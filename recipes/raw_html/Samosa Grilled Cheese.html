@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <style type="text/css">
+            /* Shared styles */
+            body {
+                font-family: Helvetica, sans-serif;
+                font-size: 16.0px;
+                color: #34302e;
+                margin: 0.25in;
+            }
+            .name {
+                font-size: 18.0px;
+                font-family: Helvetica, sans-serif;
+                font-weight: normal;
+                margin: 0 0 10px 0;
+            }
+            .categories {
+                color: #605D5D;
+                font-size: 14.0px;
+                font-family: Helvetica, sans-serif;
+                font-style: italic;
+            }
+            .rating {
+                color: #d10505;
+                font-size: 14.0px;
+            }
+            .metadata {
+                font-size: 14.0px;
+            }
+            .infobox p {
+                margin: 0;
+                line-height: 150%;
+            }
+            .subhead {
+                color: #d10505;
+                font-weight: bold;
+                font-size: 14.0px;
+                text-transform: uppercase;
+                margin: 10px 0;
+            }
+            
+            .ingredients p {
+                margin: 4px 0;
+            }
+            /* To prevent nutrition/directions from getting too close
+               to ingredients */
+            .ingredients {
+                padding-bottom: 10px;
+            }
+            .clear {
+                clear:both;
+            }
+            a {
+                color: #4990E2;
+                text-decoration: none;
+            }
+            /* Full page specific styles */
+            .text {
+                line-height: 130%;
+            }
+            .photobox {
+                
+                float: left;
+                margin-right: 14px;
+                
+                
+            }
+            .photo {
+                max-width: 140.0px;
+                max-height: 140.0px;
+                width: auto;
+                height: auto;
+            }
+            
+            .inline-image {
+                max-width: 25%;
+                max-height: 25%;
+                width: auto;
+                height: auto;
+            }
+            .photoswipe {
+                border: 1px #dddddd solid;
+                cursor: pointer;
+            }
+            .pswp__caption__center {
+                text-align: center !important;
+            }
+            .recipe {
+                
+                page-break-after: always;
+                
+                
+            }
+            .recipe:first-child {
+                border-top: 0 none;
+                margin-top: 0;
+                padding-top: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Recipe -->
+<div class="recipe" itemscope itemtype="http://schema.org/Recipe" >
+    
+    <div class="infobox">
+
+        <!-- Image -->
+        
+
+        <!-- Name -->
+        <h1 itemprop="name" class="name">Samosa Grilled Cheese</h1>
+        
+        <!-- Info -->
+        
+        
+        <!-- Rating, categories -->
+        <p itemprop="aggregateRating" class="rating" value="0"></p>
+        
+            <p itemprop="recipeCategory" class="categories">Indian, Sandwich, TCL, To Try Out</p>
+        
+        
+        <p class="metadata">
+        
+            <!-- Cook time, prep time, servings, difficulty -->
+            
+            <b>Prep Time: </b><span itemprop="prepTime">10 mins</span>
+            
+            <b>Cook Time: </b><span itemprop="cookTime">20 mins</span>
+            
+            <b>Servings: </b><span itemprop="recipeYield">Yield 6 sandwiches</span>
+            
+
+            <!-- Source -->
+            
+                <b>Source: </b>
+                
+                    <a itemprop="url" href="https://thechutneylife.com/uncategorized/samosa-grilled-cheese/">
+                        <span itemprop="author">Thechutneylife.com</span>
+                    </a>
+                
+                
+            
+        </p>
+        
+        
+        
+        <div class="clear"></div>
+        
+
+    </div>
+    
+    <div class="left-column">
+
+        <!-- Ingredients -->
+        
+        <div class="ingredientsbox">
+            <h3 class="subhead">Ingredients</h3>
+            <div class="ingredients text">
+                <p class="line" itemprop="recipeIngredient"><strong>2</strong> tbsp neutral oil like vegetable or canola</p><p class="line" itemprop="recipeIngredient"><strong>1/2</strong> tsp mustard seeds</p><p class="line" itemprop="recipeIngredient"><strong>1</strong> tsp cumin seeds</p><p class="line" itemprop="recipeIngredient"><strong>1/8</strong> teaspoon hing</p><p class="line" itemprop="recipeIngredient"><strong>1</strong> onion</p><p class="line" itemprop="recipeIngredient"><strong>2</strong> cloves garlic</p><p class="line" itemprop="recipeIngredient"><strong>3</strong> large potatoes</p><p class="line" itemprop="recipeIngredient"><strong>2</strong> teaspoons coriander-cumin powder</p><p class="line" itemprop="recipeIngredient"><strong>1/2</strong> tsp chili powder</p><p class="line" itemprop="recipeIngredient"><strong>1/4</strong> tsp turmeric</p><p class="line" itemprop="recipeIngredient"><strong>1</strong> tsp garam masala</p><p class="line" itemprop="recipeIngredient"><strong>1 1/4</strong> teaspoon salt</p><p class="line" itemprop="recipeIngredient"><strong>8</strong> slices sandwich bread like Sourdough</p><p class="line" itemprop="recipeIngredient"><strong>8</strong> oz shredded cheese</p><p class="line" itemprop="recipeIngredient"><strong>1</strong> cup prepared Tamarind -Date Chutney</p><p class="line" itemprop="recipeIngredient"><strong>1</strong> cup Cilantro Chutney</p><p class="line" itemprop="recipeIngredient"><strong>4</strong> tbsp unsalted butter, softened</p>
+            </div>
+        </div>
+        
+        
+        <!-- Nutrition (in two-column mode it goes below the ingredients) -->
+        
+
+    </div>
+    
+    <div class="right-column">
+    
+    <!-- Description -->
+    
+
+    <!-- Directions -->
+    
+    <div class="directionsbox">
+        <h3 class="subhead">Directions</h3>
+        <div itemprop="recipeInstructions" class="directions text">
+            <p class="line">Peel, boil and dice potatoes.</p><p class="line">In a non stick skillet add 2 tbsp oil over medium high heat.</p><p class="line">Once the oil is hot add mustard seeds, cumin seeds, hing and let the seeds crackle.</p><p class="line">Add the diced onions and cook until onions are translucent and golden around the edges.</p><p class="line">Lower the heat slightly and add the grated garlic, turmeric powder, chili powder, coriander cumin powder, garam masala powder and mix well.</p><p class="line">Add the potatoes, salt, and continue to stir and combine all ingredients gently until everything is evenly incorporated</p><p class="line">Using the back of a spoon or a potato masher, gently smash the potatoes if they are too large and continue to stir.</p><p class="line">Remove from heat.</p><p class="line"><strong>Assembly:</strong></p><p class="line">In a medium size skillet melt over medium heat, add 1/2 tablespoon of butter until it is foamy and melted.</p><p class="line">Lay two slices of bread down on the pan and spread one of the slices with roughly 1 tablespoon of cilantro chutney and the other slice with about 1 tablespoon of apple butter chutney.</p><p class="line">Add a slice of cheese or handful of shredded cheese on top of the cilantro chutney, then top with about 1/3 cup of the potato mixture, using the back of a spoon to press it down, and then place the remaining slice of bread (apple butter chutney side down) on top. Use a spatula to gently press the sandwich down and continue to cook until both sides are golden. To help the cheese melt, cover the pan with a melting dome. Repeat with remaining ingredients and add butter as needed to the pan.</p><p class="line">Top the potato mixture with a few spoonfuls of the sweet chutney and top with another slice of cheese.</p><p class="line">Serve the sandwiches hot, and enjoy!</p>
+        </div>
+    </div>
+    
+
+    <!-- Notes -->
+    
+
+    <!-- Nutrition (in regular mode it goes below the notes) -->
+    
+        <!-- Used in two different places depending on the recipe layout -->
+
+
+    
+    
+    </div>
+    
+    <div class="clear"></div>
+
+</div>
+
+
+
+
+
+    </body>
+</html>

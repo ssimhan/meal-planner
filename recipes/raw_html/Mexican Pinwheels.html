@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <style type="text/css">
+            /* Shared styles */
+            body {
+                font-family: Helvetica, sans-serif;
+                font-size: 16.0px;
+                color: #34302e;
+                margin: 0.25in;
+            }
+            .name {
+                font-size: 18.0px;
+                font-family: Helvetica, sans-serif;
+                font-weight: normal;
+                margin: 0 0 10px 0;
+            }
+            .categories {
+                color: #605D5D;
+                font-size: 14.0px;
+                font-family: Helvetica, sans-serif;
+                font-style: italic;
+            }
+            .rating {
+                color: #d10505;
+                font-size: 14.0px;
+            }
+            .metadata {
+                font-size: 14.0px;
+            }
+            .infobox p {
+                margin: 0;
+                line-height: 150%;
+            }
+            .subhead {
+                color: #d10505;
+                font-weight: bold;
+                font-size: 14.0px;
+                text-transform: uppercase;
+                margin: 10px 0;
+            }
+            
+            .ingredients p {
+                margin: 4px 0;
+            }
+            /* To prevent nutrition/directions from getting too close
+               to ingredients */
+            .ingredients {
+                padding-bottom: 10px;
+            }
+            .clear {
+                clear:both;
+            }
+            a {
+                color: #4990E2;
+                text-decoration: none;
+            }
+            /* Full page specific styles */
+            .text {
+                line-height: 130%;
+            }
+            .photobox {
+                
+                float: left;
+                margin-right: 14px;
+                
+                
+            }
+            .photo {
+                max-width: 140.0px;
+                max-height: 140.0px;
+                width: auto;
+                height: auto;
+            }
+            
+            .inline-image {
+                max-width: 25%;
+                max-height: 25%;
+                width: auto;
+                height: auto;
+            }
+            .photoswipe {
+                border: 1px #dddddd solid;
+                cursor: pointer;
+            }
+            .pswp__caption__center {
+                text-align: center !important;
+            }
+            .recipe {
+                
+                page-break-after: always;
+                
+                
+            }
+            .recipe:first-child {
+                border-top: 0 none;
+                margin-top: 0;
+                padding-top: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Recipe -->
+<div class="recipe" itemscope itemtype="http://schema.org/Recipe" >
+    
+    <div class="infobox">
+
+        <!-- Image -->
+        
+        <div class="photobox">
+            
+            <a href="https://minimalistbaker.com/wp-content/uploads/2015/08/AMAZING-Mexican-Pinwheels-with-Refried-Beans-Avocado-Onion-Cilantro-and-Tomato-Such-a-delicious-vegan-friendly-finger-food-recipe-healthy-snack-mexican.jpg">
+                <img src="Images/82924F14-6E66-4E01-AD4A-3E4F7E5C9D6C/AB3752EA-2C94-49D5-A498-2FC076B6B869.jpg" itemprop="image" class="photo photoswipe"/>
+            </a>
+            
+            
+        </div>
+        
+
+        <!-- Name -->
+        <h1 itemprop="name" class="name">Mexican Pinwheels</h1>
+        
+        <!-- Info -->
+        
+        
+        <!-- Rating, categories -->
+        <p itemprop="aggregateRating" class="rating" value="0"></p>
+        
+            <p itemprop="recipeCategory" class="categories">Dinner, Guest Apps, Mexican, School Entrees, To Try Out</p>
+        
+        
+        <p class="metadata">
+        
+            <!-- Cook time, prep time, servings, difficulty -->
+            
+            <b>Prep Time: </b><span itemprop="prepTime">30 minutes</span>
+            
+            <b>Cook Time: </b><span itemprop="cookTime">30 minutes</span>
+            
+            <b>Servings: </b><span itemprop="recipeYield">Serving: 1</span>
+            
+
+            <!-- Source -->
+            
+                <b>Source: </b>
+                
+                    <a itemprop="url" href="https://minimalistbaker.com/6-layer-mexican-pinwheels/">
+                        <span itemprop="author">Minimalistbaker.com</span>
+                    </a>
+                
+                
+            
+        </p>
+        
+        
+        
+        <div class="clear"></div>
+        
+
+    </div>
+    
+    <div class="left-column">
+
+        <!-- Ingredients -->
+        
+        <div class="ingredientsbox">
+            <h3 class="subhead">Ingredients</h3>
+            <div class="ingredients text">
+                <p class="line" itemprop="recipeIngredient"><strong>2</strong> large tortillas</p><p class="line" itemprop="recipeIngredient"><strong>2/3</strong> cup queso</p><p class="line" itemprop="recipeIngredient"><strong>2/3</strong> cup refried beans</p><p class="line" itemprop="recipeIngredient"><strong>1/2</strong> avocado</p><p class="line" itemprop="recipeIngredient"><strong>1/2</strong> cup red onion</p><p class="line" itemprop="recipeIngredient"><strong>1/2</strong> cup finely diced tomato or chunky salsa</p><p class="line" itemprop="recipeIngredient"><strong>1/2</strong> cup fresh cilantro</p>
+            </div>
+        </div>
+        
+        
+        <!-- Nutrition (in two-column mode it goes below the ingredients) -->
+        
+
+    </div>
+    
+    <div class="right-column">
+    
+    <!-- Description -->
+    
+
+    <!-- Directions -->
+    
+    <div class="directionsbox">
+        <h3 class="subhead">Directions</h3>
+        <div itemprop="recipeInstructions" class="directions text">
+            <p class="line">Lay one tortilla flat and spread with a thin layer of spreadable cheese.</p><p class="line">Next top with ~1/3 cup refried beans and spread flat. Continue layering with 1/4 avocado, 1/4 cup onion, 1/4 cup tomato or salsa, and 1/4 cup cilantro.</p><p class="line">Use your hands to flatten all the ingredients down so it’s easier to roll. Then tightly roll from one end to the other and place seam side down on a cutting board. If any ingredients fall out of the tortilla when rolling, it’s OK! It’s a hefty pinwheel, so just scrape it aside and move along.</p><p class="line">Starting in the center of the tortilla, use your hands to form and tighten the roll, moving outward toward the edges. This will help the fillings form together and make slicing easier.</p><p class="line">Use a serrated knife (blunt-edge knives may smash the pinwheel), and slice into 1/2-inch slices – about 8-10.</p><p class="line">Repeat the process with second tortilla and remaining ingredients. You should have ~20 pinwheels (amount as original recipe is written // adjust if altering batch size).</p><p class="line">Serve immediately, or cover and refrigerate for up to 2-3 days.</p>
+        </div>
+    </div>
+    
+
+    <!-- Notes -->
+    
+
+    <!-- Nutrition (in regular mode it goes below the notes) -->
+    
+        <!-- Used in two different places depending on the recipe layout -->
+
+
+<div class="nutritionbox textbox">
+    <h3 class="subhead">Nutrition</h3>
+    <div itemprop="nutrition" class="nutrition text">
+        <p>Calories: 61<br/>Carbohydrates: 6.8 g<br/>Protein: 1.7 g<br/>Fat: 3.2 g<br/>Saturated Fat: 0.6 g<br/>Trans Fat: 0 g<br/>Cholesterol: 0 mg<br/>Sodium: 120 mg<br/>Fiber: 1.2 g<br/>Sugar: 0.6 g</p>
+    </div>
+</div>
+
+
+
+    
+    
+    </div>
+    
+    <div class="clear"></div>
+
+</div>
+
+
+
+
+
+    </body>
+</html>

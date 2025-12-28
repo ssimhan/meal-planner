@@ -1,0 +1,138 @@
+# Recipe taxonomy and classification system
+# Used by parse_recipes.py for automatic tagging
+
+templates:
+  - tacos
+  - pasta
+  - soup
+  - curry
+  - grain_bowl
+  - dump_and_go
+  - sandwich
+  - salad
+  - stir_fry
+  - pizza
+  - burrito_bowl
+  - unknown  # Default for unclassified recipes
+
+effort_levels:
+  - no_chop         # Ready in <15min, minimal/no chopping
+  - minimal_chop    # 15-30min, light prep
+  - normal          # 30-60min, standard cooking
+
+appliances:
+  - instant_pot
+  - slow_cooker
+  - stovetop
+  - oven
+  - air_fryer
+  - blender
+  - food_processor
+
+# Keyword mapping for automatic template detection
+template_keywords:
+  tacos:
+    - taco
+    - tortilla
+    - taco seasoning
+    - enchilada
+    - flauta
+    - quesadilla
+  pasta:
+    - pasta
+    - spaghetti
+    - penne
+    - macaroni
+    - linguine
+    - fettuccine
+    - mac and cheese
+    - noodle
+  soup:
+    - soup
+    - stew
+    - broth
+    - bisque
+    - chowder
+  curry:
+    - curry
+    - masala
+    - tikka
+    - dal
+    - daal
+  grain_bowl:
+    - grain bowl
+    - rice bowl
+    - quinoa bowl
+    - buddha bowl
+  dump_and_go:
+    - slow cooker
+    - instant pot
+    - crock pot
+    - dump and go
+  sandwich:
+    - sandwich
+    - panini
+    - wrap
+    - grilled cheese
+    - burger
+  salad:
+    - salad
+  stir_fry:
+    - stir fry
+    - stir-fry
+    - pad thai
+  pizza:
+    - pizza
+  burrito_bowl:
+    - burrito bowl
+    - burrito
+    - bowl
+
+# Appliance detection keywords
+appliance_keywords:
+  instant_pot:
+    - instant pot
+    - IP
+    - pressure cooker
+  slow_cooker:
+    - slow cooker
+    - slow-cooker
+    - crock pot
+  oven:
+    - bake
+    - roast
+    - oven
+    - 350°F
+    - 400°F
+    - 375°F
+  air_fryer:
+    - air fryer
+    - air-fryer
+  stovetop:
+    - stovetop
+    - stove top
+    - simmer
+    - sauté
+
+# Avoided ingredients (dietary restrictions)
+avoided_ingredients:
+  - eggplant
+  - mushroom
+  - mushrooms
+  - green cabbage
+  - cabbage
+
+# Effort level heuristics
+effort_heuristics:
+  no_chop:
+    max_prep_time: 10  # minutes
+    max_cook_time: 15  # minutes
+    keywords:
+      - canned
+      - frozen
+      - no chop
+      - quick
+      - dump and go
+  minimal_chop:
+    max_prep_time: 20
+    max_cook_time: 30

@@ -1,1 +1,46 @@
-weeks: []
+weeks:
+- week_of: '2025-12-29'
+  dinners:
+  - recipe_id: black_bean_quinoa_salad
+    template: salad
+    day: mon
+    vegetables:
+    - beans
+    - bell pepper
+    - cilantro
+    - lime
+    - tomato
+  - recipe_id: chana_masala_ip
+    template: dump_and_go
+    day: tue
+    vegetables:
+    - cilantro
+    - garlic
+    - ginger
+    - onion
+    - peas
+    - tomato
+    - tomatoe
+  - recipe_id: cheese_and_tomato_quinoa_balls
+    template: soup
+    day: wed
+    vegetables:
+    - basil
+    - garlic
+    - onion
+    - tomato
+    - tomatoe
+  - recipe_id: beans_poriyal
+    template: curry
+    day: thu
+    vegetables:
+    - beans
+    - onion
+  - recipe_id: broccoli_spinach_pasta_sauce
+    template: pasta
+    day: fri
+    vegetables:
+    - broccoli
+    - garlic
+    - lemon
+    - spinach

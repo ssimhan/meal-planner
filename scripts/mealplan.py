@@ -290,18 +290,362 @@ def run_intake():
 
 
 # ============================================================================
-# Plan Command - Phase 3 (stub)
+# Plan Command - Phase 3
 # ============================================================================
+
+def load_input_file(input_path):
+    """Load and validate the input file."""
+    if not input_path.exists():
+        print(f"Error: Input file not found: {input_path}")
+        sys.exit(1)
+
+    with open(input_path, 'r') as f:
+        data = yaml.safe_load(f)
+
+    # Validate required fields
+    if 'week_of' not in data:
+        print("Error: Input file missing 'week_of' field")
+        sys.exit(1)
+
+    # Check if farmers market is confirmed
+    if data.get('farmers_market', {}).get('status') != 'confirmed':
+        print("\nWarning: Farmers market status is not 'confirmed'")
+        print("Please update 'confirmed_veg' and set status to 'confirmed' before generating plan")
+
+        if not prompt_yes_no("Continue anyway?", default=False):
+            sys.exit(0)
+
+    return data
+
+
+def load_recipes(index_path):
+    """Load the recipe index."""
+    if not index_path.exists():
+        print(f"Error: Recipe index not found: {index_path}")
+        print("Run 'python scripts/parse_recipes.py' first")
+        sys.exit(1)
+
+    with open(index_path, 'r') as f:
+        recipes = yaml.safe_load(f)
+
+    return recipes
+
+
+def load_history(history_path):
+    """Load the meal plan history."""
+    if not history_path.exists():
+        return {'weeks': []}
+
+    with open(history_path, 'r') as f:
+        history = yaml.safe_load(f)
+
+    if not history or 'weeks' not in history:
+        return {'weeks': []}
+
+    return history
+
+
+def get_recent_recipes(history, lookback_weeks=3):
+    """Get recipe IDs used in the last N weeks."""
+    recent = set()
+
+    if not history or 'weeks' not in history:
+        return recent
+
+    # Get last N weeks
+    for week in history['weeks'][-lookback_weeks:]:
+        for dinner in week.get('dinners', []):
+            if 'recipe_id' in dinner:
+                recent.add(dinner['recipe_id'])
+
+    return recent
+
+
+def filter_recipes(recipes, inputs, recent_recipes):
+    """Filter recipes based on constraints."""
+    filtered = []
+    avoid_ingredients = set(inputs.get('preferences', {}).get('avoid_ingredients', []))
+
+    for recipe in recipes:
+        # Skip if used recently
+        if recipe['id'] in recent_recipes:
+            continue
+
+        # Skip if contains avoided ingredients
+        if any(ing in avoid_ingredients for ing in recipe.get('avoid_contains', [])):
+            continue
+
+        # Skip if template is unknown (not categorized yet)
+        if recipe.get('template') == 'unknown':
+            continue
+
+        filtered.append(recipe)
+
+    return filtered
+
+
+def select_dinners(filtered_recipes, inputs):
+    """Select 5 dinners for Mon-Fri based on constraints."""
+    busy_days = set(inputs.get('schedule', {}).get('busy_days', []))
+    confirmed_veg = set(inputs.get('farmers_market', {}).get('confirmed_veg', []))
+
+    # Separate recipes into categories
+    no_chop_recipes = [r for r in filtered_recipes if r.get('no_chop_compatible', False)]
+    normal_recipes = [r for r in filtered_recipes if r.get('effort_level') == 'normal']
+    all_other_recipes = [r for r in filtered_recipes
+                         if not r.get('no_chop_compatible', False)
+                         and r.get('effort_level') != 'normal']
+
+    # Track used templates to avoid repetition
+    used_templates = set()
+    selected = {}
+    days = ['mon', 'tue', 'wed', 'thu', 'fri']
+
+    # First, handle busy days (Thu/Fri) - must be no_chop
+    for day in days:
+        if day in busy_days:
+            # Try to find a no-chop recipe with unused template
+            recipe = None
+            for r in no_chop_recipes:
+                template = r.get('template')
+                if template not in used_templates:
+                    recipe = r
+                    used_templates.add(template)
+                    no_chop_recipes.remove(r)
+                    break
+
+            if recipe:
+                selected[day] = recipe
+            else:
+                print(f"Warning: Could not find no-chop recipe for {day}")
+
+    # Select one "from scratch" recipe (normal effort)
+    from_scratch_recipe = None
+    for r in normal_recipes:
+        template = r.get('template')
+        if template not in used_templates:
+            from_scratch_recipe = r
+            used_templates.add(template)
+            normal_recipes.remove(r)
+            break
+
+    # Fill remaining days with other recipes
+    remaining_days = [d for d in days if d not in selected]
+    all_available = normal_recipes + all_other_recipes
+
+    for day in remaining_days:
+        recipe = None
+
+        # Try to find recipe with unused template
+        for r in all_available:
+            template = r.get('template')
+            if template not in used_templates:
+                recipe = r
+                used_templates.add(template)
+                all_available.remove(r)
+                break
+
+        if recipe:
+            selected[day] = recipe
+
+            # If this was the from_scratch recipe, note it
+            if from_scratch_recipe and recipe['id'] == from_scratch_recipe['id']:
+                selected[day + '_is_from_scratch'] = True
+        else:
+            print(f"Warning: Could not find recipe for {day}")
+
+    # If we didn't assign from_scratch yet, mark one of the normal effort recipes
+    if from_scratch_recipe:
+        for day in days:
+            if day in selected and selected[day]['id'] == from_scratch_recipe['id']:
+                selected['from_scratch_day'] = day
+                break
+
+    return selected
+
+
+def generate_plan_content(inputs, selected_dinners, from_scratch_recipe=None):
+    """Generate the weekly plan markdown content."""
+    week_of = inputs['week_of']
+    confirmed_veg = inputs.get('farmers_market', {}).get('confirmed_veg', [])
+    late_class_days = inputs.get('schedule', {}).get('late_class_days', [])
+    busy_days = set(inputs.get('schedule', {}).get('busy_days', []))
+
+    # Calculate date range
+    week_start = datetime.strptime(week_of, '%Y-%m-%d').date()
+    week_end = week_start + timedelta(days=4)  # Mon-Fri
+    date_range = f"{week_start.strftime('%B %d')} - {week_end.strftime('%B %d, %Y')}"
+
+    lines = []
+    lines.append(f"# Weekly Meal Plan: {date_range}\n")
+
+    # Farmers market shopping list
+    lines.append("## Farmers Market Shopping List\n")
+    for veg in confirmed_veg:
+        lines.append(f"- {veg}")
+    lines.append("")
+
+    # Days
+    days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+    day_abbr = ['mon', 'tue', 'wed', 'thu', 'fri']
+
+    for i, (day_name, day_key) in enumerate(zip(days, day_abbr)):
+        lines.append(f"## {day_name}\n")
+
+        # Dinner
+        if day_key in selected_dinners:
+            recipe = selected_dinners[day_key]
+            template = recipe.get('template', 'unknown')
+            main_veg = recipe.get('main_veg', [])
+
+            lines.append(f"**Dinner:** {recipe['name']} ({template})")
+            lines.append(f"- Main vegetables: {', '.join(main_veg) if main_veg else 'none'}")
+
+            # Add prep notes for busy days
+            if day_key in busy_days:
+                if recipe.get('no_chop_compatible', False):
+                    lines.append("- Prep notes: Quick no-chop meal")
+                else:
+                    lines.append("- Prep notes: Prep vegetables Wednesday evening")
+
+            lines.append("")
+
+        # Lunch prep
+        lines.append("**Lunch Prep:** [Recipe for 2 kids + 1 adult]\n")
+
+        # Heavy snack for late class days
+        if day_key in late_class_days:
+            lines.append(f"## Heavy Snack ({day_name} - Late Class Day)\n")
+            lines.append("- [Substantial snack recipe]\n")
+
+    # From scratch recipe section
+    if from_scratch_recipe:
+        lines.append("## From Scratch Recipe This Week\n")
+        lines.append(f"**{from_scratch_recipe['name']}** - [Brief rationale for why this recipe was chosen]\n")
+
+    # Prep-ahead notes
+    lines.append("## Prep-Ahead Notes\n")
+    lines.append("- **Sunday:** Grocery shopping, any Sunday prep tasks")
+    lines.append("- **Wednesday evening:** Prep vegetables for Thursday/Friday if needed")
+
+    return '\n'.join(lines)
+
+
+def update_history(history_path, inputs, selected_dinners):
+    """Update history.yml with the new week's dinners."""
+    # Load existing history
+    history = load_history(history_path)
+
+    # Create new week entry
+    week_of = inputs['week_of']
+    new_week = {
+        'week_of': week_of,
+        'dinners': []
+    }
+
+    # Add dinners
+    days = ['mon', 'tue', 'wed', 'thu', 'fri']
+    for day in days:
+        if day in selected_dinners:
+            recipe = selected_dinners[day]
+            new_week['dinners'].append({
+                'recipe_id': recipe['id'],
+                'template': recipe.get('template'),
+                'day': day,
+                'vegetables': recipe.get('main_veg', [])
+            })
+
+    # Append to history
+    history['weeks'].append(new_week)
+
+    # Write back to file
+    with open(history_path, 'w') as f:
+        yaml.dump(history, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+
 
 def run_plan():
     """Run the plan command to generate a weekly meal plan."""
-    print("Phase 3: plan command not yet implemented")
-    print("\nThis command will:")
-    print("  1. Read inputs/YYYY-MM-DD.yml")
-    print("  2. Load recipes/index.yml and data/history.yml")
-    print("  3. Select dinners based on constraints")
-    print("  4. Generate plans/YYYY-MM-DD-weekly-plan.md")
-    print("  5. Update data/history.yml")
+    # Parse command line arguments
+    if len(sys.argv) < 3:
+        print("Error: Input file required")
+        print("\nUsage: python scripts/mealplan.py plan inputs/YYYY-MM-DD.yml")
+        sys.exit(1)
+
+    input_file = Path(sys.argv[2])
+
+    print("\n" + "="*60)
+    print("MEAL PLANNER - GENERATING WEEKLY PLAN")
+    print("="*60)
+
+    # 1. Load inputs
+    print("\n[1/6] Loading input file...")
+    inputs = load_input_file(input_file)
+    week_of = inputs['week_of']
+    print(f"  Week of: {week_of}")
+
+    # 2. Load recipes
+    print("\n[2/6] Loading recipe index...")
+    index_path = Path('recipes/index.yml')
+    recipes = load_recipes(index_path)
+    print(f"  Loaded {len(recipes)} recipes")
+
+    # 3. Load history
+    print("\n[3/6] Loading meal history...")
+    history_path = Path('data/history.yml')
+    history = load_history(history_path)
+    recent_recipes = get_recent_recipes(history, lookback_weeks=3)
+    print(f"  {len(recent_recipes)} recipes used in last 3 weeks")
+
+    # 4. Filter recipes
+    print("\n[4/6] Filtering recipes based on constraints...")
+    filtered = filter_recipes(recipes, inputs, recent_recipes)
+    print(f"  {len(filtered)} recipes available after filtering")
+
+    # 5. Select dinners
+    print("\n[5/6] Selecting dinners for the week...")
+    selected_dinners = select_dinners(filtered, inputs)
+
+    # Identify from_scratch recipe
+    from_scratch_recipe = None
+    from_scratch_day = selected_dinners.get('from_scratch_day')
+    if from_scratch_day:
+        from_scratch_recipe = selected_dinners[from_scratch_day]
+
+    # Display selections
+    days = ['mon', 'tue', 'wed', 'thu', 'fri']
+    for day in days:
+        if day in selected_dinners:
+            recipe = selected_dinners[day]
+            marker = " [FROM SCRATCH]" if from_scratch_day == day else ""
+            print(f"  {day.upper()}: {recipe['name']}{marker}")
+
+    # 6. Generate plan file
+    print("\n[6/6] Generating plan file...")
+    plans_dir = Path('plans')
+    plans_dir.mkdir(exist_ok=True)
+
+    plan_file = plans_dir / f'{week_of}-weekly-plan.md'
+    plan_content = generate_plan_content(inputs, selected_dinners, from_scratch_recipe)
+
+    with open(plan_file, 'w') as f:
+        f.write(plan_content)
+
+    print(f"  Created: {plan_file}")
+
+    # Update history
+    print("\nUpdating history...")
+    update_history(history_path, inputs, selected_dinners)
+    print(f"  Updated: {history_path}")
+
+    print("\n" + "="*60)
+    print("PLAN GENERATION COMPLETE")
+    print("="*60)
+    print(f"\nView your plan: {plan_file}")
+    print("\nNext steps:")
+    print("  1. Review the generated plan")
+    print("  2. Manually add lunch prep recipes")
+    print("  3. Add heavy snack recipes if needed")
+    print("  4. Refine the from-scratch recipe rationale")
 
 
 # ============================================================================
@@ -320,7 +664,12 @@ def main():
         print("\nCurrent Status:")
         print("  Phase 0-1: ✓ Complete (scaffolding + recipe parsing)")
         print("  Phase 2:   ✓ Complete (intake command)")
-        print("  Phase 3:   ⏳ Not yet implemented (plan command)")
+        print("  Phase 3:   ✓ Complete (plan command)")
+        print("\nExample workflow:")
+        print("  1. python scripts/mealplan.py intake")
+        print("  2. Edit inputs/YYYY-MM-DD.yml to confirm vegetables")
+        print("  3. python scripts/mealplan.py plan inputs/YYYY-MM-DD.yml")
+        print("  4. python scripts/validate_plan.py plans/YYYY-MM-DD-weekly-plan.md inputs/YYYY-MM-DD.yml")
         sys.exit(1)
 
     command = sys.argv[1]

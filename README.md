@@ -82,11 +82,41 @@ After running intake:
 
 ### 3. Generate Meal Plan (Phase 3)
 
-Coming soon - this will generate the weekly meal plan:
+After confirming your farmers market vegetables, generate the weekly meal plan:
 
 ```bash
 python scripts/mealplan.py plan inputs/YYYY-MM-DD.yml
 ```
+
+This will:
+- Load your schedule and preferences from the input file
+- Filter recipes based on constraints (anti-repetition, avoided ingredients)
+- Select 5 dinners (Mon-Fri) with no template repetition
+- Prioritize no-chop recipes for busy days (Thu/Fri by default)
+- Generate `plans/YYYY-MM-DD-weekly-plan.md` with complete meal plan
+- Update `data/history.yml` to track recipe usage
+
+View the generated plan:
+
+```bash
+cat plans/YYYY-MM-DD-weekly-plan.md
+```
+
+### 4. Validate Plan (Optional)
+
+Validate that the generated plan meets all constraints:
+
+```bash
+python scripts/validate_plan.py plans/YYYY-MM-DD-weekly-plan.md inputs/YYYY-MM-DD.yml
+```
+
+This checks:
+- All dinners (Mon-Fri) are present
+- No avoided ingredients used
+- Busy days have no-chop meals or prep notes
+- Late class days have heavy snacks
+- No template repetition within the week
+- At least one vegetable per dinner
 
 ## Project Structure
 
@@ -156,15 +186,17 @@ The parser will preserve manual edits on subsequent runs (future enhancement).
 - [x] Phase 0: Scaffolding
 - [x] Phase 1: Recipe Parsing
 - [x] Phase 2: CLI Intake + Farmers Market
-- [ ] Phase 3: Plan Generation
+- [x] Phase 3: Plan Generation
 - [ ] Phase 4: Polish + Examples
 
-## Future Features (Phase 3+)
+## Future Features (Phase 4+)
 
-- AI-powered meal plan generation with Claude Code
-- Automatic history updates
-- Plan validation with retry logic
+- Improved from-scratch recipe selection (needs better template classification)
+- AI-powered plan refinement with Claude Code
+- Better lunch prep suggestions
+- Heavy snack recipe recommendations
 - GitHub Actions automation for weekly plans
+- Interactive plan editing workflow
 
 ## License
 

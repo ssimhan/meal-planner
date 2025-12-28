@@ -17,7 +17,7 @@ preferences:
   - green_cabbage
   novelty_recipe_limit: 1
 farmers_market:
-  status: proposed
+  status: confirmed
   proposed_veg:
   - cauliflower
   - sweet potato
@@ -28,4 +28,11 @@ farmers_market:
   - onion
   - garlic
   - cilantro
-  confirmed_veg: []
+  confirmed_veg:
+  - cauliflower
+  - sweet potato
+  - carrot
+  - cilantro
+  - tomato
+  - onion
+  - garlic

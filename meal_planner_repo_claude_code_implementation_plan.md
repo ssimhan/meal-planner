@@ -296,14 +296,14 @@ Checks (must pass):
    - User edits `proposed_veg` → `confirmed_veg`
    - Changes `status: proposed` → `status: confirmed`
 
-### Phase 3 — Plan generation + validation + history updates
-11. Implement `scripts/mealplan.py plan`:
-    - load inputs/index/history
-    - select candidate dinners under constraints
-    - call Claude Code to write `plans/week.md`
-    - update `history.yml`
-12. Implement `scripts/validate_plan.py` and wire into `plan`
-13. Add retry loop on validation failures
+### Phase 3 — Plan generation + validation + history updates ✅ COMPLETE
+11. ✅ Implement `scripts/mealplan.py plan`:
+    - Load inputs/index/history
+    - Select candidate dinners under constraints
+    - Generate `plans/week.md` with proper formatting
+    - Update `history.yml` automatically
+12. ✅ Implement `scripts/validate_plan.py` as standalone validation tool
+13. Note: Retry loop and Claude Code integration deferred to Phase 4
 
 ### Phase 4 — Polish + example week
 14. Add an example input + example plan in repo

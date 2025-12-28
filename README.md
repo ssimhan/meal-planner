@@ -30,9 +30,9 @@ cd meal-planner
 pip install -r requirements.txt
 ```
 
-## Usage (Phase 0-1)
+## Usage
 
-### Parse Recipes
+### 1. Parse Recipes (Phase 1)
 
 Convert HTML recipes into structured JSON and YAML indexes:
 
@@ -46,18 +46,46 @@ This will:
 - Apply tagging heuristics (template, effort level, appliances)
 - Generate `recipes/parsed/recipes.json` and `recipes/index.yml`
 
-### View Recipe Index
-
-After parsing, view the curated recipe index:
+View the curated recipe index:
 
 ```bash
 cat recipes/index.yml
 ```
 
-Or explore the full parsed data:
+### 2. Create Weekly Input (Phase 2)
+
+Run the interactive intake command to create a weekly input file:
 
 ```bash
-python -m json.tool recipes/parsed/recipes.json | less
+python scripts/mealplan.py intake
+```
+
+This will prompt you for:
+- **Week start date** (defaults to next Monday)
+- **Office days** (default: Mon, Wed, Fri)
+- **Busy days** (default: Thu, Fri) - Quick meals needed
+- **Late class days** (default: none) - Heavy snack required
+- **Special events** (optional) - Dinners out, travel, etc.
+
+The command will:
+- Generate a farmers market vegetable proposal based on:
+  - Seasonal availability (current month)
+  - Recipe requirements (from `recipes/index.yml`)
+  - Recent usage (avoid repetition from `data/history.yml`)
+- Create `inputs/YYYY-MM-DD.yml` with your schedule and preferences
+
+After running intake:
+1. Review the generated `inputs/YYYY-MM-DD.yml` file
+2. Edit `proposed_veg` if needed
+3. After farmers market shopping, copy vegetables to `confirmed_veg`
+4. Change `status: proposed` to `status: confirmed`
+
+### 3. Generate Meal Plan (Phase 3)
+
+Coming soon - this will generate the weekly meal plan:
+
+```bash
+python scripts/mealplan.py plan inputs/YYYY-MM-DD.yml
 ```
 
 ## Project Structure
@@ -127,14 +155,12 @@ The parser will preserve manual edits on subsequent runs (future enhancement).
 
 - [x] Phase 0: Scaffolding
 - [x] Phase 1: Recipe Parsing
-- [ ] Phase 2: CLI Intake + Farmers Market
+- [x] Phase 2: CLI Intake + Farmers Market
 - [ ] Phase 3: Plan Generation
 - [ ] Phase 4: Polish + Examples
 
-## Future Features (Phase 2+)
+## Future Features (Phase 3+)
 
-- Interactive intake CLI for weekly scheduling
-- Farmers market vegetable proposal generation
 - AI-powered meal plan generation with Claude Code
 - Automatic history updates
 - Plan validation with retry logic

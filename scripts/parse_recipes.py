@@ -27,7 +27,8 @@ class Recipe:
     id: str
     name: str
     categories: List[str]
-    template: str
+    cuisine: str         # NEW: cultural/regional origin (indian, mexican, italian, etc.)
+    meal_type: str       # NEW: structure/format (soup_stew, pasta_noodles, tacos_wraps, etc.)
     effort_level: str
     no_chop_compatible: bool
     prep_time_minutes: Optional[int]
@@ -149,54 +150,68 @@ def parse_time_to_minutes(time_str: str) -> Optional[int]:
 # Classification and Tagging
 # ============================================================================
 
-def classify_template(recipe_data: Dict, taxonomy: Dict) -> str:
-    """Determine recipe template using categories + keyword heuristics."""
+def classify_cuisine(recipe_data: Dict, taxonomy: Dict) -> str:
+    """Determine recipe cuisine using keyword heuristics."""
 
-    # Priority 1: Check categories for direct matches
+    # Check categories
     categories_lower = [cat.lower() for cat in recipe_data.get('categories', [])]
 
-    for template, keywords in taxonomy['template_keywords'].items():
+    for cuisine, keywords in taxonomy.get('cuisine_keywords', {}).items():
         for keyword in keywords:
             if any(keyword.lower() in cat for cat in categories_lower):
-                return template
+                return cuisine
 
-    # Priority 2: Check recipe name
+    # Check recipe name
     name_lower = recipe_data['name'].lower()
-    for template, keywords in taxonomy['template_keywords'].items():
+    for cuisine, keywords in taxonomy.get('cuisine_keywords', {}).items():
         for keyword in keywords:
             if keyword.lower() in name_lower:
-                return template
+                return cuisine
 
-    # Priority 3: Check ingredients for strong signals
+    # Check ingredients
     ingredients_text = ' '.join(recipe_data.get('ingredients', [])).lower()
+    for cuisine, keywords in taxonomy.get('cuisine_keywords', {}).items():
+        for keyword in keywords:
+            if keyword.lower() in ingredients_text:
+                return cuisine
 
-    # Strong signals for dump_and_go
-    if 'instant pot' in ingredients_text or 'slow cooker' in ingredients_text:
-        return 'dump_and_go'
+    # Default: unknown
+    return 'unknown'
 
-    # Strong signals for specific templates
-    if 'tortilla' in ingredients_text:
-        if any(word in ingredients_text for word in ['taco', 'enchilada', 'flauta']):
-            return 'tacos'
 
-    if any(word in ingredients_text for word in ['pasta', 'spaghetti', 'penne', 'macaroni']):
-        return 'pasta'
+def classify_meal_type(recipe_data: Dict, taxonomy: Dict) -> str:
+    """Determine recipe meal type using keyword heuristics."""
 
-    if 'broth' in ingredients_text or 'stock' in ingredients_text:
-        return 'soup'
+    # Check categories for direct matches
+    categories_lower = [cat.lower() for cat in recipe_data.get('categories', [])]
 
-    if any(word in ingredients_text for word in ['curry', 'masala', 'dal']):
-        return 'curry'
+    for meal_type, keywords in taxonomy.get('meal_type_keywords', {}).items():
+        for keyword in keywords:
+            if any(keyword.lower() in cat for cat in categories_lower):
+                return meal_type
 
-    # Priority 4: Check instructions for cooking method
-    instructions = recipe_data.get('instructions', '') or ''
-    instructions_lower = instructions.lower()
+    # Check recipe name
+    name_lower = recipe_data['name'].lower()
+    for meal_type, keywords in taxonomy.get('meal_type_keywords', {}).items():
+        for keyword in keywords:
+            # Support regex patterns in keywords
+            if '.*' in keyword:
+                import re
+                if re.search(keyword.lower(), name_lower):
+                    return meal_type
+            elif keyword.lower() in name_lower:
+                return meal_type
 
-    if 'instant pot' in instructions_lower or 'pressure cook' in instructions_lower:
-        return 'dump_and_go'
-
-    if 'slow cooker' in instructions_lower:
-        return 'dump_and_go'
+    # Check ingredients for strong signals
+    ingredients_text = ' '.join(recipe_data.get('ingredients', [])).lower()
+    for meal_type, keywords in taxonomy.get('meal_type_keywords', {}).items():
+        for keyword in keywords:
+            if '.*' in keyword:
+                import re
+                if re.search(keyword.lower(), ingredients_text):
+                    return meal_type
+            elif keyword.lower() in ingredients_text:
+                return meal_type
 
     # Default: unknown (requires manual tagging)
     return 'unknown'
@@ -329,8 +344,9 @@ def parse_recipe(html_file: Path, taxonomy: Dict) -> Recipe:
         if cat.lower() not in ['to edit', 'to try out', 'favorites', 'favorite']
     ]
 
-    # 4. Classify template
-    template = classify_template(data, taxonomy)
+    # 4. Classify cuisine and meal_type
+    cuisine = classify_cuisine(data, taxonomy)
+    meal_type = classify_meal_type(data, taxonomy)
 
     # 5. Estimate effort
     effort_level, no_chop = estimate_effort_level(data, taxonomy)
@@ -351,7 +367,8 @@ def parse_recipe(html_file: Path, taxonomy: Dict) -> Recipe:
         id=recipe_id,
         name=data['name'],
         categories=categories,
-        template=template,
+        cuisine=cuisine,
+        meal_type=meal_type,
         effort_level=effort_level,
         no_chop_compatible=no_chop,
         prep_time_minutes=data.get('prep_time_minutes'),
@@ -384,7 +401,8 @@ def write_index_yml(recipes: List[Recipe], output_path: Path):
         {
             'id': r.id,
             'name': r.name,
-            'template': r.template,
+            'cuisine': r.cuisine,
+            'meal_type': r.meal_type,
             'effort_level': r.effort_level,
             'no_chop_compatible': r.no_chop_compatible,
             'appliances': r.appliances,
@@ -411,11 +429,17 @@ def print_summary(recipes: List[Recipe]):
 
     print(f"\nTotal recipes parsed: {len(recipes)}")
 
-    # Template distribution
-    templates = Counter(r.template for r in recipes)
-    print("\nTemplate distribution:")
-    for template, count in templates.most_common():
-        print(f"  {template:15s}: {count:3d}")
+    # Cuisine distribution
+    cuisines = Counter(r.cuisine for r in recipes)
+    print("\nCuisine distribution:")
+    for cuisine, count in cuisines.most_common():
+        print(f"  {cuisine:15s}: {count:3d}")
+
+    # Meal type distribution
+    meal_types = Counter(r.meal_type for r in recipes)
+    print("\nMeal type distribution:")
+    for meal_type, count in meal_types.most_common():
+        print(f"  {meal_type:20s}: {count:3d}")
 
     # Effort distribution
     efforts = Counter(r.effort_level for r in recipes)
@@ -531,7 +555,7 @@ def main():
     print("="*60)
     print("\nNext steps:")
     print("1. Review recipes/index.yml for correctness")
-    print("2. Manually edit any recipes with template: unknown")
+    print("2. Manually edit any recipes with cuisine/meal_type: unknown")
     print("3. Check recipes with avoided ingredients (eggplant/mushrooms/cabbage)")
     print("4. Proceed to Phase 2: CLI intake implementation")
 

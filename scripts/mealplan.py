@@ -366,14 +366,14 @@ def filter_recipes_by_meal_type(recipes, inputs, recent_recipes, meal_type='dinn
     filtered = []
     avoid_ingredients = set(inputs.get('preferences', {}).get('avoid_ingredients', []))
 
-    # Define templates for each meal type
-    template_categories = {
+    # Define meal_types suitable for each context
+    meal_type_categories = {
         'dinner': {
-            'tacos', 'pasta', 'soup', 'curry', 'grain_bowl', 'dump_and_go',
-            'sandwich', 'salad', 'stir_fry', 'pizza', 'burrito_bowl', 'appetizer'
+            'tacos_wraps', 'pasta_noodles', 'soup_stew', 'grain_bowl',
+            'sandwich', 'salad', 'stir_fry', 'pizza', 'casserole', 'appetizer'
         },
         'lunch': {
-            'sandwich', 'salad', 'grain_bowl', 'soup', 'pasta', 'burrito_bowl'
+            'sandwich', 'salad', 'grain_bowl', 'soup_stew', 'pasta_noodles', 'tacos_wraps'
         },
         'snack': {
             'snack_bar', 'baked_goods', 'frozen_treat', 'simple_snack', 'appetizer',
@@ -384,7 +384,7 @@ def filter_recipes_by_meal_type(recipes, inputs, recent_recipes, meal_type='dinn
         }
     }
 
-    allowed_templates = template_categories.get(meal_type, set())
+    allowed_meal_types = meal_type_categories.get(meal_type, set())
 
     for recipe in recipes:
         # Skip if used recently
@@ -395,13 +395,13 @@ def filter_recipes_by_meal_type(recipes, inputs, recent_recipes, meal_type='dinn
         if any(ing in avoid_ingredients for ing in recipe.get('avoid_contains', [])):
             continue
 
-        # Skip if template is unknown (not categorized yet)
-        template = recipe.get('template')
-        if template == 'unknown':
+        # Skip if meal_type is unknown (not categorized yet)
+        recipe_meal_type = recipe.get('meal_type')
+        if recipe_meal_type == 'unknown':
             continue
 
-        # Check if template matches meal type
-        if template not in allowed_templates:
+        # Check if meal_type matches context
+        if recipe_meal_type not in allowed_meal_types:
             continue
 
         filtered.append(recipe)
@@ -426,8 +426,8 @@ def select_dinners(filtered_recipes, inputs):
                          if not r.get('no_chop_compatible', False)
                          and r.get('effort_level') != 'normal']
 
-    # Track used templates to avoid repetition
-    used_templates = set()
+    # Track used meal_types to avoid repetition (not cuisine!)
+    used_meal_types = set()
     selected = {}
     days = ['mon', 'tue', 'wed', 'thu', 'fri']
 
@@ -438,11 +438,11 @@ def select_dinners(filtered_recipes, inputs):
 
     if non_busy_days:
         for r in normal_recipes:
-            template = r.get('template')
-            if template not in used_templates:
+            meal_type = r.get('meal_type')
+            if meal_type not in used_meal_types:
                 from_scratch_recipe = r
                 from_scratch_day = non_busy_days[0]  # Assign to first available non-busy day
-                used_templates.add(template)
+                used_meal_types.add(meal_type)
                 normal_recipes.remove(r)
                 selected[from_scratch_day] = r
                 selected['from_scratch_day'] = from_scratch_day
@@ -451,13 +451,13 @@ def select_dinners(filtered_recipes, inputs):
     # Step 2: Handle busy days (Thu/Fri) - must be no_chop
     for day in days:
         if day in busy_days and day not in selected:
-            # Try to find a no-chop recipe with unused template
+            # Try to find a no-chop recipe with unused meal_type
             recipe = None
             for r in no_chop_recipes:
-                template = r.get('template')
-                if template not in used_templates:
+                meal_type = r.get('meal_type')
+                if meal_type not in used_meal_types:
                     recipe = r
-                    used_templates.add(template)
+                    used_meal_types.add(meal_type)
                     no_chop_recipes.remove(r)
                     break
 
@@ -473,12 +473,12 @@ def select_dinners(filtered_recipes, inputs):
     for day in remaining_days:
         recipe = None
 
-        # Try to find recipe with unused template
+        # Try to find recipe with unused meal_type
         for r in all_available:
-            template = r.get('template')
-            if template not in used_templates:
+            meal_type = r.get('meal_type')
+            if meal_type not in used_meal_types:
                 recipe = r
-                used_templates.add(template)
+                used_meal_types.add(meal_type)
                 all_available.remove(r)
                 break
 
@@ -521,10 +521,11 @@ def generate_plan_content(inputs, selected_dinners, from_scratch_recipe=None):
         # Dinner
         if day_key in selected_dinners:
             recipe = selected_dinners[day_key]
-            template = recipe.get('template', 'unknown')
+            cuisine = recipe.get('cuisine', 'unknown')
+            meal_type = recipe.get('meal_type', 'unknown')
             main_veg = recipe.get('main_veg', [])
 
-            lines.append(f"**Dinner:** {recipe['name']} ({template})")
+            lines.append(f"**Dinner:** {recipe['name']} ({cuisine} {meal_type})")
             lines.append(f"- Main vegetables: {', '.join(main_veg) if main_veg else 'none'}")
 
             # Add prep notes for busy days
@@ -576,7 +577,8 @@ def update_history(history_path, inputs, selected_dinners):
             recipe = selected_dinners[day]
             new_week['dinners'].append({
                 'recipe_id': recipe['id'],
-                'template': recipe.get('template'),
+                'cuisine': recipe.get('cuisine'),
+                'meal_type': recipe.get('meal_type'),
                 'day': day,
                 'vegetables': recipe.get('main_veg', [])
             })

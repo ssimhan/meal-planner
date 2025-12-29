@@ -7,7 +7,7 @@ Validates that a generated weekly meal plan meets all constraints:
 - No avoided ingredients
 - Busy days have no-chop recipes or prep notes
 - Late class days have heavy snacks
-- No template repetition within the week
+- No meal_type repetition within the week
 - At least one vegetable per dinner
 - Exactly one from-scratch recipe per week (optional check)
 
@@ -48,7 +48,7 @@ class PlanValidator:
         self._check_farmers_market_list(plan_content, inputs)
         self._check_busy_day_constraints(plan_content, inputs)
         self._check_late_class_snacks(plan_content, inputs)
-        self._check_template_repetition(plan_content)
+        self._check_meal_type_repetition(plan_content)
         self._check_vegetables_per_dinner(plan_content)
         self._check_avoided_ingredients(plan_content, inputs, recipes)
         self._check_from_scratch_recipe(plan_content, inputs)
@@ -178,21 +178,30 @@ class PlanValidator:
             if not re.search(pattern, content):
                 self.errors.append(f"Missing heavy snack for late class day: {day_name}")
 
-    def _check_template_repetition(self, content):
-        """Check that no template is used more than once."""
-        # Extract all dinner lines
+    def _check_meal_type_repetition(self, content):
+        """Check that no meal_type is used more than once."""
+        # Extract all dinner lines with format: **Dinner:** Name (cuisine meal_type)
         dinners = re.findall(r'\*\*Dinner:\*\*\s+(.+?)\s+\((.+?)\)', content)
 
-        templates = [template for _, template in dinners]
-        template_counts = {}
+        meal_types = []
+        for _, cuisine_and_type in dinners:
+            # Parse "cuisine meal_type" format
+            parts = cuisine_and_type.strip().split()
+            if len(parts) >= 2:
+                meal_type = parts[-1]  # Last part is meal_type
+                meal_types.append(meal_type)
+            elif len(parts) == 1:
+                # Fallback: single word is meal_type
+                meal_types.append(parts[0])
 
-        for template in templates:
-            template_counts[template] = template_counts.get(template, 0) + 1
+        meal_type_counts = {}
+        for meal_type in meal_types:
+            meal_type_counts[meal_type] = meal_type_counts.get(meal_type, 0) + 1
 
         # Check for repetition
-        for template, count in template_counts.items():
+        for meal_type, count in meal_type_counts.items():
             if count > 1:
-                self.errors.append(f"Template '{template}' used {count} times (max 1 per week)")
+                self.errors.append(f"Meal type '{meal_type}' used {count} times (max 1 per week)")
 
     def _check_vegetables_per_dinner(self, content):
         """Check that each dinner has at least one vegetable."""

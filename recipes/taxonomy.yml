@@ -1,27 +1,37 @@
 # Recipe taxonomy and classification system
 # Used by parse_recipes.py for automatic tagging
 
-templates:
-  - tacos
-  - pasta
-  - soup
-  - curry
-  - grain_bowl
-  - dump_and_go
-  - sandwich
-  - salad
-  - stir_fry
-  - pizza
-  - burrito_bowl
-  - breakfast       # Pancakes, waffles, french toast, quiches, oatmeal
-  - snack_bar       # Granola bars, energy balls, brownies, blondies
-  - baked_goods     # Muffins, cookies, bread
-  - sauce_dip       # Sauces, dips, condiments, spreads
-  - frozen_treat    # Popsicles, frozen yogurt, yogurt melts
-  - appetizer       # Fritters, gyoza, puffs, bruschetta
-  - side_dish       # Rice, beans, roasted chickpeas, tofu
-  - simple_snack    # Pre-packaged or no-prep items
-  - unknown         # Default for unclassified recipes
+# Cuisines (cultural/regional origin)
+cuisines:
+  - indian
+  - mexican
+  - italian
+  - american
+  - asian
+  - mediterranean
+  - fusion
+  - unknown
+
+# Meal types (structure/format of the dish)
+meal_types:
+  - soup_stew        # Soups, stews, dal, chili
+  - pasta_noodles    # Pasta, noodles, mac and cheese
+  - tacos_wraps      # Tacos, burritos, wraps, quesadillas
+  - grain_bowl       # Rice bowls, quinoa bowls, grain salads
+  - sandwich         # Sandwiches, burgers, paninis
+  - salad            # Green salads, cold salads
+  - pizza            # Pizza, flatbreads
+  - stir_fry         # Stir-fries, sautéed dishes
+  - casserole        # Baked casseroles, lasagna
+  - appetizer        # Fritters, dumplings, finger foods
+  - breakfast        # Pancakes, waffles, eggs, oatmeal
+  - snack_bar        # Granola bars, energy balls, brownies
+  - baked_goods      # Muffins, cookies, bread
+  - sauce_dip        # Sauces, dips, condiments
+  - frozen_treat     # Popsicles, frozen yogurt
+  - simple_snack     # Pre-packaged or no-prep items
+  - side_dish        # Standalone sides
+  - unknown          # Default for unclassified recipes
 
 effort_levels:
   - no_chop         # Ready in <15min, minimal/no chopping
@@ -37,16 +47,85 @@ appliances:
   - blender
   - food_processor
 
-# Keyword mapping for automatic template detection
-template_keywords:
-  tacos:
+# Keyword mapping for automatic cuisine detection
+cuisine_keywords:
+  indian:
+    - curry
+    - masala
+    - tikka
+    - dal
+    - daal
+    - paneer
+    - naan
+    - roti
+    - uttapam
+    - pesarattu
+    - appam
+    - samosa
+    - chaat
+    - khichdi
+    - upma
+    - idli
+    - dosa
+  mexican:
     - taco
-    - tortilla
-    - taco seasoning
+    - burrito
     - enchilada
-    - flauta
     - quesadilla
-  pasta:
+    - flauta
+    - salsa
+    - guacamole
+    - tortilla
+  italian:
+    - pasta
+    - spaghetti
+    - penne
+    - linguine
+    - fettuccine
+    - lasagna
+    - gnocchi
+    - pizza
+    - pesto
+    - marinara
+    - alfredo
+    - bruschetta
+  asian:
+    - stir fry
+    - stir-fry
+    - pad thai
+    - gyoza
+    - dumpling
+    - fried rice
+    - noodle
+  american:
+    - burger
+    - mac and cheese
+    - grilled cheese
+    - pancake
+    - waffle
+    - french toast
+    - bbq
+  mediterranean:
+    - hummus
+    - falafel
+    - pita
+    - tahini
+  fusion:
+    - mexican.*chaat
+    - mexican.*khichdi
+
+# Keyword mapping for automatic meal type detection
+meal_type_keywords:
+  soup_stew:
+    - soup
+    - stew
+    - broth
+    - bisque
+    - chowder
+    - dal
+    - daal
+    - chili
+  pasta_noodles:
     - pasta
     - spaghetti
     - penne
@@ -55,51 +134,51 @@ template_keywords:
     - fettuccine
     - mac and cheese
     - noodle
-    - lasagna
     - gnocchi
-  soup:
-    - soup
-    - stew
-    - broth
-    - bisque
-    - chowder
-  curry:
-    - curry
-    - masala
-    - tikka
-    - dal
-    - daal
+    - pad thai
+  tacos_wraps:
+    - taco
+    - tortilla
+    - enchilada
+    - flauta
+    - quesadilla
+    - burrito
+    - wrap
+    - roti
   grain_bowl:
     - grain bowl
     - rice bowl
     - quinoa bowl
     - buddha bowl
-  dump_and_go:
-    - slow cooker
-    - instant pot
-    - crock pot
-    - dump and go
+    - fried rice
+    - khichdi
   sandwich:
     - sandwich
     - panini
-    - wrap
     - grilled cheese
     - burger
-    - roti
     - bagel
     - toast
   salad:
     - salad
+  pizza:
+    - pizza
   stir_fry:
     - stir fry
     - stir-fry
-    - pad thai
-  pizza:
-    - pizza
-  burrito_bowl:
-    - burrito bowl
-    - burrito
-    - bowl
+  casserole:
+    - casserole
+    - lasagna
+    - baked.*bean
+  appetizer:
+    - fritter
+    - gyoza
+    - dumpling
+    - puff
+    - bruschetta
+    - pinwheel
+    - samosa
+    - chaat
   breakfast:
     - pancake
     - waffle
@@ -113,6 +192,7 @@ template_keywords:
     - appam
     - yogurt drink
     - hard boiled egg
+    - upma
   snack_bar:
     - granola bar
     - energy ball
@@ -131,6 +211,7 @@ template_keywords:
     - bread
     - scone
     - biscuit
+    - pretzel
   sauce_dip:
     - sauce
     - dip
@@ -148,19 +229,6 @@ template_keywords:
     - ice pop
     - yogurt melt
     - froyo
-  appetizer:
-    - fritter
-    - gyoza
-    - dumpling
-    - puff
-    - bruschetta
-    - pinwheel
-    - samosa
-  side_dish:
-    - coconut rice
-    - roasted chickpea
-    - fried tofu
-    - white bean
   simple_snack:
     - cheese stick
     - string cheese
@@ -168,6 +236,17 @@ template_keywords:
     - grape
     - cracker
     - cherry tomato
+    - carrot
+    - cucumber
+    - pepper
+    - strawberr
+    - orange
+    - raisin
+  side_dish:
+    - coconut rice
+    - roasted chickpea
+    - fried tofu
+    - white bean
 
 # Appliance detection keywords
 appliance_keywords:

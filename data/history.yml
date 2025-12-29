@@ -1,93 +1,9 @@
 weeks:
 - week_of: '2025-12-29'
   dinners:
-  - recipe_id: black_bean_quinoa_salad
-    template: salad
-    day: mon
-    vegetables:
-    - beans
-    - bell pepper
-    - cilantro
-    - lime
-    - tomato
-  - recipe_id: chana_masala_ip
-    template: dump_and_go
-    day: tue
-    vegetables:
-    - cilantro
-    - garlic
-    - ginger
-    - onion
-    - peas
-    - tomato
-    - tomatoe
-  - recipe_id: cheese_and_tomato_quinoa_balls
-    template: soup
-    day: wed
-    vegetables:
-    - basil
-    - garlic
-    - onion
-    - tomato
-    - tomatoe
-  - recipe_id: beans_poriyal
-    template: curry
-    day: thu
-    vegetables:
-    - beans
-    - onion
-  - recipe_id: broccoli_spinach_pasta_sauce
-    template: pasta
-    day: fri
-    vegetables:
-    - broccoli
-    - garlic
-    - lemon
-    - spinach
-- week_of: '2025-12-29'
-  dinners:
-  - recipe_id: cherry_tomato_salad
-    template: salad
-    day: mon
-    vegetables:
-    - garlic
-    - tomato
-    - tomatoe
-  - recipe_id: chickpea_salad_wrap
-    template: sandwich
-    day: tue
-    vegetables:
-    - bell pepper
-    - carrot
-    - peas
-    - tomato
-  - recipe_id: grilled_cheese_and_tomato_soup
-    template: soup
-    day: wed
-    vegetables:
-    - garlic
-    - tomato
-  - recipe_id: bhel_puri_chaat
-    template: curry
-    day: thu
-    vegetables:
-    - cilantro
-    - cucumber
-    - lemon
-    - onion
-    - potato
-    - tomato
-  - recipe_id: creamy_macaroni_pasta_salad
-    template: pasta
-    day: fri
-    vegetables:
-    - broccoli
-    - cucumber
-    - onion
-- week_of: '2025-12-29'
-  dinners:
   - recipe_id: aloo_corn_tikki_roll
-    template: curry
+    cuisine: indian
+    meal_type: soup_stew
     day: mon
     vegetables:
     - avocado
@@ -98,7 +14,8 @@ weeks:
     - onion
     - potato
   - recipe_id: baked_black_bean_and_sweet_potato_flautas
-    template: tacos
+    cuisine: mexican
+    meal_type: tacos_wraps
     day: tue
     vegetables:
     - beans
@@ -109,30 +26,33 @@ weeks:
     - pepper
     - potato
     - sweet potato
-  - recipe_id: chickpea_chaat_salad
-    template: salad
+  - recipe_id: black_bean_quinoa_salad
+    cuisine: unknown
+    meal_type: salad
     day: wed
     vegetables:
+    - beans
     - bell pepper
-    - carrot
     - cilantro
-    - cucumber
-    - garlic
-    - lemon
-    - onion
-    - peas
+    - lime
     - tomato
-  - recipe_id: curried_egg_salad_sandwich
-    template: sandwich
+  - recipe_id: bhel_puri_chaat
+    cuisine: indian
+    meal_type: appetizer
     day: thu
     vegetables:
     - cilantro
-    - garlic
-  - recipe_id: easy_chickpea_fritters
-    template: appetizer
+    - cucumber
+    - lemon
+    - onion
+    - potato
+    - tomato
+  - recipe_id: broccoli_spinach_pasta_sauce
+    cuisine: italian
+    meal_type: pasta_noodles
     day: fri
     vegetables:
-    - beans
-    - cucumber
+    - broccoli
     - garlic
-    - peas
+    - lemon
+    - spinach

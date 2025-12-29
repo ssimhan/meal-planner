@@ -32,12 +32,46 @@ pip install -r requirements.txt
 
 ## Usage
 
-### 1. Parse Recipes (Phase 1)
+### Quick Start (Easy Commands)
+
+Use the `./mealplan` wrapper script for simple commands:
+
+```bash
+# First time: Parse your HTML recipes
+./mealplan parse
+
+# Weekly workflow:
+./mealplan intake              # Create input file (interactive prompts)
+./mealplan edit 2026-01-05     # Edit vegetables after farmers market
+./mealplan plan 2026-01-05     # Generate the meal plan
+./mealplan view 2026-01-05     # View the plan
+./mealplan validate 2026-01-05 # Validate constraints (optional)
+
+# Shortcuts:
+./mealplan latest              # View most recent plan
+```
+
+**Available commands:**
+- `parse` - Parse HTML recipes into index
+- `intake` - Create weekly input file (interactive)
+- `edit <date>` - Edit input file (opens in $EDITOR or vim)
+- `plan <date>` - Generate meal plan
+- `view <date>` - View meal plan (uses bat/glow if installed)
+- `validate <date>` - Validate meal plan
+- `latest` - View most recent plan
+
+---
+
+### Detailed Usage (Manual Commands)
+
+If you prefer running Python scripts directly:
+
+#### 1. Parse Recipes (Phase 1)
 
 Convert HTML recipes into structured JSON and YAML indexes:
 
 ```bash
-python scripts/parse_recipes.py
+python3 scripts/parse_recipes.py
 ```
 
 This will:
@@ -52,12 +86,12 @@ View the curated recipe index:
 cat recipes/index.yml
 ```
 
-### 2. Create Weekly Input (Phase 2)
+#### 2. Create Weekly Input (Phase 2)
 
 Run the interactive intake command to create a weekly input file:
 
 ```bash
-python scripts/mealplan.py intake
+python3 scripts/mealplan.py intake
 ```
 
 This will prompt you for:
@@ -80,12 +114,12 @@ After running intake:
 3. After farmers market shopping, copy vegetables to `confirmed_veg`
 4. Change `status: proposed` to `status: confirmed`
 
-### 3. Generate Meal Plan (Phase 3)
+#### 3. Generate Meal Plan (Phase 3)
 
 After confirming your farmers market vegetables, generate the weekly meal plan:
 
 ```bash
-python scripts/mealplan.py plan inputs/YYYY-MM-DD.yml
+python3 scripts/mealplan.py plan inputs/YYYY-MM-DD.yml
 ```
 
 This will:
@@ -102,12 +136,12 @@ View the generated plan:
 cat plans/YYYY-MM-DD-weekly-plan.md
 ```
 
-### 4. Validate Plan (Optional)
+#### 4. Validate Plan (Optional)
 
 Validate that the generated plan meets all constraints:
 
 ```bash
-python scripts/validate_plan.py plans/YYYY-MM-DD-weekly-plan.md inputs/YYYY-MM-DD.yml
+python3 scripts/validate_plan.py plans/YYYY-MM-DD-weekly-plan.md inputs/YYYY-MM-DD.yml
 ```
 
 This checks:

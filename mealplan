@@ -1,0 +1,222 @@
+#!/bin/bash
+# Meal Planner - Easy CLI wrapper
+# Makes the meal planner commands shorter and easier to use
+
+set -e  # Exit on error
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+usage() {
+    echo "Meal Planner - Quick Commands"
+    echo ""
+    echo "Usage:"
+    echo "  ./mealplan <command> [args]"
+    echo ""
+    echo "Commands:"
+    echo "  parse              Parse HTML recipes into index"
+    echo "  intake             Create weekly input file (interactive)"
+    echo "  plan [date]        Generate meal plan (e.g., ./mealplan plan 2026-01-05)"
+    echo "  validate [date]    Validate a meal plan (e.g., ./mealplan validate 2026-01-05)"
+    echo "  view [date]        View a meal plan (e.g., ./mealplan view 2026-01-05)"
+    echo "  edit [date]        Edit input file before planning"
+    echo "  latest             View the most recent plan"
+    echo ""
+    echo "Examples:"
+    echo "  ./mealplan intake              # Start new week"
+    echo "  ./mealplan edit 2026-01-05     # Edit vegetables after farmers market"
+    echo "  ./mealplan plan 2026-01-05     # Generate plan"
+    echo "  ./mealplan view 2026-01-05     # View generated plan"
+    echo "  ./mealplan latest              # View most recent plan"
+    echo ""
+    exit 1
+}
+
+# Command handlers
+
+cmd_parse() {
+    echo -e "${GREEN}Parsing HTML recipes...${NC}"
+    python3 scripts/parse_recipes.py
+}
+
+cmd_intake() {
+    echo -e "${GREEN}Creating weekly input file...${NC}"
+    python3 scripts/mealplan.py intake
+}
+
+cmd_plan() {
+    local date="$1"
+
+    if [ -z "$date" ]; then
+        echo -e "${RED}Error: Date required${NC}"
+        echo "Usage: ./mealplan plan YYYY-MM-DD"
+        echo "Example: ./mealplan plan 2026-01-05"
+        exit 1
+    fi
+
+    local input_file="inputs/${date}.yml"
+
+    if [ ! -f "$input_file" ]; then
+        echo -e "${RED}Error: Input file not found: ${input_file}${NC}"
+        echo "Run './mealplan intake' first to create an input file"
+        exit 1
+    fi
+
+    echo -e "${GREEN}Generating meal plan for week of ${date}...${NC}"
+    python3 scripts/mealplan.py plan "$input_file"
+
+    echo ""
+    echo -e "${GREEN}✓ Plan created!${NC}"
+    echo "View it with: ./mealplan view $date"
+}
+
+cmd_validate() {
+    local date="$1"
+
+    if [ -z "$date" ]; then
+        echo -e "${RED}Error: Date required${NC}"
+        echo "Usage: ./mealplan validate YYYY-MM-DD"
+        exit 1
+    fi
+
+    local plan_file="plans/${date}-weekly-plan.md"
+    local input_file="inputs/${date}.yml"
+
+    if [ ! -f "$plan_file" ]; then
+        echo -e "${RED}Error: Plan file not found: ${plan_file}${NC}"
+        exit 1
+    fi
+
+    if [ ! -f "$input_file" ]; then
+        echo -e "${RED}Error: Input file not found: ${input_file}${NC}"
+        exit 1
+    fi
+
+    echo -e "${GREEN}Validating meal plan for ${date}...${NC}"
+    python3 scripts/validate_plan.py "$plan_file" "$input_file"
+}
+
+cmd_view() {
+    local date="$1"
+
+    if [ -z "$date" ]; then
+        echo -e "${RED}Error: Date required${NC}"
+        echo "Usage: ./mealplan view YYYY-MM-DD"
+        echo "Or use: ./mealplan latest"
+        exit 1
+    fi
+
+    local plan_file="plans/${date}-weekly-plan.md"
+
+    if [ ! -f "$plan_file" ]; then
+        echo -e "${RED}Error: Plan file not found: ${plan_file}${NC}"
+        exit 1
+    fi
+
+    if command -v bat &> /dev/null; then
+        # Use bat if available (syntax highlighting)
+        bat "$plan_file"
+    elif command -v glow &> /dev/null; then
+        # Use glow if available (pretty markdown rendering)
+        glow "$plan_file"
+    else
+        # Fallback to cat
+        cat "$plan_file"
+    fi
+}
+
+cmd_edit() {
+    local date="$1"
+
+    if [ -z "$date" ]; then
+        echo -e "${RED}Error: Date required${NC}"
+        echo "Usage: ./mealplan edit YYYY-MM-DD"
+        exit 1
+    fi
+
+    local input_file="inputs/${date}.yml"
+
+    if [ ! -f "$input_file" ]; then
+        echo -e "${RED}Error: Input file not found: ${input_file}${NC}"
+        echo "Run './mealplan intake' first"
+        exit 1
+    fi
+
+    # Use user's preferred editor or fallback to vim
+    ${EDITOR:-vim} "$input_file"
+
+    echo ""
+    echo -e "${YELLOW}Remember to:${NC}"
+    echo "  1. Update 'confirmed_veg' with actual farmers market purchases"
+    echo "  2. Change 'status: proposed' to 'status: confirmed'"
+    echo ""
+    echo "Then run: ./mealplan plan $date"
+}
+
+cmd_latest() {
+    # Find the most recent plan file
+    local latest_plan=$(ls -t plans/*.md 2>/dev/null | head -1)
+
+    if [ -z "$latest_plan" ]; then
+        echo -e "${RED}Error: No meal plans found in plans/ directory${NC}"
+        exit 1
+    fi
+
+    echo -e "${GREEN}Showing latest plan: ${latest_plan}${NC}"
+    echo ""
+
+    if command -v bat &> /dev/null; then
+        bat "$latest_plan"
+    elif command -v glow &> /dev/null; then
+        glow "$latest_plan"
+    else
+        cat "$latest_plan"
+    fi
+}
+
+# Main command dispatcher
+
+if [ $# -eq 0 ]; then
+    usage
+fi
+
+command="$1"
+shift
+
+case "$command" in
+    parse)
+        cmd_parse
+        ;;
+    intake)
+        cmd_intake
+        ;;
+    plan)
+        cmd_plan "$@"
+        ;;
+    validate)
+        cmd_validate "$@"
+        ;;
+    view)
+        cmd_view "$@"
+        ;;
+    edit)
+        cmd_edit "$@"
+        ;;
+    latest)
+        cmd_latest
+        ;;
+    help|--help|-h)
+        usage
+        ;;
+    *)
+        echo -e "${RED}Error: Unknown command: $command${NC}"
+        echo ""
+        usage
+        ;;
+esac

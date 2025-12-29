@@ -309,9 +309,12 @@ weeks:
   - Evening (5-9pm): Only permitted actions for both days: reheating, simple assembly
 
 - **Late class days:** Include a heavy snack in addition to dinner
-  - Check `inputs/YYYY-MM-DD.yml` for `late_class_days`
+  - **DEFAULT:** Assume Thursday and Friday are late class days UNLESS explicitly told otherwise
+  - Check `inputs/YYYY-MM-DD.yml` for `late_class_days` field - if empty, default to [thu, fri]
   - Heavy snack should be substantial (e.g., nachos, loaded toast, substantial wrap)
   - Approved formats: fruit + protein/fat (cheese, yogurt, peanut butter)
+  - Thursday heavy snack: Apple slices with peanut butter (or similar fruit + protein/fat combo)
+  - Friday heavy snack: Banana with almond butter (or similar fruit + protein/fat combo)
 
 - **Office days:** No special constraints (user handles lunch at office)
 
@@ -440,6 +443,7 @@ The system automatically:
 - Generates farmers market vegetable proposals
 - Generates meal plans with all constraints
 - Updates history.yml
+- **Input file cleanup:** Once a meal plan is successfully created and finalized, the corresponding `inputs/YYYY-MM-DD.yml` file can be deleted as it's no longer needed
 
 You may be asked to:
 - Review and refine generated meal plans

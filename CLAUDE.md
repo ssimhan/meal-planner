@@ -47,7 +47,7 @@ You are responsible for:
 
 **Daily Flow (Monday-Friday):**
 Each day follows this exact order:
-1. **AM Prep** block with specific tasks (Tuesday, Wednesday, Thursday only - NO AM prep on Monday)
+1. **AM Prep** block with specific tasks (Tuesday and Thursday only - NO AM prep Mon/Wed/Fri)
 2. **Lunch** plan (2 kids + 1 adult) with components
 3. **Snack** suggestion (ONE only, reusing meal ingredients)
 4. **Dinner** with evening assembly notes
@@ -117,15 +117,13 @@ PM Prep (5-9pm):
 - Prep notes: [Easy meal using earlier prep]
 - **Evening assembly:** [Minimal: "Reheat" or "Assemble bowls"]
 
-**AM Prep (Morning):**
-- Prep Wednesday lunch components if not done
-- Portion already-cooked food
-- Verify all Thu/Fri lunch components are ready
-
-**PM Prep (Evening):**
+**PM Prep (Evening ONLY):**
+- Prep Wednesday lunch if not already done
 - FINISH any remaining vegetable prep for Thu/Fri
+- Prep all remaining lunch components for Thu/Fri
 - Load Instant Pot if using for Thursday
 - Cook any final components needed for Thu/Fri dinners
+- Portion already-cooked food
 - Final check: All Thu/Fri components ready
 
 ## Thursday
@@ -267,16 +265,14 @@ These can be rotated and repeated - no need for variety every week:
 
 **Goal:** Continue prep work. Ensure Thu/Fri vegetables are chopped and stored.
 
-### Wednesday (AM + PM PREP)
-**Morning Prep:**
-- Prep Wednesday lunch components if not done
-- Portion already-cooked food
-- Verify all Thu/Fri lunch components are ready
-
-**Evening Prep:**
+### Wednesday (PM PREP ONLY - Evening 5-9pm)
+**Evening Prep (5-9pm):**
+- Prep Wednesday lunch if not already done
 - FINISH any remaining vegetable prep for Thu/Fri
+- Prep all remaining lunch components for Thu/Fri
 - Load Instant Pot or slow cooker for Thursday if needed
 - Cook any final components needed for Thu/Fri dinners
+- Portion already-cooked food
 - Final check: All Thu/Fri components ready
 
 **Goal:** Complete all remaining prep. Thu/Fri should be fully prepped by end of Wednesday.
@@ -364,7 +360,7 @@ weeks:
 - **Energy-Based Prep Model:**
   - **Monday (PM PREP ONLY):** Evening prep only (5-9pm) - start prep work, batch cooking, chop vegetables for Mon/Tue/Wed
   - **Tuesday (AM + PM PREP):** Morning and evening prep - continue chopping vegetables for Thu/Fri, prep lunch components
-  - **Wednesday (AM + PM PREP):** Morning and evening prep - finish all remaining prep, verify Thu/Fri components ready
+  - **Wednesday (PM PREP ONLY):** Evening prep only - finish all remaining prep, verify Thu/Fri components ready
   - **Thursday (MORNING PREP OK):** Light prep allowed in morning only (8-9am) - NO evening prep, NO chopping after noon
   - **Friday (NO PREP DAY):** NO chopping allowed at any time - only reheating, assembly, or pre-prepped ingredients
 
@@ -465,8 +461,8 @@ Before writing a plan, verify ALL of these:
 
 **Energy-Based Prep:**
 - [ ] Monday PM prep tasks: Chop vegetables for Mon/Tue/Wed, batch cooking, start prep work
-- [ ] Tuesday AM prep: Lunch components, portioning | PM prep: Chop Thu/Fri vegetables, prep Wed/Thu/Fri lunches
-- [ ] Wednesday AM prep: Final lunch components | PM prep: Finish remaining Thu/Fri prep, verify all components ready
+- [ ] Tuesday AM prep: Lunch components, portioning | PM prep: Chop Thu/Fri vegetables, prep lunches for rest of week
+- [ ] Wednesday PM prep ONLY: Finish remaining Thu/Fri prep, prep Wed lunch if needed, verify all components ready
 - [ ] Thursday allows morning prep (8-9am) if needed, but NO chopping after noon, NO evening prep
 - [ ] Friday is STRICTLY no-prep at any time - must use pre-prepped ingredients from Mon/Tue/Wed or Thursday AM
 - [ ] All Thu/Fri lunch components prepped by end of Wednesday

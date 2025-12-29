@@ -187,16 +187,28 @@ The parser will preserve manual edits on subsequent runs (future enhancement).
 - [x] Phase 1: Recipe Parsing
 - [x] Phase 2: CLI Intake + Farmers Market
 - [x] Phase 3: Plan Generation
-- [ ] Phase 4: Polish + Examples
+- [x] Phase 4: Template Classification Improvements (70% reduction in unknown recipes)
 
-## Future Features (Phase 4+)
+## Recent Improvements (Phase 4)
 
-- Improved from-scratch recipe selection (needs better template classification)
+**Template Classification** - Reduced unknown recipes from 120 to 36 (70% improvement):
+- Added 8 new template categories (breakfast, snack_bar, baked_goods, etc.)
+- Expanded keyword matching with 40+ new terms
+- Improved meal-type filtering (dinner vs. lunch vs. snack)
+
+**From-Scratch Recipe Selection** - Now working correctly:
+- Prioritizes normal-effort recipes for non-busy days
+- Properly displays selected recipe in plan output
+- Avoids template conflicts with busy-day meals
+
+## Future Features
+
+- Lunch prep recipe suggestions (infrastructure in place)
+- Heavy snack recipe recommendations for late class days
 - AI-powered plan refinement with Claude Code
-- Better lunch prep suggestions
-- Heavy snack recipe recommendations
 - GitHub Actions automation for weekly plans
 - Interactive plan editing workflow
+- Manual classification of remaining 36 unknown recipes
 
 ## License
 

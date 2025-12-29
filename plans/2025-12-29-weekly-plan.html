@@ -63,11 +63,65 @@
             font-weight: 900;
             font-size: var(--text-4xl);
             color: var(--accent-green);
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid var(--accent-terracotta);
+            margin-bottom: 30px;
             letter-spacing: -0.02em;
             line-height: 1.1;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--accent-terracotta);
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: var(--text-sm);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -3px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover {
+            background: rgba(45, 106, 79, 0.05);
+            color: var(--accent-green);
+        }
+
+        .tab-button.active {
+            color: var(--accent-green);
+            background: rgba(45, 106, 79, 0.08);
+            border-bottom-color: var(--accent-green);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         h2 {
@@ -75,7 +129,7 @@
             font-weight: 700;
             font-size: var(--text-2xl);
             color: var(--accent-green);
-            margin-top: 40px;
+            margin-top: 30px;
             margin-bottom: 20px;
         }
 
@@ -93,102 +147,6 @@
             font-size: var(--text-base);
             color: var(--text-primary);
             margin-bottom: 8px;
-        }
-
-        .freezer-backup {
-            background: linear-gradient(135deg, rgba(45, 106, 79, 0.08) 0%, rgba(106, 142, 127, 0.05) 100%);
-            padding: 25px;
-            border-radius: 2px;
-            margin: 30px 0;
-            border-left: 4px solid var(--accent-green);
-            border-top: 1px solid var(--border-subtle);
-            border-right: 1px solid var(--border-subtle);
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .freezer-backup h3 {
-            color: var(--accent-green);
-            font-size: var(--text-xl);
-        }
-
-        .freezer-backup ol {
-            margin: 15px 0 15px 25px;
-            font-weight: 400;
-        }
-
-        .shopping-list {
-            background: linear-gradient(135deg, rgba(212, 165, 116, 0.12) 0%, rgba(212, 165, 116, 0.05) 100%);
-            padding: 25px;
-            border-radius: 2px;
-            margin: 30px 0;
-            border-left: 4px solid var(--accent-gold);
-            border-top: 1px solid var(--border-subtle);
-            border-right: 1px solid var(--border-subtle);
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .shopping-list h3 {
-            color: var(--accent-gold);
-            font-size: var(--text-xl);
-        }
-
-        .shopping-list ul {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 12px;
-            list-style: none;
-            margin-top: 15px;
-        }
-
-        .shopping-list li {
-            font-weight: 400;
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 2px;
-            border: 1px solid var(--border-subtle);
-        }
-
-        .shopping-list li:before {
-            content: "🥬 ";
-        }
-
-        .day-section {
-            margin: 40px 0;
-            padding: 30px;
-            background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(240, 230, 210, 0.5) 100%);
-            border-radius: 2px;
-            border: 1px solid var(--border-subtle);
-            opacity: 0;
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-
-        .day-section:nth-child(1) { animation-delay: 0.1s; }
-        .day-section:nth-child(2) { animation-delay: 0.15s; }
-        .day-section:nth-child(3) { animation-delay: 0.2s; }
-        .day-section:nth-child(4) { animation-delay: 0.25s; }
-        .day-section:nth-child(5) { animation-delay: 0.3s; }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .day-header {
-            font-family: 'Space Mono', monospace;
-            font-weight: 700;
-            font-size: var(--text-2xl);
-            color: var(--accent-green);
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--accent-terracotta);
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
         }
 
         .energy-level {
@@ -224,6 +182,26 @@
             background: var(--accent-terracotta);
             color: white;
             border-color: var(--accent-terracotta);
+        }
+
+        .day-header {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: var(--text-2xl);
+            color: var(--accent-green);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--accent-terracotta);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .section {
+            margin: 25px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(240, 230, 210, 0.5) 100%);
+            border-radius: 2px;
+            border: 1px solid var(--border-subtle);
         }
 
         .meal-card {
@@ -368,40 +346,6 @@
             font-weight: 400;
         }
 
-        .prep-session {
-            margin: 40px 0;
-            padding: 30px;
-            background: linear-gradient(135deg, rgba(45, 106, 79, 0.1) 0%, rgba(106, 142, 127, 0.05) 100%);
-            border-radius: 2px;
-            border: 2px solid var(--accent-green);
-        }
-
-        .prep-session h3 {
-            font-family: 'Crimson Pro', serif;
-            font-weight: 700;
-            color: var(--accent-green);
-            font-size: var(--text-2xl);
-            margin-bottom: 20px;
-        }
-
-        .prep-session h4 {
-            font-family: 'Space Mono', monospace;
-            font-weight: 700;
-            color: var(--accent-green);
-            margin-top: 20px;
-            font-size: var(--text-base);
-            letter-spacing: 0.05em;
-        }
-
-        .prep-session ul {
-            margin-left: 25px;
-        }
-
-        .prep-session li {
-            margin: 6px 0;
-            font-size: var(--text-sm);
-        }
-
         .am-session {
             background: rgba(212, 165, 116, 0.1);
             padding: 15px;
@@ -426,26 +370,72 @@
             margin: 10px 0 0 25px;
         }
 
-        .recipe-highlight {
-            background: linear-gradient(135deg, rgba(45, 106, 79, 0.12) 0%, rgba(106, 142, 127, 0.08) 100%);
-            padding: 30px;
+        .freezer-backup {
+            background: linear-gradient(135deg, rgba(45, 106, 79, 0.08) 0%, rgba(106, 142, 127, 0.05) 100%);
+            padding: 25px;
             border-radius: 2px;
-            margin: 40px 0;
-            border: 3px solid var(--accent-green);
+            margin: 30px 0;
+            border-left: 4px solid var(--accent-green);
+            border-top: 1px solid var(--border-subtle);
+            border-right: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
         }
 
-        .recipe-highlight h3 {
-            font-family: 'Crimson Pro', serif;
-            font-weight: 900;
+        .freezer-backup h3 {
             color: var(--accent-green);
-            font-size: var(--text-2xl);
-            margin-bottom: 15px;
+            font-size: var(--text-xl);
         }
 
-        .recipe-highlight p {
+        .freezer-backup ol {
+            margin: 15px 0 15px 25px;
+            font-weight: 400;
+        }
+
+        .shopping-list {
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.12) 0%, rgba(212, 165, 116, 0.05) 100%);
+            padding: 25px;
+            border-radius: 2px;
+            margin: 30px 0;
+            border-left: 4px solid var(--accent-gold);
+            border-top: 1px solid var(--border-subtle);
+            border-right: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .shopping-list h3 {
+            color: var(--accent-gold);
+            font-size: var(--text-xl);
+        }
+
+        .shopping-list ul {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .shopping-list li {
+            margin: 6px 0;
+            font-weight: 400;
+            padding-left: 25px;
+        }
+
+        .shopping-list li:before {
+            content: "🥬 ";
+            margin-right: 8px;
+        }
+
+        .grocery-section {
+            margin: 25px 0;
+        }
+
+        .grocery-section h4 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-top: 20px;
+            margin-bottom: 12px;
             font-size: var(--text-base);
-            line-height: 1.8;
-            margin: 10px 0;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
 
         strong {
@@ -460,6 +450,15 @@
 
             h1 {
                 font-size: var(--text-3xl);
+            }
+
+            .tab-nav {
+                gap: 4px;
+            }
+
+            .tab-button {
+                padding: 10px 16px;
+                font-size: var(--text-xs);
             }
         }
 
@@ -480,8 +479,9 @@
                 font-size: var(--text-xl);
             }
 
-            .shopping-list ul {
-                grid-template-columns: 1fr;
+            .tab-button {
+                padding: 8px 12px;
+                flex: 1 1 auto;
             }
         }
 
@@ -497,10 +497,13 @@
                 border: none;
             }
 
-            .day-section {
-                page-break-inside: avoid;
-                animation: none;
-                opacity: 1;
+            .tab-nav {
+                display: none;
+            }
+
+            .tab-content {
+                display: block !important;
+                page-break-after: always;
             }
         }
 
@@ -519,68 +522,56 @@
     <div class="container">
         <h1>📅 Weekly Meal Plan: December 29, 2025 - January 2, 2026</h1>
 
-        <div class="shopping-list">
-            <h3>🛒 Farmers Market Shopping List</h3>
-            <ul>
-                <li>Cauliflower</li>
-                <li>Sweet Potato</li>
-                <li>Carrot</li>
-                <li>Cilantro</li>
-                <li>Tomato</li>
-                <li>Onion</li>
-                <li>Garlic</li>
-            </ul>
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-button active" onclick="showTab('overview')">Overview</button>
+            <button class="tab-button" onclick="showTab('monday')">Monday</button>
+            <button class="tab-button" onclick="showTab('tuesday')">Tuesday</button>
+            <button class="tab-button" onclick="showTab('wednesday')">Wednesday</button>
+            <button class="tab-button" onclick="showTab('thursday')">Thursday</button>
+            <button class="tab-button" onclick="showTab('friday')">Friday</button>
+            <button class="tab-button" onclick="showTab('groceries')">Groceries</button>
         </div>
 
-        <div class="freezer-backup">
-            <h3>❄️ Freezer Backup Status</h3>
-            <p><strong>Current backup meals in freezer:</strong></p>
-            <ol>
-                <li>Dal Tadka - frozen Dec 15</li>
-                <li>Black Bean Soup - frozen Dec 20</li>
-                <li>Pasta Marinara - frozen Dec 22</li>
-            </ol>
-            <p style="margin-top: 10px;"><strong>This week's batch cooking:</strong> Chana Masala (Monday) - Make 2x and freeze half</p>
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <div class="freezer-backup">
+                <h3>❄️ Freezer Backup Status</h3>
+                <p><strong>Current backup meals in freezer:</strong></p>
+                <ol>
+                    <li>Dal Tadka - frozen Dec 15</li>
+                    <li>Black Bean Soup - frozen Dec 20</li>
+                    <li>Pasta Marinara - frozen Dec 22</li>
+                </ol>
+                <p style="margin-top: 10px;"><strong>This week's batch cooking:</strong> Chana Masala (Monday) - Make 2x and freeze half</p>
+            </div>
+
+            <div class="section">
+                <h3>⭐ From Scratch Recipe This Week</h3>
+                <p><strong>Chana Masala (IP)</strong></p>
+                <p style="margin-top: 10px;">This classic Indian chickpea curry is the perfect "from scratch" recipe for this week. It uses fresh tomatoes, cilantro, garlic, and ginger from the farmers market, creating a deeply flavorful, aromatic curry using the Instant Pot. The layered spices (cumin, coriander, garam masala) and slow-building flavors make this an authentic, interesting recipe that goes beyond simple weeknight cooking. Making a double batch lets us freeze half for future backup meals, and the active cooking time is still manageable for a Monday when we have more energy. This introduces complex Indian spice combinations while using fresh market vegetables.</p>
+            </div>
+
+            <div class="section">
+                <h3>📋 Week at a Glance</h3>
+                <ul style="margin-left: 25px; margin-top: 15px;">
+                    <li style="margin: 10px 0;"><strong>Monday (Main Prep Day):</strong> Chana Masala (IP) - Do ALL chopping and batch cooking for the week</li>
+                    <li style="margin: 10px 0;"><strong>Tuesday (Mild Prep):</strong> Crispy Chipotle Sweet Potato Tacos - Assembly only</li>
+                    <li style="margin: 10px 0;"><strong>Wednesday (Mild Prep):</strong> Curried Cauliflower Quinoa Salad - Toss and serve</li>
+                    <li style="margin: 10px 0;"><strong>Thursday (Morning Prep OK):</strong> Easy French Toast Sticks - NO-CHOP MEAL</li>
+                    <li style="margin: 10px 0;"><strong>Friday (NO PREP):</strong> Easy Zucchini Pasta Sauce - NO-PREP MEAL</li>
+                </ul>
+            </div>
         </div>
 
-        <!-- MONDAY -->
-        <div class="day-section">
+        <!-- Monday Tab -->
+        <div id="monday" class="tab-content">
             <div class="day-header">
                 Monday <span class="energy-level energy-high">MAIN PREP DAY</span>
             </div>
 
-            <div class="meal-card">
-                <h3>🍽️ Dinner</h3>
-                <div class="meal-type">Chana Masala (IP) - Indian Soup/Stew</div>
-                <div class="vegetables">🥬 Vegetables: cilantro, garlic, ginger, onion, chickpeas, tomato</div>
-                <div class="prep-notes">
-                    <strong>Prep Notes:</strong> Make 2x batch and freeze half for backup. This freezes beautifully.
-                </div>
-                <div class="evening-assembly">
-                    <strong>⏰ Evening Assembly (5-9pm):</strong> Reheat and serve with rice (rice can be made in morning or Monday prep)
-                </div>
-            </div>
-
-            <div class="lunch-section">
-                <h4>🥪 Lunch</h4>
-                <p><strong>Kids (2):</strong> Scrambled egg sandwiches with cheese on whole wheat bread</p>
-                <p><strong>Adult (1):</strong> Weekend leftovers</p>
-                <p><strong>Components:</strong> bread, eggs, cheese, fruit</p>
-                <p><strong>Prep:</strong> Cook eggs fresh in morning (5 min)</p>
-            </div>
-
-            <div class="snacks">
-                <h4>🍪 Snack Ideas</h4>
-                <ul>
-                    <li>Apple slices with peanut butter</li>
-                    <li>Cheese cubes and crackers</li>
-                    <li>Carrot sticks with hummus</li>
-                    <li>Yogurt with granola</li>
-                </ul>
-            </div>
-
             <div class="prep-tasks">
-                <h4>✅ Monday Prep Tasks (MAIN PREP DAY)</h4>
+                <h4>☀️ AM Prep (MAIN PREP DAY)</h4>
                 <p><strong style="color: #c0392b;">CHOP ALL VEGETABLES FOR ENTIRE WEEK (Mon-Fri dinners):</strong></p>
                 <ul>
                     <li>Sweet potatoes (cubed for Tuesday tacos)</li>
@@ -611,12 +602,61 @@
                     <li>Prep veggie sticks (carrots, cucumber) for grab-and-go</li>
                 </ul>
             </div>
+
+            <div class="lunch-section">
+                <h4>🥪 Lunch</h4>
+                <p><strong>Kids (2):</strong> Scrambled egg sandwiches with cheese on whole wheat bread</p>
+                <p><strong>Adult (1):</strong> Weekend leftovers</p>
+                <p><strong>Components:</strong> bread, eggs, cheese, fruit</p>
+                <p><strong>Prep:</strong> Cook eggs fresh in morning (5 min)</p>
+            </div>
+
+            <div class="snacks">
+                <h4>🍪 Snack</h4>
+                <p style="font-size: var(--text-sm); margin-top: 8px;">Apple slices with peanut butter</p>
+            </div>
+
+            <div class="meal-card">
+                <h3>🍽️ Dinner</h3>
+                <div class="meal-type">Chana Masala (IP) - Indian Soup/Stew</div>
+                <div class="vegetables">🥬 Vegetables: cilantro, garlic, ginger, onion, chickpeas, tomato</div>
+                <div class="prep-notes">
+                    <strong>Prep Notes:</strong> Make 2x batch and freeze half for backup. This freezes beautifully.
+                </div>
+                <div class="evening-assembly">
+                    <strong>⏰ Evening Assembly (5-9pm):</strong> Reheat and serve with rice (rice can be made in morning or Monday prep)
+                </div>
+            </div>
         </div>
 
-        <!-- TUESDAY -->
-        <div class="day-section">
+        <!-- Tuesday Tab -->
+        <div id="tuesday" class="tab-content">
             <div class="day-header">
                 Tuesday <span class="energy-level energy-mild">MILD PREP DAY</span>
+            </div>
+
+            <div class="prep-tasks">
+                <h4>☀️ AM Prep (Minimal)</h4>
+                <ul>
+                    <li>NO chopping - all vegetables already prepped Monday</li>
+                    <li>Assemble Tuesday lunch in morning (warm quesadilla)</li>
+                    <li>Portion Monday's chana masala for adult lunch</li>
+                    <li>Check freezer backup inventory - verify we have 3 complete meals</li>
+                    <li>Verify all Wed/Thu/Fri components are ready</li>
+                </ul>
+            </div>
+
+            <div class="lunch-section">
+                <h4>🥪 Lunch</h4>
+                <p><strong>Kids (2):</strong> Cheese and bean quesadillas with fruit</p>
+                <p><strong>Adult (1):</strong> Rice bowl with Monday's chana masala + roasted vegetables</p>
+                <p><strong>Components:</strong> tortillas, cheese, black beans (from Monday prep), rice, vegetables</p>
+                <p><strong>Prep:</strong> All components prepped Monday - just assemble and heat</p>
+            </div>
+
+            <div class="snacks">
+                <h4>🍪 Snack</h4>
+                <p style="font-size: var(--text-sm); margin-top: 8px;">Cheese and crackers (using cheese from quesadilla ingredients)</p>
             </div>
 
             <div class="meal-card">
@@ -630,41 +670,35 @@
                     <strong>⏰ Evening Assembly (5-9pm):</strong> Warm tortillas, assemble tacos with pre-roasted sweet potatoes and toppings
                 </div>
             </div>
+        </div>
 
-            <div class="lunch-section">
-                <h4>🥪 Lunch</h4>
-                <p><strong>Kids (2):</strong> Cheese and bean quesadillas with fruit</p>
-                <p><strong>Adult (1):</strong> Rice bowl with Monday's chana masala + roasted vegetables</p>
-                <p><strong>Components:</strong> tortillas, cheese, black beans (from Monday prep), rice, vegetables</p>
-                <p><strong>Prep:</strong> All components prepped Monday - just assemble and heat</p>
-            </div>
-
-            <div class="snacks">
-                <h4>🍪 Snack Ideas</h4>
-                <ul>
-                    <li>Banana with almond butter</li>
-                    <li>Crackers with cheese slices</li>
-                    <li>Cherry tomatoes with ranch</li>
-                    <li>Pretzel sticks with hummus</li>
-                </ul>
+        <!-- Wednesday Tab -->
+        <div id="wednesday" class="tab-content">
+            <div class="day-header">
+                Wednesday <span class="energy-level energy-mild">MILD PREP DAY</span>
             </div>
 
             <div class="prep-tasks">
-                <h4>✅ Tuesday Prep Tasks (MILD PREP DAY)</h4>
+                <h4>☀️ AM Prep (Minimal)</h4>
                 <ul>
                     <li>NO chopping - all vegetables already prepped Monday</li>
-                    <li>Assemble Tuesday lunch in morning (warm quesadilla)</li>
-                    <li>Portion Monday's chana masala for adult lunch</li>
-                    <li>Check freezer backup inventory - verify we have 3 complete meals</li>
-                    <li>Verify all Wed/Thu/Fri components are ready</li>
+                    <li>Roast cauliflower for tonight's dinner if not done Monday (can do in morning)</li>
+                    <li>Verify Thursday/Friday lunch components are ready</li>
+                    <li>Double-check no prep needed for Thu/Fri dinners</li>
                 </ul>
             </div>
-        </div>
 
-        <!-- WEDNESDAY -->
-        <div class="day-section">
-            <div class="day-header">
-                Wednesday <span class="energy-level energy-mild">MILD PREP DAY</span>
+            <div class="lunch-section">
+                <h4>🥪 Lunch</h4>
+                <p><strong>Kids (2):</strong> Chapati or tortilla rolls with cheese, hummus, and shredded carrots</p>
+                <p><strong>Adult (1):</strong> Large portion of tonight's cauliflower quinoa salad</p>
+                <p><strong>Components:</strong> chapati/tortillas, cheese, hummus, carrots (prepped Monday), quinoa, cauliflower</p>
+                <p><strong>Prep:</strong> All components prepped Monday - assemble only</p>
+            </div>
+
+            <div class="snacks">
+                <h4>🍪 Snack</h4>
+                <p style="font-size: var(--text-sm); margin-top: 8px;">Cucumber rounds with cream cheese (using ingredients from dinner salad)</p>
             </div>
 
             <div class="meal-card">
@@ -678,40 +712,51 @@
                     <strong>⏰ Evening Assembly (5-9pm):</strong> Toss pre-cooked quinoa, roasted cauliflower, and prepped vegetables with dressing
                 </div>
             </div>
+        </div>
 
-            <div class="lunch-section">
-                <h4>🥪 Lunch</h4>
-                <p><strong>Kids (2):</strong> Chapati or tortilla rolls with cheese, hummus, and shredded carrots</p>
-                <p><strong>Adult (1):</strong> Large portion of tonight's cauliflower quinoa salad</p>
-                <p><strong>Components:</strong> chapati/tortillas, cheese, hummus, carrots (prepped Monday), quinoa, cauliflower</p>
-                <p><strong>Prep:</strong> All components prepped Monday - assemble only</p>
-            </div>
-
-            <div class="snacks">
-                <h4>🍪 Snack Ideas</h4>
-                <ul>
-                    <li>Orange slices</li>
-                    <li>String cheese</li>
-                    <li>Cucumber rounds with cream cheese</li>
-                    <li>Trail mix (nuts and dried fruit)</li>
-                </ul>
+        <!-- Thursday Tab -->
+        <div id="thursday" class="tab-content">
+            <div class="day-header">
+                Thursday <span class="energy-level energy-morning-ok">MORNING PREP OK</span>
             </div>
 
             <div class="prep-tasks">
-                <h4>✅ Wednesday Prep Tasks (MILD PREP DAY)</h4>
-                <ul>
-                    <li>NO chopping - all vegetables already prepped Monday</li>
-                    <li>Roast cauliflower for tonight's dinner if not done Monday (can do in morning)</li>
-                    <li>Verify Thursday/Friday lunch components are ready</li>
-                    <li>Double-check no prep needed for Thu/Fri dinners</li>
-                </ul>
+                <h4>☀️ AM Prep (Light Morning Prep Allowed)</h4>
+                <div class="am-session">
+                    <strong>Morning (8-9am):</strong>
+                    <ul>
+                        <li>Can make French toast sticks for dinner and refrigerate for evening reheat</li>
+                        <li>Light prep allowed if needed</li>
+                    </ul>
+                </div>
+                <div class="pm-session">
+                    <strong>🌙 After Noon:</strong>
+                    <ul>
+                        <li>NO chopping allowed after 12pm</li>
+                        <li>NO cooking allowed after preparing Thursday dinner prep</li>
+                    </ul>
+                </div>
             </div>
-        </div>
 
-        <!-- THURSDAY -->
-        <div class="day-section">
-            <div class="day-header">
-                Thursday <span class="energy-level energy-morning-ok">MORNING PREP OK</span>
+            <div class="lunch-section">
+                <h4>🥪 Lunch</h4>
+                <p><strong>Kids (2):</strong> Store-bought ravioli with brown butter or simple tomato sauce</p>
+                <p><strong>Adult (1):</strong> Leftover cauliflower quinoa salad from Wednesday</p>
+                <p><strong>Components:</strong> ravioli (cooked Monday), butter/sauce, parmesan, fruit</p>
+                <p><strong>Prep:</strong> All components prepped Monday - just warm ravioli and make quick butter sauce</p>
+            </div>
+
+            <div class="snacks">
+                <h4>🍪 Snack</h4>
+                <p style="font-size: var(--text-sm); margin-top: 8px;">Grapes (simple fruit snack)</p>
+            </div>
+
+            <div class="heavy-snack">
+                <h4>🍎 Heavy Snack (Late Class Day)</h4>
+                <p><strong>Apple slices with peanut butter</strong></p>
+                <p>Format: Fruit + protein/fat for sustained energy</p>
+                <p>Prep: Slice apple fresh (2 min) or use pre-cut fruit from Monday prep</p>
+                <p>Serve with 2 tbsp natural peanut butter per child</p>
             </div>
 
             <div class="meal-card">
@@ -726,49 +771,9 @@
                 </div>
             </div>
 
-            <div class="lunch-section">
-                <h4>🥪 Lunch</h4>
-                <p><strong>Kids (2):</strong> Store-bought ravioli with brown butter or simple tomato sauce</p>
-                <p><strong>Adult (1):</strong> Leftover cauliflower quinoa salad from Wednesday</p>
-                <p><strong>Components:</strong> ravioli (cooked Monday), butter/sauce, parmesan, fruit</p>
-                <p><strong>Prep:</strong> All components prepped Monday - just warm ravioli and make quick butter sauce</p>
-            </div>
-
-            <div class="snacks">
-                <h4>🍪 Snack Ideas</h4>
-                <ul>
-                    <li>Grapes</li>
-                    <li>Cheese and whole grain crackers</li>
-                    <li>Baby carrots with ranch</li>
-                    <li>Apple slices</li>
-                </ul>
-            </div>
-
-            <div class="heavy-snack">
-                <h4>🍎 Heavy Snack (Late Class Day)</h4>
-                <p><strong>Apple slices with peanut butter</strong></p>
-                <p>Format: Fruit + protein/fat for sustained energy</p>
-                <p>Prep: Slice apple fresh (2 min) or use pre-cut fruit from Monday prep</p>
-                <p>Serve with 2 tbsp natural peanut butter per child</p>
-            </div>
-
             <div class="prep-tasks">
-                <h4>✅ Thursday Prep Tasks (MORNING PREP OK)</h4>
-                <div class="am-session">
-                    <strong>☀️ Morning (8-9am):</strong>
-                    <ul>
-                        <li>Can make French toast sticks for dinner and refrigerate for evening reheat</li>
-                        <li>Light prep allowed if needed</li>
-                    </ul>
-                </div>
-                <div class="pm-session">
-                    <strong>🌙 After Noon:</strong>
-                    <ul>
-                        <li>NO chopping allowed after 12pm</li>
-                        <li>NO cooking allowed after preparing Thursday dinner prep</li>
-                    </ul>
-                </div>
-                <div class="evening-assembly" style="margin-top: 10px;">
+                <h4>🌙 PM Prep</h4>
+                <div class="evening-assembly">
                     <strong>⏰ Evening (5-9pm) - Device-free time:</strong>
                     <ul style="margin-left: 20px; margin-top: 5px;">
                         <li>Only reheating French toast sticks or quick 10-min cook if making fresh</li>
@@ -779,10 +784,44 @@
             </div>
         </div>
 
-        <!-- FRIDAY -->
-        <div class="day-section">
+        <!-- Friday Tab -->
+        <div id="friday" class="tab-content">
             <div class="day-header">
                 Friday <span class="energy-level energy-none">NO PREP DAY - STRICT</span>
+            </div>
+
+            <div class="prep-tasks">
+                <h4>⚠️ ALL DAY - NO PREP (STRICT)</h4>
+                <div style="background: #ffebee; padding: 15px; border-radius: 5px; border-left: 4px solid #f44336;">
+                    <strong style="color: #c62828;">ALL DAY RULES:</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>NO chopping allowed at any time (morning, afternoon, evening)</li>
+                        <li>NO cooking allowed - only reheating and boiling pasta</li>
+                        <li>Only actions: reheating, simple assembly, using pre-prepped ingredients from Monday</li>
+                        <li>Use freezer backup meal if energy is depleted</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="lunch-section">
+                <h4>🥪 Lunch</h4>
+                <p><strong>Kids (2):</strong> Bean and cheese burritos with mild salsa</p>
+                <p><strong>Adult (1):</strong> Burrito bowl with rice, beans, vegetables</p>
+                <p><strong>Components:</strong> tortillas, black beans (cooked Monday), rice (cooked Monday), cheese, salsa</p>
+                <p><strong>Prep:</strong> All components prepped Monday - just assemble and warm</p>
+            </div>
+
+            <div class="snacks">
+                <h4>🍪 Snack</h4>
+                <p style="font-size: var(--text-sm); margin-top: 8px;">Crackers with hummus (using hummus from Tuesday and Wednesday lunches)</p>
+            </div>
+
+            <div class="heavy-snack">
+                <h4>🍌 Heavy Snack (Late Class Day)</h4>
+                <p><strong>Banana with almond butter</strong></p>
+                <p>Format: Fruit + protein/fat for sustained energy</p>
+                <p>Prep: No prep needed - just peel banana</p>
+                <p>Serve with 2 tbsp almond butter or peanut butter per child</p>
             </div>
 
             <div class="meal-card">
@@ -797,84 +836,150 @@
                 </div>
             </div>
 
-            <div class="lunch-section">
-                <h4>🥪 Lunch</h4>
-                <p><strong>Kids (2):</strong> Bean and cheese burritos with mild salsa</p>
-                <p><strong>Adult (1):</strong> Burrito bowl with rice, beans, vegetables</p>
-                <p><strong>Components:</strong> tortillas, black beans (cooked Monday), rice (cooked Monday), cheese, salsa</p>
-                <p><strong>Prep:</strong> All components prepped Monday - just assemble and warm</p>
-            </div>
-
-            <div class="snacks">
-                <h4>🍪 Snack Ideas</h4>
-                <ul>
-                    <li>Pear slices with cheese</li>
-                    <li>Whole grain crackers with hummus</li>
-                    <li>Celery with peanut butter</li>
-                    <li>Popcorn</li>
-                </ul>
-            </div>
-
-            <div class="heavy-snack">
-                <h4>🍌 Heavy Snack (Late Class Day)</h4>
-                <p><strong>Banana with almond butter</strong></p>
-                <p>Format: Fruit + protein/fat for sustained energy</p>
-                <p>Prep: No prep needed - just peel banana</p>
-                <p>Serve with 2 tbsp almond butter or peanut butter per child</p>
-            </div>
-
             <div class="prep-tasks">
-                <h4>✅ Friday Prep Tasks (NO PREP DAY - STRICT)</h4>
-                <div style="background: #ffebee; padding: 15px; border-radius: 5px; border-left: 4px solid #f44336;">
-                    <strong style="color: #c62828;">⚠️ ALL DAY RULES:</strong>
-                    <ul style="margin-left: 20px; margin-top: 10px;">
-                        <li>NO chopping allowed at any time (morning, afternoon, evening)</li>
-                        <li>NO cooking allowed - only reheating and boiling pasta</li>
-                        <li>Only actions: reheating, simple assembly, using pre-prepped ingredients from Monday</li>
-                        <li>Use freezer backup meal if energy is depleted</li>
-                    </ul>
-                </div>
-                <div class="evening-assembly" style="margin-top: 10px;">
+                <h4>🌙 PM Prep</h4>
+                <div class="evening-assembly">
                     <strong>⏰ Evening (5-9pm) - Device-free time:</strong>
                     <p style="margin-top: 5px;">Dinner must be ready with minimal assembly</p>
                 </div>
             </div>
         </div>
 
-        <!-- FROM SCRATCH RECIPE -->
-        <div class="recipe-highlight">
-            <h3>⭐ From Scratch Recipe This Week</h3>
-            <p><strong>Chana Masala (IP)</strong></p>
-            <p style="margin-top: 10px;">This classic Indian chickpea curry is the perfect "from scratch" recipe for this week. It uses fresh tomatoes, cilantro, garlic, and ginger from the farmers market, creating a deeply flavorful, aromatic curry using the Instant Pot. The layered spices (cumin, coriander, garam masala) and slow-building flavors make this an authentic, interesting recipe that goes beyond simple weeknight cooking. Making a double batch lets us freeze half for future backup meals, and the active cooking time is still manageable for a Monday when we have more energy. This introduces complex Indian spice combinations while using fresh market vegetables.</p>
-        </div>
+        <!-- Groceries Tab -->
+        <div id="groceries" class="tab-content">
+            <h2>🛒 Comprehensive Grocery List</h2>
+            <p style="margin-bottom: 20px; color: var(--text-muted);">Organized by aisle with quantities for the entire week</p>
 
-        <!-- PREP-AHEAD SCHEDULE -->
-        <div class="prep-session">
-            <h3>📋 Prep-Ahead Schedule Summary</h3>
+            <div class="grocery-section">
+                <h4>Fresh Produce</h4>
+                <ul style="margin-left: 25px;">
+                    <li>Cauliflower - 1 large head</li>
+                    <li>Sweet potatoes - 3 medium</li>
+                    <li>Carrots - 1 lb (for shredding and snacks)</li>
+                    <li>Cucumber - 2 medium</li>
+                    <li>Arugula - 1 container (5 oz)</li>
+                    <li>Cilantro - 2 bunches</li>
+                    <li>Tomatoes - 4 large</li>
+                    <li>Onions - 3 large</li>
+                    <li>Garlic - 2 heads</li>
+                    <li>Ginger - 1 piece (2 inches)</li>
+                    <li>Limes - 4</li>
+                    <li>Lemons - 2</li>
+                    <li>Apples - 6</li>
+                    <li>Bananas - 6</li>
+                    <li>Oranges - 4</li>
+                    <li>Pears - 4</li>
+                    <li>Grapes - 1 lb</li>
+                    <li>Cherry tomatoes - 1 pint</li>
+                    <li>Celery - 1 bunch</li>
+                    <li>Baby carrots - 1 bag (1 lb)</li>
+                </ul>
+            </div>
 
-            <h4 style="color: #558b2f; margin-top: 15px;">Sunday (Dec 28) - Grocery Day</h4>
-            <ul style="margin-left: 20px;">
-                <li>Farmers market shopping</li>
-                <li>Regular grocery shopping</li>
-                <li>Put away groceries</li>
-                <li><strong>No cooking</strong> - rest day</li>
-            </ul>
+            <div class="grocery-section">
+                <h4>Frozen</h4>
+                <ul style="margin-left: 25px;">
+                    <li>Frozen zucchini - 1 bag (16 oz)</li>
+                    <li>Frozen spinach - 1 bag (10 oz)</li>
+                </ul>
+            </div>
 
-            <h4 style="color: #558b2f; margin-top: 15px;">Monday (Dec 29) - MAIN PREP DAY</h4>
-            <p style="margin-left: 20px; font-weight: 600; color: #c0392b;">GOAL: Do ALL prep work for the entire week. Nothing should require chopping after Monday.</p>
+            <div class="grocery-section">
+                <h4>Dairy & Refrigerated</h4>
+                <ul style="margin-left: 25px;">
+                    <li>Eggs - 2 dozen</li>
+                    <li>Cheese (cheddar or Mexican blend) - 2 lbs</li>
+                    <li>String cheese - 1 package (12 ct)</li>
+                    <li>Cream cheese - 8 oz</li>
+                    <li>Butter - 1 lb</li>
+                    <li>Yogurt - 6 individual cups</li>
+                    <li>Parmesan cheese - 8 oz</li>
+                </ul>
+            </div>
 
-            <h4 style="color: #558b2f; margin-top: 15px;">Tuesday (Dec 30) - MILD PREP DAY</h4>
-            <p style="margin-left: 20px; font-weight: 600; color: #e67e22;">GOAL: Minimal effort. Just assembly and organization.</p>
+            <div class="grocery-section">
+                <h4>Pantry - Grains & Pasta</h4>
+                <ul style="margin-left: 25px;">
+                    <li>Rice (white or basmati) - 2 lbs</li>
+                    <li>Quinoa - 1 lb</li>
+                    <li>Pasta (for zucchini sauce) - 1 lb</li>
+                    <li>Store-bought ravioli - 1 package (20 oz)</li>
+                    <li>Whole wheat bread - 1 loaf</li>
+                    <li>Tortillas (flour) - 2 packages (20 ct total)</li>
+                    <li>Chapati - 1 package</li>
+                </ul>
+            </div>
 
-            <h4 style="color: #558b2f; margin-top: 15px;">Wednesday (Dec 31) - MILD PREP DAY</h4>
-            <p style="margin-left: 20px; font-weight: 600; color: #e67e22;">GOAL: Minimal effort. Verify everything is ready for Thu/Fri.</p>
+            <div class="grocery-section">
+                <h4>Pantry - Canned & Jarred</h4>
+                <ul style="margin-left: 25px;">
+                    <li>Chickpeas (canned) - 4 cans (15 oz each)</li>
+                    <li>Black beans (canned) - 3 cans (15 oz each)</li>
+                    <li>Diced tomatoes (canned) - 2 cans (14.5 oz each)</li>
+                    <li>Hummus - 1 container (10 oz)</li>
+                    <li>Salsa - 1 jar (16 oz)</li>
+                    <li>Peanut butter - 1 jar (16 oz)</li>
+                    <li>Almond butter - 1 jar (12 oz)</li>
+                </ul>
+            </div>
 
-            <h4 style="color: #558b2f; margin-top: 15px;">Thursday (Jan 1) - MORNING PREP OK</h4>
-            <p style="margin-left: 20px; font-weight: 600; color: #f39c12;">GOAL: Use morning energy if needed, but protect evening. Rely mostly on Monday prep.</p>
+            <div class="grocery-section">
+                <h4>Pantry - Spices & Seasonings</h4>
+                <ul style="margin-left: 25px;">
+                    <li>Chipotle powder or chili powder</li>
+                    <li>Cumin</li>
+                    <li>Coriander</li>
+                    <li>Garam masala</li>
+                    <li>Curry powder</li>
+                    <li>Cinnamon</li>
+                    <li>Salt & pepper</li>
+                    <li>Dried basil</li>
+                </ul>
+            </div>
 
-            <h4 style="color: #558b2f; margin-top: 15px;">Friday (Jan 2) - NO PREP DAY - STRICT</h4>
-            <p style="margin-left: 20px; font-weight: 600; color: #c0392b;">GOAL: Zero prep at any time. Survive to the weekend. Rely entirely on Monday prep.</p>
+            <div class="grocery-section">
+                <h4>Snacks</h4>
+                <ul style="margin-left: 25px;">
+                    <li>Crackers (whole grain) - 2 boxes</li>
+                    <li>Pretzels - 1 bag</li>
+                    <li>Granola - 1 box or bag</li>
+                    <li>Trail mix - 1 bag</li>
+                    <li>Popcorn (kernels or microwave) - 1 package</li>
+                </ul>
+            </div>
+
+            <div class="grocery-section">
+                <h4>Condiments & Misc</h4>
+                <ul style="margin-left: 25px;">
+                    <li>Ranch dressing - 1 bottle (for dipping)</li>
+                    <li>Olive oil</li>
+                    <li>Cooking oil</li>
+                    <li>Sour cream or Greek yogurt - 16 oz (for lime crema)</li>
+                </ul>
+            </div>
         </div>
     </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab content
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+    </script>
 </body>
 </html>

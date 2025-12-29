@@ -30,44 +30,53 @@ You are responsible for:
 
 ## Files You Should Write
 
-### `plans/YYYY-MM-DD-weekly-plan.md`
+### `plans/YYYY-MM-DD-weekly-plan.html`
 
-**When:** After running `mealplan.py plan`
+**When:** After generating a weekly plan
 
-**Format:**
-```markdown
-# Weekly Meal Plan: [Date Range]
+**Format:** Tabbed HTML interface with Solarpunk design aesthetic
 
-## Farmers Market Shopping List
-- [vegetables based on confirmed_veg from inputs file]
+**Template Location:** `templates/weekly-plan-template.html`
 
-## Freezer Backup Status
-Current backup meals in freezer:
-1. [Backup meal 1] - [Date frozen]
-2. [Backup meal 2] - [Date frozen]
-3. [Backup meal 3] - [Date frozen]
+**Tab Structure (9 tabs total):**
+1. **Overview** - Freezer backup status, From Scratch recipe, Week at a glance
+2. **Monday-Friday** - Weekday meal plans
+3. **Saturday** - Weekend day 1
+4. **Sunday** - Grocery shopping day
+5. **Groceries** - Comprehensive list organized by aisle
 
-**This week's batch cooking:** [Which dinner(s) to double and freeze]
+**Daily Flow (Monday-Friday):**
+Each day follows this exact order:
+1. **AM Prep** block with specific tasks
+2. **Lunch** plan (2 kids + 1 adult) with components
+3. **Snack** suggestion (ONE only, reusing meal ingredients)
+4. **Dinner** with evening assembly notes
+5. **PM Prep** block (where applicable)
 
-## Monday
-**Dinner:** [Recipe Name] ([Template])
-- Main vegetables: [list]
-- Prep notes: [Batch cooking note if applicable: "Make 2x and freeze half"]
-- **Evening assembly:** [What needs to be done 5-9pm - should be minimal: "Reheat and serve" or "Assemble tacos"]
+**Example Monday Structure:**
+```
+AM Prep (MAIN PREP DAY):
+- CHOP ALL VEGETABLES FOR ENTIRE WEEK
+- BATCH COOKING (2x meals to freeze)
+- ALL LUNCH PREP for Tue/Wed/Thu/Fri
+- SNACKS (portion for entire week)
 
-**Lunch:** [Specific lunch recipe with components - 2 kids + 1 adult]
-- Or use: [Repeatable default option from rotation: PBJ, egg sandwich, etc.]
-- Components: [list ingredients/components]
-- Prep: [what to prepare and when]
+Lunch:
+- Kids (2): [Specific recipe]
+- Adult (1): [Option]
+- Components: [list]
+- Prep: [instructions]
 
-**Snack Ideas:** [3-4 specific snack suggestions]
+Snack:
+- ONE snack only, reusing ingredients (e.g., "Apple slices with peanut butter")
 
-**Monday Prep Tasks (MAIN PREP DAY):**
-- [Specific vegetables to chop for ENTIRE WEEK Mon-Fri dinners]
-- [Batch cooking tasks: double dal, cook beans, etc.]
-- [ALL lunch prep for Tue/Wed/Thu/Fri]
-- [Portion snacks into containers]
-- [Pre-cook any components needed for the week]
+Dinner:
+- [Recipe Name] ([Template])
+- Vegetables: [list]
+- Prep Notes: [batch cooking if applicable]
+- Evening Assembly (5-9pm): [minimal tasks only]
+
+PM Prep: (if applicable)
 
 ## Tuesday
 **Dinner:** [Recipe Name] ([Template])
@@ -152,6 +161,47 @@ Current backup meals in freezer:
 
 ## From Scratch Recipe This Week
 **[Recipe Name]** - [Brief rationale for why this recipe was chosen, how it uses farmers market vegetables, what makes it interesting]
+
+**Weekend Structure:**
+
+**Saturday:**
+- Morning: No prep required (rest day)
+- Lunch: Flexible (leftovers, eating out)
+- Snack: ONE snack (fresh fruit or remaining prepped snacks)
+- Dinner: Flexible weekend meal
+- Afternoon Prep (Optional): Review next week's plan, make grocery list, clean fridge/freezer
+
+**Sunday:**
+- AM Prep: Grocery shopping (farmers market + regular groceries)
+  - Put away groceries
+  - Organize fridge for upcoming week
+  - Reminder to check Groceries tab for complete list
+- Lunch: Simple meal (keep light to save energy)
+- Snack: ONE snack (simple fruit or crackers)
+- Dinner: Flexible weekend meal
+- Afternoon/Evening: No prep (rest day) - reminder that Monday is main prep day
+
+**Snack Guidelines:**
+- **ONE snack suggestion per day** (not 3-4)
+- Reuse ingredients from main meals where possible
+- Examples:
+  - Monday: Apple slices with peanut butter
+  - Tuesday: Cheese and crackers (from quesadilla ingredients)
+  - Wednesday: Cucumber rounds with cream cheese (from salad ingredients)
+  - Thursday: Grapes (simple fruit)
+  - Friday: Crackers with hummus (from lunch components)
+  - Saturday/Sunday: Fresh fruit or simple options
+
+**Heavy Snacks (Late Class Days - Default Thu/Fri):**
+- Format: Fruit + protein/fat for sustained energy
+- Thursday: Apple slices with peanut butter
+- Friday: Banana with almond butter
+
+**Groceries Tab:**
+- Comprehensive shopping list organized by aisle
+- Categories: Fresh Produce, Frozen, Dairy & Refrigerated, Grains & Pasta, Canned & Jarred, Spices & Seasonings, Snacks, Condiments & Misc
+- Include quantities for all items
+- Should cover entire week (Monday-Sunday)
 
 ## Repeatable Lunch Defaults (Kids)
 These can be rotated and repeated - no need for variety every week:

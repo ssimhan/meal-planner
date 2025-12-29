@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Meal Plan: {WEEK_START_DATE} - {WEEK_END_DATE}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;700;900&family=Outfit:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Solarpunk Color Palette */
+            --bg-primary: #fef9f3;
+            --bg-secondary: #f0e6d2;
+            --bg-card: #ffffff;
+            --accent-green: #2d6a4f;
+            --accent-gold: #d4a574;
+            --accent-terracotta: #c1666b;
+            --accent-sage: #6a8e7f;
+            --text-primary: #2b2d42;
+            --text-muted: #6c757d;
+            --border-subtle: rgba(109, 122, 95, 0.2);
+
+            /* Typography Scale */
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.5rem;
+            --text-2xl: 2rem;
+            --text-3xl: 3rem;
+            --text-4xl: 4.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.03"/></svg>');
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            padding: 50px;
+            border-radius: 2px;
+            box-shadow: 0 4px 30px rgba(45, 106, 79, 0.08);
+            border: 1px solid var(--border-subtle);
+        }
+
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 900;
+            font-size: var(--text-4xl);
+            color: var(--accent-green);
+            margin-bottom: 30px;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--accent-terracotta);
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: var(--text-sm);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -3px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover {
+            background: rgba(45, 106, 79, 0.05);
+            color: var(--accent-green);
+        }
+
+        .tab-button.active {
+            color: var(--accent-green);
+            background: rgba(45, 106, 79, 0.08);
+            border-bottom-color: var(--accent-green);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Additional styles from original file... */
+        /* Copy all remaining styles from 2025-12-29-weekly-plan.html */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📅 Weekly Meal Plan: {WEEK_RANGE}</h1>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-button active" onclick="showTab('overview')">Overview</button>
+            <button class="tab-button" onclick="showTab('monday')">Monday</button>
+            <button class="tab-button" onclick="showTab('tuesday')">Tuesday</button>
+            <button class="tab-button" onclick="showTab('wednesday')">Wednesday</button>
+            <button class="tab-button" onclick="showTab('thursday')">Thursday</button>
+            <button class="tab-button" onclick="showTab('friday')">Friday</button>
+            <button class="tab-button" onclick="showTab('saturday')">Saturday</button>
+            <button class="tab-button" onclick="showTab('sunday')">Sunday</button>
+            <button class="tab-button" onclick="showTab('groceries')">Groceries</button>
+        </div>
+
+        <!-- Tab contents follow the structure:
+             - Overview: Freezer backup, From Scratch recipe, Week at a glance
+             - Monday-Friday: AM Prep → Lunch → Snack (1 only) → Dinner → PM Prep
+             - Saturday: No AM prep, Lunch, Snack, Dinner, Afternoon prep (optional)
+             - Sunday: AM Prep (grocery shopping), Lunch, Snack, Dinner, No PM prep (rest day)
+             - Groceries: Comprehensive list organized by aisle
+        -->
+
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

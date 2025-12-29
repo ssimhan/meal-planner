@@ -234,6 +234,30 @@
             margin-bottom: 10px;
         }
 
+        .meal-type a {
+            color: var(--accent-terracotta);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .meal-type a:hover {
+            color: var(--accent-green);
+            border-bottom-color: var(--accent-green);
+        }
+
+        .meal-type a::after {
+            content: " 🔗";
+            font-size: 0.8em;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .meal-type a:hover::after {
+            opacity: 1;
+        }
+
         .vegetables {
             color: var(--accent-sage);
             font-weight: 400;
@@ -587,7 +611,7 @@
 
             <div class="meal-card">
                 <h3>🍽️ Dinner</h3>
-                <div class="meal-type">Chana Masala (IP) - Indian Soup/Stew</div>
+                <div class="meal-type"><a href="../recipes/raw_html/Chana Masala (IP).html">Chana Masala (IP)</a> - Indian Soup/Stew</div>
                 <div class="vegetables">🥬 Vegetables: cilantro, garlic, ginger, onion, chickpeas, tomato</div>
                 <div class="prep-notes">
                     <strong>Prep Notes:</strong> Make 2x batch and freeze half for backup. This freezes beautifully.
@@ -654,7 +678,7 @@
 
             <div class="meal-card">
                 <h3>🍽️ Dinner</h3>
-                <div class="meal-type">Crispy Chipotle Sweet Potato Tacos with Lime Crema - Mexican Tacos/Wraps</div>
+                <div class="meal-type"><a href="../recipes/raw_html/Crispy Chipotle Sweet Potato Tacos with Lime Crema.html">Crispy Chipotle Sweet Potato Tacos with Lime Crema</a> - Mexican Tacos/Wraps</div>
                 <div class="vegetables">🥬 Vegetables: black beans, cilantro, garlic, lime, sweet potato (ALL prepped Monday)</div>
                 <div class="prep-notes">
                     <strong>Prep Notes:</strong> Sweet potatoes roasted in oven with chipotle seasoning, beans warmed
@@ -711,7 +735,7 @@
 
             <div class="meal-card">
                 <h3>🍽️ Dinner</h3>
-                <div class="meal-type">Curried Cauliflower Quinoa Salad - Mediterranean Salad</div>
+                <div class="meal-type"><a href="../recipes/raw_html/Curried Cauliflower Quinoa Salad.html">Curried Cauliflower Quinoa Salad</a> - Mediterranean Salad</div>
                 <div class="vegetables">🥬 Vegetables: arugula, cauliflower, cilantro, cucumber, garlic, lemon, carrot (ALL prepped Monday/Tuesday)</div>
                 <div class="prep-notes">
                     <strong>Prep Notes:</strong> Cauliflower roasted earlier, quinoa cooked earlier, just assemble with curry dressing
@@ -805,7 +829,7 @@
 
             <div class="meal-card">
                 <h3>🍽️ Dinner</h3>
-                <div class="meal-type">Easy French Toast Sticks - American Sandwich ⭐ NO-CHOP MEAL</div>
+                <div class="meal-type"><a href="../recipes/raw_html/Easy French Toast Sticks.html">Easy French Toast Sticks</a> - American Sandwich ⭐ NO-CHOP MEAL</div>
                 <div class="vegetables">🥬 Vegetables: none</div>
                 <div class="prep-notes">
                     <strong>Prep Notes:</strong> NO CHOPPING - bread, eggs, cinnamon. Quick kid-friendly meal.
@@ -870,7 +894,7 @@
 
             <div class="meal-card">
                 <h3>🍽️ Dinner</h3>
-                <div class="meal-type">Easy Zucchini Pasta Sauce - Italian Pasta/Noodles ⭐ NO-PREP MEAL</div>
+                <div class="meal-type"><a href="../recipes/raw_html/Easy Zucchini Pasta Sauce.html">Easy Zucchini Pasta Sauce</a> - Italian Pasta/Noodles ⭐ NO-PREP MEAL</div>
                 <div class="vegetables">🥬 Vegetables: basil, garlic, lemon, spinach, zucchini (frozen pre-made sauce OR use Monday prep)</div>
                 <div class="prep-notes">
                     <strong>Prep Notes:</strong> NO PREP - using frozen vegetables and pre-made components from Monday

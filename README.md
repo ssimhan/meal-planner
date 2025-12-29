@@ -32,8 +32,6 @@ pip install -r requirements.txt
 
 ## Usage
 
-### 🌟 NEW: Streamlined Workflow (Recommended)
-
 The simplest way to use the meal planner - just run one command and it handles everything:
 
 ```bash

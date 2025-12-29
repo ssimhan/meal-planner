@@ -85,6 +85,9 @@ template_keywords:
     - wrap
     - grilled cheese
     - burger
+    - roti
+    - bagel
+    - toast
   salad:
     - salad
   stir_fry:
@@ -107,6 +110,9 @@ template_keywords:
     - smoothie
     - uttapam
     - pesarattu
+    - appam
+    - yogurt drink
+    - hard boiled egg
   snack_bar:
     - granola bar
     - energy ball
@@ -116,6 +122,9 @@ template_keywords:
     - larabar
     - protein bar
     - cereal bar
+    - bark
+    - fruit roll
+    - porridge finger
   baked_goods:
     - muffin
     - cookie
@@ -132,6 +141,7 @@ template_keywords:
     - pickle
     - alfredo
     - marinara
+    - cream cheese
   frozen_treat:
     - popsicle
     - frozen yogurt

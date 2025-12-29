@@ -530,6 +530,8 @@
             <button class="tab-button" onclick="showTab('wednesday')">Wednesday</button>
             <button class="tab-button" onclick="showTab('thursday')">Thursday</button>
             <button class="tab-button" onclick="showTab('friday')">Friday</button>
+            <button class="tab-button" onclick="showTab('saturday')">Saturday</button>
+            <button class="tab-button" onclick="showTab('sunday')">Sunday</button>
             <button class="tab-button" onclick="showTab('groceries')">Groceries</button>
         </div>
 
@@ -842,6 +844,97 @@
                     <strong>⏰ Evening (5-9pm) - Device-free time:</strong>
                     <p style="margin-top: 5px;">Dinner must be ready with minimal assembly</p>
                 </div>
+            </div>
+        </div>
+
+        <!-- Saturday Tab -->
+        <div id="saturday" class="tab-content">
+            <div class="day-header">
+                Saturday <span class="energy-level energy-mild">WEEKEND - AFTERNOON PREP</span>
+            </div>
+
+            <div class="section" style="background: rgba(212, 165, 116, 0.08); padding: 20px; border-radius: 2px; margin: 20px 0;">
+                <h4 style="color: var(--accent-terracotta); margin-bottom: 10px;">☀️ Morning - No Prep Required</h4>
+                <p style="font-size: var(--text-sm); color: var(--text-muted);">Rest day - no cooking or prep in the morning. Enjoy the weekend!</p>
+            </div>
+
+            <div class="lunch-section">
+                <h4>🥪 Lunch</h4>
+                <p><strong>Family:</strong> Flexible - leftovers, eating out, or simple weekend meal</p>
+                <p><strong>Suggestions:</strong> Use up any remaining ingredients from the week</p>
+            </div>
+
+            <div class="snacks">
+                <h4>🍪 Snack</h4>
+                <p style="font-size: var(--text-sm); margin-top: 8px;">Fresh fruit or any remaining prepped snacks from the week</p>
+            </div>
+
+            <div class="meal-card">
+                <h3>🍽️ Dinner</h3>
+                <div class="meal-type">Weekend Meal - Flexible</div>
+                <div class="prep-notes">
+                    <strong>Options:</strong> Eating out, ordering in, simple family cooking, or using freezer backup meals
+                </div>
+            </div>
+
+            <div class="prep-tasks">
+                <h4>☀️ Afternoon Prep (Optional)</h4>
+                <ul>
+                    <li>Review next week's meal plan if available</li>
+                    <li>Make grocery list for Sunday shopping</li>
+                    <li>Clean out fridge and freezer</li>
+                    <li>Check pantry inventory</li>
+                    <li>Prep containers for next week's batch cooking</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Sunday Tab -->
+        <div id="sunday" class="tab-content">
+            <div class="day-header">
+                Sunday <span class="energy-level energy-high">GROCERY DAY</span>
+            </div>
+
+            <div class="prep-tasks">
+                <h4>☀️ AM Prep (Grocery Shopping)</h4>
+                <div class="shopping-list" style="margin-top: 15px;">
+                    <h4 style="color: var(--accent-gold); margin-bottom: 10px;">🛒 Shopping Tasks</h4>
+                    <ul style="list-style: none; margin-left: 0;">
+                        <li style="margin: 8px 0; padding-left: 0;">✓ Farmers market shopping (fresh produce for next week)</li>
+                        <li style="margin: 8px 0; padding-left: 0;">✓ Regular grocery shopping (use Groceries tab for full list)</li>
+                        <li style="margin: 8px 0; padding-left: 0;">✓ Put away all groceries</li>
+                        <li style="margin: 8px 0; padding-left: 0;">✓ Organize fridge for upcoming week prep</li>
+                    </ul>
+                </div>
+                <p style="margin-top: 15px; padding: 12px; background: rgba(212, 165, 116, 0.1); border-radius: 5px; border-left: 3px solid var(--accent-gold);"><strong>Note:</strong> Refer to the Groceries tab for the complete shopping list for next week.</p>
+            </div>
+
+            <div class="lunch-section">
+                <h4>🥪 Lunch</h4>
+                <p><strong>Family:</strong> Simple meal - leftovers or easy weekend option</p>
+                <p><strong>Timing:</strong> Keep it light to save energy for grocery shopping</p>
+            </div>
+
+            <div class="snacks">
+                <h4>🍪 Snack</h4>
+                <p style="font-size: var(--text-sm); margin-top: 8px;">Simple snack - fruit or crackers</p>
+            </div>
+
+            <div class="meal-card">
+                <h3>🍽️ Dinner</h3>
+                <div class="meal-type">Weekend Meal - Flexible</div>
+                <div class="prep-notes">
+                    <strong>Options:</strong> Simple family dinner, eating out, or using freezer backup
+                </div>
+                <div class="evening-assembly">
+                    <strong>⏰ Evening:</strong> Rest day - no cooking required. Focus on relaxing before the week begins.
+                </div>
+            </div>
+
+            <div class="section" style="background: rgba(193, 102, 107, 0.08); padding: 20px; border-radius: 2px; margin: 20px 0;">
+                <h4 style="color: var(--accent-terracotta); margin-bottom: 10px;">🌙 Afternoon/Evening - No Prep</h4>
+                <p style="font-size: var(--text-sm); color: var(--text-muted);"><strong>Rest day</strong> - No cooking or meal prep. Groceries are done, now relax!</p>
+                <p style="font-size: var(--text-sm); color: var(--text-muted); margin-top: 10px;">Tomorrow (Monday) is the main prep day where all the week's cooking happens.</p>
             </div>
         </div>
 

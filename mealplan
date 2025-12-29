@@ -19,21 +19,30 @@ usage() {
     echo "Usage:"
     echo "  ./mealplan <command> [args]"
     echo ""
-    echo "Commands:"
-    echo "  parse              Parse HTML recipes into index"
-    echo "  intake             Create weekly input file (interactive)"
-    echo "  plan [date]        Generate meal plan (e.g., ./mealplan plan 2026-01-05)"
-    echo "  validate [date]    Validate a meal plan (e.g., ./mealplan validate 2026-01-05)"
-    echo "  view [date]        View a meal plan (e.g., ./mealplan view 2026-01-05)"
-    echo "  edit [date]        Edit input file before planning"
-    echo "  latest             View the most recent plan"
+    echo "Weekly Workflow Commands:"
+    echo "  1-start            Start new week (interactive prompts)"
+    echo "  2-update [date]    Update vegetables after farmers market"
+    echo "  3-plan [date]      Generate meal plan"
+    echo "  4-view [date]      View a specific plan"
+    echo "  5-latest           View the most recent plan"
+    echo ""
+    echo "Other Commands:"
+    echo "  parse              Parse HTML recipes into index (one-time setup)"
+    echo "  validate [date]    Validate a meal plan"
+    echo ""
+    echo "Aliases (same as numbered commands):"
+    echo "  start              Same as 1-start"
+    echo "  update             Same as 2-update"
+    echo "  plan               Same as 3-plan"
+    echo "  view               Same as 4-view"
+    echo "  latest             Same as 5-latest"
     echo ""
     echo "Examples:"
-    echo "  ./mealplan intake              # Start new week"
-    echo "  ./mealplan edit 2026-01-05     # Edit vegetables after farmers market"
-    echo "  ./mealplan plan 2026-01-05     # Generate plan"
-    echo "  ./mealplan view 2026-01-05     # View generated plan"
-    echo "  ./mealplan latest              # View most recent plan"
+    echo "  ./mealplan 1-start             # Start new week"
+    echo "  ./mealplan 2-update 2026-01-05 # Edit vegetables after farmers market"
+    echo "  ./mealplan 3-plan 2026-01-05   # Generate plan"
+    echo "  ./mealplan 4-view 2026-01-05   # View generated plan"
+    echo "  ./mealplan 5-latest            # View most recent plan"
     echo ""
     exit 1
 }
@@ -45,18 +54,18 @@ cmd_parse() {
     python3 scripts/parse_recipes.py
 }
 
-cmd_intake() {
-    echo -e "${GREEN}Creating weekly input file...${NC}"
+cmd_start() {
+    echo -e "${GREEN}Starting new week...${NC}"
     python3 scripts/mealplan.py intake
 }
 
-cmd_plan() {
+cmd_update() {
     local date="$1"
 
     if [ -z "$date" ]; then
         echo -e "${RED}Error: Date required${NC}"
-        echo "Usage: ./mealplan plan YYYY-MM-DD"
-        echo "Example: ./mealplan plan 2026-01-05"
+        echo "Usage: ./mealplan 2-update YYYY-MM-DD"
+        echo "Example: ./mealplan 2-update 2026-01-05"
         exit 1
     fi
 
@@ -64,7 +73,36 @@ cmd_plan() {
 
     if [ ! -f "$input_file" ]; then
         echo -e "${RED}Error: Input file not found: ${input_file}${NC}"
-        echo "Run './mealplan intake' first to create an input file"
+        echo "Run './mealplan 1-start' first"
+        exit 1
+    fi
+
+    # Use user's preferred editor or fallback to vim
+    ${EDITOR:-vim} "$input_file"
+
+    echo ""
+    echo -e "${YELLOW}Remember to:${NC}"
+    echo "  1. Update 'confirmed_veg' with actual farmers market purchases"
+    echo "  2. Change 'status: proposed' to 'status: confirmed'"
+    echo ""
+    echo "Then run: ./mealplan 3-plan $date"
+}
+
+cmd_plan() {
+    local date="$1"
+
+    if [ -z "$date" ]; then
+        echo -e "${RED}Error: Date required${NC}"
+        echo "Usage: ./mealplan 3-plan YYYY-MM-DD"
+        echo "Example: ./mealplan 3-plan 2026-01-05"
+        exit 1
+    fi
+
+    local input_file="inputs/${date}.yml"
+
+    if [ ! -f "$input_file" ]; then
+        echo -e "${RED}Error: Input file not found: ${input_file}${NC}"
+        echo "Run './mealplan 1-start' first to create an input file"
         exit 1
     fi
 
@@ -73,7 +111,7 @@ cmd_plan() {
 
     echo ""
     echo -e "${GREEN}✓ Plan created!${NC}"
-    echo "View it with: ./mealplan view $date"
+    echo "View it with: ./mealplan 4-view $date"
 }
 
 cmd_validate() {
@@ -107,8 +145,8 @@ cmd_view() {
 
     if [ -z "$date" ]; then
         echo -e "${RED}Error: Date required${NC}"
-        echo "Usage: ./mealplan view YYYY-MM-DD"
-        echo "Or use: ./mealplan latest"
+        echo "Usage: ./mealplan 4-view YYYY-MM-DD"
+        echo "Or use: ./mealplan 5-latest"
         exit 1
     fi
 
@@ -129,34 +167,6 @@ cmd_view() {
         # Fallback to cat
         cat "$plan_file"
     fi
-}
-
-cmd_edit() {
-    local date="$1"
-
-    if [ -z "$date" ]; then
-        echo -e "${RED}Error: Date required${NC}"
-        echo "Usage: ./mealplan edit YYYY-MM-DD"
-        exit 1
-    fi
-
-    local input_file="inputs/${date}.yml"
-
-    if [ ! -f "$input_file" ]; then
-        echo -e "${RED}Error: Input file not found: ${input_file}${NC}"
-        echo "Run './mealplan intake' first"
-        exit 1
-    fi
-
-    # Use user's preferred editor or fallback to vim
-    ${EDITOR:-vim} "$input_file"
-
-    echo ""
-    echo -e "${YELLOW}Remember to:${NC}"
-    echo "  1. Update 'confirmed_veg' with actual farmers market purchases"
-    echo "  2. Change 'status: proposed' to 'status: confirmed'"
-    echo ""
-    echo "Then run: ./mealplan plan $date"
 }
 
 cmd_latest() {
@@ -190,26 +200,28 @@ command="$1"
 shift
 
 case "$command" in
+    # Numbered workflow commands
+    1-start|start)
+        cmd_start
+        ;;
+    2-update|update)
+        cmd_update "$@"
+        ;;
+    3-plan|plan)
+        cmd_plan "$@"
+        ;;
+    4-view|view)
+        cmd_view "$@"
+        ;;
+    5-latest|latest)
+        cmd_latest
+        ;;
+    # Other commands
     parse)
         cmd_parse
         ;;
-    intake)
-        cmd_intake
-        ;;
-    plan)
-        cmd_plan "$@"
-        ;;
     validate)
         cmd_validate "$@"
-        ;;
-    view)
-        cmd_view "$@"
-        ;;
-    edit)
-        cmd_edit "$@"
-        ;;
-    latest)
-        cmd_latest
         ;;
     help|--help|-h)
         usage

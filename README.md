@@ -34,31 +34,33 @@ pip install -r requirements.txt
 
 ### Quick Start (Easy Commands)
 
-Use the `./mealplan` wrapper script for simple commands:
+Use the `./mealplan` wrapper script with numbered workflow commands:
 
 ```bash
-# First time: Parse your HTML recipes
+# First time only: Parse your HTML recipes
 ./mealplan parse
 
-# Weekly workflow:
-./mealplan intake              # Create input file (interactive prompts)
-./mealplan edit 2026-01-05     # Edit vegetables after farmers market
-./mealplan plan 2026-01-05     # Generate the meal plan
-./mealplan view 2026-01-05     # View the plan
-./mealplan validate 2026-01-05 # Validate constraints (optional)
+# Weekly workflow (follow the numbers):
+./mealplan 1-start             # Step 1: Start new week (interactive)
+./mealplan 2-update 2026-01-05 # Step 2: Update after farmers market
+./mealplan 3-plan 2026-01-05   # Step 3: Generate the meal plan
+./mealplan 4-view 2026-01-05   # Step 4: View the plan
+./mealplan 5-latest            # Step 5: View most recent plan
 
-# Shortcuts:
-./mealplan latest              # View most recent plan
+# Optional:
+./mealplan validate 2026-01-05 # Validate constraints
 ```
 
-**Available commands:**
-- `parse` - Parse HTML recipes into index
-- `intake` - Create weekly input file (interactive)
-- `edit <date>` - Edit input file (opens in $EDITOR or vim)
-- `plan <date>` - Generate meal plan
-- `view <date>` - View meal plan (uses bat/glow if installed)
-- `validate <date>` - Validate meal plan
-- `latest` - View most recent plan
+**Workflow Commands:**
+1. `1-start` (or `start`) - Start new week with interactive prompts
+2. `2-update <date>` (or `update`) - Update vegetables after farmers market shopping
+3. `3-plan <date>` (or `plan`) - Generate meal plan
+4. `4-view <date>` (or `view`) - View a specific plan
+5. `5-latest` (or `latest`) - View most recent plan
+
+**Other Commands:**
+- `parse` - Parse HTML recipes into index (one-time setup)
+- `validate <date>` - Validate meal plan constraints
 
 ---
 

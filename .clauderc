@@ -1,0 +1,32 @@
+{
+  "slashCommands": {
+    "1-start": {
+      "description": "Start new week - create weekly input file with interactive prompts",
+      "run": "./mealplan 1-start"
+    },
+    "2-update": {
+      "description": "Update vegetables after farmers market shopping",
+      "run": "./mealplan 2-update ${input:Week date (YYYY-MM-DD)}"
+    },
+    "3-plan": {
+      "description": "Generate meal plan for the week",
+      "run": "./mealplan 3-plan ${input:Week date (YYYY-MM-DD)}"
+    },
+    "4-view": {
+      "description": "View a specific meal plan",
+      "run": "./mealplan 4-view ${input:Week date (YYYY-MM-DD)}"
+    },
+    "5-latest": {
+      "description": "View the most recent meal plan",
+      "run": "./mealplan 5-latest"
+    },
+    "parse-recipes": {
+      "description": "Parse HTML recipes into index (one-time setup)",
+      "run": "./mealplan parse"
+    },
+    "validate-plan": {
+      "description": "Validate a meal plan meets all constraints",
+      "run": "./mealplan validate ${input:Week date (YYYY-MM-DD)}"
+    }
+  }
+}

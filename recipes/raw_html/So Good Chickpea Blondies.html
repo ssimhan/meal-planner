@@ -1,234 +1,404 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <style type="text/css">
-            /* Shared styles */
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>So Good Chickpea Blondies - Recipe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;700;900&family=Fira+Code:wght@400;600&family=Inter:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Warm Editorial Palette */
+            --bg-primary: #fffef9;
+            --bg-secondary: #faf7f0;
+            --bg-card: #ffffff;
+            --accent-warm: #d97706;
+            --accent-deep: #92400e;
+            --accent-sage: #059669;
+            --accent-muted: #6b7280;
+            --text-primary: #1f2937;
+            --text-muted: #6b7280;
+            --border: rgba(120, 113, 108, 0.2);
+
+            /* Typography */
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.5rem;
+            --text-2xl: 2.5rem;
+            --text-3xl: 3.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            background-image:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(120, 113, 108, 0.02) 2px,
+                    rgba(120, 113, 108, 0.02) 4px
+                );
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border-radius: 2px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        /* Header with Image */
+        .recipe-header {
+            position: relative;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, #f5f1e8 100%);
+            padding: 50px 40px;
+            border-bottom: 3px solid var(--accent-warm);
+        }
+
+        .recipe-image {
+            float: left;
+            margin-right: 30px;
+            margin-bottom: 20px;
+            border-radius: 2px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 3px solid var(--accent-deep);
+        }
+
+        .recipe-image img {
+            max-width: 200px;
+            max-height: 200px;
+            width: auto;
+            height: auto;
+            display: block;
+        }
+
+        h1 {
+            font-family: 'Merriweather', serif;
+            font-weight: 900;
+            font-size: var(--text-3xl);
+            color: var(--accent-deep);
+            margin-bottom: 15px;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .categories {
+            font-family: 'Fira Code', monospace;
+            font-weight: 400;
+            font-size: var(--text-xs);
+            color: var(--accent-warm);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .categories span {
+            background: rgba(217, 119, 6, 0.1);
+            padding: 4px 10px;
+            border-radius: 2px;
+            border: 1px solid rgba(217, 119, 6, 0.3);
+        }
+
+        .metadata {
+            font-family: 'Fira Code', monospace;
+            font-weight: 400;
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .metadata-item {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 2px;
+            border-left: 3px solid var(--accent-sage);
+        }
+
+        .metadata-item strong {
+            color: var(--accent-deep);
+            display: block;
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .source-link {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(5, 150, 105, 0.08);
+            border-radius: 2px;
+            border-left: 3px solid var(--accent-sage);
+        }
+
+        .source-link strong {
+            font-family: 'Fira Code', monospace;
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            color: var(--accent-sage);
+            letter-spacing: 0.1em;
+        }
+
+        .source-link a {
+            color: var(--accent-sage);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-bottom-color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .source-link a:hover {
+            border-bottom-color: var(--accent-sage);
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        /* Main Content */
+        .recipe-content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-family: 'Merriweather', serif;
+            font-weight: 700;
+            font-size: var(--text-2xl);
+            color: var(--accent-deep);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-warm);
+        }
+
+        /* Ingredients */
+        .ingredients-list {
+            background: var(--bg-secondary);
+            padding: 25px;
+            border-radius: 2px;
+            border-left: 4px solid var(--accent-warm);
+        }
+
+        .ingredients-list p {
+            margin: 10px 0;
+            font-size: var(--text-base);
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .ingredients-list p::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent-warm);
+            font-weight: 600;
+        }
+
+        .ingredients-list strong {
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            color: var(--accent-deep);
+            background: rgba(146, 64, 14, 0.1);
+            padding: 2px 6px;
+            border-radius: 2px;
+        }
+
+        /* Directions */
+        .directions-list {
+            counter-reset: step-counter;
+        }
+
+        .directions-list p {
+            margin: 20px 0;
+            padding-left: 60px;
+            position: relative;
+            line-height: 1.8;
+            font-size: var(--text-base);
+        }
+
+        .directions-list p::before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            font-size: var(--text-xl);
+            color: var(--accent-warm);
+            background: rgba(217, 119, 6, 0.1);
+            width: 45px;
+            height: 45px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--accent-warm);
+        }
+
+        /* Nutrition */
+        .nutrition-box {
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.08) 0%, rgba(5, 150, 105, 0.04) 100%);
+            padding: 25px;
+            border-radius: 2px;
+            border: 2px solid var(--accent-sage);
+            margin-top: 30px;
+        }
+
+        .nutrition-box h2 {
+            border-bottom-color: var(--accent-sage);
+            color: var(--accent-sage);
+        }
+
+        .nutrition-box p {
+            font-family: 'Fira Code', monospace;
+            font-size: var(--text-sm);
+            line-height: 2;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
             body {
-                font-family: Helvetica, sans-serif;
-                font-size: 16.0px;
-                color: #34302e;
-                margin: 0.25in;
+                padding: 20px 10px;
             }
-            .name {
-                font-size: 18.0px;
-                font-family: Helvetica, sans-serif;
-                font-weight: normal;
-                margin: 0 0 10px 0;
-            }
-            .categories {
-                color: #605D5D;
-                font-size: 14.0px;
-                font-family: Helvetica, sans-serif;
-                font-style: italic;
-            }
-            .rating {
-                color: #d10505;
-                font-size: 14.0px;
-            }
-            .metadata {
-                font-size: 14.0px;
-            }
-            .infobox p {
-                margin: 0;
-                line-height: 150%;
-            }
-            .subhead {
-                color: #d10505;
-                font-weight: bold;
-                font-size: 14.0px;
-                text-transform: uppercase;
-                margin: 10px 0;
-            }
-            
-            .ingredients p {
-                margin: 4px 0;
-            }
-            /* To prevent nutrition/directions from getting too close
-               to ingredients */
-            .ingredients {
-                padding-bottom: 10px;
-            }
-            .clear {
-                clear:both;
-            }
-            a {
-                color: #4990E2;
-                text-decoration: none;
-            }
-            /* Full page specific styles */
-            .text {
-                line-height: 130%;
-            }
-            .photobox {
-                
-                float: left;
-                margin-right: 14px;
-                
-                
-            }
-            .photo {
-                max-width: 140.0px;
-                max-height: 140.0px;
-                width: auto;
-                height: auto;
-            }
-            
-            .inline-image {
-                max-width: 25%;
-                max-height: 25%;
-                width: auto;
-                height: auto;
-            }
-            .photoswipe {
-                border: 1px #dddddd solid;
-                cursor: pointer;
-            }
-            .pswp__caption__center {
-                text-align: center !important;
-            }
-            .recipe {
-                
-                page-break-after: always;
-                
-                
-            }
-            .recipe:first-child {
-                border-top: 0 none;
-                margin-top: 0;
-                padding-top: 0;
-            }
-        </style>
-    </head>
-    <body>
-        <!-- Recipe -->
-<div class="recipe" itemscope itemtype="http://schema.org/Recipe" >
-    
-    <div class="infobox">
 
-        <!-- Image -->
-        
-        <div class="photobox">
-            
-            <a href="https://www.yummytoddlerfood.com/wp-content/uploads/2021/01/chickpea-blondies-on-unicorn-plate-150x100.jpg">
-                <img src="Images/2C5C1109-6067-4396-932B-E2C2E1CBDAEA/A9213F6F-6186-47FC-9142-9CE2C9D87EBF.jpg" itemprop="image" class="photo photoswipe"/>
-            </a>
-            
-            
+            .recipe-header {
+                padding: 30px 20px;
+            }
+
+            .recipe-image {
+                float: none;
+                margin: 0 auto 20px;
+                display: block;
+            }
+
+            h1 {
+                font-size: var(--text-2xl);
+            }
+
+            .recipe-content {
+                padding: 20px;
+            }
+
+            .directions-list p {
+                padding-left: 55px;
+            }
+
+            .directions-list p::before {
+                width: 40px;
+                height: 40px;
+                font-size: var(--text-lg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Recipe Header -->
+        <div class="recipe-header">
+            <h1>So Good Chickpea Blondies</h1>
+
+            <div class="categories">
+                <span>To Edit</span>
+                <span>To Try Out</span>
+            </div>
+
+            <div class="metadata">
+                <div class="metadata-item">
+                    <strong>Prep Time</strong>
+                    <span>10 minutes</span>
+                </div>
+                <div class="metadata-item">
+                    <strong>Cook Time</strong>
+                    <span>24 minutes</span>
+                </div>
+                <div class="metadata-item">
+                    <strong>Servings</strong>
+                    <span>12</span>
+                </div>
+            </div>
+            <div class="source-link">
+                <strong>Source: </strong>
+                <a href="https://www.yummytoddlerfood.com/so-good-chickpea-blondies/" target="_blank">yummytoddlerfood.com</a>
+            </div>
+
+            <div class="clear"></div>
         </div>
-        
 
-        <!-- Name -->
-        <h1 itemprop="name" class="name">So Good Chickpea Blondies</h1>
-        
-        <!-- Info -->
-        
-        
-        <!-- Rating, categories -->
-        <p itemprop="aggregateRating" class="rating" value="0"></p>
-        
-            <p itemprop="recipeCategory" class="categories">To Edit, To Try Out</p>
-        
-        
-        <p class="metadata">
-        
-            <!-- Cook time, prep time, servings, difficulty -->
-            
-            <b>Prep Time: </b><span itemprop="prepTime">10 minutes</span>
-            
-            <b>Cook Time: </b><span itemprop="cookTime">24 minutes</span>
-            
-            <b>Servings: </b><span itemprop="recipeYield">12</span>
-            
+        <!-- Recipe Content -->
+        <div class="recipe-content">
+            <!-- Ingredients Section -->
+            <div class="section">
+                <h2>Ingredients</h2>
+                <div class="ingredients-list">
+                    <p>US Customary Metric</p>
+                    <p>14.5- ounce can chickpeas (also called "garbanzo" beans)</p>
+                    <p>½cup sliced very ripe banana</p>
+                    <p>¼cup unsweetened creamy peanut butter</p>
+                    <p>¼cup maple syrup</p>
+                    <p>1teaspoon vanilla extract</p>
+                    <p>½teaspoon salt</p>
+                    <p>½teaspoon baking soda</p>
+                    <p>¼cup all-purpose flour</p>
+                    <p>½cup semi-sweet or dark chocolate chips (chopped or mini chocolate chips)</p>
+                </div>
+            </div>
 
-            <!-- Source -->
-            
-                <b>Source: </b>
-                
-                    <a itemprop="url" href="https://www.yummytoddlerfood.com/so-good-chickpea-blondies/">
-                        <span itemprop="author">yummytoddlerfood.com</span>
-                    </a>
-                
-                
-            
-        </p>
-        
-        
-        
-        <div class="clear"></div>
-        
-
-    </div>
-    
-    <div class="left-column">
-
-        <!-- Ingredients -->
-        
-        <div class="ingredientsbox">
-            <h3 class="subhead">Ingredients</h3>
-            <div class="ingredients text">
-                <p class="line" itemprop="recipeIngredient">US Customary Metric</p><p class="line" itemprop="recipeIngredient"><strong>14.5</strong>- ounce can chickpeas (also called &quot;garbanzo&quot; beans)</p><p class="line" itemprop="recipeIngredient"><strong>½</strong> cup sliced very ripe banana</p><p class="line" itemprop="recipeIngredient"><strong>¼</strong> cup unsweetened creamy peanut butter</p><p class="line" itemprop="recipeIngredient"><strong>¼</strong> cup maple syrup</p><p class="line" itemprop="recipeIngredient"><strong>1</strong> teaspoon vanilla extract</p><p class="line" itemprop="recipeIngredient"><strong>½</strong> teaspoon salt</p><p class="line" itemprop="recipeIngredient"><strong>½</strong> teaspoon baking soda</p><p class="line" itemprop="recipeIngredient"><strong>¼</strong> cup all-purpose flour</p><p class="line" itemprop="recipeIngredient"><strong>½</strong> cup semi-sweet or dark chocolate chips (chopped or mini chocolate chips)</p>
+            <!-- Directions Section -->
+            <div class="section">
+                <h2>Directions</h2>
+                <div class="directions-list">
+                    <p>Here’s a peak at how to make this recipe so you know what to expect from the process. Scroll down to the bottom of the post for the full information including the timing and amounts.</p>
+                    <p>Rinse and drain the chickpeas.</p>
+                    <p>Add to the food processor with the rest of the ingredients except the flour and chocolate chips. Grind well. Pulse in the flour and chocolate.</p>
+                    <p>Spread into a pan.</p>
+                    <p>Bake until golden around the edges and just firm.</p>
+                    <p>No, but I will say that they are best when you make sure to grind up the batter as smooth as possible for the best final texture.</p>
+                    <p>You can use sunflower seed butter instead of the peanut butter if you prefer.</p>
+                    <p>Store leftovers in an airtight container in the fridge for up to 5 days. I prefer them chilled, but they are fine at any temperature.</p>
+                    <p>Be sure to use a very ripe banana for the best flavor.</p>
+                    <p>These are not super sweet, so add up to ¼ cup sugar to the batter if desired.</p>
+                    <p>Use honey instead of maple syrup if needed.</p>
+                    <p>Use almond butter or sunflower seed butter instead of the peanut butter.</p>
+                    <p>Use a gluten-free cup for cup flour blend instead of all purpose if desired.</p>
+                    <p>Make them nut-free with sunflower seed butter.</p>
+                    <p>Preheat the oven to 350 degrees F and grease an 8×8-inch pan with nonstick spray.</p>
+                    <p>Add the chickpeas to a colander to drain. Rinse with water. Drain.</p>
+                    <p>Add to a food processor with the banana, peanut butter, maple syrup, vanilla, salt, and baking soda. Grind on high to make a uniformly smooth batter. (It might take 15-30 seconds.)</p>
+                    <p>Pulse in the flour and chocolate until just combined.</p>
+                    <p>Pour batter into the prepared pan and bake for 24-26 minutes, or until the edges are lightly golden brown and the top is firm to the touch.</p>
+                    <p>Let cool fully in the pan and slice to serve.</p>
+                </div>
             </div>
         </div>
-        
-        
-        <!-- Nutrition (in two-column mode it goes below the ingredients) -->
-        
-
     </div>
-    
-    <div class="right-column">
-    
-    <!-- Description -->
-    
-
-    <!-- Directions -->
-    
-    <div class="directionsbox">
-        <h3 class="subhead">Directions</h3>
-        <div itemprop="recipeInstructions" class="directions text">
-            <p class="line">Here’s a peak at how to make this recipe so you know what to expect from the process. Scroll down to the bottom of the post for the full information including the timing and amounts.</p><p class="line">Rinse and drain the chickpeas.</p><p class="line">Add to the food processor with the rest of the ingredients except the flour and chocolate chips. Grind well. Pulse in the flour and chocolate.</p><p class="line">Spread into a pan.</p><p class="line">Bake until golden around the edges and just firm.</p><p class="line">No, but I will say that they are best when you make sure to grind up the batter as smooth as possible for the best final texture.</p><p class="line">You can use sunflower seed butter instead of the peanut butter if you prefer.</p><p class="line">Store leftovers in an airtight container in the fridge for up to 5 days. I prefer them chilled, but they are fine at any temperature.</p><p class="line">Be sure to use a very ripe banana for the best flavor.</p><p class="line">These are not super sweet, so add up to ¼ cup sugar to the batter if desired.</p><p class="line">Use honey instead of maple syrup if needed.</p><p class="line">Use almond butter or sunflower seed butter instead of the peanut butter.</p><p class="line">Use a gluten-free cup for cup flour blend instead of all purpose if desired.</p><p class="line">Make them nut-free with sunflower seed butter.</p><p class="line">Preheat the oven to 350 degrees F and grease an 8×8-inch pan with nonstick spray.</p><p class="line">Add the chickpeas to a colander to drain. Rinse with water. Drain.</p><p class="line">Add to a food processor with the banana, peanut butter, maple syrup, vanilla, salt, and baking soda. Grind on high to make a uniformly smooth batter. (It might take 15-30 seconds.)</p><p class="line">Pulse in the flour and chocolate until just combined.</p><p class="line">Pour batter into the prepared pan and bake for 24-26 minutes, or until the edges are lightly golden brown and the top is firm to the touch.</p><p class="line">Let cool fully in the pan and slice to serve.</p>
-        </div>
-    </div>
-    
-
-    <!-- Notes -->
-    
-    
-    <div class="notesbox">
-        <h3 class="subhead">Notes</h3>
-        <div itemprop="comment" class="notes text">
-            <p>TIP: I like to chop the chocolate chips or use mini ones so they are more evenly distributed throughout the batter, but you don’t have to do that if you don’t want to bother!</p><p>Store leftovers in an airtight container in the fridge for up to 5 days. I prefer them chilled, but they are fine at any temperature.</p><p>Be sure to use a very ripe banana for the best flavor.</p><p>These are not super sweet. Add 2-4 tablespoons sugar to the batter if desired.</p><p>Use honey instead of maple syrup if needed.</p><p>Use almond butter or sunflower seed butter instead of the peanut butter.</p><p>Use a gluten-free cup for cup flour blend instead of all purpose if desired.</p>
-        </div>
-    </div>
-    
-    
-
-    <!-- Nutrition (in regular mode it goes below the notes) -->
-    
-        <!-- Used in two different places depending on the recipe layout -->
-
-
-<div class="nutritionbox textbox">
-    <h3 class="subhead">Nutrition</h3>
-    <div itemprop="nutrition" class="nutrition text">
-        <p>Calories: 96kcal, Carbohydrates: 14g, Protein: 3g, Fat: 3g, Saturated Fat: 1g, Polyunsaturated Fat: 1g, Monounsaturated Fat: 1g, Sodium: 263mg, Potassium: 125mg, Fiber: 2g, Sugar: 5g, Vitamin A: 9IU, Vitamin C: 1mg, Calcium: 22mg, Iron: 1mg</p>
-    </div>
-</div>
-
-
-
-    
-    
-    </div>
-    
-    <div class="clear"></div>
-
-</div>
-
-
-
-
-
-    </body>
+</body>
 </html>

@@ -1,232 +1,393 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <style type="text/css">
-            /* Shared styles */
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorite Toddler Smoothie (with Veggies!) - Recipe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;700;900&family=Fira+Code:wght@400;600&family=Inter:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Warm Editorial Palette */
+            --bg-primary: #fffef9;
+            --bg-secondary: #faf7f0;
+            --bg-card: #ffffff;
+            --accent-warm: #d97706;
+            --accent-deep: #92400e;
+            --accent-sage: #059669;
+            --accent-muted: #6b7280;
+            --text-primary: #1f2937;
+            --text-muted: #6b7280;
+            --border: rgba(120, 113, 108, 0.2);
+
+            /* Typography */
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.5rem;
+            --text-2xl: 2.5rem;
+            --text-3xl: 3.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            background-image:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(120, 113, 108, 0.02) 2px,
+                    rgba(120, 113, 108, 0.02) 4px
+                );
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border-radius: 2px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        /* Header with Image */
+        .recipe-header {
+            position: relative;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, #f5f1e8 100%);
+            padding: 50px 40px;
+            border-bottom: 3px solid var(--accent-warm);
+        }
+
+        .recipe-image {
+            float: left;
+            margin-right: 30px;
+            margin-bottom: 20px;
+            border-radius: 2px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 3px solid var(--accent-deep);
+        }
+
+        .recipe-image img {
+            max-width: 200px;
+            max-height: 200px;
+            width: auto;
+            height: auto;
+            display: block;
+        }
+
+        h1 {
+            font-family: 'Merriweather', serif;
+            font-weight: 900;
+            font-size: var(--text-3xl);
+            color: var(--accent-deep);
+            margin-bottom: 15px;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .categories {
+            font-family: 'Fira Code', monospace;
+            font-weight: 400;
+            font-size: var(--text-xs);
+            color: var(--accent-warm);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .categories span {
+            background: rgba(217, 119, 6, 0.1);
+            padding: 4px 10px;
+            border-radius: 2px;
+            border: 1px solid rgba(217, 119, 6, 0.3);
+        }
+
+        .metadata {
+            font-family: 'Fira Code', monospace;
+            font-weight: 400;
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .metadata-item {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 2px;
+            border-left: 3px solid var(--accent-sage);
+        }
+
+        .metadata-item strong {
+            color: var(--accent-deep);
+            display: block;
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .source-link {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(5, 150, 105, 0.08);
+            border-radius: 2px;
+            border-left: 3px solid var(--accent-sage);
+        }
+
+        .source-link strong {
+            font-family: 'Fira Code', monospace;
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            color: var(--accent-sage);
+            letter-spacing: 0.1em;
+        }
+
+        .source-link a {
+            color: var(--accent-sage);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-bottom-color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .source-link a:hover {
+            border-bottom-color: var(--accent-sage);
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        /* Main Content */
+        .recipe-content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-family: 'Merriweather', serif;
+            font-weight: 700;
+            font-size: var(--text-2xl);
+            color: var(--accent-deep);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-warm);
+        }
+
+        /* Ingredients */
+        .ingredients-list {
+            background: var(--bg-secondary);
+            padding: 25px;
+            border-radius: 2px;
+            border-left: 4px solid var(--accent-warm);
+        }
+
+        .ingredients-list p {
+            margin: 10px 0;
+            font-size: var(--text-base);
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .ingredients-list p::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent-warm);
+            font-weight: 600;
+        }
+
+        .ingredients-list strong {
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            color: var(--accent-deep);
+            background: rgba(146, 64, 14, 0.1);
+            padding: 2px 6px;
+            border-radius: 2px;
+        }
+
+        /* Directions */
+        .directions-list {
+            counter-reset: step-counter;
+        }
+
+        .directions-list p {
+            margin: 20px 0;
+            padding-left: 60px;
+            position: relative;
+            line-height: 1.8;
+            font-size: var(--text-base);
+        }
+
+        .directions-list p::before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            font-size: var(--text-xl);
+            color: var(--accent-warm);
+            background: rgba(217, 119, 6, 0.1);
+            width: 45px;
+            height: 45px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--accent-warm);
+        }
+
+        /* Nutrition */
+        .nutrition-box {
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.08) 0%, rgba(5, 150, 105, 0.04) 100%);
+            padding: 25px;
+            border-radius: 2px;
+            border: 2px solid var(--accent-sage);
+            margin-top: 30px;
+        }
+
+        .nutrition-box h2 {
+            border-bottom-color: var(--accent-sage);
+            color: var(--accent-sage);
+        }
+
+        .nutrition-box p {
+            font-family: 'Fira Code', monospace;
+            font-size: var(--text-sm);
+            line-height: 2;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
             body {
-                font-family: Helvetica, sans-serif;
-                font-size: 16.0px;
-                color: #34302e;
-                margin: 0.25in;
+                padding: 20px 10px;
             }
-            .name {
-                font-size: 18.0px;
-                font-family: Helvetica, sans-serif;
-                font-weight: normal;
-                margin: 0 0 10px 0;
-            }
-            .categories {
-                color: #605D5D;
-                font-size: 14.0px;
-                font-family: Helvetica, sans-serif;
-                font-style: italic;
-            }
-            .rating {
-                color: #d10505;
-                font-size: 14.0px;
-            }
-            .metadata {
-                font-size: 14.0px;
-            }
-            .infobox p {
-                margin: 0;
-                line-height: 150%;
-            }
-            .subhead {
-                color: #d10505;
-                font-weight: bold;
-                font-size: 14.0px;
-                text-transform: uppercase;
-                margin: 10px 0;
-            }
-            
-            .ingredients p {
-                margin: 4px 0;
-            }
-            /* To prevent nutrition/directions from getting too close
-               to ingredients */
-            .ingredients {
-                padding-bottom: 10px;
-            }
-            .clear {
-                clear:both;
-            }
-            a {
-                color: #4990E2;
-                text-decoration: none;
-            }
-            /* Full page specific styles */
-            .text {
-                line-height: 130%;
-            }
-            .photobox {
-                
-                float: left;
-                margin-right: 14px;
-                
-                
-            }
-            .photo {
-                max-width: 140.0px;
-                max-height: 140.0px;
-                width: auto;
-                height: auto;
-            }
-            
-            .inline-image {
-                max-width: 25%;
-                max-height: 25%;
-                width: auto;
-                height: auto;
-            }
-            .photoswipe {
-                border: 1px #dddddd solid;
-                cursor: pointer;
-            }
-            .pswp__caption__center {
-                text-align: center !important;
-            }
-            .recipe {
-                
-                page-break-after: always;
-                
-                
-            }
-            .recipe:first-child {
-                border-top: 0 none;
-                margin-top: 0;
-                padding-top: 0;
-            }
-        </style>
-    </head>
-    <body>
-        <!-- Recipe -->
-<div class="recipe" itemscope itemtype="http://schema.org/Recipe" >
-    
-    <div class="infobox">
 
-        <!-- Image -->
-        
-        <div class="photobox">
-            
-            <a href="https://www.yummytoddlerfood.com/wp-content/uploads/2021/04/toddler-smoothies-in-mason-jars.jpg">
-                <img src="Images/117CFDD1-A0E8-4750-BF26-1FD14A0AF17F/7E3152F7-73E6-44A1-860B-DD1690000B47.jpg" itemprop="image" class="photo photoswipe"/>
-            </a>
-            
-            
+            .recipe-header {
+                padding: 30px 20px;
+            }
+
+            .recipe-image {
+                float: none;
+                margin: 0 auto 20px;
+                display: block;
+            }
+
+            h1 {
+                font-size: var(--text-2xl);
+            }
+
+            .recipe-content {
+                padding: 20px;
+            }
+
+            .directions-list p {
+                padding-left: 55px;
+            }
+
+            .directions-list p::before {
+                width: 40px;
+                height: 40px;
+                font-size: var(--text-lg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Recipe Header -->
+        <div class="recipe-header">
+            <h1>Favorite Toddler Smoothie (with Veggies!)</h1>
+
+            <div class="categories">
+                
+            </div>
+
+            <div class="metadata">
+                <div class="metadata-item">
+                    <strong>Prep Time</strong>
+                    <span>5 minutes</span>
+                </div>
+                <div class="metadata-item">
+                    <strong>Cook Time</strong>
+                    <span>0 minutes</span>
+                </div>
+                <div class="metadata-item">
+                    <strong>Servings</strong>
+                    <span>1 -2 servings</span>
+                </div>
+            </div>
+            <div class="source-link">
+                <strong>Source: </strong>
+                <a href="https://www.yummytoddlerfood.com/toddler-smoothies-with-hidden-veggies/?fbclid=IwY2xjawEgpzhleHRuA2FlbQIxMAABHcKbeBmY5L_yb7ZkknGGIiB5Ot6etmESccIEAkRVvInx5F1xRgHlRV93nw_aem_scR2qIZZiDFblqHPD6U0Aw" target="_blank">Yummytoddlerfood.com</a>
+            </div>
+
+            <div class="clear"></div>
         </div>
-        
 
-        <!-- Name -->
-        <h1 itemprop="name" class="name">Favorite Toddler Smoothie (with Veggies!)</h1>
-        
-        <!-- Info -->
-        
-        
-        <!-- Rating, categories -->
-        <p itemprop="aggregateRating" class="rating" value="0"></p>
-        
-        
-        <p class="metadata">
-        
-            <!-- Cook time, prep time, servings, difficulty -->
-            
-            <b>Prep Time: </b><span itemprop="prepTime">5 minutes</span>
-            
-            <b>Cook Time: </b><span itemprop="cookTime">0 minutes</span>
-            
-            <b>Servings: </b><span itemprop="recipeYield">1 -2 servings</span>
-            
+        <!-- Recipe Content -->
+        <div class="recipe-content">
+            <!-- Ingredients Section -->
+            <div class="section">
+                <h2>Ingredients</h2>
+                <div class="ingredients-list">
+                    <p>Milk (I prefer non-dairy)</p>
+                    <p>Fruit</p>
+                    <p>Veggie</p>
+                    <p>Frozen banana</p>
+                    <p>Optional add-ins</p>
+                    <p>AD</p>
+                    <p><strong>1cup</strong> milk (I prefer nondairy)</p>
+                    <p><strong>1small</strong> banana (fresh or frozen)</p>
+                    <p><strong>1/2cup</strong> fresh or frozen fruit (such as blueberries, strawberries, mango, apple, or kiwi)</p>
+                    <p><strong>1/2cup</strong> veggies (such as kale, spinach, raw fresh or frozen chopped cauliflower, raw fresh or frozen sliced zucchini, raw fresh or frozen sliced summer squash, roasted sweet potato, roasted butternut squash, steamed diced beets)</p>
+                    <p>Optional add ins (pick 1-2: 1 teaspoon hemp seeds, chia seeds, or ground flaxseed 1 tablespoon nut butter 2 tablespoons avocado 1-2 teaspoons cocoa powder 1-2 teaspoons honey or maple syrup 1 tablespoon rolled oats)</p>
+                </div>
+            </div>
 
-            <!-- Source -->
-            
-                <b>Source: </b>
-                
-                    <a itemprop="url" href="https://www.yummytoddlerfood.com/toddler-smoothies-with-hidden-veggies/?fbclid=IwY2xjawEgpzhleHRuA2FlbQIxMAABHcKbeBmY5L_yb7ZkknGGIiB5Ot6etmESccIEAkRVvInx5F1xRgHlRV93nw_aem_scR2qIZZiDFblqHPD6U0Aw">
-                        <span itemprop="author">Yummytoddlerfood.com</span>
-                    </a>
-                
-                
-            
-        </p>
-        
-        
-        
-        <div class="clear"></div>
-        
-
-    </div>
-    
-    <div class="left-column">
-
-        <!-- Ingredients -->
-        
-        <div class="ingredientsbox">
-            <h3 class="subhead">Ingredients</h3>
-            <div class="ingredients text">
-                <p class="line" itemprop="recipeIngredient">Milk (I prefer non-dairy)</p><p class="line" itemprop="recipeIngredient">Fruit</p><p class="line" itemprop="recipeIngredient">Veggie</p><p class="line" itemprop="recipeIngredient">Frozen banana</p><p class="line" itemprop="recipeIngredient">Optional add-ins</p><p class="line" itemprop="recipeIngredient">AD</p><p class="line" itemprop="recipeIngredient"><strong>1</strong> cup milk (I prefer nondairy)</p><p class="line" itemprop="recipeIngredient"><strong>1</strong> small banana (fresh or frozen)</p><p class="line" itemprop="recipeIngredient"><strong>1/2</strong> cup fresh or frozen fruit (such as blueberries, strawberries, mango, apple, or kiwi)</p><p class="line" itemprop="recipeIngredient"><strong>1/2</strong> cup veggies (such as kale, spinach, raw fresh or frozen chopped cauliflower, raw fresh or frozen sliced zucchini, raw fresh or frozen sliced summer squash, roasted sweet potato, roasted butternut squash, steamed diced beets)</p><p class="line" itemprop="recipeIngredient">Optional add ins (pick 1-2: 1 teaspoon hemp seeds, chia seeds, or ground flaxseed 1 tablespoon nut butter 2 tablespoons avocado 1-2 teaspoons cocoa powder 1-2 teaspoons honey or maple syrup 1 tablespoon rolled oats)</p>
+            <!-- Directions Section -->
+            <div class="section">
+                <h2>Directions</h2>
+                <div class="directions-list">
+                    <p>Add the milk to the blender. (We prefer nondairy milks since they seem to have a slightly better consistency and less of a tendency to separate after blending.)</p>
+                    <p>Add the fruit and veggie.</p>
+                    <p>Add any optional ingredients.</p>
+                    <p>Blend the smoothie really well to ensure that it has a very creamy texture.</p>
+                    <p>Serve it in a reusable pouch, a small open cup, or in a sippy cup depending on what your kid likes best.</p>
+                    <p>AD</p>
+                    <p>Add chosen ingredients to a blender.</p>
+                    <p>Blend until very smooth, stopping to scrape down the sides of the bowl and adding more liquid if needed.</p>
+                    <p>Serve immediately.</p>
+                </div>
             </div>
         </div>
-        
-        
-        <!-- Nutrition (in two-column mode it goes below the ingredients) -->
-        
-
     </div>
-    
-    <div class="right-column">
-    
-    <!-- Description -->
-    
-
-    <!-- Directions -->
-    
-    <div class="directionsbox">
-        <h3 class="subhead">Directions</h3>
-        <div itemprop="recipeInstructions" class="directions text">
-            <p class="line">Add the milk to the blender. (We prefer nondairy milks since they seem to have a slightly better consistency and less of a tendency to separate after blending.)</p><p class="line">Add the fruit and veggie.</p><p class="line">Add any optional ingredients.</p><p class="line">Blend the smoothie really well to ensure that it has a very creamy texture.</p><p class="line">Serve it in a reusable pouch, a small open cup, or in a sippy cup depending on what your kid likes best.</p><p class="line">AD</p><p class="line">Add chosen ingredients to a blender.</p><p class="line">Blend until very smooth, stopping to scrape down the sides of the bowl and adding more liquid if needed.</p><p class="line">Serve immediately.</p>
-        </div>
-    </div>
-    
-
-    <!-- Notes -->
-    
-    
-    <div class="notesbox">
-        <h3 class="subhead">Notes</h3>
-        <div itemprop="comment" class="notes text">
-            <p>If you can freeze the greens ahead of time, the finished product will taste much less “green” but will have the same nutrition. Just make sure the greens are dry, then put them into a zip top freezer bag and store in the freezer for up to 3 months.</p><p>You can use raw cauliflower, zucchini, beets, and summer squash. (Or you can freeze those raw veggies and add them frozen.)</p><p>You can add fully cooked and cooled sweet potato, butternut squash, and beets. (Any kind work, even leftover puree, as long as it’s not seasoned or salted.)</p><p>Blend really (really!) well to get a very smooth consistency, adding a little more milk (or even water) as needed to thin.</p>
-        </div>
-    </div>
-    
-    
-
-    <!-- Nutrition (in regular mode it goes below the notes) -->
-    
-        <!-- Used in two different places depending on the recipe layout -->
-
-
-<div class="nutritionbox textbox">
-    <h3 class="subhead">Nutrition</h3>
-    <div itemprop="nutrition" class="nutrition text">
-        <p>Calories: 354kcal, Carbohydrates: 62g, Protein: 13g, Fat: 9g, Saturated Fat: 5g, Polyunsaturated Fat: 1g, Monounsaturated Fat: 2g, Cholesterol: 24mg, Sodium: 150mg, Potassium: 994mg, Fiber: 8g, Sugar: 34g, Vitamin A: 5132IU, Vitamin C: 27mg, Calcium: 309mg, Iron: 1mg</p>
-    </div>
-</div>
-
-
-
-    
-    
-    </div>
-    
-    <div class="clear"></div>
-
-</div>
-
-
-
-
-
-    </body>
+</body>
 </html>

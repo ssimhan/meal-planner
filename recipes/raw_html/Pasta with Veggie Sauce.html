@@ -1,193 +1,378 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <style type="text/css">
-            /* Shared styles */
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasta with Veggie Sauce - Recipe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;700;900&family=Fira+Code:wght@400;600&family=Inter:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Warm Editorial Palette */
+            --bg-primary: #fffef9;
+            --bg-secondary: #faf7f0;
+            --bg-card: #ffffff;
+            --accent-warm: #d97706;
+            --accent-deep: #92400e;
+            --accent-sage: #059669;
+            --accent-muted: #6b7280;
+            --text-primary: #1f2937;
+            --text-muted: #6b7280;
+            --border: rgba(120, 113, 108, 0.2);
+
+            /* Typography */
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.5rem;
+            --text-2xl: 2.5rem;
+            --text-3xl: 3.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            background-image:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(120, 113, 108, 0.02) 2px,
+                    rgba(120, 113, 108, 0.02) 4px
+                );
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border-radius: 2px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        /* Header with Image */
+        .recipe-header {
+            position: relative;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, #f5f1e8 100%);
+            padding: 50px 40px;
+            border-bottom: 3px solid var(--accent-warm);
+        }
+
+        .recipe-image {
+            float: left;
+            margin-right: 30px;
+            margin-bottom: 20px;
+            border-radius: 2px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 3px solid var(--accent-deep);
+        }
+
+        .recipe-image img {
+            max-width: 200px;
+            max-height: 200px;
+            width: auto;
+            height: auto;
+            display: block;
+        }
+
+        h1 {
+            font-family: 'Merriweather', serif;
+            font-weight: 900;
+            font-size: var(--text-3xl);
+            color: var(--accent-deep);
+            margin-bottom: 15px;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .categories {
+            font-family: 'Fira Code', monospace;
+            font-weight: 400;
+            font-size: var(--text-xs);
+            color: var(--accent-warm);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .categories span {
+            background: rgba(217, 119, 6, 0.1);
+            padding: 4px 10px;
+            border-radius: 2px;
+            border: 1px solid rgba(217, 119, 6, 0.3);
+        }
+
+        .metadata {
+            font-family: 'Fira Code', monospace;
+            font-weight: 400;
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .metadata-item {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 2px;
+            border-left: 3px solid var(--accent-sage);
+        }
+
+        .metadata-item strong {
+            color: var(--accent-deep);
+            display: block;
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .source-link {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(5, 150, 105, 0.08);
+            border-radius: 2px;
+            border-left: 3px solid var(--accent-sage);
+        }
+
+        .source-link strong {
+            font-family: 'Fira Code', monospace;
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            color: var(--accent-sage);
+            letter-spacing: 0.1em;
+        }
+
+        .source-link a {
+            color: var(--accent-sage);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-bottom-color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .source-link a:hover {
+            border-bottom-color: var(--accent-sage);
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        /* Main Content */
+        .recipe-content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-family: 'Merriweather', serif;
+            font-weight: 700;
+            font-size: var(--text-2xl);
+            color: var(--accent-deep);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-warm);
+        }
+
+        /* Ingredients */
+        .ingredients-list {
+            background: var(--bg-secondary);
+            padding: 25px;
+            border-radius: 2px;
+            border-left: 4px solid var(--accent-warm);
+        }
+
+        .ingredients-list p {
+            margin: 10px 0;
+            font-size: var(--text-base);
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .ingredients-list p::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent-warm);
+            font-weight: 600;
+        }
+
+        .ingredients-list strong {
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            color: var(--accent-deep);
+            background: rgba(146, 64, 14, 0.1);
+            padding: 2px 6px;
+            border-radius: 2px;
+        }
+
+        /* Directions */
+        .directions-list {
+            counter-reset: step-counter;
+        }
+
+        .directions-list p {
+            margin: 20px 0;
+            padding-left: 60px;
+            position: relative;
+            line-height: 1.8;
+            font-size: var(--text-base);
+        }
+
+        .directions-list p::before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            font-size: var(--text-xl);
+            color: var(--accent-warm);
+            background: rgba(217, 119, 6, 0.1);
+            width: 45px;
+            height: 45px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--accent-warm);
+        }
+
+        /* Nutrition */
+        .nutrition-box {
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.08) 0%, rgba(5, 150, 105, 0.04) 100%);
+            padding: 25px;
+            border-radius: 2px;
+            border: 2px solid var(--accent-sage);
+            margin-top: 30px;
+        }
+
+        .nutrition-box h2 {
+            border-bottom-color: var(--accent-sage);
+            color: var(--accent-sage);
+        }
+
+        .nutrition-box p {
+            font-family: 'Fira Code', monospace;
+            font-size: var(--text-sm);
+            line-height: 2;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
             body {
-                font-family: Helvetica, sans-serif;
-                font-size: 16.0px;
-                color: #34302e;
-                margin: 0.25in;
+                padding: 20px 10px;
             }
-            .name {
-                font-size: 18.0px;
-                font-family: Helvetica, sans-serif;
-                font-weight: normal;
-                margin: 0 0 10px 0;
-            }
-            .categories {
-                color: #605D5D;
-                font-size: 14.0px;
-                font-family: Helvetica, sans-serif;
-                font-style: italic;
-            }
-            .rating {
-                color: #d10505;
-                font-size: 14.0px;
-            }
-            .metadata {
-                font-size: 14.0px;
-            }
-            .infobox p {
-                margin: 0;
-                line-height: 150%;
-            }
-            .subhead {
-                color: #d10505;
-                font-weight: bold;
-                font-size: 14.0px;
-                text-transform: uppercase;
-                margin: 10px 0;
-            }
-            
-            .ingredients p {
-                margin: 4px 0;
-            }
-            /* To prevent nutrition/directions from getting too close
-               to ingredients */
-            .ingredients {
-                padding-bottom: 10px;
-            }
-            .clear {
-                clear:both;
-            }
-            a {
-                color: #4990E2;
-                text-decoration: none;
-            }
-            /* Full page specific styles */
-            .text {
-                line-height: 130%;
-            }
-            .photobox {
-                
-                float: left;
-                margin-right: 14px;
-                
-                
-            }
-            .photo {
-                max-width: 140.0px;
-                max-height: 140.0px;
-                width: auto;
-                height: auto;
-            }
-            
-            .inline-image {
-                max-width: 25%;
-                max-height: 25%;
-                width: auto;
-                height: auto;
-            }
-            .photoswipe {
-                border: 1px #dddddd solid;
-                cursor: pointer;
-            }
-            .pswp__caption__center {
-                text-align: center !important;
-            }
-            .recipe {
-                
-                page-break-after: always;
-                
-                
-            }
-            .recipe:first-child {
-                border-top: 0 none;
-                margin-top: 0;
-                padding-top: 0;
-            }
-        </style>
-    </head>
-    <body>
-        <!-- Recipe -->
-<div class="recipe" itemscope itemtype="http://schema.org/Recipe" >
-    
-    <div class="infobox">
 
-        <!-- Image -->
-        
+            .recipe-header {
+                padding: 30px 20px;
+            }
 
-        <!-- Name -->
-        <h1 itemprop="name" class="name">Pasta with Veggie Sauce</h1>
-        
-        <!-- Info -->
-        
-        
-        <!-- Rating, categories -->
-        <p itemprop="aggregateRating" class="rating" value="5">★★★★★</p>
-        
-            <p itemprop="recipeCategory" class="categories">Dinner, Instant Pot, Italian</p>
-        
-        
-        <p class="metadata">
-        
-            <!-- Cook time, prep time, servings, difficulty -->
-            
+            .recipe-image {
+                float: none;
+                margin: 0 auto 20px;
+                display: block;
+            }
 
-            <!-- Source -->
-            
-        </p>
-        
-        
-        
-        <div class="clear"></div>
-        
+            h1 {
+                font-size: var(--text-2xl);
+            }
 
-    </div>
-    
-    <div class="left-column">
+            .recipe-content {
+                padding: 20px;
+            }
 
-        <!-- Ingredients -->
-        
-        <div class="ingredientsbox">
-            <h3 class="subhead">Ingredients</h3>
-            <div class="ingredients text">
-                <p class="line" itemprop="recipeIngredient"><strong>1</strong> beetroot</p><p class="line" itemprop="recipeIngredient"><strong>1</strong> potato</p><p class="line" itemprop="recipeIngredient"><strong>1</strong> onion</p><p class="line" itemprop="recipeIngredient">Cashews, soaked</p><p class="line" itemprop="recipeIngredient">Salt</p><p class="line" itemprop="recipeIngredient">Cumin powder</p><p class="line" itemprop="recipeIngredient">Pasta, penne</p>
+            .directions-list p {
+                padding-left: 55px;
+            }
+
+            .directions-list p::before {
+                width: 40px;
+                height: 40px;
+                font-size: var(--text-lg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Recipe Header -->
+        <div class="recipe-header">
+            <h1>Pasta with Veggie Sauce</h1>
+
+            <div class="categories">
+                <span>Dinner</span>
+                <span>Instant Pot</span>
+                <span>Italian</span>
+            </div>
+
+            <div class="metadata">
+                
+            </div>
+
+            <div class="clear"></div>
+        </div>
+
+        <!-- Recipe Content -->
+        <div class="recipe-content">
+            <!-- Ingredients Section -->
+            <div class="section">
+                <h2>Ingredients</h2>
+                <div class="ingredients-list">
+                    <p>1beetroot</p>
+                    <p>1potato</p>
+                    <p>1onion</p>
+                    <p>Cashews, soaked</p>
+                    <p>Salt</p>
+                    <p>Cumin powder</p>
+                    <p>Pasta, penne</p>
+                </div>
+            </div>
+
+            <!-- Directions Section -->
+            <div class="section">
+                <h2>Directions</h2>
+                <div class="directions-list">
+                    <p>Soak handful or two of cashews in small stainless steel bowl</p>
+                    <p>Peel and quarter all veggies (can also use minimal carrot)</p>
+                    <p>Boil water for pasta (1L+)</p>
+                    <p>Place 2 cups water in IP pot with trivet on top</p>
+                    <p>Balance the veggies on top of trivet and nut bowl on top of that</p>
+                    <p>Set IP on manual for 5 minutes (double check online)</p>
+                    <p>Cook pasta while IP is working</p>
+                    <p>Quick release IP once done</p>
+                    <p>Blend all veggies and nuts</p>
+                    <p>Add salt, cumin powder, pepper and other spices as needed to make it tasty</p>
+                    <p>Mix sauce with pasta and serve</p>
+                </div>
             </div>
         </div>
-        
-        
-        <!-- Nutrition (in two-column mode it goes below the ingredients) -->
-        
-
     </div>
-    
-    <div class="right-column">
-    
-    <!-- Description -->
-    
-
-    <!-- Directions -->
-    
-    <div class="directionsbox">
-        <h3 class="subhead">Directions</h3>
-        <div itemprop="recipeInstructions" class="directions text">
-            <p class="line">Soak handful or two of cashews in small stainless steel bowl</p><p class="line">Peel and quarter all veggies (can also use minimal carrot)</p><p class="line">Boil water for pasta (1L+)</p><p class="line">Place 2 cups water in IP pot with trivet on top</p><p class="line">Balance the veggies on top of trivet and nut bowl on top of that</p><p class="line">Set IP on manual for 5 minutes (double check online)</p><p class="line">Cook pasta while IP is working</p><p class="line">Quick release IP once done</p><p class="line">Blend all veggies and nuts</p><p class="line">Add salt, cumin powder, pepper and other spices as needed to make it tasty</p><p class="line">Mix sauce with pasta and serve</p>
-        </div>
-    </div>
-    
-
-    <!-- Notes -->
-    
-
-    <!-- Nutrition (in regular mode it goes below the notes) -->
-    
-        <!-- Used in two different places depending on the recipe layout -->
-
-
-    
-    
-    </div>
-    
-    <div class="clear"></div>
-
-</div>
-
-
-
-
-
-    </body>
+</body>
 </html>

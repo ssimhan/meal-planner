@@ -1,232 +1,392 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <style type="text/css">
-            /* Shared styles */
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Fruit Snacks (Gummies) - Recipe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;700;900&family=Fira+Code:wght@400;600&family=Inter:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Warm Editorial Palette */
+            --bg-primary: #fffef9;
+            --bg-secondary: #faf7f0;
+            --bg-card: #ffffff;
+            --accent-warm: #d97706;
+            --accent-deep: #92400e;
+            --accent-sage: #059669;
+            --accent-muted: #6b7280;
+            --text-primary: #1f2937;
+            --text-muted: #6b7280;
+            --border: rgba(120, 113, 108, 0.2);
+
+            /* Typography */
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.5rem;
+            --text-2xl: 2.5rem;
+            --text-3xl: 3.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            background-image:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(120, 113, 108, 0.02) 2px,
+                    rgba(120, 113, 108, 0.02) 4px
+                );
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border-radius: 2px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        /* Header with Image */
+        .recipe-header {
+            position: relative;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, #f5f1e8 100%);
+            padding: 50px 40px;
+            border-bottom: 3px solid var(--accent-warm);
+        }
+
+        .recipe-image {
+            float: left;
+            margin-right: 30px;
+            margin-bottom: 20px;
+            border-radius: 2px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 3px solid var(--accent-deep);
+        }
+
+        .recipe-image img {
+            max-width: 200px;
+            max-height: 200px;
+            width: auto;
+            height: auto;
+            display: block;
+        }
+
+        h1 {
+            font-family: 'Merriweather', serif;
+            font-weight: 900;
+            font-size: var(--text-3xl);
+            color: var(--accent-deep);
+            margin-bottom: 15px;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .categories {
+            font-family: 'Fira Code', monospace;
+            font-weight: 400;
+            font-size: var(--text-xs);
+            color: var(--accent-warm);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .categories span {
+            background: rgba(217, 119, 6, 0.1);
+            padding: 4px 10px;
+            border-radius: 2px;
+            border: 1px solid rgba(217, 119, 6, 0.3);
+        }
+
+        .metadata {
+            font-family: 'Fira Code', monospace;
+            font-weight: 400;
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .metadata-item {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 2px;
+            border-left: 3px solid var(--accent-sage);
+        }
+
+        .metadata-item strong {
+            color: var(--accent-deep);
+            display: block;
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .source-link {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(5, 150, 105, 0.08);
+            border-radius: 2px;
+            border-left: 3px solid var(--accent-sage);
+        }
+
+        .source-link strong {
+            font-family: 'Fira Code', monospace;
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            color: var(--accent-sage);
+            letter-spacing: 0.1em;
+        }
+
+        .source-link a {
+            color: var(--accent-sage);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-bottom-color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .source-link a:hover {
+            border-bottom-color: var(--accent-sage);
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        /* Main Content */
+        .recipe-content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-family: 'Merriweather', serif;
+            font-weight: 700;
+            font-size: var(--text-2xl);
+            color: var(--accent-deep);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-warm);
+        }
+
+        /* Ingredients */
+        .ingredients-list {
+            background: var(--bg-secondary);
+            padding: 25px;
+            border-radius: 2px;
+            border-left: 4px solid var(--accent-warm);
+        }
+
+        .ingredients-list p {
+            margin: 10px 0;
+            font-size: var(--text-base);
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .ingredients-list p::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent-warm);
+            font-weight: 600;
+        }
+
+        .ingredients-list strong {
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            color: var(--accent-deep);
+            background: rgba(146, 64, 14, 0.1);
+            padding: 2px 6px;
+            border-radius: 2px;
+        }
+
+        /* Directions */
+        .directions-list {
+            counter-reset: step-counter;
+        }
+
+        .directions-list p {
+            margin: 20px 0;
+            padding-left: 60px;
+            position: relative;
+            line-height: 1.8;
+            font-size: var(--text-base);
+        }
+
+        .directions-list p::before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            font-size: var(--text-xl);
+            color: var(--accent-warm);
+            background: rgba(217, 119, 6, 0.1);
+            width: 45px;
+            height: 45px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--accent-warm);
+        }
+
+        /* Nutrition */
+        .nutrition-box {
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.08) 0%, rgba(5, 150, 105, 0.04) 100%);
+            padding: 25px;
+            border-radius: 2px;
+            border: 2px solid var(--accent-sage);
+            margin-top: 30px;
+        }
+
+        .nutrition-box h2 {
+            border-bottom-color: var(--accent-sage);
+            color: var(--accent-sage);
+        }
+
+        .nutrition-box p {
+            font-family: 'Fira Code', monospace;
+            font-size: var(--text-sm);
+            line-height: 2;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
             body {
-                font-family: Helvetica, sans-serif;
-                font-size: 16.0px;
-                color: #34302e;
-                margin: 0.25in;
+                padding: 20px 10px;
             }
-            .name {
-                font-size: 18.0px;
-                font-family: Helvetica, sans-serif;
-                font-weight: normal;
-                margin: 0 0 10px 0;
-            }
-            .categories {
-                color: #605D5D;
-                font-size: 14.0px;
-                font-family: Helvetica, sans-serif;
-                font-style: italic;
-            }
-            .rating {
-                color: #d10505;
-                font-size: 14.0px;
-            }
-            .metadata {
-                font-size: 14.0px;
-            }
-            .infobox p {
-                margin: 0;
-                line-height: 150%;
-            }
-            .subhead {
-                color: #d10505;
-                font-weight: bold;
-                font-size: 14.0px;
-                text-transform: uppercase;
-                margin: 10px 0;
-            }
-            
-            .ingredients p {
-                margin: 4px 0;
-            }
-            /* To prevent nutrition/directions from getting too close
-               to ingredients */
-            .ingredients {
-                padding-bottom: 10px;
-            }
-            .clear {
-                clear:both;
-            }
-            a {
-                color: #4990E2;
-                text-decoration: none;
-            }
-            /* Full page specific styles */
-            .text {
-                line-height: 130%;
-            }
-            .photobox {
-                
-                float: left;
-                margin-right: 14px;
-                
-                
-            }
-            .photo {
-                max-width: 140.0px;
-                max-height: 140.0px;
-                width: auto;
-                height: auto;
-            }
-            
-            .inline-image {
-                max-width: 25%;
-                max-height: 25%;
-                width: auto;
-                height: auto;
-            }
-            .photoswipe {
-                border: 1px #dddddd solid;
-                cursor: pointer;
-            }
-            .pswp__caption__center {
-                text-align: center !important;
-            }
-            .recipe {
-                
-                page-break-after: always;
-                
-                
-            }
-            .recipe:first-child {
-                border-top: 0 none;
-                margin-top: 0;
-                padding-top: 0;
-            }
-        </style>
-    </head>
-    <body>
-        <!-- Recipe -->
-<div class="recipe" itemscope itemtype="http://schema.org/Recipe" >
-    
-    <div class="infobox">
 
-        <!-- Image -->
-        
-        <div class="photobox">
-            
-            <a href="https://www.yummytoddlerfood.com/wp-content/uploads/2015/04/Fruit-Snacks-9-horiz.jpg">
-                <img src="Images/D3081F70-306E-4749-BB5C-EC57FE2F29DE/E2DD33F4-89F2-4DBE-9A6C-631A94118658.jpg" itemprop="image" class="photo photoswipe"/>
-            </a>
-            
-            
+            .recipe-header {
+                padding: 30px 20px;
+            }
+
+            .recipe-image {
+                float: none;
+                margin: 0 auto 20px;
+                display: block;
+            }
+
+            h1 {
+                font-size: var(--text-2xl);
+            }
+
+            .recipe-content {
+                padding: 20px;
+            }
+
+            .directions-list p {
+                padding-left: 55px;
+            }
+
+            .directions-list p::before {
+                width: 40px;
+                height: 40px;
+                font-size: var(--text-lg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Recipe Header -->
+        <div class="recipe-header">
+            <h1>Easy Fruit Snacks (Gummies)</h1>
+
+            <div class="categories">
+                
+            </div>
+
+            <div class="metadata">
+                <div class="metadata-item">
+                    <strong>Prep Time</strong>
+                    <span>10 minutes</span>
+                </div>
+                <div class="metadata-item">
+                    <strong>Cook Time</strong>
+                    <span>8 minutes</span>
+                </div>
+                <div class="metadata-item">
+                    <strong>Servings</strong>
+                    <span>6</span>
+                </div>
+            </div>
+            <div class="source-link">
+                <strong>Source: </strong>
+                <a href="https://www.yummytoddlerfood.com/blueberry-yogurt-homemade-gummies/" target="_blank">Yummytoddlerfood.com</a>
+            </div>
+
+            <div class="clear"></div>
         </div>
-        
 
-        <!-- Name -->
-        <h1 itemprop="name" class="name">Easy Fruit Snacks (Gummies)</h1>
-        
-        <!-- Info -->
-        
-        
-        <!-- Rating, categories -->
-        <p itemprop="aggregateRating" class="rating" value="0"></p>
-        
-        
-        <p class="metadata">
-        
-            <!-- Cook time, prep time, servings, difficulty -->
-            
-            <b>Prep Time: </b><span itemprop="prepTime">10 minutes</span>
-            
-            <b>Cook Time: </b><span itemprop="cookTime">8 minutes</span>
-            
-            <b>Servings: </b><span itemprop="recipeYield">6</span>
-            
+        <!-- Recipe Content -->
+        <div class="recipe-content">
+            <!-- Ingredients Section -->
+            <div class="section">
+                <h2>Ingredients</h2>
+                <div class="ingredients-list">
+                    <p>AD</p>
+                    <p><strong>1cup</strong> strawberries</p>
+                    <p>¼cup carrots</p>
+                    <p>½cup water (or apple juice)</p>
+                    <p>2tablespoons honey (or maple syrup)</p>
+                    <p>6teaspoons unflavored gelatin</p>
+                </div>
+            </div>
 
-            <!-- Source -->
-            
-                <b>Source: </b>
-                
-                    <a itemprop="url" href="https://www.yummytoddlerfood.com/blueberry-yogurt-homemade-gummies/">
-                        <span itemprop="author">Yummytoddlerfood.com</span>
-                    </a>
-                
-                
-            
-        </p>
-        
-        
-        
-        <div class="clear"></div>
-        
-
-    </div>
-    
-    <div class="left-column">
-
-        <!-- Ingredients -->
-        
-        <div class="ingredientsbox">
-            <h3 class="subhead">Ingredients</h3>
-            <div class="ingredients text">
-                <p class="line" itemprop="recipeIngredient">AD</p><p class="line" itemprop="recipeIngredient"><strong>1</strong> cup strawberries</p><p class="line" itemprop="recipeIngredient"><strong>¼</strong> cup carrots</p><p class="line" itemprop="recipeIngredient"><strong>½</strong> cup water (or apple juice)</p><p class="line" itemprop="recipeIngredient"><strong>2</strong> tablespoons honey (or maple syrup)</p><p class="line" itemprop="recipeIngredient"><strong>6</strong> teaspoons unflavored gelatin</p>
+            <!-- Directions Section -->
+            <div class="section">
+                <h2>Directions</h2>
+                <div class="directions-list">
+                    <p>AD</p>
+                    <p>Add the berries and carrots to a blender.</p>
+                    <p>Puree smooth.</p>
+                    <p>Add the berry mixture to a small pot set over low heat. Bring to a simmer.</p>
+                    <p>Dissolve the gelatin. Whisk into the fruit mixture. Add to the mold and set.</p>
+                    <p>AD</p>
+                    <p>Add the berries, carrots, and water or juice to a blender. Puree smooth.</p>
+                    <p>Add the berry mixture to a small pot set over low heat. Add the honey or maple syrup. Bring to a simmer.</p>
+                    <p>(Plan to do this step and the next one quickly.) Add the gelatin to a bowl with ⅓ cup cold water. Stir well to completely dissolve the gelatin to ensure the fruit snacks are lump-free.</p>
+                    <p>Working quickly, whisk the gelatin mixture into the simmering fruit mixture to thoroughly combine. Whisk constantly for a minute or two as the mixture starts to thicken. Turn off the heat.</p>
+                    <p>(Alternatively, you can sprinkle the gelatin right over the simmering fruit and whisk vigorously to combine. Omit the water if you do that. Know you may have some small clumps of gelatin.)</p>
+                    <p>Portion out into a silicone gummy bear mold (or other silicone mold) set on a small baking tray (which is more stable than the mold on its own). Refrigerate for at least an hour and up to overnight to set up.</p>
+                    <p>Remove from the mold to serve.</p>
+                </div>
             </div>
         </div>
-        
-        
-        <!-- Nutrition (in two-column mode it goes below the ingredients) -->
-        
-
     </div>
-    
-    <div class="right-column">
-    
-    <!-- Description -->
-    
-
-    <!-- Directions -->
-    
-    <div class="directionsbox">
-        <h3 class="subhead">Directions</h3>
-        <div itemprop="recipeInstructions" class="directions text">
-            <p class="line">AD</p><p class="line">Add the berries and carrots to a blender.</p><p class="line">Puree smooth.</p><p class="line">Add the berry mixture to a small pot set over low heat. Bring to a simmer.</p><p class="line">Dissolve the gelatin. Whisk into the fruit mixture. Add to the mold and set.</p><p class="line">AD</p><p class="line">Add the berries, carrots, and water or juice to a blender. Puree smooth.</p><p class="line">Add the berry mixture to a small pot set over low heat. Add the honey or maple syrup. Bring to a simmer.</p><p class="line">(Plan to do this step and the next one quickly.) Add the gelatin to a bowl with ⅓ cup cold water. Stir well to completely dissolve the gelatin to ensure the fruit snacks are lump-free.</p><p class="line">Working quickly, whisk the gelatin mixture into the simmering fruit mixture to thoroughly combine. Whisk constantly for a minute or two as the mixture starts to thicken. Turn off the heat.</p><p class="line">(Alternatively, you can sprinkle the gelatin right over the simmering fruit and whisk vigorously to combine. Omit the water if you do that. Know you may have some small clumps of gelatin.)</p><p class="line">Portion out into a silicone gummy bear mold (or other silicone mold) set on a small baking tray (which is more stable than the mold on its own). Refrigerate for at least an hour and up to overnight to set up.</p><p class="line">Remove from the mold to serve.</p>
-        </div>
-    </div>
-    
-
-    <!-- Notes -->
-    
-    
-    <div class="notesbox">
-        <h3 class="subhead">Notes</h3>
-        <div itemprop="comment" class="notes text">
-            <p>Store in an airtight container in the fridge for up to 2 weeks.</p><p>Use fresh or thawed frozen berries and cooked or canned carrots according to what you prefer.</p><p>Fully dissolve the gelatin in the liquid before stirring into the fruit mixture to ensure there are no clumps and the gummies set up properly. This step needs to be done quickly and immediately added to the simmering fruit mixture. If you put the bowl of dissolved gelatin down and step away from it, it will start to solidify.</p><p>Trade in another berry if you prefer. Note that berries with seeds, such as raspberries or blackberries, may have a seedy texture. You can strain the puree through a fine-mesh strainer to make a smooth gummy. Or use mango for the strawberries.</p>
-        </div>
-    </div>
-    
-    
-
-    <!-- Nutrition (in regular mode it goes below the notes) -->
-    
-        <!-- Used in two different places depending on the recipe layout -->
-
-
-<div class="nutritionbox textbox">
-    <h3 class="subhead">Nutrition</h3>
-    <div itemprop="nutrition" class="nutrition text">
-        <p>Calories: 45kcal, Carbohydrates: 8g, Protein: 4g, Fat: 0.1g, Saturated Fat: 0.01g, Polyunsaturated Fat: 0.04g, Monounsaturated Fat: 0.01g, Sodium: 13mg, Potassium: 58mg, Fiber: 1g, Sugar: 7g, Vitamin A: 894IU, Vitamin C: 14mg, Calcium: 9mg, Iron: 0.2mg</p>
-    </div>
-</div>
-
-
-
-    
-    
-    </div>
-    
-    <div class="clear"></div>
-
-</div>
-
-
-
-
-
-    </body>
+</body>
 </html>

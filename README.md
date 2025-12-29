@@ -32,6 +32,19 @@ pip install -r requirements.txt
 
 ## Usage
 
+### Visual Workflow Dashboard (Recommended)
+
+For the easiest experience, use the visual workflow dashboard:
+
+1. **Open `workflow.html`** in your browser (double-click or right-click → "Open in Default Browser")
+2. **Click buttons** to copy commands for each step
+3. **Paste into Claude Code** (Cmd+L in VS Code to open Claude Code chat)
+4. **Copy git commands** from the dashboard to commit and push
+
+The dashboard auto-calculates dates, provides git command shortcuts, and tracks your progress through the weekly workflow.
+
+---
+
 ### Quick Start (Easy Commands)
 
 Use the `./mealplan` wrapper script with numbered workflow commands:

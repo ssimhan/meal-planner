@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Planning Workflow</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: #4ec9b0; margin-bottom: 0.5rem; }
+        .subtitle { color: #858585; margin-bottom: 2rem; }
+
+        .workflow-step {
+            background: #252526;
+            border: 1px solid #3e3e42;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .workflow-step h2 {
+            color: #569cd6;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+        .workflow-step p {
+            color: #858585;
+            margin-bottom: 1rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        button {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-family: 'Consolas', 'Courier New', monospace;
+            transition: background 0.2s;
+        }
+        button:hover { background: #1177bb; }
+        button:active { background: #0d5a8f; }
+
+        .date-input {
+            background: #3c3c3c;
+            border: 1px solid #3e3e42;
+            color: #d4d4d4;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            margin-left: 0.5rem;
+        }
+        .status-pending { background: #664d03; color: #ffecb5; }
+        .status-ready { background: #0f5132; color: #a3cfbb; }
+
+        .git-commands {
+            background: #252526;
+            border-left: 3px solid #4ec9b0;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+        .git-commands code {
+            color: #ce9178;
+            display: block;
+            margin: 0.25rem 0;
+        }
+
+        .toast {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: #0f5132;
+            color: #a3cfbb;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+        .toast.show { display: block; }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍽️ Meal Planning Workflow</h1>
+        <p class="subtitle">GitHub + VS Code + Claude Code</p>
+
+        <!-- Week Date Helper -->
+        <div class="workflow-step">
+            <h2>📅 Current Week</h2>
+            <p>Next Monday: <strong id="nextMonday"></strong></p>
+            <input type="date" id="weekDate" class="date-input" />
+            <button onclick="useToday()">Use Today's Week</button>
+            <button onclick="useNextWeek()">Use Next Week</button>
+        </div>
+
+        <!-- Step 1: Start Week -->
+        <div class="workflow-step">
+            <h2>1️⃣ Start New Week <span class="status-badge status-pending" id="status1">Not Started</span></h2>
+            <p>Creates <code>inputs/YYYY-MM-DD.yml</code> with schedule and farmers market proposal</p>
+
+            <div class="button-group">
+                <button onclick="copyCommand('/1-start')">Copy Command</button>
+                <button onclick="copyAndOpenVSCode('/1-start')">🚀 Copy + Open VS Code</button>
+                <button onclick="showGitCommands('step1')">Show Git Commands</button>
+            </div>
+
+            <div class="git-commands" id="git-step1" style="display:none;">
+                <code>git pull</code>
+                <code>git add inputs/</code>
+                <code id="commit1">git commit -m "Add intake for week of YYYY-MM-DD"</code>
+                <code>git push</code>
+                <button onclick="copyGitCommands('step1')" style="margin-top:0.5rem;">Copy All</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Update Vegetables -->
+        <div class="workflow-step">
+            <h2>2️⃣ Update Vegetables <span class="status-badge status-pending" id="status2">Not Started</span></h2>
+            <p>Edit <code>inputs/YYYY-MM-DD.yml</code> with actual farmers market purchases</p>
+
+            <div class="button-group">
+                <button onclick="copyCommandWithDate('/2-update')">Copy Command</button>
+                <button onclick="copyWithDateAndOpenVSCode('/2-update')">🚀 Copy + Open VS Code</button>
+                <button onclick="showGitCommands('step2')">Show Git Commands</button>
+            </div>
+
+            <div class="git-commands" id="git-step2" style="display:none;">
+                <code>git pull</code>
+                <code id="commit2">git commit -am "Confirm vegetables for YYYY-MM-DD"</code>
+                <code>git push</code>
+                <button onclick="copyGitCommands('step2')" style="margin-top:0.5rem;">Copy All</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Generate Plan -->
+        <div class="workflow-step">
+            <h2>3️⃣ Generate Meal Plan <span class="status-badge status-pending" id="status3">Not Started</span></h2>
+            <p>Creates <code>plans/YYYY-MM-DD-weekly-plan.md</code> and updates <code>data/history.yml</code></p>
+
+            <div class="button-group">
+                <button onclick="copyCommandWithDate('/3-plan')">Copy Command</button>
+                <button onclick="copyWithDateAndOpenVSCode('/3-plan')">🚀 Copy + Open VS Code</button>
+                <button onclick="showGitCommands('step3')">Show Git Commands</button>
+            </div>
+
+            <div class="git-commands" id="git-step3" style="display:none;">
+                <code>git pull</code>
+                <code>git add plans/ data/</code>
+                <code id="commit3">git commit -m "Generate plan for week of YYYY-MM-DD"</code>
+                <code>git push</code>
+                <button onclick="copyGitCommands('step3')" style="margin-top:0.5rem;">Copy All</button>
+            </div>
+        </div>
+
+        <!-- View Commands -->
+        <div class="workflow-step">
+            <h2>👀 View Plans</h2>
+            <p>No commits needed - just view existing plans</p>
+
+            <div class="button-group">
+                <button onclick="copyCommandWithDate('/4-view')">View This Week</button>
+                <button onclick="copyCommand('/5-latest')">View Latest Plan</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Copied to clipboard!</div>
+
+    <script>
+        // Set your repo path here
+        const REPO_PATH = '/Users/sandhyasimhan/Downloads/Projects/ForGithub/meal-planner';
+
+        // Calculate next Monday
+        function getNextMonday() {
+            const today = new Date();
+            const dayOfWeek = today.getDay();
+            const daysUntilMonday = dayOfWeek === 0 ? 1 : 8 - dayOfWeek;
+            const nextMonday = new Date(today);
+            nextMonday.setDate(today.getDate() + daysUntilMonday);
+            return nextMonday;
+        }
+
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        function getWeekMonday(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            return new Date(d.setDate(diff));
+        }
+
+        // Initialize
+        const nextMonday = getNextMonday();
+        document.getElementById('nextMonday').textContent = formatDate(nextMonday);
+        document.getElementById('weekDate').value = formatDate(nextMonday);
+        updateCommitMessages();
+
+        function useToday() {
+            const today = new Date();
+            const monday = getWeekMonday(today);
+            document.getElementById('weekDate').value = formatDate(monday);
+            updateCommitMessages();
+        }
+
+        function useNextWeek() {
+            document.getElementById('weekDate').value = formatDate(nextMonday);
+            updateCommitMessages();
+        }
+
+        function updateCommitMessages() {
+            const date = document.getElementById('weekDate').value;
+            document.getElementById('commit1').textContent = `git commit -m "Add intake for week of ${date}"`;
+            document.getElementById('commit2').textContent = `git commit -am "Confirm vegetables for ${date}"`;
+            document.getElementById('commit3').textContent = `git commit -m "Generate plan for week of ${date}"`;
+        }
+
+        document.getElementById('weekDate').addEventListener('change', updateCommitMessages);
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast();
+            });
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function copyCommand(cmd) {
+            copyToClipboard(cmd);
+        }
+
+        function copyCommandWithDate(cmd) {
+            const date = document.getElementById('weekDate').value;
+            copyToClipboard(`${cmd} ${date}`);
+        }
+
+        function copyAndOpenVSCode(cmd) {
+            // Copy command to clipboard
+            copyToClipboard(cmd);
+
+            // Open VS Code to the repo folder
+            setTimeout(() => {
+                window.location.href = `vscode://file${REPO_PATH}`;
+            }, 500); // Small delay to ensure copy completes
+        }
+
+        function copyWithDateAndOpenVSCode(cmd) {
+            const date = document.getElementById('weekDate').value;
+            copyToClipboard(`${cmd} ${date}`);
+
+            // Open VS Code to the repo folder
+            setTimeout(() => {
+                window.location.href = `vscode://file${REPO_PATH}`;
+            }, 500);
+        }
+
+        function showGitCommands(step) {
+            const el = document.getElementById(`git-${step}`);
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function copyGitCommands(step) {
+            const commands = document.getElementById(`git-${step}`).querySelectorAll('code');
+            const text = Array.from(commands).map(c => c.textContent).join('\n');
+            copyToClipboard(text);
+        }
+    </script>
+</body>
+</html>

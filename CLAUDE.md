@@ -47,20 +47,14 @@ You are responsible for:
 
 **Daily Flow (Monday-Friday):**
 Each day follows this exact order:
-1. **AM Prep** block with specific tasks
+1. **AM Prep** block with specific tasks (Tuesday, Wednesday, Thursday only - NO AM prep on Monday)
 2. **Lunch** plan (2 kids + 1 adult) with components
 3. **Snack** suggestion (ONE only, reusing meal ingredients)
 4. **Dinner** with evening assembly notes
-5. **PM Prep** block (where applicable)
+5. **PM Prep** block (Monday, Tuesday, Wednesday only - NO PM prep Thu/Fri)
 
 **Example Monday Structure:**
 ```
-AM Prep (MAIN PREP DAY):
-- CHOP ALL VEGETABLES FOR ENTIRE WEEK
-- BATCH COOKING (2x meals to freeze)
-- ALL LUNCH PREP for Tue/Wed/Thu/Fri
-- SNACKS (portion for entire week)
-
 Lunch:
 - Kids (2): [Specific recipe]
 - Adult (1): [Option]
@@ -76,84 +70,108 @@ Dinner:
 - Prep Notes: [batch cooking if applicable]
 - Evening Assembly (5-9pm): [minimal tasks only]
 
-PM Prep: (if applicable)
+PM Prep (5-9pm):
+- START vegetable prep: Chop vegetables for Mon/Tue/Wed dinners
+- Batch cooking: Cook Monday dinner (2x if freezer-friendly)
+- Prep grains/beans for early week meals
+- Store prepped items in labeled containers
 
 ## Tuesday
+**Lunch:** [Specific lunch recipe with components - 2 kids + 1 adult]
+- Or use: [Repeatable default option from rotation]
+- Components: [list]
+- Prep: [instructions]
+
+**Snack:** [ONE snack only, reusing ingredients]
+
 **Dinner:** [Recipe Name] ([Template])
-- Main vegetables: [list - ALL prepped Monday]
+- Main vegetables: [list]
 - Prep notes: [Batch cooking note if applicable]
 - **Evening assembly:** [Minimal tasks only 5-9pm]
 
-**Lunch:** [Specific lunch recipe with components - 2 kids + 1 adult]
-- Or use: [Repeatable default option from rotation]
-- Components: [list - ALL prepped Monday]
-- Prep: Assemble only - components prepped Monday
-
-**Snack Ideas:** [3-4 specific snack suggestions]
-
-**Tuesday Prep Tasks (MILD PREP DAY):**
-- NO chopping - all vegetables already prepped Monday
-- Assemble Tuesday lunch in morning
-- Portion already-cooked items if needed
+**AM Prep (Morning):**
+- Prep Tuesday lunch components
+- Portion Monday's batch-cooked items
 - Check freezer backup inventory - do we have 3 meals?
+
+**PM Prep (Evening):**
+- Chop vegetables for Thursday/Friday dinners
+- Prep lunch components for Wed/Thu/Fri
+- Cook any components needed for later in week
+- Store all prepped items in labeled containers
 
 ## Heavy Snack (Tuesday - Late Class Day)
 - [Substantial snack recipe with specific ingredients]
 - Format: Fruit + protein/fat (e.g., apple slices + cheese, banana + peanut butter)
 
 ## Wednesday
-**Dinner:** [Recipe Name] ([Template])
-- Main vegetables: [list - ALL prepped Monday]
-- Prep notes: [Easy meal using Monday prep]
-- **Evening assembly:** [Minimal: "Reheat" or "Assemble bowls"]
-
 **Lunch:** [Specific lunch recipe with components - 2 kids + 1 adult]
 - Or use: [Repeatable default option from rotation]
-- Components: [list - ALL prepped Monday]
-- Prep: Assemble only - components prepped Monday
+- Components: [list - prepped Monday/Tuesday]
+- Prep: Assemble only - components already prepped
 
-**Snack Ideas:** [3-4 specific snack suggestions]
+**Snack:** [ONE snack only, reusing ingredients]
 
-**Wednesday Prep Tasks (MILD PREP DAY):**
-- NO chopping - all vegetables already prepped Monday
-- Portion already-cooked food if needed
-- Load Instant Pot if using for Thursday
+**Dinner:** [Recipe Name] ([Template])
+- Main vegetables: [list - prepped Mon/Tue]
+- Prep notes: [Easy meal using earlier prep]
+- **Evening assembly:** [Minimal: "Reheat" or "Assemble bowls"]
+
+**AM Prep (Morning):**
+- Prep Wednesday lunch components if not done
+- Portion already-cooked food
 - Verify all Thu/Fri lunch components are ready
 
-## Thursday
-**Dinner:** [Recipe Name] ([Template]) - **NO-CHOP MEAL**
-- Main vegetables: [list]
-- Prep notes: "NO CHOPPING - using pre-prepped ingredients from Monday/Tuesday"
-- **Evening assembly:** [Minimal: "Reheat and serve" or "Dump ingredients and heat"]
+**PM Prep (Evening):**
+- FINISH any remaining vegetable prep for Thu/Fri
+- Load Instant Pot if using for Thursday
+- Cook any final components needed for Thu/Fri dinners
+- Final check: All Thu/Fri components ready
 
+## Thursday
 **Lunch:** [Specific lunch recipe with components - 2 kids + 1 adult]
 - Or use: [Repeatable default option: PBJ, ravioli, chapati roll]
-- Components: [ALL prepped on Monday]
-- Prep: "All components prepped Monday - assemble only"
+- Components: [ALL prepped Monday/Tuesday/Wednesday]
+- Prep: "All components already prepped - assemble only"
 
-**Snack Ideas:** [3-4 specific snack suggestions]
+**Snack:** [ONE snack only, reusing ingredients]
 
-**Thursday Prep Tasks (MORNING PREP OK):**
-- Morning (8-9am): Light prep allowed if needed - chop 1-2 vegetables, cook components
+**Heavy Snack (Late Class Day):**
+- Format: Fruit + protein/fat (e.g., apple slices with peanut butter)
+
+**Dinner:** [Recipe Name] ([Template]) - **NO-CHOP MEAL**
+- Main vegetables: [list - ALL prepped Mon/Tue/Wed]
+- Prep notes: "NO CHOPPING - using pre-prepped ingredients from earlier in week"
+- **Evening assembly:** [Minimal: "Reheat and serve" or "Dump ingredients and heat"]
+
+**AM Prep (Morning 8-9am ONLY):**
+- Light prep allowed if needed: chop 1-2 vegetables, cook simple components
+- Can prepare components for Thursday dinner
 - NO chopping after noon
 - NO evening prep allowed
-- Evening: Only reheating, simple assembly, or grabbing pre-prepped items
+
+**PM Prep:**
+- NO PREP - Device-free time
+- Evening: Only reheating, simple assembly
 - Fallback: Use freezer backup if needed
 
 ## Friday
-**Dinner:** [Recipe Name] ([Template]) - **NO-PREP MEAL**
-- Main vegetables: [list - ALL prepped Monday or Thursday morning]
-- Prep notes: "NO PREP - using pre-prepped ingredients from Monday (or Thursday AM)"
-- **Evening assembly:** [Minimal: "Reheat and serve" or "Assemble and bake"]
-
 **Lunch:** [Specific lunch recipe with components - 2 kids + 1 adult]
 - Or use: [Repeatable default option: egg sandwich, toad-in-a-hole, burrito]
-- Components: [ALL prepped on Monday]
-- Prep: "All components prepped Monday - assemble only"
+- Components: [ALL prepped Monday/Tuesday/Wednesday]
+- Prep: "All components already prepped - assemble only"
 
-**Snack Ideas:** [3-4 specific snack suggestions]
+**Snack:** [ONE snack only, reusing ingredients]
 
-**Friday Prep Tasks (NO PREP DAY - STRICT):**
+**Heavy Snack (Late Class Day):**
+- Format: Fruit + protein/fat (e.g., banana with almond butter)
+
+**Dinner:** [Recipe Name] ([Template]) - **NO-PREP MEAL**
+- Main vegetables: [list - ALL prepped Mon/Tue/Wed or Thu AM]
+- Prep notes: "NO PREP - using pre-prepped ingredients from earlier in week"
+- **Evening assembly:** [Minimal: "Reheat and serve" or "Assemble and bake"]
+
+**NO PREP DAY (STRICT):**
 - NO chopping allowed at any time
 - NO cooking allowed - only reheating
 - Only reheating and simple assembly
@@ -226,43 +244,42 @@ These can be rotated and repeated - no need for variety every week:
 - Put away groceries
 - **No cooking** - rest day
 
-### Monday (MAIN PREP DAY)
-**Vegetable Prep:**
-- Chop vegetables for ENTIRE WEEK (Monday through Friday dinners)
-- Large batches: onions, carrots, beans, bell peppers, cauliflower, broccoli, potatoes
-- Wash, dry, and chop greens
-- Store in airtight containers labeled by day/recipe
+### Monday (PM PREP ONLY - Evening 5-9pm)
+**Evening Prep (5-9pm):**
+- Start vegetable prep: Chop vegetables for Mon/Tue/Wed dinners
+- Cook Monday dinner (double batch if freezer-friendly)
+- Pre-cook components: grains, beans for early week
+- Store in airtight containers labeled by day
 
-**Batch Cooking:**
-- [Specific dinner that should be doubled for freezer]
-- Pre-cook components: dal, beans, sauces, grains, rice
-- Roast vegetables that can be reused
-- Cook any components needed for Thu/Fri no-prep dinners
+**Goal:** Start the week's prep work. Focus on Mon/Tue/Wed meals.
 
-**Lunch Prep:**
-- Prep ALL lunch components for Tuesday, Wednesday, Thursday, Friday
-- Cook pasta, grains, boil eggs, etc.
-- Portion snacks into grab-and-go containers for entire week
-
-**Goal:** Do ALL prep work for the entire week. Nothing should require chopping after Monday.
-
-### Tuesday (MILD PREP DAY)
-**Light Tasks Only:**
-- NO chopping allowed - everything already prepped Monday
-- Assemble Tuesday lunch in morning
-- Portion already-cooked items if needed
+### Tuesday (AM + PM PREP)
+**Morning Prep:**
+- Prep Tuesday lunch components
+- Portion Monday's batch-cooked items
 - Check freezer backup inventory - do we have 3 meals?
 
-**Goal:** Minimal effort. Just assembly and organization.
+**Evening Prep:**
+- Chop vegetables for Thursday/Friday dinners
+- Prep lunch components for Wed/Thu/Fri
+- Cook components needed for later in week (dal, beans, sauces, grains)
+- Portion snacks for rest of week
 
-### Wednesday (MILD PREP DAY)
-**Light Tasks Only:**
-- NO chopping allowed - everything already prepped Monday
-- Portion already-cooked food if needed
+**Goal:** Continue prep work. Ensure Thu/Fri vegetables are chopped and stored.
+
+### Wednesday (AM + PM PREP)
+**Morning Prep:**
+- Prep Wednesday lunch components if not done
+- Portion already-cooked food
+- Verify all Thu/Fri lunch components are ready
+
+**Evening Prep:**
+- FINISH any remaining vegetable prep for Thu/Fri
 - Load Instant Pot or slow cooker for Thursday if needed
-- Verify all Thursday/Friday lunch components are ready
+- Cook any final components needed for Thu/Fri dinners
+- Final check: All Thu/Fri components ready
 
-**Goal:** Minimal effort. Verify everything is ready for Thu/Fri.
+**Goal:** Complete all remaining prep. Thu/Fri should be fully prepped by end of Wednesday.
 
 ### Thursday (MORNING PREP OK)
 **Morning Prep Window (8-9am):**
@@ -345,9 +362,9 @@ weeks:
   - All meals must be ready to serve with minimal assembly only
 
 - **Energy-Based Prep Model:**
-  - **Monday (MAIN PREP DAY):** Primary prep day - do ALL chopping and batch cooking for entire week
-  - **Tuesday (MILD PREP DAY):** Light tasks only - assemble, portion, check inventory
-  - **Wednesday (MILD PREP DAY):** Light tasks only - verify components ready, load Instant Pot if needed
+  - **Monday (PM PREP ONLY):** Evening prep only (5-9pm) - start prep work, batch cooking, chop vegetables for Mon/Tue/Wed
+  - **Tuesday (AM + PM PREP):** Morning and evening prep - continue chopping vegetables for Thu/Fri, prep lunch components
+  - **Wednesday (AM + PM PREP):** Morning and evening prep - finish all remaining prep, verify Thu/Fri components ready
   - **Thursday (MORNING PREP OK):** Light prep allowed in morning only (8-9am) - NO evening prep, NO chopping after noon
   - **Friday (NO PREP DAY):** NO chopping allowed at any time - only reheating, assembly, or pre-prepped ingredients
 
@@ -447,12 +464,12 @@ Before writing a plan, verify ALL of these:
 - [ ] Late class day has heavy snack with fruit + protein/fat (check inputs file for late_class_days)
 
 **Energy-Based Prep:**
-- [ ] Monday prep tasks are comprehensive and specific (chop ALL vegetables for entire week, batch cooking, ALL lunch prep)
-- [ ] Tuesday prep tasks are light (NO chopping - only assembly and portioning)
-- [ ] Wednesday prep tasks are light (NO chopping - only verification and loading Instant Pot)
+- [ ] Monday PM prep tasks: Chop vegetables for Mon/Tue/Wed, batch cooking, start prep work
+- [ ] Tuesday AM prep: Lunch components, portioning | PM prep: Chop Thu/Fri vegetables, prep Wed/Thu/Fri lunches
+- [ ] Wednesday AM prep: Final lunch components | PM prep: Finish remaining Thu/Fri prep, verify all components ready
 - [ ] Thursday allows morning prep (8-9am) if needed, but NO chopping after noon, NO evening prep
-- [ ] Friday is STRICTLY no-prep at any time - must use pre-prepped ingredients from Monday or Thursday AM
-- [ ] Tuesday/Wednesday/Thursday/Friday lunch components ALL prepped on Monday
+- [ ] Friday is STRICTLY no-prep at any time - must use pre-prepped ingredients from Mon/Tue/Wed or Thursday AM
+- [ ] All Thu/Fri lunch components prepped by end of Wednesday
 
 **Freezer Backup:**
 - [ ] Freezer backup status section included (3 current backup meals listed)

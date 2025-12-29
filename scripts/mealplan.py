@@ -361,10 +361,30 @@ def get_recent_recipes(history, lookback_weeks=3):
     return recent
 
 
-def filter_recipes(recipes, inputs, recent_recipes):
-    """Filter recipes based on constraints."""
+def filter_recipes_by_meal_type(recipes, inputs, recent_recipes, meal_type='dinner'):
+    """Filter recipes based on meal type (dinner, lunch, snack)."""
     filtered = []
     avoid_ingredients = set(inputs.get('preferences', {}).get('avoid_ingredients', []))
+
+    # Define templates for each meal type
+    template_categories = {
+        'dinner': {
+            'tacos', 'pasta', 'soup', 'curry', 'grain_bowl', 'dump_and_go',
+            'sandwich', 'salad', 'stir_fry', 'pizza', 'burrito_bowl', 'appetizer'
+        },
+        'lunch': {
+            'sandwich', 'salad', 'grain_bowl', 'soup', 'pasta', 'burrito_bowl'
+        },
+        'snack': {
+            'snack_bar', 'baked_goods', 'frozen_treat', 'simple_snack', 'appetizer',
+            'sauce_dip'
+        },
+        'breakfast': {
+            'breakfast', 'baked_goods', 'snack_bar'
+        }
+    }
+
+    allowed_templates = template_categories.get(meal_type, set())
 
     for recipe in recipes:
         # Skip if used recently
@@ -376,12 +396,22 @@ def filter_recipes(recipes, inputs, recent_recipes):
             continue
 
         # Skip if template is unknown (not categorized yet)
-        if recipe.get('template') == 'unknown':
+        template = recipe.get('template')
+        if template == 'unknown':
+            continue
+
+        # Check if template matches meal type
+        if template not in allowed_templates:
             continue
 
         filtered.append(recipe)
 
     return filtered
+
+
+def filter_recipes(recipes, inputs, recent_recipes):
+    """Filter recipes for dinner (backward compatibility)."""
+    return filter_recipes_by_meal_type(recipes, inputs, recent_recipes, meal_type='dinner')
 
 
 def select_dinners(filtered_recipes, inputs):
@@ -401,9 +431,26 @@ def select_dinners(filtered_recipes, inputs):
     selected = {}
     days = ['mon', 'tue', 'wed', 'thu', 'fri']
 
-    # First, handle busy days (Thu/Fri) - must be no_chop
+    # Step 1: Select one "from scratch" recipe (normal effort) for a non-busy day
+    from_scratch_recipe = None
+    from_scratch_day = None
+    non_busy_days = [d for d in days if d not in busy_days]
+
+    if non_busy_days:
+        for r in normal_recipes:
+            template = r.get('template')
+            if template not in used_templates:
+                from_scratch_recipe = r
+                from_scratch_day = non_busy_days[0]  # Assign to first available non-busy day
+                used_templates.add(template)
+                normal_recipes.remove(r)
+                selected[from_scratch_day] = r
+                selected['from_scratch_day'] = from_scratch_day
+                break
+
+    # Step 2: Handle busy days (Thu/Fri) - must be no_chop
     for day in days:
-        if day in busy_days:
+        if day in busy_days and day not in selected:
             # Try to find a no-chop recipe with unused template
             recipe = None
             for r in no_chop_recipes:
@@ -419,19 +466,9 @@ def select_dinners(filtered_recipes, inputs):
             else:
                 print(f"Warning: Could not find no-chop recipe for {day}")
 
-    # Select one "from scratch" recipe (normal effort)
-    from_scratch_recipe = None
-    for r in normal_recipes:
-        template = r.get('template')
-        if template not in used_templates:
-            from_scratch_recipe = r
-            used_templates.add(template)
-            normal_recipes.remove(r)
-            break
-
-    # Fill remaining days with other recipes
+    # Step 3: Fill remaining days with other recipes
     remaining_days = [d for d in days if d not in selected]
-    all_available = normal_recipes + all_other_recipes
+    all_available = normal_recipes + all_other_recipes + no_chop_recipes
 
     for day in remaining_days:
         recipe = None
@@ -447,19 +484,8 @@ def select_dinners(filtered_recipes, inputs):
 
         if recipe:
             selected[day] = recipe
-
-            # If this was the from_scratch recipe, note it
-            if from_scratch_recipe and recipe['id'] == from_scratch_recipe['id']:
-                selected[day + '_is_from_scratch'] = True
         else:
             print(f"Warning: Could not find recipe for {day}")
-
-    # If we didn't assign from_scratch yet, mark one of the normal effort recipes
-    if from_scratch_recipe:
-        for day in days:
-            if day in selected and selected[day]['id'] == from_scratch_recipe['id']:
-                selected['from_scratch_day'] = day
-                break
 
     return selected
 

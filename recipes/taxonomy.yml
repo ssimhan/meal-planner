@@ -13,7 +13,15 @@ templates:
   - stir_fry
   - pizza
   - burrito_bowl
-  - unknown  # Default for unclassified recipes
+  - breakfast       # Pancakes, waffles, french toast, quiches, oatmeal
+  - snack_bar       # Granola bars, energy balls, brownies, blondies
+  - baked_goods     # Muffins, cookies, bread
+  - sauce_dip       # Sauces, dips, condiments, spreads
+  - frozen_treat    # Popsicles, frozen yogurt, yogurt melts
+  - appetizer       # Fritters, gyoza, puffs, bruschetta
+  - side_dish       # Rice, beans, roasted chickpeas, tofu
+  - simple_snack    # Pre-packaged or no-prep items
+  - unknown         # Default for unclassified recipes
 
 effort_levels:
   - no_chop         # Ready in <15min, minimal/no chopping
@@ -47,6 +55,8 @@ template_keywords:
     - fettuccine
     - mac and cheese
     - noodle
+    - lasagna
+    - gnocchi
   soup:
     - soup
     - stew
@@ -87,6 +97,67 @@ template_keywords:
     - burrito bowl
     - burrito
     - bowl
+  breakfast:
+    - pancake
+    - waffle
+    - french toast
+    - oatmeal
+    - quiche
+    - frittata
+    - smoothie
+    - uttapam
+    - pesarattu
+  snack_bar:
+    - granola bar
+    - energy ball
+    - bliss ball
+    - brownie
+    - blondie
+    - larabar
+    - protein bar
+    - cereal bar
+  baked_goods:
+    - muffin
+    - cookie
+    - bread
+    - scone
+    - biscuit
+  sauce_dip:
+    - sauce
+    - dip
+    - pesto
+    - guacamole
+    - crema
+    - salsa
+    - pickle
+    - alfredo
+    - marinara
+  frozen_treat:
+    - popsicle
+    - frozen yogurt
+    - ice pop
+    - yogurt melt
+    - froyo
+  appetizer:
+    - fritter
+    - gyoza
+    - dumpling
+    - puff
+    - bruschetta
+    - pinwheel
+    - samosa
+  side_dish:
+    - coconut rice
+    - roasted chickpea
+    - fried tofu
+    - white bean
+  simple_snack:
+    - cheese stick
+    - string cheese
+    - edamame
+    - grape
+    - cracker
+    - cherry tomato
 
 # Appliance detection keywords
 appliance_keywords:

@@ -12,40 +12,44 @@
 
 ## Monday
 
-**Dinner:** Black Bean Quinoa Salad (salad)
-- Main vegetables: beans, bell pepper, cilantro, lime, tomato
+**Dinner:** Aloo Corn Tikki Roll (curry)
+- Main vegetables: avocado, cilantro, corn, garlic, ginger, onion, potato
 
 **Lunch Prep:** [Recipe for 2 kids + 1 adult]
 
 ## Tuesday
 
-**Dinner:** Chana Masala (IP) (dump_and_go)
-- Main vegetables: cilantro, garlic, ginger, onion, peas, tomato, tomatoe
+**Dinner:** Baked Black Bean and Sweet Potato Flautas (tacos)
+- Main vegetables: beans, cilantro, corn, garlic, onion, pepper, potato, sweet potato
 
 **Lunch Prep:** [Recipe for 2 kids + 1 adult]
 
 ## Wednesday
 
-**Dinner:** Cheese and Tomato Quinoa Balls (soup)
-- Main vegetables: basil, garlic, onion, tomato, tomatoe
+**Dinner:** Chickpea Chaat Salad (salad)
+- Main vegetables: bell pepper, carrot, cilantro, cucumber, garlic, lemon, onion, peas, tomato
 
 **Lunch Prep:** [Recipe for 2 kids + 1 adult]
 
 ## Thursday
 
-**Dinner:** Beans Poriyal (curry)
-- Main vegetables: beans, onion
+**Dinner:** Curried Egg Salad Sandwich (sandwich)
+- Main vegetables: cilantro, garlic
 - Prep notes: Quick no-chop meal
 
 **Lunch Prep:** [Recipe for 2 kids + 1 adult]
 
 ## Friday
 
-**Dinner:** Broccoli Spinach Pasta Sauce (pasta)
-- Main vegetables: broccoli, garlic, lemon, spinach
+**Dinner:** Easy Chickpea Fritters (appetizer)
+- Main vegetables: beans, cucumber, garlic, peas
 - Prep notes: Quick no-chop meal
 
 **Lunch Prep:** [Recipe for 2 kids + 1 adult]
+
+## From Scratch Recipe This Week
+
+**Aloo Corn Tikki Roll** - [Brief rationale for why this recipe was chosen]
 
 ## Prep-Ahead Notes
 

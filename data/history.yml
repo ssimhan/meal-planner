@@ -44,3 +44,95 @@ weeks:
     - garlic
     - lemon
     - spinach
+- week_of: '2025-12-29'
+  dinners:
+  - recipe_id: cherry_tomato_salad
+    template: salad
+    day: mon
+    vegetables:
+    - garlic
+    - tomato
+    - tomatoe
+  - recipe_id: chickpea_salad_wrap
+    template: sandwich
+    day: tue
+    vegetables:
+    - bell pepper
+    - carrot
+    - peas
+    - tomato
+  - recipe_id: grilled_cheese_and_tomato_soup
+    template: soup
+    day: wed
+    vegetables:
+    - garlic
+    - tomato
+  - recipe_id: bhel_puri_chaat
+    template: curry
+    day: thu
+    vegetables:
+    - cilantro
+    - cucumber
+    - lemon
+    - onion
+    - potato
+    - tomato
+  - recipe_id: creamy_macaroni_pasta_salad
+    template: pasta
+    day: fri
+    vegetables:
+    - broccoli
+    - cucumber
+    - onion
+- week_of: '2025-12-29'
+  dinners:
+  - recipe_id: aloo_corn_tikki_roll
+    template: curry
+    day: mon
+    vegetables:
+    - avocado
+    - cilantro
+    - corn
+    - garlic
+    - ginger
+    - onion
+    - potato
+  - recipe_id: baked_black_bean_and_sweet_potato_flautas
+    template: tacos
+    day: tue
+    vegetables:
+    - beans
+    - cilantro
+    - corn
+    - garlic
+    - onion
+    - pepper
+    - potato
+    - sweet potato
+  - recipe_id: chickpea_chaat_salad
+    template: salad
+    day: wed
+    vegetables:
+    - bell pepper
+    - carrot
+    - cilantro
+    - cucumber
+    - garlic
+    - lemon
+    - onion
+    - peas
+    - tomato
+  - recipe_id: curried_egg_salad_sandwich
+    template: sandwich
+    day: thu
+    vegetables:
+    - cilantro
+    - garlic
+  - recipe_id: easy_chickpea_fritters
+    template: appetizer
+    day: fri
+    vegetables:
+    - beans
+    - cucumber
+    - garlic
+    - peas

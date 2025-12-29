@@ -209,3 +209,60 @@ weeks:
     - parsley
     - spinach
     - zucchini
+- week_of: '2026-01-05'
+  dinners:
+  - recipe_id: aloo_corn_tikki_roll
+    cuisine: indian
+    meal_type: soup_stew
+    day: mon
+    vegetables:
+    - avocado
+    - cilantro
+    - corn
+    - garlic
+    - ginger
+    - onion
+    - potato
+  - recipe_id: baked_black_bean_and_sweet_potato_flautas
+    cuisine: mexican
+    meal_type: tacos_wraps
+    day: tue
+    vegetables:
+    - beans
+    - cilantro
+    - corn
+    - garlic
+    - onion
+    - pepper
+    - potato
+    - sweet potato
+  - recipe_id: black_bean_quinoa_salad
+    cuisine: unknown
+    meal_type: salad
+    day: wed
+    vegetables:
+    - beans
+    - bell pepper
+    - cilantro
+    - lime
+    - tomato
+  - recipe_id: bhel_puri_chaat
+    cuisine: indian
+    meal_type: appetizer
+    day: thu
+    vegetables:
+    - cilantro
+    - cucumber
+    - lemon
+    - onion
+    - potato
+    - tomato
+  - recipe_id: broccoli_spinach_pasta_sauce
+    cuisine: italian
+    meal_type: pasta_noodles
+    day: fri
+    vegetables:
+    - broccoli
+    - garlic
+    - lemon
+    - spinach

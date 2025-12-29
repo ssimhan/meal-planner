@@ -476,11 +476,61 @@ def generate_plan_content(inputs, selected_dinners, from_scratch_recipe=None):
         lines.append(f"- {veg}")
     lines.append("")
 
+    # Freezer backup section
+    lines.append("## Freezer Backup Status\n")
+    lines.append("Current backup meals in freezer:")
+    lines.append("1. [Update with current backup meal 1] - [Date frozen]")
+    lines.append("2. [Update with current backup meal 2] - [Date frozen]")
+    lines.append("3. [Update with current backup meal 3] - [Date frozen]")
+    lines.append("")
+    lines.append("**This week's batch cooking:** [Identify which dinner to double and freeze]\n")
+
     days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
     day_abbr = ['mon', 'tue', 'wed', 'thu', 'fri']
 
+    # Lunch templates with variety and repeatable defaults
+    lunch_templates = [
+        "Veggie quesadillas with cheese and beans",
+        "Pasta salad with vegetables and Italian dressing",
+        "Grilled cheese sandwiches with tomato soup",
+        "Mini bagels with cream cheese and veggie sticks",
+        "Peanut butter and jelly sandwiches with veggie straws"
+    ]
+
+    # Repeatable lunch defaults (kids)
+    lunch_defaults = [
+        "PBJ on whole wheat",
+        "Egg sandwich",
+        "Ravioli with butter",
+        "Chapati roll with fruit",
+        "Veggie burrito"
+    ]
+
+    snack_templates = [
+        "Apple slices with peanut butter, cheese sticks, crackers",
+        "Carrot sticks with hummus, pretzels, fruit cups",
+        "Yogurt with granola, banana, trail mix",
+        "String cheese, graham crackers, grapes",
+        "Popcorn, orange slices, rice cakes with almond butter"
+    ]
+
+    # Energy levels for each day
+    energy_levels = {
+        'mon': 'MAIN PREP DAY',
+        'tue': 'MILD PREP DAY',
+        'wed': 'MILD PREP DAY',
+        'thu': 'MORNING PREP OK',
+        'fri': 'NO PREP DAY'
+    }
+
     for i, (day_name, day_key) in enumerate(zip(days, day_abbr)):
-        lines.append(f"## {day_name}\n")
+        # Add day header with markers
+        if day_key == 'fri':
+            lines.append(f"## {day_name} - **NO-PREP DAY**\n")
+        elif day_key == 'thu':
+            lines.append(f"## {day_name} - **MORNING PREP OK**\n")
+        else:
+            lines.append(f"## {day_name}\n")
 
         if day_key in selected_dinners:
             recipe = selected_dinners[day_key]
@@ -491,27 +541,140 @@ def generate_plan_content(inputs, selected_dinners, from_scratch_recipe=None):
             lines.append(f"**Dinner:** {recipe['name']} ({cuisine} {meal_type})")
             lines.append(f"- Main vegetables: {', '.join(main_veg) if main_veg else 'none'}")
 
-            if day_key in busy_days:
+            # Add prep notes with batch cooking opportunities
+            if day_key == 'mon' and meal_type in ['curry', 'soup_stew', 'pasta_noodles']:
+                lines.append("- Prep notes: Consider making 2x batch and freeze half for backup")
+            elif day_key in ['tue', 'wed']:
+                lines.append("- Prep notes: All vegetables prepped Monday - just cook and assemble")
+            elif day_key == 'thu':
                 if recipe.get('no_chop_compatible', False):
-                    lines.append("- Prep notes: Quick no-chop meal")
+                    lines.append("- Prep notes: NO CHOPPING - using pre-prepped ingredients from Monday")
                 else:
-                    lines.append("- Prep notes: Prep vegetables Wednesday evening")
+                    lines.append("- Prep notes: Can prep in morning (8-9am) if needed - NO chopping after noon, NO evening prep")
+            elif day_key == 'fri':
+                if recipe.get('no_chop_compatible', False):
+                    lines.append("- Prep notes: NO PREP - using pre-prepped ingredients from Monday or Thursday AM")
+                else:
+                    lines.append("- Prep notes: ⚠️ WARNING: This recipe requires chopping but Friday is strictly no-prep!")
+
+            # Add evening assembly note
+            if day_key in busy_days:
+                lines.append("- **Evening assembly (5-9pm):** Reheat and serve only")
+            else:
+                lines.append("- **Evening assembly (5-9pm):** [Minimal tasks - assemble, heat, serve]")
 
             lines.append("")
 
-        lines.append("**Lunch Prep:** [Recipe for 2 kids + 1 adult]\n")
+        # Add lunch with both variety and default options
+        lunch_variety = lunch_templates[i % len(lunch_templates)]
+        lunch_default = lunch_defaults[i % len(lunch_defaults)]
+        lines.append(f"**Lunch:** {lunch_variety} (2 kids + 1 adult)")
+        lines.append(f"- Or use repeatable default: **{lunch_default}**")
+        lines.append("- Components: [List specific ingredients needed]")
+        if i >= 3:  # Thursday/Friday
+            lines.append("- Prep: **ALL components prepped Monday** - assemble only")
+        else:
+            lines.append("- Prep: Prepare fresh or day-of")
+        lines.append("")
+
+        # Add snack ideas
+        snacks = snack_templates[i % len(snack_templates)]
+        lines.append(f"**Snack Ideas:** {snacks}\n")
+
+        # Add daily prep tasks
+        if day_key == 'mon':
+            lines.append(f"**{day_name} Prep Tasks ({energy_levels[day_key]}):**")
+            lines.append("- Chop ALL vegetables for entire week (Mon-Fri dinners): [List specific vegetables from recipes]")
+            lines.append("- Batch cooking: [Identify freezer-friendly dinner to double]")
+            lines.append("- Prep ALL lunch components for Tue/Wed/Thu/Fri: [Cook pasta, boil eggs, etc.]")
+            lines.append("- Pre-cook any components needed for Thu/Fri no-prep dinners")
+            lines.append("- Portion snacks into grab-and-go containers for entire week\n")
+        elif day_key == 'tue':
+            lines.append(f"**{day_name} Prep Tasks ({energy_levels[day_key]}):**")
+            lines.append("- NO chopping - all vegetables already prepped Monday")
+            lines.append("- Assemble Tuesday lunch in morning")
+            lines.append("- Portion already-cooked items if needed")
+            lines.append("- Check freezer backup inventory - do we have 3 meals?\n")
+        elif day_key == 'wed':
+            lines.append(f"**{day_name} Prep Tasks ({energy_levels[day_key]}):**")
+            lines.append("- NO chopping - all vegetables already prepped Monday")
+            lines.append("- Portion already-cooked food if needed")
+            lines.append("- Load Instant Pot if using for Thursday")
+            lines.append("- Verify all Thursday/Friday lunch components are ready\n")
+        elif day_key == 'thu':
+            lines.append(f"**{day_name} Prep Tasks ({energy_levels[day_key]}):**")
+            lines.append("- Morning (8-9am): Light prep allowed if needed - chop 1-2 vegetables, cook components")
+            lines.append("- **NO chopping after noon**")
+            lines.append("- **NO evening prep** - only reheating, simple assembly")
+            lines.append("- Fallback: Use freezer backup if needed\n")
+        elif day_key == 'fri':
+            lines.append(f"**{day_name} Prep Tasks ({energy_levels[day_key]}):**")
+            lines.append("- **NO chopping allowed at any time**")
+            lines.append("- **NO cooking allowed** - only reheating")
+            lines.append("- Only reheating and simple assembly using Monday or Thursday AM prep")
+            lines.append("- Fallback: Use freezer backup if needed\n")
 
         if day_key in late_class_days:
-            lines.append(f"## Heavy Snack ({day_name} - Late Class Day)\n")
-            lines.append("- [Substantial snack recipe]\n")
+            lines.append(f"### Heavy Snack ({day_name} - Late Class Day)\n")
+            lines.append("- Format: Fruit + protein/fat")
+            lines.append("- Examples: Apple slices + cheese, banana + peanut butter, crackers + cheese\n")
 
     if from_scratch_recipe:
         lines.append("## From Scratch Recipe This Week\n")
         lines.append(f"**{from_scratch_recipe['name']}** - [Brief rationale for why this recipe was chosen]\n")
 
-    lines.append("## Prep-Ahead Notes\n")
-    lines.append("- **Sunday:** Grocery shopping, any Sunday prep tasks")
-    lines.append("- **Wednesday evening:** Prep vegetables for Thursday/Friday if needed")
+    # Add repeatable lunch defaults section
+    lines.append("## Repeatable Lunch Defaults (Kids)\n")
+    lines.append("These can be rotated and repeated - no need for variety every week:")
+    lines.append("- PBJ (whole wheat bread, natural peanut butter, fruit-only jam)")
+    lines.append("- Egg sandwich or scrambled egg sandwich")
+    lines.append("- Toad-in-a-hole (egg cooked in bread slice)")
+    lines.append("- Ravioli with brown butter or simple tomato sauce")
+    lines.append("- Chapati or dosa rolls with fruit")
+    lines.append("- Veggie burrito or pizza roll")
+    lines.append("- Quesadilla with cheese and beans\n")
+    lines.append("**Adult Lunch Defaults:**")
+    lines.append("- Leftovers from previous night's dinner (preferred)")
+    lines.append("- Grain bowl: prepped grain + roasted vegetables + protein (eggs, beans, paneer)")
+    lines.append("- Salad with dinner components\n")
+
+    lines.append("## Energy-Based Prep Summary\n")
+    lines.append("### Sunday (Grocery Day)")
+    lines.append("- Farmers market shopping")
+    lines.append("- Regular grocery shopping")
+    lines.append("- Put away groceries")
+    lines.append("- **No cooking** - rest day\n")
+    lines.append("### Monday (MAIN PREP DAY)")
+    lines.append("**Goal:** Do ALL prep work for the entire week")
+    lines.append("- Chop ALL vegetables for Mon-Fri dinners (nothing should require chopping after Monday)")
+    lines.append("- Batch cook freezer-friendly dinner (make 2x, freeze half)")
+    lines.append("- Prep ALL lunch components for Tue/Wed/Thu/Fri")
+    lines.append("- Pre-cook any components needed for Thu/Fri no-prep dinners")
+    lines.append("- Portion snacks into containers for entire week\n")
+    lines.append("### Tuesday (MILD PREP DAY)")
+    lines.append("**Goal:** Minimal effort - just assembly and organization")
+    lines.append("- NO chopping - everything already prepped Monday")
+    lines.append("- Assemble Tuesday lunch in morning")
+    lines.append("- Check freezer backup inventory (3 meals?)\n")
+    lines.append("### Wednesday (MILD PREP DAY)")
+    lines.append("**Goal:** Minimal effort - verify everything ready for Thu/Fri")
+    lines.append("- NO chopping - everything already prepped Monday")
+    lines.append("- Load Instant Pot if using for Thursday")
+    lines.append("- Verify Thu/Fri lunch components are ready\n")
+    lines.append("### Thursday (MORNING PREP OK)")
+    lines.append("**Goal:** Use morning energy if needed, protect evening")
+    lines.append("- Morning (8-9am): Light prep allowed - chop 1-2 vegetables, cook components")
+    lines.append("- **NO chopping after noon**")
+    lines.append("- **NO evening prep** - only reheating and assembly")
+    lines.append("- Evening (5-9pm): Device-free, dinner ready with minimal assembly")
+    lines.append("- Fallback: Use freezer backup\n")
+    lines.append("### Friday (NO PREP DAY - STRICT)")
+    lines.append("**Goal:** Zero prep at any time - survive to the weekend")
+    lines.append("- **NO chopping allowed at any time** (morning, afternoon, evening)")
+    lines.append("- **NO cooking allowed** - only reheating")
+    lines.append("- Only reheating and assembly using Monday or Thursday AM prep")
+    lines.append("- Evening (5-9pm): Device-free, dinner ready with minimal assembly")
+    lines.append("- Fallback: Use freezer backup")
 
     return '\n'.join(lines)
 

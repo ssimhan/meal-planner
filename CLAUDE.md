@@ -22,9 +22,8 @@ You are responsible for:
 
 ### Read for Specific Tasks
 
-- `prompts/farmers_market.md` - When generating veggie lists
-- `prompts/plan_generation.md` - When generating weekly plans
-- `prompts/validation.md` - To understand validation rules
+- `scripts/workflow.py` - Automated workflow implementation with state tracking
+- `scripts/validate_plan.py` - Validation logic and rules
 
 ## Files You Should Write
 
@@ -214,29 +213,24 @@ If you cannot generate a valid plan, explain which constraint cannot be satisfie
 
 **NEVER** proceed with an invalid plan. Always ask for user guidance when blocked.
 
-## Phase-Specific Notes
+## Automated Workflow
 
-### Phase 0-1 (Current)
+**The workflow is now fully automated via `./mealplan next` command.**
 
-- Recipe parsing is automated via `parse_recipes.py`
-- You are NOT yet responsible for plan generation
-- Focus on understanding the recipe index structure
-- No action required from you at this phase
+The system automatically:
+- Detects current state from input files
+- Creates new weeks when previous week is complete
+- Generates farmers market vegetable proposals
+- Generates meal plans with all constraints
+- Updates history.yml
 
-### Phase 2 (Future)
+You may be asked to:
+- Review and refine generated meal plans
+- Add specific lunch prep suggestions
+- Expand on from-scratch recipe rationales
+- Handle edge cases or constraint conflicts
 
-- You will help generate farmers market vegetable proposals
-- Read past history to suggest vegetables that work well
-- Consider seasonal availability (user will provide season info)
-
-### Phase 3+ (Future)
-
-- You will be invoked via `mealplan.py plan` command
-- Read all context files before generating plans
-- Update history.yml atomically after successful plan generation
-- If validation fails, regenerate the plan with adjustments
-
-## Example Workflow (Phase 3+)
+## Manual Workflow (If Needed)
 
 1. **Read inputs:**
    - inputs/YYYY-MM-DD.yml (schedule, farmers market)

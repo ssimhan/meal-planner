@@ -32,20 +32,55 @@ pip install -r requirements.txt
 
 ## Usage
 
-### Visual Workflow Dashboard (Recommended)
+### 🌟 NEW: Streamlined Workflow (Recommended)
 
-For the easiest experience, use the visual workflow dashboard:
+The simplest way to use the meal planner - just run one command and it handles everything:
 
-1. **Open `workflow.html`** in your browser (double-click or right-click → "Open in Default Browser")
-2. **Click buttons** to copy commands for each step
-3. **Paste into Claude Code** (Cmd+L in VS Code to open Claude Code chat)
-4. **Copy git commands** from the dashboard to commit and push
+```bash
+./mealplan next
+```
 
-The dashboard auto-calculates dates, provides git command shortcuts, and tracks your progress through the weekly workflow.
+That's it! The workflow automatically:
+1. Detects what stage you're at
+2. Runs the appropriate next step
+3. Guides you through what to do next
+
+**Complete Workflow Example:**
+
+```bash
+# Week starts - create new input file
+./mealplan next
+# → Creates inputs/YYYY-MM-DD.yml with proposed vegetables
+
+# Edit file to confirm vegetables after farmers market
+vim inputs/YYYY-MM-DD.yml  # Update confirmed_veg, change status to "confirmed"
+
+# Generate meal plan
+./mealplan next
+# → Creates plans/YYYY-MM-DD-weekly-plan.md and updates history
+
+# When week is done, start next week
+./mealplan next
+# → Creates next week's input file automatically
+```
+
+**Other Streamlined Commands:**
+
+```bash
+./mealplan status  # Show current workflow state
+./mealplan reset   # Force start new week (if needed)
+```
+
+**State Tracking:**
+
+Each input file now tracks its progress:
+- `intake_complete` + `status: proposed` → Awaiting farmers market confirmation
+- `intake_complete` + `status: confirmed` → Ready to generate plan
+- `plan_complete` → Week is done, ready for next week
 
 ---
 
-### Quick Start (Easy Commands)
+### Legacy Workflow Commands
 
 Use the `./mealplan` wrapper script with numbered workflow commands:
 
@@ -171,21 +206,23 @@ This checks:
 
 ```
 meal-planner/
-├── prompts/              # Prompt templates for Claude Code
+├── README.md             # This file - main documentation
+├── CLAUDE.md             # Claude Code operating instructions
+├── mealplan              # Main CLI wrapper script
 ├── recipes/
 │   ├── raw_html/         # Original HTML recipe files (234 files)
 │   ├── parsed/           # Generated JSON output
 │   ├── taxonomy.yml      # Template and tag definitions
-│   └── index.yml         # Curated recipe index for planning
+│   └── index.yml         # Curated recipe index (234 recipes)
 ├── data/
-│   ├── history.yml       # Historical meal plan tracking
-│   └── pantry.yml        # Pantry inventory (future)
+│   └── history.yml       # Historical meal plan tracking
 ├── inputs/               # Weekly input files with schedule/preferences
-├── plans/                # Generated weekly meal plans
-└── scripts/              # Python scripts for parsing and planning
+├── plans/                # Generated weekly meal plans (Markdown)
+└── scripts/              # Python automation scripts
+    ├── workflow.py       # Streamlined workflow with state tracking
+    ├── mealplan.py       # Legacy workflow commands
     ├── parse_recipes.py  # Recipe HTML parser
-    ├── mealplan.py       # CLI entry point (future)
-    └── validate_plan.py  # Plan validator (future)
+    └── validate_plan.py  # Plan validator
 ```
 
 ## Recipe Management

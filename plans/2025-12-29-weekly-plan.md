@@ -12,44 +12,44 @@
 
 ## Monday
 
-**Dinner:** Aloo Corn Tikki Roll (indian soup_stew)
-- Main vegetables: avocado, cilantro, corn, garlic, ginger, onion, potato
+**Dinner:** Chana Masala (IP) (indian soup_stew)
+- Main vegetables: cilantro, garlic, ginger, onion, peas, tomato, tomatoe
 
 **Lunch Prep:** [Recipe for 2 kids + 1 adult]
 
 ## Tuesday
 
-**Dinner:** Baked Black Bean and Sweet Potato Flautas (mexican tacos_wraps)
-- Main vegetables: beans, cilantro, corn, garlic, onion, pepper, potato, sweet potato
+**Dinner:** Crispy Chipotle Sweet Potato Tacos with Lime Crema. (mexican tacos_wraps)
+- Main vegetables: beans, cilantro, garlic, lime, poblano, potato, potatoe, sweet potato
 
 **Lunch Prep:** [Recipe for 2 kids + 1 adult]
 
 ## Wednesday
 
-**Dinner:** Black Bean Quinoa Salad (unknown salad)
-- Main vegetables: beans, bell pepper, cilantro, lime, tomato
+**Dinner:** Curried Cauliflower Quinoa Salad (mediterranean salad)
+- Main vegetables: arugula, cabbage, cauliflower, cilantro, cucumber, garlic, lemon
 
 **Lunch Prep:** [Recipe for 2 kids + 1 adult]
 
 ## Thursday
 
-**Dinner:** Bhel Puri Chaat (indian appetizer)
-- Main vegetables: cilantro, cucumber, lemon, onion, potato, tomato
+**Dinner:** Easy French Toast Sticks (american sandwich)
+- Main vegetables: none
 - Prep notes: Quick no-chop meal
 
 **Lunch Prep:** [Recipe for 2 kids + 1 adult]
 
 ## Friday
 
-**Dinner:** Broccoli Spinach Pasta Sauce (italian pasta_noodles)
-- Main vegetables: broccoli, garlic, lemon, spinach
+**Dinner:** Easy Zucchini Pasta Sauce (italian pasta_noodles)
+- Main vegetables: basil, beans, garlic, lemon, parsley, spinach, zucchini
 - Prep notes: Quick no-chop meal
 
 **Lunch Prep:** [Recipe for 2 kids + 1 adult]
 
 ## From Scratch Recipe This Week
 
-**Aloo Corn Tikki Roll** - [Brief rationale for why this recipe was chosen]
+**Chana Masala (IP)** - [Brief rationale for why this recipe was chosen]
 
 ## Prep-Ahead Notes
 

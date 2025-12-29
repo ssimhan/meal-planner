@@ -19,7 +19,12 @@ usage() {
     echo "Usage:"
     echo "  ./mealplan <command> [args]"
     echo ""
-    echo "Weekly Workflow Commands:"
+    echo "🌟 NEW Streamlined Workflow:"
+    echo "  next               Auto-detect and run next workflow step"
+    echo "  status             Show current workflow status"
+    echo "  reset              Start planning next week"
+    echo ""
+    echo "Legacy Workflow Commands:"
     echo "  1-start            Start new week (interactive prompts)"
     echo "  2-update [date]    Update vegetables after farmers market"
     echo "  3-plan [date]      Generate meal plan"
@@ -30,25 +35,36 @@ usage() {
     echo "  parse              Parse HTML recipes into index (one-time setup)"
     echo "  validate [date]    Validate a meal plan"
     echo ""
-    echo "Aliases (same as numbered commands):"
-    echo "  start              Same as 1-start"
-    echo "  update             Same as 2-update"
-    echo "  plan               Same as 3-plan"
-    echo "  view               Same as 4-view"
-    echo "  latest             Same as 5-latest"
+    echo "Examples (NEW STREAMLINED WORKFLOW):"
+    echo "  ./mealplan next    # Auto-runs next step (recommended!)"
+    echo "  ./mealplan status  # Check current state"
+    echo "  ./mealplan reset   # Start new week when current is complete"
     echo ""
-    echo "Examples:"
+    echo "Examples (Legacy):"
     echo "  ./mealplan 1-start             # Start new week"
     echo "  ./mealplan 2-update 2026-01-05 # Edit vegetables after farmers market"
     echo "  ./mealplan 3-plan 2026-01-05   # Generate plan"
-    echo "  ./mealplan 4-view 2026-01-05   # View generated plan"
-    echo "  ./mealplan 5-latest            # View most recent plan"
     echo ""
     exit 1
 }
 
 # Command handlers
 
+# New streamlined workflow commands
+cmd_next() {
+    echo -e "${GREEN}Running next workflow step...${NC}"
+    python3 scripts/workflow.py
+}
+
+cmd_status() {
+    python3 scripts/workflow.py --status
+}
+
+cmd_reset() {
+    python3 scripts/workflow.py --reset
+}
+
+# Legacy commands
 cmd_parse() {
     echo -e "${GREEN}Parsing HTML recipes...${NC}"
     python3 scripts/parse_recipes.py
@@ -200,7 +216,17 @@ command="$1"
 shift
 
 case "$command" in
-    # Numbered workflow commands
+    # New streamlined workflow
+    next)
+        cmd_next
+        ;;
+    status)
+        cmd_status
+        ;;
+    reset)
+        cmd_reset
+        ;;
+    # Numbered workflow commands (legacy)
     1-start|start)
         cmd_start
         ;;

@@ -32,9 +32,8 @@ pip-wheel-metadata/
 *~
 .DS_Store
 
-# Generated files
+# Generated files (if any)
 recipes/parsed/
-recipes/index.yml
 
 # Sensitive data
 .env

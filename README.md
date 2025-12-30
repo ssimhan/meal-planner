@@ -351,13 +351,76 @@ Add a new session entry to PROJECT_HISTORY.md including:
 
 The PROJECT_HISTORY.md file is designed to become a blog post or tutorial, so write entries with that audience in mind.
 
-## Future Features
+## Future Roadmap: GitHub Actions Automation
 
-- Lunch prep recipe suggestions (infrastructure in place)
-- Heavy snack recipe recommendations for late class days
-- AI-powered plan refinement with Claude Code
-- GitHub Actions automation for weekly plans
-- Interactive plan editing workflow
+**Vision:** Transform the CLI workflow into a GitHub Actions-powered system that's accessible from anywhere (phone, web) while keeping data private and free.
+
+### Current State (CLI-based)
+- ✅ Lunch prep recipe suggestions - **COMPLETE**
+- ✅ HTML meal plan output with Solarpunk design
+- ✅ Energy-based prep model with freezer backup strategy
+- ✅ Anti-repetition logic and constraint satisfaction
+
+### Planned Migration to GitHub Actions
+
+#### **Phase 1: Foundation** (Next Priority)
+- [ ] Enable GitHub Pages for meal plan hosting
+- [ ] Test viewing plans at `https://username.github.io/meal-planner/`
+- [ ] Update plan links to be web-accessible
+- **Effort:** 30 minutes | **Value:** Access plans from phone/tablet
+
+#### **Phase 2: Automated Weekly Planning**
+- [ ] Create `.github/workflows/weekly-plan.yml`
+- [ ] Sunday 8am: Auto-create input file with farmers market suggestions
+- [ ] Create PR for review (edit vegetables on GitHub web UI)
+- [ ] On PR merge: Auto-generate meal plan and commit
+- [ ] Comment on PR with link to generated plan
+- **Effort:** 2-3 hours | **Value:** No CLI needed for weekly planning
+
+#### **Phase 3: Daily Check-ins via GitHub Issues**
+- [ ] Create `.github/workflows/daily-checkin.yml`
+- [ ] 6pm daily: Auto-create GitHub Issue "What did you make today?"
+- [ ] Comment on issue from phone with meal notes
+- [ ] Parse comments, update `data/logs.yml`
+- [ ] Auto-close issue after logging
+- **Effort:** 3-4 hours | **Value:** Easy logging from anywhere
+
+#### **Phase 4: Inventory Automation**
+- [ ] Create `data/inventory.yml` schema (fridge/pantry/freezer)
+- [ ] Create `scripts/parse_daily_log.py` for comment parsing
+- [ ] Auto-update inventory based on logged meals
+- [ ] Carry forward leftovers week-to-week
+- [ ] Use inventory to improve farmers market suggestions
+- **Effort:** 4-5 hours | **Value:** Inventory stays current automatically
+
+#### **Phase 5: Learning & Adaptation**
+- [ ] Analyze logs for meal success patterns
+- [ ] Track time accuracy (prep time vs actual time)
+- [ ] Identify kid-friendly meals based on notes
+- [ ] Adjust suggestions based on historical data
+- [ ] Reduce food waste by tracking unused items
+- **Effort:** 10+ hours | **Value:** System gets smarter over time
+
+### Why GitHub Actions?
+
+**Benefits:**
+- ✅ **Still free** - GitHub Actions generous free tier (2,000 min/month)
+- ✅ **Still private** - Data stays in your private repo
+- ✅ **No servers** - Runs in cloud, you control it
+- ✅ **Accessible anywhere** - GitHub web UI, mobile-friendly
+- ✅ **Git-backed** - All data version-controlled
+- ✅ **Portable** - Export data anytime (YAML files)
+
+**Cost:** ~50 minutes/month of Actions (well within free tier)
+
+### Migration Strategy
+
+1. **Keep CLI working** - Don't break existing workflow
+2. **Add GitHub Actions alongside** - Incremental enhancement
+3. **Test each phase** - Use for 1-2 weeks before next phase
+4. **Evaluate value** - Skip phases that don't deliver value
+
+See [IMPLEMENTATION.md](IMPLEMENTATION.md) for detailed technical plan.
 
 ## License
 

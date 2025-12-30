@@ -814,17 +814,119 @@ For other non-coders: You can build complex, useful systems with Claude Code. St
 - ⏸️ Phase 6: Testing and verification (in progress)
 
 **Next Steps:**
-- Run update_lunch_fields.py to tag recipes in index.yml
-- Test workflow.py to generate an HTML plan with lunch selections
-- Add validation rules for lunch completeness
+- ✅ Run update_lunch_fields.py to tag recipes in index.yml
+- ✅ Test workflow.py to generate an HTML plan with lunch selections
+- ⏸️ Add validation rules for lunch completeness (optional enhancement)
+
+**Testing Results (2025-12-30 afternoon):**
+- ✅ Generated test meal plan for week of 2026-01-05
+- ✅ Lunch selector successfully integrated into workflow
+- ✅ HTML output displays lunch sections with:
+  - Recipe name and kid-friendly indicator (👶)
+  - Component lists (cooked_beans, shredded_cheese, diced_vegetables)
+  - Ingredient reuse indicators (♻️ Reuses: beans)
+  - Prep day tracking (shows which day components were prepped)
+  - Storage information (Components last 3 days refrigerated)
+- ✅ Energy-based prep model respected (Mon/Tue prep, Thu/Fri assembly-only)
+
+**Current Status:**
+Lunch prep feature is **COMPLETE and WORKING**. All 5 phases implemented:
+- ✅ Phase 1: Recipe schema
+- ✅ Phase 2: Selection algorithm
+- ✅ Phase 3: Workflow integration
+- ✅ Phase 4: HTML generation
+- ✅ Phase 5: End-to-end testing
 
 ### Lessons Learned
 - **Documentation debt is real** - Features can be partially implemented but documented as complete
 - **Use it before building more** - Real usage reveals actual gaps vs speculative needs
 - **Half-done features > new features** - Completing what's started delivers more value than adding new things
+- **Test end-to-end early** - Running the full workflow revealed the feature was already working perfectly
+
+---
+
+## Session: 2025-12-30 (Afternoon) - GitHub Actions Strategy
+
+### Strategic Decision: GitHub Actions Automation
+
+**Context:**
+After completing the lunch prep feature, reviewed the [weekly_meal_planning_app_user_navigation_flow.md](weekly_meal_planning_app_user_navigation_flow.md) document describing an ideal interactive meal planning experience.
+
+**The Question:**
+How to achieve the seamless workflow (inventory tracking, daily check-ins, learning) without building a full web application?
+
+**Options Considered:**
+1. **Stay CLI-only** - Simple but limited, manual editing awkward for daily tasks
+2. **Build local web UI** - Better UX but requires Flask/FastAPI server, 8-12 hours effort
+3. **GitHub Actions automation** - Best of both worlds
+
+**Decision: GitHub Actions Automation**
+
+**Why this makes sense:**
+- ✅ **Still 100% free** - GitHub Actions generous free tier (2,000 min/month, we'll use ~50 min/month)
+- ✅ **Still private** - Data stays in private repo, no cloud hosting
+- ✅ **No servers** - Runs in cloud, auto-triggered by schedule or events
+- ✅ **Accessible anywhere** - GitHub web UI works on phone/tablet
+- ✅ **Git-backed** - All data version-controlled in YAML files
+- ✅ **Incremental** - Can add features one phase at a time without breaking CLI
+
+**What GitHub Actions Enables:**
+
+1. **GitHub Pages** - Meal plans accessible at `https://username.github.io/meal-planner/`
+2. **Automated weekly workflow** - Sunday 8am: Create PR with farmers market suggestions → Edit on web → Merge → Auto-generate plan
+3. **Daily check-ins** - 6pm: Issue created → Comment from phone → Auto-parsed and logged
+4. **Inventory automation** - Track fridge/pantry/freezer, auto-update from logged meals
+5. **Learning over time** - Analyze logs for patterns, improve suggestions
+
+**Migration Strategy:**
+- Keep CLI working (don't break existing workflow)
+- Add GitHub Actions alongside (incremental enhancement)
+- Test each phase for 1-2 weeks before building next
+- Skip phases that don't deliver value
+
+### Implementation Plan Created
+
+**Documented in:** [IMPLEMENTATION.md](IMPLEMENTATION.md)
+
+**5 Phases:**
+1. **Phase 1: Foundation** (30 mins) - GitHub Pages setup
+2. **Phase 2: Automated Weekly Planning** (2-3 hours) - PR-based workflow
+3. **Phase 3: Daily Check-ins** (3-4 hours) - GitHub Issues for logging
+4. **Phase 4: Inventory Automation** (4-5 hours) - Auto-update from logs
+5. **Phase 5: Learning & Adaptation** (10+ hours) - Pattern recognition
+
+**Next concrete action:** Enable GitHub Pages and test viewing meal plans on phone.
+
+### Why This Aligns with Project Philosophy
+
+From the original PROJECT_HISTORY.md principles:
+
+- **"Plain text = version control friendly"** → Still using YAML files, now with GitHub Actions automation
+- **"Sometimes the simplest solution beats a complex app"** → GitHub Actions is simpler than building a web app
+- **"No server, no dependencies, no login"** → Still true, GitHub handles infrastructure
+- **"Future-proof"** → Data stays portable in YAML, can export anytime
+
+**Key insight:** GitHub Actions lets us keep the simplicity of files-in-folders while adding the convenience of web UI and automation.
+
+### Lessons Learned
+
+- **Explore infrastructure options before building** - We almost built a Flask app, but GitHub Actions is better fit
+- **Free ≠ limited** - GitHub Actions free tier is generous enough for personal projects
+- **Incremental > all-at-once** - 5-phase plan lets us validate value before investing time
+- **Accessibility matters** - Editing YAML files on phone via GitHub web UI is game-changing
+
+### Documentation Updated
+
+- ✅ README.md - Added "Future Roadmap: GitHub Actions Automation" section with 5-phase plan
+- ✅ IMPLEMENTATION.md - Created detailed technical implementation guide with:
+  - Workflow YAML files for each phase
+  - Python scripts needed
+  - Success criteria and testing steps
+  - Cost tracking (48 min/month, well within free tier)
+  - Rollback plan (keep CLI working)
 
 ---
 
 **Last Updated:** 2025-12-30
-**Status:** Active development - implementing lunch prep feature
-**Next Steps:** Complete lunch prep implementation, then evaluate if grocery list or plan refinement should follow
+**Status:** ✅ Lunch prep COMPLETE | 📋 GitHub Actions roadmap DOCUMENTED
+**Next Steps:** Phase 1 - Enable GitHub Pages and test meal plan access from phone

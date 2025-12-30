@@ -295,6 +295,12 @@ The parser will preserve manual edits on subsequent runs (future enhancement).
 - AI-powered plan refinement with Claude Code
 - GitHub Actions automation for weekly plans
 - Interactive plan editing workflow
+- **Dynamic prep capacity scheduling** - System asks about weekly schedule details (holidays, kids home, unusual events) and uses that information to determine which days allow heavy prep vs. minimal prep. This would:
+  - Account for school holidays or days when kids are home unexpectedly
+  - Handle spontaneous eating out or meal cancellations
+  - Track unused vegetables and adjust next week's plan accordingly
+  - Allow recipes to be moved/postponed to the following week
+  - Dynamically adjust the prep schedule (currently fixed to Mon/Tue/Wed prep, Thu/Fri no-prep)
 
 ## License
 

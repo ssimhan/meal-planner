@@ -38,6 +38,16 @@ effort_levels:
   - minimal_chop    # 15-30min, light prep
   - normal          # 30-60min, standard cooking
 
+# Lunch-specific attributes
+lunch_attributes:
+  lunch_suitable: [true, false]  # Can this be served for lunch?
+  kid_friendly: [true, false]    # Suitable for kids?
+  prep_style:
+    - quick_fresh      # Made fresh in <10 min (eggs, PBJ)
+    - component_based  # Requires prepped components (pasta salad, grain bowl)
+    - batch_cookable   # Can be batch-cooked (ravioli, quesadilla filling)
+  storage_days: [0, 1, 2, 3, 4, 5]  # How many days prepped components last
+
 appliances:
   - instant_pot
   - slow_cooker
@@ -247,6 +257,23 @@ meal_type_keywords:
     - roasted chickpea
     - fried tofu
     - white bean
+
+# Lunch-specific meal type keywords
+lunch_meal_keywords:
+  - ravioli
+  - quesadilla
+  - egg sandwich
+  - pbj
+  - peanut butter
+  - chapati
+  - dosa
+  - burrito
+  - pizza roll
+  - toad in.*hole
+  - scrambled egg
+  - pasta salad
+  - grain bowl
+  - rice bowl
 
 # Appliance detection keywords
 appliance_keywords:

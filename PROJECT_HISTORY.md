@@ -728,6 +728,61 @@ For other non-coders: You can build complex, useful systems with Claude Code. St
 
 ---
 
+---
+
+## Session: 2025-12-30 (Continued) - Feature Planning & Implementation
+
+### What We Analyzed
+- Reviewed all future features listed in README
+- Analyzed actual implementation vs documentation claims
+- Discovered critical gaps between what's documented and what actually works
+
+### Critical Findings
+1. **Lunch prep is placeholder text** - Documentation claims "infrastructure in place" but workflow.py generates generic placeholders, not actual lunch plans
+2. **Grocery list not generated** - HTML tab exists but content is not populated from recipes
+3. **Freezer inventory is manual** - Placeholder text in plans, not automated tracking
+4. **No plan iteration** - One-shot generation with no refinement workflow
+
+### Key Decisions Made
+
+**Revised Future Feature Priorities:**
+1. ✅ **Lunch prep recipe suggestions** (CRITICAL - falsely documented as working)
+2. ✅ **Automated grocery list generation** (HIGH VALUE - low effort, high impact)
+3. ✅ **Interactive plan refinement** (HIGH VALUE - enables iteration)
+4. ⏸️ **Freezer inventory tracking** (MODERATE VALUE)
+5. ❌ **Heavy snack variety** (SKIP - working as designed, intentional decision fatigue reduction)
+6. ❌ **GitHub Actions automation** (SKIP - unnecessary complexity)
+
+**Rationale:** Focus on completing half-done features before adding new ones. The system is production-ready; gaps are in automation polish, not core functionality.
+
+### Implementation Started: Lunch Prep Recipe Suggestions
+
+**Phase 1 Progress (Recipe Index Schema):**
+- ✅ Added lunch_attributes section to taxonomy.yml
+  - `lunch_suitable`, `kid_friendly`, `prep_style`, `storage_days`
+- ✅ Added lunch_meal_keywords to taxonomy.yml
+- ✅ Created update_lunch_fields.py script to tag 5 initial recipes:
+  - cheesy_veggie_quesadilla
+  - greek_quesadillas
+  - sheet_pan_black_bean_quesadillas
+  - curried_egg_salad_sandwich
+  - refried_bean_burrito
+
+**Next Steps:**
+- Install PyYAML dependency
+- Run update script to add lunch fields to all recipes
+- Create lunch_selector.py with intelligent selection algorithm
+- Integrate into workflow.py
+- Update HTML template
+- Add validation rules
+
+### Lessons Learned
+- **Documentation debt is real** - Features can be partially implemented but documented as complete
+- **Use it before building more** - Real usage reveals actual gaps vs speculative needs
+- **Half-done features > new features** - Completing what's started delivers more value than adding new things
+
+---
+
 **Last Updated:** 2025-12-30
-**Status:** Active use, ongoing refinement
-**Next Steps:** Document first full month of usage, refine based on real-world experience
+**Status:** Active development - implementing lunch prep feature
+**Next Steps:** Complete lunch prep implementation, then evaluate if grocery list or plan refinement should follow

@@ -288,6 +288,69 @@ The parser will preserve manual edits on subsequent runs (future enhancement).
 - Properly displays selected recipe in plan output
 - Avoids template conflicts with busy-day meals
 
+## Maintaining Project History
+
+**After every coding session**, update the project documentation:
+
+### End of Session Checklist
+
+When you're ready to commit your work, always ask Claude Code to:
+
+1. **Update PROJECT_HISTORY.md** with session notes:
+   ```
+   Please update PROJECT_HISTORY.md with what we did this session:
+   - What features/fixes were implemented
+   - Key decisions made and why
+   - Lessons learned or insights discovered
+   - Any new patterns or approaches introduced
+   ```
+
+2. **Commit all changes** together:
+   ```bash
+   # Claude Code will handle the git commands
+   "Please commit all files with an appropriate message"
+   ```
+
+### What to Document
+
+Add a new session entry to PROJECT_HISTORY.md including:
+- **Date** of the session
+- **What changed**: Features added, bugs fixed, refactoring done
+- **Why**: Rationale for decisions made
+- **Lessons learned**: Insights for future you and other builders
+- **Next steps**: What to tackle next (optional)
+
+### Example Session Entry Format
+
+```markdown
+## Session: 2025-12-30
+
+### What We Built
+- Created PROJECT_HISTORY.md to document project journey
+- Added automated session tracking to README workflow
+
+### Key Decisions
+- Decided to maintain project history alongside code
+- Chose Markdown format for easy editing and version control
+
+### Lessons Learned
+- Documentation is best maintained continuously, not retroactively
+- Future blog posts become easier when you document as you go
+
+### Next Steps
+- Continue refining meal planning algorithm
+- Add more recipes to the database
+```
+
+### Why This Matters
+
+- **For your blog**: You'll have detailed notes about your journey
+- **For future you**: Remember why you made certain decisions
+- **For other builders**: Help non-coders learn from your process
+- **For the project**: Creates institutional knowledge
+
+The PROJECT_HISTORY.md file is designed to become a blog post or tutorial, so write entries with that audience in mind.
+
 ## Future Features
 
 - Lunch prep recipe suggestions (infrastructure in place)

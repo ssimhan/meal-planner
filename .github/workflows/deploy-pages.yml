@@ -27,10 +27,13 @@ jobs:
       - name: Create site directory
         run: mkdir -p _site
 
-      - name: Copy blog content to site
+      - name: Copy meal plans to site
         run: |
-          # For now, create a simple index page
-          # You can expand this to build your full blog later
+          # Copy all meal plan HTML files
+          mkdir -p _site/plans
+          cp -r plans/*.html _site/plans/ 2>/dev/null || true
+
+          # Create index page with links to meal plans
           cat > _site/index.html << 'EOF'
           <!DOCTYPE html>
           <html lang="en">
@@ -48,13 +51,43 @@ jobs:
                 color: #333;
               }
               h1 { color: #2c5282; }
-              a { color: #3182ce; }
+              h2 { color: #2d3748; margin-top: 2rem; }
+              a {
+                color: #3182ce;
+                text-decoration: none;
+              }
+              a:hover {
+                text-decoration: underline;
+              }
+              ul {
+                list-style: none;
+                padding: 0;
+              }
+              li {
+                padding: 0.5rem 0;
+                border-bottom: 1px solid #e2e8f0;
+              }
             </style>
           </head>
           <body>
             <h1>Meal Planner Project</h1>
             <p>Energy-based meal planning system for busy families.</p>
-            <h2>Coming Soon</h2>
+
+            <h2>Weekly Meal Plans</h2>
+            <ul>
+          EOF
+
+          # Add links to all meal plans (sorted newest first)
+          for plan in $(ls -t plans/*.html 2>/dev/null); do
+            filename=$(basename "$plan")
+            week_date=$(echo "$filename" | cut -d- -f1,2,3)
+            echo "              <li><a href=\"plans/$filename\">Week of $week_date</a></li>" >> _site/index.html
+          done
+
+          cat >> _site/index.html << 'EOF'
+            </ul>
+
+            <h2>About This Project</h2>
             <p>This site will feature a detailed blog post about the development of this meal planning system.</p>
             <p><a href="https://github.com/${{ github.repository }}">View on GitHub</a></p>
           </body>

@@ -1,0 +1,38 @@
+week_of: '2026-01-05'
+timezone: America/Los_Angeles
+workflow:
+  status: plan_complete
+  created_at: '2025-12-30T13:51:01.417497'
+  updated_at: '2025-12-30T14:04:36.695070'
+schedule:
+  office_days:
+  - mon
+  - wed
+  - fri
+  busy_days:
+  - thu
+  - fri
+  late_class_days: []
+preferences:
+  vegetarian: true
+  avoid_ingredients:
+  - eggplant
+  - mushrooms
+  - green_cabbage
+  novelty_recipe_limit: 1
+farmers_market:
+  status: confirmed
+  proposed_veg:
+  - carrot
+  - onion
+  - garlic
+  - cilantro
+  confirmed_veg:
+  - carrot
+  - onion
+  - garlic
+  - cilantro
+  - bell peppers
+  - tomatoes
+  - spinach
+  - sweet potato

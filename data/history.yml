@@ -266,3 +266,76 @@ weeks:
     - garlic
     - lemon
     - spinach
+- week_of: '2026-01-05'
+  dinners:
+  - recipe_id: bisi_bele_bath
+    cuisine: indian
+    meal_type: soup_stew
+    day: mon
+    vegetables:
+    - beans
+    - carrot
+    - onion
+    - peas
+    - potato
+    - potatoe
+    - tomato
+    - tomatoe
+    - beans
+    - carrot
+    - onion
+    - peas
+    - potato
+    - potatoe
+    - tomato
+    - tomatoe
+  - recipe_id: mediterranean_quinoa_salad
+    cuisine: unknown
+    meal_type: salad
+    day: tue
+    vegetables:
+    - beans
+    - cucumber
+    - lemon
+    - tomato
+    - beans
+    - cucumber
+    - lemon
+    - tomato
+  - recipe_id: mexican_papdi_chaat
+    cuisine: indian
+    meal_type: appetizer
+    day: wed
+    vegetables:
+    - beans
+    - bell pepper
+    - cilantro
+    - corn
+    - onion
+    - scallion
+    - beans
+    - bell pepper
+    - cilantro
+    - corn
+    - onion
+    - scallion
+  - recipe_id: creamy_macaroni_pasta_salad
+    cuisine: italian
+    meal_type: pasta_noodles
+    day: thu
+    vegetables:
+    - broccoli
+    - cucumber
+    - onion
+    - broccoli
+    - cucumber
+    - onion
+  - recipe_id: enchilada_sauce
+    cuisine: mexican
+    meal_type: tacos_wraps
+    day: fri
+    vegetables:
+    - garlic
+    - tomato
+    - garlic
+    - tomato

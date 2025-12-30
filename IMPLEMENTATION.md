@@ -524,9 +524,65 @@ def suggest_farmers_market_vegetables():
 
 ## Phase 5: Learning & Adaptation
 
-**Goal:** Use historical logs to improve suggestions.
+**Goal:** Use historical logs to improve suggestions over time.
 
-### 5.1 Meal Success Scoring
+### What the System Should Learn
+
+Your daily notes aren't just logs — they're training signals. The system should quietly learn:
+
+#### 5.1 Meal Reliability
+- **Which meals you actually make vs skip** - Track completion rate per recipe
+- **Which meals get repeated voluntarily** - User explicitly makes same meal again
+- **Which meals consistently leave leftovers** - Good (intentional batch) or bad (overestimated portions)
+
+**Impact:** Favor low-friction, high-success meals in future suggestions.
+
+#### 5.2 Time Realism
+- **Meals that took longer than planned** - Parse notes for "took 30 mins" vs recipe estimate
+- **Prep sessions that didn't happen** - Monday prep skipped = adjust Thu/Fri to no-prep
+- **Office days where cooking ambition was too high** - Notes like "too tired to cook"
+
+**Impact:** Downshift complexity on busy days automatically.
+
+#### 5.3 Kid & Household Response Patterns
+- **Meals kids consistently eat** - Parse notes for "kids loved", "ate well", "finished plates"
+- **Meals that trigger complaints or waste** - "kids didn't eat", "complained", "threw away"
+- **Flavors or textures that work better on certain days** - Patterns like "pasta works on Fridays"
+
+**Impact:** Bias toward family-safe defaults when energy is low.
+
+#### 5.4 Ingredient Behavior
+- **Produce that regularly goes unused** - Track inventory items marked "still untouched" after use-by date
+- **Staples that are always consumed** - Rice, beans, cheese never wasted
+- **Items that freeze well vs spoil** - Correlate with freezer backup success
+
+**Impact:** Reduce food waste, stabilize core grocery list.
+
+#### 5.5 Prep Effectiveness
+- **Prep that clearly made the week easier** - Notes like "Monday prep saved me Thursday"
+- **Prep that wasn't worth the effort** - "Spent 2 hours Sunday, still stressed Thursday"
+- **Tasks that compound well** - Chopping once, using twice across meals
+
+**Impact:** Suggest fewer, smarter prep steps.
+
+#### 5.6 Preference Drift (Without Asking)
+- **Seasonal taste shifts** - Lighter meals in summer, heartier in winter
+- **Fatigue with certain cuisines** - If tacos appear 3 weeks in row, user skips → reduce frequency
+- **Increased tolerance for repetition during busy weeks** - Same lunch 5 days = fine when stressed
+
+**Impact:** Adapt without forcing explicit preference updates.
+
+#### 5.7 Confidence Signals
+- **Meals labeled as "easy", "repeat", or "reliable"** - Boost these in rotation
+- **Weeks that felt calm vs chaotic** - Correlate meal complexity with stress level
+
+**Impact:** Optimize for mental load, not just nutrition.
+
+### Implementation
+
+#### 5.1 Meal Success Scoring
+
+**File:** `scripts/analyze_logs.py`
 
 ```python
 def analyze_meal_success():
@@ -536,30 +592,41 @@ def analyze_meal_success():
     # - "took longer" → -5
     # - "didn't eat" → -10
     # - "easy" → +5
+    # - "repeat" → +8
     # Return success scores per recipe
     pass
 ```
 
-### 5.2 Time Accuracy
+#### 5.2 Time Accuracy Tracking
 
 ```python
 def track_time_accuracy():
     """Compare estimated vs actual prep time."""
-    # If notes say "took 30 mins" and recipe says 15 mins
-    # Update recipe metadata or adjust future estimates
+    # Parse notes for time mentions: "took 30 mins", "2 hours"
+    # Compare to recipe metadata
+    # Adjust future estimates or flag recipes as "takes longer than stated"
     pass
 ```
 
-### 5.3 Adaptive Suggestions
+#### 5.3 Adaptive Plan Generation
 
 ```python
 def generate_adaptive_plan():
     """Generate plan using learned preferences."""
+    # Load success scores from analyze_logs()
     # Boost high-success meals on busy weeks
     # Reduce complexity when compliance is low
     # Favor kid-friendly meals more often
+    # Reduce frequency of cuisines with recent negative notes
     pass
 ```
+
+**Success Criteria:**
+- [ ] Meal success scores calculated from logs
+- [ ] Time estimates adjusted based on reality
+- [ ] Kid-friendly meals prioritized
+- [ ] Prep recommendations refined based on effectiveness
+- [ ] System gets noticeably "smarter" after 4-6 weeks of logs
 
 ---
 

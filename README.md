@@ -355,6 +355,26 @@ The PROJECT_HISTORY.md file is designed to become a blog post or tutorial, so wr
 
 **Vision:** Transform the CLI workflow into a GitHub Actions-powered system that's accessible from anywhere (phone, web) while keeping data private and free.
 
+### Design Philosophy
+
+**The Meta-Goal:**
+Over time, the system should move from:
+> "Here's a plan you *could* follow"
+
+to:
+> "Here's the plan you almost always *do* follow."
+
+**How it learns:**
+- **Meal reliability** - Which meals you actually make vs skip, which get repeated voluntarily
+- **Time realism** - Meals that took longer than planned, prep that didn't happen
+- **Kid & household patterns** - Meals kids consistently eat vs complain about
+- **Ingredient behavior** - Produce that goes unused, staples always consumed
+- **Prep effectiveness** - Tasks that made the week easier vs weren't worth effort
+- **Preference drift** - Seasonal taste shifts, fatigue with certain cuisines
+- **Confidence signals** - Weeks that felt calm vs chaotic
+
+The system optimizes not just for nutrition, but for **mental load reduction**.
+
 ### Current State (CLI-based)
 - ✅ Lunch prep recipe suggestions - **COMPLETE**
 - ✅ HTML meal plan output with Solarpunk design

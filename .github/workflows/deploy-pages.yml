@@ -31,8 +31,12 @@ jobs:
         run: |
           # Copy all meal plan HTML files
           mkdir -p _site/plans
-          cp -r plans/*.html _site/plans/ 2>/dev/null || true
+          if ls plans/*.html 1> /dev/null 2>&1; then
+            cp plans/*.html _site/plans/
+          fi
 
+      - name: Generate index page
+        run: |
           # Create index page with links to meal plans
           cat > _site/index.html << 'EOF'
           <!DOCTYPE html>
@@ -77,12 +81,16 @@ jobs:
             <ul>
           EOF
 
-          # Add links to all meal plans (sorted newest first)
-          for plan in $(ls -t plans/*.html 2>/dev/null); do
-            filename=$(basename "$plan")
-            week_date=$(echo "$filename" | cut -d- -f1,2,3)
-            echo "              <li><a href=\"plans/$filename\">Week of $week_date</a></li>" >> _site/index.html
-          done
+          # Add links to all meal plans (sorted newest first) from _site/plans
+          if ls _site/plans/*.html 1> /dev/null 2>&1; then
+            for plan in $(ls -t _site/plans/*.html); do
+              filename=$(basename "$plan")
+              week_date=$(echo "$filename" | cut -d- -f1,2,3)
+              echo "              <li><a href=\"plans/$filename\">Week of $week_date</a></li>" >> _site/index.html
+            done
+          else
+            echo "              <li>No meal plans available yet.</li>" >> _site/index.html
+          fi
 
           cat >> _site/index.html << 'EOF'
             </ul>

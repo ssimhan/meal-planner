@@ -670,3 +670,8 @@ GitHub Actions free tier: 2,000 minutes/month
 Start with **Phase 1** (GitHub Pages) to validate the approach before building workflows.
 
 Track progress in README.md checkboxes.
+
+
+## backlog of feature ideas
+- cleaning up the html files so that the github pages interface looks in line with the rest of things
+

@@ -25,7 +25,10 @@ jobs:
         uses: actions/configure-pages@v4
 
       - name: Create site directory
-        run: mkdir -p _site
+        run: |
+          mkdir -p _site
+          # Disable Jekyll processing
+          touch _site/.nojekyll
 
       - name: Copy meal plans to site
         run: |

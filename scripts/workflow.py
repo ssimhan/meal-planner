@@ -260,9 +260,9 @@ def generate_meal_plan(input_file, data):
     plans_dir = Path('plans')
     plans_dir.mkdir(exist_ok=True)
 
-    plan_file = plans_dir / f'{week_of}-weekly-plan.md'
+    plan_file = plans_dir / f'{week_of}-weekly-plan.html'
     from_scratch_recipe = selected_dinners.get(from_scratch_day) if from_scratch_day else None
-    plan_content = generate_plan_content(data, selected_dinners, from_scratch_recipe, selected_lunches)
+    plan_content = generate_html_plan(data, selected_dinners, from_scratch_recipe, selected_lunches)
 
     with open(plan_file, 'w') as f:
         f.write(plan_content)
@@ -484,8 +484,535 @@ def select_dinners(filtered_recipes, inputs):
     return selected
 
 
+def generate_lunch_html(lunch_suggestion, day_name):
+    """
+    Generate HTML markup for a lunch section.
+
+    Args:
+        lunch_suggestion: LunchSuggestion object from lunch_selector.py
+        day_name: Day name (e.g., "Monday", "Tuesday")
+
+    Returns:
+        HTML string for the lunch section
+    """
+    html = []
+    html.append('            <div class="lunch-section">')
+    html.append('                <h4>🥪 Lunch</h4>')
+
+    if lunch_suggestion.default_option:
+        # Using default repeatable option
+        html.append(f'                <p><strong>Kids (2):</strong> {lunch_suggestion.recipe_name}</p>')
+        html.append(f'                <p><strong>Adult (1):</strong> Leftovers or grain bowl</p>')
+        html.append(f'                <p><strong>Prep:</strong> {lunch_suggestion.assembly_notes}</p>')
+    else:
+        # Using actual recipe
+        html.append(f'                <p><strong>Kids (2):</strong> {lunch_suggestion.recipe_name}')
+        if lunch_suggestion.kid_friendly:
+            html.append(' 👶')
+        html.append('</p>')
+
+        html.append(f'                <p><strong>Adult (1):</strong> Leftovers or grain bowl with dinner components</p>')
+
+        if lunch_suggestion.prep_components:
+            components_str = ', '.join(lunch_suggestion.prep_components)
+            html.append(f'                <p><strong>Components:</strong> {components_str}')
+        else:
+            html.append(f'                <p><strong>Components:</strong> Fresh ingredients')
+
+        if lunch_suggestion.reuses_ingredients:
+            reused_str = ', '.join(lunch_suggestion.reuses_ingredients)
+            html.append(f' <span style="color: var(--accent-sage);">♻️ Reuses: {reused_str}</span>')
+        html.append('</p>')
+
+        html.append(f'                <p><strong>Prep:</strong> {lunch_suggestion.assembly_notes}</p>')
+
+        # Add storage info if component-based
+        if lunch_suggestion.prep_style == 'component_based' and lunch_suggestion.storage_days > 0:
+            html.append(f'                <p style="font-size: var(--text-xs); color: var(--text-muted);"><em>Components last {lunch_suggestion.storage_days} days refrigerated</em></p>')
+
+    html.append('            </div>')
+    return '\n'.join(html)
+
+
+def generate_html_plan(inputs, selected_dinners, from_scratch_recipe=None, selected_lunches=None):
+    """Generate the weekly plan as HTML."""
+    # Read the HTML template
+    template_path = Path('templates/weekly-plan-template.html')
+    with open(template_path, 'r') as f:
+        template_content = f.read()
+
+    week_of = inputs['week_of']
+    week_start = datetime.strptime(week_of, '%Y-%m-%d').date()
+    week_end = week_start + timedelta(days=4)
+    week_range = f"{week_start.strftime('%b %d, %Y')} - {week_end.strftime('%b %d, %Y')}"
+
+    # Extract template styles (everything before </head>)
+    styles_end = template_content.find('</head>')
+    html_head = template_content[:styles_end]
+
+    # Replace title
+    html_head = html_head.replace('{WEEK_START_DATE}', week_start.strftime('%b %d, %Y'))
+    html_head = html_head.replace('{WEEK_END_DATE}', week_end.strftime('%b %d, %Y'))
+
+    # Start building the HTML content
+    html = []
+    html.append(html_head)
+    html.append('</head>')
+    html.append('<body>')
+    html.append('    <div class="container">')
+    html.append(f'        <h1>📅 Weekly Meal Plan: {week_range}</h1>')
+    html.append('')
+    html.append('        <!-- Tab Navigation -->')
+    html.append('        <div class="tab-nav">')
+    html.append('            <button class="tab-button active" onclick="showTab(\'overview\')">Overview</button>')
+    html.append('            <button class="tab-button" onclick="showTab(\'monday\')">Monday</button>')
+    html.append('            <button class="tab-button" onclick="showTab(\'tuesday\')">Tuesday</button>')
+    html.append('            <button class="tab-button" onclick="showTab(\'wednesday\')">Wednesday</button>')
+    html.append('            <button class="tab-button" onclick="showTab(\'thursday\')">Thursday</button>')
+    html.append('            <button class="tab-button" onclick="showTab(\'friday\')">Friday</button>')
+    html.append('            <button class="tab-button" onclick="showTab(\'saturday\')">Saturday</button>')
+    html.append('            <button class="tab-button" onclick="showTab(\'sunday\')">Sunday</button>')
+    html.append('            <button class="tab-button" onclick="showTab(\'groceries\')">Groceries</button>')
+    html.append('        </div>')
+    html.append('')
+
+    # Generate overview tab
+    html.extend(generate_overview_tab(inputs, selected_dinners, from_scratch_recipe))
+
+    # Generate weekday tabs with lunch data
+    html.extend(generate_weekday_tabs(inputs, selected_dinners, selected_lunches or {}))
+
+    # Generate weekend tabs
+    html.extend(generate_weekend_tabs())
+
+    # Generate groceries tab
+    html.extend(generate_groceries_tab(inputs))
+
+    # Close container and add JavaScript
+    html.append('    </div>')
+    html.append('')
+    html.append('    <script>')
+    html.append('        function showTab(tabName) {')
+    html.append('            const tabContents = document.querySelectorAll(\'.tab-content\');')
+    html.append('            tabContents.forEach(content => {')
+    html.append('                content.classList.remove(\'active\');')
+    html.append('            });')
+    html.append('')
+    html.append('            const tabButtons = document.querySelectorAll(\'.tab-button\');')
+    html.append('            tabButtons.forEach(button => {')
+    html.append('                button.classList.remove(\'active\');')
+    html.append('            });')
+    html.append('')
+    html.append('            document.getElementById(tabName).classList.add(\'active\');')
+    html.append('            event.target.classList.add(\'active\');')
+    html.append('        }')
+    html.append('    </script>')
+    html.append('</body>')
+    html.append('</html>')
+
+    return '\n'.join(html)
+
+
+def generate_overview_tab(inputs, selected_dinners, from_scratch_recipe):
+    """Generate the Overview tab content."""
+    html = []
+    html.append('        <!-- Overview Tab -->')
+    html.append('        <div id="overview" class="tab-content active">')
+    html.append('            <div class="freezer-backup">')
+    html.append('                <h3>🧊 Freezer Backup Status</h3>')
+    html.append('                <p style="margin-bottom: 15px;">Current backup meals in freezer:</p>')
+    html.append('                <ul>')
+    html.append('                    <li>[Update with current backup meal 1] - [Date frozen]</li>')
+    html.append('                    <li>[Update with current backup meal 2] - [Date frozen]</li>')
+    html.append('                    <li>[Update with current backup meal 3] - [Date frozen]</li>')
+    html.append('                </ul>')
+    html.append('                <p style="margin-top: 15px;"><strong>This week\'s batch cooking:</strong> [Identify which dinner to double and freeze]</p>')
+    html.append('            </div>')
+    html.append('')
+
+    if from_scratch_recipe:
+        html.append('            <div class="from-scratch">')
+        html.append('                <h3>🌟 From Scratch Recipe This Week</h3>')
+        html.append(f'                <p><strong>{from_scratch_recipe.get("name")}</strong></p>')
+        html.append('                <p>[Brief rationale for why this recipe was chosen - how it uses farmers market vegetables, what makes it interesting]</p>')
+        html.append('            </div>')
+    html.append('')
+
+    # Week at a glance
+    html.append('            <div class="week-glance">')
+    html.append('                <h3>📋 Week at a Glance</h3>')
+    html.append('                <ul>')
+
+    days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+    day_abbr = ['mon', 'tue', 'wed', 'thu', 'fri']
+
+    for day_name, day_key in zip(days, day_abbr):
+        if day_key in selected_dinners:
+            recipe = selected_dinners[day_key]
+            html.append(f'                    <li><strong>{day_name}:</strong> {recipe.get("name")}</li>')
+
+    html.append('                </ul>')
+    html.append('            </div>')
+    html.append('        </div>')
+    html.append('')
+
+    return html
+
+
+def generate_weekday_tabs(inputs, selected_dinners, selected_lunches):
+    """Generate tabs for Monday through Friday."""
+    html = []
+
+    days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+    day_abbr = ['mon', 'tue', 'wed', 'thu', 'fri']
+    late_class_days = inputs.get('schedule', {}).get('late_class_days', ['thu', 'fri'])
+    busy_days = set(inputs.get('schedule', {}).get('busy_days', ['thu', 'fri']))
+
+    energy_labels = {
+        'mon': ('PM PREP ONLY', 'energy-high'),
+        'tue': ('AM + PM PREP', 'energy-mild'),
+        'wed': ('PM PREP ONLY', 'energy-mild'),
+        'thu': ('MORNING PREP OK', 'energy-morning-ok'),
+        'fri': ('NO PREP DAY', 'energy-none')
+    }
+
+    for day_name, day_key in zip(days, day_abbr):
+        label, energy_class = energy_labels[day_key]
+
+        html.append(f'        <!-- {day_name} Tab -->')
+        html.append(f'        <div id="{day_key.lower()}" class="tab-content">')
+        html.append(f'            <div class="day-header">')
+        html.append(f'                {day_name} <span class="energy-level {energy_class}">{label}</span>')
+        html.append(f'            </div>')
+        html.append('')
+
+        # Add lunch section
+        if day_key in selected_lunches:
+            html.append(generate_lunch_html(selected_lunches[day_key], day_name))
+            html.append('')
+
+        # Add snack section
+        html.extend(generate_snack_section(day_key, late_class_days))
+        html.append('')
+
+        # Add dinner section
+        if day_key in selected_dinners:
+            html.extend(generate_dinner_section(selected_dinners[day_key], day_key, busy_days))
+            html.append('')
+
+        # Add prep tasks
+        html.extend(generate_prep_section(day_key, day_name))
+        html.append('')
+
+        html.append('        </div>')
+        html.append('')
+
+    return html
+
+
+def generate_snack_section(day_key, late_class_days):
+    """Generate snack section for a day."""
+    html = []
+
+    # Default snacks
+    default_snacks = {
+        'mon': 'Apple slices with peanut butter',
+        'tue': 'Cheese and crackers',
+        'wed': 'Cucumber rounds with cream cheese',
+        'thu': 'Grapes',
+        'fri': 'Crackers with hummus'
+    }
+
+    is_late_class = day_key in late_class_days
+
+    if is_late_class:
+        html.append('            <div class="heavy-snack">')
+        html.append('                <h4>🍎 Heavy Snack (Late Class Day)</h4>')
+        heavy_snack = 'Apple slices with peanut butter' if day_key == 'thu' else 'Banana with almond butter'
+        html.append(f'                <p style="font-size: var(--text-sm);">Format: Fruit + protein/fat for sustained energy</p>')
+        html.append(f'                <p><strong>{heavy_snack}</strong></p>')
+        html.append('            </div>')
+    else:
+        html.append('            <div class="snacks">')
+        html.append('                <h4>🍪 Snack</h4>')
+        html.append(f'                <p style="font-size: var(--text-sm); margin-top: 8px;">{default_snacks.get(day_key, "Simple snack")}</p>')
+        html.append('            </div>')
+
+    return html
+
+
+def generate_dinner_section(recipe, day_key, busy_days):
+    """Generate dinner section for a day."""
+    html = []
+
+    html.append('            <div class="meal-card">')
+    html.append('                <h3>🍽️ Dinner</h3>')
+
+    # Recipe name with link
+    recipe_name = recipe.get('name', '')
+    recipe_file = f"{recipe_name}.html"
+    cuisine = recipe.get('cuisine', 'unknown')
+    meal_type = recipe.get('meal_type', 'unknown')
+
+    html.append(f'                <div class="meal-type"><a href="../recipes/raw_html/{recipe_file}">{recipe_name}</a> - {cuisine.title()} {meal_type.replace("_", " ").title()}</div>')
+
+    # Vegetables
+    main_veg = recipe.get('main_veg', [])
+    if main_veg:
+        veg_str = ', '.join(main_veg)
+        html.append(f'                <div class="vegetables">Main vegetables: {veg_str}</div>')
+
+    # Prep notes
+    html.append('                <div class="prep-notes">')
+    if day_key == 'mon':
+        html.append('                    <strong>Prep notes:</strong> Consider making 2x batch and freeze half for backup')
+    elif day_key in ['tue', 'wed']:
+        html.append('                    <strong>Prep notes:</strong> All vegetables prepped Monday - just cook and assemble')
+    elif day_key == 'thu':
+        if recipe.get('no_chop_compatible', False):
+            html.append('                    <strong>Prep notes:</strong> NO CHOPPING - using pre-prepped ingredients from Monday')
+        else:
+            html.append('                    <strong>Prep notes:</strong> Can prep in morning (8-9am) if needed - NO chopping after noon, NO evening prep')
+    elif day_key == 'fri':
+        if recipe.get('no_chop_compatible', False):
+            html.append('                    <strong>Prep notes:</strong> NO PREP - using pre-prepped ingredients from Monday or Thursday AM')
+        else:
+            html.append('                    <strong>Prep notes:</strong> ⚠️ WARNING: This recipe requires chopping but Friday is strictly no-prep!')
+    html.append('                </div>')
+
+    # Evening assembly
+    html.append('                <div class="evening-assembly">')
+    if day_key in busy_days:
+        html.append('                    <strong>Evening assembly (5-9pm):</strong> Reheat and serve only')
+    else:
+        html.append('                    <strong>Evening assembly (5-9pm):</strong> Minimal tasks - assemble, heat, serve')
+    html.append('                </div>')
+
+    html.append('            </div>')
+
+    return html
+
+
+def generate_prep_section(day_key, day_name):
+    """Generate prep tasks section for a day."""
+    html = []
+
+    prep_tasks = {
+        'mon': {
+            'title': f'{day_name} Prep Tasks (PM PREP ONLY)',
+            'tasks': [
+                'Chop ALL vegetables for entire week (Mon-Fri dinners)',
+                'Batch cooking: Identify freezer-friendly dinner to double',
+                'Prep ALL lunch components for Tue/Wed/Thu/Fri',
+                'Pre-cook any components needed for Thu/Fri no-prep dinners',
+                'Portion snacks into grab-and-go containers for entire week'
+            ]
+        },
+        'tue': {
+            'title': f'{day_name} Prep Tasks (AM + PM PREP)',
+            'am_tasks': [
+                'Prep Tuesday lunch components',
+                'Portion Monday\'s batch-cooked items',
+                'Check freezer backup inventory - verify we have 3 complete meals'
+            ],
+            'pm_tasks': [
+                'NO chopping - all vegetables already prepped Monday',
+                'Continue prepping lunch components for Wed/Thu/Fri',
+                'Portion snacks for rest of week'
+            ]
+        },
+        'wed': {
+            'title': f'{day_name} Prep Tasks (PM PREP ONLY)',
+            'tasks': [
+                'NO chopping - all vegetables already prepped Monday',
+                'FINISH any remaining vegetable prep for Thu/Fri',
+                'Prep all remaining lunch components for Thu/Fri',
+                'Load Instant Pot or slow cooker for Thursday if needed',
+                'Portion already-cooked food',
+                'Final check: All Thu/Fri components ready'
+            ]
+        },
+        'thu': {
+            'title': f'{day_name} Prep Tasks (MORNING PREP OK)',
+            'tasks': [
+                'Morning (8-9am): Light prep allowed if needed - chop 1-2 vegetables, cook components',
+                '**NO chopping after noon**',
+                '**NO evening prep** - only reheating, simple assembly',
+                'Fallback: Use freezer backup if needed'
+            ]
+        },
+        'fri': {
+            'title': f'{day_name} Prep Tasks (NO PREP DAY - STRICT)',
+            'tasks': [
+                'ALL DAY: NO chopping allowed at any time',
+                'ALL DAY: NO cooking allowed - only reheating',
+                'Only actions: reheating, simple assembly, using pre-prepped ingredients',
+                'Fallback: Use freezer backup if energy is depleted'
+            ]
+        }
+    }
+
+    if day_key in prep_tasks:
+        prep = prep_tasks[day_key]
+
+        if day_key == 'tue':
+            # Special layout for Tuesday with AM/PM sections
+            html.append('            <div class="prep-tasks">')
+            html.append(f'                <h4>{prep["title"]}</h4>')
+            html.append('                <div style="margin-top: 15px;">')
+            html.append('                    <strong>☀️ AM Prep (Morning):</strong>')
+            html.append('                    <ul>')
+            for task in prep['am_tasks']:
+                html.append(f'                        <li>{task}</li>')
+            html.append('                    </ul>')
+            html.append('                </div>')
+            html.append('                <div style="margin-top: 15px;">')
+            html.append('                    <strong>🌙 PM Prep (Evening 5-9pm):</strong>')
+            html.append('                    <ul>')
+            for task in prep['pm_tasks']:
+                html.append(f'                        <li>{task}</li>')
+            html.append('                    </ul>')
+            html.append('                </div>')
+            html.append('            </div>')
+        else:
+            html.append('            <div class="prep-tasks">')
+            html.append(f'                <h4>{prep["title"]}</h4>')
+            html.append('                <ul>')
+            for task in prep['tasks']:
+                html.append(f'                    <li>{task}</li>')
+            html.append('                </ul>')
+            html.append('            </div>')
+
+    return html
+
+
+def generate_weekend_tabs():
+    """Generate Saturday and Sunday tabs."""
+    html = []
+
+    # Saturday
+    html.append('        <!-- Saturday Tab -->')
+    html.append('        <div id="saturday" class="tab-content">')
+    html.append('            <div class="day-header">')
+    html.append('                Saturday <span class="energy-level energy-mild">WEEKEND - AFTERNOON PREP</span>')
+    html.append('            </div>')
+    html.append('')
+    html.append('            <div class="section" style="background: rgba(212, 165, 116, 0.08); padding: 20px; border-radius: 2px; margin: 20px 0;">')
+    html.append('                <h4 style="color: var(--accent-terracotta); margin-bottom: 10px;">☀️ Morning - No Prep Required</h4>')
+    html.append('                <p style="font-size: var(--text-sm); color: var(--text-muted);">Rest day - no cooking or prep in the morning. Enjoy the weekend!</p>')
+    html.append('            </div>')
+    html.append('')
+    html.append('            <div class="lunch-section">')
+    html.append('                <h4>🥪 Lunch</h4>')
+    html.append('                <p><strong>Family:</strong> Flexible - leftovers, eating out, or simple weekend meal</p>')
+    html.append('                <p><strong>Suggestions:</strong> Use up any remaining ingredients from the week</p>')
+    html.append('            </div>')
+    html.append('')
+    html.append('            <div class="snacks">')
+    html.append('                <h4>🍪 Snack</h4>')
+    html.append('                <p style="font-size: var(--text-sm); margin-top: 8px;">Fresh fruit or any remaining prepped snacks from the week</p>')
+    html.append('            </div>')
+    html.append('')
+    html.append('            <div class="section">')
+    html.append('                <h4>🍽️ Dinner</h4>')
+    html.append('                <p>Flexible weekend meal - eating out or simple cooking</p>')
+    html.append('            </div>')
+    html.append('')
+    html.append('            <div class="prep-tasks">')
+    html.append('                <h4>🌙 Afternoon Prep (Optional)</h4>')
+    html.append('                <ul>')
+    html.append('                    <li>Review next week\'s meal plan</li>')
+    html.append('                    <li>Make grocery list (see Groceries tab)</li>')
+    html.append('                    <li>Clean out fridge and freezer</li>')
+    html.append('                    <li>Check freezer backup inventory</li>')
+    html.append('                </ul>')
+    html.append('            </div>')
+    html.append('        </div>')
+    html.append('')
+
+    # Sunday
+    html.append('        <!-- Sunday Tab -->')
+    html.append('        <div id="sunday" class="tab-content">')
+    html.append('            <div class="day-header">')
+    html.append('                Sunday <span class="energy-level energy-mild">GROCERY SHOPPING DAY</span>')
+    html.append('            </div>')
+    html.append('')
+    html.append('            <div class="prep-tasks">')
+    html.append('                <h4>☀️ AM Prep (Morning - Grocery Shopping)</h4>')
+    html.append('                <ul style="list-style: none; margin-left: 0;">')
+    html.append('                    <li style="margin: 8px 0; padding-left: 0;">✓ Farmers market shopping (fresh produce for next week)</li>')
+    html.append('                    <li style="margin: 8px 0; padding-left: 0;">✓ Regular grocery shopping (use Groceries tab for full list)</li>')
+    html.append('                    <li style="margin: 8px 0; padding-left: 0;">✓ Put away all groceries</li>')
+    html.append('                    <li style="margin: 8px 0; padding-left: 0;">✓ Organize fridge for upcoming week prep</li>')
+    html.append('                </ul>')
+    html.append('                <p style="margin-top: 15px; padding: 12px; background: rgba(212, 165, 116, 0.1); border-radius: 5px; border-left: 3px solid var(--accent-gold);"><strong>Note:</strong> Refer to the Groceries tab for the complete shopping list for next week.</p>')
+    html.append('            </div>')
+    html.append('')
+    html.append('            <div class="lunch-section">')
+    html.append('                <h4>🥪 Lunch</h4>')
+    html.append('                <p><strong>Family:</strong> Simple meal - leftovers or easy weekend option</p>')
+    html.append('                <p><strong>Timing:</strong> Keep it light to save energy for grocery shopping</p>')
+    html.append('            </div>')
+    html.append('')
+    html.append('            <div class="snacks">')
+    html.append('                <h4>🍪 Snack</h4>')
+    html.append('                <p style="font-size: var(--text-sm); margin-top: 8px;">Simple snack - fruit or crackers</p>')
+    html.append('            </div>')
+    html.append('')
+    html.append('            <div class="section">')
+    html.append('                <h4>🍽️ Dinner</h4>')
+    html.append('                <p>Flexible weekend meal</p>')
+    html.append('            </div>')
+    html.append('')
+    html.append('            <div class="section" style="background: rgba(212, 165, 116, 0.08);">')
+    html.append('                <h4 style="color: var(--accent-terracotta);">🌙 Evening - Rest Day</h4>')
+    html.append('                <p style="font-size: var(--text-sm); color: var(--text-muted);">No prep today. Monday is the main prep day - save your energy!</p>')
+    html.append('            </div>')
+    html.append('        </div>')
+    html.append('')
+
+    return html
+
+
+def generate_groceries_tab(inputs):
+    """Generate the Groceries tab."""
+    html = []
+
+    html.append('        <!-- Groceries Tab -->')
+    html.append('        <div id="groceries" class="tab-content">')
+    html.append('            <h2>🛒 Comprehensive Shopping List</h2>')
+    html.append('            <p style="margin-bottom: 20px; color: var(--text-muted);">Organized by aisle for efficient shopping</p>')
+    html.append('')
+
+    # Categories
+    categories = [
+        ('Fresh Produce', ['[Add vegetables from dinner plans]', '[Add fruits for snacks]']),
+        ('Frozen', ['[Add any frozen items needed]']),
+        ('Dairy & Refrigerated', ['[Add dairy items]', '[Add refrigerated items]']),
+        ('Grains & Pasta', ['[Add grains needed]', '[Add pasta if needed]']),
+        ('Canned & Jarred', ['[Add canned beans, tomatoes, etc.]']),
+        ('Spices & Seasonings', ['[Add spices needed for recipes]']),
+        ('Snacks', ['[Add snack ingredients]']),
+        ('Condiments & Misc', ['[Add condiments and miscellaneous items]'])
+    ]
+
+    for category, items in categories:
+        html.append('            <div class="grocery-section">')
+        html.append(f'                <h4>{category}</h4>')
+        html.append('                <ul>')
+        for item in items:
+            html.append(f'                    <li>{item}</li>')
+        html.append('                </ul>')
+        html.append('            </div>')
+        html.append('')
+
+    html.append('        </div>')
+
+    return html
+
+
 def generate_plan_content(inputs, selected_dinners, from_scratch_recipe=None, selected_lunches=None):
-    """Generate the weekly plan markdown content."""
+    """Generate the weekly plan markdown content (legacy function - use generate_html_plan instead)."""
     week_of = inputs['week_of']
     confirmed_veg = inputs.get('farmers_market', {}).get('confirmed_veg', [])
     late_class_days = inputs.get('schedule', {}).get('late_class_days', [])

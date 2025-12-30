@@ -789,17 +789,33 @@ For other non-coders: You can build complex, useful systems with Claude Code. St
     - Assembly notes based on prep day
     - Repeatable default fallbacks
 
+**Phase 4 Progress (HTML Generation):**
+- ✅ Updated workflow.py to generate HTML instead of Markdown
+  - Created generate_html_plan() function with full HTML structure
+  - generate_lunch_html() displays lunch suggestions with proper styling
+  - Integrated lunch selector data into HTML weekday tabs
+  - Component lists, reuse indicators, kid-friendly markers
+  - Storage days for component-based prep
+  - Assembly notes based on prep schedule
+- ✅ HTML generation includes all features:
+  - Overview tab (freezer backup, from scratch recipe, week at glance)
+  - Monday-Friday tabs with lunch sections using lunch selector
+  - Saturday/Sunday weekend tabs
+  - Groceries tab (placeholder for future automation)
+  - Full Solarpunk styling from template
+  - Tab navigation and JavaScript
+
 **Implementation Status:**
 - ✅ Phase 1: Lunch schema (taxonomy.yml + update script)
 - ✅ Phase 2: Selection algorithm (lunch_selector.py)
 - ✅ Phase 3: Workflow integration (workflow.py)
-- ⏸️ Phase 4: HTML template updates (pending)
+- ✅ Phase 4: HTML generation with lunch selector data
 - ⏸️ Phase 5: Validation rules (pending)
 - ⏸️ Phase 6: Testing and verification (in progress)
 
 **Next Steps:**
-- Test lunch selector with actual recipe index
-- Update HTML weekly plan template with lunch details
+- Run update_lunch_fields.py to tag recipes in index.yml
+- Test workflow.py to generate an HTML plan with lunch selections
 - Add validation rules for lunch completeness
 
 ### Lessons Learned

@@ -14,6 +14,7 @@ import yaml
 from pathlib import Path
 from datetime import datetime, timedelta
 from collections import Counter
+from lunch_selector import LunchSelector
 
 
 # ============================================================================
@@ -228,6 +229,32 @@ def generate_meal_plan(input_file, data):
             marker = " 🌟 FROM SCRATCH" if from_scratch_day == day else ""
             print(f"  {day.upper()}: {recipe['name']}{marker}")
 
+    # Select lunches based on dinner plan
+    print("\n[4.5/5] Selecting lunches...")
+    lunch_selector = LunchSelector(index_path)
+
+    # Build dinner plan list for lunch selector
+    dinner_plan_list = []
+    for day in days:
+        if day in selected_dinners:
+            recipe = selected_dinners[day]
+            dinner_plan_list.append({
+                'recipe_id': recipe.get('id'),
+                'recipe_name': recipe.get('name'),
+                'day': day,
+                'vegetables': recipe.get('main_veg', [])
+            })
+
+    selected_lunches = lunch_selector.select_weekly_lunches(
+        dinner_plan=dinner_plan_list,
+        week_of=week_of
+    )
+
+    for day in days:
+        if day in selected_lunches:
+            lunch = selected_lunches[day]
+            print(f"  {day.upper()}: {lunch.recipe_name} ({lunch.prep_style})")
+
     # Generate plan file
     print("\n[5/5] Writing plan file...")
     plans_dir = Path('plans')
@@ -235,7 +262,7 @@ def generate_meal_plan(input_file, data):
 
     plan_file = plans_dir / f'{week_of}-weekly-plan.md'
     from_scratch_recipe = selected_dinners.get(from_scratch_day) if from_scratch_day else None
-    plan_content = generate_plan_content(data, selected_dinners, from_scratch_recipe)
+    plan_content = generate_plan_content(data, selected_dinners, from_scratch_recipe, selected_lunches)
 
     with open(plan_file, 'w') as f:
         f.write(plan_content)
@@ -457,12 +484,16 @@ def select_dinners(filtered_recipes, inputs):
     return selected
 
 
-def generate_plan_content(inputs, selected_dinners, from_scratch_recipe=None):
+def generate_plan_content(inputs, selected_dinners, from_scratch_recipe=None, selected_lunches=None):
     """Generate the weekly plan markdown content."""
     week_of = inputs['week_of']
     confirmed_veg = inputs.get('farmers_market', {}).get('confirmed_veg', [])
     late_class_days = inputs.get('schedule', {}).get('late_class_days', [])
     busy_days = set(inputs.get('schedule', {}).get('busy_days', []))
+
+    # Handle legacy calls without selected_lunches
+    if selected_lunches is None:
+        selected_lunches = {}
 
     week_start = datetime.strptime(week_of, '%Y-%m-%d').date()
     week_end = week_start + timedelta(days=4)
@@ -565,16 +596,46 @@ def generate_plan_content(inputs, selected_dinners, from_scratch_recipe=None):
 
             lines.append("")
 
-        # Add lunch with both variety and default options
-        lunch_variety = lunch_templates[i % len(lunch_templates)]
-        lunch_default = lunch_defaults[i % len(lunch_defaults)]
-        lines.append(f"**Lunch:** {lunch_variety} (2 kids + 1 adult)")
-        lines.append(f"- Or use repeatable default: **{lunch_default}**")
-        lines.append("- Components: [List specific ingredients needed]")
-        if i >= 3:  # Thursday/Friday
-            lines.append("- Prep: **ALL components prepped Monday** - assemble only")
+        # Add lunch suggestions
+        if day_key in selected_lunches:
+            lunch = selected_lunches[day_key]
+
+            if lunch.default_option:
+                # Using default option
+                lines.append(f"**Lunch:** {lunch.recipe_name} (2 kids + 1 adult)")
+                lines.append(f"- **Repeatable default** - no recipe needed")
+                lines.append(f"- Prep: {lunch.assembly_notes}")
+            else:
+                # Using actual recipe
+                lines.append(f"**Lunch:** {lunch.recipe_name} (2 kids + 1 adult)")
+                if lunch.kid_friendly:
+                    lines.append(f"- 👶 Kid-friendly")
+
+                if lunch.prep_components:
+                    lines.append(f"- Components: {', '.join(lunch.prep_components)}")
+                else:
+                    lines.append(f"- Components: Fresh ingredients")
+
+                lines.append(f"- Prep: {lunch.assembly_notes}")
+
+                if lunch.reuses_ingredients:
+                    lines.append(f"- ♻️  Reuses dinner ingredients: {', '.join(lunch.reuses_ingredients)}")
+
+                # Add suggested default fallback
+                fallback = lunch_defaults[i % len(lunch_defaults)]
+                lines.append(f"- Or use repeatable default: **{fallback}**")
         else:
-            lines.append("- Prep: Prepare fresh or day-of")
+            # Fallback to old template if no lunch selected
+            lunch_variety = lunch_templates[i % len(lunch_templates)]
+            lunch_default = lunch_defaults[i % len(lunch_defaults)]
+            lines.append(f"**Lunch:** {lunch_variety} (2 kids + 1 adult)")
+            lines.append(f"- Or use repeatable default: **{lunch_default}**")
+            lines.append("- Components: [List specific ingredients needed]")
+            if i >= 3:  # Thursday/Friday
+                lines.append("- Prep: **ALL components prepped Monday** - assemble only")
+            else:
+                lines.append("- Prep: Prepare fresh or day-of")
+
         lines.append("")
 
         # Add snack ideas

@@ -768,13 +768,39 @@ For other non-coders: You can build complex, useful systems with Claude Code. St
   - curried_egg_salad_sandwich
   - refried_bean_burrito
 
+**Phase 2 Progress (Lunch Selection Algorithm):**
+- ✅ Created lunch_selector.py with intelligent selection algorithm
+  - `LunchSelector` class with recipe filtering and ranking
+  - Considers ingredient reuse from dinner plans
+  - Respects energy-based prep model (Thu/Fri assembly-only)
+  - Scores candidates by overlap, kid-friendliness, prep style
+  - Falls back to repeatable defaults when no matches
+  - Determines optimal prep days (Mon/Tue for Thu/Fri lunches)
+
+**Phase 3 Progress (Workflow Integration):**
+- ✅ Integrated lunch selector into workflow.py
+  - Added import for LunchSelector
+  - Modified generate_meal_plan() to call lunch selector after dinner selection
+  - Builds dinner_plan_list with recipe IDs, names, days, vegetables
+  - Passes selected lunches to generate_plan_content()
+  - Updated plan generation to display lunch details:
+    - Recipe name, kid-friendly indicator
+    - Component lists with reuse indicators
+    - Assembly notes based on prep day
+    - Repeatable default fallbacks
+
+**Implementation Status:**
+- ✅ Phase 1: Lunch schema (taxonomy.yml + update script)
+- ✅ Phase 2: Selection algorithm (lunch_selector.py)
+- ✅ Phase 3: Workflow integration (workflow.py)
+- ⏸️ Phase 4: HTML template updates (pending)
+- ⏸️ Phase 5: Validation rules (pending)
+- ⏸️ Phase 6: Testing and verification (in progress)
+
 **Next Steps:**
-- Install PyYAML dependency
-- Run update script to add lunch fields to all recipes
-- Create lunch_selector.py with intelligent selection algorithm
-- Integrate into workflow.py
-- Update HTML template
-- Add validation rules
+- Test lunch selector with actual recipe index
+- Update HTML weekly plan template with lunch details
+- Add validation rules for lunch completeness
 
 ### Lessons Learned
 - **Documentation debt is real** - Features can be partially implemented but documented as complete

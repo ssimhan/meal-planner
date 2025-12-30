@@ -1,0 +1,433 @@
+#!/usr/bin/env python3
+"""
+Intelligent lunch selection algorithm for meal planning system.
+
+Selects lunch recipes based on:
+- Component-based prep model (prep Mon/Tue for Thu/Fri lunches)
+- Kid-friendly constraints
+- Ingredient reuse from dinner plans
+- Energy-based scheduling (light assembly on Thu/Fri)
+- Repeatable defaults for decision fatigue reduction
+"""
+
+from typing import List, Dict, Any, Optional
+from dataclasses import dataclass
+from datetime import datetime
+import yaml
+
+
+@dataclass
+class LunchSuggestion:
+    """Represents a lunch suggestion with prep details."""
+    recipe_id: str
+    recipe_name: str
+    kid_friendly: bool
+    prep_style: str  # 'quick_fresh', 'component_based', 'batch_cookable'
+    prep_components: List[str]
+    storage_days: int
+    prep_day: str  # When to prep components (mon, tue, wed)
+    assembly_notes: str
+    reuses_ingredients: List[str]  # Ingredients from dinner plans
+    default_option: Optional[str] = None  # Fallback repeatable option
+
+
+class LunchSelector:
+    """Selects lunch recipes based on weekly dinner plan and constraints."""
+
+    # Repeatable lunch defaults (decision fatigue reduction)
+    DEFAULTS = {
+        'kids': [
+            'PBJ on whole wheat',
+            'Egg sandwich or scrambled egg sandwich',
+            'Toad-in-a-hole (egg cooked in bread)',
+            'Ravioli with brown butter or simple tomato sauce',
+            'Chapati or dosa rolls with fruit',
+            'Veggie burrito or pizza roll',
+            'Quesadilla with cheese and beans'
+        ],
+        'adult': [
+            'Leftovers from previous night\'s dinner (preferred)',
+            'Grain bowl: prepped grain + roasted vegetables + protein',
+            'Salad with dinner components'
+        ]
+    }
+
+    def __init__(self, recipe_index_path: str = 'recipes/index.yml'):
+        """Initialize selector with recipe index."""
+        self.recipe_index_path = recipe_index_path
+        self.recipes = self._load_recipes()
+        self.lunch_recipes = self._filter_lunch_suitable()
+
+    def _load_recipes(self) -> List[Dict[str, Any]]:
+        """Load recipe index from YAML."""
+        with open(self.recipe_index_path, 'r') as f:
+            return yaml.safe_load(f) or []
+
+    def _filter_lunch_suitable(self) -> List[Dict[str, Any]]:
+        """Filter recipes suitable for lunch."""
+        return [
+            r for r in self.recipes
+            if r.get('lunch_suitable', False)
+        ]
+
+    def select_weekly_lunches(
+        self,
+        dinner_plan: List[Dict[str, Any]],
+        week_of: str
+    ) -> Dict[str, LunchSuggestion]:
+        """
+        Select lunches for the entire week based on dinner plan.
+
+        Args:
+            dinner_plan: List of dinner recipes with their scheduled days
+                Each item: {recipe_id, recipe_name, day, vegetables, ...}
+            week_of: ISO date string (YYYY-MM-DD) for start of week
+
+        Returns:
+            Dictionary mapping day -> LunchSuggestion
+        """
+        weekly_lunches = {}
+
+        # Extract all ingredients used in dinners this week
+        dinner_ingredients = self._extract_dinner_ingredients(dinner_plan)
+
+        # Select lunches for each day
+        for day in ['mon', 'tue', 'wed', 'thu', 'fri']:
+            suggestion = self._select_daily_lunch(
+                day=day,
+                dinner_ingredients=dinner_ingredients,
+                dinner_plan=dinner_plan
+            )
+            weekly_lunches[day] = suggestion
+
+        return weekly_lunches
+
+    def _extract_dinner_ingredients(
+        self,
+        dinner_plan: List[Dict[str, Any]]
+    ) -> Dict[str, List[str]]:
+        """
+        Extract ingredients from dinner plan organized by day.
+
+        Returns:
+            Dict mapping day -> list of ingredients
+        """
+        ingredients_by_day = {}
+
+        for dinner in dinner_plan:
+            day = dinner['day']
+            # Get vegetables from dinner
+            vegetables = dinner.get('vegetables', [])
+
+            # Look up recipe to get additional ingredients
+            recipe = self._find_recipe_by_id(dinner['recipe_id'])
+            if recipe:
+                # Extract common pantry items that might be reused
+                main_veg = recipe.get('main_veg', [])
+                vegetables.extend(main_veg)
+
+            ingredients_by_day[day] = list(set(vegetables))  # Deduplicate
+
+        return ingredients_by_day
+
+    def _find_recipe_by_id(self, recipe_id: str) -> Optional[Dict[str, Any]]:
+        """Find recipe by ID in index."""
+        for recipe in self.recipes:
+            if recipe.get('id') == recipe_id:
+                return recipe
+        return None
+
+    def _select_daily_lunch(
+        self,
+        day: str,
+        dinner_ingredients: Dict[str, List[str]],
+        dinner_plan: List[Dict[str, Any]]
+    ) -> LunchSuggestion:
+        """
+        Select lunch for a specific day.
+
+        Strategy:
+        - Monday/Tuesday: Can use quick_fresh or prep components for later
+        - Wednesday: Use components prepped Mon/Tue
+        - Thursday/Friday: Use components prepped Mon/Tue/Wed (ONLY assembly)
+        """
+
+        # Get ingredients available from recent dinners
+        available_ingredients = self._get_available_ingredients(
+            day=day,
+            dinner_ingredients=dinner_ingredients
+        )
+
+        # Find lunch recipes that reuse these ingredients
+        candidate_recipes = self._find_reusable_lunch_recipes(
+            available_ingredients=available_ingredients,
+            day=day
+        )
+
+        if candidate_recipes:
+            # Select best match
+            selected = self._rank_and_select(candidate_recipes, day)
+            return self._create_suggestion(selected, day, available_ingredients)
+        else:
+            # Fall back to default
+            return self._create_default_suggestion(day)
+
+    def _get_available_ingredients(
+        self,
+        day: str,
+        dinner_ingredients: Dict[str, List[str]]
+    ) -> List[str]:
+        """
+        Get ingredients available for reuse on a given day.
+
+        Consider:
+        - Previous night's dinner (for leftovers)
+        - Earlier in the week (for batch-prepped components)
+        """
+        day_order = ['mon', 'tue', 'wed', 'thu', 'fri']
+        current_day_idx = day_order.index(day)
+
+        available = []
+
+        # Include ingredients from all previous days this week
+        for prev_day in day_order[:current_day_idx + 1]:
+            if prev_day in dinner_ingredients:
+                available.extend(dinner_ingredients[prev_day])
+
+        return list(set(available))  # Deduplicate
+
+    def _find_reusable_lunch_recipes(
+        self,
+        available_ingredients: List[str],
+        day: str
+    ) -> List[Dict[str, Any]]:
+        """
+        Find lunch recipes that reuse available ingredients.
+
+        Filters by:
+        - Ingredient reuse (prefers recipes using dinner ingredients)
+        - Prep style compatible with day (Thu/Fri must be component_based or quick_fresh)
+        - Kid-friendly (preferred but not required)
+        """
+        candidates = []
+
+        for recipe in self.lunch_recipes:
+            # Check if recipe reuses any available ingredients
+            reuses_ingredients = recipe.get('reuses_dinner_ingredients', [])
+            overlap = set(reuses_ingredients) & set(available_ingredients)
+
+            if not overlap:
+                continue  # Skip recipes that don't reuse ingredients
+
+            # Check prep style compatibility
+            prep_style = recipe.get('prep_style')
+
+            if day in ['thu', 'fri']:
+                # Thursday/Friday: ONLY component_based or quick_fresh
+                # (components prepped earlier, just assemble)
+                if prep_style not in ['component_based', 'quick_fresh']:
+                    continue
+
+            candidates.append({
+                'recipe': recipe,
+                'overlap_count': len(overlap),
+                'overlap_ingredients': list(overlap)
+            })
+
+        return candidates
+
+    def _rank_and_select(
+        self,
+        candidates: List[Dict[str, Any]],
+        day: str
+    ) -> Dict[str, Any]:
+        """
+        Rank candidates and select best match.
+
+        Scoring:
+        - More ingredient overlap = higher score
+        - Kid-friendly = bonus points
+        - Component-based on Thu/Fri = bonus points
+        """
+        scored = []
+
+        for candidate in candidates:
+            recipe = candidate['recipe']
+            score = 0
+
+            # Ingredient overlap score
+            score += candidate['overlap_count'] * 10
+
+            # Kid-friendly bonus
+            if recipe.get('kid_friendly', False):
+                score += 5
+
+            # Component-based on busy days bonus
+            if day in ['thu', 'fri'] and recipe.get('prep_style') == 'component_based':
+                score += 3
+
+            scored.append({
+                'recipe': recipe,
+                'score': score,
+                'overlap_ingredients': candidate['overlap_ingredients']
+            })
+
+        # Sort by score descending
+        scored.sort(key=lambda x: x['score'], reverse=True)
+
+        return scored[0]  # Return highest scored
+
+    def _create_suggestion(
+        self,
+        selected: Dict[str, Any],
+        day: str,
+        available_ingredients: List[str]
+    ) -> LunchSuggestion:
+        """Create LunchSuggestion from selected recipe."""
+        recipe = selected['recipe']
+        overlap_ingredients = selected['overlap_ingredients']
+
+        # Determine prep day based on when lunch is served
+        prep_day = self._determine_prep_day(day, recipe.get('prep_style'))
+
+        # Generate assembly notes
+        assembly_notes = self._generate_assembly_notes(
+            day=day,
+            prep_style=recipe.get('prep_style'),
+            prep_day=prep_day
+        )
+
+        return LunchSuggestion(
+            recipe_id=recipe.get('id'),
+            recipe_name=recipe.get('name', recipe.get('id')),
+            kid_friendly=recipe.get('kid_friendly', False),
+            prep_style=recipe.get('prep_style', 'quick_fresh'),
+            prep_components=recipe.get('prep_components', []),
+            storage_days=recipe.get('component_storage_days', 0),
+            prep_day=prep_day,
+            assembly_notes=assembly_notes,
+            reuses_ingredients=overlap_ingredients,
+            default_option=None
+        )
+
+    def _create_default_suggestion(self, day: str) -> LunchSuggestion:
+        """Create default suggestion when no recipes match."""
+        # Rotate through defaults based on day
+        day_order = ['mon', 'tue', 'wed', 'thu', 'fri']
+        day_idx = day_order.index(day)
+        default_idx = day_idx % len(self.DEFAULTS['kids'])
+
+        default_option = self.DEFAULTS['kids'][default_idx]
+
+        return LunchSuggestion(
+            recipe_id=f'default_{day}',
+            recipe_name=default_option,
+            kid_friendly=True,
+            prep_style='quick_fresh',
+            prep_components=[],
+            storage_days=0,
+            prep_day=day,
+            assembly_notes='Make fresh in <10 minutes',
+            reuses_ingredients=[],
+            default_option=default_option
+        )
+
+    def _determine_prep_day(self, lunch_day: str, prep_style: str) -> str:
+        """
+        Determine when to prep components for a given lunch day.
+
+        Strategy:
+        - Monday/Tuesday lunches: Can prep same morning or night before
+        - Wednesday lunch: Prep Monday or Tuesday
+        - Thursday lunch: Prep Monday or Tuesday (NOT Wednesday)
+        - Friday lunch: Prep Monday or Tuesday (NOT Wednesday)
+        """
+        if prep_style == 'quick_fresh':
+            return lunch_day  # Prep same day
+
+        day_order = ['mon', 'tue', 'wed', 'thu', 'fri']
+        lunch_idx = day_order.index(lunch_day)
+
+        if lunch_idx <= 1:  # Mon or Tue
+            return 'mon'  # Prep Monday evening
+        elif lunch_idx == 2:  # Wed
+            return 'tue'  # Prep Tuesday evening
+        else:  # Thu or Fri
+            return 'mon'  # Prep Monday evening for maximum freshness window
+
+    def _generate_assembly_notes(
+        self,
+        day: str,
+        prep_style: str,
+        prep_day: str
+    ) -> str:
+        """Generate human-readable assembly notes."""
+        if prep_style == 'quick_fresh':
+            return 'Make fresh in <10 minutes'
+
+        if day == prep_day:
+            return f'Prep components {day.capitalize()} evening'
+        else:
+            return f'All components prepped {prep_day.capitalize()} - assemble only'
+
+
+def main():
+    """Example usage of LunchSelector."""
+    selector = LunchSelector()
+
+    # Example dinner plan
+    dinner_plan = [
+        {
+            'recipe_id': 'cheesy_veggie_quesadilla',
+            'recipe_name': 'Cheesy Veggie Quesadilla',
+            'day': 'mon',
+            'vegetables': ['bell_peppers', 'onions', 'corn']
+        },
+        {
+            'recipe_id': 'dal_tadka',
+            'recipe_name': 'Dal Tadka',
+            'day': 'tue',
+            'vegetables': ['tomatoes', 'onions']
+        },
+        {
+            'recipe_id': 'pasta_primavera',
+            'recipe_name': 'Pasta Primavera',
+            'day': 'wed',
+            'vegetables': ['broccoli', 'carrots', 'bell_peppers']
+        },
+        {
+            'recipe_id': 'refried_bean_burrito',
+            'recipe_name': 'Refried Bean Burrito',
+            'day': 'thu',
+            'vegetables': ['beans', 'cheese']
+        },
+        {
+            'recipe_id': 'curried_egg_salad_sandwich',
+            'recipe_name': 'Curried Egg Salad Sandwich',
+            'day': 'fri',
+            'vegetables': ['eggs', 'curry_powder']
+        }
+    ]
+
+    # Select weekly lunches
+    lunches = selector.select_weekly_lunches(
+        dinner_plan=dinner_plan,
+        week_of='2026-01-05'
+    )
+
+    # Print results
+    for day, suggestion in lunches.items():
+        print(f"\n{day.upper()}:")
+        print(f"  Recipe: {suggestion.recipe_name}")
+        print(f"  Kid-friendly: {suggestion.kid_friendly}")
+        print(f"  Prep style: {suggestion.prep_style}")
+        print(f"  Prep day: {suggestion.prep_day}")
+        print(f"  Components: {', '.join(suggestion.prep_components)}")
+        print(f"  Assembly: {suggestion.assembly_notes}")
+        print(f"  Reuses: {', '.join(suggestion.reuses_ingredients)}")
+        if suggestion.default_option:
+            print(f"  Default option: {suggestion.default_option}")
+
+
+if __name__ == '__main__':
+    main()

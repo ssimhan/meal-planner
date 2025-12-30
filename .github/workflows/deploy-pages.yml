@@ -1,0 +1,76 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Create site directory
+        run: mkdir -p _site
+
+      - name: Copy blog content to site
+        run: |
+          # For now, create a simple index page
+          # You can expand this to build your full blog later
+          cat > _site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Meal Planner Project</title>
+            <style>
+              body {
+                font-family: system-ui, -apple-system, sans-serif;
+                line-height: 1.6;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 2rem;
+                color: #333;
+              }
+              h1 { color: #2c5282; }
+              a { color: #3182ce; }
+            </style>
+          </head>
+          <body>
+            <h1>Meal Planner Project</h1>
+            <p>Energy-based meal planning system for busy families.</p>
+            <h2>Coming Soon</h2>
+            <p>This site will feature a detailed blog post about the development of this meal planning system.</p>
+            <p><a href="https://github.com/${{ github.repository }}">View on GitHub</a></p>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

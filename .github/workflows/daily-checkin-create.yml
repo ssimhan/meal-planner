@@ -1,0 +1,52 @@
+name: Daily Meal Check-in
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # 6pm PST = 2:00 UTC next day
+  workflow_dispatch:
+
+jobs:
+  create-checkin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create daily check-in issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const today = new Date().toLocaleDateString('en-US', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            });
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `📝 Daily Check-in: ${today}`,
+              body: `## What did you make today?
+
+            Reply to this issue with:
+            - **Lunch:** What did you make/eat?
+            - **Dinner:** What did you make/eat?
+            - **Notes:** Any observations (time, kid reactions, leftovers, etc.)
+
+            ### Examples:
+            \`\`\`
+            Lunch: PBJ for kids, leftovers for me
+            Dinner: Quesadillas - kids loved them, took 15 mins
+            Notes: Had leftover beans from Monday
+            \`\`\`
+
+            \`\`\`
+            Lunch: Ravioli
+            Dinner: Skipped - ate out
+            Notes: Too tired to cook
+            \`\`\`
+
+            This issue will automatically close after logging.
+
+            ---
+            🤖 Daily check-in · Auto-created by workflow`,
+              labels: ['daily-checkin']
+            });

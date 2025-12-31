@@ -1,0 +1,48 @@
+name: Parse Daily Check-in
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  parse-checkin:
+    if: contains(github.event.issue.labels.*.name, 'daily-checkin')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Parse comment and update logs
+        run: |
+          python3 scripts/parse_daily_log.py \
+            --comment "${{ github.event.comment.body }}" \
+            --date "${{ github.event.issue.created_at }}" \
+            --issue-title "${{ github.event.issue.title }}"
+
+      - name: Commit log updates
+        run: |
+          git config user.name "Meal Planner Bot"
+          git config user.email "mealplanner@users.noreply.github.com"
+          git add data/logs.yml
+          git commit -m "Log daily meals from ${{ github.event.issue.title }}" || echo "No changes to commit"
+          git push
+
+      - name: Close issue
+        uses: peter-evans/close-issue@v3
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          comment: |
+            ✅ **Logged successfully!**
+
+            Your meal notes have been saved to `data/logs.yml`.
+
+            ---
+            🤖 Auto-closed after logging

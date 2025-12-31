@@ -22,17 +22,18 @@ from lunch_selector import LunchSelector
 # ============================================================================
 
 def get_next_monday():
-    """Calculate the date of the next Monday (or current week's Monday if it's early in the week)."""
+    """Calculate the date of the upcoming Monday (next week if we're past Saturday)."""
     today = datetime.now()
-    days_ahead = 0 - today.weekday()  # Monday is 0
 
-    # If today is Monday-Wednesday, use this week's Monday
-    # If today is Thursday-Sunday, use next week's Monday
-    if today.weekday() >= 3:  # Thursday (3) or later
-        if days_ahead <= 0:
-            days_ahead += 7
+    # Calculate days until next Monday
+    # weekday: Mon=0, Tue=1, Wed=2, Thu=3, Fri=4, Sat=5, Sun=6
+    days_until_monday = (7 - today.weekday()) % 7
 
-    next_monday = today + timedelta(days=days_ahead)
+    # If today is already Monday, get next Monday (7 days ahead)
+    if days_until_monday == 0:
+        days_until_monday = 7
+
+    next_monday = today + timedelta(days=days_until_monday)
     return next_monday.date()
 
 
@@ -64,19 +65,6 @@ def find_current_week_file():
 
     # All weeks are complete, calculate next Monday
     next_monday = get_next_monday()
-
-    # Make sure we're not proposing a week that already exists
-    if input_files:
-        # Get the most recent week
-        last_file = input_files[-1]
-        with open(last_file, 'r') as f:
-            last_data = yaml.safe_load(f)
-        last_week_str = last_data.get('week_of')
-        last_week_date = datetime.strptime(last_week_str, '%Y-%m-%d').date()
-
-        # Propose the week after the last one (always next Monday after last week)
-        next_monday = last_week_date + timedelta(days=7)
-
     week_str = next_monday.strftime('%Y-%m-%d')
     return None, week_str
 

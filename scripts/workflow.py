@@ -289,10 +289,16 @@ def generate_meal_plan(input_file, data):
         yaml.dump(data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
 
     print(f"\n✅ PLAN COMPLETE!")
-    print(f"\n📄 View your plan: {plan_file}")
+    print(f"\n📄 View your plan locally: {plan_file}")
+
+    # Generate GitHub Pages URL
+    gh_pages_url = f"https://ssimhan.github.io/meal-planner/plans/{week_of}-weekly-plan.html"
+    print(f"\n🌐 View on any device: {gh_pages_url}")
+
     print(f"\n📋 NEXT STEPS:")
-    print(f"   1. Review and refine the meal plan")
-    print(f"   2. When you're ready for next week, run: python3 scripts/workflow.py")
+    print(f"   1. Push to GitHub to deploy the plan to GitHub Pages")
+    print(f"   2. Access the plan from your phone using the URL above")
+    print(f"   3. When you're ready for next week, run: python3 scripts/workflow.py")
 
 
 def show_week_complete(input_file, data):

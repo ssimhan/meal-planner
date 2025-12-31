@@ -138,6 +138,7 @@ def get_workflow_status(inputs_dir):
             week_info = {
                 'date_range': date_range,
                 'status': wf_status,
+                'fm_status': fm_status,
                 'badges_html': badges,
                 'action_html': action
             }
@@ -186,6 +187,80 @@ def get_past_plans_list(plans_dir):
         return '<p style="color: var(--text-muted);">Error loading meal plans.</p>'
 
 
+def get_contextual_actions(workflow_status, latest_plan_url, github_repo_url):
+    """Generate contextual quick action buttons based on workflow state."""
+    actions = []
+
+    # Priority 1: Check next week's status for actionable items
+    if workflow_status['next_week']:
+        nw = workflow_status['next_week']
+        status = nw['status']
+        fm_status = nw.get('fm_status', 'proposed')
+
+        if status == 'intake_complete':
+            # Farmers market vegetables need review/confirmation
+            if fm_status == 'proposed':
+                actions.append({
+                    'icon': '📝',
+                    'text': 'Review Farmers Market Veggies',
+                    'url': f"{github_repo_url}/tree/main/inputs",
+                    'priority': 1
+                })
+            # Vegetables confirmed, ready to generate plan
+            elif fm_status == 'confirmed':
+                actions.append({
+                    'icon': '🚀',
+                    'text': 'Generate Next Week\'s Plan',
+                    'url': f"{github_repo_url}#readme",
+                    'priority': 1
+                })
+
+    # Priority 2: Current week actions
+    if workflow_status['current_week']:
+        cw = workflow_status['current_week']
+        if cw['status'] == 'plan_complete' and latest_plan_url and latest_plan_url != '#':
+            actions.append({
+                'icon': '🛒',
+                'text': 'View Shopping List',
+                'url': f"{latest_plan_url}#groceries",
+                'priority': 2
+            })
+
+    # Priority 3: Always show - Daily check-in
+    actions.append({
+        'icon': '✏️',
+        'text': 'Daily Check-in',
+        'url': f"{github_repo_url}/issues?q=is%3Aissue+is%3Aopen+label%3Adaily-checkin",
+        'priority': 3
+    })
+
+    # Priority 4: Always show - Past plans
+    actions.append({
+        'icon': '📅',
+        'text': 'Past Meal Plans',
+        'url': '#past-plans',
+        'priority': 4
+    })
+
+    # Priority 5: Always show - GitHub repo
+    actions.append({
+        'icon': '🔧',
+        'text': 'View on GitHub',
+        'url': github_repo_url,
+        'priority': 5
+    })
+
+    # Sort by priority and generate HTML
+    actions.sort(key=lambda x: x['priority'])
+    html_items = []
+    for action in actions:
+        html_items.append(
+            f'<a href="{action["url"]}" class="action-button">{action["icon"]} {action["text"]}</a>'
+        )
+
+    return '\n'.join(html_items)
+
+
 def generate_landing_page(template_path, output_path, plans_dir, inventory_path, inputs_dir, github_repo_url):
     """Generate landing page from template."""
 
@@ -225,6 +300,9 @@ def generate_landing_page(template_path, output_path, plans_dir, inventory_path,
             {action_block}
         """
 
+    # Generate contextual quick actions
+    quick_actions_html = get_contextual_actions(workflow_status, latest_plan_url, github_repo_url)
+
     # Replace placeholders
     html = template.replace('{WEEK_DATE_RANGE}', week_range)
     html = html.replace('{LATEST_PLAN_URL}', latest_plan_url)
@@ -235,6 +313,7 @@ def generate_landing_page(template_path, output_path, plans_dir, inventory_path,
     html = html.replace('{DAILY_CHECKIN_URL}', f"{github_repo_url}/issues?q=is%3Aissue+is%3Aopen+label%3Adaily-checkin")
     html = html.replace('{CURRENT_WEEK_STATUS}', current_week_html)
     html = html.replace('{NEXT_WEEK_STATUS}', next_week_html)
+    html = html.replace('{QUICK_ACTIONS}', quick_actions_html)
 
     # Write output
     with open(output_path, 'w') as f:

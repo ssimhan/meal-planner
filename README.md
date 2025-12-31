@@ -1,450 +1,176 @@
 # Meal Planner System
 
-An automated meal planning system that generates weekly meal plans with anti-repetition logic, farmers market integration, and constraint satisfaction.
+Automated meal planning system with anti-repetition logic, farmers market integration, and constraint satisfaction.
 
 **🌐 Live Site:** https://ssimhan.github.io/meal-planner/
 
-**📖 Documentation:** See [IMPLEMENTATION.md](IMPLEMENTATION.md) for full automation setup and [PROJECT_HISTORY.md](PROJECT_HISTORY.md) for development journey.
+**📖 Documentation:**
+- [IMPLEMENTATION.md](IMPLEMENTATION.md) - Automation setup and implementation status
+- [PROJECT_HISTORY.md](PROJECT_HISTORY.md) - Development journey and key decisions
+- [docs/REPO_STRUCTURE.md](docs/REPO_STRUCTURE.md) - File organization reference
 
 ## Features
 
-### Recipe Planning
-- Parses 234+ vegetarian recipes from HTML files
-- Prevents recipe repetition within 3 weeks
-- Prevents template repetition more than once per week
-- Respects dietary constraints (avoid: eggplant, mushrooms, green cabbage)
-- Supports busy-day logic with no-chop requirements
-- Automatically selects one "from scratch" novelty recipe per week
+### Core Capabilities
+- 234+ vegetarian recipes with metadata
+- Anti-repetition: No recipe repeats within 3 weeks
+- No template repeats within one week
+- Dietary constraints (avoid: eggplant, mushrooms, green cabbage)
+- Busy-day logic with no-chop requirements
+- Weekly "from scratch" novelty recipe selection
 
-### GitHub Actions Automation
-- **Saturday 5am PST:** Automated PR creation with farmers market vegetable suggestions
-- **On PR Merge:** Automatic meal plan generation and GitHub Pages deployment
-- **Daily 8pm PST:** GitHub issue created for daily meal logging
-- **Inventory Tracking:** Automatic freezer backup count updates
-- **Live Deployment:** Meal plans accessible at https://ssimhan.github.io/meal-planner/
+### Automation (GitHub Actions)
+- **Saturday 5am PST:** PR with farmers market vegetable suggestions
+- **On PR merge:** Automatic meal plan generation and deployment
+- **Daily 8pm PST:** GitHub issue for meal logging
+- **Inventory tracking:** Automatic freezer backup updates
+- **Live deployment:** https://ssimhan.github.io/meal-planner/
 
 ### User Interface
-- Solarpunk-themed landing page with live status updates
-- Mobile-first responsive design for kitchen/grocery use
-- Glanceable freezer backup status and shopping countdown
-- Archive of all past meal plans
-
-## Prerequisites
-
-- Python 3.10 or higher
-- pip (Python package manager)
-
-## Installation
-
-1. Clone this repository:
-```bash
-git clone <your-repo-url>
-cd meal-planner
-```
-
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-## Usage
-
-### Automated Workflow (Recommended)
-
-The system now runs automatically via GitHub Actions:
-
-1. **Saturday 5am PST:** You'll receive a GitHub PR with farmers market vegetable suggestions
-2. **Review PR:** Edit the vegetables list, confirm, and merge when ready
-3. **Automatic Generation:** Meal plan is automatically generated and deployed to GitHub Pages
-4. **Daily Check-ins:** At 8pm PST, you'll receive a GitHub issue to log your meals
-
-**View your plans:** https://ssimhan.github.io/meal-planner/
-
-### CLI Workflow (Manual/Local)
-
-For local testing or manual plan generation:
-
-```bash
-# Simplified workflow - just run one command
-./mealplan next
-```
-
-The workflow automatically:
-1. Detects what stage you're at
-2. Runs the appropriate next step
-3. Guides you through what to do next
-
-**Complete CLI Example:**
-
-```bash
-# Week starts - create new input file
-./mealplan next
-# → Creates inputs/YYYY-MM-DD.yml with proposed vegetables
-
-# Edit file to confirm vegetables after farmers market
-vim inputs/YYYY-MM-DD.yml  # Update confirmed_veg, change status to "confirmed"
-
-# Generate meal plan
-./mealplan next
-# → Creates plans/YYYY-MM-DD-weekly-plan.html and updates history
-
-# When week is done, start next week
-./mealplan next
-# → Creates next week's input file automatically
-```
-
-**Other CLI Commands:**
-
-```bash
-./mealplan status   # Show current workflow state
-./mealplan reset    # Force start new week (if needed)
-./mealplan parse    # Re-parse HTML recipes (first time only)
-```
-
-**Workflow Commands:**
-1. `1-start` (or `start`) - Start new week with interactive prompts
-2. `2-update <date>` (or `update`) - Update vegetables after farmers market shopping
-3. `3-plan <date>` (or `plan`) - Generate meal plan
-4. `4-view <date>` (or `view`) - View a specific plan
-5. `5-latest` (or `latest`) - View most recent plan
-
-**Other Commands:**
-- `parse` - Parse HTML recipes into index (one-time setup)
-- `validate <date>` - Validate meal plan constraints
+- Solarpunk-themed responsive design
+- Mobile-first for kitchen/grocery use
+- Live status updates and quick actions
+- Archive of all past plans organized by month
 
 ---
 
-### Detailed Usage (Manual Commands)
+## Quick Start
 
-If you prefer running Python scripts directly:
+### Prerequisites
+- Python 3.10+
+- pip
 
-#### 1. Parse Recipes (Phase 1)
-
-Convert HTML recipes into structured JSON and YAML indexes:
-
-```bash
-python3 scripts/parse_recipes.py
-```
-
-This will:
-- Read all HTML files from `recipes/raw_html/`
-- Extract recipe metadata (name, ingredients, instructions, categories)
-- Apply tagging heuristics (template, effort level, appliances)
-- Generate `recipes/parsed/recipes.json` and `recipes/index.yml`
-
-View the curated recipe index:
+### Installation
 
 ```bash
-cat recipes/index.yml
+git clone <your-repo-url>
+cd meal-planner
+pip install -r requirements.txt
 ```
 
-#### 2. Create Weekly Input (Phase 2)
+### Usage
 
-Run the interactive intake command to create a weekly input file:
+**Automated (Recommended):**
+1. Saturday 5am: Receive PR with vegetable suggestions
+2. Review/edit vegetables on GitHub, merge when ready
+3. Plan auto-generates and deploys to GitHub Pages
+4. Daily 8pm: Log meals via GitHub issue
 
+**Manual/Local:**
 ```bash
-python3 scripts/mealplan.py intake
+./mealplan next  # Automatically detects and runs next step
 ```
 
-This will prompt you for:
-- **Week start date** (defaults to next Monday)
-- **Office days** (default: Mon, Wed, Fri)
-- **Busy days** (default: Thu, Fri) - Quick meals needed
-- **Late class days** (default: none) - Heavy snack required
-- **Special events** (optional) - Dinners out, travel, etc.
+The CLI workflow:
+1. Creates input file with proposed vegetables
+2. Edit file, confirm vegetables after farmers market
+3. Generate meal plan HTML
+4. Updates history automatically
 
-The command will:
-- Generate a farmers market vegetable proposal based on:
-  - Seasonal availability (current month)
-  - Recipe requirements (from `recipes/index.yml`)
-  - Recent usage (avoid repetition from `data/history.yml`)
-- Create `inputs/YYYY-MM-DD.yml` with your schedule and preferences
-
-After running intake:
-1. Review the generated `inputs/YYYY-MM-DD.yml` file
-2. Edit `proposed_veg` if needed
-3. After farmers market shopping, copy vegetables to `confirmed_veg`
-4. Change `status: proposed` to `status: confirmed`
-
-#### 3. Generate Meal Plan (Phase 3)
-
-After confirming your farmers market vegetables, generate the weekly meal plan:
-
+**Other commands:**
 ```bash
-python3 scripts/mealplan.py plan inputs/YYYY-MM-DD.yml
+./mealplan status    # Show current state
+./mealplan reset     # Force start new week
+./mealplan parse     # Parse recipes (first time only)
 ```
 
-This will:
-- Load your schedule and preferences from the input file
-- Filter recipes based on constraints (anti-repetition, avoided ingredients)
-- Select 5 dinners (Mon-Fri) with no template repetition
-- Prioritize no-chop recipes for busy days (Thu/Fri by default)
-- Generate `plans/YYYY-MM-DD-weekly-plan.md` with complete meal plan
-- Update `data/history.yml` to track recipe usage
-
-View the generated plan:
-
-```bash
-cat plans/YYYY-MM-DD-weekly-plan.md
-```
-
-#### 4. Validate Plan (Optional)
-
-Validate that the generated plan meets all constraints:
-
-```bash
-python3 scripts/validate_plan.py plans/YYYY-MM-DD-weekly-plan.md inputs/YYYY-MM-DD.yml
-```
-
-This checks:
-- All dinners (Mon-Fri) are present
-- No avoided ingredients used
-- Busy days have no-chop meals or prep notes
-- Late class days have heavy snacks
-- No template repetition within the week
-- At least one vegetable per dinner
+---
 
 ## Project Structure
 
+See [docs/REPO_STRUCTURE.md](docs/REPO_STRUCTURE.md) for detailed file organization.
+
+**Key directories:**
 ```
 meal-planner/
-├── README.md             # This file - main documentation
-├── CLAUDE.md             # Claude Code operating instructions
-├── mealplan              # Main CLI wrapper script
 ├── recipes/
-│   ├── raw_html/         # Original HTML recipe files (234 files)
-│   ├── parsed/           # Generated JSON output
-│   ├── taxonomy.yml      # Template and tag definitions
-│   └── index.yml         # Curated recipe index (234 recipes)
+│   ├── raw_html/         # 234 HTML recipe files
+│   ├── index.yml         # Curated recipe database
+│   └── taxonomy.yml      # Classification schema
 ├── data/
-│   └── history.yml       # Historical meal plan tracking
-├── inputs/               # Weekly input files with schedule/preferences
-├── plans/                # Generated weekly meal plans (Markdown)
-└── scripts/              # Python automation scripts
-    ├── workflow.py       # Streamlined workflow with state tracking
-    ├── mealplan.py       # Legacy workflow commands
-    ├── parse_recipes.py  # Recipe HTML parser
-    └── validate_plan.py  # Plan validator
+│   ├── history.yml       # Meal plan tracking (anti-repetition)
+│   └── inventory.yml     # Freezer/pantry/fridge
+├── inputs/               # Weekly constraints and schedule
+├── plans/                # Generated meal plan HTML files
+├── scripts/              # Python automation
+└── .github/workflows/    # GitHub Actions automation
 ```
 
-## Recipe Management
-
-### Adding New Recipes
-
-1. Export recipes as HTML files (with schema.org microdata)
-2. Place in `recipes/raw_html/`
-3. Run `python scripts/parse_recipes.py`
-
-### Editing Recipe Tags
-
-After parsing, manually edit `recipes/index.yml` to correct:
-- Template categorization
-- Effort levels
-- Appliances
-- Ingredient lists
-
-The parser will preserve manual edits on subsequent runs (future enhancement).
+---
 
 ## Recipe Taxonomy
 
-### Templates
-- **tacos** - Tacos, enchiladas, flautas, quesadillas
-- **pasta** - Pasta dishes, mac and cheese, noodles
-- **soup** - Soups, stews, broths
-- **curry** - Curries, masalas, dal
-- **grain_bowl** - Rice bowls, quinoa bowls, buddha bowls
-- **dump_and_go** - Instant Pot, slow cooker recipes
-- **sandwich** - Sandwiches, wraps, paninis
-- **salad** - Salads
-- **stir_fry** - Stir-fries, pad thai
-- **pizza** - Pizza
-- **burrito_bowl** - Burrito bowls
-- **unknown** - Unclassified (requires manual tagging)
+**Templates:** tacos, pasta, soup, curry, grain_bowl, dump_and_go, sandwich, salad, stir_fry, pizza, burrito_bowl
 
-### Effort Levels
-- **no_chop** - Ready in <15min, minimal/no chopping
-- **minimal_chop** - 15-30min, light prep
-- **normal** - 30-60min, standard cooking
+**Effort Levels:**
+- `no_chop` - <15min, minimal chopping
+- `minimal_chop` - 15-30min, light prep
+- `normal` - 30-60min, standard cooking
 
-### Appliances
-- instant_pot, slow_cooker, stovetop, oven, air_fryer, blender, food_processor
+**Appliances:** instant_pot, slow_cooker, stovetop, oven, air_fryer, blender, food_processor
+
+---
+
+## Recipe Management
+
+**Adding recipes:**
+1. Export as HTML with schema.org microdata
+2. Place in `recipes/raw_html/`
+3. Run `python scripts/parse_recipes.py`
+
+**Editing tags:**
+Manually edit `recipes/index.yml` to correct template, effort level, appliances, or ingredients.
+
+---
+
+## Design Philosophy
+
+**The Meta-Goal:**
+Move from "Here's a plan you *could* follow" to "Here's the plan you almost always *do* follow."
+
+**Key principles:**
+- **Energy-based prep model** - Monday (high energy) → Friday (zero prep)
+- **Evening protection (5-9pm)** - Device-free time, minimal assembly only
+- **Freezer backup strategy** - Maintain 3 complete backup meals
+- **Anti-repetition** - Prevent recipe/template fatigue
+- **Mental load reduction** - Optimize for calm, not just nutrition
+
+See [PROJECT_HISTORY.md](PROJECT_HISTORY.md) for detailed philosophy and evolution.
+
+---
 
 ## Development Status
 
-- [x] Phase 0: Scaffolding
-- [x] Phase 1: Recipe Parsing
-- [x] Phase 2: CLI Intake + Farmers Market
-- [x] Phase 3: Plan Generation
-- [x] Phase 4: Complete Template Classification (100% of recipes categorized)
+**Completed:**
+- ✅ Phases 1-4: Core automation (GitHub Pages, weekly planning, daily check-ins, inventory)
+- ✅ Phase 5: UI polish (landing page, mobile optimization, archive organization)
+- ✅ Recipe parsing and classification (100% categorized, 0 unknown)
+- ✅ Lunch selection intelligence (109 lunch-suitable recipes)
 
-## Recent Improvements (Phase 4)
+**Future (Optional):**
+- Phase 6: Learning & adaptation (meal success scoring, preference tracking)
 
-**Complete Recipe Classification** - 100% of recipes now categorized (0 unknown):
-- Added 8 new template categories (breakfast, snack_bar, baked_goods, etc.)
-- Expanded keyword matching with 50+ new terms
-- Manually classified all 36 remaining unknowns
-- Improved meal-type filtering (dinner vs. lunch vs. snack)
-- **Before**: 120 unknown recipes (51%)
-- **After**: 0 unknown recipes (0%)
+See [IMPLEMENTATION.md](IMPLEMENTATION.md) for complete status and future ideas.
 
-**From-Scratch Recipe Selection** - Now working correctly:
-- Prioritizes normal-effort recipes for non-busy days
-- Properly displays selected recipe in plan output
-- Avoids template conflicts with busy-day meals
+---
 
 ## Maintaining Project History
 
-**After every coding session**, update the project documentation:
+After coding sessions, document your work in [PROJECT_HISTORY.md](PROJECT_HISTORY.md):
 
-### End of Session Checklist
+**What to include:**
+- Date and what changed (features, fixes, refactoring)
+- Why (rationale for decisions)
+- Lessons learned (insights for future you)
+- Next steps (optional)
 
-When you're ready to commit your work, always ask Claude Code to:
+**Purpose:**
+- Blog post material
+- Decision rationale
+- Help non-coders learn
+- Institutional knowledge
 
-1. **Update PROJECT_HISTORY.md** with session notes:
-   ```
-   Please update PROJECT_HISTORY.md with what we did this session:
-   - What features/fixes were implemented
-   - Key decisions made and why
-   - Lessons learned or insights discovered
-   - Any new patterns or approaches introduced
-   ```
-
-2. **Commit all changes** together:
-   ```bash
-   # Claude Code will handle the git commands
-   "Please commit all files with an appropriate message"
-   ```
-
-### What to Document
-
-Add a new session entry to PROJECT_HISTORY.md including:
-- **Date** of the session
-- **What changed**: Features added, bugs fixed, refactoring done
-- **Why**: Rationale for decisions made
-- **Lessons learned**: Insights for future you and other builders
-- **Next steps**: What to tackle next (optional)
-
-### Example Session Entry Format
-
-```markdown
-## Session: 2025-12-30
-
-### What We Built
-- Created PROJECT_HISTORY.md to document project journey
-- Added automated session tracking to README workflow
-
-### Key Decisions
-- Decided to maintain project history alongside code
-- Chose Markdown format for easy editing and version control
-
-### Lessons Learned
-- Documentation is best maintained continuously, not retroactively
-- Future blog posts become easier when you document as you go
-
-### Next Steps
-- Continue refining meal planning algorithm
-- Add more recipes to the database
-```
-
-### Why This Matters
-
-- **For your blog**: You'll have detailed notes about your journey
-- **For future you**: Remember why you made certain decisions
-- **For other builders**: Help non-coders learn from your process
-- **For the project**: Creates institutional knowledge
-
-The PROJECT_HISTORY.md file is designed to become a blog post or tutorial, so write entries with that audience in mind.
-
-## Future Roadmap: GitHub Actions Automation
-
-**Vision:** Transform the CLI workflow into a GitHub Actions-powered system that's accessible from anywhere (phone, web) while keeping data private and free.
-
-### Design Philosophy
-
-**The Meta-Goal:**
-Over time, the system should move from:
-> "Here's a plan you *could* follow"
-
-to:
-> "Here's the plan you almost always *do* follow."
-
-**How it learns:**
-- **Meal reliability** - Which meals you actually make vs skip, which get repeated voluntarily
-- **Time realism** - Meals that took longer than planned, prep that didn't happen
-- **Kid & household patterns** - Meals kids consistently eat vs complain about
-- **Ingredient behavior** - Produce that goes unused, staples always consumed
-- **Prep effectiveness** - Tasks that made the week easier vs weren't worth effort
-- **Preference drift** - Seasonal taste shifts, fatigue with certain cuisines
-- **Confidence signals** - Weeks that felt calm vs chaotic
-
-The system optimizes not just for nutrition, but for **mental load reduction**.
-
-### Current State (CLI-based)
-- ✅ Lunch prep recipe suggestions - **COMPLETE**
-- ✅ HTML meal plan output with Solarpunk design
-- ✅ Energy-based prep model with freezer backup strategy
-- ✅ Anti-repetition logic and constraint satisfaction
-
-### Planned Migration to GitHub Actions
-
-#### **Phase 1: Foundation** (Next Priority)
-- [ ] Enable GitHub Pages for meal plan hosting
-- [ ] Test viewing plans at `https://username.github.io/meal-planner/`
-- [ ] Update plan links to be web-accessible
-- **Effort:** 30 minutes | **Value:** Access plans from phone/tablet
-
-#### **Phase 2: Automated Weekly Planning**
-- [ ] Create `.github/workflows/weekly-plan.yml`
-- [ ] Sunday 8am: Auto-create input file with farmers market suggestions
-- [ ] Create PR for review (edit vegetables on GitHub web UI)
-- [ ] On PR merge: Auto-generate meal plan and commit
-- [ ] Comment on PR with link to generated plan
-- **Effort:** 2-3 hours | **Value:** No CLI needed for weekly planning
-
-#### **Phase 3: Daily Check-ins via GitHub Issues**
-- [ ] Create `.github/workflows/daily-checkin.yml`
-- [ ] 6pm daily: Auto-create GitHub Issue "What did you make today?"
-- [ ] Comment on issue from phone with meal notes
-- [ ] Parse comments, update `data/logs.yml`
-- [ ] Auto-close issue after logging
-- **Effort:** 3-4 hours | **Value:** Easy logging from anywhere
-
-#### **Phase 4: Inventory Automation**
-- [ ] Create `data/inventory.yml` schema (fridge/pantry/freezer)
-- [ ] Create `scripts/parse_daily_log.py` for comment parsing
-- [ ] Auto-update inventory based on logged meals
-- [ ] Carry forward leftovers week-to-week
-- [ ] Use inventory to improve farmers market suggestions
-- **Effort:** 4-5 hours | **Value:** Inventory stays current automatically
-
-#### **Phase 5: Learning & Adaptation**
-- [ ] Analyze logs for meal success patterns
-- [ ] Track time accuracy (prep time vs actual time)
-- [ ] Identify kid-friendly meals based on notes
-- [ ] Adjust suggestions based on historical data
-- [ ] Reduce food waste by tracking unused items
-- **Effort:** 10+ hours | **Value:** System gets smarter over time
-
-### Why GitHub Actions?
-
-**Benefits:**
-- ✅ **Still free** - GitHub Actions generous free tier (2,000 min/month)
-- ✅ **Still private** - Data stays in your private repo
-- ✅ **No servers** - Runs in cloud, you control it
-- ✅ **Accessible anywhere** - GitHub web UI, mobile-friendly
-- ✅ **Git-backed** - All data version-controlled
-- ✅ **Portable** - Export data anytime (YAML files)
-
-**Cost:** ~50 minutes/month of Actions (well within free tier)
-
-### Migration Strategy
-
-1. **Keep CLI working** - Don't break existing workflow
-2. **Add GitHub Actions alongside** - Incremental enhancement
-3. **Test each phase** - Use for 1-2 weeks before next phase
-4. **Evaluate value** - Skip phases that don't deliver value
-
-See [IMPLEMENTATION.md](IMPLEMENTATION.md) for detailed technical plan.
+---
 
 ## License
 

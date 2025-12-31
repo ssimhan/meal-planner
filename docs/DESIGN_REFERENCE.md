@@ -1,227 +1,72 @@
-# Meal Planner - Design Reference
+# Design Reference - Original UX Vision
 
-This document describes the original ideal user experience vision. It serves as a design reference for building features incrementally.
+**Status:** Aspirational design for future development
 
-**For technical implementation details, see [IMPLEMENTATION.md](../IMPLEMENTATION.md)**
-**For current roadmap and progress, see [README.md](../README.md)**
-
----
-
-## Weekly Meal Planning App — User Navigation Flow
-
-This describes the *exact order* you experience when using the app, from opening it to daily tracking.
+**Current implementation:** See [IMPLEMENTATION.md](../IMPLEMENTATION.md) for what's actually built
 
 ---
 
-### 1) Open the app → Start
-You open a simple HTML page.
+## The Ideal User Flow
 
-You see:
-- One primary action: **"Start this week's meal planning"**
-- A small helper line: *"Takes ~10–15 minutes"*
+**Vision:** A 10-15 minute weekly planning session that gets smarter over time
 
-You click **Start**.
+### Weekly Planning Session
+1. **Open app** → Click "Start this week's meal planning"
+2. **Inventory check** → Confirm fridge/pantry/freezer contents
+3. **Farmers market suggestions** → Review seasonal produce + rough meal outline
+4. **Schedule confirmation** → Adjust WFH/office/busy days as needed
+5. **Prep recommendations** → Accept or adjust prep timing
+6. **Final plan + grocery list** → Save complete week (Mon-Sun)
 
----
-
-### 2) Quick inventory check (fridge / pantry / freezer)
-The app shows what it currently thinks you have, grouped by:
-- Fridge
-- Pantry
-- Freezer
-
-Vegetables and perishables are visually highlighted.
-
-You're asked:
-> "Is this still accurate?"
-
-You can:
-- Add items
-- Remove items
-- Mark items as *running low*
-- Add quick notes (e.g., "use soon", "opened already")
-
-You click **Confirm inventory**.
+### Daily During Week
+7. **Daily check-in** → Log what you actually made, mark inventory changes
+8. **Auto-update inventory** → Used items reduce, leftovers carry forward
+9. **Next week starts smarter** → Learns from your patterns
 
 ---
 
-### 3) Seasonal farmers market suggestions + rough plan
-Based on:
-- Your updated inventory
-- Current seasonality
+## What The System Should Learn
 
-The app shows:
-- **Seasonal produce worth buying at the farmers market**
-- A **rough meal plan outline** (high‑level lunch/dinner ideas, not locked yet)
+**From daily logs, the app should silently learn:**
 
-You're asked:
-> "Anything here you want to exclude or swap?"
+- **Meal reliability** - Which meals you actually make vs skip, success patterns
+- **Time realism** - Meals that took longer than planned, prep that didn't happen
+- **Kid response** - Meals consistently eaten vs complained about
+- **Ingredient behavior** - Produce that goes unused, staples always consumed
+- **Prep effectiveness** - Prep that made week easier vs wasn't worth it
+- **Preference drift** - Seasonal shifts, cuisine fatigue (without asking explicitly)
+- **Confidence signals** - Meals labeled "easy", "reliable"; calm vs chaotic weeks
 
-You can:
-- Remove an ingredient
-- Flag something as "don't feel like it this week"
-
-You click **Looks good**.
-
----
-
-### 4) Confirm schedule (defaults included)
-The app now shows your week with defaults pre‑filled:
-- WFH days
-- Office days
-- Kid activities / busy evenings
-
-You're asked:
-> "Is this week typical?"
-
-You can:
-- Accept as‑is
-- Quickly adjust a day or two
-
-You click **Confirm schedule**.
-
----
-
-### 5) Prep recommendations
-Using your schedule, the app suggests:
-- Best days and times to prep
-- What to prep in each window
-
-Defaults are already filled in (e.g., duration, energy level).
-
-You're asked:
-> "Does this prep plan work for you?"
-
-You can:
-- Accept
-- Nudge timing earlier/later
-
-You click **Lock prep plan**.
-
----
-
-### 6) Final weekly meal plan + grocery list
-The app generates the final plan:
-- Lunches and dinners for **Monday → Sunday**
-- Meals optimized for:
-  - Inventory usage first
-  - Schedule constraints
-  - Prep efficiency
-
-You also see:
-- A **complete grocery list**, grouped by section
-- Clear callouts for **farmers market vs grocery store**
-
-You click **Save this week's plan**.
-
----
-
-### 7) Daily check‑in (used throughout the week)
-Each day, you open the app and see:
-> "What did you actually make today?"
-
-You can quickly:
-- Select the planned meal or type what you made
-- Mark items as *used up*, *leftover*, or *still untouched*
-- Add a short note (e.g., "kids didn't eat", "took longer than expected")
-
-You click **Log today**.
-
----
-
-### 8) Inventory stays up to date automatically
-As you log meals:
-- Used items reduce inventory
-- Leftovers carry forward
-- Notes accumulate quietly in the background
-
-You never have to do a full reset unless you want to.
-
----
-
-### 9) Next week starts smarter
-When you start the next week:
-- Inventory reflects reality
-- The app remembers what worked and what didn't
-- Prep suggestions and meal choices feel increasingly "you"
-
-You click **Start this week's meal planning** again — and it's faster every time.
-
----
-
-## What the app should quietly learn from your daily notes
-Your notes aren't just logs — they're training signals. Over time, the app should learn:
-
-### Meal reliability
-- Which meals you *actually* make vs skip
-- Which meals get repeated voluntarily
-- Which meals consistently leave leftovers (good or bad)
-
-This helps it favor **low-friction, high-success meals**.
-
-### Time realism
-- Meals that took longer than planned
-- Prep sessions that didn't happen
-- Office days where cooking ambition was too high
-
-This helps it downshift complexity on busy days automatically.
-
-### Kid & household response patterns
-- Meals kids consistently eat
-- Meals that trigger complaints or waste
-- Flavors or textures that work better on certain days
-
-This helps it bias toward **family-safe defaults** when energy is low.
-
-### Ingredient behavior
-- Produce that regularly goes unused
-- Staples that are always consumed
-- Items that freeze well vs spoil
-
-This helps reduce food waste and stabilize your core grocery list.
-
-### Prep effectiveness
-- Prep that clearly made the week easier
-- Prep that wasn't worth the effort
-- Tasks that compound well (chopping once, using twice)
-
-This helps the app suggest *fewer, smarter* prep steps.
-
-### Preference drift (without asking you)
-- Seasonal taste shifts
-- Fatigue with certain cuisines
-- Increased tolerance for repetition during busy weeks
-
-This helps the app adapt without forcing explicit preference updates.
-
-### Confidence signals
-- Meals you label as "easy", "repeat", or "reliable"
-- Weeks that felt calm vs chaotic
-
-This lets the app optimize not just for nutrition, but for **mental load**.
-
----
-
-### The meta-goal
-Over time, the app should move from:
-> "Here's a plan you *could* follow"
-
-to:
-> "Here's the plan you almost always *do* follow."
+**Meta-goal:** Move from "Here's a plan you *could* follow" to "Here's the plan you almost always *do* follow."
 
 ---
 
 ## Implementation Status
 
-**Current (CLI-based):**
-- ✅ Steps 3-6 partially implemented (farmers market → meal plan generation)
-- ✅ Anti-repetition, constraint satisfaction, energy-based prep model
-- ❌ Steps 2, 7-9 not yet implemented (inventory, daily check-ins, learning)
+### Currently Built ✅
+- Steps 3-6: Farmers market → meal plan generation (CLI + GitHub Actions)
+- Anti-repetition, constraint satisfaction, energy-based prep model
+- Daily check-ins via GitHub Issues (Phase 3 complete)
+- Inventory automation (Phase 4 complete)
 
-**Planned (GitHub Actions):**
-- Phase 1-2: Steps 3-6 via GitHub web UI instead of CLI
-- Phase 3: Step 7 via GitHub Issues
-- Phase 4: Steps 2, 8 (inventory automation)
-- Phase 5: Step 9 (learning and adaptation)
+### Not Yet Built ❌
+- Step 2: Interactive inventory check
+- Steps 7-9: Learning and adaptation from daily logs
+- Meal reliability tracking
+- Time estimation improvements
+- Preference drift detection
 
-See [IMPLEMENTATION.md](../IMPLEMENTATION.md) for detailed technical plan.
+### Future (Phase 6 - Optional)
+See [IMPLEMENTATION.md](../IMPLEMENTATION.md) "Phase 6: Learning & Adaptation" for technical details.
+
+---
+
+## Why This Document Exists
+
+This describes the *ideal experience* - what the system could become if fully developed. It serves as:
+- Long-term vision for features
+- Design reference for incremental improvements
+- Reminder of the meta-goal (mental load reduction, not just nutrition)
+
+**For what's actually built:** See [IMPLEMENTATION.md](../IMPLEMENTATION.md)
+**For current capabilities:** See [README.md](../README.md)

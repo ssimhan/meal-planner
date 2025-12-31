@@ -1,111 +1,104 @@
 # Repository Structure
 
-This document describes the organization of the meal-planner repository.
+File organization reference for the meal-planner repository.
 
-## Current Structure (Organized)
+---
+
+## Directory Structure
 
 ```
 meal-planner/
-├── README.md                    # Project overview and quick start
-├── CLAUDE.md                    # Claude Code operating instructions
-├── .clauderc                    # Claude Code slash commands configuration
-├── .gitignore                   # Git ignore patterns
-├── mealplan                     # Main CLI tool (bash script)
+├── README.md                    # Project overview
+├── CLAUDE.md                    # AI assistant instructions
+├── IMPLEMENTATION.md            # Implementation status
+├── PROJECT_HISTORY.md           # Development journey
+├── GITHUB_ACTIONS_SETUP.md      # GitHub Actions setup guide
+├── mealplan                     # Main CLI tool
 ├── requirements.txt             # Python dependencies
 │
+├── .github/workflows/           # GitHub Actions automation
+│   ├── deploy-pages.yml
+│   ├── weekly-plan-start.yml
+│   ├── weekly-plan-generate.yml
+│   ├── daily-checkin-create.yml
+│   └── daily-checkin-parse.yml
+│
 ├── docs/                        # Documentation
+│   ├── DESIGN_REFERENCE.md      # Original UX vision
 │   ├── UPDATE_RECIPE_TEMPLATES.md
 │   └── REPO_STRUCTURE.md (this file)
 │
-├── scripts/                     # Python automation scripts
-│   ├── __init__.py             # Python package marker
-│   ├── workflow.py             # Automated workflow orchestration
-│   ├── mealplan.py             # Meal plan generation
-│   ├── parse_recipes.py        # Recipe HTML parser
-│   ├── validate_plan.py        # Plan validation logic
-│   └── update_recipe_templates.py  # Batch recipe updater
+├── scripts/                     # Python automation
+│   ├── workflow.py              # State-based workflow
+│   ├── mealplan.py              # CLI commands
+│   ├── lunch_selector.py        # Lunch recipe selection
+│   ├── generate_landing_page.py # Landing page generator
+│   ├── parse_recipes.py         # Recipe HTML parser
+│   └── validate_plan.py         # Plan validator
 │
-├── recipes/                     # Recipe data
-│   ├── index.yml               # Master recipe index (106 recipes)
-│   ├── taxonomy.yml            # Recipe classification schema
-│   └── raw_html/               # Recipe HTML files (106 files)
+├── recipes/                     # Recipe database
+│   ├── index.yml                # 234 recipes with metadata
+│   ├── taxonomy.yml             # Classification schema
+│   └── raw_html/                # Source HTML files (234)
 │
-├── data/                        # Historical data
-│   └── history.yml             # Past meal plan history
+├── data/                        # Persistent data
+│   ├── history.yml              # Meal plan tracking
+│   ├── inventory.yml            # Freezer/pantry/fridge
+│   └── logs.yml                 # Daily check-in logs
 │
 ├── templates/                   # HTML templates
-│   └── weekly-plan-template.html
+│   ├── weekly-plan-template.html
+│   └── landing-page-template.html
 │
-├── inputs/                      # Weekly input files
-│   ├── .gitkeep
-│   └── YYYY-MM-DD.yml          # Week-specific constraints
+├── inputs/                      # Weekly inputs (temporary)
+│   └── YYYY-MM-DD.yml           # Week constraints
 │
-└── plans/                       # Generated meal plans
-    ├── .gitkeep
-    └── YYYY-MM-DD-weekly-plan.html
+├── plans/                       # Generated meal plans
+│   └── YYYY-MM-DD-weekly-plan.html
+│
+└── _site/                       # GitHub Pages deployment
+    ├── index.html               # Landing page
+    └── plans/                   # Deployed meal plans
 ```
+
+---
 
 ## File Organization Principles
 
-### Root Level
-**Keep minimal** - Only essential files:
-- Core documentation (README, CLAUDE.md)
-- Configuration files (.clauderc, .gitignore)
-- Main CLI tool (mealplan)
-- Dependencies (requirements.txt)
+| Directory | Purpose | Persistence |
+|-----------|---------|-------------|
+| Root | Core docs, CLI tool, config | Permanent |
+| `.github/workflows/` | Automation workflows | Permanent |
+| `docs/` | User-facing documentation | Permanent |
+| `scripts/` | Python automation | Permanent |
+| `recipes/` | Recipe database | Permanent |
+| `data/` | Historical tracking | Permanent |
+| `templates/` | HTML templates | Permanent |
+| `inputs/` | Weekly constraints | **Temporary** - delete after plan generated |
+| `plans/` | Generated meal plans | Permanent (archive) |
+| `_site/` | GitHub Pages build | Auto-generated |
 
-### Documentation (`docs/`)
-All user-facing documentation and guides.
-
-### Scripts (`scripts/`)
-All Python automation scripts and tools.
-
-### Recipes (`recipes/`)
-- `index.yml` - Structured recipe metadata
-- `taxonomy.yml` - Classification schema
-- `raw_html/` - Source recipe HTML files
-
-### Data (`data/`)
-Persistent historical data (meal plan history).
-
-### Templates (`templates/`)
-HTML templates for generating output files.
-
-### Inputs (`inputs/`)
-**Temporary working directory** - Week-specific input files.
-These are deleted after meal plan is finalized.
-
-### Plans (`plans/`)
-Generated meal plan HTML files (output).
+---
 
 ## File Naming Conventions
 
-### Recipe Files
+**Weekly files:**
+- Input: `YYYY-MM-DD.yml` (e.g., `2026-01-05.yml`)
+- Plan: `YYYY-MM-DD-weekly-plan.html` (e.g., `2026-01-05-weekly-plan.html`)
+
+**Recipe files:**
 - Format: `Recipe Name.html`
-- Examples:
-  - ✅ `Chana Masala (IP).html`
-  - ✅ `Sunflower Seed Cream Cheese (Dairy-Free).html`
-  - ❌ `Petra A. | Sunglow Kitchen | Comment CHEESE...html` (too verbose)
+- Example: `Chana Masala (IP).html`
 
-### Weekly Files
-- Input: `YYYY-MM-DD.yml` (week start date)
-- Plan: `YYYY-MM-DD-weekly-plan.html`
-- Example: `2025-12-29.yml` → `2025-12-29-weekly-plan.html`
-
-## Clean-up Notes
-
-The following files/folders can be safely removed:
-- `.DS_Store` - macOS system file (already in .gitignore)
-- None currently - repo is well-organized!
+---
 
 ## Maintenance
 
-### When Adding New Files
-- **Scripts** → `scripts/` directory
-- **Documentation** → `docs/` directory
-- **Templates** → `templates/` directory
-- **Recipes** → `recipes/raw_html/` + update `recipes/index.yml`
+**After finalizing a meal plan:**
+- Delete `inputs/YYYY-MM-DD.yml` (no longer needed)
 
-### Periodic Cleanup
-- **Inputs folder**: Delete old `.yml` files after meal plans are finalized
-- **Plans folder**: Archive old plans if needed (optional)
+**When adding new content:**
+- Scripts → `scripts/`
+- Documentation → `docs/`
+- Templates → `templates/`
+- Recipes → `recipes/raw_html/` + update `recipes/index.yml`

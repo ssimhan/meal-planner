@@ -618,7 +618,7 @@ def generate_html_plan(inputs, selected_dinners, from_scratch_recipe=None, selec
     html.append('')
 
     # Generate overview tab
-    html.extend(generate_overview_tab(inputs, selected_dinners, from_scratch_recipe))
+    html.extend(generate_overview_tab(inputs, selected_dinners, from_scratch_recipe, selected_lunches or {}))
 
     # Generate weekday tabs with lunch data
     html.extend(generate_weekday_tabs(inputs, selected_dinners, selected_lunches or {}))
@@ -654,7 +654,7 @@ def generate_html_plan(inputs, selected_dinners, from_scratch_recipe=None, selec
     return '\n'.join(html)
 
 
-def generate_overview_tab(inputs, selected_dinners, from_scratch_recipe):
+def generate_overview_tab(inputs, selected_dinners, from_scratch_recipe, selected_lunches=None):
     """Generate the Overview tab content."""
     html = []
     html.append('        <!-- Overview Tab -->')
@@ -679,20 +679,47 @@ def generate_overview_tab(inputs, selected_dinners, from_scratch_recipe):
         html.append('            </div>')
     html.append('')
 
-    # Week at a glance
+    # Week at a glance - Table format
     html.append('            <div class="week-glance">')
     html.append('                <h3>📋 Week at a Glance</h3>')
-    html.append('                <ul>')
+    html.append('                <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">')
+    html.append('                    <thead>')
+    html.append('                        <tr style="background: var(--bg-secondary); border-bottom: 2px solid var(--accent-green);">')
+    html.append('                            <th style="padding: 12px; text-align: left; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Day</th>')
+    html.append('                            <th style="padding: 12px; text-align: left; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Lunch</th>')
+    html.append('                            <th style="padding: 12px; text-align: left; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Dinner</th>')
+    html.append('                        </tr>')
+    html.append('                    </thead>')
+    html.append('                    <tbody>')
 
     days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
     day_abbr = ['mon', 'tue', 'wed', 'thu', 'fri']
 
     for day_name, day_key in zip(days, day_abbr):
+        # Get lunch
+        lunch_text = ''
+        if selected_lunches and day_key in selected_lunches:
+            lunch = selected_lunches[day_key]
+            lunch_text = lunch.recipe_name
+        else:
+            lunch_text = '[Lunch suggestion]'
+
+        # Get dinner
+        dinner_text = ''
         if day_key in selected_dinners:
             recipe = selected_dinners[day_key]
-            html.append(f'                    <li><strong>{day_name}:</strong> {recipe.get("name")}</li>')
+            dinner_text = recipe.get("name", '[Dinner]')
+        else:
+            dinner_text = '[Dinner]'
 
-    html.append('                </ul>')
+        html.append(f'                        <tr style="border-bottom: 1px solid var(--border-subtle);">')
+        html.append(f'                            <td style="padding: 12px; font-weight: 500;"><strong>{day_name}</strong></td>')
+        html.append(f'                            <td style="padding: 12px; color: var(--text-muted);">{lunch_text}</td>')
+        html.append(f'                            <td style="padding: 12px;">{dinner_text}</td>')
+        html.append(f'                        </tr>')
+
+    html.append('                    </tbody>')
+    html.append('                </table>')
     html.append('            </div>')
     html.append('        </div>')
     html.append('')

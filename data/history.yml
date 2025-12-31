@@ -651,3 +651,78 @@ weeks:
     - tomato
     - garlic
     - tomato
+- week_of: '2026-01-05'
+  dinners:
+  - recipe_id: cauliflower_rasam
+    cuisine: indian
+    meal_type: soup_stew
+    day: mon
+    vegetables:
+    - cauliflower
+    - cilantro
+    - lemon
+    - tomato
+    - tomatoe
+    - cauliflower
+    - cilantro
+    - lemon
+    - tomato
+    - tomatoe
+  - recipe_id: cheesy_veggie_quesadilla
+    cuisine: mexican
+    meal_type: tacos_wraps
+    day: tue
+    vegetables:
+    - bell pepper
+    - corn
+    - garlic
+    - onion
+    - bell pepper
+    - corn
+    - garlic
+    - onion
+  - recipe_id: chickpea_chaat_salad
+    cuisine: indian
+    meal_type: salad
+    day: wed
+    vegetables:
+    - bell pepper
+    - carrot
+    - cilantro
+    - cucumber
+    - garlic
+    - lemon
+    - onion
+    - peas
+    - tomato
+    - bell pepper
+    - carrot
+    - cilantro
+    - cucumber
+    - garlic
+    - lemon
+    - onion
+    - peas
+    - tomato
+  - recipe_id: curried_egg_salad_sandwich
+    cuisine: indian
+    meal_type: sandwich
+    day: thu
+    vegetables:
+    - cilantro
+    - garlic
+    - cilantro
+    - garlic
+  - recipe_id: easy_chickpea_fritters
+    cuisine: mediterranean
+    meal_type: appetizer
+    day: fri
+    vegetables:
+    - beans
+    - cucumber
+    - garlic
+    - peas
+    - beans
+    - cucumber
+    - garlic
+    - peas

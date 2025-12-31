@@ -220,6 +220,12 @@ See [Priority 3](#priority-3-optional-phase-5---learning--adaptation-) above for
 - (Optional) Learning & Adaptation
 
 ### Future Ideas 💡
+- **Dynamic meal plan updates** - Update weekly HTML plan as daily check-ins are logged
+  - Show "planned vs. actual" comparison
+  - Add checkmarks for completed meals
+  - Highlight when freezer backups were used
+  - Display deviations from the plan
+  - Could trigger on daily-checkin-parse workflow completion
 - Email/SMS notifications instead of relying on GitHub
 - Mobile app wrapper around GitHub Pages
 - Integration with grocery delivery services

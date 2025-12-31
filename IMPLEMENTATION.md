@@ -2,6 +2,27 @@
 
 This document provides the detailed technical plan for migrating from CLI-only workflow to GitHub Actions automation.
 
+## Progress Tracker
+
+**Last Updated:** 2025-12-30
+
+| Phase | Status | Notes |
+|-------|--------|-------|
+| **Phase 1: GitHub Pages Setup** | ✅ **COMPLETE** | All tasks done. GitHub Pages URL now shows in workflow output. |
+| 1.1 Enable GitHub Pages | ✅ Complete | Configured to deploy from GitHub Actions |
+| 1.2 Test Access | ✅ Complete | Site accessible at https://ssimhan.github.io/meal-planner/ |
+| 1.3 Update Plan Generation | ✅ Complete | workflow.py now displays GitHub Pages URL after generation |
+| **Phase 2: Automated Weekly Planning** | 🚧 **IN PROGRESS** | Workflows created and tested locally. Ready to test on GitHub. |
+| 2.1 Create Weekly Start Workflow | ✅ Complete | `.github/workflows/weekly-plan-start.yml` created |
+| 2.2 Create Plan Generation Workflow | ✅ Complete | `.github/workflows/weekly-plan-generate.yml` created |
+| 2.3 Modify workflow.py | ✅ Complete | Added `start-week` and `generate-plan` commands |
+| 2.4 Test Workflows | ⏳ **NEXT STEP** | Ready to test manually on GitHub |
+| **Phase 3: Daily Check-ins** | ⏸️ Not Started | Planned |
+| **Phase 4: Inventory Automation** | ⏸️ Not Started | Planned |
+| **Phase 5: Learning & Adaptation** | ⏸️ Not Started | Planned |
+
+**Next Action:** Push Phase 2 changes to GitHub and test the weekly planning workflow manually using `workflow_dispatch`.
+
 ## Table of Contents
 - [Phase 1: GitHub Pages Setup](#phase-1-github-pages-setup)
 - [Phase 2: Automated Weekly Planning](#phase-2-automated-weekly-planning)
@@ -674,4 +695,4 @@ Track progress in README.md checkboxes.
 
 ## backlog of feature ideas
 - cleaning up the html files so that the github pages interface looks in line with the rest of things
-
+- add github actions etc so that i can run the whole end to end process within the html file instead of having to use CLI

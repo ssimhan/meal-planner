@@ -1336,18 +1336,40 @@ def show_status():
 
 def main():
     """Main workflow orchestrator."""
-    # Check for flags
-    if '--status' in sys.argv:
-        show_status()
-        return
+    # Check for command arguments
+    if len(sys.argv) > 1:
+        command = sys.argv[1]
 
-    if '--reset' in sys.argv:
-        # Force create new week
-        _, week_str = find_current_week_file()
-        create_new_week(week_str)
-        return
+        if command == '--status':
+            show_status()
+            return
 
-    # Auto-detect state and execute next step
+        if command == '--reset':
+            # Force create new week
+            _, week_str = find_current_week_file()
+            create_new_week(week_str)
+            return
+
+        if command == 'start-week':
+            # GitHub Actions mode: Create new week without prompts
+            _, week_str = find_current_week_file()
+            create_new_week(week_str)
+            return
+
+        if command == 'generate-plan':
+            # GitHub Actions mode: Generate plan from latest confirmed input
+            input_file, week_str = find_current_week_file()
+            state, data = get_workflow_state(input_file)
+
+            if state == 'ready_to_plan':
+                generate_meal_plan(input_file, data)
+            else:
+                print(f"ERROR: Cannot generate plan. Current state: {state}")
+                print(f"Expected state: ready_to_plan (farmers market must be confirmed)")
+                sys.exit(1)
+            return
+
+    # Auto-detect state and execute next step (default behavior)
     input_file, week_str = find_current_week_file()
     state, data = get_workflow_state(input_file)
 

@@ -38,72 +38,21 @@ jobs:
             cp plans/*.html _site/plans/
           fi
 
-      - name: Generate index page
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
         run: |
-          # Create index page with links to meal plans
-          cat > _site/index.html << 'EOF'
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Meal Planner Project</title>
-            <style>
-              body {
-                font-family: system-ui, -apple-system, sans-serif;
-                line-height: 1.6;
-                max-width: 800px;
-                margin: 0 auto;
-                padding: 2rem;
-                color: #333;
-              }
-              h1 { color: #2c5282; }
-              h2 { color: #2d3748; margin-top: 2rem; }
-              a {
-                color: #3182ce;
-                text-decoration: none;
-              }
-              a:hover {
-                text-decoration: underline;
-              }
-              ul {
-                list-style: none;
-                padding: 0;
-              }
-              li {
-                padding: 0.5rem 0;
-                border-bottom: 1px solid #e2e8f0;
-              }
-            </style>
-          </head>
-          <body>
-            <h1>Meal Planner Project</h1>
-            <p>Energy-based meal planning system for busy families.</p>
+          pip install PyYAML
 
-            <h2>Weekly Meal Plans</h2>
-            <ul>
-          EOF
-
-          # Add links to all meal plans (sorted newest first) from _site/plans
-          if ls _site/plans/*.html 1> /dev/null 2>&1; then
-            for plan in $(ls -t _site/plans/*.html); do
-              filename=$(basename "$plan")
-              week_date=$(echo "$filename" | cut -d- -f1,2,3)
-              echo "              <li><a href=\"plans/$filename\">Week of $week_date</a></li>" >> _site/index.html
-            done
-          else
-            echo "              <li>No meal plans available yet.</li>" >> _site/index.html
-          fi
-
-          cat >> _site/index.html << 'EOF'
-            </ul>
-
-            <h2>About This Project</h2>
-            <p>This site will feature a detailed blog post about the development of this meal planning system.</p>
-            <p><a href="https://github.com/${{ github.repository }}">View on GitHub</a></p>
-          </body>
-          </html>
-          EOF
+      - name: Generate landing page
+        run: |
+          # Generate beautiful landing page with live data
+          python3 scripts/generate_landing_page.py
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

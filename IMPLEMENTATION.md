@@ -8,106 +8,195 @@ This document tracks the automation journey from CLI-only workflow to GitHub Act
 
 | Phase | Status | Key Files |
 |-------|--------|-----------|
-| **Phase 1: GitHub Pages Setup** | ✅ **COMPLETE** | [deploy-pages.yml](.github/workflows/deploy-pages.yml) |
-| **Phase 2: Automated Weekly Planning** | ✅ **COMPLETE** | [weekly-plan-start.yml](.github/workflows/weekly-plan-start.yml), [weekly-plan-generate.yml](.github/workflows/weekly-plan-generate.yml) |
-| **Phase 3: Daily Check-ins** | ✅ **COMPLETE** | [daily-checkin-create.yml](.github/workflows/daily-checkin-create.yml), [daily-checkin-parse.yml](.github/workflows/daily-checkin-parse.yml) |
-| **Phase 4: Inventory Automation** | ✅ **COMPLETE** | [parse_daily_log.py](scripts/parse_daily_log.py), [inventory.yml](data/inventory.yml) |
-| **Phase 5: Learning & Adaptation** | ⏸️ Not Started | Future: `scripts/analyze_logs.py` |
+| **Phases 1-4: Core Automation** | ✅ **COMPLETE** | GitHub Pages, Weekly Planning, Daily Check-ins, Inventory |
+| **Phase 5: UI Polish** | 🚧 **IN PROGRESS** | Landing page, navigation, mobile optimization |
+| **Phase 6: Learning & Adaptation** | ⏸️ Future | Analytics, recipe scoring |
 
-**Current Status:** ✅ All core automation phases (1-4) complete and pushed to GitHub!
+**Current Status:** ✅ All automation complete. Now focusing on user experience improvements.
 
 **Live Site:** https://ssimhan.github.io/meal-planner/
 
 ---
 
-## Recommended Order of Remaining Work
+## Current Focus: UI Polish & User Experience 🎨
 
-### Priority 1: Testing & Validation 🧪
-**Status:** ✅ **COMPLETE**
+**Goal:** Transform the auto-generated GitHub Pages site into a polished, mobile-friendly meal planning hub.
 
-**Goal:** Verify all workflows work correctly on GitHub before using in production.
+### Task 1: Design and Build Landing Page
+**Status:** 📋 Ready to start
 
-**Tasks:**
-1. **Test Phase 2 - Weekly Planning Workflow** ✅
-   - Verified PR creation with farmers market suggestions
-   - Tested input file editing on GitHub
-   - Confirmed meal plan auto-generates on PR merge
-   - Validated plans appear on GitHub Pages
+**What we're building:**
+A welcoming home page that serves as the meal planning dashboard.
 
-2. **Test Phase 3 - Daily Check-in Workflow** ✅
-   - Verified issue creation with proper template
-   - Tested comment parsing with meal data
-   - Confirmed logs.yml updates correctly
-   - Validated issue auto-closes after parsing
+**Design Requirements:**
+- **Solarpunk aesthetic** - Match existing meal plan theme (warm, organic, sustainable vibes)
+- **Mobile-first** - Primary use case is checking plans from phone in kitchen/grocery store
+- **Glanceable info** - Quick overview without scrolling
+
+**Content Sections:**
+1. **Hero section**
+   - Project title: "My Meal Planner"
+   - Tagline: Brief description of the system (e.g., "Energy-aware vegetarian meal planning with freezer backup strategy")
+   - Visual element (optional): Solarpunk-themed graphic or icon
+
+2. **This Week section**
+   - Week date range (e.g., "Week of Jan 6-12, 2025")
+   - Large button: "View This Week's Plan" → links to latest meal plan HTML
+   - Quick status indicators:
+     - Freezer backup count (e.g., "🧊 3 backup meals ready")
+     - Days until next grocery trip (e.g., "🛒 Shopping in 2 days")
+
+3. **Quick Actions section**
+   - Button: "Past Meal Plans" → archive view
+   - Button: "View Recipes" → link to recipe index (if we build this)
+   - Link: "Daily Check-in" → current GitHub issue (if applicable)
+
+4. **How It Works section** (collapsible/expandable)
+   - Brief explanation of the automated workflow
+   - Sunday: Weekly plan PR → Edit vegetables → Merge
+   - Daily: Check-in issue → Log meals → Auto-update
+   - Links to GitHub repo for more details
+
+**Technical Implementation:**
+- Static HTML file: `index.html` (will be generated/updated by workflow)
+- Embedded CSS (no external dependencies for offline reliability)
+- Minimal JavaScript (or none) - prefer static content
+- Read data from:
+  - `data/inventory.yml` - freezer backup count
+  - List of plan files in `plans/` directory - find latest week
+  - Current date - calculate days until Sunday
+
+**Files to Create:**
+- [ ] `templates/landing-page-template.html` - Template with placeholders
+- [ ] `scripts/generate_landing_page.py` - Script to populate template with live data
+- [ ] Update `.github/workflows/deploy-pages.yml` - Generate landing page before deployment
 
 **Success Criteria:**
-- [x] Weekly planning PR workflow works end-to-end
-- [x] Daily check-in issue workflow works end-to-end
-- [x] All automated commits appear correctly
-- [x] GitHub Pages updates with new plans
+- [ ] Landing page renders beautifully on mobile (primary device)
+- [ ] One-tap access to current week's meal plan
+- [ ] Freezer backup status visible at a glance
+- [ ] Matches Solarpunk aesthetic of meal plans
+- [ ] Loads instantly (no external dependencies)
 
 ---
 
-### Priority 2: UI Polish & User Experience 🎨
-**Estimated Effort:** 2-3 hours
+### Task 2: Improve Meal Plan Navigation
+**Status:** ⏸️ Next
 
-**Goal:** Make GitHub Pages more polished and user-friendly.
+**What we're building:**
+Add navigation elements to existing meal plan HTML files.
 
-**Tasks:**
-1. **Create a proper landing page (index.html)**
-   - Currently auto-generated - make it visually appealing
-   - Add project description and instructions
-   - Link to latest meal plan
-   - Show freezer backup status
-   - Display upcoming week information
+**Features to Add:**
+1. **Previous/Next week buttons**
+   - Top and bottom of each meal plan page
+   - Disable "Previous" if it's the oldest plan
+   - Disable "Next" if it's the current week
 
-2. **Improve meal plan HTML styling**
-   - Already uses Solarpunk theme - keep it
-   - Add print-friendly CSS for grocery lists
-   - Better mobile responsiveness
-   - Quick links to jump between days
+2. **Archive index page**
+   - List all past meal plans in reverse chronological order
+   - Show week date range for each plan
+   - Link from landing page "Past Meal Plans" button
 
-3. **Add navigation between plans**
-   - Previous/Next week buttons
-   - Archive of past plans
+3. **Quick day navigation** (within meal plan)
+   - Sticky header with tabs for each day
+   - Click to jump to that day's section
+   - Already implemented in tabbed interface - just verify mobile behavior
+
+**Technical Implementation:**
+- Modify `templates/weekly-plan-template.html` to include navigation
+- Update `scripts/workflow.py` to pass previous/next week info when generating plan
+- Create `scripts/generate_archive.py` to build archive index
+- Update deployment workflow to generate archive page
+
+**Files to Modify:**
+- [ ] `templates/weekly-plan-template.html` - Add nav buttons
+- [ ] `scripts/workflow.py` - Calculate prev/next week dates
+- [ ] `.github/workflows/deploy-pages.yml` - Generate archive index
 
 **Success Criteria:**
-- [ ] Landing page looks professional
-- [ ] Easy to navigate from phone
-- [ ] Print-friendly grocery list
+- [ ] Easy to browse past weeks from any meal plan
+- [ ] Archive page shows full history at a glance
+- [ ] Navigation works smoothly on mobile
 
 ---
 
-### Priority 3 (Optional): Phase 5 - Learning & Adaptation 🧠
-**Estimated Effort:** 4-6 hours
+### Task 3: Print-Friendly Grocery List
+**Status:** ⏸️ Future
 
-**Goal:** Make the system learn from your daily logs to improve suggestions.
+**What we're building:**
+Optimize the Groceries tab for printing or saving as PDF.
 
-**This is entirely optional** - the system works perfectly without it. Only pursue if you're interested in the analytics aspect.
+**Features:**
+- Print-specific CSS (`@media print`)
+- Remove decorative elements when printing
+- Ensure grocery list fits on 1-2 pages
+- Checkbox-friendly layout for marking items
+- Option to print just the Groceries tab
 
-**Suggested Minimal Implementation:**
-
-Focus on 1-2 high-impact features:
-
-1. **Meal Success Scoring** (Highest Impact)
-   - Parse logs for keywords: "loved", "easy", "quick" vs "didn't eat", "took forever"
-   - Score each recipe over time
-   - Boost successful recipes in rotation
-
-2. **Freezer Backup Intelligence**
-   - Track which backup meals get used most
-   - Suggest batch cooking popular backup meals
-   - Learn optimal backup variety
-
-**Implementation:**
-- Create `scripts/analyze_logs.py`
-- Run weekly to update recipe scores
-- Use scores in dinner selection algorithm
+**Technical Implementation:**
+- Add `@media print` styles to meal plan template
+- Create "Print Grocery List" button that triggers `window.print()`
+- Hide non-grocery tabs when printing
 
 **Success Criteria:**
-- [ ] Recipe scores calculated from logs
-- [ ] High-success meals appear more frequently
-- [ ] System feels "smarter" after 4-6 weeks
+- [ ] Grocery list prints cleanly on standard paper
+- [ ] Checkboxes or space to mark completed items
+- [ ] No wasted ink/paper on decorative elements
+
+---
+
+## Completed Work (Archive)
+
+<details>
+<summary><strong>Phases 1-4: Core Automation</strong> ✅ (Click to expand)</summary>
+
+### Phase 1: GitHub Pages Setup ✅
+- Automated deployment of meal plans as static HTML
+- Accessible at https://ssimhan.github.io/meal-planner/
+- Files: [deploy-pages.yml](.github/workflows/deploy-pages.yml)
+
+### Phase 2: Automated Weekly Planning ✅
+- Sunday PR creation with farmers market suggestions
+- Auto-generate meal plan on PR merge
+- Files: [weekly-plan-start.yml](.github/workflows/weekly-plan-start.yml), [weekly-plan-generate.yml](.github/workflows/weekly-plan-generate.yml)
+
+### Phase 3: Daily Check-ins ✅
+- Automated GitHub issue creation at 8pm daily
+- Parse user responses and update logs.yml
+- Files: [daily-checkin-create.yml](.github/workflows/daily-checkin-create.yml), [daily-checkin-parse.yml](.github/workflows/daily-checkin-parse.yml)
+
+### Phase 4: Inventory Automation ✅
+- Track freezer backups automatically
+- Smart farmers market suggestions
+- Files: [parse_daily_log.py](scripts/parse_daily_log.py), [inventory.yml](data/inventory.yml)
+
+### Testing & Validation ✅
+- All workflows tested end-to-end
+- Verified on GitHub with real data
+- System ready for production use
+
+</details>
+
+---
+
+## Future Ideas (Backlog)
+
+### Phase 6: Learning & Adaptation 🧠
+**Goal:** Make the system learn from daily logs to improve suggestions.
+
+**Minimal Implementation:**
+- Meal success scoring from log keywords
+- Freezer backup intelligence
+- Recipe frequency optimization
+
+**This is optional** - system works perfectly without it.
+
+### Other Ideas 💡
+- **Dynamic meal plan updates** - Show "planned vs. actual" as daily check-ins are logged
+- Email/SMS notifications instead of GitHub issues
+- Mobile app wrapper around GitHub Pages
+- Recipe rating system in UI
+- Integration with grocery delivery services
 
 ---
 
@@ -278,4 +367,4 @@ GitHub Actions free tier: 2,000 minutes/month
 # Sandhya notes
 This section is for ideas that I want to add quickly
 
-- i want to clean up the number of github actions in this repo
+- (none currently)

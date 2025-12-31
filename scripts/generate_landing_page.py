@@ -1,0 +1,174 @@
+#!/usr/bin/env python3
+"""
+Generate landing page for GitHub Pages deployment.
+
+Reads template from templates/landing-page-template.html and populates it with:
+- Latest meal plan week
+- Freezer backup count from inventory.yml
+- Days until next Sunday (shopping day)
+- List of past meal plans
+"""
+
+import os
+import yaml
+from datetime import datetime, timedelta
+from pathlib import Path
+
+
+def get_next_sunday():
+    """Calculate days until next Sunday (shopping day)."""
+    today = datetime.now()
+    days_until_sunday = (6 - today.weekday()) % 7
+    if days_until_sunday == 0:
+        days_until_sunday = 7  # If today is Sunday, next Sunday is 7 days away
+
+    if days_until_sunday == 0:
+        return "Today!"
+    elif days_until_sunday == 1:
+        return "Tomorrow"
+    else:
+        return f"In {days_until_sunday} days"
+
+
+def get_current_week_range():
+    """Get the current week's date range (Monday-Sunday)."""
+    today = datetime.now()
+    # Calculate Monday of current week
+    monday = today - timedelta(days=today.weekday())
+    # Calculate Sunday of current week
+    sunday = monday + timedelta(days=6)
+
+    return f"Week of {monday.strftime('%b %d')} - {sunday.strftime('%d, %Y')}"
+
+
+def get_freezer_backup_count(inventory_path):
+    """Read freezer backup count from inventory.yml."""
+    try:
+        with open(inventory_path, 'r') as f:
+            inventory = yaml.safe_load(f)
+
+        backups = inventory.get('freezer', {}).get('backups', [])
+        return len(backups)
+    except Exception as e:
+        print(f"Warning: Could not read inventory.yml: {e}")
+        return 0
+
+
+def get_latest_plan(plans_dir):
+    """Find the most recent meal plan HTML file."""
+    try:
+        plans = list(Path(plans_dir).glob('*.html'))
+        if not plans:
+            return None, None
+
+        # Sort by filename (which includes date) in reverse order
+        plans.sort(reverse=True)
+        latest = plans[0]
+
+        # Extract date from filename (format: YYYY-MM-DD-weekly-plan.html)
+        filename = latest.name
+        date_str = filename[:10]  # First 10 chars are YYYY-MM-DD
+
+        # Parse date and create readable range
+        plan_date = datetime.strptime(date_str, '%Y-%m-%d')
+        end_date = plan_date + timedelta(days=6)
+        week_range = f"Week of {plan_date.strftime('%b %d')} - {end_date.strftime('%d, %Y')}"
+
+        return f"plans/{filename}", week_range
+    except Exception as e:
+        print(f"Warning: Could not find latest plan: {e}")
+        return None, None
+
+
+def get_past_plans_list(plans_dir):
+    """Generate HTML list of past meal plans."""
+    try:
+        plans = list(Path(plans_dir).glob('*.html'))
+        if not plans:
+            return '<p style="color: var(--text-muted);">No meal plans available yet.</p>'
+
+        # Sort by filename (reverse chronological)
+        plans.sort(reverse=True)
+
+        html_items = []
+        for plan in plans:
+            filename = plan.name
+            date_str = filename[:10]
+
+            # Parse date
+            plan_date = datetime.strptime(date_str, '%Y-%m-%d')
+            end_date = plan_date + timedelta(days=6)
+            week_label = f"{plan_date.strftime('%b %d')} - {end_date.strftime('%d, %Y')}"
+
+            html_items.append(
+                f'<div style="padding: 12px 0; border-bottom: 1px solid var(--border-subtle);">'
+                f'<a href="plans/{filename}" style="color: var(--accent-green); text-decoration: none; font-weight: 400;">'
+                f'📅 {week_label}</a></div>'
+            )
+
+        return '\n'.join(html_items)
+    except Exception as e:
+        print(f"Warning: Could not generate past plans list: {e}")
+        return '<p style="color: var(--text-muted);">Error loading meal plans.</p>'
+
+
+def generate_landing_page(template_path, output_path, plans_dir, inventory_path, github_repo_url):
+    """Generate landing page from template."""
+
+    # Read template
+    with open(template_path, 'r') as f:
+        template = f.read()
+
+    # Get dynamic data
+    freezer_count = get_freezer_backup_count(inventory_path)
+    days_until_shopping = get_next_sunday()
+    latest_plan_url, week_range = get_latest_plan(plans_dir)
+    past_plans_html = get_past_plans_list(plans_dir)
+
+    # Fallback if no plans exist yet
+    if not latest_plan_url:
+        latest_plan_url = "#"
+        week_range = "No meal plans yet"
+
+    # Replace placeholders
+    html = template.replace('{WEEK_DATE_RANGE}', week_range)
+    html = html.replace('{LATEST_PLAN_URL}', latest_plan_url)
+    html = html.replace('{FREEZER_BACKUP_COUNT}', str(freezer_count))
+    html = html.replace('{DAYS_UNTIL_SHOPPING}', days_until_shopping)
+    html = html.replace('{PAST_PLANS_LIST}', past_plans_html)
+    html = html.replace('{GITHUB_REPO_URL}', github_repo_url)
+    html = html.replace('{DAILY_CHECKIN_URL}', f"{github_repo_url}/issues?q=is%3Aissue+is%3Aopen+label%3Adaily-checkin")
+
+    # Write output
+    with open(output_path, 'w') as f:
+        f.write(html)
+
+    print(f"✅ Landing page generated: {output_path}")
+    print(f"   - Week: {week_range}")
+    print(f"   - Freezer backups: {freezer_count}")
+    print(f"   - Shopping: {days_until_shopping}")
+
+
+if __name__ == '__main__':
+    # Paths
+    repo_root = Path(__file__).parent.parent
+    template_path = repo_root / 'templates' / 'landing-page-template.html'
+    output_path = repo_root / '_site' / 'index.html'
+    plans_dir = repo_root / '_site' / 'plans'
+    inventory_path = repo_root / 'data' / 'inventory.yml'
+
+    # GitHub repository URL (can be overridden by environment variable)
+    github_repo = os.environ.get('GITHUB_REPOSITORY', 'ssimhan/meal-planner')
+    github_repo_url = f"https://github.com/{github_repo}"
+
+    # Ensure output directory exists
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Generate landing page
+    generate_landing_page(
+        template_path=template_path,
+        output_path=output_path,
+        plans_dir=plans_dir,
+        inventory_path=inventory_path,
+        github_repo_url=github_repo_url
+    )

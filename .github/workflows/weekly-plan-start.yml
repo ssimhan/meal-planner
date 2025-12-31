@@ -38,7 +38,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }}
           commit-message: "Weekly planning: Propose farmers market for week of ${{ steps.create-input.outputs.week_date }}"
           branch: weekly-plan/${{ steps.create-input.outputs.week_date }}
           title: "🥕 Week of ${{ steps.create-input.outputs.week_date }}: Review Farmers Market Suggestions"

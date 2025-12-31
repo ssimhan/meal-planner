@@ -1214,14 +1214,38 @@ permissions:
   pull-requests: write
 ```
 
-**Git Commit:**
+**Git Commits:**
 - `3bb4c08` - Fix GitHub Actions permissions for PR creation
+- `7c6ac3e` - Document GitHub Actions permissions fix in PROJECT_HISTORY.md
+
+**Additional Issue Discovered:**
+GitHub Actions has a security restriction preventing the default `GITHUB_TOKEN` from creating PRs that trigger other workflows. Error message: "GitHub Actions is not permitted to create or approve pull requests."
+
+**Solution Required:**
+Must create a Personal Access Token (PAT) with specific permissions:
+1. Create fine-grained PAT at GitHub Settings → Developer settings
+2. Grant permissions: Contents (write), Pull requests (write), Workflows (write)
+3. Add as repository secret named `PAT_TOKEN`
+4. Workflow already updated to use `${{ secrets.PAT_TOKEN }}`
+
+**Documentation Created:**
+- `GITHUB_ACTIONS_SETUP.md` - Complete step-by-step setup guide with:
+  - How to create fine-grained PAT
+  - Required permissions
+  - How to add repository secret
+  - Security best practices
+  - Troubleshooting tips
+  - Alternative simplified workflow option
 
 **Lesson Learned:**
-GitHub Actions security model requires explicit permission grants. Always check action requirements and add minimal necessary permissions at workflow level.
+GitHub Actions security model has two layers:
+1. Workflow permissions (contents, pull-requests) - controls what actions can do
+2. Token restrictions (default vs PAT) - default token cannot trigger workflows via PRs
+Understanding both layers is critical for automation that creates PRs.
 
 **Next Steps:**
-- Re-test Phase 2 workflow with permissions fix
+- User must create PAT and add to repository secrets (5 minutes)
+- Re-test Phase 2 workflow with PAT
 - Test Phase 3 workflow (daily check-ins)
 - Verify end-to-end automation
 

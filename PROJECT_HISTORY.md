@@ -874,7 +874,7 @@ How to achieve the seamless workflow (inventory tracking, daily check-ins, learn
 
 1. **GitHub Pages** - Meal plans accessible at `https://username.github.io/meal-planner/`
 2. **Automated weekly workflow** - Sunday 8am: Create PR with farmers market suggestions → Edit on web → Merge → Auto-generate plan
-3. **Daily check-ins** - 6pm: Issue created → Comment from phone → Auto-parsed and logged
+3. **Daily check-ins** - 8pm PST: Issue created → Comment from phone → Auto-parsed and logged
 4. **Inventory automation** - Track fridge/pantry/freezer, auto-update from logged meals
 5. **Learning over time** - Analyze logs for patterns, improve suggestions
 
@@ -991,7 +991,7 @@ Users can now do the entire weekly planning workflow from phone/web:
 ### Phase 3: Daily Check-ins via GitHub Issues ✅
 
 **What We Built:**
-- `.github/workflows/daily-checkin-create.yml` - Runs daily at 6pm PST
+- `.github/workflows/daily-checkin-create.yml` - Runs daily at 8pm PST
   - Creates GitHub Issue with meal logging template
 - `.github/workflows/daily-checkin-parse.yml` - Triggers on issue comment
   - Parses free-form comment (lunch, dinner, notes)

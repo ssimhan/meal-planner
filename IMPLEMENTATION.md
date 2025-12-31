@@ -151,7 +151,7 @@ Focus on 1-2 high-impact features:
 
 **How it works:**
 - **Workflow 1:** [daily-checkin-create.yml](.github/workflows/daily-checkin-create.yml)
-  - Triggers: Daily at 6pm PST (or manual via `workflow_dispatch`)
+  - Triggers: Daily at 8pm PST (or manual via `workflow_dispatch`)
   - Actions: Creates issue with template for logging lunch/dinner/notes
 
 - **Workflow 2:** [daily-checkin-parse.yml](.github/workflows/daily-checkin-parse.yml)

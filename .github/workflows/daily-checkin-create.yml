@@ -2,7 +2,7 @@ name: Daily Meal Check-in
 
 on:
   schedule:
-    - cron: '0 2 * * *'  # 6pm PST = 2:00 UTC next day
+    - cron: '0 4 * * *'  # 8pm PST = 4:00 UTC next day
   workflow_dispatch:
 
 permissions:
@@ -16,7 +16,9 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            // Get current date in PST timezone
             const today = new Date().toLocaleDateString('en-US', {
+              timeZone: 'America/Los_Angeles',
               weekday: 'long',
               year: 'numeric',
               month: 'long',

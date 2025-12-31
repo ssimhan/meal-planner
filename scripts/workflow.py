@@ -188,9 +188,26 @@ def generate_meal_plan(input_file, data):
     # Load recipes
     print("\n[1/5] Loading recipe index...")
     index_path = Path('recipes/index.yml')
-    with open(index_path, 'r') as f:
-        recipes = yaml.safe_load(f)
-    print(f"  ✓ Loaded {len(recipes)} recipes")
+
+    try:
+        if not index_path.exists():
+            print(f"  ✗ ERROR: Recipe index not found: {index_path}")
+            sys.exit(1)
+
+        with open(index_path, 'r') as f:
+            recipes = yaml.safe_load(f)
+
+        if not recipes:
+            print(f"  ✗ ERROR: Recipe index is empty: {index_path}")
+            sys.exit(1)
+
+        print(f"  ✓ Loaded {len(recipes)} recipes")
+    except yaml.YAMLError as e:
+        print(f"  ✗ ERROR: Invalid YAML in {index_path}: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"  ✗ ERROR: Failed to load recipe index: {e}")
+        sys.exit(1)
 
     # Load history
     print("\n[2/5] Loading meal history...")
@@ -292,7 +309,7 @@ def generate_meal_plan(input_file, data):
 def show_week_complete(input_file, data):
     """Show completion status and prompt for next week."""
     week_of = data['week_of']
-    plan_file = Path(f'plans/{week_of}-weekly-plan.md')
+    plan_file = Path(f'plans/{week_of}-weekly-plan.html')
 
     print("\n" + "="*60)
     print(f"✅ WEEK {week_of} COMPLETE")
@@ -324,36 +341,49 @@ def generate_farmers_market_proposal(history_path, index_path):
     freezer_backup_count = 0
 
     if inventory_path.exists():
-        with open(inventory_path, 'r') as f:
-            inventory = yaml.safe_load(f)
-            if inventory:
-                # Extract items currently in fridge
-                if 'fridge' in inventory:
-                    for item in inventory['fridge']:
-                        current_fridge_items.add(item['item'].lower())
+        try:
+            with open(inventory_path, 'r') as f:
+                inventory = yaml.safe_load(f)
+                if inventory:
+                    # Extract items currently in fridge
+                    if 'fridge' in inventory:
+                        for item in inventory['fridge']:
+                            current_fridge_items.add(item['item'].lower())
 
-                # Count freezer backups
-                if 'freezer' in inventory and 'backups' in inventory['freezer']:
-                    freezer_backup_count = len(inventory['freezer']['backups'])
+                    # Count freezer backups
+                    if 'freezer' in inventory and 'backups' in inventory['freezer']:
+                        freezer_backup_count = len(inventory['freezer']['backups'])
+        except (yaml.YAMLError, KeyError, TypeError) as e:
+            print(f"⚠️  WARNING: Failed to load inventory from {inventory_path}: {e}")
+            print(f"   Continuing without inventory data")
 
     # Load recent vegetables from history
     recent_veg = set()
     if history_path.exists():
-        with open(history_path, 'r') as f:
-            history = yaml.safe_load(f)
-            if history and 'weeks' in history:
-                for week in history['weeks'][-2:]:
-                    for dinner in week.get('dinners', []):
-                        recent_veg.update(dinner.get('vegetables', []))
+        try:
+            with open(history_path, 'r') as f:
+                history = yaml.safe_load(f)
+                if history and 'weeks' in history:
+                    for week in history['weeks'][-2:]:
+                        for dinner in week.get('dinners', []):
+                            recent_veg.update(dinner.get('vegetables', []))
+        except (yaml.YAMLError, KeyError, TypeError) as e:
+            print(f"⚠️  WARNING: Failed to load history from {history_path}: {e}")
+            print(f"   Continuing without recent vegetable data")
 
     # Get common vegetables from recipes
     common_veg = Counter()
     if index_path.exists():
-        with open(index_path, 'r') as f:
-            recipes = yaml.safe_load(f)
-            for recipe in recipes:
-                main_veg = recipe.get('main_veg', [])
-                common_veg.update(main_veg)
+        try:
+            with open(index_path, 'r') as f:
+                recipes = yaml.safe_load(f)
+                if recipes:
+                    for recipe in recipes:
+                        main_veg = recipe.get('main_veg', [])
+                        common_veg.update(main_veg)
+        except (yaml.YAMLError, KeyError, TypeError) as e:
+            print(f"⚠️  WARNING: Failed to load recipes from {index_path}: {e}")
+            print(f"   Using default vegetable list")
 
     # Filter out vegetables already in fridge, recently used, and staples
     top_veg = [veg for veg, count in common_veg.most_common(20)
@@ -401,13 +431,22 @@ def load_history(history_path):
     if not history_path.exists():
         return {'weeks': []}
 
-    with open(history_path, 'r') as f:
-        history = yaml.safe_load(f)
+    try:
+        with open(history_path, 'r') as f:
+            history = yaml.safe_load(f)
 
-    if not history or 'weeks' not in history:
+        if not history or 'weeks' not in history:
+            return {'weeks': []}
+
+        return history
+    except yaml.YAMLError as e:
+        print(f"⚠️  WARNING: Invalid YAML in {history_path}: {e}")
+        print(f"   Returning empty history - please fix the file")
         return {'weeks': []}
-
-    return history
+    except Exception as e:
+        print(f"⚠️  WARNING: Failed to load {history_path}: {e}")
+        print(f"   Returning empty history")
+        return {'weeks': []}
 
 
 def get_recent_recipes(history, lookback_weeks=3):
@@ -1068,7 +1107,12 @@ def generate_groceries_tab(inputs):
 
 
 def generate_plan_content(inputs, selected_dinners, from_scratch_recipe=None, selected_lunches=None):
-    """Generate the weekly plan markdown content (legacy function - use generate_html_plan instead)."""
+    """Generate the weekly plan markdown content.
+
+    LEGACY FUNCTION - Used by scripts/mealplan.py (legacy workflow commands).
+    New workflow uses generate_html_plan() instead.
+    DO NOT DELETE - still required for backward compatibility with mealplan wrapper.
+    """
     week_of = inputs['week_of']
     confirmed_veg = inputs.get('farmers_market', {}).get('confirmed_veg', [])
     late_class_days = inputs.get('schedule', {}).get('late_class_days', [])
@@ -1379,7 +1423,7 @@ def show_status():
         print(f"\n📅 Week: {week_str}")
         print(f"📝 Status: ✅ Complete")
         print(f"📄 File: {input_file}")
-        plan_file = Path(f'plans/{week_str}-weekly-plan.md')
+        plan_file = Path(f'plans/{week_str}-weekly-plan.html')
         if plan_file.exists():
             print(f"📄 Plan: {plan_file}")
 

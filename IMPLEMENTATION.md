@@ -22,6 +22,61 @@ This document tracks the automation journey from CLI-only workflow to GitHub Act
 
 **Goal:** Transform the auto-generated GitHub Pages site into a polished, mobile-friendly meal planning hub.
 
+### Priority 1: Weekly Plan Visual Hierarchy
+**Status:** ✅ **COMPLETE** (2025-12-30)
+
+**What we built:**
+Compact, card-based mobile-first design for weekly meal plans.
+
+**Key improvements:**
+- White card backgrounds with thin 4px colored left borders for visual hierarchy
+- Compact spacing (20px margins) for denser information display
+- Small uppercase headers for LUNCH, SNACK, DINNER, PREP sections
+- Improved mobile scannability - can see 3-4 meal sections on one screen
+
+**Files modified:**
+- [templates/weekly-plan-template.html](templates/weekly-plan-template.html)
+
+---
+
+### Priority 2: Landing Page Workflow Status
+**Status:** ✅ **COMPLETE** (2025-12-30)
+
+**What we built:**
+Compact status badge system showing workflow state on landing page.
+
+**Features:**
+- Detects workflow state from `inputs/*.yml` files
+- Shows current week and next week status badges
+- Actionable prompts for next steps
+- Badges: ✓ plan active (green), ⏳ awaiting veggies (gold), → ready to generate (terracotta)
+
+**Files modified:**
+- [scripts/generate_landing_page.py](scripts/generate_landing_page.py) - Added workflow status detection
+- [templates/landing-page-template.html](templates/landing-page-template.html) - Added badge styles
+
+---
+
+### Priority 3: Landing Page Quick Actions
+**Status:** ✅ **COMPLETE** (2025-12-30)
+
+**What we built:**
+Contextual quick action buttons that adapt to workflow state.
+
+**Features:**
+- Priority-based action ordering
+- Shows most relevant next step first
+- When awaiting veggies: "📝 Review Farmers Market Veggies"
+- When ready to generate: "🚀 Generate Next Week's Plan"
+- When plan complete: "🛒 View Shopping List" (links to Groceries tab)
+- Always available: Daily Check-in, Past Plans, GitHub
+
+**Files modified:**
+- [scripts/generate_landing_page.py](scripts/generate_landing_page.py:189-260) - Added `get_contextual_actions()`
+- [templates/landing-page-template.html](templates/landing-page-template.html:422-428) - Dynamic actions placeholder
+
+---
+
 ### Task 1: Design and Build Landing Page
 **Status:** ✅ **COMPLETE**
 
@@ -434,7 +489,74 @@ Meal Planning Status
 Action needed: Review and confirm farmers market vegetables
 ```
 
-### 🎯 Priority 3: Landing Page Quick Actions (Combine with Priority 2)
+### 🎯 Priority 3: Landing Page Quick Actions ✅ COMPLETE
+**Completed:** 2025-12-30
+
+**What we built:**
+Contextual quick action buttons that adapt to workflow state with intelligent priority ordering.
+
+**Implementation:**
+- Added `get_contextual_actions()` function to [scripts/generate_landing_page.py](scripts/generate_landing_page.py:189-260)
+- Function detects workflow state and farmers market status
+- Generates priority-ordered action buttons based on current context
+- Updated [templates/landing-page-template.html](templates/landing-page-template.html:422-428) with dynamic `{QUICK_ACTIONS}` placeholder
+
+**Contextual Actions:**
+- Priority 1: When awaiting veggies → "📝 Review Farmers Market Veggies"
+- Priority 1: When ready to generate → "🚀 Generate Next Week's Plan"
+- Priority 2: When plan complete → "🛒 View Shopping List" (links to #groceries tab)
+- Priority 3-5: Always available - Daily Check-in, Past Plans, GitHub
+
+**Impact:**
+- Users see most relevant next step first
+- Reduces cognitive load - no need to remember workflow state
+- Mobile-friendly - quick access to shopping list from kitchen
+- Context-aware - actions change as you progress through the week
+
+---
+
+### 🎯 Priority 4: Lunch Selection Intelligence ✅ COMPLETE
+**Completed:** 2025-12-30
+
+**Problem:**
+- Only 5 recipes marked as `lunch_suitable: true` in recipe index
+- Lunch selector filtered to only these 5 recipes
+- Users getting same lunch suggestions every week (rotating through 5 defaults)
+- 234 total recipes but 229 were excluded from lunch consideration
+
+**Solution:**
+1. **Expanded recipe pool from 5 to 109 recipes**
+   - Changed `_filter_lunch_suitable()` to use `meal_type` instead of requiring explicit flag
+   - Now includes recipes with meal types: sandwich, salad, grain_bowl, tacos_wraps, soup_stew, pasta_noodles, appetizer
+   - Breakdown: soup_stew (50), tacos_wraps (22), salad (10), pasta_noodles (10), appetizer (9), sandwich (6), grain_bowl (2)
+
+2. **Made ingredient reuse optional**
+   - Before: Required recipes to reuse dinner ingredients (hard filter at line 219-220)
+   - After: All lunch recipes are candidates, ingredient reuse gives bonus points in ranking
+   - Allows more variety while still preferring efficient ingredient use
+
+3. **Prioritized leftovers for adult lunches**
+   - Added `_create_leftovers_suggestion()` method
+   - Tuesday-Friday: Adult gets previous night's dinner leftovers (just reheat)
+   - Kids get rotating defaults (PBJ, egg sandwich, toad-in-a-hole, ravioli, chapati rolls, etc.)
+   - Monday: Uses a lunch recipe since there's no previous dinner
+
+**Files modified:**
+- [scripts/lunch_selector.py](scripts/lunch_selector.py)
+  - `_filter_lunch_suitable()` - Uses meal_type filtering
+  - `_find_reusable_lunch_recipes()` - Ingredient reuse is bonus, not required
+  - `_select_daily_lunch()` - Prioritizes leftovers for Tue-Fri
+  - Added `_create_leftovers_suggestion()` method
+
+**Impact:**
+- 109 lunch-suitable recipes (up from 5) = 21.8x more variety
+- Adult lunches now default to leftovers (reduce cooking burden)
+- Kids get consistent, kid-friendly defaults
+- Much better week-to-week variety
+
+---
+
+### 🎯 Priority 3 (Old): Landing Page Quick Actions (Combine with Priority 2)
 - Current quick actions are generic (Past Plans, GitHub, Daily Check-in)
 - Should map to the meal planning process stages:
   - "Review This Week's PR" (if PR is open)

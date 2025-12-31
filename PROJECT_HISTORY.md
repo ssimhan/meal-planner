@@ -1182,6 +1182,51 @@ Despite adding GitHub Actions automation, core data structure remains simple YAM
 
 ---
 
-**Last Updated:** 2025-12-30 (Evening)
-**Status:** ✅ All core automation phases (1-4) COMPLETE
-**Next Steps:** Test workflows on GitHub, then polish UI
+---
+
+## Session: 2025-12-30 (Late Evening) - GitHub Actions Permissions Fix
+
+### Workflow Testing & Permission Resolution
+
+**Context:**
+After implementing all 4 automation phases, began testing workflows on GitHub Actions.
+
+**Issue Encountered:**
+Phase 2 workflow (weekly-plan-start.yml) failed during PR creation with permissions error:
+```
+remote: Permission to ssimhan/meal-planner.git denied to github-actions[bot].
+fatal: unable to access 'https://github.com/ssimhan/meal-planner/': The requested URL returned error: 403
+Error: The process '/usr/bin/git' failed with exit code 128
+```
+
+**Root Cause:**
+GitHub Actions workflows need explicit permissions to:
+- Create and push to branches (`contents: write`)
+- Create and manage pull requests (`pull-requests: write`)
+
+By default, workflows only have read access. The `peter-evans/create-pull-request@v6` action requires write permissions.
+
+**Fix Applied:**
+Added permissions block to `.github/workflows/weekly-plan-start.yml`:
+```yaml
+permissions:
+  contents: write
+  pull-requests: write
+```
+
+**Git Commit:**
+- `3bb4c08` - Fix GitHub Actions permissions for PR creation
+
+**Lesson Learned:**
+GitHub Actions security model requires explicit permission grants. Always check action requirements and add minimal necessary permissions at workflow level.
+
+**Next Steps:**
+- Re-test Phase 2 workflow with permissions fix
+- Test Phase 3 workflow (daily check-ins)
+- Verify end-to-end automation
+
+---
+
+**Last Updated:** 2025-12-30 (Late Evening)
+**Status:** ✅ All core automation phases (1-4) COMPLETE | 🔧 Permissions fix applied, re-testing pending
+**Next Steps:** Re-test workflows on GitHub, then polish UI

@@ -33,33 +33,33 @@
 
 ## Phase 5: UI Polish - Completed Work ✅
 
-### Priority 1: Weekly Plan Visual Hierarchy (2025-12-30)
+### Priority 1: Weekly Plan Visual Hierarchy 
 **Compact, mobile-first meal plan design**
 - White card backgrounds with 4px colored left borders (lunch/snack/dinner/prep)
 - Compact 20px spacing - see 3-4 sections per mobile screen
 - Small uppercase headers for quick scanning
 - Files: [weekly-plan-template.html](templates/weekly-plan-template.html)
 
-### Priority 2: Landing Page Workflow Status (2025-12-30)
+### Priority 2: Landing Page Workflow Status 
 **Status badges removed from landing page for simplicity**
 - Quick actions are contextual and workflow-aware (sufficient status indication)
 - Files: [landing-page-template.html](templates/landing-page-template.html), [generate_landing_page.py](scripts/generate_landing_page.py)
 
-### Priority 3: Landing Page Quick Actions (2025-12-30)
+### Priority 3: Landing Page Quick Actions 
 **Context-aware action buttons**
 - Priority 1: "📝 Review Farmers Market Veggies" or "🚀 Generate Next Week's Plan"
 - Priority 2: "🛒 View Shopping List" (current week)
 - Always available: Daily Check-in, Past Plans, GitHub
 - Files: [generate_landing_page.py](scripts/generate_landing_page.py:216-287)
 
-### Priority 4: Lunch Selection Intelligence (2025-12-30)
+### Priority 4: Lunch Selection Intelligence 
 **Expanded lunch variety from 5 to 109 recipes**
 - Changed filter from explicit `lunch_suitable` flag to `meal_type` (sandwich, salad, grain_bowl, tacos_wraps, soup_stew, pasta_noodles, appetizer)
 - Made ingredient reuse optional (bonus points, not required)
 - Adult lunches default to leftovers (Tue-Fri), kids get rotating defaults
 - Files: [lunch_selector.py](scripts/lunch_selector.py)
 
-### Task 2: Archive Page Organization (2025-12-30)
+### Task 2: Archive Page Organization
 **Past plans grouped by month with collapsible sections**
 - Plans organized by year/month (e.g., "January 2026", "December 2025")
 - Collapsible `<details>` sections with rotating arrow animation

@@ -361,26 +361,78 @@ This section is for ideas that I want to add quickly
 
 ## Priority Order (Agreed 2025-12-30)
 
-### 🎯 Priority 1: Weekly Plan Visual Hierarchy (NEXT)
-- **Use frontend-ui skill** to improve scannability of daily schedule
-- Make it easier to visually delineate between: Lunch, Snack, Dinner, AM Prep, PM Prep
-- Current layout has everything in one flow - hard to quickly find "what's for dinner tonight?"
-- Suggestions: color coding, better spacing, section headers, icons, visual separators
-- **Goal:** Glance at phone and immediately see what meal slot you need
-- **Why first:** Daily use, high impact, improves kitchen workflow
+### 🎯 Priority 1: Weekly Plan Visual Hierarchy ✅ COMPLETE
+**Completed:** 2025-12-30
 
-### 🎯 Priority 2: Landing Page Workflow Status
-- Main page should clearly show the status of current week's plan AND next week's plan
-- Show which steps have been completed (e.g., "Veggies confirmed ✓", "Plan generated ✓")
-- Show which steps are pending (e.g., "Waiting for veggie confirmation", "PR ready to merge")
-- Display status for both current week and upcoming week
-- Make it clear what action is needed next (if any)
-- Example states:
-  - "Current week: Active plan (Dec 29 - Jan 4)"
-  - "Next week: Veggies confirmed, waiting for PR merge"
-  - "Next week: PR open - review and merge to generate plan"
-  - "Next week: Not yet started (will begin Saturday 5am)"
-- **Combine with:** Landing page quick actions (make them contextual)
+**What we built:**
+Compact, card-based mobile-first design inspired by modern meal planning apps, adapted to Solarpunk aesthetic.
+
+**Design Changes:**
+- **Clean white card backgrounds** instead of colored gradients - dramatically improves scannability
+- **Thin 4px colored left borders** for subtle color coding:
+  - 🥪 Lunch: Warm gold (`--accent-gold`)
+  - 🍎 Snack: Sage green (`--accent-sage`)
+  - 🍽️ Dinner: Terracotta (`--accent-terracotta`)
+  - ☀️/🌙 Prep: Deep green (`--accent-green`)
+- **Compact spacing:** 20px margins (24px on mobile) instead of 40-50px for denser information display
+- **Small uppercase headers:** 0.7rem (0.75rem on mobile) muted gray labels - LUNCH, SNACK, DINNER, AM PREP, PM PREP
+- **Minimal shadows:** Subtle 1px shadows for depth without bulk
+- **Smaller text hierarchy:** 0.75rem for secondary info (vegetables, prep notes, evening assembly)
+- **Integrated emoji icons:** 1em size, part of compact headers for quick visual scanning
+
+**What we kept (user preferences):**
+- ✅ Warm Solarpunk color palette (gold, sage, terracotta, green)
+- ✅ Current fonts (Space Mono for headers, Outfit for body, Crimson Pro for titles)
+- ✅ Emoji icons for meal types
+- ✅ All existing functionality and content structure
+
+**Files modified:**
+- [templates/weekly-plan-template.html](templates/weekly-plan-template.html) - Complete redesign to compact card layout
+- [test-compact-design.html](test-compact-design.html) - Full preview with all meal types
+
+**Impact:**
+- Can now see 3-4 meal sections on one mobile screen (vs 1-2 before)
+- Instantly scannable - white cards with thin color accents create clear visual hierarchy
+- Maintains warm, organic Solarpunk feel while achieving modern app-like usability
+- Perfect for quick kitchen glances: "What's for dinner tonight?" is immediately visible
+
+**Next regeneration:** The updated template will be used automatically when the next weekly plan is generated via `./mealplan next` workflow.
+
+### 🎯 Priority 2: Landing Page Workflow Status ✅ COMPLETE
+**Completed:** 2025-12-30
+
+**What we built:**
+Compact status badge display showing workflow state for current and next week on the landing page.
+
+**Implementation:**
+- **Status detection** - Added `get_workflow_status()` function to [generate_landing_page.py](scripts/generate_landing_page.py)
+  - Reads input files from `inputs/` directory
+  - Detects current vs next week based on Monday date
+  - Determines workflow state: `plan_complete`, `awaiting_veggies`, `ready_to_generate`, or `new_week`
+- **Compact badges (Option 1)** - User-selected design without capital letters:
+  - ✓ `plan active` (green badge) - Plan is complete and ready to use
+  - ⏳ `awaiting veggies` (gold badge) - Farmers market vegetables need confirmation
+  - → `ready to generate` (terracotta badge) - Ready to run meal plan generation
+- **Clear action prompts** - Shows "Action needed:" text when user input is required
+- **Template updates** - Added badge styles and placeholders to [landing-page-template.html](templates/landing-page-template.html)
+
+**Files modified:**
+- [scripts/generate_landing_page.py](scripts/generate_landing_page.py) - Added workflow state detection
+- [templates/landing-page-template.html](templates/landing-page-template.html) - Added badge styles and status sections
+
+**Live at:** https://ssimhan.github.io/meal-planner/
+
+**Example display:**
+```
+Meal Planning Status
+
+📅 Dec 29 - Jan 4, 2025
+✓ plan active
+
+📅 Jan 6 - 12, 2025
+⏳ awaiting veggies
+Action needed: Review and confirm farmers market vegetables
+```
 
 ### 🎯 Priority 3: Landing Page Quick Actions (Combine with Priority 2)
 - Current quick actions are generic (Past Plans, GitHub, Daily Check-in)

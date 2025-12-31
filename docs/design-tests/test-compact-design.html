@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compact Card Design - Monday Sample</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;700;900&family=Outfit:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #fef9f3;
+            --bg-secondary: #f0e6d2;
+            --bg-card: #ffffff;
+            --accent-green: #2d6a4f;
+            --accent-gold: #d4a574;
+            --accent-terracotta: #c1666b;
+            --accent-sage: #6a8e7f;
+            --text-primary: #2b2d42;
+            --text-muted: #6c757d;
+            --border-subtle: rgba(109, 122, 95, 0.2);
+
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--bg-primary);
+            padding: 20px;
+        }
+
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 900;
+            font-size: 2rem;
+            color: var(--accent-green);
+            margin-bottom: 30px;
+        }
+
+        .day-header {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--accent-green);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-terracotta);
+        }
+
+        /* Compact card design */
+        .lunch-section, .snacks, .meal-card, .prep-tasks {
+            background: white;
+            padding: 0;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: none;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .lunch-section {
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .snacks {
+            border-left: 4px solid var(--accent-sage);
+        }
+
+        .meal-card {
+            border-left: 4px solid var(--accent-terracotta);
+        }
+
+        .prep-tasks {
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .lunch-section h4, .snacks h4, .meal-card h3, .prep-tasks h4 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin: 0;
+            padding: 12px 16px 8px 16px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lunch-section h4::before {
+            content: "🥪";
+            font-size: 1em;
+        }
+
+        .snacks h4::before {
+            content: "🍎";
+            font-size: 1em;
+        }
+
+        .meal-card h3::before {
+            content: "🍽️";
+            font-size: 1em;
+        }
+
+        .prep-tasks.am h4::before {
+            content: "☀️";
+            font-size: 1em;
+        }
+
+        .prep-tasks.pm h4::before {
+            content: "🌙";
+            font-size: 1em;
+        }
+
+        .lunch-section p, .snacks p, .prep-tasks p {
+            padding: 0 16px;
+            margin: 4px 0;
+            font-size: var(--text-sm);
+            line-height: 1.5;
+        }
+
+        .lunch-section p:last-child, .snacks p:last-child {
+            padding-bottom: 16px;
+        }
+
+        .lunch-section p strong, .prep-tasks p strong {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .meal-type {
+            font-weight: 600;
+            font-size: var(--text-base);
+            color: var(--text-primary);
+            padding: 0 16px;
+            margin-bottom: 8px;
+        }
+
+        .meal-type a {
+            color: var(--text-primary);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .meal-type a:hover {
+            color: var(--accent-terracotta);
+            border-bottom-color: var(--accent-terracotta);
+        }
+
+        .vegetables {
+            color: var(--text-muted);
+            font-weight: 400;
+            padding: 0 16px;
+            margin: 4px 0;
+            font-size: var(--text-xs);
+        }
+
+        .prep-notes, .evening-assembly {
+            padding: 10px 16px;
+            margin: 8px 0 0 0;
+            font-size: var(--text-xs);
+            line-height: 1.5;
+        }
+
+        .prep-notes {
+            background: rgba(240, 230, 210, 0.3);
+        }
+
+        .evening-assembly {
+            background: rgba(193, 102, 107, 0.06);
+            padding-bottom: 16px;
+        }
+
+        .prep-tasks ul {
+            margin: 0;
+            padding: 0 16px 16px 40px;
+        }
+
+        .prep-tasks li {
+            margin: 4px 0;
+            font-size: var(--text-xs);
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .lunch-section, .snacks, .meal-card, .prep-tasks {
+                margin: 24px 0;
+            }
+
+            .lunch-section h4, .snacks h4, .meal-card h3, .prep-tasks h4 {
+                font-size: 0.75rem;
+                padding: 14px 18px 10px 18px;
+            }
+
+            .lunch-section p, .snacks p, .meal-type, .vegetables, .prep-notes, .evening-assembly, .prep-tasks p {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Compact Design Preview</h1>
+        <div class="day-header">Monday</div>
+
+        <!-- AM Prep -->
+        <div class="prep-tasks am">
+            <h4>AM Prep (Morning)</h4>
+            <p><strong>No prep scheduled - rest day</strong></p>
+        </div>
+
+        <!-- Lunch -->
+        <div class="lunch-section">
+            <h4>Lunch</h4>
+            <p><strong>Kids (2):</strong> Scrambled egg sandwiches with cheese on whole wheat bread</p>
+            <p><strong>Adult (1):</strong> Weekend leftovers</p>
+            <p><strong>Components:</strong> bread, eggs, cheese, fruit</p>
+            <p><strong>Prep:</strong> Cook eggs fresh in morning (5 min)</p>
+        </div>
+
+        <!-- Snack -->
+        <div class="snacks">
+            <h4>Snack</h4>
+            <p>Apple slices with peanut butter</p>
+        </div>
+
+        <!-- Dinner -->
+        <div class="meal-card">
+            <h3>Dinner</h3>
+            <div class="meal-type"><a href="#">Chana Masala (IP)</a> - Indian Soup/Stew</div>
+            <div class="vegetables">🥬 Vegetables: cilantro, garlic, ginger, onion, chickpeas, tomato</div>
+            <div class="prep-notes">
+                <strong>Prep Notes:</strong> Make 2x batch and freeze half for backup. This freezes beautifully.
+            </div>
+            <div class="evening-assembly">
+                <strong>⏰ Evening Assembly (5-9pm):</strong> Reheat and serve with rice
+            </div>
+        </div>
+
+        <!-- PM Prep -->
+        <div class="prep-tasks pm">
+            <h4>PM Prep (Evening 5-9pm ONLY)</h4>
+            <p><strong style="color: #c0392b;">START VEGETABLE PREP for Mon/Tue/Wed dinners:</strong></p>
+            <ul>
+                <li>Sweet potatoes (cubed for Tuesday tacos)</li>
+                <li>Cauliflower (florets for Wednesday salad)</li>
+                <li>Onions (diced for Mon/Tue/Wed meals)</li>
+                <li>Cilantro (chopped - store in damp paper towel)</li>
+            </ul>
+            <p><strong style="color: #16a085;">BATCH COOKING:</strong></p>
+            <ul>
+                <li>Make 2x batch of Chana Masala and freeze half</li>
+                <li>Cook large batch of rice for Mon/Tue/Wed dinners</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 40px; padding: 20px; background: white; border-radius: 8px; border-left: 4px solid var(--accent-green);">
+            <h4 style="font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--text-primary); margin-bottom: 15px; letter-spacing: 0.1em; text-transform: uppercase;">
+                ✨ Design Improvements
+            </h4>
+            <ul style="font-size: 0.875rem; line-height: 1.8; margin-left: 20px;">
+                <li><strong>Compact spacing:</strong> 20px margins (24px on mobile) instead of 40-50px</li>
+                <li><strong>Small header labels:</strong> 0.7rem uppercase with subtle color</li>
+                <li><strong>Thin accent borders:</strong> 4px left border for color coding</li>
+                <li><strong>White card backgrounds:</strong> Clean, scannable layout</li>
+                <li><strong>Kept emojis & colors:</strong> Warm Solarpunk aesthetic maintained</li>
+                <li><strong>Smaller text:</strong> Extra-small (0.75rem) for secondary info</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

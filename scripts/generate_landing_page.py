@@ -80,6 +80,80 @@ def get_latest_plan(plans_dir):
         return None, None
 
 
+def get_workflow_status(inputs_dir):
+    """Detect workflow status from input files.
+
+    Returns dict with:
+    - current_week: {date_range, status, badges_html}
+    - next_week: {date_range, status, badges_html, action_html}
+    """
+    result = {
+        'current_week': None,
+        'next_week': None
+    }
+
+    try:
+        if not inputs_dir.exists():
+            return result
+
+        # Get all input files
+        input_files = sorted(inputs_dir.glob('*.yml'))
+        if not input_files:
+            return result
+
+        today = datetime.now()
+        current_monday = today - timedelta(days=today.weekday())
+
+        for input_file in input_files:
+            with open(input_file, 'r') as f:
+                data = yaml.safe_load(f)
+
+            week_str = data.get('week_of')
+            week_date = datetime.strptime(week_str, '%Y-%m-%d').date()
+            end_date = week_date + timedelta(days=6)
+            date_range = f"{week_date.strftime('%b %d')} - {end_date.strftime('%d, %Y')}"
+
+            # Determine if this is current or next week
+            is_current = week_date <= current_monday.date() < (week_date + timedelta(days=7))
+
+            # Get workflow status
+            wf_status = data.get('workflow', {}).get('status', 'intake_complete')
+            fm_status = data.get('farmers_market', {}).get('status', 'proposed')
+
+            # Generate status badges and action text
+            if wf_status == 'plan_complete':
+                badges = '<span class="badge badge-active">✓ plan active</span>'
+                action = None
+            elif wf_status == 'intake_complete':
+                if fm_status == 'confirmed':
+                    badges = '<span class="badge badge-ready">→ ready to generate</span>'
+                    action = '<strong>Action needed:</strong> Run <code>./mealplan next</code> to generate plan'
+                else:
+                    badges = '<span class="badge badge-waiting">⏳ awaiting veggies</span>'
+                    action = '<strong>Action needed:</strong> Review and confirm farmers market vegetables'
+            else:
+                badges = '<span class="badge badge-waiting">⏳ new week</span>'
+                action = '<strong>Action needed:</strong> Create new week with <code>./mealplan next</code>'
+
+            week_info = {
+                'date_range': date_range,
+                'status': wf_status,
+                'badges_html': badges,
+                'action_html': action
+            }
+
+            if is_current:
+                result['current_week'] = week_info
+            elif not result['next_week']:  # First future week
+                result['next_week'] = week_info
+
+        return result
+
+    except Exception as e:
+        print(f"Warning: Could not detect workflow status: {e}")
+        return result
+
+
 def get_past_plans_list(plans_dir):
     """Generate HTML list of past meal plans."""
     try:
@@ -112,7 +186,7 @@ def get_past_plans_list(plans_dir):
         return '<p style="color: var(--text-muted);">Error loading meal plans.</p>'
 
 
-def generate_landing_page(template_path, output_path, plans_dir, inventory_path, github_repo_url):
+def generate_landing_page(template_path, output_path, plans_dir, inventory_path, inputs_dir, github_repo_url):
     """Generate landing page from template."""
 
     # Read template
@@ -124,11 +198,32 @@ def generate_landing_page(template_path, output_path, plans_dir, inventory_path,
     days_until_shopping = get_next_sunday()
     latest_plan_url, week_range = get_latest_plan(plans_dir)
     past_plans_html = get_past_plans_list(plans_dir)
+    workflow_status = get_workflow_status(inputs_dir)
 
     # Fallback if no plans exist yet
     if not latest_plan_url:
         latest_plan_url = "#"
         week_range = "No meal plans yet"
+
+    # Format workflow status HTML
+    current_week_html = ""
+    next_week_html = ""
+
+    if workflow_status['current_week']:
+        cw = workflow_status['current_week']
+        current_week_html = f"""
+            <h3>📅 {cw['date_range']}</h3>
+            {cw['badges_html']}
+        """
+
+    if workflow_status['next_week']:
+        nw = workflow_status['next_week']
+        action_block = f'<p style="margin-top: 12px; font-size: 0.875rem; color: var(--text-muted);">{nw["action_html"]}</p>' if nw['action_html'] else ''
+        next_week_html = f"""
+            <h3>📅 {nw['date_range']}</h3>
+            {nw['badges_html']}
+            {action_block}
+        """
 
     # Replace placeholders
     html = template.replace('{WEEK_DATE_RANGE}', week_range)
@@ -138,6 +233,8 @@ def generate_landing_page(template_path, output_path, plans_dir, inventory_path,
     html = html.replace('{PAST_PLANS_LIST}', past_plans_html)
     html = html.replace('{GITHUB_REPO_URL}', github_repo_url)
     html = html.replace('{DAILY_CHECKIN_URL}', f"{github_repo_url}/issues?q=is%3Aissue+is%3Aopen+label%3Adaily-checkin")
+    html = html.replace('{CURRENT_WEEK_STATUS}', current_week_html)
+    html = html.replace('{NEXT_WEEK_STATUS}', next_week_html)
 
     # Write output
     with open(output_path, 'w') as f:
@@ -156,6 +253,7 @@ if __name__ == '__main__':
     output_path = repo_root / '_site' / 'index.html'
     plans_dir = repo_root / '_site' / 'plans'
     inventory_path = repo_root / 'data' / 'inventory.yml'
+    inputs_dir = repo_root / 'inputs'
 
     # GitHub repository URL (can be overridden by environment variable)
     github_repo = os.environ.get('GITHUB_REPOSITORY', 'ssimhan/meal-planner')
@@ -170,5 +268,6 @@ if __name__ == '__main__':
         output_path=output_path,
         plans_dir=plans_dir,
         inventory_path=inventory_path,
+        inputs_dir=inputs_dir,
         github_repo_url=github_repo_url
     )

@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workflow Status Display Options</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;700;900&family=Outfit:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #fef9f3;
+            --bg-card: #ffffff;
+            --accent-green: #2d6a4f;
+            --accent-gold: #d4a574;
+            --accent-terracotta: #c1666b;
+            --accent-sage: #6a8e7f;
+            --text-primary: #2b2d42;
+            --text-muted: #6c757d;
+            --border-subtle: rgba(109, 122, 95, 0.2);
+
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 900;
+            font-size: 2.5rem;
+            color: var(--accent-green);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .option {
+            background: white;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .option-title {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: var(--text-lg);
+            color: var(--accent-terracotta);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-terracotta);
+        }
+
+        /* Option 1: Compact Status Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-family: 'Space Mono', monospace;
+            font-size: var(--text-xs);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-right: 8px;
+        }
+
+        .badge-active {
+            background: rgba(45, 106, 79, 0.1);
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+        }
+
+        .badge-waiting {
+            background: rgba(212, 165, 116, 0.1);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+        }
+
+        .badge-ready {
+            background: rgba(193, 102, 107, 0.1);
+            color: var(--accent-terracotta);
+            border: 1px solid var(--accent-terracotta);
+        }
+
+        .week-info {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(240, 230, 210, 0.3);
+            border-radius: 4px;
+        }
+
+        .week-info h3 {
+            font-size: var(--text-base);
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        /* Option 2: Progress Tracker */
+        .progress-tracker {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(240, 230, 210, 0.3);
+            border-radius: 4px;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .step-complete .step-circle {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .step-current .step-circle {
+            background: var(--accent-gold);
+            color: white;
+            box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.2);
+        }
+
+        .step-pending .step-circle {
+            background: rgba(109, 122, 95, 0.1);
+            color: var(--text-muted);
+            border: 2px solid var(--border-subtle);
+        }
+
+        .step-label {
+            font-size: var(--text-xs);
+            color: var(--text-muted);
+        }
+
+        .step-connector {
+            flex: 0 0 40px;
+            height: 2px;
+            background: var(--border-subtle);
+            margin-top: -30px;
+        }
+
+        .step-connector.complete {
+            background: var(--accent-green);
+        }
+
+        /* Option 3: Status Cards */
+        .status-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-card-current {
+            border-left-color: var(--accent-green);
+        }
+
+        .status-card-next {
+            border-left-color: var(--accent-terracotta);
+        }
+
+        .status-card h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: var(--text-sm);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+            color: var(--text-muted);
+        }
+
+        .status-card .week-range {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .status-card .status {
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .status-card .action {
+            background: rgba(45, 106, 79, 0.05);
+            padding: 10px 12px;
+            border-radius: 4px;
+            border-left: 3px solid var(--accent-green);
+            font-size: var(--text-sm);
+        }
+
+        .status-card .action strong {
+            color: var(--accent-green);
+        }
+
+        /* Option 4: Timeline View */
+        .timeline {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(240, 230, 210, 0.3);
+            border-radius: 4px;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .timeline-date {
+            flex: 0 0 120px;
+            text-align: right;
+        }
+
+        .timeline-date .week {
+            font-family: 'Space Mono', monospace;
+            font-size: var(--text-xs);
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .timeline-date .range {
+            font-size: var(--text-sm);
+            color: var(--text-primary);
+            margin-top: 4px;
+        }
+
+        .timeline-dot {
+            flex: 0 0 24px;
+            padding-top: 4px;
+        }
+
+        .timeline-dot-circle {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        .timeline-dot-active {
+            background: var(--accent-green);
+        }
+
+        .timeline-dot-waiting {
+            background: var(--accent-gold);
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-content .status {
+            font-size: var(--text-base);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .timeline-content .details {
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .status-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-tracker {
+                flex-direction: column;
+            }
+
+            .step-connector {
+                width: 2px;
+                height: 30px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Workflow Status Display Options</h1>
+
+        <!-- Option 1: Compact Status Badges -->
+        <div class="option">
+            <div class="option-title">Option 1: Compact Status Badges (like GitHub)</div>
+
+            <div class="week-info">
+                <h3>📅 This Week: Dec 29 - Jan 4, 2025</h3>
+                <span class="badge badge-active">✓ Plan Active</span>
+                <span class="badge badge-active">✓ Veggies Confirmed</span>
+                <span class="badge badge-active">✓ Generated</span>
+            </div>
+
+            <div class="week-info">
+                <h3>📅 Next Week: Jan 6 - 12, 2025</h3>
+                <span class="badge badge-waiting">⏳ Awaiting Veggies</span>
+                <p style="margin-top: 12px; font-size: 0.875rem; color: var(--text-muted);">
+                    <strong>Action needed:</strong> Review and confirm farmers market vegetables
+                </p>
+            </div>
+
+            <p style="margin-top: 20px; font-size: 0.875rem; color: var(--text-muted); font-style: italic;">
+                ✅ <strong>Pros:</strong> Compact, fits in existing layout, clear at-a-glance status<br>
+                ⚠️ <strong>Cons:</strong> Less visual hierarchy, doesn't show progression
+            </p>
+        </div>
+
+        <!-- Option 2: Progress Tracker -->
+        <div class="option">
+            <div class="option-title">Option 2: Full Progress Tracker with Steps</div>
+
+            <h3 style="margin-bottom: 10px; font-size: 1rem;">Current Week: Dec 29 - Jan 4, 2025</h3>
+            <div class="progress-tracker">
+                <div class="step step-complete">
+                    <div class="step-circle">✓</div>
+                    <div class="step-label">Week<br>Created</div>
+                </div>
+                <div class="step-connector complete"></div>
+                <div class="step step-complete">
+                    <div class="step-circle">✓</div>
+                    <div class="step-label">Veggies<br>Confirmed</div>
+                </div>
+                <div class="step-connector complete"></div>
+                <div class="step step-complete">
+                    <div class="step-circle">✓</div>
+                    <div class="step-label">Plan<br>Generated</div>
+                </div>
+            </div>
+
+            <h3 style="margin: 30px 0 10px 0; font-size: 1rem;">Next Week: Jan 6 - 12, 2025</h3>
+            <div class="progress-tracker">
+                <div class="step step-complete">
+                    <div class="step-circle">✓</div>
+                    <div class="step-label">Week<br>Created</div>
+                </div>
+                <div class="step-connector complete"></div>
+                <div class="step step-current">
+                    <div class="step-circle">⏳</div>
+                    <div class="step-label">Veggies<br>Confirmed</div>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step step-pending">
+                    <div class="step-circle">○</div>
+                    <div class="step-label">Plan<br>Generated</div>
+                </div>
+            </div>
+
+            <p style="margin-top: 20px; font-size: 0.875rem; color: var(--text-muted); font-style: italic;">
+                ✅ <strong>Pros:</strong> Shows clear progression, visually engaging, easy to understand workflow<br>
+                ⚠️ <strong>Cons:</strong> Takes more vertical space, may be overkill for simple states
+            </p>
+        </div>
+
+        <!-- Option 3: Status Cards -->
+        <div class="option">
+            <div class="option-title">Option 3: Status Cards for Current + Next Week</div>
+
+            <div class="status-cards">
+                <div class="status-card status-card-current">
+                    <h3>Current Week</h3>
+                    <div class="week-range">Dec 29 - Jan 4, 2025</div>
+                    <div class="status">✓ Plan active and ready to use</div>
+                    <div class="action">
+                        <strong>Quick actions:</strong><br>
+                        • View this week's plan<br>
+                        • Check freezer backups (3 meals)<br>
+                        • Log today's check-in
+                    </div>
+                </div>
+
+                <div class="status-card status-card-next">
+                    <h3>Next Week</h3>
+                    <div class="week-range">Jan 6 - 12, 2025</div>
+                    <div class="status">⏳ Awaiting veggie confirmation</div>
+                    <div class="action">
+                        <strong>Action needed:</strong><br>
+                        Review and confirm farmers market vegetables to generate plan
+                    </div>
+                </div>
+            </div>
+
+            <p style="margin-top: 20px; font-size: 0.875rem; color: var(--text-muted); font-style: italic;">
+                ✅ <strong>Pros:</strong> Clear separation between weeks, actionable buttons, mobile-friendly<br>
+                ⚠️ <strong>Cons:</strong> Takes horizontal space, may not work well with 3+ weeks
+            </p>
+        </div>
+
+        <!-- Option 4: Timeline View -->
+        <div class="option">
+            <div class="option-title">Option 4: Single Timeline View</div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">
+                        <div class="week">Current Week</div>
+                        <div class="range">Dec 29 - Jan 4</div>
+                    </div>
+                    <div class="timeline-dot">
+                        <div class="timeline-dot-circle timeline-dot-active"></div>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="status">Plan Active ✓</div>
+                        <div class="details">All steps complete. Plan ready to use. 3 freezer backup meals available.</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">
+                        <div class="week">Next Week</div>
+                        <div class="range">Jan 6 - 12</div>
+                    </div>
+                    <div class="timeline-dot">
+                        <div class="timeline-dot-circle timeline-dot-waiting"></div>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="status">Awaiting Veggies ⏳</div>
+                        <div class="details">
+                            <strong style="color: var(--accent-terracotta);">Action needed:</strong> Review and confirm farmers market vegetables to generate plan
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p style="margin-top: 20px; font-size: 0.875rem; color: var(--text-muted); font-style: italic;">
+                ✅ <strong>Pros:</strong> Clean chronological view, easy to scan, scales to many weeks<br>
+                ⚠️ <strong>Cons:</strong> Linear flow may not emphasize current week enough
+            </p>
+        </div>
+
+        <div style="background: var(--accent-green); color: white; padding: 30px; border-radius: 8px; margin-top: 40px; text-align: center;">
+            <h2 style="font-family: 'Crimson Pro', serif; font-size: 1.5rem; margin-bottom: 15px;">
+                Which option do you prefer?
+            </h2>
+            <p style="font-size: 1rem; opacity: 0.9;">
+                Consider: mobile usability, scannability, and how much detail you want at a glance
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -206,52 +206,65 @@
 
         .meal-card {
             background: white;
-            padding: 20px;
+            padding: 0;
             margin: 20px 0;
-            border-radius: 2px;
-            border-left: 4px solid var(--accent-sage);
-            border-top: 1px solid var(--border-subtle);
-            border-right: 1px solid var(--border-subtle);
-            border-bottom: 1px solid var(--border-subtle);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-left: 4px solid var(--accent-terracotta);
+            transition: box-shadow 0.2s ease;
         }
 
         .meal-card:hover {
-            transform: translateX(3px);
-            box-shadow: -4px 4px 0 rgba(45, 106, 79, 0.15);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
         .meal-card h3 {
-            font-size: var(--text-xl);
-            color: var(--accent-green);
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin: 0;
+            padding: 12px 16px 8px 16px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .meal-card h3::before {
+            content: "🍽️";
+            font-size: 1em;
         }
 
         .meal-type {
             font-family: 'Outfit', sans-serif;
-            font-weight: 500;
-            font-size: var(--text-lg);
-            color: var(--accent-terracotta);
-            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: var(--text-base);
+            color: var(--text-primary);
+            padding: 0 16px;
+            margin-bottom: 8px;
         }
 
         .meal-type a {
-            color: var(--accent-terracotta);
+            color: var(--text-primary);
             text-decoration: none;
-            border-bottom: 2px solid transparent;
-            transition: all 0.3s ease;
-            position: relative;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s ease;
         }
 
         .meal-type a:hover {
-            color: var(--accent-green);
-            border-bottom-color: var(--accent-green);
+            color: var(--accent-terracotta);
+            border-bottom-color: var(--accent-terracotta);
         }
 
         .meal-type a::after {
             content: " 🔗";
             font-size: 0.8em;
-            opacity: 0.5;
-            transition: opacity 0.3s ease;
+            opacity: 0.3;
+            transition: opacity 0.2s ease;
         }
 
         .meal-type a:hover::after {
@@ -259,56 +272,123 @@
         }
 
         .vegetables {
-            color: var(--accent-sage);
+            color: var(--text-muted);
             font-weight: 400;
-            font-style: italic;
-            margin: 10px 0;
-            font-size: var(--text-sm);
+            font-style: normal;
+            padding: 0 16px;
+            margin: 4px 0;
+            font-size: var(--text-xs);
         }
 
         .prep-notes {
-            background: rgba(240, 230, 210, 0.4);
-            padding: 12px;
-            border-radius: 2px;
-            margin: 12px 0;
-            border-left: 3px solid var(--accent-gold);
-            font-size: var(--text-sm);
+            background: rgba(240, 230, 210, 0.3);
+            padding: 10px 16px;
+            margin: 8px 0 0 0;
+            border-left: none;
+            font-size: var(--text-xs);
+            line-height: 1.5;
         }
 
         .evening-assembly {
-            background: linear-gradient(135deg, rgba(193, 102, 107, 0.08) 0%, rgba(193, 102, 107, 0.04) 100%);
-            padding: 12px;
-            border-radius: 2px;
-            margin: 12px 0;
-            border-left: 3px solid var(--accent-terracotta);
+            background: rgba(193, 102, 107, 0.06);
+            padding: 10px 16px 16px 16px;
+            margin: 8px 0 0 0;
+            border-left: none;
             font-weight: 400;
-            font-size: var(--text-sm);
+            font-size: var(--text-xs);
+            line-height: 1.5;
         }
 
+        /* ENHANCED MEAL SECTIONS - Compact card-based design inspired by meal planner apps */
+
         .lunch-section {
-            background: rgba(212, 165, 116, 0.08);
-            padding: 15px;
-            border-radius: 2px;
-            margin: 15px 0;
-            border: 1px solid var(--border-subtle);
+            background: white;
+            padding: 0;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: none;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .lunch-section h4 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin: 0;
+            padding: 12px 16px 8px 16px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lunch-section h4::before {
+            content: "🥪";
+            font-size: 1em;
         }
 
         .lunch-section p {
-            margin: 6px 0;
+            padding: 0 16px 12px 16px;
+            margin: 4px 0;
             font-size: var(--text-sm);
+            line-height: 1.5;
+        }
+
+        .lunch-section p strong {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .lunch-section p:last-child {
+            padding-bottom: 16px;
         }
 
         .snacks {
-            background: rgba(106, 142, 127, 0.08);
-            padding: 15px;
-            border-radius: 2px;
-            margin: 15px 0;
-            border: 1px solid var(--border-subtle);
+            background: white;
+            padding: 0;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: none;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-left: 4px solid var(--accent-sage);
+        }
+
+        .snacks h4 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin: 0;
+            padding: 12px 16px 8px 16px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .snacks h4::before {
+            content: "🍎";
+            font-size: 1em;
+        }
+
+        .snacks p {
+            padding: 0 16px 16px 16px;
+            margin: 0;
+            font-size: var(--text-sm);
+            line-height: 1.5;
         }
 
         .snacks ul {
             list-style: none;
-            margin-top: 8px;
+            margin: 0;
+            padding: 0 16px 16px 16px;
         }
 
         .snacks li {
@@ -317,7 +397,9 @@
         }
 
         .snacks li:before {
-            content: "🍎 ";
+            content: "• ";
+            color: var(--accent-sage);
+            font-weight: 700;
         }
 
         .heavy-snack {
@@ -339,25 +421,57 @@
         }
 
         .prep-tasks {
-            background: linear-gradient(135deg, rgba(45, 106, 79, 0.08) 0%, rgba(45, 106, 79, 0.04) 100%);
-            padding: 20px;
-            border-radius: 2px;
+            background: white;
+            padding: 0;
+            border-radius: 8px;
             margin: 20px 0;
-            border: 1px solid var(--border-subtle);
+            border: none;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-left: 4px solid var(--accent-green);
         }
 
         .prep-tasks h4 {
-            color: var(--accent-green);
-            margin-bottom: 12px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin: 0;
+            padding: 12px 16px 8px 16px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Add icons for prep headers - will be set in content generation */
+        .prep-tasks h4::before {
+            content: "⚙️";
+            font-size: 1em;
+        }
+
+        .prep-tasks p {
+            padding: 0 16px;
+            margin: 8px 0;
+            font-size: var(--text-sm);
+            line-height: 1.5;
+        }
+
+        .prep-tasks p strong {
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
         .prep-tasks ul {
-            margin: 10px 0 10px 25px;
+            margin: 0;
+            padding: 0 16px 16px 40px;
         }
 
         .prep-tasks li {
-            margin: 6px 0;
-            font-size: var(--text-sm);
+            margin: 4px 0;
+            font-size: var(--text-xs);
+            line-height: 1.5;
         }
 
         .freezer-backup {
@@ -451,6 +565,19 @@
             font-size: var(--text-sm);
         }
 
+        /* Visual Separators for Major Sections */
+        .section-separator {
+            height: 2px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                var(--accent-terracotta) 20%,
+                var(--accent-terracotta) 80%,
+                transparent 100%);
+            margin: 50px 0;
+            opacity: 0.3;
+        }
+
+        /* Mobile Optimizations - Make sections EXTRA scannable on small screens */
         @media (max-width: 768px) {
             body {
                 padding: 10px;
@@ -473,6 +600,49 @@
                 flex-shrink: 0;
                 padding: 10px 16px;
                 font-size: var(--text-xs);
+            }
+
+            /* MOBILE: Keep compact spacing - already optimized */
+            .lunch-section,
+            .snacks,
+            .meal-card,
+            .prep-tasks {
+                margin: 24px 0;
+            }
+
+            /* MOBILE: Slightly larger headers for readability */
+            .lunch-section h4,
+            .snacks h4,
+            .meal-card h3,
+            .prep-tasks h4 {
+                font-size: 0.75rem;
+                padding: 14px 18px 10px 18px;
+            }
+
+            /* MOBILE: Keep thin borders consistent */
+            .lunch-section,
+            .snacks,
+            .meal-card,
+            .prep-tasks {
+                border-left-width: 4px;
+            }
+
+            /* MOBILE: Increase content padding for easier reading */
+            .lunch-section p,
+            .snacks p,
+            .meal-type,
+            .vegetables,
+            .prep-notes,
+            .evening-assembly,
+            .prep-tasks p {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+
+            /* MOBILE: Increase touch target size */
+            .meal-type a {
+                padding: 4px 0;
+                display: inline-block;
             }
         }
     </style>

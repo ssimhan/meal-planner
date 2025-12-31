@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Hierarchy Test - Monday Sample</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;700;900&family=Outfit:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Solarpunk Color Palette */
+            --bg-primary: #fef9f3;
+            --bg-secondary: #f0e6d2;
+            --bg-card: #ffffff;
+            --accent-green: #2d6a4f;
+            --accent-gold: #d4a574;
+            --accent-terracotta: #c1666b;
+            --accent-sage: #6a8e7f;
+            --text-primary: #2b2d42;
+            --text-muted: #6c757d;
+            --border-subtle: rgba(109, 122, 95, 0.2);
+
+            /* Typography Scale */
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.5rem;
+            --text-2xl: 2rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 2px;
+            box-shadow: 0 4px 30px rgba(45, 106, 79, 0.08);
+        }
+
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 900;
+            font-size: 3rem;
+            color: var(--accent-green);
+            margin-bottom: 40px;
+        }
+
+        .comparison {
+            display: grid;
+            gap: 60px;
+            margin: 40px 0;
+        }
+
+        .version {
+            border: 2px solid var(--border-subtle);
+            padding: 30px;
+            border-radius: 4px;
+        }
+
+        .version h2 {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--accent-terracotta);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* NEW ENHANCED STYLES */
+        .lunch-section {
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.12) 0%, rgba(212, 165, 116, 0.06) 100%);
+            padding: 20px;
+            border-radius: 4px;
+            margin: 40px 0;
+            border-left: 6px solid var(--accent-gold);
+            border-top: 1px solid rgba(212, 165, 116, 0.3);
+            border-right: 1px solid rgba(212, 165, 116, 0.3);
+            border-bottom: 1px solid rgba(212, 165, 116, 0.3);
+            box-shadow: 0 2px 12px rgba(212, 165, 116, 0.1);
+        }
+
+        .lunch-section h4 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: var(--text-xl);
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lunch-section h4::before {
+            content: "🥪";
+            font-size: 1.5em;
+        }
+
+        .lunch-section p {
+            margin: 10px 0;
+            font-size: var(--text-sm);
+            line-height: 1.6;
+        }
+
+        .snacks {
+            background: linear-gradient(135deg, rgba(106, 142, 127, 0.12) 0%, rgba(106, 142, 127, 0.06) 100%);
+            padding: 20px;
+            border-radius: 4px;
+            margin: 40px 0;
+            border-left: 6px solid var(--accent-sage);
+            border-top: 1px solid rgba(106, 142, 127, 0.3);
+            border-right: 1px solid rgba(106, 142, 127, 0.3);
+            border-bottom: 1px solid rgba(106, 142, 127, 0.3);
+            box-shadow: 0 2px 12px rgba(106, 142, 127, 0.1);
+        }
+
+        .snacks h4 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: var(--text-xl);
+            color: var(--accent-sage);
+            margin-bottom: 15px;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .snacks h4::before {
+            content: "🍎";
+            font-size: 1.5em;
+        }
+
+        .snacks p {
+            font-size: var(--text-sm);
+        }
+
+        .meal-card {
+            background: linear-gradient(135deg, rgba(193, 102, 107, 0.08) 0%, rgba(193, 102, 107, 0.03) 100%);
+            padding: 25px;
+            margin: 40px 0;
+            border-radius: 4px;
+            border-left: 6px solid var(--accent-terracotta);
+            border-top: 1px solid rgba(193, 102, 107, 0.3);
+            border-right: 1px solid rgba(193, 102, 107, 0.3);
+            border-bottom: 1px solid rgba(193, 102, 107, 0.3);
+            box-shadow: 0 3px 15px rgba(193, 102, 107, 0.12);
+        }
+
+        .meal-card h3 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: var(--text-2xl);
+            color: var(--accent-terracotta);
+            margin-bottom: 18px;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .meal-card h3::before {
+            content: "🍽️";
+            font-size: 1.3em;
+        }
+
+        .meal-type {
+            font-weight: 600;
+            font-size: var(--text-lg);
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .vegetables {
+            color: var(--accent-sage);
+            font-weight: 400;
+            font-style: italic;
+            margin: 10px 0;
+            font-size: var(--text-sm);
+        }
+
+        .prep-tasks {
+            background: linear-gradient(135deg, rgba(45, 106, 79, 0.10) 0%, rgba(45, 106, 79, 0.05) 100%);
+            padding: 25px;
+            border-radius: 4px;
+            margin: 40px 0;
+            border-left: 6px solid var(--accent-green);
+            border-top: 1px solid rgba(45, 106, 79, 0.3);
+            border-right: 1px solid rgba(45, 106, 79, 0.3);
+            border-bottom: 1px solid rgba(45, 106, 79, 0.3);
+            box-shadow: 0 2px 12px rgba(45, 106, 79, 0.1);
+        }
+
+        .prep-tasks h4 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: var(--text-xl);
+            color: var(--accent-green);
+            margin-bottom: 15px;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .prep-tasks h4::before {
+            content: "🌙";
+            font-size: 1.3em;
+        }
+
+        .prep-tasks ul {
+            margin: 10px 0 10px 25px;
+            font-size: var(--text-sm);
+        }
+
+        .prep-tasks li {
+            margin: 8px 0;
+        }
+
+        /* OLD STYLES for comparison */
+        .old-lunch {
+            background: rgba(212, 165, 116, 0.08);
+            padding: 15px;
+            border-radius: 2px;
+            margin: 15px 0;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .old-lunch h4 {
+            font-size: var(--text-base);
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .old-lunch p {
+            margin: 6px 0;
+            font-size: var(--text-sm);
+        }
+
+        .old-snacks {
+            background: rgba(106, 142, 127, 0.08);
+            padding: 15px;
+            border-radius: 2px;
+            margin: 15px 0;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .old-snacks h4 {
+            font-size: var(--text-base);
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .old-dinner {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 2px;
+            border-left: 4px solid var(--accent-sage);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .old-dinner h3 {
+            font-size: var(--text-xl);
+            color: var(--accent-green);
+            margin-bottom: 12px;
+        }
+
+        .old-prep {
+            background: linear-gradient(135deg, rgba(45, 106, 79, 0.08) 0%, rgba(45, 106, 79, 0.04) 100%);
+            padding: 20px;
+            border-radius: 2px;
+            margin: 20px 0;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .old-prep h4 {
+            color: var(--accent-green);
+            font-size: var(--text-base);
+            margin-bottom: 12px;
+        }
+
+        .old-prep ul {
+            margin: 10px 0 10px 25px;
+            font-size: var(--text-sm);
+        }
+
+        /* Mobile optimization preview */
+        @media (max-width: 768px) {
+            .lunch-section,
+            .snacks,
+            .meal-card,
+            .prep-tasks {
+                margin: 50px 0;
+                border-left-width: 8px;
+            }
+
+            .lunch-section h4,
+            .snacks h4,
+            .meal-card h3,
+            .prep-tasks h4 {
+                font-size: var(--text-2xl);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Visual Hierarchy Improvements</h1>
+
+        <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 40px; color: var(--text-muted);">
+            <strong>Goal:</strong> Make each meal section instantly distinguishable when glancing at your phone in the kitchen.
+            <br><br>
+            <strong>Key changes:</strong> Larger icons, thicker colored borders (6-8px), better spacing (40px+ margins),
+            bolder headers, and stronger color coding for each meal type.
+        </p>
+
+        <div class="comparison">
+            <!-- OLD VERSION -->
+            <div class="version">
+                <h2>❌ Before: Hard to Scan</h2>
+
+                <div class="old-lunch">
+                    <h4>🥪 Lunch</h4>
+                    <p><strong>Kids (2):</strong> Scrambled egg sandwiches with cheese</p>
+                    <p><strong>Adult (1):</strong> Weekend leftovers</p>
+                </div>
+
+                <div class="old-snacks">
+                    <h4>🍪 Snack</h4>
+                    <p>Apple slices with peanut butter</p>
+                </div>
+
+                <div class="old-dinner">
+                    <h3>🍽️ Dinner</h3>
+                    <div class="meal-type">Chana Masala (IP) - Indian Soup/Stew</div>
+                    <div class="vegetables">🥬 Vegetables: cilantro, garlic, ginger, onion, chickpeas, tomato</div>
+                </div>
+
+                <div class="old-prep">
+                    <h4>🌙 PM Prep (Evening 5-9pm ONLY)</h4>
+                    <ul>
+                        <li>Chop vegetables for Mon/Tue/Wed dinners</li>
+                        <li>Make 2x batch of Chana Masala and freeze half</li>
+                        <li>Cook large batch of rice</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- NEW VERSION -->
+            <div class="version">
+                <h2>✅ After: Instantly Scannable</h2>
+
+                <div class="lunch-section">
+                    <h4>Lunch</h4>
+                    <p><strong>Kids (2):</strong> Scrambled egg sandwiches with cheese</p>
+                    <p><strong>Adult (1):</strong> Weekend leftovers</p>
+                </div>
+
+                <div class="snacks">
+                    <h4>Snack</h4>
+                    <p>Apple slices with peanut butter</p>
+                </div>
+
+                <div class="meal-card">
+                    <h3>Dinner</h3>
+                    <div class="meal-type">Chana Masala (IP) - Indian Soup/Stew</div>
+                    <div class="vegetables">🥬 Vegetables: cilantro, garlic, ginger, onion, chickpeas, tomato</div>
+                </div>
+
+                <div class="prep-tasks">
+                    <h4>PM Prep (Evening 5-9pm ONLY)</h4>
+                    <ul>
+                        <li>Chop vegetables for Mon/Tue/Wed dinners</li>
+                        <li>Make 2x batch of Chana Masala and freeze half</li>
+                        <li>Cook large batch of rice</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: var(--bg-secondary); padding: 30px; border-radius: 4px; margin-top: 60px;">
+            <h2 style="font-family: 'Space Mono', monospace; color: var(--accent-green); margin-bottom: 20px;">
+                🎨 Color Coding System
+            </h2>
+            <div style="display: grid; gap: 15px; font-size: var(--text-sm);">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 60px; height: 40px; background: var(--accent-gold); border-radius: 2px;"></div>
+                    <strong>🥪 Lunch</strong> - Warm gold for midday energy
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 60px; height: 40px; background: var(--accent-sage); border-radius: 2px;"></div>
+                    <strong>🍎 Snack</strong> - Sage green for light, refreshing
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 60px; height: 40px; background: var(--accent-terracotta); border-radius: 2px;"></div>
+                    <strong>🍽️ Dinner</strong> - Terracotta for evening warmth
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 60px; height: 40px; background: var(--accent-green); border-radius: 2px;"></div>
+                    <strong>☀️/🌙 Prep</strong> - Deep green for morning/evening tasks
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; padding: 20px; background: rgba(45, 106, 79, 0.05); border-left: 4px solid var(--accent-green); border-radius: 2px;">
+            <p style="font-size: var(--text-sm); line-height: 1.8;">
+                <strong>Mobile optimizations:</strong> On screens under 768px wide, borders thicken to 8px,
+                headers increase to 2rem, and margins expand to 50px for easier thumb scrolling and instant visual recognition.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

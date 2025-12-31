@@ -2,7 +2,7 @@ name: Start Weekly Meal Planning
 
 on:
   schedule:
-    - cron: '0 16 * * SUN'  # 8am PST = 16:00 UTC (Sunday)
+    - cron: '0 13 * * SAT'  # 5am PST = 13:00 UTC (Saturday)
   workflow_dispatch:  # Manual trigger for testing
 
 permissions:

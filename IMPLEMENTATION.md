@@ -80,68 +80,33 @@ A welcoming home page that serves as the meal planning dashboard.
 
 ---
 
-### Task 2: Improve Meal Plan Navigation
+### Task 2: Archive Page Organization
 **Status:** ⏸️ Next
 
 **What we're building:**
-Add navigation elements to existing meal plan HTML files.
+Organize past meal plans by year and month for easier browsing.
 
-**Features to Add:**
-1. **Previous/Next week buttons**
-   - Top and bottom of each meal plan page
-   - Disable "Previous" if it's the oldest plan
-   - Disable "Next" if it's the current week
+**Current state:** Landing page lists all plans in reverse chronological order (newest first)
 
-2. **Archive index page**
-   - List all past meal plans in reverse chronological order
-   - Show week date range for each plan
-   - Link from landing page "Past Meal Plans" button
-
-3. **Quick day navigation** (within meal plan)
-   - Sticky header with tabs for each day
-   - Click to jump to that day's section
-   - Already implemented in tabbed interface - just verify mobile behavior
+**Improved design:**
+- Group plans by year and month
+- Collapsible sections (e.g., "2025 → December", "2025 → January")
+- Each month shows list of weeks
+- Visual hierarchy makes it easy to find specific time periods
 
 **Technical Implementation:**
-- Modify `templates/weekly-plan-template.html` to include navigation
-- Update `scripts/workflow.py` to pass previous/next week info when generating plan
-- Create `scripts/generate_archive.py` to build archive index
-- Update deployment workflow to generate archive page
+- Update `scripts/generate_landing_page.py` to group plans by year/month
+- Modify landing page template to show organized sections
+- Add CSS for collapsible month sections
 
 **Files to Modify:**
-- [ ] `templates/weekly-plan-template.html` - Add nav buttons
-- [ ] `scripts/workflow.py` - Calculate prev/next week dates
-- [ ] `.github/workflows/deploy-pages.yml` - Generate archive index
+- [ ] `templates/landing-page-template.html` - Add month/year grouping UI
+- [ ] `scripts/generate_landing_page.py` - Parse dates and organize by month
 
 **Success Criteria:**
-- [ ] Easy to browse past weeks from any meal plan
-- [ ] Archive page shows full history at a glance
-- [ ] Navigation works smoothly on mobile
-
----
-
-### Task 3: Print-Friendly Grocery List
-**Status:** ⏸️ Future
-
-**What we're building:**
-Optimize the Groceries tab for printing or saving as PDF.
-
-**Features:**
-- Print-specific CSS (`@media print`)
-- Remove decorative elements when printing
-- Ensure grocery list fits on 1-2 pages
-- Checkbox-friendly layout for marking items
-- Option to print just the Groceries tab
-
-**Technical Implementation:**
-- Add `@media print` styles to meal plan template
-- Create "Print Grocery List" button that triggers `window.print()`
-- Hide non-grocery tabs when printing
-
-**Success Criteria:**
-- [ ] Grocery list prints cleanly on standard paper
-- [ ] Checkboxes or space to mark completed items
-- [ ] No wasted ink/paper on decorative elements
+- [ ] Plans organized by year and month
+- [ ] Easy to find meal plans from 6+ months ago
+- [ ] Collapsible sections keep page clean
 
 ---
 
@@ -367,4 +332,41 @@ GitHub Actions free tier: 2,000 minutes/month
 # Sandhya notes
 This section is for ideas that I want to add quickly
 
-- (none currently)
+## Priority Order (Agreed 2025-12-30)
+
+### 🎯 Priority 1: Weekly Plan Visual Hierarchy (NEXT)
+- **Use frontend-ui skill** to improve scannability of daily schedule
+- Make it easier to visually delineate between: Lunch, Snack, Dinner, AM Prep, PM Prep
+- Current layout has everything in one flow - hard to quickly find "what's for dinner tonight?"
+- Suggestions: color coding, better spacing, section headers, icons, visual separators
+- **Goal:** Glance at phone and immediately see what meal slot you need
+- **Why first:** Daily use, high impact, improves kitchen workflow
+
+### 🎯 Priority 2: Landing Page Workflow Status
+- Main page should clearly show the status of current week's plan AND next week's plan
+- Show which steps have been completed (e.g., "Veggies confirmed ✓", "Plan generated ✓")
+- Show which steps are pending (e.g., "Waiting for veggie confirmation", "PR ready to merge")
+- Display status for both current week and upcoming week
+- Make it clear what action is needed next (if any)
+- Example states:
+  - "Current week: Active plan (Dec 29 - Jan 4)"
+  - "Next week: Veggies confirmed, waiting for PR merge"
+  - "Next week: PR open - review and merge to generate plan"
+  - "Next week: Not yet started (will begin Saturday 5am)"
+- **Combine with:** Landing page quick actions (make them contextual)
+
+### 🎯 Priority 3: Landing Page Quick Actions (Combine with Priority 2)
+- Current quick actions are generic (Past Plans, GitHub, Daily Check-in)
+- Should map to the meal planning process stages:
+  - "Review This Week's PR" (if PR is open)
+  - "Confirm Veggies for Next Week" (if input file needs editing)
+  - "Today's Check-in" (if issue is open)
+  - "View Shopping List" (link to Groceries tab of current plan)
+  - "Past Meal Plans" (archive)
+- Make actions contextual to current state - only show relevant next steps
+
+## Configuration Changes ✅
+- ✅ Weekly planning trigger: Changed from Sunday 8am PST to **Saturday 5am PST**
+- ✅ Removed: Print-friendly grocery list (not needed)
+- ✅ Removed: Previous/Next navigation buttons (not needed)
+- ✅ Changed Task 2 to: Archive organization by year/month

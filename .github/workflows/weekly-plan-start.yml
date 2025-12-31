@@ -2,7 +2,7 @@ name: Start Weekly Meal Planning
 
 on:
   schedule:
-    - cron: '0 13 * * SAT'  # 5am PST = 13:00 UTC (Saturday)
+    - cron: '0 13 31 12 *'  # Test run: Dec 31, 2025 at 5am PST (13:00 UTC)
   workflow_dispatch:  # Manual trigger for testing
 
 permissions:

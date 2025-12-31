@@ -337,6 +337,16 @@
             border-bottom-color: var(--accent-green);
         }
 
+        /* Archive Month Sections */
+        details summary span {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        details[open] summary span {
+            transform: rotate(90deg);
+        }
+
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
             body {

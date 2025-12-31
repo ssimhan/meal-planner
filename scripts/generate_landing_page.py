@@ -156,7 +156,7 @@ def get_workflow_status(inputs_dir):
 
 
 def get_past_plans_list(plans_dir):
-    """Generate HTML list of past meal plans."""
+    """Generate HTML list of past meal plans organized by year and month."""
     try:
         plans = list(Path(plans_dir).glob('*.html'))
         if not plans:
@@ -165,23 +165,50 @@ def get_past_plans_list(plans_dir):
         # Sort by filename (reverse chronological)
         plans.sort(reverse=True)
 
-        html_items = []
+        # Group plans by year and month
+        from collections import defaultdict
+        plans_by_month = defaultdict(list)
+
         for plan in plans:
             filename = plan.name
             date_str = filename[:10]
-
-            # Parse date
             plan_date = datetime.strptime(date_str, '%Y-%m-%d')
             end_date = plan_date + timedelta(days=6)
+
+            # Group by YYYY-MM
+            month_key = plan_date.strftime('%Y-%m')
+            month_label = plan_date.strftime('%B %Y')  # e.g., "January 2026"
             week_label = f"{plan_date.strftime('%b %d')} - {end_date.strftime('%d, %Y')}"
 
-            html_items.append(
-                f'<div style="padding: 12px 0; border-bottom: 1px solid var(--border-subtle);">'
-                f'<a href="plans/{filename}" style="color: var(--accent-green); text-decoration: none; font-weight: 400;">'
-                f'📅 {week_label}</a></div>'
-            )
+            plans_by_month[month_key].append({
+                'filename': filename,
+                'month_label': month_label,
+                'week_label': week_label
+            })
 
-        return '\n'.join(html_items)
+        # Generate HTML with collapsible month sections
+        html_parts = []
+        for month_key in sorted(plans_by_month.keys(), reverse=True):
+            month_plans = plans_by_month[month_key]
+            month_label = month_plans[0]['month_label']
+
+            html_parts.append(f'<details open style="margin-bottom: 20px;">')
+            html_parts.append(f'    <summary style="cursor: pointer; font-family: \'Space Mono\', monospace; font-weight: 700; font-size: 0.875rem; color: var(--accent-green); padding: 12px; background: rgba(45, 106, 79, 0.05); border-radius: 2px; list-style: none;">')
+            html_parts.append(f'        <span style="margin-right: 8px;">▸</span>{month_label}')
+            html_parts.append(f'    </summary>')
+            html_parts.append(f'    <div style="padding: 10px 0 0 20px;">')
+
+            for plan_info in month_plans:
+                html_parts.append(
+                    f'        <div style="padding: 10px 0; border-bottom: 1px solid var(--border-subtle);">'
+                    f'<a href="plans/{plan_info["filename"]}" style="color: var(--accent-green); text-decoration: none; font-weight: 400;">'
+                    f'📅 {plan_info["week_label"]}</a></div>'
+                )
+
+            html_parts.append(f'    </div>')
+            html_parts.append(f'</details>')
+
+        return '\n'.join(html_parts)
     except Exception as e:
         print(f"Warning: Could not generate past plans list: {e}")
         return '<p style="color: var(--text-muted);">Error loading meal plans.</p>'

@@ -337,6 +337,16 @@
             border-bottom-color: var(--accent-green);
         }
 
+        /* Archive Month Sections */
+        details summary span {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        details[open] summary span {
+            transform: rotate(90deg);
+        }
+
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
             body {
@@ -406,8 +416,22 @@
         <div id="past-plans" style="margin-bottom: 50px;">
             <h2 class="section-title">Past Meal Plans</h2>
             <div style="background: var(--bg-secondary); padding: 20px; border-radius: 2px;">
-                <div style="padding: 12px 0; border-bottom: 1px solid var(--border-subtle);"><a href="plans/2026-01-05-weekly-plan.html" style="color: var(--accent-green); text-decoration: none; font-weight: 400;">📅 Jan 05 - 11, 2026</a></div>
-<div style="padding: 12px 0; border-bottom: 1px solid var(--border-subtle);"><a href="plans/2025-12-29-weekly-plan.html" style="color: var(--accent-green); text-decoration: none; font-weight: 400;">📅 Dec 29 - 04, 2026</a></div>
+                <details open style="margin-bottom: 20px;">
+    <summary style="cursor: pointer; font-family: 'Space Mono', monospace; font-weight: 700; font-size: 0.875rem; color: var(--accent-green); padding: 12px; background: rgba(45, 106, 79, 0.05); border-radius: 2px; list-style: none;">
+        <span style="margin-right: 8px;">▸</span>January 2026
+    </summary>
+    <div style="padding: 10px 0 0 20px;">
+        <div style="padding: 10px 0; border-bottom: 1px solid var(--border-subtle);"><a href="plans/2026-01-05-weekly-plan.html" style="color: var(--accent-green); text-decoration: none; font-weight: 400;">📅 Jan 05 - 11, 2026</a></div>
+    </div>
+</details>
+<details open style="margin-bottom: 20px;">
+    <summary style="cursor: pointer; font-family: 'Space Mono', monospace; font-weight: 700; font-size: 0.875rem; color: var(--accent-green); padding: 12px; background: rgba(45, 106, 79, 0.05); border-radius: 2px; list-style: none;">
+        <span style="margin-right: 8px;">▸</span>December 2025
+    </summary>
+    <div style="padding: 10px 0 0 20px;">
+        <div style="padding: 10px 0; border-bottom: 1px solid var(--border-subtle);"><a href="plans/2025-12-29-weekly-plan.html" style="color: var(--accent-green); text-decoration: none; font-weight: 400;">📅 Dec 29 - 04, 2026</a></div>
+    </div>
+</details>
             </div>
         </div>
 

@@ -1,1 +1,5 @@
-daily_logs: []
+daily_logs:
+- date: '2025-12-31'
+  lunch: carrot rice
+  dinner: ordered sushi from restaurant
+  notes: kids were mildly resistant to carrot rice.

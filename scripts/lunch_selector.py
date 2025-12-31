@@ -64,11 +64,26 @@ class LunchSelector:
             return yaml.safe_load(f) or []
 
     def _filter_lunch_suitable(self) -> List[Dict[str, Any]]:
-        """Filter recipes suitable for lunch."""
-        return [
-            r for r in self.recipes
-            if r.get('lunch_suitable', False)
-        ]
+        """Filter recipes suitable for lunch based on meal_type."""
+        # Meal types that work well for lunch
+        lunch_meal_types = {
+            'sandwich', 'salad', 'grain_bowl', 'tacos_wraps',
+            'soup_stew', 'pasta_noodles', 'appetizer'
+        }
+
+        lunch_recipes = []
+        for r in self.recipes:
+            # Include if explicitly marked as lunch_suitable
+            if r.get('lunch_suitable', False):
+                lunch_recipes.append(r)
+                continue
+
+            # Include if meal_type is lunch-friendly
+            meal_type = r.get('meal_type', 'unknown')
+            if meal_type in lunch_meal_types:
+                lunch_recipes.append(r)
+
+        return lunch_recipes
 
     def select_weekly_lunches(
         self,
@@ -147,18 +162,33 @@ class LunchSelector:
         Select lunch for a specific day.
 
         Strategy:
+        - Priority 1: Suggest leftovers from previous night's dinner (adult)
+        - Priority 2: Find lunch recipes (with ingredient reuse bonus)
+        - Priority 3: Fall back to repeatable defaults
         - Monday/Tuesday: Can use quick_fresh or prep components for later
         - Wednesday: Use components prepped Mon/Tue
         - Thursday/Friday: Use components prepped Mon/Tue/Wed (ONLY assembly)
         """
 
-        # Get ingredients available from recent dinners
+        # Priority 1: Check if we can suggest leftovers from previous night
+        day_order = ['mon', 'tue', 'wed', 'thu', 'fri']
+        current_day_idx = day_order.index(day)
+
+        if current_day_idx > 0:  # Not Monday
+            previous_day = day_order[current_day_idx - 1]
+            previous_dinner = next((d for d in dinner_plan if d['day'] == previous_day), None)
+
+            if previous_dinner:
+                # Suggest leftovers for adult, default for kids
+                return self._create_leftovers_suggestion(day, previous_dinner)
+
+        # Priority 2: Get ingredients available from recent dinners
         available_ingredients = self._get_available_ingredients(
             day=day,
             dinner_ingredients=dinner_ingredients
         )
 
-        # Find lunch recipes that reuse these ingredients
+        # Find lunch recipes
         candidate_recipes = self._find_reusable_lunch_recipes(
             available_ingredients=available_ingredients,
             day=day
@@ -169,7 +199,7 @@ class LunchSelector:
             selected = self._rank_and_select(candidate_recipes, day)
             return self._create_suggestion(selected, day, available_ingredients)
         else:
-            # Fall back to default
+            # Priority 3: Fall back to default
             return self._create_default_suggestion(day)
 
     def _get_available_ingredients(
@@ -202,24 +232,17 @@ class LunchSelector:
         day: str
     ) -> List[Dict[str, Any]]:
         """
-        Find lunch recipes that reuse available ingredients.
+        Find lunch recipes suitable for the day.
 
         Filters by:
-        - Ingredient reuse (prefers recipes using dinner ingredients)
         - Prep style compatible with day (Thu/Fri must be component_based or quick_fresh)
         - Kid-friendly (preferred but not required)
+        - Ingredient reuse is BONUS points, not required
         """
         candidates = []
 
         for recipe in self.lunch_recipes:
-            # Check if recipe reuses any available ingredients
-            reuses_ingredients = recipe.get('reuses_dinner_ingredients', [])
-            overlap = set(reuses_ingredients) & set(available_ingredients)
-
-            if not overlap:
-                continue  # Skip recipes that don't reuse ingredients
-
-            # Check prep style compatibility
+            # Check prep style compatibility FIRST
             prep_style = recipe.get('prep_style')
 
             if day in ['thu', 'fri']:
@@ -227,6 +250,10 @@ class LunchSelector:
                 # (components prepped earlier, just assemble)
                 if prep_style not in ['component_based', 'quick_fresh']:
                     continue
+
+            # Check if recipe reuses any available ingredients (BONUS, not required)
+            reuses_ingredients = recipe.get('reuses_dinner_ingredients', [])
+            overlap = set(reuses_ingredients) & set(available_ingredients)
 
             candidates.append({
                 'recipe': recipe,
@@ -308,6 +335,37 @@ class LunchSelector:
             assembly_notes=assembly_notes,
             reuses_ingredients=overlap_ingredients,
             default_option=None
+        )
+
+    def _create_leftovers_suggestion(
+        self,
+        day: str,
+        previous_dinner: Dict[str, Any]
+    ) -> LunchSuggestion:
+        """Create suggestion to use leftovers from previous night's dinner."""
+        # Get the previous day for assembly notes
+        day_order = ['mon', 'tue', 'wed', 'thu', 'fri']
+        current_day_idx = day_order.index(day)
+        previous_day = day_order[current_day_idx - 1]
+
+        # Get default for kids (rotate through defaults)
+        day_idx = day_order.index(day)
+        default_idx = day_idx % len(self.DEFAULTS['kids'])
+        kids_default = self.DEFAULTS['kids'][default_idx]
+
+        dinner_name = previous_dinner.get('recipe_name', 'previous dinner')
+
+        return LunchSuggestion(
+            recipe_id=f'leftovers_{day}',
+            recipe_name=f"{kids_default} OR Adult: Leftovers from {dinner_name}",
+            kid_friendly=True,
+            prep_style='quick_fresh',
+            prep_components=[],
+            storage_days=1,
+            prep_day=previous_day,
+            assembly_notes=f'Kids: {kids_default} (<10 mins) | Adult: Reheat {previous_day.capitalize()} dinner leftovers',
+            reuses_ingredients=previous_dinner.get('vegetables', []),
+            default_option=kids_default
         )
 
     def _create_default_suggestion(self, day: str) -> LunchSuggestion:

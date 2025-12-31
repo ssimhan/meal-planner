@@ -1,0 +1,29 @@
+last_updated: '2025-12-30'
+
+fridge:
+  - item: bell peppers
+    quantity: 3
+    unit: count
+    added: '2025-12-29'
+    use_by: '2026-01-05'
+  - item: onions
+    quantity: 5
+    unit: count
+    added: '2025-12-29'
+
+pantry:
+  - item: black beans
+    quantity: 4
+    unit: cans
+  - item: rice
+    quantity: 5
+    unit: cups
+
+freezer:
+  backups:
+    - meal: Chana Masala
+      servings: 4
+      frozen_date: '2025-12-20'
+    - meal: Black Bean Soup
+      servings: 6
+      frozen_date: '2025-12-15'

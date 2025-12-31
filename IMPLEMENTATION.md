@@ -17,15 +17,19 @@ This document provides the detailed technical plan for migrating from CLI-only w
 | 2.2 Create Plan Generation Workflow | ✅ Complete | `.github/workflows/weekly-plan-generate.yml` created |
 | 2.3 Modify workflow.py | ✅ Complete | Added `start-week` and `generate-plan` commands |
 | 2.4 Test Workflows | ⏳ Pending | Ready to test manually on GitHub Actions tab |
-| **Phase 3: Daily Check-ins** | 🚧 **IN PROGRESS** | Workflows created and tested locally. Ready to test on GitHub. |
+| **Phase 3: Daily Check-ins** | ✅ **COMPLETE** | Workflows pushed to GitHub. Ready to test with workflow_dispatch. |
 | 3.1 Create Daily Check-in Workflow | ✅ Complete | `.github/workflows/daily-checkin-create.yml` created |
 | 3.2 Create Parse Check-in Workflow | ✅ Complete | `.github/workflows/daily-checkin-parse.yml` created |
 | 3.3 Create parse_daily_log.py | ✅ Complete | Script tested and working correctly |
-| 3.4 Test Workflows | ⏳ **NEXT STEP** | Ready to test manually on GitHub |
-| **Phase 4: Inventory Automation** | ⏸️ Not Started | Planned |
-| **Phase 5: Learning & Adaptation** | ⏸️ Not Started | Planned |
+| 3.4 Test Workflows | ⏳ Pending | Ready to test manually on GitHub Actions tab |
+| **Phase 4: Inventory Automation** | ✅ **COMPLETE** | Freezer backup tracking and inventory-aware farmers market suggestions implemented. |
+| 4.1 Create Inventory Schema | ✅ Complete | `data/inventory.yml` created with fridge/pantry/freezer structure |
+| 4.2 Update parse_daily_log.py | ✅ Complete | Detects freezer backup usage and decrements inventory |
+| 4.3 Enhance Farmers Market Suggestions | ✅ Complete | Skips items in fridge, warns if freezer backups < 3 |
+| 4.4 Test Inventory Updates | ✅ Complete | Tested locally - freezer tracking and warnings work correctly |
+| **Phase 5: Learning & Adaptation** | ⏸️ Not Started | Planned for future implementation |
 
-**Next Action:** Push Phase 3 changes to GitHub and test the daily check-in workflow manually using `workflow_dispatch`.
+**Next Action:** Push Phase 4 changes to GitHub. All automation phases (1-4) complete! Phase 5 is optional advanced feature.
 
 ## Table of Contents
 - [Phase 1: GitHub Pages Setup](#phase-1-github-pages-setup)

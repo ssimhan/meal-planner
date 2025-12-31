@@ -323,7 +323,32 @@ def show_week_complete(input_file, data):
 # ============================================================================
 
 def generate_farmers_market_proposal(history_path, index_path):
-    """Generate a proposed farmers market vegetable list."""
+    """Generate a proposed farmers market vegetable list.
+
+    Now considers inventory to:
+    - Skip vegetables already in fridge
+    - Prioritize low/missing items
+    - Check freezer backup count
+    """
+    # Load inventory if available
+    inventory_path = Path('data/inventory.yml')
+    current_fridge_items = set()
+    freezer_backup_count = 0
+
+    if inventory_path.exists():
+        with open(inventory_path, 'r') as f:
+            inventory = yaml.safe_load(f)
+            if inventory:
+                # Extract items currently in fridge
+                if 'fridge' in inventory:
+                    for item in inventory['fridge']:
+                        current_fridge_items.add(item['item'].lower())
+
+                # Count freezer backups
+                if 'freezer' in inventory and 'backups' in inventory['freezer']:
+                    freezer_backup_count = len(inventory['freezer']['backups'])
+
+    # Load recent vegetables from history
     recent_veg = set()
     if history_path.exists():
         with open(history_path, 'r') as f:
@@ -333,6 +358,7 @@ def generate_farmers_market_proposal(history_path, index_path):
                     for dinner in week.get('dinners', []):
                         recent_veg.update(dinner.get('vegetables', []))
 
+    # Get common vegetables from recipes
     common_veg = Counter()
     if index_path.exists():
         with open(index_path, 'r') as f:
@@ -341,8 +367,11 @@ def generate_farmers_market_proposal(history_path, index_path):
                 main_veg = recipe.get('main_veg', [])
                 common_veg.update(main_veg)
 
+    # Filter out vegetables already in fridge, recently used, and staples
     top_veg = [veg for veg, count in common_veg.most_common(20)
-               if veg not in recent_veg and veg not in ['garlic', 'onion', 'ginger']]
+               if veg not in recent_veg
+               and veg not in ['garlic', 'onion', 'ginger']
+               and veg not in current_fridge_items]
 
     current_month = datetime.now().month
 
@@ -370,6 +399,12 @@ def generate_farmers_market_proposal(history_path, index_path):
             break
 
     staples = ['onion', 'garlic', 'cilantro']
+
+    # Add note about freezer backups (informational)
+    if freezer_backup_count < 3:
+        print(f"\n⚠️  Freezer backup status: {freezer_backup_count}/3 meals")
+        print(f"   Consider batch cooking this week to maintain 3 backups")
+
     return proposed, staples
 
 

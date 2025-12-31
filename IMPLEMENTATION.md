@@ -139,32 +139,37 @@ A welcoming home page that serves as the meal planning dashboard.
 ---
 
 ### Task 2: Archive Page Organization
-**Status:** ⏸️ Next
+**Status:** ✅ **COMPLETE** (2025-12-30)
 
-**What we're building:**
-Organize past meal plans by year and month for easier browsing.
+**What we built:**
+Organized past meal plans by year and month with collapsible sections for easier browsing.
 
-**Current state:** Landing page lists all plans in reverse chronological order (newest first)
-
-**Improved design:**
-- Group plans by year and month
-- Collapsible sections (e.g., "2025 → December", "2025 → January")
-- Each month shows list of weeks
-- Visual hierarchy makes it easy to find specific time periods
+**Features:**
+- Plans grouped by year and month (e.g., "January 2026", "December 2025")
+- Each month is a collapsible `<details>` section (default: open)
+- Arrow icon rotates 90° when expanded for visual feedback
+- Chronological order: newest months first, weeks within each month
+- Maintains Solarpunk aesthetic with Space Mono font and green accents
 
 **Technical Implementation:**
-- Update `scripts/generate_landing_page.py` to group plans by year/month
-- Modify landing page template to show organized sections
-- Add CSS for collapsible month sections
+- Modified `get_past_plans_list()` in [scripts/generate_landing_page.py](scripts/generate_landing_page.py:158-214)
+  - Groups plans by YYYY-MM key using defaultdict
+  - Generates collapsible HTML with inline styles
+- Added CSS in [templates/landing-page-template.html](templates/landing-page-template.html:340-348)
+  - Rotating arrow animation on details[open]
+  - Smooth 0.3s transition
 
-**Files to Modify:**
-- [ ] `templates/landing-page-template.html` - Add month/year grouping UI
-- [ ] `scripts/generate_landing_page.py` - Parse dates and organize by month
+**Files Modified:**
+- [x] `templates/landing-page-template.html` - Added CSS for rotating arrow
+- [x] `scripts/generate_landing_page.py` - Implemented month grouping logic
 
 **Success Criteria:**
-- [ ] Plans organized by year and month
-- [ ] Easy to find meal plans from 6+ months ago
-- [ ] Collapsible sections keep page clean
+- [x] Plans organized by year and month
+- [x] Easy to find meal plans from 6+ months ago
+- [x] Collapsible sections keep page clean
+- [x] Mobile-friendly and matches existing design
+
+**Live at:** https://ssimhan.github.io/meal-planner/
 
 ---
 

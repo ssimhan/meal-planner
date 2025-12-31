@@ -5,6 +5,9 @@ on:
     - cron: '0 2 * * *'  # 6pm PST = 2:00 UTC next day
   workflow_dispatch:
 
+permissions:
+  issues: write
+
 jobs:
   create-checkin:
     runs-on: ubuntu-latest

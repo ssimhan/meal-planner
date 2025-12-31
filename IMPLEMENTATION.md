@@ -23,7 +23,7 @@ This document tracks the automation journey from CLI-only workflow to GitHub Act
 **Goal:** Transform the auto-generated GitHub Pages site into a polished, mobile-friendly meal planning hub.
 
 ### Task 1: Design and Build Landing Page
-**Status:** 📋 Ready to start
+**Status:** ✅ **COMPLETE**
 
 **What we're building:**
 A welcoming home page that serves as the meal planning dashboard.
@@ -66,17 +66,20 @@ A welcoming home page that serves as the meal planning dashboard.
   - List of plan files in `plans/` directory - find latest week
   - Current date - calculate days until Sunday
 
-**Files to Create:**
-- [ ] `templates/landing-page-template.html` - Template with placeholders
-- [ ] `scripts/generate_landing_page.py` - Script to populate template with live data
-- [ ] Update `.github/workflows/deploy-pages.yml` - Generate landing page before deployment
+**Files Created:**
+- [x] `templates/landing-page-template.html` - Template with placeholders
+- [x] `scripts/generate_landing_page.py` - Script to populate template with live data
+- [x] Update `.github/workflows/deploy-pages.yml` - Generate landing page before deployment
 
 **Success Criteria:**
-- [ ] Landing page renders beautifully on mobile (primary device)
-- [ ] One-tap access to current week's meal plan
-- [ ] Freezer backup status visible at a glance
-- [ ] Matches Solarpunk aesthetic of meal plans
-- [ ] Loads instantly (no external dependencies)
+- [x] Landing page renders beautifully on mobile (primary device)
+- [x] One-tap access to current week's meal plan
+- [x] Freezer backup status visible at a glance
+- [x] Matches Solarpunk aesthetic of meal plans
+- [x] Loads instantly (no external dependencies)
+
+**Completed:** 2025-12-30
+**Live at:** https://ssimhan.github.io/meal-planner/
 
 ---
 
@@ -121,12 +124,12 @@ Organize past meal plans by year and month for easier browsing.
 - Files: [deploy-pages.yml](.github/workflows/deploy-pages.yml)
 
 ### Phase 2: Automated Weekly Planning ✅
-- Sunday PR creation with farmers market suggestions
+- Saturday 5am PST: PR creation with farmers market suggestions
 - Auto-generate meal plan on PR merge
 - Files: [weekly-plan-start.yml](.github/workflows/weekly-plan-start.yml), [weekly-plan-generate.yml](.github/workflows/weekly-plan-generate.yml)
 
 ### Phase 3: Daily Check-ins ✅
-- Automated GitHub issue creation at 8pm daily
+- Automated GitHub issue creation at 8pm PST daily
 - Parse user responses and update logs.yml
 - Files: [daily-checkin-create.yml](.github/workflows/daily-checkin-create.yml), [daily-checkin-parse.yml](.github/workflows/daily-checkin-parse.yml)
 
@@ -139,6 +142,28 @@ Organize past meal plans by year and month for easier browsing.
 - All workflows tested end-to-end
 - Verified on GitHub with real data
 - System ready for production use
+
+</details>
+
+<details>
+<summary><strong>Phase 5 - Task 1: Landing Page</strong> ✅ (Click to expand)</summary>
+
+### Beautiful Solarpunk Landing Page ✅
+**Completed:** 2025-12-30
+
+**What we built:**
+- Mobile-first landing page with Solarpunk aesthetic matching meal plan design
+- Live data integration: freezer backup count, next shopping day, current week link
+- Past meal plans archive (will be organized by year/month in Task 2)
+- Collapsible "How It Works" section
+- Quick action buttons
+
+**Files created:**
+- `templates/landing-page-template.html` - Solarpunk HTML/CSS template
+- `scripts/generate_landing_page.py` - Python script to populate with live data
+- Updated `.github/workflows/deploy-pages.yml` - Generate landing page on deployment
+
+**Live site:** https://ssimhan.github.io/meal-planner/
 
 </details>
 
@@ -183,7 +208,7 @@ Organize past meal plans by year and month for easier browsing.
 
 **How it works:**
 - **Workflow 1:** [weekly-plan-start.yml](.github/workflows/weekly-plan-start.yml)
-  - Triggers: Sundays at 8am PST (or manual via `workflow_dispatch`)
+  - Triggers: Saturdays at 5am PST (or manual via `workflow_dispatch`)
   - Actions: Runs `python3 scripts/workflow.py start-week`, creates PR with proposed vegetables
 
 - **Workflow 2:** [weekly-plan-generate.yml](.github/workflows/weekly-plan-generate.yml)
@@ -191,7 +216,7 @@ Organize past meal plans by year and month for easier browsing.
   - Actions: Runs `python3 scripts/workflow.py generate-plan`, commits plan and history
 
 **User flow:**
-1. Sunday 8am: Receive PR with farmers market suggestions
+1. Saturday 5am: Receive PR with farmers market suggestions
 2. Edit vegetables on GitHub web UI
 3. Merge PR when ready
 4. Meal plan auto-generates and appears on GitHub Pages
@@ -211,7 +236,7 @@ Organize past meal plans by year and month for easier browsing.
   - Actions: Runs [parse_daily_log.py](scripts/parse_daily_log.py), updates [logs.yml](data/logs.yml), closes issue
 
 **User flow:**
-1. 6pm daily: Receive GitHub issue notification
+1. 8pm PST daily: Receive GitHub issue notification
 2. Reply with meal details from phone/web
 3. System parses response, saves to logs.yml, closes issue
 
@@ -325,8 +350,10 @@ GitHub Actions free tier: 2,000 minutes/month
 3. Start using: Let scheduled workflows run automatically
 
 **For ongoing use:**
-- Sunday 8am: Review PR with farmers market suggestions, edit and merge
-- Daily 6pm: Reply to check-in issue with meal notes
+- Saturday 5am: Automated PR created with farmers market suggestions
+- Review PR: Edit vegetables, confirm, and merge when ready
+- Daily 8pm: Receive GitHub issue notification for daily check-in
+- Reply with meal details from phone/web
 - View plans anytime at: https://ssimhan.github.io/meal-planner/
 
 # Sandhya notes

@@ -2,15 +2,32 @@
 
 An automated meal planning system that generates weekly meal plans with anti-repetition logic, farmers market integration, and constraint satisfaction.
 
+**🌐 Live Site:** https://ssimhan.github.io/meal-planner/
+
+**📖 Documentation:** See [IMPLEMENTATION.md](IMPLEMENTATION.md) for full automation setup and [PROJECT_HISTORY.md](PROJECT_HISTORY.md) for development journey.
+
 ## Features
 
+### Recipe Planning
 - Parses 234+ vegetarian recipes from HTML files
 - Prevents recipe repetition within 3 weeks
 - Prevents template repetition more than once per week
 - Respects dietary constraints (avoid: eggplant, mushrooms, green cabbage)
-- Two-step workflow: intake → farmers market → plan generation
 - Supports busy-day logic with no-chop requirements
 - Automatically selects one "from scratch" novelty recipe per week
+
+### GitHub Actions Automation
+- **Saturday 5am PST:** Automated PR creation with farmers market vegetable suggestions
+- **On PR Merge:** Automatic meal plan generation and GitHub Pages deployment
+- **Daily 8pm PST:** GitHub issue created for daily meal logging
+- **Inventory Tracking:** Automatic freezer backup count updates
+- **Live Deployment:** Meal plans accessible at https://ssimhan.github.io/meal-planner/
+
+### User Interface
+- Solarpunk-themed landing page with live status updates
+- Mobile-first responsive design for kitchen/grocery use
+- Glanceable freezer backup status and shopping countdown
+- Archive of all past meal plans
 
 ## Prerequisites
 
@@ -32,18 +49,32 @@ pip install -r requirements.txt
 
 ## Usage
 
-The simplest way to use the meal planner - just run one command and it handles everything:
+### Automated Workflow (Recommended)
+
+The system now runs automatically via GitHub Actions:
+
+1. **Saturday 5am PST:** You'll receive a GitHub PR with farmers market vegetable suggestions
+2. **Review PR:** Edit the vegetables list, confirm, and merge when ready
+3. **Automatic Generation:** Meal plan is automatically generated and deployed to GitHub Pages
+4. **Daily Check-ins:** At 8pm PST, you'll receive a GitHub issue to log your meals
+
+**View your plans:** https://ssimhan.github.io/meal-planner/
+
+### CLI Workflow (Manual/Local)
+
+For local testing or manual plan generation:
 
 ```bash
+# Simplified workflow - just run one command
 ./mealplan next
 ```
 
-That's it! The workflow automatically:
+The workflow automatically:
 1. Detects what stage you're at
 2. Runs the appropriate next step
 3. Guides you through what to do next
 
-**Complete Workflow Example:**
+**Complete CLI Example:**
 
 ```bash
 # Week starts - create new input file
@@ -55,46 +86,19 @@ vim inputs/YYYY-MM-DD.yml  # Update confirmed_veg, change status to "confirmed"
 
 # Generate meal plan
 ./mealplan next
-# → Creates plans/YYYY-MM-DD-weekly-plan.md and updates history
+# → Creates plans/YYYY-MM-DD-weekly-plan.html and updates history
 
 # When week is done, start next week
 ./mealplan next
 # → Creates next week's input file automatically
 ```
 
-**Other Streamlined Commands:**
+**Other CLI Commands:**
 
 ```bash
-./mealplan status  # Show current workflow state
-./mealplan reset   # Force start new week (if needed)
-```
-
-**State Tracking:**
-
-Each input file now tracks its progress:
-- `intake_complete` + `status: proposed` → Awaiting farmers market confirmation
-- `intake_complete` + `status: confirmed` → Ready to generate plan
-- `plan_complete` → Week is done, ready for next week
-
----
-
-### Legacy Workflow Commands
-
-Use the `./mealplan` wrapper script with numbered workflow commands:
-
-```bash
-# First time only: Parse your HTML recipes
-./mealplan parse
-
-# Weekly workflow (follow the numbers):
-./mealplan 1-start             # Step 1: Start new week (interactive)
-./mealplan 2-update 2026-01-05 # Step 2: Update after farmers market
-./mealplan 3-plan 2026-01-05   # Step 3: Generate the meal plan
-./mealplan 4-view 2026-01-05   # Step 4: View the plan
-./mealplan 5-latest            # Step 5: View most recent plan
-
-# Optional:
-./mealplan validate 2026-01-05 # Validate constraints
+./mealplan status   # Show current workflow state
+./mealplan reset    # Force start new week (if needed)
+./mealplan parse    # Re-parse HTML recipes (first time only)
 ```
 
 **Workflow Commands:**

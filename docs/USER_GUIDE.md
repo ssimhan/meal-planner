@@ -62,8 +62,34 @@ The system automatically manages a "Emergency Freezer Stash."
 
 ---
 
+---
+
+## 🧪 Testing & Local Development
+
+If you want to tweak recipes, change the design, or verify the logic without waiting for a real Saturday rollout, you can do so locally.
+
+### 1. Live Preview (The Feedback Loop)
+The fastest way to see changes is to use the **Live Reload** script.
+*   **Command:** `./scripts/dev.sh`
+*   **What it does:** It watches all your files. The moment you save a recipe or change a template, it regenerates the plan and refreshes your browser automatically.
+
+### 2. Automated Testing
+To ensure your changes haven't broken core features (like anti-repetition), run the internal test suite.
+*   **Logic Tests:** `python3 scripts/test_logic.py`
+*   **YAML Validation:** `python3 scripts/validate_yaml.py` (checks for syntax errors in your data files).
+
+### 3. Manual Verification Checklist
+When testing a new week's logic, verify:
+*   [ ] **Lunch Balance:** Do kids and adults have distinct, sensible options?
+*   [ ] **Grocery List:** Are new ingredients from your recipes appearing in the "Groceries" tab?
+*   [ ] **Energy Flow:** Does the prep schedule feel balanced (Mon-Tue vs. Wed-Fri)?
+*   [ ] **Sticking Choices:** If you manually override a meal in `history.yml`, does the generator respect it?
+
+---
+
 ## ⚡ Quick Tips
 
 *   **Friday is "No Prep" day.** The plan ensures you never have to chop vegetables on a Friday night.
 *   **Variety is guaranteed.** You won't see the same recipe twice in 3 weeks.
 *   **Device-Free Evenings.** The plan is designed so usually all the hard work is done *before* 5 PM.
+*   **Manual Overrides:** You can always manually edit your `history.yml` to "pin" a specific meal (like a Freezer Backup), and the system will build the rest of your plan around it.

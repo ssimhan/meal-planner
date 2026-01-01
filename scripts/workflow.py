@@ -733,15 +733,17 @@ def generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe
     html.append('            <div class="freezer-backup">')
     html.append('                <h3>🧊 Freezer Backup Status</h3>')
     
-    # Get freezer inventory from the latest available week
+    # Get freezer inventory from data/inventory.yml (single source of truth)
     freezer_meals = []
-    if history and 'weeks' in history and history['weeks']:
-        # Sort weeks to find the most recent one with freezer inventory
-        sorted_weeks = sorted(history['weeks'], key=lambda x: x.get('week_of', ''), reverse=True)
-        for week in sorted_weeks:
-            if 'freezer_inventory' in week and week['freezer_inventory']:
-                freezer_meals = week['freezer_inventory']
-                break
+    inventory_path = Path('data/inventory.yml')
+    if inventory_path.exists():
+        try:
+            with open(inventory_path, 'r') as f:
+                inventory = yaml.safe_load(f)
+                if inventory and 'freezer' in inventory and 'backups' in inventory['freezer']:
+                    freezer_meals = inventory['freezer']['backups']
+        except Exception as e:
+            print(f"Warning: Failed to load freezer inventory from {inventory_path}: {e}")
     
     if freezer_meals:
         html.append(f'                <p style="margin-bottom: 15px;">You have <strong>{len(freezer_meals)}/3</strong> backup meals in stock:</p>')

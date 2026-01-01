@@ -8,6 +8,7 @@ from pathlib import Path
 from datetime import datetime
 
 HISTORY_FILE = Path('data/history.yml')
+INVENTORY_FILE = Path('data/inventory.yml')
 
 def load_history():
     """Load history.yml or return empty structure."""
@@ -54,47 +55,66 @@ def calculate_adherence(week):
         pct = int((made_as_planned_count / len(dinners)) * 100)
         week['plan_adherence_pct'] = pct
 
-def update_inventory(week, args):
-    """Update freezer and fridge inventory."""
-    # Initialize containers if missing
-    if 'freezer_inventory' not in week:
-        week['freezer_inventory'] = []
-    if 'fridge_vegetables' not in week:
-        # We don't initialize valid values here (that's Phase 6.4), 
-        # but we need a list to be able to remove things if it exists.
-        # If it doesn't exist, we can't remove anything regardless.
-        pass
+def update_inventory_file(args, used_veggies=None):
+    """Update the master data/inventory.yml file."""
+    if not INVENTORY_FILE.exists():
+        return
 
-    # Freezer Logic
-    # 1. Made 2x -> Add to freezer
-    if args.made_2x:
-        # Find meal name - assuming recipe_id or need a lookup?
-        # The prompt examples imply using the meal name. 
-        # But history.yml has recipe_id. 
-        # We might need to fetch the readable name or just use ID?
-        # Example output shows "Bisi Bele Bath". 
-        # Since we don't have easy access to the recipe title map here without parsing all recipes,
-        # let's try to derive a reasonable name or use a placeholder if needed.
-        # Check if we can find the dinner entry to get more info?
-        # We are usually calling this WITH the dinner context.
-        pass # Logic moved to main flow to have dinner context
+    try:
+        with open(INVENTORY_FILE, 'r') as f:
+            inventory = yaml.safe_load(f) or {}
+        
+        updated = False
+        
+        # 1. Used freezer backup -> Remove from inventory
+        if args.made == 'freezer_backup' or args.made == 'freezer':
+            meal_name = args.freezer_meal
+            if meal_name and 'freezer' in inventory and 'backups' in inventory['freezer']:
+                for i, item in enumerate(inventory['freezer']['backups']):
+                    if item.get('meal', '').lower() == meal_name.lower():
+                        inventory['freezer']['backups'].pop(i)
+                        updated = True
+                        print(f"  - Removed '{meal_name}' from master freezer inventory")
+                        break
 
-    # 2. Used freezer -> Remove from freezer
-    if args.made == 'freezer':
-        meal_name = args.freezer_meal
-        if not meal_name:
-            print("Warning: --made freezer used but no --freezer-meal specified.")
-        else:
-            # simple string match removal
-            # Find and remove first match
-            found = False
-            for i, item in enumerate(week['freezer_inventory']):
-                if item['meal'].lower() == meal_name.lower():
-                    week['freezer_inventory'].pop(i)
-                    found = True
-                    break
-            if not found:
-                print(f"Warning: Freezer meal '{meal_name}' not found in inventory.")
+        # 2. Made 2x -> Add to inventory
+        if args.made_2x:
+            # Derive a readable name
+            meal_name = args.actual_meal or "New Freezer Meal"
+            if 'freezer' not in inventory: inventory['freezer'] = {}
+            if 'backups' not in inventory['freezer']: inventory['freezer']['backups'] = []
+            
+            inventory['freezer']['backups'].append({
+                'meal': meal_name,
+                'servings': 4, # Default
+                'frozen_date': datetime.now().strftime('%Y-%m-%d')
+            })
+            updated = True
+            print(f"  - Added '{meal_name}' to master freezer inventory")
+
+        # 3. Vegetables used -> Remove from fridge inventory
+        if used_veggies and 'fridge' in inventory:
+            def normalize_veg(n):
+                return n.lower().strip().rstrip('s')
+
+            norm_used = [normalize_veg(v) for v in used_veggies]
+            new_fridge = []
+            for item in inventory['fridge']:
+                item_name = item.get('item', '')
+                if normalize_veg(item_name) in norm_used:
+                    updated = True
+                    print(f"  - Removed '{item_name}' from master fridge inventory")
+                    continue
+                new_fridge.append(item)
+            inventory['fridge'] = new_fridge
+
+        if updated:
+            inventory['last_updated'] = datetime.now().strftime('%Y-%m-%d')
+            with open(INVENTORY_FILE, 'w') as f:
+                yaml.dump(inventory, f, default_flow_style=False, sort_keys=False)
+                
+    except Exception as e:
+        print(f"Warning: Failed to update inventory.yml: {e}")
 
 def main():
     parser = argparse.ArgumentParser(description='Log meal execution.')
@@ -236,7 +256,12 @@ def main():
         }
         
         # Remove from freezer inventory
-        update_inventory(week, args) # Call the helper for removals
+        update_inventory_file(args) 
+
+    # Final sync of master inventory for any other changes (veggies, made_2x)
+    if args.vegetables or args.made_2x:
+        used_veggies = [v.strip() for v in args.vegetables.split(',')] if args.vegetables else None
+        update_inventory_file(args, used_veggies)
 
     # Recalculate stats
     calculate_adherence(week)

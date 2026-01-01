@@ -63,6 +63,10 @@ weeks:
     meal_type: freezer
     day: mon
     vegetables: []
+    made: freezer_backup
+    freezer_used:
+      meal: Chana Masala
+      frozen_date: Unknown
   - recipe_id: chickpea_salad_wrap
     cuisine: mexican
     meal_type: tacos_wraps
@@ -76,6 +80,18 @@ weeks:
     - carrot
     - peas
     - tomato
+    made: true
+    vegetables_used:
+    - bell pepper
+    - carrot
+    - peas
+    - tomato
+    - bell pepper
+    - carrot
+    - peas
+    - tomato
+    made_2x_for_freezer: true
+    actual_meal: Doubled Chickpea Wraps
   - recipe_id: curried_cauliflower_quinoa_salad
     cuisine: mediterranean
     meal_type: salad
@@ -133,6 +149,10 @@ weeks:
   - peas
   - tomato
   - tomatoe
+  plan_adherence_pct: 20
+  freezer_inventory:
+  - meal: Chickpea Salad Wrap
+    frozen_date: '2026-01-01'
 - week_of: '2026-01-12'
   dinners:
   - recipe_id: cauliflower_rasam

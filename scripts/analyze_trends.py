@@ -153,10 +153,15 @@ def main():
     parser = argparse.ArgumentParser(description='Analyze meal plan execution trends.')
     parser.add_argument('--output', help='Output markdown file path')
     parser.add_argument('--history-file', default=str(DEFAULT_HISTORY_FILE), help='Path to history file')
+    parser.add_argument('--weeks', type=int, help='Number of recent weeks to analyze (default: all)')
     args = parser.parse_args()
     
     data = load_history(args.history_file)
     weeks = data.get('weeks', [])
+    
+    # Filter by recent weeks if requested
+    if args.weeks and len(weeks) > args.weeks:
+        weeks = weeks[-args.weeks:]
     
     recipe_stats = calculate_recipe_stats(weeks)
     veg_counts, weeks_logged = calculate_veg_stats(weeks)

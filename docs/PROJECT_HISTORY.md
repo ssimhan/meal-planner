@@ -490,3 +490,22 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Result:** Changes to recipes, templates, or inputs automatically regenerate the plan and refresh the browser.
 **Learning:** Real-time feedback loops are critical for developer (and user) happiness.
 
+---
+
+## Session: 2026-01-01 (Late Afternoon) - Logic & UI Refinements
+
+**Commit:** `504` (Refined Week at a Glance, fixed Groceries tab, and persistent meal substitutions), `771` (Unify inventory tracking)
+
+**Work Completed:**
+- **Refined Week at a Glance**: Split lunch into distinct "Kids Lunch" and "Adult Lunch" columns. Added alternating row colors for better mobile readability.
+- **Dynamic Grocery Generation**: Replaced placeholder grocery list with a real aggregator that scans selected dinner and lunch recipes for produce, dairy, grains, and canned goods.
+- **Persistent Meal Substitutions**: Implemented "sticky" logic in `select_dinners`. If a meal is manually changed in `history.yml` (e.g., to a "Freezer Backup Meal"), the generator respects that choice and updates prep/grocery tasks accordingly.
+- **Unified Inventory Tracking**: Moved inventory stock management to `data/inventory.yml` as the single source of truth. The Overview tab and `log_execution.py` now both sync with this file.
+- **Data Sanitization**: Used `sed` to fix systematic misspellings ("tomatoe" -> "tomato", "potatoe" -> "potato") across 5,000+ lines of `recipes/index.yml`.
+- **Prep Schedule Balancing**: Redistributed prep load: Monday handles Mon-Tue, Tuesday handles Wed-Fri, Wednesday serves as a backup/buffer day.
+
+**Learning:**
+- **Respect User Overrides**: Automation should be a starting point, not a cage. Allowing users to manually "pin" a freezer meal in history makes the tool feel collaborative rather than prescriptive.
+- **Data Fragmentation is Technical Debt**: Having inventory tracked in two different YAML files created a "split brain" problem. Consolidating to one source of truth simplified both the planning logic and the UI generation.
+- **Dumb Regex is Powerful**: Cleaning up thousands of lines of misspellings via `sed` was much faster and less error-prone than trying to build a complex Python cleanup script.
+

@@ -15,6 +15,7 @@
 | **Phase 7: Learning & Adaptation** | 💡 Future | Analytics, recipe scoring, insights reports |
 | **Phase 8: Architecture & Robustness** | ✅ Complete | Backups, config file, fuzzy matching, validation |
 | **Phase 9: Testing & Validation** | ✅ Complete | Unit tests for logic, CI integration |
+| **Phase 10: UI & Logic Refinements** | ✅ Complete | Dynamic groceries, split lunch table, unified inventory |
 | **Operational: Live Dev** | ✅ Complete | Real-time regeneration and browser refresh |
 
 ---
@@ -658,4 +659,27 @@ python3 scripts/log_execution.py --week 2026-01-05 --summary
 4.  **Auto-Targeting:** Automatically opens the most recent plan file in the browser.
 
 **Validation:** Changes reflect in the browser in <3 seconds.
+## Phase 10: UI & Logic Refinements ✅
+
+**Status:** Complete
+**Goal:** Enhance usability and ensure a single source of truth for all data.
+
+### Features
+
+1.  **Refined "Week at a Glance":**
+    - Split single lunch column into "Kids Lunch" and "Adult Lunch".
+    - Added alternating row background colors (zebra striping) for readability.
+2.  **Automated Grocery List:**
+    - Scans selected recipes and lunches for ingredients.
+    - Categorizes items into Produce, Dairy, Grains, and Canned Goods.
+    - Deduplicates and cleans ingredient names automatically.
+3.  **Persistent Substitutions (Sticky Logic):**
+    - The planning script (`workflow.py`) now reads `history.yml` for the current week first.
+    - If a meal is manually set (e.g., to `freezer_meal`), the script preserves this choice and adjusts all other tabs (Prep, Groceries) accordingly.
+4.  **Unified Inventory Tracking:**
+    - Consolidated freezer and fridge stock management into `data/inventory.yml`.
+    - `log_execution.py` now updates the master `inventory.yml` when meals are logged.
+    - The "Overview" tab pulls directly from the master inventory for a live view of stock.
+
+---
 

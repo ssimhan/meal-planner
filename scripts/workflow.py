@@ -755,7 +755,8 @@ def generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe
     html.append('                    <thead>')
     html.append('                        <tr style="background: var(--bg-secondary); border-bottom: 2px solid var(--accent-green);">')
     html.append('                            <th style="padding: 12px; text-align: left; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Day</th>')
-    html.append('                            <th style="padding: 12px; text-align: left; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Lunch</th>')
+    html.append('                            <th style="padding: 12px; text-align: left; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Kids Lunch</th>')
+    html.append('                            <th style="padding: 12px; text-align: left; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Adult Lunch</th>')
     html.append('                            <th style="padding: 12px; text-align: left; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Dinner</th>')
     html.append('                        </tr>')
     html.append('                    </thead>')
@@ -764,14 +765,18 @@ def generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe
     days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
     day_abbr = ['mon', 'tue', 'wed', 'thu', 'fri']
 
-    for day_name, day_key in zip(days, day_abbr):
-        # Get lunch
-        lunch_text = ''
+    for i, (day_name, day_key) in enumerate(zip(days, day_abbr)):
+        # Get lunch details
+        kids_lunch = '-'
+        adult_lunch = '-'
+        
         if selected_lunches and day_key in selected_lunches:
             lunch = selected_lunches[day_key]
-            lunch_text = lunch.recipe_name
-        else:
-            lunch_text = '[Lunch suggestion]'
+            kids_lunch = lunch.recipe_name
+            if lunch.default_option:
+                adult_lunch = 'Leftovers or grain bowl'
+            else:
+                adult_lunch = 'Leftovers or dinner components'
 
         # Get dinner
         dinner_text = ''
@@ -781,10 +786,14 @@ def generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe
         else:
             dinner_text = '[Dinner]'
 
-        html.append(f'                        <tr style="border-bottom: 1px solid var(--border-subtle);">')
+        # Alternating row background
+        row_bg = 'transparent' if i % 2 == 0 else 'rgba(0,0,0,0.02)'
+
+        html.append(f'                        <tr style="border-bottom: 1px solid var(--border-subtle); background: {row_bg};">')
         html.append(f'                            <td style="padding: 12px; font-weight: 500;"><strong>{day_name}</strong></td>')
-        html.append(f'                            <td style="padding: 12px; color: var(--text-muted);">{lunch_text}</td>')
-        html.append(f'                            <td style="padding: 12px;">{dinner_text}</td>')
+        html.append(f'                            <td style="padding: 12px; color: var(--text-muted); font-size: 0.9rem;">{kids_lunch}</td>')
+        html.append(f'                            <td style="padding: 12px; color: var(--text-muted); font-size: 0.9rem;"><em>{adult_lunch}</em></td>')
+        html.append(f'                            <td style="padding: 12px; font-weight: 500;">{dinner_text}</td>')
         html.append(f'                        </tr>')
 
     html.append('                    </tbody>')

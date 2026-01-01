@@ -13,6 +13,7 @@
 | **Phase 5: UI Polish** | ✅ Complete | Landing page, mobile optimization, archive organization |
 | **Phase 6: Execution Tracking** | ✅ Complete | Track actual meals, vegetables, freezer, kids preferences |
 | **Phase 7: Learning & Adaptation** | 💡 Future | Analytics, recipe scoring, insights reports |
+| **Phase 8: Architecture & Robustness** | ✅ Complete | Backups, config file, fuzzy matching, validation |
 
 ---
 
@@ -600,3 +601,20 @@ python3 scripts/log_execution.py --week 2026-01-05 --summary
 - **Phase 7 Initial Framework Complete:** Basic analytics script (`analyze_trends.py`) ready
 - **Simplicity first:** Test each phase before building next
 - **Context efficiency:** Single `history.yml` file keeps LLM usage low
+
+## Phase 8: Architecture & Robustness ✅
+
+**Status:** Complete
+**Goal:** Ensure system longevity, data integrity, and maintainability.
+
+### Features
+1.  **Data Integrity:**
+    - New workflow `data-integrity.yml` runs `scripts/validate_yaml.py` on every push.
+    - `daily-checkin` workflow backs up `history.yml` before modification.
+2.  **Configuration:**
+    - Moved hardcoded settings (timezones, schedules) to `config.yml`.
+3.  **Maintenance Scripts:**
+    - `scripts/archive_history.py` moves old data to `data/archive/` to keep the main file fast.
+4.  **Operational Excellence:**
+    - All workflows support manual triggering (`workflow_dispatch`).
+    - Fuzzy matching implemented for more accurate ingredient tracking.

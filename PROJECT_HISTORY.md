@@ -362,3 +362,72 @@ The best tools are the ones you actually use. This system works because it reduc
 - Small visual improvements have big impact (same data, delightful presentation)
 
 **Next:** Priority 1 (Weekly Plan Visual Hierarchy), Priority 2 (Landing Page Intelligence), Priority 3 (Archive Organization)
+
+---
+
+## Session: 2026-01-01 - Phase 6 Planning (Execution Tracking)
+
+**Commits:** `35099a3`, `eaa87a8`
+
+**Work Completed:**
+- Designed Phase 6: Execution Tracking system architecture
+- Merged EXECUTION_TRACKING_IMPLEMENTATION.md into main IMPLEMENTATION.md
+- Renamed phases: Phase 6 = Execution Tracking, Phase 7 = Learning & Adaptation
+- Simplified design based on user feedback
+
+**Key Design Decisions:**
+
+1. **Single source of truth:** Use `history.yml` only - no separate execution files
+   - Rationale: Minimize duplication, optimize LLM context usage, simpler data management
+   - Learning: More files ≠ better organization - single file with clear structure beats multiple files
+
+2. **Minimal required fields:** `made` (yes/no/freezer) + `vegetables_used` only
+   - Removed: prep time tracking, energy levels, lunch tracking
+   - Rationale: Focus on high-value data (actual execution, vegetable consumption, kids preferences)
+   - Learning: Start simple, expand only if needed - avoid premature complexity
+
+3. **Vegetable tracking per dinner:** Track actual vegetables used each night
+   - Rationale: Enables waste reduction, family consumption analysis, fridge inventory management
+   - Use case: "We buy cucumbers every week but only use them 20% of the time"
+
+4. **Freezer inventory management:** Track additions (2x batches) and usage
+   - Auto-update when logging: made_2x_for_freezer adds meal, freezer_used removes meal
+   - Goal: Maintain 3 backup meals at all times
+   - Learning: Automation works best when it's invisible - track state changes automatically
+
+5. **Kids preferences tracking:** Two-part system
+   - Quick feedback: Multiple choice (Loved it ❤️ / Liked it 👍 / Neutral 😐 / Didn't like 👎 / Refused ❌)
+   - Dislikes accumulation: Optional complaints field → persistent kids_dislikes list
+   - Learning: Track both favorites (what to repeat) and dislikes (what to avoid)
+
+6. **Phased implementation:** Build → Test → Automate
+   - Phase 6.1: CLI logging script (`log_execution.py`)
+   - Phase 6.2: Manual testing for 3-5 days
+   - Phase 6.3: GitHub Actions integration (structured forms)
+   - Phase 6.4: Vegetable initialization from HTML Groceries tab
+   - Learning: Test each component before integrating - validate assumptions early
+
+7. **GitHub Actions evolution:** Structured forms instead of free text
+   - Current: Free text parsing ("Dinner: quesadillas - kids loved it")
+   - Planned: Checkboxes for vegetables, kids feedback, freezer meals
+   - Rationale: Reduce parsing complexity, mobile-friendly interaction
+   - Learning: Structured input > AI parsing - let users pick from lists when possible
+
+8. **Fridge vegetables initialization:** Extract from HTML Groceries tab
+   - Source: "Fresh Produce" section in weekly plan HTML
+   - Updated: As vegetables used daily via execution logging
+   - Use case: "What vegetables do I have left for Thursday/Friday?"
+
+**Future Phase 7 (Analytics):**
+- Depends on 4-8 weeks of Phase 6 data
+- Insights: Recipe success rates, vegetable waste patterns, kids preferences, plan adherence trends
+- Output: Markdown reports with recommendations (recipes to remove, vegetables to skip, favorites to increase)
+
+**Architectural Insights:**
+- Context efficiency matters: Single YAML file keeps token usage low for LLM workflows
+- Default behaviors reduce friction: If not logged, assume "made as planned"
+- State management via auto-calculation: `plan_adherence_pct` computed, not manual
+
+**Status:** Phase 6.1 ready to implement - next session will build `log_execution.py`
+
+**Learning:** Planning conversations with users reveal requirements better than spec documents - iterative design through Q&A uncovers edge cases and simplifications

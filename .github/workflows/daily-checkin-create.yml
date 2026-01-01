@@ -29,29 +29,62 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: `📝 Daily Check-in: ${today}`,
-              body: `## What did you make today?
+              body: `## 🍽️ Dinner Check-in: ${today}
 
-            Reply to this issue with:
-            - **Lunch:** What did you make/eat?
-            - **Dinner:** What did you make/eat?
-            - **Notes:** Any observations (time, kid reactions, leftovers, etc.)
-
-            ### Examples:
-            \`\`\`
-            Lunch: PBJ for kids, leftovers for me
-            Dinner: Quesadillas - kids loved them, took 15 mins
-            Notes: Had leftover beans from Monday
-            \`\`\`
-
-            \`\`\`
-            Lunch: Ravioli
-            Dinner: Skipped - ate out
-            Notes: Too tired to cook
-            \`\`\`
-
-            This issue will automatically close after logging.
+            ### Did you make the planned dinner?
+            - [ ] ✅ Made as planned
+            - [ ] ❄️ Made as planned + froze 2x batch
+            - [ ] 🍲 Used freezer backup
+            - [ ] 🔄 Made something else
+            - [ ] 🍽️ Ate out
 
             ---
-            🤖 Daily check-in · Auto-created by workflow`,
+
+            **If "Used freezer backup" → which meal?**
+            - [ ] Bisi Bele Bath
+            - [ ] Dal Makhani
+            - [ ] Pasta Sauce
+            - [ ] Cheesy Veggie Quesadilla
+
+            **If "Made something else" → what did you make?**
+            <!-- Enter meal name below -->
+
+            ---
+
+            ### What vegetables did you use tonight?
+            _(Check all that apply)_
+
+            - [ ] bell pepper
+            - [ ] broccoli
+            - [ ] carrot
+            - [ ] corn
+            - [ ] cucumber
+            - [ ] garlic
+            - [ ] onion
+            - [ ] peas
+            - [ ] potato
+            - [ ] tomato
+            - [ ] spinach
+            - [ ] zucchini
+
+            ---
+
+            ### Kids' feedback?
+            - [ ] ❤️ Loved it
+            - [ ] 👍 Liked it
+            - [ ] 😐 Neutral
+            - [ ] 👎 Didn't like
+            - [ ] ❌ Refused to eat
+
+            **Any complaints?** (optional)
+            <!-- key:complaints -->
+
+            ---
+
+            ### Notes (optional)
+            <!-- key:notes -->
+            [Free text for any other observations]
+            `,
               labels: ['daily-checkin']
             });
+

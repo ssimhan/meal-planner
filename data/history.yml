@@ -102,6 +102,20 @@ weeks:
     day: fri
     vegetables:
     - cucumber
+  fridge_vegetables:
+  - beans
+  - bell pepper
+  - carrot
+  - cauliflower
+  - cilantro
+  - corn
+  - cucumber
+  - garlic
+  - lemon
+  - onion
+  - peas
+  - tomato
+  - tomatoe
 - week_of: '2025-12-29'
   dinners:
   - recipe_id: cauliflower_rasam

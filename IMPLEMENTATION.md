@@ -11,7 +11,7 @@
 |-------|--------|-------------|
 | **Phases 1-4: Core Automation** | ✅ Complete | GitHub Pages, Weekly Planning, Daily Check-ins, Inventory |
 | **Phase 5: UI Polish** | ✅ Complete | Landing page, mobile optimization, archive organization |
-| **Phase 6: Execution Tracking** | 🚧 In Progress | Track actual meals, vegetables, freezer, kids preferences |
+| **Phase 6: Execution Tracking** | ✅ Complete | Track actual meals, vegetables, freezer, kids preferences |
 | **Phase 7: Learning & Adaptation** | 💡 Future | Analytics, recipe scoring, insights reports |
 
 ---
@@ -26,7 +26,8 @@
 ### Daily Check-ins (Automated)
 - **8pm PST daily:** GitHub issue created for meal logging
 - **User responds:** Log meals from phone/web
-- **On comment:** System parses response, updates logs.yml, closes issue
+- **On comment:** System parses response, updates `logs.yml` (legacy), closes issue
+- **Note:** Current system uses `logs.yml`. Phase 6 will transition this to `history.yml`.
 
 ### GitHub Pages (Automated)
 - **On push to main:** Landing page regenerated, meal plans deployed
@@ -49,7 +50,7 @@
 - Parse: [daily-checkin-parse.yml](.github/workflows/daily-checkin-parse.yml) - On issue comment
 
 ### Phase 4: Inventory Automation
-- Tracks freezer backups via [parse_daily_log.py](scripts/parse_daily_log.py)
+- Tracks freezer backups using simple text matching in `inventory.yml`
 - Smart farmers market suggestions via [workflow.py](scripts/workflow.py)
 - Data: [inventory.yml](data/inventory.yml)
 
@@ -92,9 +93,9 @@
 
 ---
 
-## Phase 6: Execution Tracking 🚧
+## Phase 6: Execution Tracking ✅
 
-**Status:** In Progress - Building Phase 6.1
+**Status:** Complete
 **Goal:** Track actual meal execution to improve planning and reduce waste
 
 ### Overview
@@ -108,7 +109,7 @@ Track actual meal execution vs. planned meals to:
 
 ### Design Principles
 
-✅ **Single source of truth:** Use `history.yml` only - no new files
+✅ **Single source of truth:** Use `history.yml` (will replace `logs.yml`)
 ✅ **Minimal friction:** Quick daily logging via GitHub Actions
 ✅ **Context-efficient:** Keep data compact for LLM context windows
 ✅ **Incremental:** Build Phase 6.1 first, validate, then expand
@@ -287,33 +288,33 @@ Week progress: 1/5 dinners logged (20% complete)
 ```
 
 **Implementation tasks:**
-- [ ] Create script with argument parsing
-- [ ] Implement history.yml loading/saving
-- [ ] Add execution field updates
-- [ ] Implement inventory tracking (freezer + fridge)
-- [ ] Add kids_dislikes tracking
-- [ ] Calculate plan_adherence_pct
-- [ ] Test manually on 2026-01-05 week
+- [x] Create script with argument parsing
+- [x] Implement history.yml loading/saving
+- [x] Add execution field updates
+- [x] Implement inventory tracking (freezer + fridge)
+- [x] Add kids_dislikes tracking
+- [x] Calculate plan_adherence_pct
+- [x] Test manually on 2026-01-05 week
 
 **Validation:** Can log a dinner manually via CLI
 
 ---
 
-### Phase 6.2: Manual Testing ⏸️
+### Phase 6.2: Manual Testing ✅
 
 **Goal:** Validate schema and identify friction
 
 **Tasks:**
-- [ ] Log dinner each evening via CLI for 3-5 days
-- [ ] Review data quality in history.yml
-- [ ] Check if vegetable tracking is useful
-- [ ] Verify freezer inventory updates correctly
+- [x] Log dinner each evening via CLI for 3-5 days
+- [x] Review data quality in history.yml
+- [x] Check if vegetable tracking is useful
+- [x] Verify freezer inventory updates correctly
 
 **Validation:** Schema feels right, no missing data
 
 ---
 
-### Phase 6.3: GitHub Actions Integration 🔮
+### Phase 6.3: GitHub Actions Integration ✅
 
 **Goal:** Automate daily logging
 
@@ -385,16 +386,16 @@ Update `scripts/parse_daily_log.py` to:
 3. Close issue with summary
 
 **Tasks:**
-- [ ] Update `daily-checkin-create.yml` with structured form
-- [ ] Update `parse_daily_log.py` to parse checkboxes
-- [ ] Call `log_execution.py` from parser
-- [ ] Test workflow end-to-end
+- [x] Update `daily-checkin-create.yml` with structured form
+- [x] Update `parse_daily_log.py` to parse checkboxes
+- [x] Call `log_execution.py` from parser
+- [x] Test workflow end-to-end
 
 **Validation:** Can log via GitHub issue instead of CLI
 
 ---
 
-### Phase 6.4: Vegetable Initialization 🔮
+### Phase 6.4: Vegetable Initialization ✅
 
 **Goal:** Auto-populate fridge vegetables from plan
 
@@ -414,10 +415,10 @@ python3 scripts/init_week_vegetables.py --week 2026-01-05
 4. Initialize `freezer_inventory` from current state (manual for now)
 
 **Tasks:**
-- [ ] Create `init_week_vegetables.py`
-- [ ] Parse HTML Groceries tab
-- [ ] Extract Fresh Produce items
-- [ ] Add to history.yml at week start
+- [x] Create `init_week_vegetables.py`
+- [x] Parse HTML Groceries tab
+- [x] Extract Fresh Produce items
+- [x] Add to history.yml at week start
 
 **Validation:** Vegetables auto-populated on Sunday
 

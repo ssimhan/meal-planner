@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pyyaml
+          pip install pyyaml beautifulsoup4
 
       - name: Generate meal plan
         id: generate
@@ -33,6 +33,12 @@ jobs:
           # Extract week date
           WEEK_DATE=$(ls -t plans/*.html | head -1 | xargs basename | cut -d- -f1,2,3)
           echo "week_date=$WEEK_DATE" >> $GITHUB_OUTPUT
+
+      - name: Initialize Inventory
+        run: |
+          # Extract vegetables from generated plan to history.yml
+          python3 scripts/init_week_vegetables.py --week ${{ steps.generate.outputs.week_date }}
+
 
       - name: Commit generated plan
         run: |

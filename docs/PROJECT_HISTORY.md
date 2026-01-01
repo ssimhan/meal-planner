@@ -479,3 +479,14 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Configuration:** Centralized settings into `config.yml`.
 - **Maintenance:** Created `archive_history.py` to manage long-term data growth and implemented fuzzy matching for ingredient tracking.
 - **Documentation:** Conducted and implemented a full architectural review.
+
+---
+
+## Session: 2026-01-01 (Final) - Live Development Setup
+
+**Work Completed:**
+- **Problem:** Static HTML is hard to iterate on - manually running `workflow.py` and refreshing the browser is slow.
+- **Solution:** Created `scripts/dev.sh` using `nodemon` and `browser-sync`.
+- **Result:** Changes to recipes, templates, or inputs automatically regenerate the plan and refresh the browser.
+**Learning:** Real-time feedback loops are critical for developer (and user) happiness.
+

@@ -15,6 +15,7 @@
 | **Phase 7: Learning & Adaptation** | 💡 Future | Analytics, recipe scoring, insights reports |
 | **Phase 8: Architecture & Robustness** | ✅ Complete | Backups, config file, fuzzy matching, validation |
 | **Phase 9: Testing & Validation** | ✅ Complete | Unit tests for logic, CI integration |
+| **Operational: Live Dev** | ✅ Complete | Real-time regeneration and browser refresh |
 
 ---
 
@@ -636,3 +637,25 @@ python3 scripts/log_execution.py --week 2026-01-05 --summary
     - Failures block deployment, ensuring only valid plans are generated.
 3.  **Data Cleanup:**
     - `scripts/deduplicate_history.py` utility for merging historical duplication and cleaning internal lists.
+
+---
+
+## Live Development ✅
+
+**Goal:** Provide a real-time feedback loop for making changes locally.
+
+### Component: `scripts/dev.sh`
+
+**Usage:**
+```bash
+./scripts/dev.sh
+```
+
+**Workflow:**
+1.  **Watcher (`nodemon`):** Monitors `inputs/`, `recipes/`, `templates/`, and `data/` for changes (`.yml`, `.html`, `.py`).
+2.  **Regeneration:** Automatically runs `python3 scripts/workflow.py generate-plan` on any change.
+3.  **Local Server (`browser-sync`):** Serves the project directory and live-refreshes when any plan file in `plans/` changes.
+4.  **Auto-Targeting:** Automatically opens the most recent plan file in the browser.
+
+**Validation:** Changes reflect in the browser in <3 seconds.
+

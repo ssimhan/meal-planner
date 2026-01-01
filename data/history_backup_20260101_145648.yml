@@ -1,0 +1,742 @@
+weeks:
+- week_of: '2025-12-29'
+  dinners:
+  - recipe_id: aloo_corn_tikki_roll
+    cuisine: indian
+    meal_type: soup_stew
+    day: mon
+    vegetables:
+    - avocado
+    - cilantro
+    - corn
+    - garlic
+    - ginger
+    - onion
+    - potato
+  - recipe_id: baked_black_bean_and_sweet_potato_flautas
+    cuisine: mexican
+    meal_type: tacos_wraps
+    day: tue
+    vegetables:
+    - beans
+    - cilantro
+    - corn
+    - garlic
+    - onion
+    - pepper
+    - potato
+    - sweet potato
+  - recipe_id: black_bean_quinoa_salad
+    cuisine: unknown
+    meal_type: salad
+    day: wed
+    vegetables:
+    - beans
+    - bell pepper
+    - cilantro
+    - lime
+    - tomato
+  - recipe_id: bhel_puri_chaat
+    cuisine: indian
+    meal_type: appetizer
+    day: thu
+    vegetables:
+    - cilantro
+    - cucumber
+    - lemon
+    - onion
+    - potato
+    - tomato
+  - recipe_id: broccoli_spinach_pasta_sauce
+    cuisine: italian
+    meal_type: pasta_noodles
+    day: fri
+    vegetables:
+    - broccoli
+    - garlic
+    - lemon
+    - spinach
+- week_of: '2026-01-05'
+  dinners:
+  - recipe_id: bisi_bele_bath
+    cuisine: indian
+    meal_type: soup_stew
+    day: mon
+    vegetables:
+    - beans
+    - carrot
+    - onion
+    - peas
+    - potato
+    - potatoe
+    - tomato
+    - tomatoe
+  - recipe_id: cheesy_veggie_quesadilla
+    cuisine: mexican
+    meal_type: tacos_wraps
+    day: tue
+    vegetables:
+    - bell pepper
+    - corn
+    - garlic
+    - onion
+  - recipe_id: cherry_tomato_salad
+    cuisine: unknown
+    meal_type: salad
+    day: wed
+    vegetables:
+    - garlic
+    - tomato
+    - tomatoe
+  - recipe_id: creamy_macaroni_pasta_salad
+    cuisine: italian
+    meal_type: pasta_noodles
+    day: thu
+    vegetables:
+    - broccoli
+    - cucumber
+    - onion
+  - recipe_id: cucumber_cream_cheese_bagel
+    cuisine: unknown
+    meal_type: sandwich
+    day: fri
+    vegetables:
+    - cucumber
+  fridge_vegetables:
+  - beans
+  - bell pepper
+  - carrot
+  - cauliflower
+  - cilantro
+  - corn
+  - cucumber
+  - garlic
+  - lemon
+  - onion
+  - peas
+  - tomato
+  - tomatoe
+- week_of: '2025-12-29'
+  dinners:
+  - recipe_id: cauliflower_rasam
+    cuisine: indian
+    meal_type: soup_stew
+    day: mon
+    vegetables:
+    - cauliflower
+    - cilantro
+    - lemon
+    - tomato
+    - tomatoe
+  - recipe_id: chickpea_chaat_salad
+    cuisine: indian
+    meal_type: salad
+    day: tue
+    vegetables:
+    - bell pepper
+    - carrot
+    - cilantro
+    - cucumber
+    - garlic
+    - lemon
+    - onion
+    - peas
+    - tomato
+  - recipe_id: chickpea_salad_wrap
+    cuisine: mexican
+    meal_type: tacos_wraps
+    day: wed
+    vegetables:
+    - bell pepper
+    - carrot
+    - peas
+    - tomato
+  - recipe_id: curried_egg_salad_sandwich
+    cuisine: indian
+    meal_type: sandwich
+    day: thu
+    vegetables:
+    - cilantro
+    - garlic
+  - recipe_id: easy_chickpea_fritters
+    cuisine: mediterranean
+    meal_type: appetizer
+    day: fri
+    vegetables:
+    - beans
+    - cucumber
+    - garlic
+    - peas
+- week_of: '2025-12-29'
+  dinners:
+  - recipe_id: chana_masala_ip
+    cuisine: indian
+    meal_type: soup_stew
+    day: mon
+    vegetables:
+    - cilantro
+    - garlic
+    - ginger
+    - onion
+    - peas
+    - tomato
+    - tomatoe
+  - recipe_id: crispy_chipotle_sweet_potato_tacos_with_lime_crema
+    cuisine: mexican
+    meal_type: tacos_wraps
+    day: tue
+    vegetables:
+    - beans
+    - cilantro
+    - garlic
+    - lime
+    - poblano
+    - potato
+    - potatoe
+    - sweet potato
+  - recipe_id: curried_cauliflower_quinoa_salad
+    cuisine: mediterranean
+    meal_type: salad
+    day: wed
+    vegetables:
+    - arugula
+    - cabbage
+    - cauliflower
+    - cilantro
+    - cucumber
+    - garlic
+    - lemon
+  - recipe_id: easy_french_toast_sticks
+    cuisine: american
+    meal_type: sandwich
+    day: thu
+    vegetables: []
+  - recipe_id: easy_zucchini_pasta_sauce
+    cuisine: italian
+    meal_type: pasta_noodles
+    day: fri
+    vegetables:
+    - basil
+    - beans
+    - garlic
+    - lemon
+    - parsley
+    - spinach
+    - zucchini
+- week_of: '2026-01-05'
+  dinners:
+  - recipe_id: aloo_corn_tikki_roll
+    cuisine: indian
+    meal_type: soup_stew
+    day: mon
+    vegetables:
+    - avocado
+    - cilantro
+    - corn
+    - garlic
+    - ginger
+    - onion
+    - potato
+  - recipe_id: baked_black_bean_and_sweet_potato_flautas
+    cuisine: mexican
+    meal_type: tacos_wraps
+    day: tue
+    vegetables:
+    - beans
+    - cilantro
+    - corn
+    - garlic
+    - onion
+    - pepper
+    - potato
+    - sweet potato
+  - recipe_id: black_bean_quinoa_salad
+    cuisine: unknown
+    meal_type: salad
+    day: wed
+    vegetables:
+    - beans
+    - bell pepper
+    - cilantro
+    - lime
+    - tomato
+  - recipe_id: bhel_puri_chaat
+    cuisine: indian
+    meal_type: appetizer
+    day: thu
+    vegetables:
+    - cilantro
+    - cucumber
+    - lemon
+    - onion
+    - potato
+    - tomato
+  - recipe_id: broccoli_spinach_pasta_sauce
+    cuisine: italian
+    meal_type: pasta_noodles
+    day: fri
+    vegetables:
+    - broccoli
+    - garlic
+    - lemon
+    - spinach
+- week_of: '2026-01-05'
+  dinners:
+  - recipe_id: bisi_bele_bath
+    cuisine: indian
+    meal_type: soup_stew
+    day: mon
+    vegetables:
+    - beans
+    - carrot
+    - onion
+    - peas
+    - potato
+    - potatoe
+    - tomato
+    - tomatoe
+    - beans
+    - carrot
+    - onion
+    - peas
+    - potato
+    - potatoe
+    - tomato
+    - tomatoe
+  - recipe_id: mediterranean_quinoa_salad
+    cuisine: unknown
+    meal_type: salad
+    day: tue
+    vegetables:
+    - beans
+    - cucumber
+    - lemon
+    - tomato
+    - beans
+    - cucumber
+    - lemon
+    - tomato
+  - recipe_id: mexican_papdi_chaat
+    cuisine: indian
+    meal_type: appetizer
+    day: wed
+    vegetables:
+    - beans
+    - bell pepper
+    - cilantro
+    - corn
+    - onion
+    - scallion
+    - beans
+    - bell pepper
+    - cilantro
+    - corn
+    - onion
+    - scallion
+  - recipe_id: creamy_macaroni_pasta_salad
+    cuisine: italian
+    meal_type: pasta_noodles
+    day: thu
+    vegetables:
+    - broccoli
+    - cucumber
+    - onion
+    - broccoli
+    - cucumber
+    - onion
+  - recipe_id: enchilada_sauce
+    cuisine: mexican
+    meal_type: tacos_wraps
+    day: fri
+    vegetables:
+    - garlic
+    - tomato
+    - garlic
+    - tomato
+- week_of: '2026-01-12'
+  dinners:
+  - recipe_id: cauliflower_rasam
+    cuisine: indian
+    meal_type: soup_stew
+    day: mon
+    vegetables:
+    - cauliflower
+    - cilantro
+    - lemon
+    - tomato
+    - tomatoe
+    - cauliflower
+    - cilantro
+    - lemon
+    - tomato
+    - tomatoe
+  - recipe_id: cheesy_veggie_quesadilla
+    cuisine: mexican
+    meal_type: tacos_wraps
+    day: tue
+    vegetables:
+    - bell pepper
+    - corn
+    - garlic
+    - onion
+    - bell pepper
+    - corn
+    - garlic
+    - onion
+  - recipe_id: chickpea_chaat_salad
+    cuisine: indian
+    meal_type: salad
+    day: wed
+    vegetables:
+    - bell pepper
+    - carrot
+    - cilantro
+    - cucumber
+    - garlic
+    - lemon
+    - onion
+    - peas
+    - tomato
+    - bell pepper
+    - carrot
+    - cilantro
+    - cucumber
+    - garlic
+    - lemon
+    - onion
+    - peas
+    - tomato
+  - recipe_id: curried_egg_salad_sandwich
+    cuisine: indian
+    meal_type: sandwich
+    day: thu
+    vegetables:
+    - cilantro
+    - garlic
+    - cilantro
+    - garlic
+  - recipe_id: easy_chickpea_fritters
+    cuisine: mediterranean
+    meal_type: appetizer
+    day: fri
+    vegetables:
+    - beans
+    - cucumber
+    - garlic
+    - peas
+    - beans
+    - cucumber
+    - garlic
+    - peas
+- week_of: '2026-01-05'
+  dinners:
+  - recipe_id: chana_masala_ip
+    cuisine: indian
+    meal_type: soup_stew
+    day: mon
+    vegetables:
+    - cilantro
+    - garlic
+    - ginger
+    - onion
+    - peas
+    - tomato
+    - tomatoe
+    - cilantro
+    - garlic
+    - ginger
+    - onion
+    - peas
+    - tomato
+    - tomatoe
+  - recipe_id: chickpea_salad_wrap
+    cuisine: mexican
+    meal_type: tacos_wraps
+    day: tue
+    vegetables:
+    - bell pepper
+    - carrot
+    - peas
+    - tomato
+    - bell pepper
+    - carrot
+    - peas
+    - tomato
+  - recipe_id: curried_cauliflower_quinoa_salad
+    cuisine: mediterranean
+    meal_type: salad
+    day: wed
+    vegetables:
+    - arugula
+    - cabbage
+    - cauliflower
+    - cilantro
+    - cucumber
+    - garlic
+    - lemon
+    - arugula
+    - cabbage
+    - cauliflower
+    - cilantro
+    - cucumber
+    - garlic
+    - lemon
+  - recipe_id: easy_french_toast_sticks
+    cuisine: american
+    meal_type: sandwich
+    day: thu
+    vegetables: []
+  - recipe_id: easy_zucchini_pasta_sauce
+    cuisine: italian
+    meal_type: pasta_noodles
+    day: fri
+    vegetables:
+    - basil
+    - beans
+    - garlic
+    - lemon
+    - parsley
+    - spinach
+    - zucchini
+    - basil
+    - beans
+    - garlic
+    - lemon
+    - parsley
+    - spinach
+    - zucchini
+- week_of: '2026-01-05'
+  dinners:
+  - recipe_id: aloo_corn_tikki_roll
+    cuisine: indian
+    meal_type: soup_stew
+    day: mon
+    vegetables:
+    - avocado
+    - cilantro
+    - corn
+    - garlic
+    - ginger
+    - onion
+    - potato
+    - avocado
+    - cilantro
+    - corn
+    - garlic
+    - ginger
+    - onion
+    - potato
+  - recipe_id: baked_black_bean_and_sweet_potato_flautas
+    cuisine: mexican
+    meal_type: tacos_wraps
+    day: tue
+    vegetables:
+    - beans
+    - cilantro
+    - corn
+    - garlic
+    - onion
+    - pepper
+    - potato
+    - sweet potato
+    - beans
+    - cilantro
+    - corn
+    - garlic
+    - onion
+    - pepper
+    - potato
+    - sweet potato
+  - recipe_id: black_bean_quinoa_salad
+    cuisine: unknown
+    meal_type: salad
+    day: wed
+    vegetables:
+    - beans
+    - bell pepper
+    - cilantro
+    - lime
+    - tomato
+    - beans
+    - bell pepper
+    - cilantro
+    - lime
+    - tomato
+  - recipe_id: bhel_puri_chaat
+    cuisine: indian
+    meal_type: appetizer
+    day: thu
+    vegetables:
+    - cilantro
+    - cucumber
+    - lemon
+    - onion
+    - potato
+    - tomato
+    - cilantro
+    - cucumber
+    - lemon
+    - onion
+    - potato
+    - tomato
+  - recipe_id: broccoli_spinach_pasta_sauce
+    cuisine: italian
+    meal_type: pasta_noodles
+    day: fri
+    vegetables:
+    - broccoli
+    - garlic
+    - lemon
+    - spinach
+    - broccoli
+    - garlic
+    - lemon
+    - spinach
+- week_of: '2026-01-12'
+  dinners:
+  - recipe_id: bisi_bele_bath
+    cuisine: indian
+    meal_type: soup_stew
+    day: mon
+    vegetables:
+    - beans
+    - carrot
+    - onion
+    - peas
+    - potato
+    - potatoe
+    - tomato
+    - tomatoe
+    - beans
+    - carrot
+    - onion
+    - peas
+    - potato
+    - potatoe
+    - tomato
+    - tomatoe
+  - recipe_id: mediterranean_quinoa_salad
+    cuisine: unknown
+    meal_type: salad
+    day: tue
+    vegetables:
+    - beans
+    - cucumber
+    - lemon
+    - tomato
+    - beans
+    - cucumber
+    - lemon
+    - tomato
+  - recipe_id: mexican_papdi_chaat
+    cuisine: indian
+    meal_type: appetizer
+    day: wed
+    vegetables:
+    - beans
+    - bell pepper
+    - cilantro
+    - corn
+    - onion
+    - scallion
+    - beans
+    - bell pepper
+    - cilantro
+    - corn
+    - onion
+    - scallion
+  - recipe_id: creamy_macaroni_pasta_salad
+    cuisine: italian
+    meal_type: pasta_noodles
+    day: thu
+    vegetables:
+    - broccoli
+    - cucumber
+    - onion
+    - broccoli
+    - cucumber
+    - onion
+  - recipe_id: enchilada_sauce
+    cuisine: mexican
+    meal_type: tacos_wraps
+    day: fri
+    vegetables:
+    - garlic
+    - tomato
+    - garlic
+    - tomato
+- week_of: '2026-01-05'
+  dinners:
+  - recipe_id: cauliflower_rasam
+    cuisine: indian
+    meal_type: soup_stew
+    day: mon
+    vegetables:
+    - cauliflower
+    - cilantro
+    - lemon
+    - tomato
+    - tomatoe
+    - cauliflower
+    - cilantro
+    - lemon
+    - tomato
+    - tomatoe
+  - recipe_id: cheesy_veggie_quesadilla
+    cuisine: mexican
+    meal_type: tacos_wraps
+    day: tue
+    vegetables:
+    - bell pepper
+    - corn
+    - garlic
+    - onion
+    - bell pepper
+    - corn
+    - garlic
+    - onion
+  - recipe_id: chickpea_chaat_salad
+    cuisine: indian
+    meal_type: salad
+    day: wed
+    vegetables:
+    - bell pepper
+    - carrot
+    - cilantro
+    - cucumber
+    - garlic
+    - lemon
+    - onion
+    - peas
+    - tomato
+    - bell pepper
+    - carrot
+    - cilantro
+    - cucumber
+    - garlic
+    - lemon
+    - onion
+    - peas
+    - tomato
+  - recipe_id: curried_egg_salad_sandwich
+    cuisine: indian
+    meal_type: sandwich
+    day: thu
+    vegetables:
+    - cilantro
+    - garlic
+    - cilantro
+    - garlic
+  - recipe_id: easy_chickpea_fritters
+    cuisine: mediterranean
+    meal_type: appetizer
+    day: fri
+    vegetables:
+    - beans
+    - cucumber
+    - garlic
+    - peas
+    - beans
+    - cucumber
+    - garlic
+    - peas

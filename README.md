@@ -68,6 +68,16 @@ The CLI workflow:
 3. Generate meal plan HTML
 4. Updates history automatically
 
+**Live Development (New!):**
+To see changes in real-time without manual refreshes:
+```bash
+./scripts/dev.sh
+```
+This will:
+- Watch for changes in `recipes/`, `templates/`, `inputs/`, and `data/`
+- Automatically regenerate the meal plan
+- Live-refresh your browser whenever the plan updates
+
 **Other commands:**
 ```bash
 ./mealplan status    # Show current state

@@ -2,8 +2,8 @@ week_of: '2026-01-05'
 timezone: America/Los_Angeles
 workflow:
   status: plan_complete
-  created_at: '2026-01-01T15:03:17.248039'
-  updated_at: '2026-01-01T15:18:40.439817'
+  created_at: '2026-01-01T15:27:16.412118'
+  updated_at: '2026-01-01T15:27:34.857869'
 schedule:
   office_days:
   - mon
@@ -27,6 +27,7 @@ farmers_market:
   - spinach
   - lime
   - avocado
+  - squash
   - onion
   - garlic
   - cilantro

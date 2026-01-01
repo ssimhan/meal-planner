@@ -637,9 +637,9 @@
   kid_friendly: true
   prep_style: component_based
   prep_components:
-  - cooked_beans
-  - shredded_cheese
-  - diced_vegetables
+  - cooked_black_or_pinto_beans
+  - shredded_mexican_blend_cheese
+  - diced_bell_peppers_and_onions
   component_storage_days: 3
   reuses_dinner_ingredients:
   - beans
@@ -689,8 +689,8 @@
   prep_components: []
   component_storage_days: 0
   reuses_dinner_ingredients: []
-- id: cherry_tomatos
-  name: Cherry tomatos
+- id: cherry_tomatoes
+  name: Cherry tomatoes
   cuisine: unknown
   meal_type: simple_snack
   effort_level: normal
@@ -701,7 +701,7 @@
   avoid_contains: []
   source:
     type: html
-    file: recipes/raw_html/Cherry tomatos.html
+    file: recipes/raw_html/Cherry tomatoes.html
   lunch_suitable: false
   kid_friendly: false
   prep_style: null
@@ -1939,14 +1939,14 @@
   kid_friendly: true
   prep_style: component_based
   prep_components:
-  - cooked_beans
-  - shredded_cheese
-  - chopped_vegetables
+  - cooked_black_or_pinto_beans
+  - shredded_mozzarella_or_feta
+  - chopped_onions_and_spinach
   component_storage_days: 3
   reuses_dinner_ingredients:
   - beans
   - cheese
-  - tomatos
+  - tomatoes
   - cucumbers
 - id: grilled_cheese_and_tomato_soup
   name: Grilled Cheese and Tomato Soup
@@ -3749,9 +3749,9 @@
   kid_friendly: true
   prep_style: component_based
   prep_components:
-  - refried_beans
-  - shredded_cheese
-  - rice
+  - refried_pinto_beans
+  - shredded_mexican_blend_cheese
+  - cooked_brown_or_white_rice
   component_storage_days: 3
   reuses_dinner_ingredients:
   - beans
@@ -3921,7 +3921,7 @@
   prep_style: component_based
   prep_components:
   - cooked_black_beans
-  - shredded_cheese
+  - shredded_cheddar_cheese
   - corn
   component_storage_days: 3
   reuses_dinner_ingredients:

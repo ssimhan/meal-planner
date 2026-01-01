@@ -58,77 +58,81 @@ weeks:
     - spinach
 - week_of: '2026-01-05'
   dinners:
-  - recipe_id: bisi_bele_bath
+  - recipe_id: chana_masala_ip
     cuisine: indian
     meal_type: soup_stew
     day: mon
     vegetables:
-    - beans
-    - carrot
+    - cilantro
+    - garlic
+    - ginger
     - onion
     - peas
-    - potato
-    - potato
     - tomato
     - tomato
-    - beans
-    - carrot
+    - cilantro
+    - garlic
+    - ginger
     - onion
     - peas
-    - potato
-    - potato
     - tomato
     - tomato
-  - recipe_id: mediterranean_quinoa_salad
-    cuisine: unknown
-    meal_type: salad
-    day: tue
-    vegetables:
-    - beans
-    - cucumber
-    - lemon
-    - tomato
-    - beans
-    - cucumber
-    - lemon
-    - tomato
-  - recipe_id: mexican_papdi_chaat
-    cuisine: indian
-    meal_type: appetizer
-    day: wed
-    vegetables:
-    - beans
-    - bell pepper
-    - cilantro
-    - corn
-    - onion
-    - scallion
-    - beans
-    - bell pepper
-    - cilantro
-    - corn
-    - onion
-    - scallion
-  - recipe_id: creamy_macaroni_pasta_salad
-    cuisine: italian
-    meal_type: pasta_noodles
-    day: thu
-    vegetables:
-    - broccoli
-    - cucumber
-    - onion
-    - broccoli
-    - cucumber
-    - onion
-  - recipe_id: enchilada_sauce
+  - recipe_id: chickpea_salad_wrap
     cuisine: mexican
     meal_type: tacos_wraps
+    day: tue
+    vegetables:
+    - bell pepper
+    - carrot
+    - peas
+    - tomato
+    - bell pepper
+    - carrot
+    - peas
+    - tomato
+  - recipe_id: curried_cauliflower_quinoa_salad
+    cuisine: mediterranean
+    meal_type: salad
+    day: wed
+    vegetables:
+    - arugula
+    - cabbage
+    - cauliflower
+    - cilantro
+    - cucumber
+    - garlic
+    - lemon
+    - arugula
+    - cabbage
+    - cauliflower
+    - cilantro
+    - cucumber
+    - garlic
+    - lemon
+  - recipe_id: easy_french_toast_sticks
+    cuisine: american
+    meal_type: sandwich
+    day: thu
+    vegetables: []
+  - recipe_id: easy_zucchini_pasta_sauce
+    cuisine: italian
+    meal_type: pasta_noodles
     day: fri
     vegetables:
+    - basil
+    - beans
     - garlic
-    - tomato
+    - lemon
+    - parsley
+    - spinach
+    - zucchini
+    - basil
+    - beans
     - garlic
-    - tomato
+    - lemon
+    - parsley
+    - spinach
+    - zucchini
   fridge_vegetables:
   - beans
   - bell pepper

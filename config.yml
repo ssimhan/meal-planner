@@ -1,0 +1,19 @@
+# Meal Planner Configuration
+
+timezone: America/Los_Angeles
+
+schedule:
+  office_days: [mon, wed, fri]
+  busy_days: [thu, fri]
+  late_class_days: []
+
+preferences:
+  vegetarian: true
+  avoid_ingredients: 
+    - eggplant
+    - mushrooms
+    - green_cabbage
+  novelty_recipe_limit: 1
+
+workflows:
+  daily_check_in_time: "0 4 * * *" # 8pm PST

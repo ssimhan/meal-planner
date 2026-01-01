@@ -109,25 +109,38 @@ def create_new_week(week_str):
 
     proposed_veg, staples = generate_farmers_market_proposal(history_path, index_path)
 
+    # Load configuration
+    config_path = Path('config.yml')
+    if config_path.exists():
+        with open(config_path, 'r') as f:
+            config = yaml.safe_load(f)
+    else:
+        # Fallback defaults
+        config = {
+            'timezone': 'America/Los_Angeles',
+            'schedule': {
+                'office_days': ['mon', 'wed', 'fri'],
+                'busy_days': ['thu', 'fri'],
+                'late_class_days': [],
+            },
+            'preferences': {
+                'vegetarian': True,
+                'avoid_ingredients': ['eggplant', 'mushrooms', 'green_cabbage'],
+                'novelty_recipe_limit': 1,
+            }
+        }
+
     # Create input file
     input_data = {
         'week_of': week_str,
-        'timezone': 'America/Los_Angeles',
+        'timezone': config.get('timezone', 'America/Los_Angeles'),
         'workflow': {
             'status': 'intake_complete',
             'created_at': datetime.now().isoformat(),
             'updated_at': datetime.now().isoformat(),
         },
-        'schedule': {
-            'office_days': ['mon', 'wed', 'fri'],
-            'busy_days': ['thu', 'fri'],
-            'late_class_days': [],
-        },
-        'preferences': {
-            'vegetarian': True,
-            'avoid_ingredients': ['eggplant', 'mushrooms', 'green_cabbage'],
-            'novelty_recipe_limit': 1,
-        },
+        'schedule': config.get('schedule', {}),
+        'preferences': config.get('preferences', {}),
         'farmers_market': {
             'status': 'proposed',
             'proposed_veg': proposed_veg + staples,

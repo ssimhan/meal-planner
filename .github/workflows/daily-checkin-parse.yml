@@ -3,6 +3,7 @@ name: Parse Daily Check-in
 on:
   issue_comment:
     types: [created]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -10,7 +11,7 @@ permissions:
 
 jobs:
   parse-checkin:
-    if: contains(github.event.issue.labels.*.name, 'daily-checkin')
+    if: contains(github.event.issue.labels.*.name, 'daily-checkin') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -23,6 +24,12 @@ jobs:
 
       - name: Install dependencies
         run: pip install pyyaml
+
+      - name: Backup history
+        run: |
+          if [ -f data/history.yml ]; then
+            cp data/history.yml data/history_backup.yml
+          fi
 
       - name: Parse comment and update logs
         run: |
@@ -39,7 +46,7 @@ jobs:
         run: |
           git config user.name "Meal Planner Bot"
           git config user.email "mealplanner@users.noreply.github.com"
-          git add data/history.yml
+          git add data/history.yml data/history_backup.yml
           git commit -m "Log daily meals from ${{ github.event.issue.title }}" || echo "No changes to commit"
           git push
 

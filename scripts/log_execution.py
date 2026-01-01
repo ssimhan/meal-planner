@@ -154,30 +154,28 @@ def main():
         # Remove from fridge inventory if exists
         if 'fridge_vegetables' in week:
             # We iterate a copy to modify the original
-            current_fridge = [v.lower() for v in week['fridge_vegetables']]
             
-            # Simple removal logic: try to remove matching items
-            # This is tricky because vegetables_used might match multiple items or none.
-            # We'll just try to remove one instance for each used veg.
+            def normalize_veg(n):
+                """Normalize name for matching (lower, strip s)."""
+                n = n.lower().strip()
+                if n.endswith('s') and not n.endswith('ss'):
+                    return n[:-1]
+                return n
+
+            used_temp = [normalize_veg(v) for v in veggies_list]
             new_fridge = []
-            used_temp = [v.lower() for v in veggies_list]
-            
-            # Reconstruct fridge list by "using up" items
-            # This logic assumes simple string matching
-            # It might be safer to just remove strict matches
-             
-            # Better approach:
-            # 1. Count frequency in fridge
-            # 2. Subtract usage
-            # 3. Rebuild
-            
-            # Simplest approach for now: list remove
+
             for veg in week['fridge_vegetables']:
-                veg_lower = veg.lower()
-                if veg_lower in used_temp:
-                    used_temp.remove(veg_lower) # Removed one instance
-                    # Don't add to new list (it's used)
-                else:
+                veg_norm = normalize_veg(veg)
+                
+                # Check for match (either exact norm match or partial)
+                match_found = False
+                
+                if veg_norm in used_temp:
+                    used_temp.remove(veg_norm)
+                    match_found = True
+                
+                if not match_found:
                     new_fridge.append(veg)
             
             week['fridge_vegetables'] = new_fridge

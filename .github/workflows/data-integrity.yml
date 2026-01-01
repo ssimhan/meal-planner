@@ -1,0 +1,33 @@
+name: Data Integrity Check
+
+on:
+  push:
+    paths:
+      - 'data/*.yml'
+      - 'inputs/*.yml'
+      - 'recipes/*.yml'
+      - '**.yml'
+      - '**.yaml'
+  pull_request:
+    paths:
+      - '**.yml'
+      - '**.yaml'
+  workflow_dispatch:
+
+jobs:
+  validate-yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Validate YAML syntax
+        run: python3 scripts/validate_yaml.py

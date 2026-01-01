@@ -953,9 +953,9 @@ def generate_prep_section(day_key, day_name, selected_dinners, selected_lunches)
         return s.replace('_', ' ').title()
 
     if day_key == 'mon':
-        # Monday: CHOP EVERYTHING
+        # Monday: CHOP FOR MON/TUE
         all_vegs = []
-        for d_key in ['mon', 'tue', 'wed', 'thu', 'fri']:
+        for d_key in ['mon', 'tue']:
             if d_key in selected_dinners:
                 all_vegs.extend(selected_dinners[d_key].get('main_veg', []))
         
@@ -963,9 +963,9 @@ def generate_prep_section(day_key, day_name, selected_dinners, selected_lunches)
         unique_vegs = sorted(list(set(all_vegs)))
         veg_list_str = ', '.join([format_item(v) for v in unique_vegs]) if unique_vegs else 'None identified'
 
-        # Lunch components to prep
+        # Lunch components to prep for early week
         all_components = []
-        for l_key in ['mon', 'tue', 'wed', 'thu', 'fri']:
+        for l_key in ['mon', 'tue']:
             if l_key in selected_lunches:
                 all_components.extend(selected_lunches[l_key].prep_components)
         
@@ -978,13 +978,13 @@ def generate_prep_section(day_key, day_name, selected_dinners, selected_lunches)
             snack_prep.append('Cube cheese brick for Tuesday snack')
 
         html.append('            <div class="prep-tasks">')
-        html.append(f'                <h4>{day_name} Prep Tasks (PM PREP ONLY)</h4>')
+        html.append(f'                <h4>{day_name} Prep Tasks (MON-TUE PREP)</h4>')
         html.append('                <ul>')
-        html.append(f'                    <li><strong>Chop ALL vegetables:</strong> {veg_list_str}</li>')
-        html.append(f'                    <li><strong>Prep components:</strong> {comp_list_str}</li>')
+        html.append(f'                    <li><strong>Chop vegetables (Mon/Tue):</strong> {veg_list_str}</li>')
+        html.append(f'                    <li><strong>Prep components (Mon/Tue):</strong> {comp_list_str}</li>')
         for sp in snack_prep:
             html.append(f'                    <li>{sp}</li>')
-        html.append('                    <li>Portion snacks into grab-and-go containers for entire week</li>')
+        html.append('                    <li>Portion snacks into grab-and-go containers for early week</li>')
         html.append('                    <li>Identify freezer-friendly dinner to double (batch cook)</li>')
         html.append('                </ul>')
         html.append('            </div>')
@@ -992,7 +992,7 @@ def generate_prep_section(day_key, day_name, selected_dinners, selected_lunches)
     elif day_key == 'tue':
         # Tuesday: AM/PM split
         html.append('            <div class="prep-tasks">')
-        html.append(f'                <h4>{day_name} Prep Tasks (AM + PM PREP)</h4>')
+        html.append(f'                <h4>{day_name} Prep Tasks (WED-FRI PREP)</h4>')
         
         # AM Section
         html.append('                <div style="margin-top: 15px;">')
@@ -1006,21 +1006,38 @@ def generate_prep_section(day_key, day_name, selected_dinners, selected_lunches)
         html.append('                    </ul>')
         html.append('                </div>')
 
-        # PM Section
+        # PM Section: CHOP FOR WED/THU/FRI
+        all_vegs = []
+        for d_key in ['wed', 'thu', 'fri']:
+            if d_key in selected_dinners:
+                all_vegs.extend(selected_dinners[d_key].get('main_veg', []))
+        
+        unique_vegs = sorted(list(set(all_vegs)))
+        veg_list_str = ', '.join([format_item(v) for v in unique_vegs]) if unique_vegs else 'None identified'
+
+        all_components = []
+        for l_key in ['wed', 'thu', 'fri']:
+            if l_key in selected_lunches:
+                all_components.extend(selected_lunches[l_key].prep_components)
+        
+        unique_components = sorted(list(set(all_components)))
+        comp_list_str = ', '.join([format_item(c) for c in unique_components]) if unique_components else 'None identified'
+
         html.append('                <div style="margin-top: 15px;">')
         html.append('                    <strong>🌙 PM Prep (Evening 5-9pm):</strong>')
         html.append('                    <ul>')
-        html.append('                        <li>NO chopping - all vegetables already prepped Monday</li>')
-        html.append('                        <li>Continue prepping lunch components for Wed/Thu/Fri</li>')
+        html.append(f'                        <li><strong>Chop vegetables (Wed-Fri):</strong> {veg_list_str}</li>')
+        html.append(f'                        <li><strong>Prep components (Wed-Fri):</strong> {comp_list_str}</li>')
+        html.append('                        <li>Portion snacks for rest of week</li>')
         html.append('                    </ul>')
         html.append('                </div>')
         html.append('            </div>')
 
     elif day_key == 'wed':
         html.append('            <div class="prep-tasks">')
-        html.append(f'                <h4>{day_name} Prep Tasks (PM PREP ONLY)</h4>')
+        html.append(f'                <h4>{day_name} Prep Tasks (BACKUP PREP)</h4>')
         html.append('                <ul>')
-        html.append('                    <li>NO chopping - all vegetables already prepped Monday</li>')
+        html.append('                    <li><strong>Backup day:</strong> Finish any remaining veg/lunch prep for Thu/Fri</li>')
         html.append('                    <li>Load Instant Pot or slow cooker for Thursday if needed</li>')
         html.append('                    <li>Final check: All Thu/Fri components ready</li>')
         html.append('                </ul>')

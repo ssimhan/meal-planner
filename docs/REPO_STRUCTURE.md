@@ -1,6 +1,7 @@
 # Repository System architecture and file organization reference.
 
 ## Documentation
+- `docs/USER_GUIDE.md`: Non-technical "How To" guide
 - `docs/IMPLEMENTATION.md`: Automation setup and implementation status
 - `docs/PROJECT_HISTORY.md`: Development journey and key decisions
 - `docs/GITHUB_ACTIONS_SETUP.md`: Setup guide for GitHub Actions

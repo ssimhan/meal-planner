@@ -468,3 +468,6 @@ The best tools are the ones you actually use. This system works because it reduc
 
 **Status:** Initial framework complete. Script is ready to run once data accumulates.
 
+
+### Note on Workflow (2026-01-01)
+*This session and the implementation of Phases 6 & 7 were conducted using **Google Antigravity** (Advanced Agentic Coding), differentiating it from previous sessions using the standard Claude Code plugin.*

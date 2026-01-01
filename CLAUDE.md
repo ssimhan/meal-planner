@@ -23,6 +23,8 @@ Generate weekly meal plans following these responsibilities:
 - `data/history.yml` - Last 3+ weeks of meals (anti-repetition)
 - `inputs/YYYY-MM-DD.yml` - Current week constraints/schedule
 - `recipes/taxonomy.yml` - Valid cuisines, meal types, effort levels
+- After feature implementation, update [docs/IMPLEMENTATION.md](file:///docs/IMPLEMENTATION.md) and [docs/PROJECT_HISTORY.md](file:///docs/PROJECT_HISTORY.md)
+- Keep [docs/IMPLEMENTATION.md](file:///docs/IMPLEMENTATION.md) as single source of truth for planning
 
 ### For Specific Tasks
 - `scripts/workflow.py` - Automated workflow with state tracking

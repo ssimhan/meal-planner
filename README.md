@@ -5,8 +5,8 @@ Automated meal planning system with anti-repetition logic, farmers market integr
 **🌐 Live Site:** https://ssimhan.github.io/meal-planner/
 
 **📖 Documentation:**
-- [IMPLEMENTATION.md](IMPLEMENTATION.md) - Automation setup and implementation status
-- [PROJECT_HISTORY.md](PROJECT_HISTORY.md) - Development journey and key decisions
+- [docs/IMPLEMENTATION.md](docs/IMPLEMENTATION.md) - Automation setup and implementation status
+- [docs/PROJECT_HISTORY.md](docs/PROJECT_HISTORY.md) - Development journey and key decisions
 - [docs/REPO_STRUCTURE.md](docs/REPO_STRUCTURE.md) - File organization reference
 
 ## Features
@@ -136,7 +136,7 @@ Move from "Here's a plan you *could* follow" to "Here's the plan you almost alwa
 - **Anti-repetition** - Prevent recipe/template fatigue
 - **Mental load reduction** - Optimize for calm, not just nutrition
 
-See [PROJECT_HISTORY.md](PROJECT_HISTORY.md) for detailed philosophy and evolution.
+See [docs/PROJECT_HISTORY.md](docs/PROJECT_HISTORY.md) for detailed philosophy and evolution.
 
 ---
 
@@ -151,13 +151,13 @@ See [PROJECT_HISTORY.md](PROJECT_HISTORY.md) for detailed philosophy and evoluti
 - ✅ Phase 6: Execution Tracking (meal adherence, vegetable tracking, kids preferences)
 - 🚧 Phase 7: Analytics & Insights (initial framework complete)
 
-See [IMPLEMENTATION.md](IMPLEMENTATION.md) for complete status and future ideas.
+See [docs/IMPLEMENTATION.md](docs/IMPLEMENTATION.md) for complete status and future ideas.
 
 ---
 
 ## Maintaining Project History
 
-After coding sessions, document your work in [PROJECT_HISTORY.md](PROJECT_HISTORY.md):
+After coding sessions, document your work in [docs/PROJECT_HISTORY.md](docs/PROJECT_HISTORY.md):
 
 **What to include:**
 - Date and what changed (features, fixes, refactoring)

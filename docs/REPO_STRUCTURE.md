@@ -1,6 +1,10 @@
-# Repository Structure
+# Repository System architecture and file organization reference.
 
-File organization reference for the meal-planner repository.
+## Documentation
+- `docs/IMPLEMENTATION.md`: Automation setup and implementation status
+- `docs/PROJECT_HISTORY.md`: Development journey and key decisions
+- `docs/GITHUB_ACTIONS_SETUP.md`: Setup guide for GitHub Actions
+ for the meal-planner repository.
 
 ---
 
@@ -27,6 +31,10 @@ meal-planner/
 │   ├── DESIGN_REFERENCE.md      # Original UX vision
 │   ├── UPDATE_RECIPE_TEMPLATES.md
 │   └── REPO_STRUCTURE.md (this file)
+│   ├── REPO_STRUCTURE.md (this file)
+│   ├── IMPLEMENTATION.md          # Implementation details
+│   ├── PROJECT_HISTORY.md         # Project history
+│   └── GITHUB_ACTIONS_SETUP.md    # Actions setup guide
 │
 ├── scripts/                     # Python automation
 │   ├── workflow.py              # State-based workflow

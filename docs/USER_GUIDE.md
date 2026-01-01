@@ -40,7 +40,7 @@ Bookmark this link on your phone:
 
 Every night at 8 PM, the system asks: *"Did you stick to the plan?"*
 
-1.  Open the notification on your phone.
+1.  Open the notification on your phone (**GitHub App** or **Email**).
 2.  You will see a simple checklist:
     - [ ] **Made as planned?** (Yes/No)
     - [ ] **Vegetables used?** (Select from list)

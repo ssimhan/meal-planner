@@ -2,8 +2,8 @@ week_of: '2026-01-05'
 timezone: America/Los_Angeles
 workflow:
   status: plan_complete
-  created_at: '2026-01-01T15:33:37.435807'
-  updated_at: '2026-01-01T15:33:49.696402'
+  created_at: '2026-01-01T15:37:42.318156'
+  updated_at: '2026-01-01T15:38:14.851634'
 schedule:
   office_days:
   - mon
@@ -23,8 +23,9 @@ preferences:
 farmers_market:
   status: confirmed
   proposed_veg:
+  - broccoli
   - sweet potato
-  - spinach
+  - potato
   - lime
   - avocado
   - squash

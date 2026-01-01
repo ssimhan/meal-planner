@@ -58,25 +58,11 @@ weeks:
     - spinach
 - week_of: '2026-01-05'
   dinners:
-  - recipe_id: chana_masala_ip
-    cuisine: indian
-    meal_type: soup_stew
+  - recipe_id: freezer_meal
+    cuisine: various
+    meal_type: freezer
     day: mon
-    vegetables:
-    - cilantro
-    - garlic
-    - ginger
-    - onion
-    - peas
-    - tomato
-    - tomato
-    - cilantro
-    - garlic
-    - ginger
-    - onion
-    - peas
-    - tomato
-    - tomato
+    vegetables: []
   - recipe_id: chickpea_salad_wrap
     cuisine: mexican
     meal_type: tacos_wraps

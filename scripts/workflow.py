@@ -234,9 +234,15 @@ def generate_meal_plan(input_file, data):
     filtered = filter_recipes(recipes, data, recent_recipes)
     print(f"  ✓ {len(filtered)} recipes available")
 
-    # Select dinners
-    print("\n[4/5] Selecting dinners...")
-    selected_dinners = select_dinners(filtered, data)
+    # Find current week in history to check for overrides
+    current_week_history = None
+    for week in history.get('weeks', []):
+        if week.get('week_of') == week_of:
+            current_week_history = week
+            break
+
+    # Select dinners (respecting existing choices if any)
+    selected_dinners = select_dinners(filtered, data, current_week_history, recipes)
 
     days = ['mon', 'tue', 'wed', 'thu', 'fri']
     from_scratch_day = selected_dinners.get('from_scratch_day')
@@ -504,7 +510,7 @@ def filter_recipes(recipes, inputs, recent_recipes):
     return filtered
 
 
-def select_dinners(filtered_recipes, inputs):
+def select_dinners(filtered_recipes, inputs, current_week_history=None, all_recipes=None):
     """Select 5 dinners for Mon-Fri based on constraints."""
     busy_days = set(inputs.get('schedule', {}).get('busy_days', []))
 
@@ -518,6 +524,28 @@ def select_dinners(filtered_recipes, inputs):
     selected = {}
     days = ['mon', 'tue', 'wed', 'thu', 'fri']
 
+    # 1. Pre-fill from history (for substitutions/sticky selection)
+    if current_week_history and 'dinners' in current_week_history:
+        for dh in current_week_history['dinners']:
+            day = dh.get('day')
+            recipe_id = dh.get('recipe_id')
+            if day in days:
+                if recipe_id == 'freezer_meal':
+                    # Special dummy recipe for freezer meals
+                    selected[day] = {
+                        'id': 'freezer_meal',
+                        'name': 'Freezer Backup Meal',
+                        'main_veg': [],
+                        'meal_type': 'freezer',
+                        'cuisine': 'various'
+                    }
+                elif all_recipes:
+                    # Look up recipe in full index
+                    recipe = next((r for r in all_recipes if r.get('id') == recipe_id), None)
+                    if recipe:
+                        selected[day] = recipe
+                        used_meal_types.add(recipe.get('meal_type'))
+
     # Select from scratch recipe
     non_busy_days = [d for d in days if d not in busy_days]
 
@@ -526,11 +554,12 @@ def select_dinners(filtered_recipes, inputs):
             meal_type = r.get('meal_type')
             if meal_type not in used_meal_types:
                 from_scratch_day = non_busy_days[0]
-                used_meal_types.add(meal_type)
-                normal_recipes.remove(r)
-                selected[from_scratch_day] = r
-                selected['from_scratch_day'] = from_scratch_day
-                break
+                if from_scratch_day not in selected:
+                    used_meal_types.add(meal_type)
+                    normal_recipes.remove(r)
+                    selected[from_scratch_day] = r
+                    selected['from_scratch_day'] = from_scratch_day
+                    break
 
     # Handle busy days
     for day in days:
@@ -669,7 +698,7 @@ def generate_html_plan(inputs, history, selected_dinners, from_scratch_recipe=No
     html.extend(generate_weekend_tabs())
 
     # Generate groceries tab
-    html.extend(generate_groceries_tab(inputs))
+    html.extend(generate_groceries_tab(inputs, selected_dinners, selected_lunches or {}))
 
     # Close container and add JavaScript
     html.append('    </div>')
@@ -728,8 +757,9 @@ def generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe
 
     # Identify batch cooking suggestion
     batch_suggestion = "[None identified yet]"
+    days_of_week = ['mon', 'tue', 'wed', 'thu', 'fri']
     for day, recipe in selected_dinners.items():
-         if recipe.get('meal_type') in ['soup_stew', 'curry', 'pasta_noodles']:
+         if day in days_of_week and recipe.get('meal_type') in ['soup_stew', 'curry', 'pasta_noodles']:
              batch_suggestion = f"Double the <strong>{recipe.get('name')}</strong> on {day.capitalize()}"
              break
              
@@ -948,7 +978,7 @@ def generate_prep_section(day_key, day_name, selected_dinners, selected_lunches)
     """Generate prep tasks section for a day."""
     html = []
 
-    # Default snacks for reference (could also pass these in)
+    # Default snacks for reference
     default_snacks = {
         'mon': 'Apple slices with peanut butter',
         'tue': 'Cheese and crackers',
@@ -1169,7 +1199,7 @@ def generate_weekend_tabs():
     return html
 
 
-def generate_groceries_tab(inputs):
+def generate_groceries_tab(inputs, selected_dinners, selected_lunches):
     """Generate the Groceries tab."""
     html = []
 
@@ -1179,30 +1209,88 @@ def generate_groceries_tab(inputs):
     html.append('            <p style="margin-bottom: 20px; color: var(--text-muted);">Organized by aisle for efficient shopping</p>')
     html.append('')
 
+    # Aggregators
+    produce = []
+    dairy = []
+    grains = []
+    canned = []
+    frozen = []
+    misc = []
+    snacks_list = []
+
+    # Get snacks
+    default_snacks = {
+        'mon': 'Apple slices with peanut butter',
+        'tue': 'Cheese and crackers',
+        'wed': 'Cucumber rounds with cream cheese',
+        'thu': 'Grapes',
+        'fri': 'Crackers with hummus'
+    }
+    for s in default_snacks.values():
+        snacks_list.append(s)
+
+    # Process dinners
+    days_of_week = ['mon', 'tue', 'wed', 'thu', 'fri']
+    for day, recipe in selected_dinners.items():
+        if day in days_of_week and recipe:
+            # Add main veg to produce
+            produce.extend(recipe.get('main_veg', []))
+            
+            # Look for grains in recipe name/type/tags
+            name = recipe.get('name', '').lower()
+            if 'rice' in name or 'quinoa' in name or 'pasta' in name or 'tortellini' in name or 'couscous' in name:
+                grains.append(recipe.get('name'))
+            
+            # Look for canned based on common names
+            if 'chana' in name or 'chickpea' in name or 'beans' in name:
+                canned.append('Canned beans/chickpeas')
+            if 'tomato' in name and 'bisque' in name:
+                canned.append('Canned tomatoes/soup base')
+
+    # Process lunches
+    for day, lunch in selected_lunches.items():
+        if lunch:
+            # Add lunch components
+            for comp in lunch.prep_components:
+                c = comp.lower().replace('_', ' ')
+                if 'cheese' in c or 'yogurt' in c:
+                    dairy.append(c)
+                elif 'beans' in c or 'rice' in c:
+                    canned.append(c)
+                elif 'vegetables' in c or 'pepper' in c or 'onion' in c:
+                    produce.append(c)
+                else:
+                    misc.append(c)
+
+    # Clean up and deduplicate
+    def clean(items):
+        return sorted(list(set([i.replace('_', ' ').title() for i in items if i])))
+
     # Categories
-    categories = [
-        ('Fresh Produce', ['[Add vegetables from dinner plans]', '[Add fruits for snacks]']),
-        ('Frozen', ['[Add any frozen items needed]']),
-        ('Dairy & Refrigerated', ['[Add dairy items]', '[Add refrigerated items]']),
-        ('Grains & Pasta', ['[Add grains needed]', '[Add pasta if needed]']),
-        ('Canned & Jarred', ['[Add canned beans, tomatoes, etc.]']),
-        ('Spices & Seasonings', ['[Add spices needed for recipes]']),
-        ('Snacks', ['[Add snack ingredients]']),
-        ('Condiments & Misc', ['[Add condiments and miscellaneous items]'])
+    cat_data = [
+        ('Fresh Produce (Include Mon/Tue/Wed shopping)', clean(produce)),
+        ('Dairy & Refrigerated', clean(dairy)),
+        ('Grains, Pasta & Bread', clean(grains)),
+        ('Canned, Jarred & Dry Goods', clean(canned)),
+        ('Frozen', clean(frozen) if frozen else ['N/A for this plan']),
+        ('Snacks', clean(snacks_list)),
+        ('Condiments & Miscellaneous', clean(misc) if misc else ['Staples only'])
     ]
 
-    for category, items in categories:
+    for category, items in cat_data:
         html.append('            <div class="grocery-section">')
         html.append(f'                <h4>{category}</h4>')
         html.append('                <ul>')
-        for item in items:
-            html.append(f'                    <li>{item}</li>')
+        if not items or items == ['']:
+            html.append('                    <li>Check staples</li>')
+        else:
+            for item in items:
+                html.append(f'                    <li>{item}</li>')
         html.append('                </ul>')
         html.append('            </div>')
         html.append('')
 
     html.append('        </div>')
-
     return html
 
 

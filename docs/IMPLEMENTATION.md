@@ -14,6 +14,7 @@
 | **Phase 6: Execution Tracking** | ✅ Complete | Track actual meals, vegetables, freezer, kids preferences |
 | **Phase 7: Learning & Adaptation** | 💡 Future | Analytics, recipe scoring, insights reports |
 | **Phase 8: Architecture & Robustness** | ✅ Complete | Backups, config file, fuzzy matching, validation |
+| **Phase 9: Testing & Validation** | ✅ Complete | Unit tests for logic, CI integration |
 
 ---
 
@@ -618,3 +619,20 @@ python3 scripts/log_execution.py --week 2026-01-05 --summary
 4.  **Operational Excellence:**
     - All workflows support manual triggering (`workflow_dispatch`).
     - Fuzzy matching implemented for more accurate ingredient tracking.
+
+---
+
+## Phase 9: Testing & Validation ✅
+
+**Status:** Complete
+**Goal:** Ensure logic remains correct and data stays clean through automated testing.
+
+### Features
+1.  **Unit Testing:**
+    - Logic tests in `scripts/test_logic.py` verify critical behaviors.
+    - Tests: Recipe filtering (avoidance), anti-repetition lookback, and date logic.
+2.  **CI Integration:**
+    - `data-integrity.yml` updated to run logic tests on every push.
+    - Failures block deployment, ensuring only valid plans are generated.
+3.  **Data Cleanup:**
+    - `scripts/deduplicate_history.py` utility for merging historical duplication and cleaning internal lists.

@@ -278,9 +278,11 @@ def generate_meal_plan(input_file, data):
     plans_dir = Path('plans')
     plans_dir.mkdir(exist_ok=True)
 
+    history = load_history(history_path)
+
     plan_file = plans_dir / f'{week_of}-weekly-plan.html'
     from_scratch_recipe = selected_dinners.get(from_scratch_day) if from_scratch_day else None
-    plan_content = generate_html_plan(data, selected_dinners, from_scratch_recipe, selected_lunches)
+    plan_content = generate_html_plan(data, history, selected_dinners, from_scratch_recipe, selected_lunches)
 
     with open(plan_file, 'w') as f:
         f.write(plan_content)
@@ -615,7 +617,7 @@ def generate_lunch_html(lunch_suggestion, day_name):
     return '\n'.join(html)
 
 
-def generate_html_plan(inputs, selected_dinners, from_scratch_recipe=None, selected_lunches=None):
+def generate_html_plan(inputs, history, selected_dinners, from_scratch_recipe=None, selected_lunches=None):
     """Generate the weekly plan as HTML."""
     # Read the HTML template
     template_path = Path('templates/weekly-plan-template.html')
@@ -658,7 +660,7 @@ def generate_html_plan(inputs, selected_dinners, from_scratch_recipe=None, selec
     html.append('')
 
     # Generate overview tab
-    html.extend(generate_overview_tab(inputs, selected_dinners, from_scratch_recipe, selected_lunches or {}))
+    html.extend(generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe, selected_lunches or {}))
 
     # Generate weekday tabs with lunch data
     html.extend(generate_weekday_tabs(inputs, selected_dinners, selected_lunches or {}))
@@ -694,20 +696,44 @@ def generate_html_plan(inputs, selected_dinners, from_scratch_recipe=None, selec
     return '\n'.join(html)
 
 
-def generate_overview_tab(inputs, selected_dinners, from_scratch_recipe, selected_lunches=None):
+def generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe, selected_lunches=None):
     """Generate the Overview tab content."""
     html = []
     html.append('        <!-- Overview Tab -->')
     html.append('        <div id="overview" class="tab-content active">')
     html.append('            <div class="freezer-backup">')
     html.append('                <h3>🧊 Freezer Backup Status</h3>')
-    html.append('                <p style="margin-bottom: 15px;">Current backup meals in freezer:</p>')
-    html.append('                <ul>')
-    html.append('                    <li>[Update with current backup meal 1] - [Date frozen]</li>')
-    html.append('                    <li>[Update with current backup meal 2] - [Date frozen]</li>')
-    html.append('                    <li>[Update with current backup meal 3] - [Date frozen]</li>')
-    html.append('                </ul>')
-    html.append('                <p style="margin-top: 15px;"><strong>This week\'s batch cooking:</strong> [Identify which dinner to double and freeze]</p>')
+    
+    # Get freezer inventory from the latest available week
+    freezer_meals = []
+    if history and 'weeks' in history and history['weeks']:
+        # Sort weeks to find the most recent one with freezer inventory
+        sorted_weeks = sorted(history['weeks'], key=lambda x: x.get('week_of', ''), reverse=True)
+        for week in sorted_weeks:
+            if 'freezer_inventory' in week and week['freezer_inventory']:
+                freezer_meals = week['freezer_inventory']
+                break
+    
+    if freezer_meals:
+        html.append(f'                <p style="margin-bottom: 15px;">You have <strong>{len(freezer_meals)}/3</strong> backup meals in stock:</p>')
+        html.append('                <ul>')
+        for item in freezer_meals:
+            meal = item.get('meal', 'Unknown Meal')
+            date = item.get('frozen_date', 'Unknown Date')
+            html.append(f'                    <li>{meal} - (Frozen {date})</li>')
+        html.append('                </ul>')
+    else:
+        html.append('                <p style="margin-bottom: 15px; color: var(--accent-terracotta);">⚠️ <strong>Freezer Empty!</strong> No backup meals found.</p>')
+        html.append('                <p style="font-size: var(--text-sm);">Maintaining 3 backup meals is highly recommended for busy days.</p>')
+
+    # Identify batch cooking suggestion
+    batch_suggestion = "[None identified yet]"
+    for day, recipe in selected_dinners.items():
+         if recipe.get('meal_type') in ['soup_stew', 'curry', 'pasta_noodles']:
+             batch_suggestion = f"Double the <strong>{recipe.get('name')}</strong> on {day.capitalize()}"
+             break
+             
+    html.append(f'                <p style="margin-top: 15px;"><strong>This week\'s suggestion:</strong> {batch_suggestion}</p>')
     html.append('            </div>')
     html.append('')
 
@@ -715,7 +741,10 @@ def generate_overview_tab(inputs, selected_dinners, from_scratch_recipe, selecte
         html.append('            <div class="from-scratch">')
         html.append('                <h3>🌟 From Scratch Recipe This Week</h3>')
         html.append(f'                <p><strong>{from_scratch_recipe.get("name")}</strong></p>')
-        html.append('                <p>[Brief rationale for why this recipe was chosen - how it uses farmers market vegetables, what makes it interesting]</p>')
+        
+        # Pull rationale if exists, else provide template
+        rationale = from_scratch_recipe.get('rationale', "This recipe selected for its unique technique or use of seasonal vegetables.")
+        html.append(f'                <p>{rationale}</p>')
         html.append('            </div>')
     html.append('')
 
@@ -788,7 +817,7 @@ def generate_weekday_tabs(inputs, selected_dinners, selected_lunches):
         label, energy_class = energy_labels[day_key]
 
         html.append(f'        <!-- {day_name} Tab -->')
-        html.append(f'        <div id="{day_key.lower()}" class="tab-content">')
+        html.append(f'        <div id="{day_name.lower()}" class="tab-content">')
         html.append(f'            <div class="day-header">')
         html.append(f'                {day_name} <span class="energy-level {energy_class}">{label}</span>')
         html.append(f'            </div>')
@@ -864,10 +893,15 @@ def generate_dinner_section(recipe, day_key, busy_days):
 
     html.append(f'                <div class="meal-type"><a href="../recipes/raw_html/{recipe_file}">{recipe_name}</a> - {cuisine.title()} {meal_type.replace("_", " ").title()}</div>')
 
-    # Vegetables
+    # Vegetables (Deduplicated)
     main_veg = recipe.get('main_veg', [])
     if main_veg:
-        veg_str = ', '.join(main_veg)
+        # Use a list to preserve order but set to deduplicate
+        unique_veg = []
+        for v in main_veg:
+            if v not in unique_veg:
+                unique_veg.append(v)
+        veg_str = ', '.join(unique_veg)
         html.append(f'                <div class="vegetables">Main vegetables: {veg_str}</div>')
 
     # Prep notes
@@ -1402,7 +1436,19 @@ def update_history(history_path, inputs, selected_dinners):
                 'vegetables': recipe.get('main_veg', [])
             })
 
-    history['weeks'].append(new_week)
+    # Find or update existing week entry
+    week_entry = None
+    for week in history.get('weeks', []):
+        if week.get('week_of') == week_of:
+            week_entry = week
+            break
+
+    if week_entry:
+        # Update dinners list in existing week
+        week_entry['dinners'] = new_week['dinners']
+    else:
+        # Append new week
+        history.setdefault('weeks', []).append(new_week)
 
     with open(history_path, 'w') as f:
         yaml.dump(history, f, default_flow_style=False, sort_keys=False, allow_unicode=True)

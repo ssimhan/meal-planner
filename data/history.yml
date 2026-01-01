@@ -58,81 +58,77 @@ weeks:
     - spinach
 - week_of: '2026-01-05'
   dinners:
-  - recipe_id: chana_masala_ip
+  - recipe_id: bisi_bele_bath
     cuisine: indian
     meal_type: soup_stew
     day: mon
     vegetables:
-    - cilantro
-    - garlic
-    - ginger
+    - beans
+    - carrot
     - onion
     - peas
+    - potato
+    - potato
     - tomato
-    - tomatoe
-    - cilantro
-    - garlic
-    - ginger
+    - tomato
+    - beans
+    - carrot
     - onion
     - peas
+    - potato
+    - potato
     - tomato
-    - tomatoe
-  - recipe_id: chickpea_salad_wrap
-    cuisine: mexican
-    meal_type: tacos_wraps
+    - tomato
+  - recipe_id: mediterranean_quinoa_salad
+    cuisine: unknown
+    meal_type: salad
     day: tue
     vegetables:
-    - bell pepper
-    - carrot
-    - peas
+    - beans
+    - cucumber
+    - lemon
     - tomato
-    - bell pepper
-    - carrot
-    - peas
+    - beans
+    - cucumber
+    - lemon
     - tomato
-  - recipe_id: curried_cauliflower_quinoa_salad
-    cuisine: mediterranean
-    meal_type: salad
+  - recipe_id: mexican_papdi_chaat
+    cuisine: indian
+    meal_type: appetizer
     day: wed
     vegetables:
-    - arugula
-    - cabbage
-    - cauliflower
+    - beans
+    - bell pepper
     - cilantro
-    - cucumber
-    - garlic
-    - lemon
-    - arugula
-    - cabbage
-    - cauliflower
+    - corn
+    - onion
+    - scallion
+    - beans
+    - bell pepper
     - cilantro
-    - cucumber
-    - garlic
-    - lemon
-  - recipe_id: easy_french_toast_sticks
-    cuisine: american
-    meal_type: sandwich
-    day: thu
-    vegetables: []
-  - recipe_id: easy_zucchini_pasta_sauce
+    - corn
+    - onion
+    - scallion
+  - recipe_id: creamy_macaroni_pasta_salad
     cuisine: italian
     meal_type: pasta_noodles
+    day: thu
+    vegetables:
+    - broccoli
+    - cucumber
+    - onion
+    - broccoli
+    - cucumber
+    - onion
+  - recipe_id: enchilada_sauce
+    cuisine: mexican
+    meal_type: tacos_wraps
     day: fri
     vegetables:
-    - basil
-    - beans
     - garlic
-    - lemon
-    - parsley
-    - spinach
-    - zucchini
-    - basil
-    - beans
+    - tomato
     - garlic
-    - lemon
-    - parsley
-    - spinach
-    - zucchini
+    - tomato
   fridge_vegetables:
   - beans
   - bell pepper

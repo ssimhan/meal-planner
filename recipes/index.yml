@@ -162,7 +162,7 @@
   - basil
   - garlic
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -272,9 +272,9 @@
   - onion
   - peas
   - potato
-  - potatoe
+  - potato
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -513,7 +513,7 @@
   - cilantro
   - lemon
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -540,7 +540,7 @@
   - onion
   - peas
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -586,7 +586,7 @@
   - garlic
   - onion
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -678,7 +678,7 @@
   main_veg:
   - garlic
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -689,8 +689,8 @@
   prep_components: []
   component_storage_days: 0
   reuses_dinner_ingredients: []
-- id: cherry_tomatoes
-  name: Cherry tomatoes
+- id: cherry_tomatos
+  name: Cherry tomatos
   cuisine: unknown
   meal_type: simple_snack
   effort_level: normal
@@ -701,7 +701,7 @@
   avoid_contains: []
   source:
     type: html
-    file: recipes/raw_html/Cherry tomatoes.html
+    file: recipes/raw_html/Cherry tomatos.html
   lunch_suitable: false
   kid_friendly: false
   prep_style: null
@@ -948,7 +948,7 @@
   - onion
   - peas
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -997,7 +997,7 @@
   - lime
   - poblano
   - potato
-  - potatoe
+  - potato
   - sweet potato
   avoid_contains: []
   source:
@@ -1831,7 +1831,7 @@
   - lemon
   - parsley
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -1946,7 +1946,7 @@
   reuses_dinner_ingredients:
   - beans
   - cheese
-  - tomatoes
+  - tomatos
   - cucumbers
 - id: grilled_cheese_and_tomato_soup
   name: Grilled Cheese and Tomato Soup
@@ -2007,7 +2007,7 @@
   - beans
   - parsley
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -2090,7 +2090,7 @@
   - onion
   - spinach
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -2264,7 +2264,7 @@
   - lime
   - onion
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -2314,7 +2314,7 @@
   - lemon
   - onion
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -2534,7 +2534,7 @@
   - parsley
   - peas
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -2579,7 +2579,7 @@
   - garlic
   - lemon
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -2604,7 +2604,7 @@
   - onion
   - peas
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -2890,11 +2890,11 @@
   - onion
   - peas
   - potato
-  - potatoe
+  - potato
   - spinach
   - sweet potato
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -3060,7 +3060,7 @@
   - lime
   - onion
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -3175,9 +3175,9 @@
   - onion
   - peas
   - potato
-  - potatoe
+  - potato
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -3291,7 +3291,7 @@
   - pepper
   - spinach
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -3592,7 +3592,7 @@
   - onion
   - potato
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -3618,7 +3618,7 @@
   - onion
   - potato
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -3645,7 +3645,7 @@
   - cucumber
   - onion
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains:
   - cabbage
   source:
@@ -3692,7 +3692,7 @@
   - lime
   - onion
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -3715,7 +3715,7 @@
   main_veg:
   - cilantro
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -3770,7 +3770,7 @@
   - pepper
   - spinach
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -3795,7 +3795,7 @@
   - parsley
   - pepper
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -3839,7 +3839,7 @@
   - garlic
   - onion
   - potato
-  - potatoe
+  - potato
   avoid_contains: []
   source:
     type: html
@@ -3863,7 +3863,7 @@
   - lemon
   - peas
   - potato
-  - potatoe
+  - potato
   avoid_contains: []
   source:
     type: html
@@ -3969,7 +3969,7 @@
   - garlic
   - onion
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -3996,7 +3996,7 @@
   - parsley
   - spinach
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -4023,7 +4023,7 @@
   - garlic
   - onion
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -4218,7 +4218,7 @@
   - parsley
   - scallion
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -4316,7 +4316,7 @@
   - onion
   - spinach
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -4495,11 +4495,11 @@
   - onion
   - peas
   - potato
-  - potatoe
+  - potato
   - squash
   - sweet potato
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -4529,11 +4529,11 @@
   - onion
   - peas
   - potato
-  - potatoe
+  - potato
   - squash
   - sweet potato
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -4544,7 +4544,7 @@
   prep_components: []
   component_storage_days: 0
   reuses_dinner_ingredients: []
-- id: sweet_potatoes_with_thai_peanut_butter_sauce
+- id: sweet_potatos_with_thai_peanut_butter_sauce
   name: Sweet Potatoes with Thai Peanut Butter Sauce
   cuisine: unknown
   meal_type: sauce_dip
@@ -4559,7 +4559,7 @@
   - lime
   - onion
   - potato
-  - potatoe
+  - potato
   - sweet potato
   avoid_contains:
   - cabbage
@@ -4674,7 +4674,7 @@
   - green onion
   - onion
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -4698,7 +4698,7 @@
   - onion
   - spinach
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -4888,10 +4888,10 @@
   - onion
   - peas
   - potato
-  - potatoe
+  - potato
   - sweet potato
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -5035,7 +5035,7 @@
   - onion
   - pepper
   - potato
-  - potatoe
+  - potato
   - sweet potato
   - tomato
   avoid_contains: []
@@ -5064,7 +5064,7 @@
   - cilantro
   - onion
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -5095,7 +5095,7 @@
   - onion
   - radish
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html
@@ -5127,7 +5127,7 @@
   - squash
   - sweet potato
   - tomato
-  - tomatoe
+  - tomato
   avoid_contains: []
   source:
     type: html

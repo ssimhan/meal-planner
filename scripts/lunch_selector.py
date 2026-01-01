@@ -395,7 +395,8 @@ class LunchSelector:
         Determine when to prep components for a given lunch day.
 
         Strategy:
-        - Monday/Tuesday lunches: Can prep same morning or night before
+        - Monday lunch: Prep Sunday evening or Monday morning (if component-based)
+        - Tuesday lunch: Prep Monday evening
         - Wednesday lunch: Prep Monday or Tuesday
         - Thursday lunch: Prep Monday or Tuesday (NOT Wednesday)
         - Friday lunch: Prep Monday or Tuesday (NOT Wednesday)
@@ -406,11 +407,13 @@ class LunchSelector:
         day_order = ['mon', 'tue', 'wed', 'thu', 'fri']
         lunch_idx = day_order.index(lunch_day)
 
-        if lunch_idx <= 1:  # Mon or Tue
+        if lunch_idx == 0:  # Monday
+            return 'sun'  # Prep Sunday for Monday lunch
+        elif lunch_idx == 1:  # Tuesday
             return 'mon'  # Prep Monday evening
-        elif lunch_idx == 2:  # Wed
+        elif lunch_idx == 2:  # Wednesday
             return 'tue'  # Prep Tuesday evening
-        else:  # Thu or Fri
+        else:  # Thursday or Friday
             return 'mon'  # Prep Monday evening for maximum freshness window
 
     def _generate_assembly_notes(

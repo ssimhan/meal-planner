@@ -39,7 +39,7 @@ jobs:
         run: |
           git config user.name "Meal Planner Bot"
           git config user.email "mealplanner@users.noreply.github.com"
-          git add data/logs.yml data/inventory.yml
+          git add data/history.yml
           git commit -m "Log daily meals from ${{ github.event.issue.title }}" || echo "No changes to commit"
           git push
 

@@ -22,8 +22,9 @@ Automated meal planning system with anti-repetition logic, farmers market integr
 ### Automation (GitHub Actions)
 - **Saturday 5am PST:** PR with farmers market vegetable suggestions
 - **On PR merge:** Automatic meal plan generation and deployment
-- **Daily 8pm PST:** GitHub issue for meal logging
-- **Inventory tracking:** Automatic freezer backup updates
+- **Daily 8pm PST:** GitHub issue check-in with structured forms
+- **Execution tracking:** Logs actual meals, vegetables used, and kids preferences
+- **Inventory tracking:** Automatic freezer backup updates and fridge vegetable tracking
 - **Live deployment:** https://ssimhan.github.io/meal-planner/
 
 ### User Interface
@@ -147,8 +148,8 @@ See [PROJECT_HISTORY.md](PROJECT_HISTORY.md) for detailed philosophy and evoluti
 - ✅ Recipe parsing and classification (100% categorized, 0 unknown)
 - ✅ Lunch selection intelligence (109 lunch-suitable recipes)
 
-**Future (Optional):**
-- Phase 6: Learning & adaptation (meal success scoring, preference tracking)
+- ✅ Phase 6: Execution Tracking (meal adherence, vegetable tracking, kids preferences)
+- 🚧 Phase 7: Analytics & Insights (initial framework complete)
 
 See [IMPLEMENTATION.md](IMPLEMENTATION.md) for complete status and future ideas.
 

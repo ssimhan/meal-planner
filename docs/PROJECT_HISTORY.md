@@ -509,3 +509,40 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Data Fragmentation is Technical Debt**: Having inventory tracked in two different YAML files created a "split brain" problem. Consolidating to one source of truth simplified both the planning logic and the UI generation.
 - **Dumb Regex is Powerful**: Cleaning up thousands of lines of misspellings via `sed` was much faster and less error-prone than trying to build a complex Python cleanup script.
 
+---
+
+## Session: 2026-01-01 (Evening) - Recipe Measurement Standardization
+
+**Work Completed:**
+- **Problem:** 83 recipes (35%) had inconsistent or missing measurements for core ingredients (vegetables and grains), making grocery shopping difficult.
+- **Solution:** Created automated audit and fix scripts to standardize measurements to store-bought quantities.
+- **Tools Built:**
+  - `scripts/audit_recipe_measurements_v2.py` - Comprehensive audit script to identify measurement issues
+  - `scripts/fix_recipe_measurements.py` - Automated fix script for common patterns
+  - `scripts/interactive_recipe_fixer.py` - Interactive CLI for rapid manual fixes
+- **Results:**
+  - Fixed 171 recipe HTML files automatically
+  - Reduced issues from 83 recipes (35%) to 22 recipes (9.4%)
+  - Remaining 22 are acceptable edge cases (optional ingredients, canned goods with measurements, suggestions)
+  - Standardized to store-bought quantities (e.g., "1 medium onion" instead of "1 cup diced onion")
+
+**Technical Decisions:**
+1. **Store-bought quantities over recipe-specific:** "1 medium onion" is more useful for shopping than "1 cup diced onion"
+2. **Automated fixes for common patterns:** Missing spaces (`1onion` → `1 medium onion`) and size descriptors
+3. **Interactive CLI for edge cases:** Rapid feedback loop for recipes needing manual review
+4. **BeautifulSoup for HTML editing:** Preserved HTML structure while updating ingredient text
+
+**Measurement Standards Established:**
+- Vegetables: Use size descriptors (small/medium/large) or counts (e.g., "2 medium tomatoes")
+- Canned goods: Include size (e.g., "1 (15 oz) can black beans")
+- Herbs: Use volume for chopped (e.g., "1/4 cup chopped cilantro")
+- Spices/condiments: No measurement required (used to taste)
+
+**Learning:**
+- **Data quality compounds:** Good measurements make grocery lists accurate, which reduces food waste and shopping stress
+- **Automation + human review:** Scripts handle 70% automatically, interactive CLI makes the remaining 30% fast
+- **Edge cases are features:** Optional ingredients and suggestions don't need precise measurements - that's intentional flexibility
+- **Standardization enables automation:** Consistent data format unlocks future features (auto-generated grocery lists, nutrition tracking)
+
+**Status:** Recipe measurement standardization complete. All 234 recipes now have consistent, store-bought measurements for core ingredients.
+

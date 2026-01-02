@@ -2,8 +2,8 @@ week_of: '2026-01-05'
 timezone: America/Los_Angeles
 workflow:
   status: plan_complete
-  created_at: '2026-01-01T15:44:11.297854'
-  updated_at: '2026-01-01T15:44:21.646037'
+  created_at: '2026-01-01T17:55:57.012380'
+  updated_at: '2026-01-01T18:36:09.732636'
 schedule:
   office_days:
   - mon
@@ -32,4 +32,32 @@ farmers_market:
   - onion
   - garlic
   - cilantro
-  confirmed_veg: []
+  confirmed_veg:
+  - broccoli
+  - sweet potato
+  - potato
+  - lime
+  - avocado
+  - squash
+  - onion
+  - garlic
+  - cilantro
+rollover:
+- recipe_id: bhel_puri_chaat
+  cuisine: indian
+  meal_type: appetizer
+  vegetables:
+  - cilantro
+  - cucumber
+  - lemon
+  - onion
+  - potato
+  - tomato
+- recipe_id: broccoli_spinach_pasta_sauce
+  cuisine: italian
+  meal_type: pasta_noodles
+  vegetables:
+  - broccoli
+  - garlic
+  - lemon
+  - spinach

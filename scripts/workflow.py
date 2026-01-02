@@ -11,6 +11,7 @@ Usage:
 
 import sys
 import yaml
+import re
 from pathlib import Path
 from datetime import datetime, timedelta
 from collections import Counter
@@ -152,6 +153,23 @@ def create_new_week(week_str):
     inputs_dir = Path('inputs')
     inputs_dir.mkdir(exist_ok=True)
     output_file = inputs_dir / f'{week_str}.yml'
+
+    # Check for rollover from previous week
+    rollover_recipes = []
+    prev_monday = datetime.strptime(week_str, '%Y-%m-%d') - timedelta(days=7)
+    prev_monday_str = prev_monday.strftime('%Y-%m-%d')
+    if history_path.exists():
+        with open(history_path, 'r') as f:
+            history = yaml.safe_load(f)
+            if history:
+                for week in history.get('weeks', []):
+                    if week.get('week_of') == prev_monday_str:
+                        rollover_recipes = week.get('rollover', [])
+                        break
+
+    if rollover_recipes:
+        print(f"📦 Found {len(rollover_recipes)} rollover recipes from last week.")
+        input_data['rollover'] = rollover_recipes
 
     with open(output_file, 'w') as f:
         yaml.dump(input_data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
@@ -333,11 +351,164 @@ def show_week_complete(input_file, data):
     plan_file = Path(f'plans/{week_of}-weekly-plan.html')
 
     print("\n" + "="*60)
-    print(f"✅ WEEK {week_of} COMPLETE")
+    print(f"✅ WEEK {week_of} ACTIVE")
     print("="*60)
 
     if plan_file.exists():
         print(f"\n📄 Plan: {plan_file}")
+
+    print(f"\n💡 Tip: Run 'python3 scripts/workflow.py replan' to update for remaining days.")
+
+
+def replan_meal_plan(input_file, data):
+    """
+    Re-distribute remaining and skipped meals across the rest of the week.
+    Handles rollover to next week if needed.
+    """
+    # 1. Get current date and identify the Monday of the current week
+    today = datetime.now()
+    monday = today - timedelta(days=today.weekday())
+    monday_str = monday.strftime('%Y-%m-%d')
+    today_abbr = today.strftime('%a').lower()[:3] # mon, tue, wed...
+
+    # robust data loading for replan (handles cases where find_current_week_file skips active weeks)
+    if data is None:
+        if not input_file:
+            input_file = Path(f'inputs/{monday_str}.yml')
+        
+        if input_file.exists():
+            with open(input_file, 'r') as f:
+                data = yaml.safe_load(f)
+        else:
+            print(f"Error: No input file found for active week {monday_str} at {input_file}")
+            return
+
+    history_path = Path('data/history.yml')
+    history = load_history(history_path)
+
+    days_list = ['mon', 'tue', 'wed', 'thu', 'fri']
+    if today_abbr not in days_list:
+        print(f"Today is {today.strftime('%A')}. Re-planning is optimized for Mon-Fri.")
+        return
+
+    # 2. Find current week in history
+    week_entry = None
+    for week in history.get('weeks', []):
+        if week.get('week_of') == monday_str:
+            week_entry = week
+            break
+
+    if not week_entry:
+        print(f"Error: No history entry found for week of {monday_str}")
+        return
+
+    # 3. Categorize meals
+    print(f"\n[Re-plan] Analyzing week of {monday_str} (Today is {today_abbr.upper()})")
+    
+    successful_dinners = [] # Already made
+    to_be_planned = []       # Not yet made, or skipped in the past
+
+    current_day_idx = days_list.index(today_abbr)
+
+    # We iterate through days_list to preserve chronological intent
+    planned_dinners = {d['day']: d for d in week_entry.get('dinners', [])}
+
+    for day in days_list:
+        dinner = planned_dinners.get(day)
+        if not dinner:
+            continue
+
+        day_idx = days_list.index(day)
+        # A meal is "done" if made is True/yes/freezer
+        is_done = dinner.get('made') in [True, 'yes', 'freezer_backup']
+
+        if is_done:
+            successful_dinners.append(dinner)
+        elif day_idx < current_day_idx:
+            # Skipped past meal
+            print(f"   ↺ Found skipped meal from {day}: {dinner.get('recipe_id')}")
+            # Reset metadata for re-planning
+            dinner.pop('made', None)
+            to_be_planned.append(dinner)
+        else:
+            # Future (or today's) planned meal
+            to_be_planned.append(dinner)
+
+    # 4. Identify remaining days
+    remaining_days = days_list[current_day_idx:]
+    print(f"   📅 Remaining days: {', '.join(remaining_days).upper()}")
+
+    # 5. Distribute recipes
+    new_dinners = list(successful_dinners)
+    rollover_recipes = []
+
+    idx = 0
+    for day in remaining_days:
+        if idx < len(to_be_planned):
+            recipe_entry = to_be_planned[idx]
+            recipe_entry['day'] = day
+            new_dinners.append(recipe_entry)
+            idx += 1
+
+    # Manage Overflow
+    if idx < len(to_be_planned):
+        rollover_recipes = to_be_planned[idx:]
+        week_entry['rollover'] = []
+        for r in rollover_recipes:
+             week_entry['rollover'].append({
+                 'recipe_id': r.get('recipe_id'),
+                 'cuisine': r.get('cuisine'),
+                 'meal_type': r.get('meal_type'),
+                 'vegetables': r.get('vegetables', [])
+             })
+        print(f"   📦 {len(rollover_recipes)} recipes moved to rollover (will be added to next week's plan).")
+    else:
+        # Clear rollover if we caught up
+        week_entry.pop('rollover', None)
+
+    # Sort new_dinners by day
+    new_dinners.sort(key=lambda d: days_list.index(d['day']) if d['day'] in days_list else 99)
+
+    # 6. Update history
+    week_entry['dinners'] = new_dinners
+
+    with open(history_path, 'w') as f:
+        yaml.dump(history, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+
+    # 7. Regenerate HTML
+    all_recipes = []
+    index_path = Path('recipes/index.yml')
+    if index_path.exists():
+        with open(index_path, 'r') as f:
+            all_recipes = yaml.safe_load(f) or []
+
+    selected_dinners_objs = {}
+    for d in new_dinners:
+        r_id = d.get('recipe_id')
+        day = d.get('day')
+        if r_id == 'freezer_meal':
+             selected_dinners_objs[day] = {
+                        'id': 'freezer_meal',
+                        'name': 'Freezer Backup Meal',
+                        'main_veg': [],
+                        'meal_type': 'freezer',
+                        'cuisine': 'various'
+                    }
+        else:
+            recipe = next((r for r in all_recipes if r.get('id') == r_id), None)
+            if recipe:
+                selected_dinners_objs[day] = recipe
+
+    print(f"   📄 Regenerating HTML plan for week of {monday_str}...")
+    plan_content = generate_html_plan(data, history, selected_dinners_objs)
+    
+    plans_dir = Path('plans')
+    plans_dir.mkdir(exist_ok=True)
+    plan_file = plans_dir / f'{monday_str}-weekly-plan.html'
+    with open(plan_file, 'w') as f:
+        f.write(plan_content)
+
+    print(f"✅ Re-plan complete! Remaining days updated.")
 
     print(f"\n📋 NEXT STEPS:")
     print(f"   • When you're ready to plan next week, run:")
@@ -513,6 +684,7 @@ def filter_recipes(recipes, inputs, recent_recipes):
 def select_dinners(filtered_recipes, inputs, current_week_history=None, all_recipes=None):
     """Select 5 dinners for Mon-Fri based on constraints."""
     busy_days = set(inputs.get('schedule', {}).get('busy_days', []))
+    rollover_data = inputs.get('rollover', [])
 
     no_chop_recipes = [r for r in filtered_recipes if r.get('no_chop_compatible', False)]
     normal_recipes = [r for r in filtered_recipes if r.get('effort_level') == 'normal']
@@ -545,6 +717,23 @@ def select_dinners(filtered_recipes, inputs, current_week_history=None, all_reci
                     if recipe:
                         selected[day] = recipe
                         used_meal_types.add(recipe.get('meal_type'))
+
+    # 2. Handle Rollover (Priority over new selections)
+    if rollover_data and all_recipes:
+        for r_meta in rollover_data:
+            r_id = r_meta.get('recipe_id')
+            recipe = next((r for r in all_recipes if r.get('id') == r_id), None)
+            if recipe and recipe.get('meal_type') not in used_meal_types:
+                # Find first empty day
+                for day in days:
+                    if day not in selected:
+                        selected[day] = recipe
+                        used_meal_types.add(recipe.get('meal_type'))
+                        # Remove from availability lists if it was there
+                        if recipe in no_chop_recipes: no_chop_recipes.remove(recipe)
+                        if recipe in normal_recipes: normal_recipes.remove(recipe)
+                        if recipe in all_other_recipes: all_other_recipes.remove(recipe)
+                        break
 
     # Select from scratch recipe
     non_busy_days = [d for d in days if d not in busy_days]
@@ -1215,12 +1404,12 @@ def generate_groceries_tab(inputs, selected_dinners, selected_lunches):
     produce = []
     dairy = []
     grains = []
+    shelf = []
     canned = []
     frozen = []
     misc = []
-    snacks_list = []
 
-    # Get snacks
+    # Get and split snacks
     default_snacks = {
         'mon': 'Apple slices with peanut butter',
         'tue': 'Cheese and crackers',
@@ -1228,8 +1417,54 @@ def generate_groceries_tab(inputs, selected_dinners, selected_lunches):
         'thu': 'Grapes',
         'fri': 'Crackers with hummus'
     }
-    for s in default_snacks.values():
-        snacks_list.append(s)
+    
+    snack_items = []
+    for snack in default_snacks.values():
+        # Split into components (e.g., "Cheese and crackers" -> ["Cheese", "crackers"])
+        parts = re.split(r' with | and |, ', snack, flags=re.IGNORECASE)
+        for part in parts:
+            clean_part = part.strip().lower()
+            # Remove modifiers for shopping list
+            clean_part = clean_part.replace('slices', '').replace('rounds', '').strip()
+            if clean_part:
+                snack_items.append(clean_part)
+
+    def categorize_ingredient(item, target_lists):
+        """Helper to categorize an ingredient into the correct list."""
+        c = item.lower().replace('_', ' ')
+        
+        # Shelf Stable keywords (check first for peanut/almond butter)
+        if any(k in c for k in ['peanut butter', 'almond butter', 'cracker', 'pretzel', 'popcorn', 'pitted dates', 'nut', 'trail mix', 'granola', 'rice cake']):
+            target_lists['shelf'].append(c)
+        # Produce keywords
+        elif any(k in c for k in ['apple', 'banana', 'grape', 'cucumber', 'carrot', 'tomato', 'pepper', 'onion', 'garlic', 'vegetable', 'fruit', 'lemon', 'lime', 'ginger']):
+            target_lists['produce'].append(c)
+        # Dairy keywords
+        elif any(k in c for k in ['cheese', 'yogurt', 'cream cheese', 'hummus', 'milk', 'butter', 'paneer']):
+            target_lists['dairy'].append(c)
+        # Grains keywords
+        elif any(k in c for k in ['rice', 'quinoa', 'pasta', 'bread', 'tortilla', 'roll', 'bagel', 'couscous']):
+            target_lists['grains'].append(c)
+        # Canned keywords
+        elif any(k in c for k in ['canned', 'beans', 'chickpea', 'tomato sauce', 'soup base', 'chana']):
+            target_lists['canned'].append(c)
+        else:
+            target_lists['misc'].append(c)
+
+    # Categorizers mapping
+    lists = {
+        'produce': produce,
+        'dairy': dairy,
+        'grains': grains,
+        'shelf': shelf,
+        'canned': canned,
+        'frozen': frozen,
+        'misc': misc
+    }
+
+    # Process snacks
+    for item in snack_items:
+        categorize_ingredient(item, lists)
 
     # Process dinners
     days_of_week = ['mon', 'tue', 'wed', 'thu', 'fri']
@@ -1238,31 +1473,16 @@ def generate_groceries_tab(inputs, selected_dinners, selected_lunches):
             # Add main veg to produce
             produce.extend(recipe.get('main_veg', []))
             
-            # Look for grains in recipe name/type/tags
+            # Use name and meal type for categorization
             name = recipe.get('name', '').lower()
-            if 'rice' in name or 'quinoa' in name or 'pasta' in name or 'tortellini' in name or 'couscous' in name:
-                grains.append(recipe.get('name'))
-            
-            # Look for canned based on common names
-            if 'chana' in name or 'chickpea' in name or 'beans' in name:
-                canned.append('Canned beans/chickpeas')
-            if 'tomato' in name and 'bisque' in name:
-                canned.append('Canned tomatoes/soup base')
+            categorize_ingredient(name, lists)
 
     # Process lunches
     for day, lunch in selected_lunches.items():
         if lunch:
             # Add lunch components
             for comp in lunch.prep_components:
-                c = comp.lower().replace('_', ' ')
-                if 'cheese' in c or 'yogurt' in c:
-                    dairy.append(c)
-                elif 'beans' in c or 'rice' in c:
-                    canned.append(c)
-                elif 'vegetables' in c or 'pepper' in c or 'onion' in c:
-                    produce.append(c)
-                else:
-                    misc.append(c)
+                categorize_ingredient(comp, lists)
 
     # Clean up and deduplicate
     def clean(items):
@@ -1272,10 +1492,10 @@ def generate_groceries_tab(inputs, selected_dinners, selected_lunches):
     cat_data = [
         ('Fresh Produce (Include Mon/Tue/Wed shopping)', clean(produce)),
         ('Dairy & Refrigerated', clean(dairy)),
+        ('Shelf Stable', clean(shelf)),
         ('Grains, Pasta & Bread', clean(grains)),
         ('Canned, Jarred & Dry Goods', clean(canned)),
         ('Frozen', clean(frozen) if frozen else ['N/A for this plan']),
-        ('Snacks', clean(snacks_list)),
         ('Condiments & Miscellaneous', clean(misc) if misc else ['Staples only'])
     ]
 
@@ -1663,6 +1883,13 @@ def main():
                 print(f"ERROR: Cannot generate plan. Current state: {state}")
                 print(f"Expected state: ready_to_plan (farmers market must be confirmed)")
                 sys.exit(1)
+            return
+
+        if command == 'replan':
+            # Trigger smart re-planning
+            input_file, week_str = find_current_week_file()
+            state, data = get_workflow_state(input_file)
+            replan_meal_plan(input_file, data)
             return
 
     # Auto-detect state and execute next step (default behavior)

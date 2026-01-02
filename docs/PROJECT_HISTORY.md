@@ -546,3 +546,46 @@ The best tools are the ones you actually use. This system works because it reduc
 
 **Status:** Recipe measurement standardization complete. All 234 recipes now have consistent, store-bought measurements for core ingredients.
 
+---
+
+## Session: 2026-01-01 (Late Night) - Smart Re-planning & Rollover
+
+**Work Completed:**
+- **Problem:** When life happens and meals get skipped (e.g., "Ate out"), the plan breaks. Meals are lost, and upcoming days are over-scheduled.
+- **Solution:** Implemented `python3 scripts/workflow.py replan` which automatically:
+  1. Detects skipped meals in `history.yml` (marked as `made: false`)
+  2. Shifts skipped meals to the first available future day
+  3. Moves "overflow" meals (recipes that no longer fit in the week) to a `rollover` list
+  4. Automatically rebuilds the Weekly Plan HTML to reflect these changes
+- **Integration:** Integrated into the Daily Check-in workflow (`daily-checkin-parse.yml`), so re-planning happens automatically every time you log a status update.
+
+**Technical Details:**
+- **Robust Rollover:** "Overflow" recipes are stored in `history.yml` under a `rollover` key.
+- **Priority Scheduling:** When generating the *next* week's plan (`create_new_week`), the system checks for `rollover` items and prioritizes them above all other constraints.
+- **Verification:** Simulated end-to-end flow where a skipped Monday meal pushed Wednesday's meal to Friday, knocking Friday's original meal into next week's rollover queue.
+
+**Learning:**
+- **Plans must be fluid:** A static plan that breaks on the first error is useless. A dynamic plan that heals itself is resilient.
+- **Automated housekeeping:** Users shouldn't have to manually "move" meals. The system should infer intent from status updates ("I didn't make this" implies "I still need to make this").
+
+**Status:** Smart Re-planning live. System now self-corrects based on execution reality.
+
+
+---
+
+## Session: 2026-01-01 (Night) - Grocery List Enhancements
+
+**Work Completed:**
+- **Problem:** Snack categorization was poor (all lumped under "Snacks"), and shelf-stable items like crackers/nut butters were hard to find in the list.
+- **Solution:**
+  - Implemented logic to split composite snacks (e.g., "Apple and peanut butter") into individual components.
+  - Added categorical sorting for components (Apple -> Produce, Peanut Butter -> Shelf Stable).
+  - Created a dedicated "Shelf Stable" section in the grocery list.
+  - Removed the redundant "Snacks" category in favor of aisle-based organization.
+
+**Decisions:**
+- **Peanut Butter is Shelf Stable:** Explicitly categorized as shelf-stable, not a dairy variant/butter.
+- **Section Naming:** Removed aisle numbers (e.g., "Aisle 3/4") from section headers to keep the design clean and store-agnostic.
+
+**Status:** Complete. Grocery list now organized purely by aisle/category, significantly improving the shopping experience.
+

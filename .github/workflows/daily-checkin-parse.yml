@@ -50,6 +50,19 @@ jobs:
           git commit -m "Log daily meals from ${{ github.event.issue.title }}" || echo "No changes to commit"
           git push
 
+      - name: Trigger Re-plan
+        run: |
+          # Automatically adjust remaining days and regenerate HTML plan
+          python3 scripts/workflow.py replan
+          
+      - name: Commit plan updates
+        run: |
+          git config user.name "Meal Planner Bot"
+          git config user.email "mealplanner@users.noreply.github.com"
+          git add plans/ data/history.yml
+          git commit -m "Auto-replan after daily check-in" || echo "No changes to commit"
+          git push
+
       - name: Close issue
         uses: peter-evans/close-issue@v3
         with:

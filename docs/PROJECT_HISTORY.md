@@ -589,3 +589,22 @@ The best tools are the ones you actually use. This system works because it reduc
 
 **Status:** Complete. Grocery list now organized purely by aisle/category, significantly improving the shopping experience.
 
+---
+
+## Session: 2026-01-04 - Migration to Vercel (Hybrid App)
+
+**Problem:** GitHub Pages is static and limits "updateability" (e.g., no live dashboard to edit inventory or trigger re-plans without manual commits or GitHub Action wait times).
+
+**Decision: Move to Option 2 (Hybrid Serverless Python App on Vercel).**
+
+**Rationale:**
+- **Flexibility:** Vercel allows for dynamic server-side logic (Python Serverless Functions) alongside a modern React (Next.js) frontend.
+- **Maintain Logic:** Porting 2,500+ lines of complex Python logic (`workflow.py`, `lunch_selector.py`) to TypeScript would be high-effort; keeping it in Python but running it in the cloud is the "sweet spot."
+- **Data Persistence:** Using the GitHub API as a temporary database allows for a "GitOps" workflow while moving towards a true web app interface.
+- **Cost:** $0/mo on Vercel Hobby tier.
+
+**Backups Created:**
+- Git Branch: `legacy-static-backup`
+- Physical Folder: `_legacy_backup/`
+
+**Status:** Implementation started. Next step is initializing the Next.js project and refactoring Python scripts into API endpoints.

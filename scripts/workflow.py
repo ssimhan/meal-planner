@@ -222,23 +222,19 @@ def generate_meal_plan(input_file, data):
 
     try:
         if not index_path.exists():
-            print(f"  ✗ ERROR: Recipe index not found: {index_path}")
-            sys.exit(1)
+            raise ValueError(f"Recipe index not found: {index_path}")
 
         with open(index_path, 'r') as f:
             recipes = yaml.safe_load(f)
 
         if not recipes:
-            print(f"  ✗ ERROR: Recipe index is empty: {index_path}")
-            sys.exit(1)
+            raise ValueError(f"Recipe index is empty: {index_path}")
 
         print(f"  ✓ Loaded {len(recipes)} recipes")
     except yaml.YAMLError as e:
-        print(f"  ✗ ERROR: Invalid YAML in {index_path}: {e}")
-        sys.exit(1)
+        raise ValueError(f"Invalid YAML in {index_path}: {e}")
     except Exception as e:
-        print(f"  ✗ ERROR: Failed to load recipe index: {e}")
-        sys.exit(1)
+        raise ValueError(f"Failed to load recipe index: {e}")
 
     # Load history
     print("\n[2/5] Loading meal history...")

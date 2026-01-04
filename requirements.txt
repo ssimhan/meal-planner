@@ -6,6 +6,6 @@ lxml==4.9.3
 # CLI framework (future use)
 click==8.1.7
 
-# Future dependencies (Phase 2+)
-# anthropic==0.18.1
-# python-dateutil==2.8.2
+# Web API
+flask==3.0.0
+flask-cors==4.0.0

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { getStatus, generatePlan, WorkflowStatus } from '@/lib/api';
 
@@ -8,7 +9,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [success, setSuccess] = useState<{ message: string; url?: string } | null>(null);
 
   useEffect(() => {
     fetchStatus();
@@ -37,7 +38,10 @@ export default function Dashboard() {
       setSuccess(null);
 
       const result = await generatePlan(status.week_of);
-      setSuccess(`Plan generated successfully for week of ${status.week_of}!`);
+      setSuccess({
+        message: `Plan generated successfully for week of ${status.week_of}!`,
+        url: result.plan_url
+      });
 
       // Refresh status
       await fetchStatus();
@@ -71,7 +75,17 @@ export default function Dashboard() {
       {success && (
         <div className="card border-green-200 bg-green-50 text-green-700 p-6 mb-8">
           <p className="font-bold mb-2">✓ Success</p>
-          <p>{success}</p>
+          <p className="mb-4">{success.message}</p>
+          {success.url && (
+            <a
+              href={success.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary inline-block text-center"
+            >
+              View Generated Plan
+            </a>
+          )}
         </div>
       )}
 
@@ -117,10 +131,10 @@ export default function Dashboard() {
               <span>{generating ? 'Generating...' : 'Generate Weekly Plan'}</span>
               <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
             </button>
-            <button className="btn-secondary w-full text-left flex justify-between items-center group">
+            <Link href="/inventory" className="btn-secondary w-full text-left flex justify-between items-center group">
               <span>Update Inventory</span>
               <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-            </button>
+            </Link>
           </div>
         </section>
 
@@ -147,8 +161,8 @@ export default function Dashboard() {
       <footer className="mt-16 pt-8 border-t border-[var(--border-subtle)] flex justify-between items-center text-sm text-[var(--text-muted)]">
         <p>© 2026 Meal Planner System</p>
         <div className="flex gap-4">
-          <a href="#" className="hover:text-[var(--accent-green)] underline underline-offset-4">History</a>
-          <a href="#" className="hover:text-[var(--accent-green)] underline underline-offset-4">Recipes</a>
+          <Link href="#" className="hover:text-[var(--accent-green)] underline underline-offset-4">History</Link>
+          <Link href="/recipes" className="hover:text-[var(--accent-green)] underline underline-offset-4">Recipes</Link>
         </div>
       </footer>
     </main>

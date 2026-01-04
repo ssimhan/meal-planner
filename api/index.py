@@ -16,6 +16,8 @@ except ImportError as e:
 
 from api.generate_plan import generate_plan_api
 
+import yaml
+
 app = Flask(__name__)
 CORS(app) # Enable CORS for all routes
 
@@ -36,6 +38,52 @@ def get_status():
             "status": "error",
             "message": str(e)
         }), 500
+
+@app.route("/api/recipes")
+def get_recipes():
+    try:
+        index_path = Path('recipes/index.yml')
+        if not index_path.exists():
+            return jsonify({"status": "error", "message": "Recipe index not found"}), 404
+        
+        with open(index_path, 'r') as f:
+            recipes = yaml.safe_load(f)
+        
+        return jsonify({"status": "success", "recipes": recipes})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route("/api/inventory")
+def get_inventory():
+    try:
+        inventory_path = Path('data/inventory.yml')
+        if not inventory_path.exists():
+            return jsonify({"status": "error", "message": "Inventory file not found"}), 404
+        
+        with open(inventory_path, 'r') as f:
+            inventory = yaml.safe_load(f)
+        
+        return jsonify({"status": "success", "inventory": inventory})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route("/api/history")
+def get_history():
+    try:
+        history_path = Path('data/history.yml')
+        if not history_path.exists():
+            return jsonify({"status": "error", "message": "History file not found"}), 404
+        
+        with open(history_path, 'r') as f:
+            history = yaml.safe_load(f)
+        
+        return jsonify({
+            "status": "success", 
+            "history": history,
+            "count": len(history) if history else 0
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 # Register plan generation route
 generate_plan_api(app)

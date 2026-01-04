@@ -23,14 +23,22 @@ def generate_plan_api(app):
                 }), 400
                 
             # Run the generation
-            # Note: generate_meal_plan normally prints to stdout and writes files
-            # Since we refactored it to raise ValueError, we can catch issues
             generate_meal_plan(input_file, data)
+            
+            # Persist changes to GitHub
+            from scripts.github_helper import sync_changes_to_github
+            plan_filename = f"public/plans/{week_str}-weekly-plan.html"
+            history_path = "data/history.yml"
+            
+            sync_changes_to_github([plan_filename, history_path, str(input_file)])
+            
+            plan_url = f"/plans/{week_str}-weekly-plan.html"
             
             return jsonify({
                 "status": "success",
                 "message": f"Successfully generated plan for week of {week_str}",
-                "week_of": week_str
+                "week_of": week_str,
+                "plan_url": plan_url
             })
             
         except Exception as e:

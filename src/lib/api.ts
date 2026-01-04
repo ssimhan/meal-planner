@@ -28,3 +28,18 @@ export async function generatePlan(week_of: string): Promise<any> {
     }
     return res.json();
 }
+export async function getRecipes(): Promise<any> {
+    const res = await fetch('/api/recipes');
+    if (!res.ok) {
+        throw new Error('Failed to fetch recipes');
+    }
+    return res.json();
+}
+
+export async function getInventory(): Promise<any> {
+    const res = await fetch('/api/inventory');
+    if (!res.ok) {
+        throw new Error('Failed to fetch inventory');
+    }
+    return res.json();
+}

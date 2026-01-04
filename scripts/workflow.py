@@ -295,7 +295,7 @@ def generate_meal_plan(input_file, data):
 
     # Generate plan file
     print("\n[5/5] Writing plan file...")
-    plans_dir = Path('plans')
+    plans_dir = Path('public/plans')
     plans_dir.mkdir(exist_ok=True)
 
     history = load_history(history_path)
@@ -498,7 +498,7 @@ def replan_meal_plan(input_file, data):
     print(f"   📄 Regenerating HTML plan for week of {monday_str}...")
     plan_content = generate_html_plan(data, history, selected_dinners_objs)
     
-    plans_dir = Path('plans')
+    plans_dir = Path('public/plans')
     plans_dir.mkdir(exist_ok=True)
     plan_file = plans_dir / f'{monday_str}-weekly-plan.html'
     with open(plan_file, 'w') as f:
@@ -1841,7 +1841,7 @@ def show_status():
         print(f"\n📅 Week: {week_str}")
         print(f"📝 Status: ✅ Complete")
         print(f"📄 File: {input_file}")
-        plan_file = Path(f'plans/{week_str}-weekly-plan.html')
+        plan_file = Path(f'public/plans/{week_str}-weekly-plan.html')
         if plan_file.exists():
             print(f"📄 Plan: {plan_file}")
 

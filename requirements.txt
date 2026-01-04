@@ -9,3 +9,5 @@ click==8.1.7
 # Web API
 flask==3.0.0
 flask-cors==4.0.0
+PyGithub==2.1.1
+python-dotenv==1.0.0

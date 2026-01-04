@@ -70,18 +70,30 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 
 ## Future Roadmap
 
-### Phase 7: Learning & Adaptation
--   **Analytics:** Use `analyze_trends.py` to identify favorite recipes and reduce vegetable waste.
--   **Recipe Scoring:** Automatically adjust rotation based on kids' feedback.
--   **Insights Reports:** Monthly summaries of adherence and freezer usage.
+### Phase 7: User Experience & Logging Improvements
+- the full workflow can be managed and viewed in webpage (currently github page but maybe should switch to vercel or webapp)
+-   **Quick feedback buttons:** Thumbs up/down in daily check-ins for faster logging
+-   **Leftover optimizer:** Explicitly plan dinner → lunch pipelines
+-   **Weekly summary email:** Adherence %, vegetables used, freezer status, upcoming week preview
+-   **Web UX expansion:** Display suggested veggies, pantry/fridge/freezer details on live site
 
-### Potential Enhancements
--   **Mobile App Wrapper:** For easier access on the go.
--   **Frictionless Logging:** Explore SMS or WhatsApp integration for check-ins.
-- easy add for what I buy at the grocery, image scanning if possible
-- suggested veggies should show up in Web ux. details of pantry, fridge and freezer also should show up on web ux. 
-- scan receipt and confirm what I bought to add to my pantry fridge or freezer
+### Phase 8: Intelligence & Automation
+-   **Receipt OCR:** Snap receipt → confirm item names and location -> populate pantry/fridge/freezer inventory list
+-   **Recipe success scoring:** Track completion rates, adjust rotation based on kids' feedback
+-   **Prep checklist mode:** Interactive checkboxes for Monday/Tuesday/Wednesday prep tasks
+-   **Analytics dashboard:** Identify favorite recipes, reduce vegetable waste, track trends
 
--   **Runtime:** Python 3.10+.
--   **Actions Usage:** ~60 mins/month (Free tier).
--   **Success Goal:** Plan adherence >80%, Freezer backups >= 3.
+### Phase 9: Advanced Features
+-   **Weather/calendar integration:** Auto-detect busy days, suggest soups on rainy days
+-   **Recipe importer:** Paste URL → auto-extract and add to index
+-   **Nutrition tracking:** Calculate macros, show weekly vegetable diversity scores
+-   **Meal swap feature:** Drag-and-drop to reorder dinner schedule mid-week
+-   **Smart substitutions:** Suggest recipe swaps based on current inventory
+
+---
+
+## System Requirements
+
+-   **Runtime:** Python 3.10+
+-   **Actions Usage:** ~60 mins/month (Free tier)
+-   **Success Goal:** Plan adherence >80%, Freezer backups >= 3

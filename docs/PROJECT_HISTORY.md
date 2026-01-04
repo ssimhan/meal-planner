@@ -608,3 +608,35 @@ The best tools are the ones you actually use. This system works because it reduc
 - Physical Folder: `_legacy_backup/`
 
 **Status:** Implementation started. Next step is initializing the Next.js project and refactoring Python scripts into API endpoints.
+
+---
+
+## Session: 2026-01-04 (Continued) - Vercel Migration & Dashboard Implementation
+
+**Work Completed:**
+
+- **Backend Migration:** Refactored `workflow.py` and `generate_plan.py` to work as serverless functions.
+    - Replaced `sys.exit()` with exception handling.
+    - Implemented `github_helper.py` to persist data (history, plans, inventory) back to GitHub via API.
+    - Created `/api` endpoints: `status`, `generate-plan`, `create-week`, `confirm-veg`, `inventory`.
+
+- **Frontend Dashboard (Next.js):**
+    - Built a modern, Solarpunk-themed dashboard using Tailwind CSS.
+    - **Interactive Features:**
+        - **Start New Week:** Initialize the next planning cycle with one click.
+        - **Confirm Veg:** Input farmers market purchases directly from the UI.
+        - **Generate Plan:** Trigger the Python engine and view the resulting HTML plan instantly.
+        - **Quick Add Inventory:** Update freezer, pantry, and fridge stocks in real-time.
+    - **Viewers:** Added `/recipes` and `/inventory` pages for easy browsing.
+
+- **Deployment:**
+    - Live on Vercel: `meal-planner-eta-seven.vercel.app`
+    - configured `vercel.json` to route API requests to Python and frontend to Next.js.
+    - Set up `GITHUB_TOKEN` for secure data persistence.
+
+**Key Technical Decisions:**
+1.  **GitOps Persistence:** Even though the app runs on Vercel, the "database" is still the YAML files in the GitHub repo. The app uses the GitHub API to commit changes back to itself, ensuring we never lose the benefits of version control.
+2.  **Hybrid Architecture:** Interactive UI (Next.js) + Complex Logic (Python). We kept the proven meal planning algorithms in Python but wrapped them in a modern web UI.
+3.  **Public Plan Serving:** Start storing generated HTML plans in `public/plans` so they are served directly by Vercel without needing a separate GitHub Pages build step.
+
+**Status:** Migration Complete. The system is now a fully functional web app.

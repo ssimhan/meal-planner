@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { getStatus, generatePlan, WorkflowStatus } from '@/lib/api';
+import { getStatus, generatePlan, createWeek, confirmVeg, WorkflowStatus } from '@/lib/api';
 
 export default function Dashboard() {
   const [status, setStatus] = useState<WorkflowStatus | null>(null);
@@ -10,6 +10,8 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
   const [success, setSuccess] = useState<{ message: string; url?: string } | null>(null);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [vegInput, setVegInput] = useState('');
 
   useEffect(() => {
     fetchStatus();
@@ -26,6 +28,35 @@ export default function Dashboard() {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleCreateWeek() {
+    try {
+      setActionLoading(true);
+      await createWeek();
+      setSuccess({ message: 'New week initialization started!' });
+      await fetchStatus();
+    } catch (err: any) {
+      setError(err.message || 'Failed to create new week');
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  async function handleConfirmVeg() {
+    if (!vegInput.trim()) return;
+    try {
+      setActionLoading(true);
+      const vegList = vegInput.split(',').map(v => v.trim()).filter(v => v);
+      await confirmVeg(vegList);
+      setSuccess({ message: 'Vegetables confirmed! You can now generate the plan.' });
+      setVegInput('');
+      await fetchStatus();
+    } catch (err: any) {
+      setError(err.message || 'Failed to confirm vegetables');
+    } finally {
+      setActionLoading(false);
     }
   }
 
@@ -123,14 +154,26 @@ export default function Dashboard() {
             Quick Actions
           </h2>
           <div className="flex flex-col gap-4">
-            <button
-              onClick={handleGeneratePlan}
-              disabled={generating || status?.state !== 'ready_to_plan'}
-              className="btn-primary w-full text-left flex justify-between items-center group disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <span>{generating ? 'Generating...' : 'Generate Weekly Plan'}</span>
-              <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-            </button>
+            {status?.state === 'new_week' ? (
+              <button
+                onClick={handleCreateWeek}
+                disabled={actionLoading}
+                className="btn-primary w-full text-left flex justify-between items-center group"
+              >
+                <span>{actionLoading ? 'Initializing...' : 'Start New Week'}</span>
+                <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+              </button>
+            ) : (
+              <button
+                onClick={handleGeneratePlan}
+                disabled={generating || status?.state !== 'ready_to_plan'}
+                className="btn-primary w-full text-left flex justify-between items-center group disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span>{generating ? 'Generating...' : 'Generate Weekly Plan'}</span>
+                <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+              </button>
+            )}
+
             <Link href="/inventory" className="btn-secondary w-full text-left flex justify-between items-center group">
               <span>Update Inventory</span>
               <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
@@ -141,13 +184,31 @@ export default function Dashboard() {
         {/* Next Steps */}
         <section className="card md:col-span-2">
           <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
-            Next Steps
+            {status?.state === 'awaiting_farmers_market' ? 'Confirm Vegetables' : 'Next Steps'}
           </h2>
           <div className="p-4 bg-[var(--bg-secondary)] border-l-4 border-[var(--accent-terracotta)]">
             {status?.state === 'ready_to_plan' ? (
               <p>✓ Farmers market vegetables are confirmed. Click "Generate Weekly Plan" above!</p>
             ) : status?.state === 'awaiting_farmers_market' ? (
-              <p>⏳ Awaiting vegetable confirmations from the farmers market.</p>
+              <div className="space-y-4">
+                <p>What did you buy? Enter comma-separated list:</p>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={vegInput}
+                    onChange={(e) => setVegInput(e.target.value)}
+                    placeholder="broccoli, sweet potato, spinach..."
+                    className="flex-1 p-2 border border-[var(--border-subtle)] rounded-sm bg-white"
+                  />
+                  <button
+                    onClick={handleConfirmVeg}
+                    disabled={actionLoading}
+                    className="btn-primary"
+                  >
+                    {actionLoading ? 'Confirming...' : 'Confirm'}
+                  </button>
+                </div>
+              </div>
             ) : status?.state === 'week_complete' ? (
               <p>✓ This week's plan is complete. Start a new week when ready.</p>
             ) : (

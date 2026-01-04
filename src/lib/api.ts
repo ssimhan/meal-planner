@@ -43,3 +43,32 @@ export async function getInventory(): Promise<any> {
     }
     return res.json();
 }
+export async function createWeek(week_of?: string): Promise<any> {
+    const res = await fetch('/api/create-week', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ week_of }),
+    });
+    if (!res.ok) throw new Error('Failed to create week');
+    return res.json();
+}
+
+export async function confirmVeg(confirmed_veg: string[]): Promise<any> {
+    const res = await fetch('/api/confirm-veg', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirmed_veg }),
+    });
+    if (!res.ok) throw new Error('Failed to confirm vegetables');
+    return res.json();
+}
+
+export async function addItemToInventory(category: string, item: string): Promise<any> {
+    const res = await fetch('/api/inventory/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category, item }),
+    });
+    if (!res.ok) throw new Error('Failed to add item to inventory');
+    return res.json();
+}

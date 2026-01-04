@@ -77,13 +77,11 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 
 ### Potential Enhancements
 -   **Mobile App Wrapper:** For easier access on the go.
--   **Grocery Integration:** Link grocery lists to delivery services (e.g., Instacart).
 -   **Frictionless Logging:** Explore SMS or WhatsApp integration for check-ins.
+- easy add for what I buy at the grocery, image scanning if possible
+- suggested veggies should show up in Web ux. details of pantry, fridge and freezer also should show up on web ux. 
+- scan receipt and confirm what I bought to add to my pantry fridge or freezer
 
----
-
-## Resources & Metrics
--   **Platform:** GitHub (Pages & Actions).
 -   **Runtime:** Python 3.10+.
 -   **Actions Usage:** ~60 mins/month (Free tier).
 -   **Success Goal:** Plan adherence >80%, Freezer backups >= 3.

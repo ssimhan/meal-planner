@@ -129,17 +129,61 @@ def get_status():
                 if 'adult_lunch_made' in day_feedback:
                     today_lunch['adult_lunch_made'] = day_feedback['adult_lunch_made']
 
-            # Prep Tasks Logic (Unified)
+            # Prep Tasks Logic - Generate granular tasks using workflow logic
+            from scripts.workflow import generate_granular_prep_tasks, fuzzy_match_prep_task
+
+            # Extract completed prep tasks from history
+            completed_prep = []
+            if history_week and 'daily_feedback' in history_week:
+                for day, feedback in history_week['daily_feedback'].items():
+                    if 'prep_completed' in feedback:
+                        completed_prep.extend(feedback['prep_completed'])
+
+            # Build selected_dinners dict for granular task generation
+            selected_dinners = {}
+            for dinner in dinners:
+                day = dinner.get('day')
+                if day:
+                    # Load recipe details to get main_veg
+                    recipe_id = dinner.get('recipe_id')
+                    if recipe_id:
+                        try:
+                            from pathlib import Path
+                            import yaml as yaml_lib
+                            index_path = Path('recipes/index.yml')
+                            if index_path.exists():
+                                with open(index_path, 'r') as f:
+                                    recipes = yaml_lib.safe_load(f)
+                                    for recipe in recipes:
+                                        if recipe.get('id') == recipe_id:
+                                            selected_dinners[day] = recipe
+                                            break
+                        except Exception as e:
+                            print(f"Warning: Could not load recipe {recipe_id}: {e}")
+
+            # Build selected_lunches dict
+            selected_lunches = {}
+            # For now, we'll use empty prep_components as lunch data isn't fully structured
+            # This will be enhanced when LunchSelector is integrated
+
+            # Generate prep tasks based on day
             if current_day == 'mon':
-                prep_tasks = ["Chop vegetables for Mon/Tue", "Prep lunch components", "Identify batch cooking meal"]
+                prep_tasks = generate_granular_prep_tasks(selected_dinners, selected_lunches, ['mon', 'tue'], "Mon/Tue", completed_prep)
+                prep_tasks.extend(['Portion snacks into grab-and-go containers for early week', 'Identify freezer-friendly dinner to double (batch cook)'])
             elif current_day == 'tue':
-                prep_tasks = ["☀️ AM: Assemble Tuesday lunch", "🌙 PM: Chop vegetables for Wed-Fri", "🌙 PM: Prep components for Wed-Fri"]
+                am_tasks = ["Assemble Tuesday lunch", "Portion Monday's batch-cooked items", "Check freezer backup inventory (verify 3 meals)"]
+                am_tasks = [task for task in am_tasks if not fuzzy_match_prep_task(task, completed_prep)]
+                pm_tasks = generate_granular_prep_tasks(selected_dinners, selected_lunches, ['wed', 'thu', 'fri'], "Wed-Fri", completed_prep)
+                pm_tasks.append('Portion snacks for rest of week')
+                prep_tasks = [{"task": t, "time": "am"} for t in am_tasks] + [{"task": t, "time": "pm"} for t in pm_tasks]
             elif current_day == 'wed':
-                prep_tasks = ["Finish any remaining vegetable/lunch prep", "Check Thu/Fri components", "Load slow cooker if needed"]
+                prep_tasks = ['Finish any remaining veg/lunch prep for Thu/Fri', 'Load Instant Pot or slow cooker for Thursday if needed', 'Final check: All Thu/Fri components ready']
+                prep_tasks = [task for task in prep_tasks if not fuzzy_match_prep_task(task, completed_prep)]
             elif current_day == 'thu':
-                prep_tasks = ["Morning prep (8-9am) allowed", "NO chopping after noon", "NO evening prep"]
+                prep_tasks = ['Light prep allowed (8-9am) if needed', 'NO chopping after noon', 'NO evening prep - only reheating/assembly', 'Fallback: Use freezer backup if energy is depleted']
+                prep_tasks = [task for task in prep_tasks if not fuzzy_match_prep_task(task, completed_prep)]
             elif current_day == 'fri':
-                prep_tasks = ["STRICT NO PREP DAY", "Only reheating/assembly allowed"]
+                prep_tasks = ['ALL DAY: NO chopping allowed', 'ALL DAY: NO cooking allowed - only reheating', 'Only actions: reheating, simple assembly', 'Fallback: Use freezer backup if energy is depleted']
 
         return jsonify({
             "week_of": week_str,
@@ -232,7 +276,9 @@ def log_meal():
         home_snack_made = data.get('home_snack_made')
         kids_lunch_made = data.get('kids_lunch_made')
         adult_lunch_made = data.get('adult_lunch_made')
-        
+        # Prep completion tracking
+        prep_completed = data.get('prep_completed', [])  # Array of completed task strings
+
         # Allow logging feedback without a "made" status for snacks/lunch
         if not week_str or not day:
             return jsonify({"status": "error", "message": "Week and day are required"}), 400
@@ -338,6 +384,17 @@ def log_meal():
                 week['daily_feedback'][target_day]['adult_lunch'] = adult_lunch_feedback
             if adult_lunch_made is not None:
                 week['daily_feedback'][target_day]['adult_lunch_made'] = adult_lunch_made
+
+            # Store prep completion data
+            if prep_completed and len(prep_completed) > 0:
+                if 'prep_completed' not in week['daily_feedback'][target_day]:
+                    week['daily_feedback'][target_day]['prep_completed'] = []
+                # Append new completed tasks (avoid duplicates)
+                existing_tasks = set(week['daily_feedback'][target_day]['prep_completed'])
+                for task in prep_completed:
+                    if task not in existing_tasks:
+                        week['daily_feedback'][target_day]['prep_completed'].append(task)
+                        existing_tasks.add(task)
         if not is_feedback_only:
             if made_2x:
                 target_dinner['made_2x_for_freezer'] = True

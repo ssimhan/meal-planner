@@ -13,6 +13,7 @@ export default function Dashboard() {
   const [actionLoading, setActionLoading] = useState(false);
   const [vegInput, setVegInput] = useState('');
   const [logLoading, setLogLoading] = useState(false);
+  const [completedPrep, setCompletedPrep] = useState<string[]>([]);
 
   useEffect(() => {
     fetchStatus();
@@ -66,6 +67,34 @@ export default function Dashboard() {
       setError(err.message || 'Failed to confirm vegetables');
     } finally {
       setActionLoading(false);
+    }
+  }
+
+  async function togglePrepTask(task: string) {
+    const isCompleted = completedPrep.includes(task);
+
+    if (isCompleted) {
+      // Remove from completed list
+      setCompletedPrep(completedPrep.filter(t => t !== task));
+    } else {
+      // Add to completed list and save to backend
+      const newCompleted = [...completedPrep, task];
+      setCompletedPrep(newCompleted);
+
+      // Send to backend immediately
+      if (status?.week_of && status?.current_day) {
+        try {
+          await logMeal({
+            week: status.week_of,
+            day: status.current_day,
+            prep_completed: [task] // Send only the newly completed task
+          });
+        } catch (err) {
+          console.error('Failed to log prep completion:', err);
+          // Revert on error
+          setCompletedPrep(completedPrep);
+        }
+      }
     }
   }
 
@@ -700,12 +729,29 @@ export default function Dashboard() {
               </header>
               <div className="space-y-3">
                 {status?.prep_tasks && status.prep_tasks.length > 0 ? (
-                  status.prep_tasks.map((task, idx) => (
-                    <div key={idx} className="flex gap-3 items-start">
-                      <span className="w-4 h-4 rounded-full bg-[var(--accent-sage)] flex-shrink-0 mt-0.5 opacity-40"></span>
-                      <p className="text-sm">{task}</p>
-                    </div>
-                  ))
+                  status.prep_tasks.map((task, idx) => {
+                    const taskStr = typeof task === 'string' ? task : task.task;
+                    const taskTime = typeof task === 'object' && task.time ? task.time : null;
+                    const isCompleted = completedPrep.includes(taskStr);
+
+                    return (
+                      <div key={idx} className="flex gap-3 items-start">
+                        <input
+                          type="checkbox"
+                          checked={isCompleted}
+                          onChange={() => togglePrepTask(taskStr)}
+                          className="w-4 h-4 rounded border-2 border-[var(--accent-sage)] text-[var(--accent-sage)] focus:ring-[var(--accent-sage)] cursor-pointer mt-0.5 flex-shrink-0"
+                        />
+                        <label
+                          className={`text-sm cursor-pointer flex-1 ${isCompleted ? 'line-through text-[var(--text-muted)]' : ''}`}
+                          onClick={() => togglePrepTask(taskStr)}
+                        >
+                          {taskTime && <span className="font-mono text-xs mr-2 text-[var(--accent-gold)]">{taskTime.toUpperCase()}</span>}
+                          {taskStr}
+                        </label>
+                      </div>
+                    );
+                  })
                 ) : (
                   <p className="text-sm text-[var(--text-muted)] italic">No specific prep tasks for today.</p>
                 )}

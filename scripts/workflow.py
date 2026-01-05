@@ -1054,11 +1054,19 @@ def generate_html_plan(inputs, history, selected_dinners, from_scratch_recipe=No
     html.append('        </div>')
     html.append('')
 
+    # Extract current week's history data for prep tracking
+    week_history = None
+    if history and 'weeks' in history:
+        for week_data in history['weeks']:
+            if week_data.get('week_of') == week_of:
+                week_history = week_data
+                break
+
     # Generate overview tab
     html.extend(generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe, selected_lunches or {}))
 
-    # Generate weekday tabs with lunch data
-    html.extend(generate_weekday_tabs(inputs, selected_dinners, selected_lunches or {}))
+    # Generate weekday tabs with lunch data and week history for prep tracking
+    html.extend(generate_weekday_tabs(inputs, selected_dinners, selected_lunches or {}, week_history))
 
     # Generate weekend tabs
     html.extend(generate_weekend_tabs())
@@ -1233,8 +1241,15 @@ def generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe
     return html
 
 
-def generate_weekday_tabs(inputs, selected_dinners, selected_lunches):
-    """Generate tabs for Monday through Friday."""
+def generate_weekday_tabs(inputs, selected_dinners, selected_lunches, week_history=None):
+    """Generate tabs for Monday through Friday.
+
+    Args:
+        inputs: Input data for the week
+        selected_dinners: Dict of selected dinner recipes
+        selected_lunches: Dict of selected lunch data
+        week_history: Optional dict containing week execution data from history.yml
+    """
     html = []
 
     days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
@@ -1275,7 +1290,7 @@ def generate_weekday_tabs(inputs, selected_dinners, selected_lunches):
             html.append('')
 
         # Add prep tasks
-        html.extend(generate_prep_section(day_key, day_name, selected_dinners, selected_lunches))
+        html.extend(generate_prep_section(day_key, day_name, selected_dinners, selected_lunches, week_history))
         html.append('')
 
         html.append('        </div>')
@@ -1413,9 +1428,100 @@ def generate_dinner_section(recipe, day_key, busy_days):
     return html
 
 
-def generate_prep_section(day_key, day_name, selected_dinners, selected_lunches):
-    """Generate prep tasks section for a day."""
+def fuzzy_match_prep_task(task, completed_tasks):
+    """Check if a task has been completed using fuzzy matching.
+
+    Args:
+        task: Task string to check
+        completed_tasks: List of completed task strings
+
+    Returns:
+        bool: True if task matches any completed task
+    """
+    task_lower = task.lower()
+
+    # Extract key components from task
+    task_keywords = set(task_lower.split())
+
+    for completed in completed_tasks:
+        completed_lower = completed.lower()
+        completed_keywords = set(completed_lower.split())
+
+        # Simple fuzzy match: if 60%+ keywords match, consider it completed
+        common_keywords = task_keywords & completed_keywords
+        if len(common_keywords) >= max(2, len(task_keywords) * 0.6):
+            return True
+
+    return False
+
+
+def generate_granular_prep_tasks(selected_dinners, selected_lunches, day_keys, task_context="", completed_tasks=None):
+    """Generate granular, ingredient-level prep tasks for specified days.
+
+    Args:
+        selected_dinners: Dict of {day: recipe_data}
+        selected_lunches: Dict of {day: lunch_data}
+        day_keys: List of day keys to generate tasks for (e.g., ['mon', 'tue'])
+        task_context: Description for grouping (e.g., "Mon/Tue", "Wed-Fri")
+        completed_tasks: List of already completed task strings (for filtering)
+
+    Returns:
+        List of granular task strings (e.g., "Chop 2 carrots for Monday curry")
+    """
+    tasks = []
+    completed_tasks = completed_tasks or []
+
+    # Track vegetables by recipe for more specific instructions
+    veg_by_recipe = {}
+    for day_key in day_keys:
+        if day_key in selected_dinners:
+            recipe = selected_dinners[day_key]
+            recipe_name = recipe.get('name', 'dinner')
+            main_vegs = recipe.get('main_veg', [])
+
+            for veg in main_vegs:
+                veg_clean = veg.replace('_', ' ')
+                day_name = day_key.capitalize()
+                task = f"Chop {veg_clean} for {day_name} {recipe_name}"
+
+                # Skip if already completed
+                if not fuzzy_match_prep_task(task, completed_tasks):
+                    tasks.append(task)
+
+    # Add lunch component prep tasks
+    for day_key in day_keys:
+        if day_key in selected_lunches:
+            lunch = selected_lunches[day_key]
+            for component in lunch.prep_components:
+                component_clean = component.replace('_', ' ')
+                day_name = day_key.capitalize()
+                task = f"Prep {component_clean} for {day_name} lunch"
+
+                # Skip if already completed
+                if not fuzzy_match_prep_task(task, completed_tasks):
+                    tasks.append(task)
+
+    return tasks
+
+
+def generate_prep_section(day_key, day_name, selected_dinners, selected_lunches, week_history=None):
+    """Generate prep tasks section for a day.
+
+    Args:
+        day_key: Day abbreviation (mon, tue, etc.)
+        day_name: Full day name (Monday, Tuesday, etc.)
+        selected_dinners: Dict of selected dinner recipes
+        selected_lunches: Dict of selected lunch data
+        week_history: Optional dict containing completed prep tasks from history
+    """
     html = []
+
+    # Extract completed prep tasks from history for smart filtering
+    completed_prep = []
+    if week_history and 'daily_feedback' in week_history:
+        for day, feedback in week_history['daily_feedback'].items():
+            if 'prep_completed' in feedback:
+                completed_prep.extend(feedback['prep_completed'])
 
     # Default snacks for reference
     default_snacks = {
@@ -1432,40 +1538,33 @@ def generate_prep_section(day_key, day_name, selected_dinners, selected_lunches)
 
     if day_key == 'mon':
         # Monday: CHOP FOR MON/TUE
-        all_vegs = []
-        for d_key in ['mon', 'tue']:
-            if d_key in selected_dinners:
-                all_vegs.extend(selected_dinners[d_key].get('main_veg', []))
-        
-        # Deduplicate and sort
-        unique_vegs = sorted(list(set(all_vegs)))
-        veg_list_str = ', '.join([format_item(v) for v in unique_vegs]) if unique_vegs else 'None identified'
-
-        # Lunch components to prep for early week
-        all_components = []
-        for l_key in ['mon', 'tue']:
-            if l_key in selected_lunches:
-                all_components.extend(selected_lunches[l_key].prep_components)
-        
-        unique_components = sorted(list(set(all_components)))
-        comp_list_str = ', '.join([format_item(c) for c in unique_components]) if unique_components else 'None identified'
+        granular_tasks = generate_granular_prep_tasks(selected_dinners, selected_lunches, ['mon', 'tue'], "Mon/Tue", completed_prep)
 
         # Specific snack prep
-        snack_prep = []
         if default_snacks.get('tue') == 'Cheese and crackers':
-            snack_prep.append('Cube cheese brick for Tuesday snack')
+            granular_tasks.append('Cube cheese brick for Tuesday snack')
+
+        # General prep tasks
+        general_tasks = [
+            'Portion snacks into grab-and-go containers for early week',
+            'Identify freezer-friendly dinner to double (batch cook)'
+        ]
+
+        if 'tue' in selected_lunches and selected_lunches['tue'].recipe_id.startswith('pipeline_'):
+            general_tasks.append(f"Pack leftovers for tomorrow's lunch: {selected_lunches['tue'].recipe_name}")
 
         html.append('            <div class="prep-tasks">')
         html.append(f'                <h4>{day_name} Prep Tasks (MON-TUE PREP)</h4>')
         html.append('                <ul>')
-        html.append(f'                    <li><strong>Chop vegetables (Mon/Tue):</strong> {veg_list_str}</li>')
-        html.append(f'                    <li><strong>Prep components (Mon/Tue):</strong> {comp_list_str}</li>')
-        for sp in snack_prep:
-            html.append(f'                    <li>{sp}</li>')
-        html.append('                    <li>Portion snacks into grab-and-go containers for early week</li>')
-        html.append('                    <li>Identify freezer-friendly dinner to double (batch cook)</li>')
-        if 'tue' in selected_lunches and selected_lunches['tue'].recipe_id.startswith('pipeline_'):
-            html.append(f"                    <li><strong>Pack leftovers:</strong> Tomorrow's lunch is {selected_lunches['tue'].recipe_name}</li>")
+
+        # Render granular tasks with data attributes for tracking
+        for task in granular_tasks:
+            html.append(f'                    <li data-prep-task="{task}">{task}</li>')
+
+        # Render general tasks
+        for task in general_tasks:
+            html.append(f'                    <li data-prep-task="{task}">{task}</li>')
+
         html.append('                </ul>')
         html.append('            </div>')
 
@@ -1473,91 +1572,107 @@ def generate_prep_section(day_key, day_name, selected_dinners, selected_lunches)
         # Tuesday: AM/PM split
         html.append('            <div class="prep-tasks">')
         html.append(f'                <h4>{day_name} Prep Tasks (WED-FRI PREP)</h4>')
-        
+
         # AM Section
+        am_tasks = []
+        if 'tue' in selected_lunches:
+            lunch = selected_lunches['tue']
+            am_tasks.append(f'Assemble Tuesday lunch: {lunch.recipe_name}')
+        am_tasks.extend([
+            "Portion Monday's batch-cooked items",
+            'Check freezer backup inventory (verify 3 meals)'
+        ])
+
         html.append('                <div style="margin-top: 15px;">')
         html.append('                    <strong>☀️ AM Prep (Morning):</strong>')
         html.append('                    <ul>')
-        if 'tue' in selected_lunches:
-            lunch = selected_lunches['tue']
-            html.append(f'                        <li>Assemble Tuesday lunch: {lunch.recipe_name}</li>')
-        html.append('                        <li>Portion Monday\'s batch-cooked items</li>')
-        html.append('                        <li>Check freezer backup inventory (verify 3 meals)</li>')
+        for task in am_tasks:
+            html.append(f'                        <li data-prep-task="{task}" data-prep-time="am">{task}</li>')
         html.append('                    </ul>')
         html.append('                </div>')
 
         # PM Section: CHOP FOR WED/THU/FRI
-        all_vegs = []
-        for d_key in ['wed', 'thu', 'fri']:
-            if d_key in selected_dinners:
-                all_vegs.extend(selected_dinners[d_key].get('main_veg', []))
-        
-        unique_vegs = sorted(list(set(all_vegs)))
-        veg_list_str = ', '.join([format_item(v) for v in unique_vegs]) if unique_vegs else 'None identified'
+        pm_granular_tasks = generate_granular_prep_tasks(selected_dinners, selected_lunches, ['wed', 'thu', 'fri'], "Wed-Fri", completed_prep)
 
-        all_components = []
-        for l_key in ['wed', 'thu', 'fri']:
-            if l_key in selected_lunches:
-                all_components.extend(selected_lunches[l_key].prep_components)
-        
-        unique_components = sorted(list(set(all_components)))
-        comp_list_str = ', '.join([format_item(c) for c in unique_components]) if unique_components else 'None identified'
+        pm_general_tasks = ['Portion snacks for rest of week']
+        if 'wed' in selected_lunches and selected_lunches['wed'].recipe_id.startswith('pipeline_'):
+            pm_general_tasks.append(f"Pack leftovers for tomorrow's lunch: {selected_lunches['wed'].recipe_name}")
 
         html.append('                <div style="margin-top: 15px;">')
         html.append('                    <strong>🌙 PM Prep (Evening 5-9pm):</strong>')
         html.append('                    <ul>')
-        html.append(f'                        <li><strong>Chop vegetables (Wed-Fri):</strong> {veg_list_str}</li>')
-        html.append(f'                        <li><strong>Prep components (Wed-Fri):</strong> {comp_list_str}</li>')
-        html.append('                        <li>Portion snacks for rest of week</li>')
-        if 'wed' in selected_lunches and selected_lunches['wed'].recipe_id.startswith('pipeline_'):
-            html.append(f"                        <li><strong>Pack leftovers:</strong> Tomorrow's lunch is {selected_lunches['wed'].recipe_name}</li>")
+
+        # Render granular PM tasks
+        for task in pm_granular_tasks:
+            html.append(f'                        <li data-prep-task="{task}" data-prep-time="pm">{task}</li>')
+
+        # Render general PM tasks
+        for task in pm_general_tasks:
+            html.append(f'                        <li data-prep-task="{task}" data-prep-time="pm">{task}</li>')
+
         html.append('                    </ul>')
         html.append('                </div>')
         html.append('            </div>')
 
     elif day_key == 'wed':
+        # Wednesday: Backup prep day
+        wed_tasks = [
+            'Finish any remaining veg/lunch prep for Thu/Fri',
+            'Load Instant Pot or slow cooker for Thursday if needed',
+            'Final check: All Thu/Fri components ready'
+        ]
+
+        if 'thu' in selected_lunches and selected_lunches['thu'].recipe_id.startswith('pipeline_'):
+            wed_tasks.append(f"Pack leftovers for tomorrow's lunch: {selected_lunches['thu'].recipe_name}")
+
         html.append('            <div class="prep-tasks">')
         html.append(f'                <h4>{day_name} Prep Tasks (BACKUP PREP)</h4>')
         html.append('                <ul>')
-        html.append('                    <li><strong>Backup day:</strong> Finish any remaining veg/lunch prep for Thu/Fri</li>')
-        html.append('                    <li>Load Instant Pot or slow cooker for Thursday if needed</li>')
-        html.append('                    <li>Final check: All Thu/Fri components ready</li>')
-        if 'thu' in selected_lunches and selected_lunches['thu'].recipe_id.startswith('pipeline_'):
-            html.append(f"                    <li><strong>Pack leftovers:</strong> Tomorrow's lunch is {selected_lunches['thu'].recipe_name}</li>")
+        for task in wed_tasks:
+            html.append(f'                    <li data-prep-task="{task}">{task}</li>')
         html.append('                </ul>')
         html.append('            </div>')
 
     elif day_key == 'thu':
         # Thursday morning prep
-        html.append('            <div class="prep-tasks">')
-        html.append(f'                <h4>{day_name} Prep Tasks (MORNING PREP OK)</h4>')
-        html.append('                <ul>')
-        
-        morning_tasks = ['Light prep allowed (8-9am) if needed']
+        thu_tasks = ['Light prep allowed (8-9am) if needed']
+
         if 'thu' in selected_dinners:
             recipe = selected_dinners['thu']
             if recipe.get('effort_level') == 'normal':
-                 morning_tasks.append(f"Start initial steps for {recipe.get('name')} if time allows")
-        
-        for task in morning_tasks:
-            html.append(f'                    <li>{task}</li>')
-        
-        html.append('                    <li><strong>NO chopping after noon</strong></li>')
-        html.append('                    <li><strong>NO evening prep</strong> - only reheating/assembly</li>')
-        html.append('                    <li>Fallback: Use freezer backup if energy is depleted</li>')
+                thu_tasks.append(f"Start initial steps for {recipe.get('name')} if time allows")
+
+        thu_tasks.extend([
+            'NO chopping after noon',
+            'NO evening prep - only reheating/assembly',
+            'Fallback: Use freezer backup if energy is depleted'
+        ])
+
         if 'fri' in selected_lunches and selected_lunches['fri'].recipe_id.startswith('pipeline_'):
-            html.append(f"                    <li><strong>Pack leftovers:</strong> Tomorrow's lunch is {selected_lunches['fri'].recipe_name}</li>")
+            thu_tasks.append(f"Pack leftovers for tomorrow's lunch: {selected_lunches['fri'].recipe_name}")
+
+        html.append('            <div class="prep-tasks">')
+        html.append(f'                <h4>{day_name} Prep Tasks (MORNING PREP OK)</h4>')
+        html.append('                <ul>')
+        for task in thu_tasks:
+            html.append(f'                    <li data-prep-task="{task}" data-prep-time="am">{task}</li>')
         html.append('                </ul>')
         html.append('            </div>')
 
     elif day_key == 'fri':
+        # Friday: No prep day
+        fri_tasks = [
+            'ALL DAY: NO chopping allowed',
+            'ALL DAY: NO cooking allowed - only reheating',
+            'Only actions: reheating, simple assembly',
+            'Fallback: Use freezer backup if energy is depleted'
+        ]
+
         html.append('            <div class="prep-tasks">')
         html.append(f'                <h4>{day_name} Prep Tasks (NO PREP DAY - STRICT)</h4>')
         html.append('                <ul>')
-        html.append('                    <li><strong>ALL DAY: NO chopping allowed</strong></li>')
-        html.append('                    <li><strong>ALL DAY: NO cooking allowed</strong> - only reheating</li>')
-        html.append('                    <li>Only actions: reheating, simple assembly</li>')
-        html.append('                    <li>Fallback: Use freezer backup if energy is depleted</li>')
+        for task in fri_tasks:
+            html.append(f'                    <li data-prep-task="{task}">{task}</li>')
         html.append('                </ul>')
         html.append('            </div>')
 

@@ -32,7 +32,7 @@ export interface WorkflowStatus {
         school_snack_made?: boolean;
         home_snack_made?: boolean;
     };
-    prep_tasks?: string[];
+    prep_tasks?: (string | { task: string; time: string })[];
     week_data?: any;
 }
 
@@ -114,9 +114,9 @@ export async function addItemToInventory(category: string, item: string): Promis
 }
 
 export interface LogMealData {
-    week: string;
-    day: string;
-    made: string | boolean;
+    week?: string;
+    day?: string;
+    made?: string | boolean;
     vegetables?: string;
     kids_feedback?: string;
     kids_complaints?: string;
@@ -134,6 +134,8 @@ export interface LogMealData {
     home_snack_made?: boolean;
     kids_lunch_made?: boolean;
     adult_lunch_made?: boolean;
+    // Prep completion tracking
+    prep_completed?: string[];
 }
 
 export async function logMeal(data: LogMealData): Promise<any> {

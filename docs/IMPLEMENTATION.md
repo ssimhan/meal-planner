@@ -213,6 +213,7 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 
 ### Recipe Index changes
 *Pending recipe additions from corrections:*
+- [ ] Add recipe for: Rasam rice and broccoli (requested on 2026-01-05)
 
 ---
 

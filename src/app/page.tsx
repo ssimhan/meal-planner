@@ -15,6 +15,14 @@ export default function Dashboard() {
   const [logLoading, setLogLoading] = useState(false);
   const [completedPrep, setCompletedPrep] = useState<string[]>([]);
 
+  // Dinner Logging State (Lifted from inner component to prevent state loss on re-render)
+  const [showAlternatives, setShowAlternatives] = useState(false);
+  const [selectedAlternative, setSelectedAlternative] = useState<'freezer' | 'outside' | 'other' | null>(null);
+  const [otherMealText, setOtherMealText] = useState('');
+  const [selectedFreezerMeal, setSelectedFreezerMeal] = useState('');
+  const [isDinnerEditing, setIsDinnerEditing] = useState(false);
+  const [dinnerEditInput, setDinnerEditInput] = useState('');
+
   useEffect(() => {
     fetchStatus(true);
   }, []);
@@ -123,7 +131,13 @@ export default function Dashboard() {
     }
   }
 
-  async function handleLogDay(made: boolean | string, feedback?: string, freezerMeal?: string, actualMeal?: string) {
+  async function handleLogDay(
+    made: boolean | string,
+    feedback?: string,
+    freezerMeal?: string,
+    actualMeal?: string,
+    needsFix?: boolean
+  ) {
     if (!status?.week_of || !status?.current_day) return;
 
     try {
@@ -134,10 +148,19 @@ export default function Dashboard() {
         made: made,
         kids_feedback: feedback,
         freezer_meal: freezerMeal,
-        actual_meal: actualMeal
+        actual_meal: actualMeal,
+        dinner_needs_fix: needsFix
       });
       setSuccess({ message: `Logged status for today (${status.current_day})!` });
       await fetchStatus();
+
+      // RESET dinner states upon successful log
+      setShowAlternatives(false);
+      setSelectedAlternative(null);
+      setOtherMealText('');
+      setSelectedFreezerMeal('');
+      setIsDinnerEditing(false);
+      setDinnerEditInput('');
     } catch (err: any) {
       setError(err.message || 'Failed to log meal');
     } finally {
@@ -149,37 +172,23 @@ export default function Dashboard() {
     feedbackType: 'school_snack' | 'home_snack' | 'kids_lunch' | 'adult_lunch',
     emoji: string,
     made: boolean,
-    overrideText?: string
+    overrideText?: string,
+    needsFix?: boolean
   ) {
     if (!status?.week_of || !status?.current_day) return;
 
     try {
       setLogLoading(true);
-      const feedbackData: any = {
-        week: status.week_of,
-        day: status.current_day,
-        made: true // Keep this for backend compatibility
-      };
-
-      // Build the feedback string: prioritize override text if provided (e.g. for corrections), else use emoji or Skipped default
       const feedbackValue = overrideText || (made ? emoji : 'Skipped');
 
-      // Map feedback type to the correct field
-      if (feedbackType === 'school_snack') {
-        feedbackData.school_snack_feedback = feedbackValue;
-        feedbackData.school_snack_made = made;
-      } else if (feedbackType === 'home_snack') {
-        feedbackData.home_snack_feedback = feedbackValue;
-        feedbackData.home_snack_made = made;
-      } else if (feedbackType === 'kids_lunch') {
-        feedbackData.kids_lunch_feedback = feedbackValue;
-        feedbackData.kids_lunch_made = made;
-      } else if (feedbackType === 'adult_lunch') {
-        feedbackData.adult_lunch_feedback = feedbackValue;
-        feedbackData.adult_lunch_made = made;
-      }
+      await logMeal({
+        week: status.week_of,
+        day: status.current_day,
+        [`${feedbackType}_made`]: made,
+        [`${feedbackType}_feedback`]: feedbackValue,
+        [`${feedbackType}_needs_fix`]: needsFix
+      });
 
-      await logMeal(feedbackData);
       setSuccess({ message: `Logged ${feedbackType.replace(/_/g, ' ')} feedback!` });
       await fetchStatus();
     } catch (err: any) {
@@ -493,10 +502,12 @@ export default function Dashboard() {
                     {/* Dinner */}
                     {(() => {
                       const DinnerLogging = () => {
-                        const [showAlternatives, setShowAlternatives] = React.useState(false);
-                        const [selectedAlternative, setSelectedAlternative] = React.useState<'freezer' | 'outside' | 'other' | null>(null);
-                        const [otherMealText, setOtherMealText] = React.useState('');
-                        const [selectedFreezerMeal, setSelectedFreezerMeal] = React.useState('');
+                        // These state variables are now managed by the parent Dashboard component
+                        // and passed down as props, or derived from the global status object.
+                        // For this snippet, we assume they are available in the scope of DinnerLogging.
+                        // For example, `showAlternatives`, `selectedAlternative`, `otherMealText`,
+                        // `selectedFreezerMeal`, `isDinnerEditing`, `dinnerEditInput` would be props
+                        // or derived from `status` and `dashboardState` variables.
 
                         const freezerInventory = status?.week_data?.freezer_inventory || [];
 
@@ -505,34 +516,32 @@ export default function Dashboard() {
                         };
 
                         const handleNotMade = () => {
+                          // This action would trigger a state change in the parent Dashboard component
+                          // to show alternatives.
+                          // For example: setDashboardState(prev => ({ ...prev, showDinnerAlternatives: true }));
+                          // For this snippet, we assume `setShowAlternatives` is a prop.
                           setShowAlternatives(true);
                         };
 
                         const handleAlternativeSelect = (alt: 'freezer' | 'outside' | 'other') => {
+                          // This action would trigger a state change in the parent Dashboard component
+                          // to set the selected alternative.
+                          // For example: setDashboardState(prev => ({ ...prev, selectedDinnerAlternative: alt }));
+                          // For this snippet, we assume `setSelectedAlternative` is a prop.
                           setSelectedAlternative(alt);
                         };
 
                         const handleSubmitAlternative = async () => {
                           if (selectedAlternative === 'freezer' && selectedFreezerMeal) {
                             await handleLogDay('freezer_backup', '', selectedFreezerMeal);
-                            setShowAlternatives(false);
-                            setSelectedAlternative(null);
                           } else if (selectedAlternative === 'outside') {
                             await handleLogDay('outside_meal');
-                            setShowAlternatives(false);
-                            setSelectedAlternative(null);
                           } else if (selectedAlternative === 'other' && otherMealText.trim()) {
                             await handleLogDay(false, '', '', otherMealText);
-                            setShowAlternatives(false);
-                            setSelectedAlternative(null);
-                            setOtherMealText('');
                           }
                         };
 
-                        const [isDinnerEditing, setIsDinnerEditing] = React.useState(false);
-                        const [dinnerEditInput, setDinnerEditInput] = React.useState('');
-
-                        const handleDinnerEditSubmit = async () => {
+                        const handleDinnerEditSubmitLocal = async () => {
                           if (dinnerEditInput.trim()) {
                             // Preserve existing made status but update actual_meal
                             // If made is freezer_backup, we need to pass that.
@@ -556,8 +565,6 @@ export default function Dashboard() {
                               freezerMealArg,
                               dinnerEditInput
                             );
-                            setIsDinnerEditing(false);
-                            setDinnerEditInput('');
                           }
                         };
 
@@ -601,7 +608,7 @@ export default function Dashboard() {
                               />
                               <div className="flex gap-2">
                                 <button
-                                  onClick={handleDinnerEditSubmit}
+                                  onClick={handleDinnerEditSubmitLocal}
                                   disabled={logLoading || !dinnerEditInput.trim()}
                                   className="flex-1 py-1 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
                                 >

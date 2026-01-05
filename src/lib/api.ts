@@ -12,6 +12,7 @@ export interface WorkflowStatus {
         vegetables?: string[];
         kids_feedback?: string;
         actual_meal?: string;
+        needs_fix?: boolean;
         freezer_used?: { meal: string; frozen_date?: string };
     };
     today_lunch?: {
@@ -23,6 +24,8 @@ export interface WorkflowStatus {
         adult_lunch_feedback?: string;
         kids_lunch_made?: boolean;
         adult_lunch_made?: boolean;
+        kids_lunch_needs_fix?: boolean;
+        adult_lunch_needs_fix?: boolean;
     };
     today_snacks?: {
         school: string;
@@ -31,6 +34,8 @@ export interface WorkflowStatus {
         home_snack_feedback?: string;
         school_snack_made?: boolean;
         home_snack_made?: boolean;
+        school_snack_needs_fix?: boolean;
+        home_snack_needs_fix?: boolean;
     };
     prep_tasks?: (string | { task: string; time: string })[];
     completed_prep?: string[];
@@ -135,6 +140,12 @@ export interface LogMealData {
     home_snack_made?: boolean;
     kids_lunch_made?: boolean;
     adult_lunch_made?: boolean;
+    // Need fix flags
+    dinner_needs_fix?: boolean;
+    kids_lunch_needs_fix?: boolean;
+    adult_lunch_needs_fix?: boolean;
+    school_snack_needs_fix?: boolean;
+    home_snack_needs_fix?: boolean;
     // Prep completion tracking
     prep_completed?: string[];
 }

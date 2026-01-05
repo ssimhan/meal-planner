@@ -148,12 +148,10 @@ def get_status():
                     recipe_id = dinner.get('recipe_id')
                     if recipe_id:
                         try:
-                            from pathlib import Path
-                            import yaml as yaml_lib
                             index_path = Path('recipes/index.yml')
                             if index_path.exists():
                                 with open(index_path, 'r') as f:
-                                    recipes = yaml_lib.safe_load(f)
+                                    recipes = yaml.safe_load(f)
                                     for recipe in recipes:
                                         if recipe.get('id') == recipe_id:
                                             selected_dinners[day] = recipe

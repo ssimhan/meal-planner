@@ -928,4 +928,25 @@ freezer_inventory:
 
 **Status:** Create week endpoint now works on Vercel. Users can start new weeks directly from the web UI without filesystem errors.
 
+## Session: 2026-01-04 (Final) - Vercel State Sync and GitHub-Aware Data Loading
+
+**Issue:** Dashboard was showing stale data after "Start New Week" or "Confirm Veg" because Vercel was reading from its local (stale) filesystem instead of the updated GitHub repository.
+
+**Root Cause:**
+- Vercel's local filesystem is snapshotted at deployment and doesn't sync with the repository at runtime.
+- API endpoints were using `Path.exists()` and `open()` on local paths, missing changes pushed to GitHub.
+
+**Fix:**
+1. **GitHub as Source of Truth:** Implemented `get_yaml_data` which fetches the latest files directly from GitHub using the API before falling back to local files.
+2. **Synchronization to `/tmp`:** Synchronized critical files (`history.yml`, `inventory.yml`, `inputs/`) to the writable `/tmp` directory on Vercel to support existing script logic.
+3. **Workflow Prioritization:** Updated `get_status` to scan for incomplete weeks (`status != 'plan_complete'`) rather than strictly following the calendar date.
+4. **UX Improvements:** Refactored `fetchStatus` to support background syncing, allowing the dashboard to remain visible while data is refreshed.
+
+**Technical Changes:**
+- **`api/index.py`**: Added `get_yaml_data` and implemented it across all GET/POST endpoints.
+- **`api/index.py`**: Added background syncing of key files to `/tmp` during the status check.
+- **`src/app/page.tsx`**: Updated `handleCreateWeek` and `fetchStatus` to provide continuous feedback without full-page reloads.
+
+**Status:** Complete state consistency achieved on Vercel. Actions taken in the UI are reflected immediately on the dashboard.
+
 ---

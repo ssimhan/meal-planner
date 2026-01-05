@@ -1,34 +1,23 @@
 #!/bin/bash
 
-# Live Reload Development Script for Meal Planner
-# This script watches for changes in input files and templates, 
-# regenerates the meal plan, and refreshes the browser.
+# Modern local dev workflow for hybrid Next.js + Python app
+# Use this to start both the Next.js dashboard and Python API together
 
-# 1. Start nodemon to watch for changes and regenerate the plan
-# We use npx to avoid requiring a local install of nodemon
-echo "🚀 Starting watcher (nodemon)..."
-npx -y nodemon --watch inputs/ --watch recipes/ --watch templates/ --watch data/ \
-    -e yml,html,py \
-    --exec "python3 scripts/workflow.py generate-plan" &
+echo "🚀 Starting Meal Planner Local Dev Environment..."
+echo ""
+echo "Services:"
+echo "  - Next.js Dashboard: http://localhost:3000"
+echo "  - Python API: http://localhost:5328"
+echo "  - API Status: http://localhost:5328/api/status"
+echo ""
 
-# 2. Wait a moment for the first generation if needed
-sleep 2
-
-# 3. Start browser-sync to serve the plans and refresh on HTML changes
-# It will automatically find the latest generated plan if we point it to the plans directory
-echo "🌐 Starting local server (browser-sync)..."
-# Find the most recent plan file to open initially
-LATEST_PLAN=$(ls -t plans/*-weekly-plan.html 2>/dev/null | head -n 1)
-
-if [ -z "$LATEST_PLAN" ]; then
-    echo "⚠️ No plan found yet. Generating one now..."
-    python3 scripts/workflow.py generate-plan
-    LATEST_PLAN=$(ls -t plans/*-weekly-plan.html | head -n 1)
+# Check for .env file
+if [ ! -f .env ]; then
+    echo "⚠️  No .env file found. Creating from .env.example..."
+    cp .env.example .env
+    echo "📝 Edit .env to add your GITHUB_TOKEN (optional)"
+    echo ""
 fi
 
-echo "📖 Opening latest plan: $LATEST_PLAN"
-
-npx -y browser-sync start --server --files "plans/*.html" --startPath "$LATEST_PLAN" --no-notify
-
-# Handle cleanup on exit
-trap "kill 0" EXIT
+# Start both services concurrently
+npm run dev:full

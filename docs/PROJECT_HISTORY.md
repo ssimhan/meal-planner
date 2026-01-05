@@ -964,3 +964,15 @@ freezer_inventory:
     - Verified logic correctly processes updates while preserving "Made" status.
 - **Outcome:** Users can now maintain an accurate history even if they initially logged something incorrectly, or want to add context later. This improves data quality for future analytics.
 - **Status:** Complete. Feature live on dashboard.
+
+---
+### [2026-01-04] Reversion to Stable Build (d8519bb)
+- **Reason:** A bug fix session attempting to address UI/UX issues (skip button, week view opacity, inline needs-fix input, recipe links) introduced cascading JSX structure errors that repeatedly broke Vercel builds.
+- **Root Cause:** During refactoring of the `DinnerLogging` component, the IIFE structure (opening fragment `<>`, return statement, and closing `})()}`) became corrupted, causing "Expected '</', got 'div'" parser errors.
+- **Action:** Reverted to commit `d8519bb` ("fix: restore FeedbackButtons component definition to resolve build error") which was the last known stable, deployable state.
+- **Commits Lost:**
+  - `715d62a` - Bug fix attempt (skip logic, week view, recipe links)
+  - `cabe650`, `65bb8ed`, `8a0705e`, `dc15774` - Various syntax fix attempts
+  - `a03a1d3` - Title change to "Sandhya's Meal Planner"
+- **Next Steps:** Carefully re-implement the desired features with proper testing before pushing.
+- **Lesson Learned:** Complex JSX refactoring (especially IIFEs with component definitions) requires validating builds locally before pushing to production.

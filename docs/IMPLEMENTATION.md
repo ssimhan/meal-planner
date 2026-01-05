@@ -1,6 +1,6 @@
 # Meal Planner Implementation Guide
 
-**Last Updated:** 2026-01-01
+**Last Updated:** 2026-01-04
 **Live Site:** [ssimhan.github.io/meal-planner/](https://ssimhan.github.io/meal-planner/)
 
 ---
@@ -87,7 +87,7 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 
 **1.5 Mobile & UX Polish** ✅
 - [x] **Mobile Responsive Dashboard**: Grid uses `grid-cols-1 md:grid-cols-2 lg:grid-cols-5` (cards stack vertically on mobile)
-- [ ] **Full Week View**: Add a dedicated "Weekly Overview" page (or section) showing the entire week's plan in a clear table format.
+- [x] **Full Week View**: Dedicated `/week-view` page with table layout (desktop) and card layout (mobile)
 
 **2. Smart Personalization (Effort: Medium)**
 - [ ] **Kid Profiles**: Update `lunch_selector.py` to handle multiple kid profiles (e.g., specific preferences/allergies like "Akira: nuts ok" vs "Anya: no nuts").

@@ -229,6 +229,15 @@ export default function Dashboard() {
             Quick Actions
           </h2>
           <div className="flex flex-col gap-4">
+            {status?.state === 'active' && (
+              <Link
+                href="/week-view"
+                className="btn-secondary w-full text-left flex justify-between items-center group"
+              >
+                <span>View Full Week</span>
+                <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+              </Link>
+            )}
             {status?.state === 'new_week' ? (
               <button
                 onClick={handleCreateWeek}

@@ -860,3 +860,39 @@ freezer_inventory:
   - Specific task lists reduce ambiguity and improve execution consistency
   - Backlog items capture good ideas without derailing current work
 - **Status:** Documentation complete. Prep tracking feature added to Phase 11 backlog.
+
+### [2026-01-04] Prep Completion Tracking Implementation
+- **Goal:** Enable users to track completed prep tasks with interactive checkboxes and smart filtering.
+- **Implementation:**
+  - **Backend (Python):**
+    - Created `generate_granular_prep_tasks()` in workflow.py to generate ingredient-level tasks
+    - Added `fuzzy_match_prep_task()` with 60% keyword overlap detection for smart filtering
+    - Updated `generate_prep_section()` to accept week history and filter completed tasks
+    - Enhanced `/api/status` to generate granular prep tasks and return completed tasks
+    - Modified `/api/log-meal` to accept `prep_completed` array and store in `daily_feedback`
+  - **Frontend (Next.js/React):**
+    - Added interactive checkboxes to Prep Interface card on dashboard
+    - Implemented `togglePrepTask()` for real-time task completion and backend sync
+    - Added visual feedback (strikethrough, muted color) for completed tasks
+    - Integrated checkbox state initialization from backend on page load
+    - Added AM/PM time labels for Tuesday tasks
+  - **Data Structure:**
+    - Tasks stored in `history.yml` under `daily_feedback.{day}.prep_completed` as array of strings
+    - Example: `["Chop carrots for Monday curry", "Prep rice for Monday lunch"]`
+- **Technical Decisions:**
+  1. **Granular tasks over generic**: "Chop carrots for Monday curry" instead of "Chop vegetables for Mon/Tue"
+  2. **Fuzzy matching for intelligence**: Detects similar completed tasks to avoid duplication
+  3. **Real-time sync**: Checkbox clicks save immediately to backend via `/api/log-meal`
+  4. **Persistent state**: Frontend loads completed tasks from API on page load
+  5. **Day-level storage**: Prep tasks stored at day level in `daily_feedback` for consistency
+- **Challenges & Fixes:**
+  - **Issue 1**: Duplicate Path import caused API 500 error → Removed nested import
+  - **Issue 2**: UTC timezone showed Monday when it's Sunday in California → Added pytz for Pacific time
+  - **Issue 3**: Checkboxes didn't stay checked → Added completed_prep to API response and initialized frontend state
+  - **Issue 4**: Missing pytz module on Vercel → Added pytz==2024.1 to requirements.txt
+- **Learning:**
+  - Granular tasks provide better tracking and accountability than generic categories
+  - Fuzzy matching creates intelligent automation without exact string matching requirements
+  - Timezone handling is critical for serverless apps (Vercel uses UTC, users expect local time)
+  - Persistent state requires both backend storage AND frontend initialization
+- **Status:** Prep Completion Tracking fully implemented and deployed. Users can now check off tasks and see them persist across sessions.

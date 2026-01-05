@@ -149,9 +149,67 @@ def generate_markdown_report(recipe_stats, veg_counts, weeks_logged, adherence, 
     
     return "\n".join(lines)
 
-def main():
+def get_recipe_scores(weeks):
+    """Calculate scores for recipes based on emoji feedback."""
+    feedback_map = {
+        'Loved it ❤️': 3,
+        'Loved it': 3,
+        '❤️': 3,
+        'Liked it 👍': 1,
+        'Liked it': 1,
+        '👍': 1,
+        'Neutral 😐': 0,
+        '😐': 0,
+        "Didn't like 👎": -1,
+        "Didn't like": -1,
+        '👎': -1,
+        'Refused ❌': -3,
+        '❌': -3
+    }
+    
+    scores = defaultdict(int)
+    counts = defaultdict(int)
+    
+    for week in weeks:
+        for dinner in week.get('dinners', []):
+            r_id = dinner.get('recipe_id')
+            if not r_id: continue
+            
+            feedback = dinner.get('kids_feedback')
+            if feedback:
+                score = 0
+                for pattern, val in feedback_map.items():
+                    if pattern in feedback:
+                        score = val
+                        break
+                scores[r_id] += score
+                counts[r_id] += 1
+                
+    # Return average score per entry, or 0
+    return {r_id: scores[r_id] / counts[r_id] if counts[r_id] > 0 else 0 for r_id in scores}
+
+    if args.output:
+        if args.output.endswith('.json'):
+            import json
+            stats_data = {
+                'recipes': recipe_stats,
+                'vegetables': {veg: count for veg, count in veg_counts.items()},
+                'adherence': adherence,
+                'freezer': freezer_stats,
+                'recipe_scores': get_recipe_scores(weeks)
+            }
+            with open(args.output, 'w') as f:
+                json.dump(stats_data, f, indent=2)
+        else:
+            with open(args.output, 'w') as f:
+                f.write(report)
+        print(f"Report written to {args.output}")
+    else:
+        print(report)
+
+if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Analyze meal plan execution trends.')
-    parser.add_argument('--output', help='Output markdown file path')
+    parser.add_argument('--output', help='Output file path (use .json for json)')
     parser.add_argument('--history-file', default=str(DEFAULT_HISTORY_FILE), help='Path to history file')
     parser.add_argument('--weeks', type=int, help='Number of recent weeks to analyze (default: all)')
     args = parser.parse_args()
@@ -170,12 +228,4 @@ def main():
     
     report = generate_markdown_report(recipe_stats, veg_counts, weeks_logged, adherence, freezer_stats)
     
-    if args.output:
-        with open(args.output, 'w') as f:
-            f.write(report)
-        print(f"Report written to {args.output}")
-    else:
-        print(report)
-
-if __name__ == '__main__':
     main()

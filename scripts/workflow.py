@@ -71,28 +71,155 @@ def find_current_week_file():
 
 
 def get_workflow_state(input_file):
-    """Determine current workflow state from input file."""
+    """Determine current workflow state from input file and time."""
     if not input_file or not input_file.exists():
         return 'new_week', None
 
     with open(input_file, 'r') as f:
         data = yaml.safe_load(f)
 
-    # Check workflow status
+    week_of = data.get('week_of')
     status = data.get('workflow', {}).get('status', 'intake_complete')
+    
+    # 1. Check for Archiving (Past the week's end date)
+    if week_of:
+        try:
+            week_start = datetime.strptime(week_of, '%Y-%m-%d')
+            # Assuming a week lasts until Sunday night (6 days after Monday)
+            week_end = week_start + timedelta(days=7)
+            if datetime.now() >= week_end:
+                return 'archived', data
+        except ValueError:
+            pass
 
+    # 2. Base Workflow States
     if status == 'intake_complete':
-        # Check if farmers market is confirmed
         fm_status = data.get('farmers_market', {}).get('status')
         if fm_status == 'confirmed':
+            # Check if we should be "active" (cooking) vs just "ready"
+            if week_of and datetime.now().date() >= datetime.strptime(week_of, '%Y-%m-%d').date():
+                return 'active', data # Plan not generated yet but it's already the week?
             return 'ready_to_plan', data
         else:
             return 'awaiting_farmers_market', data
+            
     elif status == 'plan_complete':
-        return 'week_complete', data
+        # 3. Check for "Waiting for Check-in" (After 8 PM on weeknights)
+        now = datetime.now()
+        # Mocking 8 PM check for America/Los_Angeles needs consideration if on server.
+        # But let's assume local time or coordinated time.
+        
+        # Determine if it's the active week
+        if week_of:
+            week_start_date = datetime.strptime(week_of, '%Y-%m-%d').date()
+            today = now.date()
+            if week_start_date <= today < (week_start_date + timedelta(days=7)):
+                # It's the active week.
+                # Check for 8 PM weeknight
+                if today.weekday() < 5 and now.hour >= 20: # Mon-Fri, 8 PM+
+                    current_day_abbr = now.strftime('%a').lower()[:3]
+                    
+                    # Check history for today's check-in
+                    history_path = Path('data/history.yml')
+                    if history_path.exists():
+                        with open(history_path, 'r') as hf:
+                            history = yaml.safe_load(hf)
+                            for week in history.get('weeks', []):
+                                if week.get('week_of') == week_of:
+                                    for dinner in week.get('dinners', []):
+                                        if dinner.get('day') == current_day_abbr:
+                                            if 'made' not in dinner:
+                                                return 'waiting_for_checkin', data
+                                            break
+                                    break
+        
+        return 'active', data # 'week_complete' renamed to 'active'
     else:
         return 'new_week', None
 
+
+def archive_expired_weeks():
+    """Find weeks that have passed their end date and handle rollover."""
+    from scripts.log_execution import load_history, save_history
+    history = load_history()
+    dirty = False
+    
+    # Process inputs to find what needs archiving
+    input_dir = Path('inputs')
+    for input_file in input_dir.glob('*.yml'):
+        if input_file.name == '.gitkeep': continue
+        
+        state, data = get_workflow_state(input_file)
+        if state == 'archived' and data.get('workflow', {}).get('status') != 'archived':
+            print(f"Archiving week {data.get('week_of')}...")
+            week_of = data.get('week_of')
+            
+            # Find the week in history to get leftovers
+            history_week = None
+            for w in history.get('weeks', []):
+                if w.get('week_of') == week_of:
+                    history_week = w
+                    break
+            
+            if history_week:
+                # 1. Get unused vegetables from fridge
+                fridge_veg = history_week.get('fridge_vegetables', [])
+                
+                # 2. Get unmade meals
+                unmade_meals = []
+                for dinner in history_week.get('dinners', []):
+                    if not dinner.get('made'):
+                        unmade_meals.append({
+                            'recipe_id': dinner.get('recipe_id'),
+                            'day': dinner.get('day'),
+                            'reason': dinner.get('reason', 'Skipped')
+                        })
+                
+                # 3. Find NEXT week's input file to add rollover
+                next_monday = datetime.strptime(week_of, '%Y-%m-%d') + timedelta(days=7)
+                next_week_str = next_monday.strftime('%Y-%m-%d')
+                next_input_path = Path(f'inputs/{next_week_str}.yml')
+                
+                if next_input_path.exists():
+                    with open(next_input_path, 'r') as nf:
+                        next_data = yaml.safe_load(nf)
+                    
+                    if 'rollover' not in next_data: next_data['rollover'] = []
+                    
+                    # Add unmade meals to rollover
+                    for meal in unmade_meals:
+                        if not any(r.get('recipe_id') == meal['recipe_id'] for r in next_data['rollover']):
+                            next_data['rollover'].append({
+                                'recipe_id': meal['recipe_id'],
+                                'source_week': week_of
+                            })
+                    
+                    # Add vegetables to proposed_veg if not already there
+                    if 'farmers_market' in next_data:
+                        if 'proposed_veg' not in next_data['farmers_market']:
+                            next_data['farmers_market']['proposed_veg'] = []
+                        for veg in fridge_veg:
+                            if veg not in next_data['farmers_market']['proposed_veg']:
+                                next_data['farmers_market']['proposed_veg'].append(veg)
+                    
+                    with open(next_input_path, 'w') as nf:
+                        yaml.dump(next_data, nf, sort_keys=False)
+                
+            # Mark the input file as archived
+            if 'workflow' not in data: data['workflow'] = {}
+            data['workflow']['status'] = 'archived'
+            with open(input_file, 'w') as f:
+                yaml.dump(data, f, sort_keys=False)
+            dirty = True
+
+    if dirty:
+        save_history(history)
+        # Sync to GitHub
+        try:
+            from scripts.github_helper import sync_changes_to_github
+            sync_changes_to_github(['data/history.yml'] + [str(p) for p in input_dir.glob('*.yml')])
+        except Exception as e:
+            print(f"Sync failed: {e}")
 
 # ============================================================================
 # Workflow Steps

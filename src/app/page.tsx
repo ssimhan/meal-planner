@@ -202,98 +202,149 @@ export default function Dashboard() {
           </div>
         </section>
 
-        {/* Daily Check-in (Show when plan is complete) */}
-        {status?.state === 'week_complete' && (
-          <section className="card md:col-span-2 border-l-4 border-[var(--accent-green)]">
-            <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
-              Daily Check-in: {status?.current_day?.toUpperCase()}
-            </h2>
-
-            <div className="flex flex-col md:flex-row gap-8 items-start">
-              <div className="flex-1">
-                <p className="text-xs uppercase tracking-tighter text-[var(--text-muted)] mb-1">Tonight's Dinner</p>
-                <p className="text-2xl font-bold mb-2">
-                  {status?.today_dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Nothing planned'}
-                </p>
-                {status?.today_dinner?.vegetables && (
-                  <p className="text-sm text-[var(--text-muted)]">
-                    Veggies: {status.today_dinner.vegetables.join(', ')}
-                  </p>
+        {/* Today's Schedule (Show when plan is active or waiting for check-in) */}
+        {(status?.state === 'active' || status?.state === 'waiting_for_checkin') && (
+          <section className={`md:col-span-2 mt-8 p-6 rounded-lg ${status?.state === 'waiting_for_checkin' ? 'bg-red-50 border-2 border-[var(--accent-terracotta)] animate-pulse' : ''}`}>
+            <header className="flex justify-between items-center mb-6">
+              <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)]">
+                Today's Schedule: {status?.current_day?.toUpperCase()}
+              </h2>
+              <div className="flex gap-2">
+                {status?.state === 'waiting_for_checkin' && (
+                  <span className="text-xs font-bold text-[var(--accent-terracotta)] uppercase tracking-widest px-2 py-1 bg-white rounded border border-[var(--accent-terracotta)]">
+                    ⚠️ Action Required: Logging Pending
+                  </span>
                 )}
-
-                {status?.today_dinner?.made !== undefined && (
-                  <div className="mt-4 inline-block px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">
-                    Status: {status.today_dinner.made === true ? 'Completed ✓' : status.today_dinner.made === 'freezer_backup' ? 'Freezer Backup Used' : 'Skipped'}
-                  </div>
-                )}
+                <span className="text-xs font-mono px-2 py-1 bg-[var(--bg-secondary)] rounded border border-[var(--border-subtle)] text-[var(--accent-sage)] uppercase">
+                  ACTIVE PLAN
+                </span>
               </div>
+            </header>
 
-              <div className="flex flex-wrap gap-3">
-                {!status?.today_dinner?.made ? (
-                  <>
-                    <button
-                      onClick={() => handleLogDay(true)}
-                      disabled={logLoading}
-                      className="px-4 py-2 bg-[var(--accent-green)] text-white rounded-md hover:opacity-90 transition-opacity disabled:opacity-50"
-                    >
-                      Made it!
-                    </button>
-                    <button
-                      onClick={() => handleLogDay('freezer_backup')}
-                      disabled={logLoading}
-                      className="px-4 py-2 bg-[var(--accent-terracotta)] text-white rounded-md hover:opacity-90 transition-opacity disabled:opacity-50"
-                    >
-                      Used Freezer
-                    </button>
-                    <button
-                      onClick={() => handleLogDay(false)}
-                      disabled={logLoading}
-                      className="px-4 py-2 border border-[var(--border-subtle)] rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
-                    >
-                      Skipped
-                    </button>
-                  </>
-                ) : (
-                  <div className="flex flex-col gap-2">
-                    <p className="text-sm font-medium">Kids' Feedback:</p>
-                    <div className="flex gap-4 text-2xl">
-                      <button
-                        onClick={() => handleLogDay(true, 'Loved it ❤️')}
-                        className={`hover:scale-125 transition-transform ${status?.today_dinner?.kids_feedback === 'Loved it ❤️' ? 'grayscale-0' : 'grayscale opacity-50'}`}
-                        title="Loved it ❤️"
-                      >
-                        ❤️
-                      </button>
-                      <button
-                        onClick={() => handleLogDay(true, 'Liked it 👍')}
-                        className={`hover:scale-125 transition-transform ${status?.today_dinner?.kids_feedback === 'Liked it 👍' ? 'grayscale-0' : 'grayscale opacity-50'}`}
-                        title="Liked it 👍"
-                      >
-                        👍
-                      </button>
-                      <button
-                        onClick={() => handleLogDay(true, 'Neutral 😐')}
-                        className={`hover:scale-125 transition-transform ${status?.today_dinner?.kids_feedback === 'Neutral 😐' ? 'grayscale-0' : 'grayscale opacity-50'}`}
-                        title="Neutral 😐"
-                      >
-                        😐
-                      </button>
-                      <button
-                        onClick={() => handleLogDay(true, "Didn't like 👎")}
-                        className={`hover:scale-125 transition-transform ${status?.today_dinner?.kids_feedback === "Didn't like 👎" ? 'grayscale-0' : 'grayscale opacity-50'}`}
-                        title="Didn't like 👎"
-                      >
-                        👎
-                      </button>
-                      <button
-                        onClick={() => handleLogDay(true, 'Refused ❌')}
-                        className={`hover:scale-125 transition-transform ${status?.today_dinner?.kids_feedback === 'Refused ❌' ? 'grayscale-0' : 'grayscale opacity-50'}`}
-                        title="Refused ❌"
-                      >
-                        ❌
-                      </button>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+              {/* Card Title Helper */}
+              {(() => {
+                const Card = ({ title, icon, subtitle, content, badge, action }: any) => (
+                  <div className="card flex flex-col h-full border-t-2 border-t-[var(--accent-sage)] shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex justify-between items-<ctrl94>">
+                      <span className="text-xs font-mono uppercase text-[var(--text-muted)]">{title}</span>
+                      <span className="text-xl">{icon}</span>
                     </div>
+                    <div className="mt-2 flex-grow">
+                      <p className="text-lg font-bold leading-tight">{content}</p>
+                      {subtitle && <p className="text-xs text-[var(--text-muted)] mt-1">{subtitle}</p>}
+                      {badge && (
+                        <span className="mt-2 inline-block px-2 py-0.5 bg-green-100 text-green-700 text-[10px] rounded-full font-bold uppercase">
+                          {badge}
+                        </span>
+                      )}
+                    </div>
+                    {action && <div className="mt-4 pt-3 border-t border-[var(--border-subtle)]">{action}</div>}
                   </div>
+                );
+
+                return (
+                  <>
+                    {/* School Snack */}
+                    <Card
+                      title="School Snack"
+                      icon="🎒"
+                      content={status?.today_snacks?.school || "Fruit"}
+                    />
+
+                    {/* Kids Lunch */}
+                    <Card
+                      title="Kids Lunch"
+                      icon="🥪"
+                      content={status?.today_lunch?.recipe_name || "Leftovers"}
+                      subtitle={status?.today_lunch?.assembly_notes}
+                    />
+
+                    {/* Adult Lunch */}
+                    <Card
+                      title="Adult Lunch"
+                      icon="☕"
+                      content="Leftovers"
+                      subtitle="Grain bowl + dinner components"
+                    />
+
+                    {/* Home Snack */}
+                    <Card
+                      title="Home Snack"
+                      icon="🏠"
+                      content={status?.today_snacks?.home || "Cucumber"}
+                    />
+
+                    {/* Dinner */}
+                    <Card
+                      title="Dinner"
+                      icon="🍽️"
+                      content={status?.today_dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Nothing planned'}
+                      subtitle={status?.today_dinner?.vegetables ? `Veggies: ${status.today_dinner.vegetables.join(', ')}` : null}
+                      badge={status?.today_dinner?.made !== undefined ? (status.today_dinner.made === true ? '✓ Made' : status.today_dinner.made === 'freezer_backup' ? '🧊 Freezer' : '× Skipped') : null}
+                      action={
+                        !status?.today_dinner?.made ? (
+                          <div className="flex flex-col gap-2">
+                            <button
+                              onClick={() => handleLogDay(true)}
+                              disabled={logLoading}
+                              className="w-full py-2 bg-[var(--accent-green)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
+                            >
+                              Made it!
+                            </button>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleLogDay('freezer_backup')}
+                                disabled={logLoading}
+                                className="flex-1 py-1 px-1 bg-[var(--accent-terracotta)] text-white text-[10px] rounded hover:opacity-90 disabled:opacity-50"
+                              >
+                                Freezer
+                              </button>
+                              <button
+                                onClick={() => handleLogDay(false)}
+                                disabled={logLoading}
+                                className="flex-1 py-1 px-1 border border-[var(--border-subtle)] text-[10px] rounded hover:bg-gray-50 disabled:opacity-50"
+                              >
+                                Skip
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex justify-between items-center bg-gray-50 p-1 rounded">
+                            {['❤️', '👍', '😐', '👎', '❌'].map(emoji => (
+                              <button
+                                key={emoji}
+                                onClick={() => handleLogDay(true, emoji)}
+                                className={`p-1 hover:scale-110 transition-transform ${status?.today_dinner?.kids_feedback?.includes(emoji) ? 'opacity-100' : 'opacity-40 grayscale'}`}
+                              >
+                                {emoji}
+                              </button>
+                            ))}
+                          </div>
+                        )
+                      }
+                    />
+                  </>
+                );
+              })()}
+            </div>
+
+            {/* Prep Timeline */}
+            <div className="card bg-[var(--bg-secondary)] border-none shadow-none">
+              <header className="flex items-center gap-2 mb-4 border-b border-[var(--border-subtle)] pb-2">
+                <span className="text-xl">⏱️</span>
+                <h3 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)]">Prep Interface</h3>
+              </header>
+              <div className="space-y-3">
+                {status?.prep_tasks && status.prep_tasks.length > 0 ? (
+                  status.prep_tasks.map((task, idx) => (
+                    <div key={idx} className="flex gap-3 items-start">
+                      <span className="w-4 h-4 rounded-full bg-[var(--accent-sage)] flex-shrink-0 mt-0.5 opacity-40"></span>
+                      <p className="text-sm">{task}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-[var(--text-muted)] italic">No specific prep tasks for today.</p>
                 )}
               </div>
             </div>
@@ -301,7 +352,7 @@ export default function Dashboard() {
         )}
 
         {/* Next Steps / Farmers Market */}
-        {status?.state !== 'week_complete' && (
+        {!(status?.state === 'active' || status?.state === 'waiting_for_checkin') && status?.state !== 'archived' && (
           <section className="card md:col-span-2">
             <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
               {status?.state === 'awaiting_farmers_market' ? 'Confirm Vegetables' : 'Next Steps'}
@@ -332,6 +383,18 @@ export default function Dashboard() {
               ) : (
                 <p>Start a new week to begin the planning process.</p>
               )}
+            </div>
+          </section>
+        )}
+
+        {/* Archived Message */}
+        {status?.state === 'archived' && (
+          <section className="card md:col-span-2 opacity-75">
+            <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
+              Week Archived
+            </h2>
+            <div className="p-4 bg-[var(--bg-secondary)] border-l-4 border-gray-400">
+              <p>✓ This week's plan has been archived. Unused items have been rolled over. Start a new week to begin planning next week!</p>
             </div>
           </section>
         )}

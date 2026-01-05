@@ -12,6 +12,18 @@ export interface WorkflowStatus {
         vegetables?: string[];
         kids_feedback?: string;
     };
+    today_lunch?: {
+        recipe_id?: string;
+        recipe_name?: string;
+        prep_style?: string;
+        assembly_notes?: string;
+    };
+    today_snacks?: {
+        school: string;
+        home: string;
+    };
+    prep_tasks?: string[];
+    week_data?: any;
 }
 
 export async function getStatus(): Promise<WorkflowStatus> {
@@ -104,5 +116,14 @@ export async function logMeal(data: LogMealData): Promise<any> {
         const error = await res.json();
         throw new Error(error.message || 'Failed to log meal');
     }
+    return res.json();
+}
+export async function bulkAddItemsToInventory(items: { category: string, item: string, quantity?: number, unit?: string }[]): Promise<any> {
+    const res = await fetch('/api/inventory/bulk-add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items }),
+    });
+    if (!res.ok) throw new Error('Failed to bulk add items to inventory');
     return res.json();
 }

@@ -25,27 +25,55 @@ CORS(app) # Enable CORS for all routes
 @app.route("/api/status")
 def get_status():
     try:
+        from scripts.workflow import archive_expired_weeks, get_workflow_state, find_current_week_file
+        archive_expired_weeks()
+        
         from datetime import datetime, timedelta
+        # Try to find the most relevant week for the dashboard
+        # Priority: This week if it exists, otherwise next week
         today = datetime.now()
-        # On weekends, look for the upcoming Monday
-        if today.weekday() >= 5: # Saturday or Sunday
-            target_date = today + timedelta(days=(7 - today.weekday()))
-        else:
-            target_date = today - timedelta(days=today.weekday())
+        monday = today - timedelta(days=today.weekday())
+        week_str = monday.strftime('%Y-%m-%d')
         
-        week_str = target_date.strftime('%Y-%m-%d')
         input_file = Path(f'inputs/{week_str}.yml')
+        if not input_file.exists():
+            # Fallback to next Monday if today is late in the week
+            if today.weekday() >= 4: # Friday or later
+                next_monday = monday + timedelta(days=7)
+                week_str = next_monday.strftime('%Y-%m-%d')
+                input_file = Path(f'inputs/{week_str}.yml')
+            else:
+                input_file, week_str = find_current_week_file()
         
-        if input_file.exists():
-            state, data = get_workflow_state(input_file)
-        else:
-            input_file, week_str = find_current_week_file()
-            state, data = get_workflow_state(input_file)
+        state, data = get_workflow_state(input_file)
         
-        # Force current day to Monday for testing visibility on Vercel
-        current_day = 'mon'
-            
+        # Determine current day context for the dashboard
+        current_day = datetime.now().strftime('%a').lower()[:3]
+        
         today_dinner = None
+        if state in ['active', 'waiting_for_checkin']:
+            from scripts.log_execution import load_history, find_week
+            history = load_history()
+            week = find_week(history, week_str)
+            if week and 'dinners' in week:
+                for dinner in week['dinners']:
+                    if dinner.get('day') == current_day:
+                        today_dinner = dinner
+                        break
+        
+        return jsonify({
+            "week_of": week_str,
+            "state": state,
+            "has_data": data is not None,
+            "status": "success",
+            "current_day": current_day,
+            "today_dinner": today_dinner
+        })
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
         today_lunch = None
         today_snacks = {
             "school": "Fruit or Cheese sticks",

@@ -41,6 +41,40 @@ The Meal Planner is a detailed Hybrid Serverless application that manages weekly
 -   **Smart Re-plan:** Logic to shift skipped meals and handle rollover to the next week.
 -   **Fuzzy Matching:** Ingredients and meals are matched using fuzzy logic.
 
+#### Energy-Based Prep Schedule
+The system follows a declining energy model from Monday (high) to Friday (zero prep):
+
+**Monday PM Prep (High Energy)**
+-   Chop vegetables for Monday, Tuesday, Wednesday dinners
+-   Batch cook components (dal, rice, grains, sauces)
+-   Pre-measure dry ingredients for upcoming meals
+-   Prep freezer batch meals (make 2x, freeze half)
+
+**Tuesday AM Prep (8-9am)**
+-   Assemble lunch components for Wednesday, Thursday, Friday
+-   Boil eggs if needed for lunches
+-   Pre-portion snack ingredients
+
+**Tuesday PM Prep**
+-   Chop vegetables for Thursday and Friday dinners
+-   Complete any remaining lunch prep
+-   Marinate proteins if needed
+
+**Wednesday PM Prep (Final Push)**
+-   Finish ALL remaining prep for Thursday and Friday
+-   No chopping allowed after this point
+-   Ensure Thursday and Friday meals are fully prepped
+
+**Thursday AM Prep (8-9am, Light Only)**
+-   Minimal assembly tasks only
+-   NO chopping after noon on Thursday
+-   NO evening prep
+
+**Friday (Zero Prep)**
+-   Reheating and simple assembly only
+-   All components must be pre-chopped and ready
+-   Dinner must be `no_chop_compatible: true`
+
 ### 3. Smart Personalization
 -   **Kid Profiles:** Individual profiles in `config.yml` with allergy tracking (e.g., Anya avoids nuts).
 -   **Lunch Syncing:** Base meals synchronized across kids with personalized restrictions applied.
@@ -120,6 +154,11 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 
 ### Phase 11: Future Enhancements (Backlog)
 -   [x] **Recipe Importer**: Paste URL → auto-extract and add to index. (COMPLETED 2026-01-04)
+-   **Prep Completion Tracking**: Add daily check-in question "What prep have you completed?" during re-plan workflow
+    -   Track completed prep tasks in `history.yml` (e.g., "chopped vegetables", "batch cooked dal", "prepped lunches")
+    -   Refresh remaining prep suggestions based on what's already done
+    -   UI in dashboard to mark prep items as complete before triggering re-plan
+    -   Adjust prep schedule dynamically to avoid duplicate suggestions
 -   **Weather/Calendar Integration**: Auto-detect busy days, suggest soups on rainy days.
 -   **Weekly Summary Email**: Adherence %, vegetables used, freezer status.
 -   **Nutrition Tracking**: Calculate macros, show weekly vegetable diversity scores.

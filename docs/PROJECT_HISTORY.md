@@ -839,3 +839,24 @@ freezer_inventory:
   - Real-time feedback display creates accountability - seeing the week's progress motivates completion
   - Energy-based prep reminder reinforces the core workflow - visible schedule keeps users on track
 - **Status:** Phase 10 (UX Polish) fully complete. Ready for Phase 11 advanced features.
+
+### [2026-01-04] Energy-Based Prep Schedule Documentation
+- **Goal:** Document specific prep tasks for each prep slot to improve planning clarity.
+- **Implementation:**
+  - Added detailed "Energy-Based Prep Schedule" section to IMPLEMENTATION.md under Planning Logic
+  - Documented specific tasks for each prep window:
+    - **Monday PM**: Vegetable chopping for Mon/Tue/Wed, batch cooking, freezer prep
+    - **Tuesday AM**: Lunch assembly for Wed/Thu/Fri, eggs, snack portioning
+    - **Tuesday PM**: Thu/Fri vegetable chopping, remaining lunch prep, marinades
+    - **Wednesday PM**: Final push to complete all remaining prep
+    - **Thursday AM**: Light assembly only (8-9am), strict no-chopping after noon
+    - **Friday**: Zero prep - only reheating/assembly
+  - Added to Phase 11 backlog: Prep Completion Tracking feature
+    - Track completed prep tasks during daily check-in
+    - Refresh remaining suggestions based on what's done
+    - Dynamic adjustment to avoid duplicate suggestions
+- **Learning:**
+  - Documentation serves dual purpose: guides AI planning and provides user reference
+  - Specific task lists reduce ambiguity and improve execution consistency
+  - Backlog items capture good ideas without derailing current work
+- **Status:** Documentation complete. Prep tracking feature added to Phase 11 backlog.

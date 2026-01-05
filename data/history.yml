@@ -135,14 +135,23 @@ weeks:
     - parsley
     - spinach
     - zucchini
+  - day: sun
+    recipe_id: unplanned_meal
+    cuisine: various
+    vegetables: []
+    made: true
   fridge_vegetables:
   - white rice
   - brown rice
   - okra
-  plan_adherence_pct: 20
+  plan_adherence_pct: 33
   freezer_inventory:
   - meal: Chickpea Salad Wrap
     frozen_date: '2026-01-01'
+  daily_feedback:
+    sun:
+      school_snack: ''
+      school_snack_made: true
 - week_of: '2026-01-12'
   dinners:
   - recipe_id: cauliflower_rasam

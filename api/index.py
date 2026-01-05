@@ -25,14 +25,25 @@ CORS(app) # Enable CORS for all routes
 @app.route("/api/status")
 def get_status():
     try:
-        input_file, week_str = find_current_week_file()
-        state, data = get_workflow_state(input_file)
+        from datetime import datetime, timedelta
+        today = datetime.now()
+        # On weekends, look for the upcoming Monday
+        if today.weekday() >= 5: # Saturday or Sunday
+            target_date = today + timedelta(days=(7 - today.weekday()))
+        else:
+            target_date = today - timedelta(days=today.weekday())
         
-        # Get actual current day
-        current_day = datetime.now().strftime('%a').lower()[:3]
-        # For testing purposes if it's weekend, maybe default to Mon?
-        if current_day not in ['mon', 'tue', 'wed', 'thu', 'fri']:
-            current_day = 'mon'
+        week_str = target_date.strftime('%Y-%m-%d')
+        input_file = Path(f'inputs/{week_str}.yml')
+        
+        if input_file.exists():
+            state, data = get_workflow_state(input_file)
+        else:
+            input_file, week_str = find_current_week_file()
+            state, data = get_workflow_state(input_file)
+        
+        # Force current day to Monday for testing visibility on Vercel
+        current_day = 'mon'
             
         today_dinner = None
         today_lunch = None

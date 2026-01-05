@@ -322,14 +322,14 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
               {/* Card Title Helper */}
               {(() => {
-                const Card = ({ title, icon, subtitle, content, badge, action }: any) => (
-                  <div className="card flex flex-col h-full border-t-2 border-t-[var(--accent-sage)] shadow-sm hover:shadow-md transition-shadow">
+                const Card = ({ title, icon, subtitle, content, badge, action, isConfirmed }: any) => (
+                  <div className={`card flex flex-col h-full border-t-2 border-t-[var(--accent-sage)] shadow-sm hover:shadow-md transition-all ${isConfirmed ? 'opacity-50 grayscale bg-gray-50' : ''}`}>
                     <div className="flex justify-between items-center">
                       <span className="text-xs font-mono uppercase text-[var(--text-muted)]">{title}</span>
                       <span className="text-xl">{icon}</span>
                     </div>
                     <div className="mt-2 flex-grow">
-                      <p className="text-lg font-bold leading-tight">{content}</p>
+                      <p className={`text-lg font-bold leading-tight ${isConfirmed ? 'text-[var(--text-muted)]' : ''}`}>{content}</p>
                       {subtitle && <p className="text-xs text-[var(--text-muted)] mt-1">{subtitle}</p>}
                       {badge && (
                         <span className="mt-2 inline-block px-2 py-0.5 bg-green-100 text-green-700 text-[10px] rounded-full font-bold uppercase">
@@ -450,6 +450,7 @@ export default function Dashboard() {
                       title="School Snack"
                       icon="🎒"
                       content={status?.today_snacks?.school || "Fruit"}
+                      isConfirmed={status?.today_snacks?.school_snack_made !== undefined}
                       action={<FeedbackButtons
                         feedbackType="school_snack"
                         currentFeedback={status?.today_snacks?.school_snack_feedback}
@@ -464,6 +465,7 @@ export default function Dashboard() {
                       icon="🥪"
                       content={status?.today_lunch?.recipe_name || "Leftovers"}
                       subtitle={status?.today_lunch?.assembly_notes}
+                      isConfirmed={status?.today_lunch?.kids_lunch_made !== undefined}
                       action={<FeedbackButtons
                         feedbackType="kids_lunch"
                         currentFeedback={status?.today_lunch?.kids_lunch_feedback}
@@ -478,6 +480,7 @@ export default function Dashboard() {
                       icon="☕"
                       content="Leftovers"
                       subtitle="Grain bowl + dinner components"
+                      isConfirmed={status?.today_lunch?.adult_lunch_made !== undefined}
                       action={<FeedbackButtons
                         feedbackType="adult_lunch"
                         currentFeedback={status?.today_lunch?.adult_lunch_feedback}
@@ -491,6 +494,7 @@ export default function Dashboard() {
                       title="Home Snack"
                       icon="🏠"
                       content={status?.today_snacks?.home || "Cucumber"}
+                      isConfirmed={status?.today_snacks?.home_snack_made !== undefined}
                       action={<FeedbackButtons
                         feedbackType="home_snack"
                         currentFeedback={status?.today_snacks?.home_snack_feedback}
@@ -707,6 +711,7 @@ export default function Dashboard() {
                           icon="🍽️"
                           content={status?.today_dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Nothing planned'}
                           subtitle={status?.today_dinner?.vegetables ? `Veggies: ${status.today_dinner.vegetables.join(', ')}` : null}
+                          isConfirmed={status?.today_dinner?.made !== undefined}
                           badge={status?.today_dinner?.made !== undefined ? (
                             status.today_dinner.made === true ? '✓ Made' :
                               status.today_dinner.made === 'freezer_backup' ? '🧊 Freezer' :

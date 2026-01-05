@@ -146,6 +146,7 @@ export interface LogMealData {
     adult_lunch_needs_fix?: boolean;
     school_snack_needs_fix?: boolean;
     home_snack_needs_fix?: boolean;
+    request_recipe?: boolean;
     // Prep completion tracking
     prep_completed?: string[];
 }

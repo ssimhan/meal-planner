@@ -628,7 +628,7 @@ export default function Dashboard() {
                                 disabled={logLoading}
                                 className="w-full py-2 bg-[var(--accent-green)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
                               >
-                                ✓ Made as Planned
+                                ✓ Made
                               </button>
                               <button
                                 onClick={handleNotMade}

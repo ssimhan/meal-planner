@@ -552,23 +552,7 @@
   source:
     type: html
     file: recipes/raw_html/Chickpea Chaat Salad.html
-- id: chickpea_salad_wrap
-  name: Chickpea Salad Wrap
-  cuisine: indian
-  meal_type: tacos_wraps
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - bell pepper
-  - carrot
-  - peas
-  - tomato
-  avoid_contains: []
-  source:
-    type: html
-    file: recipes/raw_html/Chickpea Salad Wrap.html
+
 - id: chocolate_banana_bark
   name: Chocolate Banana Bark
   cuisine: unknown

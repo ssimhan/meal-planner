@@ -272,8 +272,8 @@ export default function Dashboard() {
                 <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
               </Link>
             )}
-            {/* Show "Start New Week" for new_week state */}
-            {status?.state === 'new_week' && (
+            {/* Show "Start New Week" for new_week and archived states */}
+            {(status?.state === 'new_week' || status?.state === 'archived') && (
               <button
                 onClick={handleCreateWeek}
                 disabled={actionLoading}

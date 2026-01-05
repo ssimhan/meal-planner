@@ -4,6 +4,14 @@ export interface WorkflowStatus {
     has_data: boolean;
     status: string;
     message?: string;
+    current_day?: string;
+    today_dinner?: {
+        day: string;
+        recipe_id: string;
+        made?: boolean | string;
+        vegetables?: string[];
+        kids_feedback?: string;
+    };
 }
 
 export async function getStatus(): Promise<WorkflowStatus> {
@@ -70,5 +78,31 @@ export async function addItemToInventory(category: string, item: string): Promis
         body: JSON.stringify({ category, item }),
     });
     if (!res.ok) throw new Error('Failed to add item to inventory');
+    return res.json();
+}
+
+export interface LogMealData {
+    week: string;
+    day: string;
+    made: string | boolean;
+    vegetables?: string;
+    kids_feedback?: string;
+    kids_complaints?: string;
+    actual_meal?: string;
+    made_2x?: boolean;
+    freezer_meal?: string;
+    reason?: string;
+}
+
+export async function logMeal(data: LogMealData): Promise<any> {
+    const res = await fetch('/api/log-meal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to log meal');
+    }
     return res.json();
 }

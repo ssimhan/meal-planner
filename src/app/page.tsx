@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { getStatus, generatePlan, createWeek, confirmVeg, WorkflowStatus } from '@/lib/api';
+import { getStatus, generatePlan, createWeek, confirmVeg, logMeal, WorkflowStatus } from '@/lib/api';
 
 export default function Dashboard() {
   const [status, setStatus] = useState<WorkflowStatus | null>(null);
@@ -12,6 +12,7 @@ export default function Dashboard() {
   const [success, setSuccess] = useState<{ message: string; url?: string } | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [vegInput, setVegInput] = useState('');
+  const [logLoading, setLogLoading] = useState(false);
 
   useEffect(() => {
     fetchStatus();
@@ -80,6 +81,26 @@ export default function Dashboard() {
       setError(err.message || 'Failed to generate plan');
     } finally {
       setGenerating(false);
+    }
+  }
+
+  async function handleLogDay(made: boolean | string, feedback?: string) {
+    if (!status?.week_of || !status?.current_day) return;
+
+    try {
+      setLogLoading(true);
+      await logMeal({
+        week: status.week_of,
+        day: status.current_day,
+        made: made,
+        kids_feedback: feedback
+      });
+      setSuccess({ message: `Logged status for today (${status.current_day})!` });
+      await fetchStatus();
+    } catch (err: any) {
+      setError(err.message || 'Failed to log meal');
+    } finally {
+      setLogLoading(false);
     }
   }
 
@@ -181,41 +202,139 @@ export default function Dashboard() {
           </div>
         </section>
 
-        {/* Next Steps */}
-        <section className="card md:col-span-2">
-          <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
-            {status?.state === 'awaiting_farmers_market' ? 'Confirm Vegetables' : 'Next Steps'}
-          </h2>
-          <div className="p-4 bg-[var(--bg-secondary)] border-l-4 border-[var(--accent-terracotta)]">
-            {status?.state === 'ready_to_plan' ? (
-              <p>✓ Farmers market vegetables are confirmed. Click "Generate Weekly Plan" above!</p>
-            ) : status?.state === 'awaiting_farmers_market' ? (
-              <div className="space-y-4">
-                <p>What did you buy? Enter comma-separated list:</p>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={vegInput}
-                    onChange={(e) => setVegInput(e.target.value)}
-                    placeholder="broccoli, sweet potato, spinach..."
-                    className="flex-1 p-2 border border-[var(--border-subtle)] rounded-sm bg-white"
-                  />
-                  <button
-                    onClick={handleConfirmVeg}
-                    disabled={actionLoading}
-                    className="btn-primary"
-                  >
-                    {actionLoading ? 'Confirming...' : 'Confirm'}
-                  </button>
-                </div>
+        {/* Daily Check-in (Show when plan is complete) */}
+        {status?.state === 'week_complete' && (
+          <section className="card md:col-span-2 border-l-4 border-[var(--accent-green)]">
+            <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
+              Daily Check-in: {status?.current_day?.toUpperCase()}
+            </h2>
+
+            <div className="flex flex-col md:flex-row gap-8 items-start">
+              <div className="flex-1">
+                <p className="text-xs uppercase tracking-tighter text-[var(--text-muted)] mb-1">Tonight's Dinner</p>
+                <p className="text-2xl font-bold mb-2">
+                  {status?.today_dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Nothing planned'}
+                </p>
+                {status?.today_dinner?.vegetables && (
+                  <p className="text-sm text-[var(--text-muted)]">
+                    Veggies: {status.today_dinner.vegetables.join(', ')}
+                  </p>
+                )}
+
+                {status?.today_dinner?.made !== undefined && (
+                  <div className="mt-4 inline-block px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">
+                    Status: {status.today_dinner.made === true ? 'Completed ✓' : status.today_dinner.made === 'freezer_backup' ? 'Freezer Backup Used' : 'Skipped'}
+                  </div>
+                )}
               </div>
-            ) : status?.state === 'week_complete' ? (
-              <p>✓ This week's plan is complete. Start a new week when ready.</p>
-            ) : (
-              <p>Start a new week to begin the planning process.</p>
-            )}
-          </div>
-        </section>
+
+              <div className="flex flex-wrap gap-3">
+                {!status?.today_dinner?.made ? (
+                  <>
+                    <button
+                      onClick={() => handleLogDay(true)}
+                      disabled={logLoading}
+                      className="px-4 py-2 bg-[var(--accent-green)] text-white rounded-md hover:opacity-90 transition-opacity disabled:opacity-50"
+                    >
+                      Made it!
+                    </button>
+                    <button
+                      onClick={() => handleLogDay('freezer_backup')}
+                      disabled={logLoading}
+                      className="px-4 py-2 bg-[var(--accent-terracotta)] text-white rounded-md hover:opacity-90 transition-opacity disabled:opacity-50"
+                    >
+                      Used Freezer
+                    </button>
+                    <button
+                      onClick={() => handleLogDay(false)}
+                      disabled={logLoading}
+                      className="px-4 py-2 border border-[var(--border-subtle)] rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+                    >
+                      Skipped
+                    </button>
+                  </>
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    <p className="text-sm font-medium">Kids' Feedback:</p>
+                    <div className="flex gap-4 text-2xl">
+                      <button
+                        onClick={() => handleLogDay(true, 'Loved it ❤️')}
+                        className={`hover:scale-125 transition-transform ${status?.today_dinner?.kids_feedback === 'Loved it ❤️' ? 'grayscale-0' : 'grayscale opacity-50'}`}
+                        title="Loved it ❤️"
+                      >
+                        ❤️
+                      </button>
+                      <button
+                        onClick={() => handleLogDay(true, 'Liked it 👍')}
+                        className={`hover:scale-125 transition-transform ${status?.today_dinner?.kids_feedback === 'Liked it 👍' ? 'grayscale-0' : 'grayscale opacity-50'}`}
+                        title="Liked it 👍"
+                      >
+                        👍
+                      </button>
+                      <button
+                        onClick={() => handleLogDay(true, 'Neutral 😐')}
+                        className={`hover:scale-125 transition-transform ${status?.today_dinner?.kids_feedback === 'Neutral 😐' ? 'grayscale-0' : 'grayscale opacity-50'}`}
+                        title="Neutral 😐"
+                      >
+                        😐
+                      </button>
+                      <button
+                        onClick={() => handleLogDay(true, "Didn't like 👎")}
+                        className={`hover:scale-125 transition-transform ${status?.today_dinner?.kids_feedback === "Didn't like 👎" ? 'grayscale-0' : 'grayscale opacity-50'}`}
+                        title="Didn't like 👎"
+                      >
+                        👎
+                      </button>
+                      <button
+                        onClick={() => handleLogDay(true, 'Refused ❌')}
+                        className={`hover:scale-125 transition-transform ${status?.today_dinner?.kids_feedback === 'Refused ❌' ? 'grayscale-0' : 'grayscale opacity-50'}`}
+                        title="Refused ❌"
+                      >
+                        ❌
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Next Steps / Farmers Market */}
+        {status?.state !== 'week_complete' && (
+          <section className="card md:col-span-2">
+            <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
+              {status?.state === 'awaiting_farmers_market' ? 'Confirm Vegetables' : 'Next Steps'}
+            </h2>
+            <div className="p-4 bg-[var(--bg-secondary)] border-l-4 border-[var(--accent-terracotta)]">
+              {status?.state === 'ready_to_plan' ? (
+                <p>✓ Farmers market vegetables are confirmed. Click "Generate Weekly Plan" above!</p>
+              ) : status?.state === 'awaiting_farmers_market' ? (
+                <div className="space-y-4">
+                  <p>What did you buy? Enter comma-separated list:</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={vegInput}
+                      onChange={(e) => setVegInput(e.target.value)}
+                      placeholder="broccoli, sweet potato, spinach..."
+                      className="flex-1 p-2 border border-[var(--border-subtle)] rounded-sm bg-white"
+                    />
+                    <button
+                      onClick={handleConfirmVeg}
+                      disabled={actionLoading}
+                      className="btn-primary"
+                    >
+                      {actionLoading ? 'Confirming...' : 'Confirm'}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <p>Start a new week to begin the planning process.</p>
+              )}
+            </div>
+          </section>
+        )}
       </div>
 
       {/* Footer */}

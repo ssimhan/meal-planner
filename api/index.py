@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 import sys
 import os
 from pathlib import Path
+from datetime import datetime
 from flask_cors import CORS
 
 # Add the parent directory to sys.path so we can import from scripts/
@@ -27,11 +28,27 @@ def get_status():
         input_file, week_str = find_current_week_file()
         state, data = get_workflow_state(input_file)
         
+        # Get today's dinner if plan is complete
+        today_dinner = None
+        current_day = datetime.now().strftime('%a').lower()[:3]
+        
+        if state == 'week_complete':
+            from scripts.log_execution import load_history, find_week
+            history = load_history()
+            week = find_week(history, week_str)
+            if week and 'dinners' in week:
+                for dinner in week['dinners']:
+                    if dinner.get('day') == current_day:
+                        today_dinner = dinner
+                        break
+        
         return jsonify({
             "week_of": week_str,
             "state": state,
             "has_data": data is not None,
-            "status": "success"
+            "status": "success",
+            "current_day": current_day,
+            "today_dinner": today_dinner
         })
     except Exception as e:
         return jsonify({
@@ -87,6 +104,119 @@ def get_history():
 
 # Register plan generation route
 generate_plan_api(app)
+
+@app.route("/api/log-meal", methods=["POST"])
+def log_meal():
+    try:
+        data = request.json or {}
+        week_str = data.get('week')
+        day = data.get('day') # mon, tue, wed...
+        made = data.get('made') # yes, no, freezer
+        vegetables = data.get('vegetables') # comma separated string
+        kids_feedback = data.get('kids_feedback')
+        kids_complaints = data.get('kids_complaints')
+        actual_meal = data.get('actual_meal')
+        made_2x = data.get('made_2x', False)
+        freezer_meal = data.get('freezer_meal')
+        reason = data.get('reason')
+        
+        if not week_str or not day or not made:
+            return jsonify({"status": "error", "message": "Week, day, and made status are required"}), 400
+            
+        # We'll call the log_execution.py logic but as a library function
+        # to avoid shell overhead, but for now we'll import and call its main-like logic
+        # Refactoring log_execution to be more library-friendly would be better, 
+        # but let's see if we can just import the core functions.
+        
+        from scripts.log_execution import load_history, find_week, calculate_adherence, update_inventory_file, save_history
+        from datetime import datetime
+        
+        history = load_history()
+        week = find_week(history, week_str)
+        
+        if not week:
+            return jsonify({"status": "error", "message": f"Week {week_str} not found"}), 404
+            
+        # Find dinner
+        target_day = day.lower()[:3]
+        target_dinner = None
+        for dinner in week.get('dinners', []):
+            if dinner.get('day') == target_day:
+                target_dinner = dinner
+                break
+                
+        if not target_dinner:
+            return jsonify({"status": "error", "message": f"No dinner found for {target_day}"}), 404
+            
+        # Update execution data
+        if str(made).lower() in ('yes', 'true', '1', 'y'):
+            target_dinner['made'] = True
+        elif str(made).lower() in ('no', 'false', '0', 'n'):
+            target_dinner['made'] = False
+        elif str(made).lower() in ('freezer', 'backup'):
+            target_dinner['made'] = 'freezer_backup'
+        else:
+            target_dinner['made'] = made
+            
+        if vegetables:
+            veggies_list = [v.strip() for v in vegetables.split(',')]
+            target_dinner['vegetables_used'] = veggies_list
+            
+            # Remove from fridge inventory in the week object
+            if 'fridge_vegetables' in week:
+                def normalize_veg(n):
+                    n = n.lower().strip()
+                    if n.endswith('s') and not n.endswith('ss'): return n[:-1]
+                    return n
+                used_norm = [normalize_veg(v) for v in veggies_list]
+                week['fridge_vegetables'] = [v for v in week['fridge_vegetables'] if normalize_veg(v) not in used_norm]
+
+        if kids_feedback: target_dinner['kids_feedback'] = kids_feedback
+        if kids_complaints: 
+            target_dinner['kids_complaints'] = kids_complaints
+            if 'kids_dislikes' not in week: week['kids_dislikes'] = []
+            week['kids_dislikes'].append({
+                'complaint': kids_complaints,
+                'date': datetime.now().strftime('%Y-%m-%d'),
+                'recipe': target_dinner.get('recipe_id')
+            })
+            
+        if actual_meal: target_dinner['actual_meal'] = actual_meal
+        if reason: target_dinner['reason'] = reason
+        if made_2x: 
+            target_dinner['made_2x_for_freezer'] = True
+            if 'freezer_inventory' not in week: week['freezer_inventory'] = []
+            meal_name = target_dinner.get('recipe_id', 'Unknown Meal').replace('_', ' ').title()
+            week['freezer_inventory'].append({
+                'meal': meal_name,
+                'frozen_date': datetime.now().strftime('%Y-%m-%d')
+            })
+            
+        if freezer_meal and target_dinner['made'] == 'freezer_backup':
+            target_dinner['freezer_used'] = {'meal': freezer_meal, 'frozen_date': 'Unknown'}
+
+        # Update the master inventory file too
+        # We need a dummy args object for update_inventory_file
+        class Args:
+            def __init__(self, made, freezer_meal, made_2x, actual_meal):
+                self.made = made
+                self.freezer_meal = freezer_meal
+                self.made_2x = made_2x
+                self.actual_meal = actual_meal
+        
+        update_inventory_file(Args(made, freezer_meal, made_2x, actual_meal), 
+                              [v.strip() for v in vegetables.split(',')] if vegetables else None)
+        
+        calculate_adherence(week)
+        save_history(history)
+        
+        # Sync to GitHub
+        from scripts.github_helper import sync_changes_to_github
+        sync_changes_to_github(['data/history.yml', 'data/inventory.yml'])
+        
+        return jsonify({"status": "success", "message": "Meal logged successfully"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route("/api/create-week", methods=["POST"])
 def create_week():

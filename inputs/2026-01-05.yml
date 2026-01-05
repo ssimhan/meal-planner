@@ -21,7 +21,7 @@ preferences:
   - green_cabbage
   novelty_recipe_limit: 1
 farmers_market:
-  status: proposed
+  status: confirmed
   proposed_veg:
   - sweet potato
   - potato
@@ -31,4 +31,7 @@ farmers_market:
   - onion
   - garlic
   - cilantro
-  confirmed_veg: []
+  confirmed_veg:
+  - white rice
+  - brown rice
+  - okra

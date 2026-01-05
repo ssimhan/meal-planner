@@ -1,4 +1,4 @@
-last_updated: '2026-01-04'
+last_updated: '2026-01-05'
 fridge:
 - item: pomegranates
   quantity: 4
@@ -16,6 +16,14 @@ fridge:
   quantity: 10
   unit: count
   added: '2026-01-04'
+- item: white rice
+  quantity: 1
+  unit: count
+  added: '2026-01-05'
+- item: brown rice
+  quantity: 1
+  unit: count
+  added: '2026-01-05'
 pantry:
 - item: black beans
   quantity: 4

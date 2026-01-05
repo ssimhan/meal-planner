@@ -136,19 +136,9 @@ weeks:
     - spinach
     - zucchini
   fridge_vegetables:
-  - beans
-  - bell pepper
-  - carrot
-  - cauliflower
-  - cilantro
-  - corn
-  - cucumber
-  - garlic
-  - lemon
-  - onion
-  - peas
-  - tomato
-  - tomatoe
+  - white rice
+  - brown rice
+  - okra
   plan_adherence_pct: 20
   freezer_inventory:
   - meal: Chickpea Salad Wrap

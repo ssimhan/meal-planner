@@ -2,6 +2,9 @@
 
 AI assistant instructions for meal planner system.
 
+## Claude Instructions
+When responding, be concise. Use fewer filler words and minimal formatting when responding to user or creating documentation. 
+
 ## Your Role
 
 Generate weekly meal plans:

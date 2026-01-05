@@ -950,3 +950,17 @@ freezer_inventory:
 **Status:** Complete state consistency achieved on Vercel. Actions taken in the UI are reflected immediately on the dashboard.
 
 ---
+### [2026-01-04] Correction / Needs Fix Workflow Implementation
+- **Goal:** Allow users to correct logged meals (e.g., "Skipped dinner" → actually "Ate pizza") and log missed specific feedback.
+- **Implementation:**
+  - **Frontend (page.tsx):**
+    - Enhanced `FeedbackButtons` (Snacks/Lunch): Added "🔧 Fix / Edit Details" button for items already marked as "Made".
+    - Enhanced `DinnerLogging` (Dinner): Added "🔧 Fix / Edit Actual Meal" button for confirmed dinners.
+    - Implemented text input overlay for entering correction details.
+    - Updated Feedback Badge display to show `✓ Made (Actual: [Meal Name])` for overrides.
+  - **Backend (api/index.py):**
+    - Leveraged existing `actual_meal` field for dinner corrections.
+    - Leveraged existing `*_feedback` fields for snack/lunch corrections.
+    - Verified logic correctly processes updates while preserving "Made" status.
+- **Outcome:** Users can now maintain an accurate history even if they initially logged something incorrectly, or want to add context later. This improves data quality for future analytics.
+- **Status:** Complete. Feature live on dashboard.

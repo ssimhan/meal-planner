@@ -153,24 +153,50 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 - [x] **Smart Re-plan Refinement**: Improve the "one-click re-plan" to handle complex mid-week shifts and auto-refresh the rest of the week to use up leftovers. (COMPLETED 2026-01-04)
 
 ### Phase 11: Future Enhancements (Backlog)
--   [x] **Recipe Importer**: Paste URL → auto-extract and add to index. (COMPLETED 2026-01-04)
--   [x] **Prep Completion Tracking**: Track daily completed prep tasks with granular checkboxes (COMPLETED 2026-01-04)
-    -   Granular ingredient-level tasks (e.g., "Chop carrots for Monday curry")
-    -   Interactive checkboxes in Prep Interface card on dashboard
-    -   Smart fuzzy matching (60% keyword overlap) filters out similar completed tasks
-    -   Real-time sync to `history.yml` under `daily_feedback.{day}.prep_completed`
-    -   Persistent checkbox state across page refreshes
-    -   AM/PM time labels for Tuesday tasks
--   **Lazy Loading Recipe Details**: Optimize token usage by only loading full recipe data for selected weekly dinners
-    -   Currently reads all 226 recipes from `recipes/index.yml` during plan generation
-    -   Refactor to load metadata index first, then fetch full details only for 5-7 selected recipes
-    -   Reduce context window usage by ~80-90% during planning
-    -   Implement recipe detail caching for API performance
--   **Weather/Calendar Integration**: Auto-detect busy days, suggest soups on rainy days.
--   **Weekly Summary Email**: Adherence %, vegetables used, freezer status.
--   **Nutrition Tracking**: Calculate macros, show weekly vegetable diversity scores.
--   **Meal Swap Feature**: Drag-and-drop to reorder dinner schedule mid-week.
--   **Smart Substitutions**: Suggest recipe swaps based on current inventory.
+
+#### Block 1: Performance Optimization (Backend)
+**Focus:** Lazy Loading Recipe Details
+- **Goal:** Reduce token usage and improve plan generation speed by 80-90%.
+- **Tasks:**
+  - Refactor `workflow.py` to load lightweight `recipes/index.yml` first.
+  - Implement on-demand fetching of full recipe YAMLs only for selected meals.
+  - Add simple in-memory caching for recipe details in the API.
+
+#### Block 2: Drag-and-Drop Schedule Management (Frontend/UI)
+**Focus:** Meal Swap Feature
+- **Goal:** Allow users to easily rearrange their week when plans change.
+- **Tasks:**
+  - Create a "Swap" UI in the Week View (or Dashboard).
+  - Implement logic to switch dinner slots (e.g., move Tuesday's Tacos to Thursday).
+  - Update prep instructions to reflect the new order.
+
+#### Block 3: Context-Aware Planning (Intelligence)
+**Focus:** Weather & Calendar Integration
+- **Goal:** Make the planner smarter about real-life constraints.
+- **Tasks:**
+  - Integrate a simple weather API to detect rain/cold (boost soup probability).
+  - Add "Busy Day" detection (calendar integration or manual toggle) to force "Quick Prep" meals.
+
+#### Block 4: Inventory Intelligence (Logic)
+**Focus:** Smart Substitutions
+- **Goal:** Help users use up what they have.
+- **Tasks:**
+  - Implement logic to scan `inventory.yml` against the recipe index.
+  - Create a "What can I replace this with?" suggestion modal on the Dashboard.
+
+#### Block 5: Analytics & Health (Data)
+**Focus:** Nutrition Tracking
+- **Goal:** Provide health insights without manual tracking.
+- **Tasks:**
+  - Add macro estimation fields to recipe metadata.
+  - specialized "Vegetable Diversity Score" calculation displayed on the Weekly Plan.
+
+#### Block 6: User Retention & Reporting (Notification)
+**Focus:** Weekly Summary Email
+- **Goal:** Close the feedback loop.
+- **Tasks:**
+  - Create a summary generator (Adherence %, Veggies consumed, Freezer items banked).
+  - Implement an email transport (e.g., SMTP or SendGrid free tier) to send the report on Sunday nights.
 
 ### Recently Completed (Phase 7-10)
 - [x] **Web Workflow**: Full workflow managed via webpage.

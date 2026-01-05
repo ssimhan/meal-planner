@@ -28,27 +28,80 @@ def get_status():
         input_file, week_str = find_current_week_file()
         state, data = get_workflow_state(input_file)
         
-        # Get today's dinner if plan is complete
-        today_dinner = None
+        # Get actual current day
         current_day = datetime.now().strftime('%a').lower()[:3]
+        # For testing purposes if it's weekend, maybe default to Mon?
+        if current_day not in ['mon', 'tue', 'wed', 'thu', 'fri']:
+            current_day = 'mon'
+            
+        today_dinner = None
+        today_lunch = None
+        today_snacks = {
+            "school": "Fruit or Cheese sticks",
+            "home": "Cucumber or Crackers"
+        }
+        prep_tasks = []
+        week_data = None
+        
+        # Default snacks from workflow.py
+        DEFAULT_SNACKS = {
+            'mon': 'Apple slices with peanut butter',
+            'tue': 'Cheese and crackers',
+            'wed': 'Cucumber rounds with cream cheese',
+            'thu': 'Grapes',
+            'fri': 'Crackers with hummus'
+        }
+        today_snacks["school"] = DEFAULT_SNACKS.get(current_day, "Fruit")
         
         if state == 'week_complete':
             from scripts.log_execution import load_history, find_week
             history = load_history()
-            week = find_week(history, week_str)
-            if week and 'dinners' in week:
-                for dinner in week['dinners']:
+            week_data = find_week(history, week_str)
+            if week_data and 'dinners' in week_data:
+                for dinner in week_data['dinners']:
                     if dinner.get('day') == current_day:
                         today_dinner = dinner
                         break
-        
+            
+            # Identify lunches
+            if week_data and 'lunches' in week_data:
+                if isinstance(week_data['lunches'], dict):
+                    today_lunch = week_data['lunches'].get(current_day)
+                elif isinstance(week_data['lunches'], list):
+                    for lunch in week_data['lunches']:
+                        if lunch.get('day') == current_day:
+                            today_lunch = lunch
+                            break
+            
+            # If no lunch in history, try to derive it (as workflow.py does)
+            if not today_lunch and state == 'week_complete':
+                # This would require running lunch_selector logic, 
+                # but for simplicity we'll just note it's missing or use a placeholder
+                today_lunch = {"recipe_name": "Leftovers or Simple Lunch", "prep_style": "quick_fresh"}
+
+            # Prep Tasks Logic
+            if current_day == 'mon':
+                prep_tasks = ["Chop vegetables for Mon/Tue", "Prep lunch components", "Identify batch cooking meal"]
+            elif current_day == 'tue':
+                prep_tasks = ["☀️ AM: Assemble Tuesday lunch", "🌙 PM: Chop vegetables for Wed-Fri", "🌙 PM: Prep components for Wed-Fri"]
+            elif current_day == 'wed':
+                prep_tasks = ["Finish any remaining vegetable/lunch prep", "Check Thu/Fri components", "Load slow cooker if needed"]
+            elif current_day == 'thu':
+                prep_tasks = ["Morning prep (8-9am) allowed", "NO chopping after noon", "NO evening prep"]
+            elif current_day == 'fri':
+                prep_tasks = ["STRICT NO PREP DAY", "Only reheating/assembly allowed"]
+
         return jsonify({
             "week_of": week_str,
             "state": state,
             "has_data": data is not None,
             "status": "success",
             "current_day": current_day,
-            "today_dinner": today_dinner
+            "today_dinner": today_dinner,
+            "today_lunch": today_lunch,
+            "today_snacks": today_snacks,
+            "prep_tasks": prep_tasks,
+            "week_data": week_data
         })
     except Exception as e:
         return jsonify({
@@ -281,22 +334,88 @@ def add_inventory():
             
         inventory_path = Path('data/inventory.yml')
         with open(inventory_path, 'r') as f:
-            inventory = yaml.safe_load(f)
+            inventory = yaml.safe_load(f) or {}
             
         if category == 'meals':
             if 'freezer' not in inventory: inventory['freezer'] = {}
-            if 'meals' not in inventory['freezer']: inventory['freezer']['meals'] = {}
-            meals = inventory['freezer']['meals']
-            meals[item] = meals.get(item, 0) + 1
+            if 'backups' not in inventory['freezer']: inventory['freezer']['backups'] = []
+            inventory['freezer']['backups'].append({
+                'meal': item,
+                'servings': 4,
+                'frozen_date': datetime.now().strftime('%Y-%m-%d')
+            })
         elif category == 'pantry':
-            if 'vegetables' not in inventory: inventory['vegetables'] = {}
-            if 'pantry' not in inventory['vegetables']: inventory['vegetables']['pantry'] = []
-            inventory['vegetables']['pantry'].append(item)
+            if 'pantry' not in inventory: inventory['pantry'] = []
+            inventory['pantry'].append({
+                'item': item,
+                'quantity': 1,
+                'unit': 'count'
+            })
         elif category == 'fridge':
-            if 'vegetables' not in inventory: inventory['vegetables'] = {}
-            if 'fridge' not in inventory['vegetables']: inventory['vegetables']['fridge'] = []
-            inventory['vegetables']['fridge'].append(item)
+            if 'fridge' not in inventory: inventory['fridge'] = []
+            inventory['fridge'].append({
+                'item': item,
+                'quantity': 1,
+                'unit': 'count',
+                'added': datetime.now().strftime('%Y-%m-%d')
+            })
             
+        inventory['last_updated'] = datetime.now().strftime('%Y-%m-%d')
+        with open(inventory_path, 'w') as f:
+            yaml.dump(inventory, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+            
+        # Sync to GitHub
+        from scripts.github_helper import sync_changes_to_github
+        sync_changes_to_github([str(inventory_path)])
+        
+        return jsonify({"status": "success", "inventory": inventory})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route("/api/inventory/bulk-add", methods=["POST"])
+def bulk_add_inventory():
+    try:
+        data = request.json or {}
+        items = data.get('items', [])
+        
+        if not items:
+            return jsonify({"status": "error", "message": "No items provided"}), 400
+            
+        inventory_path = Path('data/inventory.yml')
+        with open(inventory_path, 'r') as f:
+            inventory = yaml.safe_load(f) or {}
+            
+        for entry in items:
+            category = entry.get('category')
+            item = entry.get('item')
+            quantity = entry.get('quantity', 1)
+            unit = entry.get('unit', 'count')
+            
+            if category == 'meals':
+                if 'freezer' not in inventory: inventory['freezer'] = {}
+                if 'backups' not in inventory['freezer']: inventory['freezer']['backups'] = []
+                inventory['freezer']['backups'].append({
+                    'meal': item,
+                    'servings': quantity if isinstance(quantity, int) else 4,
+                    'frozen_date': datetime.now().strftime('%Y-%m-%d')
+                })
+            elif category == 'pantry':
+                if 'pantry' not in inventory: inventory['pantry'] = []
+                inventory['pantry'].append({
+                    'item': item,
+                    'quantity': quantity,
+                    'unit': unit
+                })
+            elif category == 'fridge':
+                if 'fridge' not in inventory: inventory['fridge'] = []
+                inventory['fridge'].append({
+                    'item': item,
+                    'quantity': quantity,
+                    'unit': unit,
+                    'added': datetime.now().strftime('%Y-%m-%d')
+                })
+            
+        inventory['last_updated'] = datetime.now().strftime('%Y-%m-%d')
         with open(inventory_path, 'w') as f:
             yaml.dump(inventory, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
             

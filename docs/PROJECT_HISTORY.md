@@ -788,6 +788,20 @@ freezer_inventory:
   - Implemented automatic nut substitution (Sunbutter/Seeds) for School Snacks.
 - **Outcome:** System now safely handles Anya's nut restriction for school meals while allowing nuts at home.
 
+## Session: 2026-01-05 - Week View UX & Vercel Issues
+
+**Work Completed:**
+- **Problem:** "Week at a Glance" meal editing was cramped on mobile with inline inputs.
+- **Solution:** Implemented "Selection & Dedicated Edit Queue" model (Option 1).
+    - **Batch Selection:** "Mark for Fix" mode with checkboxes.
+    - **Edit Queue:** Dedicated full-screen view for processing corrections one by one.
+    - **Visuals:** Floating action bar, clear "Fix Now" calls to action.
+- **Deployment Issue:** Vercel builds stopped triggering.
+    - **Diagnosis:** Hit Vercel daily build rate limit.
+    - **Workaround:** Configured local development environment (`npm run dev` + `python3 api/index.py`) to bypass Vercel for testing.
+
+**Status:** Week View UX complete and verified locally. Waiting for Vercel rate limit to reset (approx 15h) for production deployment.
+
 ### [2026-01-04] Leftover Optimizer (Planned Pipelines)
 - **Goal:** Transform adult-only leftovers into intentional "Planned Pipelines" for the whole family.
 - **Changes:**

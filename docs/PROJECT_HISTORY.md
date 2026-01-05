@@ -678,3 +678,21 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Context is king**: Seeing the *entire* day's schedule (not just dinner) reduces cognitive load for the family.
 - **Actionable Analytics**: Translating emojis into scores creates a feedback loop that directly improves the quality of future automated plans.
 - **Lowering Friction**: The "Brain Dump" tool transforms one of the most tedious tasks (inventory updates) into a 10-second activity.
+
+---
+
+## Session: 2026-01-04 (Emergency Fix) - Vercel Read-Only Filesystem
+
+**Issue:** Dashboard crashed with "Failed to connect to the meal planner brain" (500 Internal Server Error).
+**Root Cause:**
+- Vercel servers run in UTC.
+- When UTC time crosses into the next week (Monday), the `archive_expired_weeks()` function triggers.
+- This function attempts to write to `inputs/*.yml` and `history.yml` to archive the old week.
+- Vercel's filesystem is read-only at runtime, causing the API to crash.
+
+**Fix:** Wrappped the archival logic in `api/index.py` with a `try...except` block.
+- If writing fails (e.g., on Vercel), it logs a warning and proceeds without crashing.
+- The dashboard remains functional even if archival cannot be performed automatically on the server.
+- Users can still trigger proper archival by running the script locally and pushing to GitHub.
+
+**Learning:** Serverless environments often have read-only filesystems. Side-effects (like file updates) should be handled via API calls (GitHub API) or skipped gracefully, not by direct file I/O.

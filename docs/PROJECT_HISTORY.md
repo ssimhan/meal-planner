@@ -896,3 +896,36 @@ freezer_inventory:
   - Timezone handling is critical for serverless apps (Vercel uses UTC, users expect local time)
   - Persistent state requires both backend storage AND frontend initialization
 - **Status:** Prep Completion Tracking fully implemented and deployed. Users can now check off tasks and see them persist across sessions.
+
+---
+
+## Session: 2026-01-04 (Late Night) - Vercel Read-Only Filesystem Fix (Create Week)
+
+**Issue:** `/api/create-week` endpoint crashed with `[Errno 30] Read-only file system: 'inputs/2026-01-05.yml'` on Vercel deployment.
+
+**Root Cause:**
+- The endpoint was calling `create_new_week()` which writes files locally before syncing to GitHub
+- Vercel's serverless environment has a read-only filesystem at runtime
+- Local file writes fail with OSError, causing the API to crash
+
+**Fix:** Refactored `/api/create-week` to follow the same pattern as `/api/confirm-veg`:
+1. Generate YAML content in memory (no local file writes)
+2. Push directly to GitHub using `commit_file_to_github()` API
+3. Gracefully handle OSError for local development compatibility (try/except block)
+4. Return enhanced response with proposed vegetables and rollover count
+
+**Technical Changes:**
+- Inlined the logic from `create_new_week()` directly in the API endpoint
+- Replaced `sync_changes_to_github()` with `commit_file_to_github()` for direct content push
+- Added try/except around local file write (works locally, skips on Vercel)
+- Enhanced response payload with `proposed_veg` and `rollover_count` for better UX
+
+**Learning:**
+- **Serverless constraints require different patterns:** Functions that work locally may fail in read-only environments
+- **GitHub API as database:** Using `commit_file_to_github()` with in-memory content bypasses filesystem entirely
+- **Graceful degradation:** Try local write for dev convenience, catch OSError for production compatibility
+- **Consistency matters:** Following the same pattern as `confirm_veg` made the fix straightforward
+
+**Status:** Create week endpoint now works on Vercel. Users can start new weeks directly from the web UI without filesystem errors.
+
+---

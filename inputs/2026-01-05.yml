@@ -2,8 +2,8 @@ week_of: '2026-01-05'
 timezone: America/Los_Angeles
 workflow:
   status: intake_complete
-  created_at: '2026-01-04T16:51:25.703478'
-  updated_at: '2026-01-04T16:51:25.703489'
+  created_at: '2026-01-05T05:31:42.683413'
+  updated_at: '2026-01-05T05:31:42.683431'
 schedule:
   office_days:
   - mon
@@ -21,31 +21,14 @@ preferences:
   - green_cabbage
   novelty_recipe_limit: 1
 farmers_market:
-  status: confirmed
+  status: proposed
   proposed_veg:
-  - broccoli
   - sweet potato
   - potato
   - lime
   - avocado
-  - squash
+  - potatoe
   - onion
   - garlic
   - cilantro
-  confirmed_veg:
-  - Bread
-  - Dried mango
-  - Cubed cheddar
-  - Pumpkin seeds
-  - Parotta frozen
-  - Sweet potato
-  - Sweet corn
-  - Blackberries
-  - Pomegranates
-  - Gnocchi
-  - Grapes
-  - Pineapple
-  - Cauliflower florets
-  - Avocado packs
-  - Multi grain crackers
-  - Sweet potato sticks
+  confirmed_veg: []

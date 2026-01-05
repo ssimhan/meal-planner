@@ -804,3 +804,14 @@ freezer_inventory:
   - Added synchronization of `inputs/{date}.yml` during re-plan to keep the dashboard in sync.
   - Added a visual notice in the HTML plan indicating when the plan was last re-planned.
 - **Outcome:** Re-planning no longer breaks lunch pipelines and provides clear visual feedback to the user.
+
+### [2026-01-04] Phase 11: Recipe Importer
+- **Goal:** Enable users to import recipes from URLs without manual HTML editing.
+- **Implementation:**
+  - Created `scripts/import_recipe.py` to fetch, parse, and auto-add recipes from URLs.
+  - Enhanced `scripts/parse_recipes.py` with:
+    - Fallback HTML parsing for non-schema.org recipes (class-based selectors).
+    - Metadata preservation logic to retain manual fields like `leftover_potential` and `kid_favorite` across re-parses.
+  - Added `/api/recipes/import` endpoint for web UI integration.
+  - Verified that re-running the parser preserves all manually added metadata.
+- **Outcome:** Users can now paste a recipe URL and have it automatically added to the index without losing custom metadata.

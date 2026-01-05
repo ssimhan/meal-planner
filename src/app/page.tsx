@@ -229,16 +229,18 @@ export default function Dashboard() {
             Quick Actions
           </h2>
           <div className="flex flex-col gap-4">
-            {status?.state === 'active' && (
+            {/* Show "View Full Week" if plan is complete or active */}
+            {(status?.state === 'active' || status?.state === 'plan_complete' || status?.state === 'waiting_for_checkin') && (
               <Link
                 href="/week-view"
-                className="btn-secondary w-full text-left flex justify-between items-center group"
+                className="btn-primary w-full text-left flex justify-between items-center group"
               >
-                <span>View Full Week</span>
+                <span>View Full Week Plan</span>
                 <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
               </Link>
             )}
-            {status?.state === 'new_week' ? (
+            {/* Show "Start New Week" for new_week state */}
+            {status?.state === 'new_week' && (
               <button
                 onClick={handleCreateWeek}
                 disabled={actionLoading}
@@ -247,10 +249,12 @@ export default function Dashboard() {
                 <span>{actionLoading ? 'Initializing...' : 'Start New Week'}</span>
                 <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
               </button>
-            ) : (
+            )}
+            {/* Show "Generate Weekly Plan" only when ready to plan */}
+            {status?.state === 'ready_to_plan' && (
               <button
                 onClick={handleGeneratePlan}
-                disabled={generating || status?.state !== 'ready_to_plan'}
+                disabled={generating}
                 className="btn-primary w-full text-left flex justify-between items-center group disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span>{generating ? 'Generating...' : 'Generate Weekly Plan'}</span>

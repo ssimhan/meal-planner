@@ -1,42 +1,21 @@
-last_updated: '2026-01-05'
+last_updated: '2026-01-04'
 fridge:
-- item: bell peppers
-  quantity: 3
+- item: pomegranates
+  quantity: 4
   unit: count
-  added: '2025-12-29'
-  use_by: '2026-01-05'
-- item: onions
-  quantity: 5
+  added: '2026-01-04'
+- item: tomatoes
+  quantity: 10
   unit: count
-  added: '2025-12-29'
-- item: Cubed cheddar
+  added: '2026-01-04'
+- item: okra
   quantity: 1
+  unit: bag
+  added: '2026-01-04'
+- item: avocado packs
+  quantity: 10
   unit: count
-  added: '2026-01-05'
-- item: Blackberries
-  quantity: 1
-  unit: count
-  added: '2026-01-05'
-- item: Pomegranates
-  quantity: 1
-  unit: count
-  added: '2026-01-05'
-- item: Grapes
-  quantity: 1
-  unit: count
-  added: '2026-01-05'
-- item: Pineapple
-  quantity: 1
-  unit: count
-  added: '2026-01-05'
-- item: Cauliflower florets
-  quantity: 1
-  unit: count
-  added: '2026-01-05'
-- item: Avocado packs
-  quantity: 1
-  unit: count
-  added: '2026-01-05'
+  added: '2026-01-04'
 pantry:
 - item: black beans
   quantity: 4
@@ -44,30 +23,18 @@ pantry:
 - item: rice
   quantity: 5
   unit: cups
-- item: Bread
-  quantity: 1
+- item: onions
+  quantity: 3
   unit: count
-- item: Dried mango
-  quantity: 1
+  added: '2026-01-04'
+- item: sweet potatoes
+  quantity: 7
   unit: count
-- item: Pumpkin seeds
-  quantity: 1
+  added: '2026-01-04'
+- item: potato
+  quantity: 3
   unit: count
-- item: Sweet potato
-  quantity: 1
-  unit: count
-- item: Sweet corn
-  quantity: 1
-  unit: count
-- item: Gnocchi
-  quantity: 1
-  unit: count
-- item: Multi grain crackers
-  quantity: 1
-  unit: count
-- item: Sweet potato sticks
-  quantity: 1
-  unit: count
+  added: '2026-01-04'
 freezer:
   backups:
   - meal: Black Bean Soup

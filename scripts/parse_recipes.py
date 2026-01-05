@@ -64,33 +64,41 @@ def parse_html_file(html_path: Path) -> Dict:
 
     # Find the recipe div with schema.org itemtype
     recipe_div = soup.find('div', {'itemtype': 'http://schema.org/Recipe'})
-
     if not recipe_div:
-        # Fallback: try to find any recipe-like content
         recipe_div = soup.find('div', class_='recipe') or soup
 
     data = {}
 
-    # Extract name (required)
-    name_elem = recipe_div.find(itemprop='name') or recipe_div.find('h1', class_='name')
+    # Extract name
+    name_elem = recipe_div.find(itemprop='name') or recipe_div.find('h1')
     if name_elem:
         data['name'] = name_elem.get_text(strip=True)
     else:
-        # Use filename as fallback
         data['name'] = html_path.stem.replace('_', ' ').replace('-', ' ').title()
 
-    # Extract categories (optional, may be comma-separated)
-    category_elem = recipe_div.find(itemprop='recipeCategory') or recipe_div.find('p', class_='categories')
+    # Extract categories
+    category_elem = recipe_div.find(itemprop='recipeCategory') or recipe_div.find('div', class_='categories')
     if category_elem:
         categories_text = category_elem.get_text(strip=True)
-        data['categories'] = [cat.strip() for cat in categories_text.split(',')]
+        # Handle spans if they exist (new format)
+        spans = category_elem.find_all('span')
+        if spans:
+            data['categories'] = [s.get_text(strip=True) for s in spans]
+        else:
+            data['categories'] = [cat.strip() for cat in categories_text.split(',')]
     else:
         data['categories'] = []
 
-    # Extract ingredients (multiple <p itemprop="recipeIngredient">)
+    # Extract ingredients
     ingredient_elems = recipe_div.find_all(itemprop='recipeIngredient')
     if not ingredient_elems:
-        # Fallback: look for class="line" in ingredients section
+        # Fallback 1: class="ingredients-list" (Common in our manual imports)
+        ingredients_container = recipe_div.find('div', class_='ingredients-list')
+        if ingredients_container:
+            ingredient_elems = ingredients_container.find_all('p')
+            
+    if not ingredient_elems:
+        # Fallback 2: class="line"
         ingredient_elems = recipe_div.find_all('p', class_='line')
 
     data['ingredients'] = [
@@ -99,15 +107,11 @@ def parse_html_file(html_path: Path) -> Dict:
         if elem.get_text(strip=True)
     ]
 
-    # Extract instructions (optional)
-    instructions_elem = recipe_div.find(itemprop='recipeInstructions')
+    # Extract instructions
+    instructions_elem = recipe_div.find(itemprop='recipeInstructions') or recipe_div.find('div', class_='directions-list')
     if instructions_elem:
-        # Join all <p> tags with newlines
-        paragraphs = instructions_elem.find_all('p', class_='line')
-        if paragraphs:
-            data['instructions'] = '\n'.join(p.get_text(strip=True) for p in paragraphs)
-        else:
-            data['instructions'] = instructions_elem.get_text(strip=True)
+        paragraphs = instructions_elem.find_all('p')
+        data['instructions'] = '\n'.join(p.get_text(strip=True) for p in paragraphs)
     else:
         data['instructions'] = None
 
@@ -396,9 +400,23 @@ def write_recipes_json(recipes: List[Recipe], output_path: Path):
 
 
 def write_index_yml(recipes: List[Recipe], output_path: Path):
-    """Write curated recipe index for planning."""
-    index_data = [
-        {
+    """Write curated recipe index for planning, preserving existing manual metadata."""
+    
+    # 1. Load existing index if it exists
+    existing_recipes = {}
+    if output_path.exists():
+        try:
+            with open(output_path, 'r', encoding='utf-8') as f:
+                existing_list = yaml.safe_load(f) or []
+                for r in existing_list:
+                    if 'id' in r:
+                        existing_recipes[r['id']] = r
+        except Exception as e:
+            print(f"  ⚠️ Warning: Could not load existing index for merging: {e}")
+
+    index_data = []
+    for r in recipes:
+        recipe_dict = {
             'id': r.id,
             'name': r.name,
             'cuisine': r.cuisine,
@@ -413,8 +431,17 @@ def write_index_yml(recipes: List[Recipe], output_path: Path):
                 'file': f'recipes/raw_html/{r.source_file}'
             }
         }
-        for r in recipes
-    ]
+        
+        # 2. Merge with existing data to preserve manual fields
+        if r.id in existing_recipes:
+            existing = existing_recipes[r.id]
+            # List of fields to preserve if they exist in the current index
+            preserved_fields = ['leftover_potential', 'kid_favorite', 'notes', 'rating', 'tags']
+            for field in preserved_fields:
+                if field in existing:
+                    recipe_dict[field] = existing[field]
+                    
+        index_data.append(recipe_dict)
 
     with open(output_path, 'w', encoding='utf-8') as f:
         yaml.dump(index_data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)

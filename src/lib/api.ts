@@ -160,3 +160,18 @@ export async function bulkAddItemsToInventory(items: { category: string, item: s
     }
     return res.json();
 }
+
+export async function importRecipe(url: string): Promise<any> {
+    const res = await fetch('/api/recipes/import', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url }),
+    });
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to import recipe');
+    }
+    return res.json();
+}

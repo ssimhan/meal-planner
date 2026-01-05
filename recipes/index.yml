@@ -11,12 +11,6 @@
   source:
     type: html
     file: recipes/raw_html/3-Ingredient Cereal Bars.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: aloo_corn_tikki_roll
   name: Aloo Corn Tikki Roll
   cuisine: indian
@@ -37,12 +31,6 @@
   source:
     type: html
     file: recipes/raw_html/Aloo Corn Tikki Roll.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: apple_cinnamon_carrot_muffin
   name: Apple Cinnamon Carrot Muffin
   cuisine: unknown
@@ -59,12 +47,6 @@
   source:
     type: html
     file: recipes/raw_html/Apple Cinnamon Carrot Muffin.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: apple_sauce
   name: Apple sauce
   cuisine: unknown
@@ -78,12 +60,6 @@
   source:
     type: html
     file: recipes/raw_html/Apple sauce.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: arisi_upma_mix
   name: Arisi Upma Mix
   cuisine: indian
@@ -97,12 +73,6 @@
   source:
     type: html
     file: recipes/raw_html/Arisi Upma Mix.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: baby_carrots
   name: Baby Carrots
   cuisine: unknown
@@ -116,12 +86,6 @@
   source:
     type: html
     file: recipes/raw_html/Baby Carrots.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: baked_black_bean_and_sweet_potato_flautas
   name: Baked Black Bean and Sweet Potato Flautas
   cuisine: mexican
@@ -144,17 +108,11 @@
   source:
     type: html
     file: recipes/raw_html/Baked Black Bean and Sweet Potato Flautas.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: balsamic_bruschetta
   name: Balsamic Bruschetta
   cuisine: italian
   meal_type: appetizer
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - oven
@@ -162,17 +120,11 @@
   - basil
   - garlic
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Balsamic Bruschetta.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: banana_bread_muffins
   name: Banana Bread Muffins
   cuisine: unknown
@@ -186,18 +138,12 @@
   source:
     type: html
     file: recipes/raw_html/Banana Bread Muffins.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: beans_poriyal
   name: Beans Poriyal
   cuisine: indian
   meal_type: soup_stew
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - stovetop
   main_veg:
@@ -207,17 +153,11 @@
   source:
     type: html
     file: recipes/raw_html/Beans Poriyal.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: best_ever_banana_nut_muffins
   name: Best Ever Banana Nut Muffins
   cuisine: unknown
   meal_type: baked_goods
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - oven
@@ -226,18 +166,12 @@
   source:
     type: html
     file: recipes/raw_html/Best Ever Banana Nut Muffins.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: bhel_puri_chaat
   name: Bhel Puri Chaat
   cuisine: indian
   meal_type: appetizer
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - oven
   main_veg:
@@ -251,12 +185,6 @@
   source:
     type: html
     file: recipes/raw_html/Bhel Puri Chaat.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: bisi_bele_bath
   name: Bisi Bele Bath
   cuisine: indian
@@ -272,27 +200,21 @@
   - onion
   - peas
   - potato
-  - potato
+  - potatoe
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Bisi Bele Bath.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
   leftover_potential: high
   kid_favorite: true
 - id: black_bean_brownie_bites
   name: Black Bean Brownie Bites
   cuisine: unknown
   meal_type: snack_bar
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   - oven
@@ -302,12 +224,6 @@
   source:
     type: html
     file: recipes/raw_html/Black Bean Brownie Bites.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: black_bean_quinoa_salad
   name: Black Bean Quinoa Salad
   cuisine: unknown
@@ -326,12 +242,6 @@
   source:
     type: html
     file: recipes/raw_html/Black Bean Quinoa Salad.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: blueberry_chocolate_chip_muffin
   name: Blueberry Chocolate Chip Muffin
   cuisine: unknown
@@ -349,12 +259,6 @@
   source:
     type: html
     file: recipes/raw_html/Blueberry Chocolate Chip Muffin.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: blueberry_date_oatmeal
   name: Blueberry Date Oatmeal
   cuisine: unknown
@@ -369,18 +273,12 @@
   source:
     type: html
     file: recipes/raw_html/Blueberry Date Oatmeal.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: broccoli_spinach_pasta_sauce
   name: Broccoli Spinach Pasta Sauce
   cuisine: italian
   meal_type: pasta_noodles
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - stovetop
   main_veg:
@@ -392,17 +290,11 @@
   source:
     type: html
     file: recipes/raw_html/Broccoli Spinach Pasta Sauce.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: butternut_squash_mac_and_cheese
   name: Butternut Squash Mac and Cheese
   cuisine: american
   meal_type: pasta_noodles
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -413,19 +305,13 @@
   source:
     type: html
     file: recipes/raw_html/Butternut Squash Mac and Cheese.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
   leftover_potential: high
   kid_favorite: true
 - id: caramel_delight_energy_balls
   name: Caramel Delight Energy Balls
   cuisine: unknown
   meal_type: snack_bar
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -434,15 +320,9 @@
   source:
     type: html
     file: recipes/raw_html/Caramel Delight Energy Balls.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: carrot_cake_bars
   name: Carrot Cake Bars
-  cuisine: unknown
+  cuisine: indian
   meal_type: simple_snack
   effort_level: normal
   no_chop_compatible: false
@@ -455,17 +335,11 @@
   source:
     type: html
     file: recipes/raw_html/Carrot Cake Bars.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: carrot_poriyal
   name: Carrot Poriyal
   cuisine: indian
   meal_type: simple_snack
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -476,12 +350,6 @@
   source:
     type: html
     file: recipes/raw_html/Carrot Poriyal.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: cauliflower_alfredo_sauce
   name: Cauliflower Alfredo Sauce
   cuisine: italian
@@ -498,12 +366,6 @@
   source:
     type: html
     file: recipes/raw_html/Cauliflower Alfredo Sauce.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: cauliflower_rasam
   name: Cauliflower Rasam
   cuisine: indian
@@ -517,17 +379,11 @@
   - cilantro
   - lemon
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Cauliflower Rasam.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: chana_masala_ip
   name: Chana Masala (IP)
   cuisine: indian
@@ -544,24 +400,18 @@
   - onion
   - peas
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Chana Masala (IP).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
   leftover_potential: high
   kid_favorite: true
 - id: cheddar_and_spinach_muffins
   name: Cheddar and Spinach Muffins
   cuisine: unknown
   meal_type: baked_goods
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - oven
@@ -572,12 +422,6 @@
   source:
     type: html
     file: recipes/raw_html/Cheddar and Spinach Muffins.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: cheese_and_tomato_quinoa_balls
   name: Cheese and Tomato Quinoa Balls
   cuisine: unknown
@@ -592,17 +436,11 @@
   - garlic
   - onion
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Cheese and Tomato Quinoa Balls.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: cheese_sticks
   name: Cheese sticks
   cuisine: unknown
@@ -616,12 +454,6 @@
   source:
     type: html
     file: recipes/raw_html/Cheese sticks.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: cheesy_veggie_quesadilla
   name: Cheesy Veggie Quesadilla
   cuisine: mexican
@@ -639,26 +471,13 @@
   source:
     type: html
     file: recipes/raw_html/Cheesy Veggie Quesadilla.html
-  lunch_suitable: true
-  kid_friendly: true
-  prep_style: component_based
-  prep_components:
-  - cooked_black_or_pinto_beans
-  - shredded_mexican_blend_cheese
-  - diced_bell_peppers_and_onions
-  component_storage_days: 3
-  reuses_dinner_ingredients:
-  - beans
-  - cheese
-  - bell_peppers
-  - onions
   leftover_potential: high
   kid_favorite: true
 - id: chef_s_paniyaram
   name: Chef’s Paniyaram
   cuisine: indian
   meal_type: unknown
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -669,16 +488,10 @@
   source:
     type: html
     file: recipes/raw_html/Chef’s Paniyaram.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: cherry_tomato_salad
   name: Cherry Tomato Salad
   cuisine: unknown
-  meal_type: side
+  meal_type: salad
   effort_level: normal
   no_chop_compatible: false
   appliances:
@@ -686,17 +499,11 @@
   main_veg:
   - garlic
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Cherry Tomato Salad.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: cherry_tomatoes
   name: Cherry tomatoes
   cuisine: unknown
@@ -710,12 +517,6 @@
   source:
     type: html
     file: recipes/raw_html/Cherry tomatoes.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: chex_cereal
   name: Chex cereal
   cuisine: unknown
@@ -729,12 +530,6 @@
   source:
     type: html
     file: recipes/raw_html/Chex cereal.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: chickpea_chaat_salad
   name: Chickpea Chaat Salad
   cuisine: indian
@@ -757,15 +552,9 @@
   source:
     type: html
     file: recipes/raw_html/Chickpea Chaat Salad.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: chickpea_salad_wrap
   name: Chickpea Salad Wrap
-  cuisine: mexican
+  cuisine: indian
   meal_type: tacos_wraps
   effort_level: normal
   no_chop_compatible: false
@@ -780,12 +569,6 @@
   source:
     type: html
     file: recipes/raw_html/Chickpea Salad Wrap.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: chocolate_banana_bark
   name: Chocolate Banana Bark
   cuisine: unknown
@@ -799,12 +582,6 @@
   source:
     type: html
     file: recipes/raw_html/Chocolate Banana Bark.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: chocolate_banana_lentil_muffins_rew
   name: Chocolate Banana Lentil Muffins (REW)
   cuisine: unknown
@@ -819,18 +596,12 @@
   source:
     type: html
     file: recipes/raw_html/Chocolate Banana Lentil Muffins (REW).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: chocolate_chip_mini_muffins_little_bites_copycat
   name: Chocolate Chip Mini Muffins (Little Bites Copycat)
   cuisine: unknown
   meal_type: baked_goods
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   - oven
@@ -839,17 +610,11 @@
   source:
     type: html
     file: recipes/raw_html/Chocolate Chip Mini Muffins (Little Bites Copycat).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: chocolate_protein_muffins_with_veggies
   name: Chocolate Protein Muffins (with Veggies!)
   cuisine: unknown
   meal_type: baked_goods
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -861,17 +626,11 @@
   source:
     type: html
     file: recipes/raw_html/Chocolate Protein Muffins (with Veggies!).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: chow_chow_kootu
   name: Chow Chow Kootu
   cuisine: indian
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -880,18 +639,12 @@
   source:
     type: html
     file: recipes/raw_html/Chow Chow Kootu.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: cilantro_lime_crema
   name: Cilantro Lime Crema
   cuisine: unknown
   meal_type: sauce_dip
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - stovetop
   main_veg:
@@ -903,17 +656,11 @@
   source:
     type: html
     file: recipes/raw_html/Cilantro Lime Crema.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: corn_black_bean_dip_tcl
   name: Corn & Black Bean Dip TCL
   cuisine: unknown
   meal_type: sauce_dip
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -931,17 +678,11 @@
   source:
     type: html
     file: recipes/raw_html/Corn & Black Bean Dip TCL.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: cowboy_caviar_salad
   name: Cowboy Caviar Salad
   cuisine: unknown
   meal_type: salad
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -956,23 +697,17 @@
   - onion
   - peas
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Cowboy Caviar Salad.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: creamy_macaroni_pasta_salad
   name: Creamy Macaroni Pasta Salad
   cuisine: italian
   meal_type: pasta_noodles
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - stovetop
   main_veg:
@@ -983,12 +718,6 @@
   source:
     type: html
     file: recipes/raw_html/Creamy Macaroni Pasta Salad.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: crispy_chipotle_sweet_potato_tacos_with_lime_crema
   name: Crispy Chipotle Sweet Potato Tacos with Lime Crema.
   cuisine: mexican
@@ -1005,18 +734,12 @@
   - lime
   - poblano
   - potato
-  - potato
+  - potatoe
   - sweet potato
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Crispy Chipotle Sweet Potato Tacos with Lime Crema..html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: cubed_fried_tofu
   name: Cubed, fried tofu
   cuisine: unknown
@@ -1030,18 +753,12 @@
   source:
     type: html
     file: recipes/raw_html/Cubed, fried tofu.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: cucumber_cream_cheese_bagel
   name: Cucumber Cream Cheese Bagel
   cuisine: unknown
-  meal_type: heavy_snack
-  effort_level: no_chop
-  no_chop_compatible: true
+  meal_type: sandwich
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - stovetop
   main_veg:
@@ -1050,17 +767,11 @@
   source:
     type: html
     file: recipes/raw_html/Cucumber Cream Cheese Bagel.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: cucumber_sandwiches
   name: Cucumber Sandwiches
   cuisine: unknown
   meal_type: sandwich
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1073,12 +784,6 @@
   source:
     type: html
     file: recipes/raw_html/Cucumber Sandwiches.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: curried_cauliflower_quinoa_salad
   name: Curried Cauliflower Quinoa Salad
   cuisine: mediterranean
@@ -1100,18 +805,12 @@
   source:
     type: html
     file: recipes/raw_html/Curried Cauliflower Quinoa Salad.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: curried_egg_salad_sandwich
   name: Curried Egg Salad Sandwich
   cuisine: indian
   meal_type: sandwich
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - stovetop
   main_veg:
@@ -1121,16 +820,6 @@
   source:
     type: html
     file: recipes/raw_html/Curried Egg Salad Sandwich.html
-  lunch_suitable: true
-  kid_friendly: false
-  prep_style: component_based
-  prep_components:
-  - hard_boiled_eggs
-  - curry_mayo_mixture
-  component_storage_days: 2
-  reuses_dinner_ingredients:
-  - eggs
-  - curry_powder
 - id: date_cookies
   name: Date Cookies
   cuisine: unknown
@@ -1144,17 +833,11 @@
   source:
     type: html
     file: recipes/raw_html/Date Cookies.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: dry_paneer_masala
   name: Dry Paneer Masala
   cuisine: indian
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1168,38 +851,12 @@
   source:
     type: html
     file: recipes/raw_html/Dry Paneer Masala.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
-- id: easiest_animal_crackers_2
-  name: Easiest Animal Crackers
-  cuisine: unknown
-  meal_type: simple_snack
-  effort_level: no_chop
-  no_chop_compatible: true
-  appliances:
-  - instant_pot
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: html
-    file: recipes/raw_html/Easiest Animal Crackers 2.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: easiest_animal_crackers
   name: Easiest Animal Crackers
   cuisine: unknown
   meal_type: simple_snack
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   - oven
@@ -1208,17 +865,11 @@
   source:
     type: html
     file: recipes/raw_html/Easiest Animal Crackers.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: easy_cheese_crackers
   name: Easy Cheese Crackers
   cuisine: unknown
   meal_type: simple_snack
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1228,18 +879,12 @@
   source:
     type: html
     file: recipes/raw_html/Easy Cheese Crackers.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: easy_chickpea_fritters
   name: Easy Chickpea Fritters
   cuisine: mediterranean
   meal_type: appetizer
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   main_veg:
@@ -1251,18 +896,12 @@
   source:
     type: html
     file: recipes/raw_html/Easy Chickpea Fritters.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: easy_french_toast_sticks
   name: Easy French Toast Sticks
   cuisine: american
   meal_type: sandwich
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - air_fryer
   - instant_pot
@@ -1272,18 +911,12 @@
   source:
     type: html
     file: recipes/raw_html/Easy French Toast Sticks.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: easy_fruit_snacks_gummies
   name: Easy Fruit Snacks (Gummies)
   cuisine: unknown
   meal_type: simple_snack
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - stovetop
   main_veg:
@@ -1292,61 +925,11 @@
   source:
     type: html
     file: recipes/raw_html/Easy Fruit Snacks (Gummies).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
-- id: easy_homemade_granola_bars_2
-  name: Easy Homemade Granola Bars
-  cuisine: unknown
-  meal_type: snack_bar
-  effort_level: minimal_chop
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - butternut squash
-  - potato
-  - pumpkin
-  - squash
-  - sweet potato
-  avoid_contains: []
-  source:
-    type: html
-    file: recipes/raw_html/Easy Homemade Granola Bars 2.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
-- id: easy_homemade_granola_bars_3
-  name: Easy Homemade Granola Bars
-  cuisine: unknown
-  meal_type: snack_bar
-  effort_level: minimal_chop
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: html
-    file: recipes/raw_html/Easy Homemade Granola Bars 3.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: easy_homemade_granola_bars
   name: Easy Homemade Granola Bars
   cuisine: unknown
   meal_type: snack_bar
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1361,17 +944,11 @@
   source:
     type: html
     file: recipes/raw_html/Easy Homemade Granola Bars.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: easy_oatmeal_bars_with_blueberry_and_carrot
   name: Easy Oatmeal Bars (with Blueberry and Carrot)
   cuisine: unknown
   meal_type: breakfast
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1382,18 +959,12 @@
   source:
     type: html
     file: recipes/raw_html/Easy Oatmeal Bars (with Blueberry and Carrot).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: easy_pancake_muffins_favorite_pancake_bites
   name: Easy Pancake Muffins (Favorite Pancake Bites)
   cuisine: american
   meal_type: breakfast
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   - oven
@@ -1402,12 +973,6 @@
   source:
     type: html
     file: recipes/raw_html/Easy Pancake Muffins (Favorite Pancake Bites).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: easy_pear_popsicles
   name: Easy Pear Popsicles
   cuisine: unknown
@@ -1421,18 +986,12 @@
   source:
     type: html
     file: recipes/raw_html/Easy Pear Popsicles.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: easy_zucchini_pasta_sauce
   name: Easy Zucchini Pasta Sauce
   cuisine: italian
   meal_type: pasta_noodles
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   main_veg:
@@ -1447,12 +1006,6 @@
   source:
     type: html
     file: recipes/raw_html/Easy Zucchini Pasta Sauce.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: edamame
   name: Edamame
   cuisine: unknown
@@ -1466,18 +1019,12 @@
   source:
     type: html
     file: recipes/raw_html/Edamame.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: enchilada_sauce
   name: Enchilada Sauce
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - stovetop
   main_veg:
@@ -1487,17 +1034,11 @@
   source:
     type: html
     file: recipes/raw_html/Enchilada Sauce.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: esquites_mexican_street_corn_salad
   name: Esquites (Mexican Street Corn Salad)
   cuisine: unknown
   meal_type: salad
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1510,12 +1051,6 @@
   source:
     type: html
     file: recipes/raw_html/Esquites (Mexican Street Corn Salad).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: favorite_bliss_balls
   name: Favorite Bliss Balls
   cuisine: unknown
@@ -1529,12 +1064,6 @@
   source:
     type: html
     file: recipes/raw_html/Favorite Bliss Balls.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: favorite_mango_smoothie
   name: Favorite Mango Smoothie
   cuisine: unknown
@@ -1550,17 +1079,11 @@
   source:
     type: html
     file: recipes/raw_html/Favorite Mango Smoothie.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: favorite_pizza_rolls_with_spinach_and_cheese
   name: Favorite Pizza Rolls (with Spinach and Cheese)
   cuisine: italian
   meal_type: pizza
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1571,12 +1094,6 @@
   source:
     type: html
     file: recipes/raw_html/Favorite Pizza Rolls (with Spinach and Cheese).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: favorite_toddler_smoothie_with_veggies
   name: Favorite Toddler Smoothie (with Veggies!)
   cuisine: unknown
@@ -1600,12 +1117,6 @@
   source:
     type: html
     file: recipes/raw_html/Favorite Toddler Smoothie (with Veggies!).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: favorite_yogurt_drinks
   name: Favorite Yogurt Drinks
   cuisine: unknown
@@ -1623,31 +1134,6 @@
   source:
     type: html
     file: recipes/raw_html/Favorite Yogurt Drinks.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
-- id: favorite_yogurt_melts_2
-  name: Favorite Yogurt Melts
-  cuisine: unknown
-  meal_type: frozen_treat
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: html
-    file: recipes/raw_html/Favorite Yogurt Melts 2.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: favorite_yogurt_melts
   name: Favorite Yogurt Melts
   cuisine: unknown
@@ -1661,17 +1147,11 @@
   source:
     type: html
     file: recipes/raw_html/Favorite Yogurt Melts.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: favorite_yogurt_muffins
   name: Favorite Yogurt Muffins
   cuisine: unknown
   meal_type: baked_goods
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1684,12 +1164,6 @@
   source:
     type: html
     file: recipes/raw_html/Favorite Yogurt Muffins.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: freeze_dried_fruits
   name: Freeze dried fruits
   cuisine: unknown
@@ -1703,12 +1177,6 @@
   source:
     type: html
     file: recipes/raw_html/Freeze dried fruits.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: freezer_ready_mini_pizzas
   name: Freezer Ready Mini Pizzas
   cuisine: italian
@@ -1724,12 +1192,6 @@
   source:
     type: html
     file: recipes/raw_html/Freezer Ready Mini Pizzas.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: froyo_pouch
   name: Froyo pouch
   cuisine: unknown
@@ -1743,31 +1205,6 @@
   source:
     type: html
     file: recipes/raw_html/Froyo pouch.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
-- id: frozen_yogurt_bark_2
-  name: Frozen Yogurt Bark
-  cuisine: unknown
-  meal_type: snack_bar
-  effort_level: no_chop
-  no_chop_compatible: true
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: html
-    file: recipes/raw_html/Frozen Yogurt Bark 2.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: frozen_yogurt_bark
   name: Frozen Yogurt Bark
   cuisine: unknown
@@ -1781,12 +1218,6 @@
   source:
     type: html
     file: recipes/raw_html/Frozen Yogurt Bark.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: fruit_and_nut_bars_copycat_larabar
   name: Fruit and Nut Bars (Copycat Larabar)
   cuisine: unknown
@@ -1800,12 +1231,6 @@
   source:
     type: html
     file: recipes/raw_html/Fruit and Nut Bars (Copycat Larabar).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: fruit_bar
   name: Fruit bar
   cuisine: unknown
@@ -1819,12 +1244,6 @@
   source:
     type: html
     file: recipes/raw_html/Fruit bar.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: garlic_parmesan_white_beans
   name: Garlic Parmesan White Beans
   cuisine: unknown
@@ -1839,23 +1258,17 @@
   - lemon
   - parsley
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Garlic Parmesan White Beans.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: ginger_chutney_allam_chutney
   name: Ginger Chutney Allam Chutney
   cuisine: indian
   meal_type: soup_stew
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - oven
   main_veg:
@@ -1864,18 +1277,12 @@
   source:
     type: html
     file: recipes/raw_html/Ginger Chutney Allam Chutney.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: granny_eggs
   name: Granny Eggs
   cuisine: unknown
   meal_type: baked_goods
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   main_veg: []
@@ -1883,12 +1290,6 @@
   source:
     type: html
     file: recipes/raw_html/Granny Eggs.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: granola_bar
   name: Granola bar
   cuisine: unknown
@@ -1902,12 +1303,6 @@
   source:
     type: html
     file: recipes/raw_html/Granola bar.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: grapes
   name: Grapes
   cuisine: unknown
@@ -1921,18 +1316,12 @@
   source:
     type: html
     file: recipes/raw_html/Grapes.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: greek_quesadillas
   name: Greek Quesadillas
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   - oven
@@ -1943,19 +1332,6 @@
   source:
     type: html
     file: recipes/raw_html/Greek Quesadillas.html
-  lunch_suitable: true
-  kid_friendly: true
-  prep_style: component_based
-  prep_components:
-  - cooked_black_or_pinto_beans
-  - shredded_mozzarella_or_feta
-  - chopped_onions_and_spinach
-  component_storage_days: 3
-  reuses_dinner_ingredients:
-  - beans
-  - cheese
-  - tomatoes
-  - cucumbers
 - id: grilled_cheese_and_tomato_soup
   name: Grilled Cheese and Tomato Soup
   cuisine: american
@@ -1972,18 +1348,12 @@
   source:
     type: html
     file: recipes/raw_html/Grilled Cheese and Tomato Soup.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: guacamole
   name: Guacamole
   cuisine: mexican
   meal_type: sauce_dip
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - stovetop
   main_veg:
@@ -1996,18 +1366,12 @@
   source:
     type: html
     file: recipes/raw_html/Guacamole.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: high_protein_marry_me_breakfast_toast
   name: HIGH PROTEIN ‘MARRY ME’ BREAKFAST TOAST
-  cuisine: unknown
+  cuisine: mediterranean
   meal_type: sandwich
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   - stovetop
@@ -2015,17 +1379,11 @@
   - beans
   - parsley
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/HIGH PROTEIN ‘MARRY ME’ BREAKFAST TOAST.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: hard_boiled_egg
   name: Hard boiled egg
   cuisine: unknown
@@ -2039,17 +1397,11 @@
   source:
     type: html
     file: recipes/raw_html/Hard boiled egg.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: healthy_breakfast_bars_with_jam
   name: Healthy Breakfast Bars with Jam
   cuisine: unknown
   meal_type: unknown
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - oven
@@ -2058,12 +1410,6 @@
   source:
     type: html
     file: recipes/raw_html/Healthy Breakfast Bars with Jam.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: healthy_homemade_fruit_roll_ups_flavor_guide
   name: Healthy Homemade Fruit Roll Ups (+ Flavor Guide)
   cuisine: unknown
@@ -2079,18 +1425,12 @@
   source:
     type: html
     file: recipes/raw_html/Healthy Homemade Fruit Roll Ups (+ Flavor Guide).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: healthy_vegetable_sheet_pan_frittata
   name: Healthy Vegetable Sheet Pan Frittata
   cuisine: unknown
   meal_type: breakfast
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - oven
   main_veg:
@@ -2098,17 +1438,11 @@
   - onion
   - spinach
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Healthy Vegetable Sheet Pan Frittata.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: homemade_frozen_yogurt
   name: Homemade Frozen Yogurt
   cuisine: unknown
@@ -2122,12 +1456,6 @@
   source:
     type: html
     file: recipes/raw_html/Homemade Frozen Yogurt.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: homemade_larabars
   name: Homemade Larabars
   cuisine: unknown
@@ -2141,17 +1469,11 @@
   source:
     type: html
     file: recipes/raw_html/Homemade Larabars.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: homemade_oatmeal_cream_pies
   name: Homemade Oatmeal Cream Pies
   cuisine: unknown
   meal_type: breakfast
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2161,12 +1483,6 @@
   source:
     type: html
     file: recipes/raw_html/Homemade Oatmeal Cream Pies.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: homemade_popcorn
   name: Homemade popcorn
   cuisine: unknown
@@ -2180,17 +1496,11 @@
   source:
     type: html
     file: recipes/raw_html/Homemade popcorn.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: hotel_sambar
   name: Hotel Sambar
   cuisine: indian
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2205,17 +1515,11 @@
   source:
     type: html
     file: recipes/raw_html/Hotel Sambar.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: how_to_make_coconut_rice
   name: How to Make Coconut Rice
   cuisine: unknown
   meal_type: side_dish
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2226,17 +1530,11 @@
   source:
     type: html
     file: recipes/raw_html/How to Make Coconut Rice.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: ip_dal_tadka
   name: IP Dal Tadka
   cuisine: indian
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2250,17 +1548,11 @@
   source:
     type: html
     file: recipes/raw_html/IP Dal Tadka.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: ip_masoor_dal_red_lentils
   name: IP Masoor Dal / Red Lentils
   cuisine: indian
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2272,17 +1564,11 @@
   - lime
   - onion
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/IP Masoor Dal  Red Lentils.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: ip_no_soak_kidney_beans_rajma
   name: IP No Soak Kidney Beans / Rajma
   cuisine: unknown
@@ -2298,17 +1584,11 @@
   source:
     type: html
     file: recipes/raw_html/IP No Soak Kidney Beans  Rajma.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: ip_quinoa_chili
   name: IP Quinoa Chili
   cuisine: unknown
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2322,22 +1602,16 @@
   - lemon
   - onion
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/IP Quinoa Chili.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: ip_ven_pongal
   name: IP Ven Pongal
   cuisine: indian
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2349,12 +1623,6 @@
   source:
     type: html
     file: recipes/raw_html/IP Ven Pongal.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: idli_dosa_batter
   name: Idli Dosa Batter
   cuisine: indian
@@ -2368,17 +1636,11 @@
   source:
     type: html
     file: recipes/raw_html/Idli Dosa Batter.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: instant_nei_appam
   name: Instant Nei Appam
   cuisine: indian
   meal_type: breakfast
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2387,18 +1649,12 @@
   source:
     type: html
     file: recipes/raw_html/Instant Nei Appam.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: instant_pot_lasagna_soup
   name: Instant Pot Lasagna Soup
   cuisine: italian
   meal_type: soup_stew
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   - stovetop
@@ -2413,17 +1669,11 @@
   source:
     type: html
     file: recipes/raw_html/Instant Pot Lasagna Soup.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: instant_pot_mexican_rice_beans
   name: Instant Pot Mexican Rice & Beans
   cuisine: mexican
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2439,18 +1689,12 @@
   source:
     type: html
     file: recipes/raw_html/Instant Pot Mexican Rice & Beans.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: jeera_rice
   name: Jeera Rice
   cuisine: unknown
   meal_type: unknown
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   main_veg: []
@@ -2458,18 +1702,12 @@
   source:
     type: html
     file: recipes/raw_html/Jeera Rice.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: khaman_dhokla_ip
   name: Khaman Dhokla IP
   cuisine: indian
   meal_type: soup_stew
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   - stovetop
@@ -2480,17 +1718,11 @@
   source:
     type: html
     file: recipes/raw_html/Khaman Dhokla IP.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: kondakadalai_kala_channa_masala_sundal
   name: Kondakadalai Kala Channa Masala Sundal
   cuisine: indian
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - oven
@@ -2499,17 +1731,11 @@
   source:
     type: html
     file: recipes/raw_html/Kondakadalai Kala Channa Masala Sundal.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: lemon_crinkle_cookies
   name: Lemon Crinkle Cookies
   cuisine: unknown
   meal_type: baked_goods
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2521,17 +1747,11 @@
   source:
     type: html
     file: recipes/raw_html/Lemon Crinkle Cookies.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: loaded_greek_chickpea_pasta_salad
   name: Loaded Greek Chickpea Pasta Salad
   cuisine: italian
   meal_type: salad
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2542,21 +1762,15 @@
   - parsley
   - peas
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Loaded Greek Chickpea Pasta Salad.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: mango_yogurt
   name: Mango Yogurt
-  cuisine: unknown
-  meal_type: unknown
+  cuisine: indian
+  meal_type: breakfast
   effort_level: normal
   no_chop_compatible: false
   appliances:
@@ -2567,17 +1781,11 @@
   source:
     type: html
     file: recipes/raw_html/Mango Yogurt.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: masoor_dal
   name: Masoor Dal
   cuisine: indian
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2587,22 +1795,16 @@
   - garlic
   - lemon
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Masoor Dal.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: mattar_paneer_sabji
   name: Mattar Paneer Sabji
   cuisine: indian
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2612,22 +1814,16 @@
   - onion
   - peas
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Mattar Paneer Sabji.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: mediterranean_diet_black_bean_brownies
   name: Mediterranean Diet Black Bean Brownies
   cuisine: unknown
   meal_type: snack_bar
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2638,12 +1834,6 @@
   source:
     type: html
     file: recipes/raw_html/Mediterranean Diet Black Bean Brownies.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: mediterranean_quinoa_salad
   name: Mediterranean Quinoa Salad
   cuisine: unknown
@@ -2661,12 +1851,6 @@
   source:
     type: html
     file: recipes/raw_html/Mediterranean Quinoa Salad.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: mexican_papdi_chaat
   name: Mexican Papdi Chaat
   cuisine: indian
@@ -2686,12 +1870,6 @@
   source:
     type: html
     file: recipes/raw_html/Mexican Papdi Chaat.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: mexican_pinwheels
   name: Mexican Pinwheels
   cuisine: mexican
@@ -2710,12 +1888,6 @@
   source:
     type: html
     file: recipes/raw_html/Mexican Pinwheels.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: mexican_risotto_ip
   name: Mexican Risotto (IP)
   cuisine: mexican
@@ -2734,12 +1906,6 @@
   source:
     type: html
     file: recipes/raw_html/Mexican Risotto (IP).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: mexican_sabudana_khichdi
   name: Mexican Sabudana Khichdi
   cuisine: indian
@@ -2760,18 +1926,12 @@
   source:
     type: html
     file: recipes/raw_html/Mexican Sabudana Khichdi.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: mexican_street_corn_pasta_salad
   name: Mexican Street Corn Pasta Salad
   cuisine: italian
   meal_type: pasta_noodles
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   main_veg:
@@ -2785,17 +1945,11 @@
   source:
     type: html
     file: recipes/raw_html/Mexican Street Corn Pasta Salad.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: mini_crustless_quiches
   name: Mini Crustless Quiches
   cuisine: unknown
   meal_type: breakfast
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - oven
@@ -2807,17 +1961,11 @@
   source:
     type: html
     file: recipes/raw_html/Mini Crustless Quiches.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: mini_egg_muffins_with_cheese_and_veggies
   name: Mini Egg Muffins with Cheese and Veggies
   cuisine: unknown
   meal_type: baked_goods
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2833,12 +1981,6 @@
   source:
     type: html
     file: recipes/raw_html/Mini Egg Muffins with Cheese and Veggies.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: mini_orange
   name: Mini orange
   cuisine: unknown
@@ -2852,17 +1994,11 @@
   source:
     type: html
     file: recipes/raw_html/Mini orange.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: moong_dal_chilla
   name: Moong Dal Chilla
   cuisine: indian
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2875,17 +2011,11 @@
   source:
     type: html
     file: recipes/raw_html/Moong Dal Chilla.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: moroccan_chickpea_stew
   name: Moroccan Chickpea Stew
   cuisine: unknown
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2898,21 +2028,15 @@
   - onion
   - peas
   - potato
-  - potato
+  - potatoe
   - spinach
   - sweet potato
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Moroccan Chickpea Stew.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: no_bake_chocolate_granola_bars
   name: No-Bake Chocolate Granola Bars
   cuisine: unknown
@@ -2927,17 +2051,11 @@
   source:
     type: html
     file: recipes/raw_html/No-Bake Chocolate Granola Bars.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: one_pan_enchilada_quinoa
   name: One Pan Enchilada Quinoa
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2951,12 +2069,6 @@
   source:
     type: html
     file: recipes/raw_html/One Pan Enchilada Quinoa.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: one_pot_broccoli_cheddar_quinoa
   name: One Pot Broccoli Cheddar Quinoa
   cuisine: unknown
@@ -2974,17 +2086,11 @@
   source:
     type: html
     file: recipes/raw_html/One Pot Broccoli Cheddar Quinoa.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: oven_baked_crispy_black_bean_tacos
   name: Oven-Baked Crispy Black Bean Tacos
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3002,17 +2108,11 @@
   source:
     type: html
     file: recipes/raw_html/Oven-Baked Crispy Black Bean Tacos.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: pachai_payaru_moong_dal_sundal
   name: Pachai Payaru, Moong Dal Sundal
   cuisine: indian
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3022,17 +2122,24 @@
   source:
     type: html
     file: recipes/raw_html/Pachai Payaru, Moong Dal Sundal.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
+- id: page_not_found_8211_smitten_kitchen
+  name: Whoops!
+  cuisine: unknown
+  meal_type: unknown
+  effort_level: normal
+  no_chop_compatible: false
+  appliances:
+  - stovetop
+  main_veg: []
+  avoid_contains: []
+  source:
+    type: html
+    file: recipes/raw_html/Page_not_found___8211__smitten_kitchen.html
 - id: palak_paneer_spinach
   name: Palak Paneer Spinach
   cuisine: indian
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3047,17 +2154,11 @@
   source:
     type: html
     file: recipes/raw_html/Palak Paneer Spinach.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: panchmel_dal
   name: Panchmel Dal
   cuisine: indian
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3068,17 +2169,11 @@
   - lime
   - onion
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Panchmel Dal.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: paneeer_corn_utthapam
   name: Paneeer & Corn Utthapam
   cuisine: indian
@@ -3094,18 +2189,12 @@
   source:
     type: html
     file: recipes/raw_html/Paneeer & Corn Utthapam.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: paruppu_thogayal
   name: Paruppu Thogayal
   cuisine: indian
   meal_type: soup_stew
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - stovetop
   main_veg:
@@ -3114,12 +2203,6 @@
   source:
     type: html
     file: recipes/raw_html/Paruppu Thogayal.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: paruppu_usili
   name: Paruppu Usili
   cuisine: indian
@@ -3135,12 +2218,6 @@
   source:
     type: html
     file: recipes/raw_html/Paruppu Usili.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: pasta_with_veggie_sauce
   name: Pasta with Veggie Sauce
   cuisine: italian
@@ -3157,17 +2234,11 @@
   source:
     type: html
     file: recipes/raw_html/Pasta with Veggie Sauce.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: pav_bhaji
   name: Pav Bhaji
   cuisine: indian
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3183,25 +2254,19 @@
   - onion
   - peas
   - potato
-  - potato
+  - potatoe
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Pav Bhaji.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: peanut_chutney
   name: Peanut Chutney
   cuisine: indian
   meal_type: soup_stew
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - oven
   main_veg:
@@ -3210,17 +2275,11 @@
   source:
     type: html
     file: recipes/raw_html/Peanut Chutney.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: pesarattu
   name: Pesarattu
   cuisine: indian
   meal_type: breakfast
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3232,37 +2291,12 @@
   source:
     type: html
     file: recipes/raw_html/Pesarattu.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
-- id: sunflower_seed_cream_cheese_dairy_free
-  name: Sunflower Seed Cream Cheese (Dairy-Free)
-  cuisine: unknown
-  meal_type: sauce_dip
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: html
-    file: recipes/raw_html/Sunflower Seed Cream Cheese (Dairy-Free).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: pickled_red_onions
   name: Pickled Red Onions
   cuisine: unknown
   meal_type: sauce_dip
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - stovetop
   main_veg:
@@ -3273,17 +2307,11 @@
   source:
     type: html
     file: recipes/raw_html/Pickled Red Onions.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: pinto_bean_casserole
   name: Pinto Bean Casserole
   cuisine: mexican
   meal_type: casserole
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3299,22 +2327,16 @@
   - pepper
   - spinach
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Pinto Bean Casserole.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: pizza_muffins_with_veggies
   name: Pizza Muffins (with Veggies!)
   cuisine: italian
   meal_type: pizza
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - oven
@@ -3324,12 +2346,6 @@
   source:
     type: html
     file: recipes/raw_html/Pizza Muffins (with Veggies!).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: poblano_cream_enchilada_sauce
   name: Poblano Cream Enchilada Sauce
   cuisine: mexican
@@ -3347,17 +2363,11 @@
   source:
     type: html
     file: recipes/raw_html/Poblano Cream Enchilada Sauce.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: pomegranate_orange_muffins
   name: Pomegranate Orange Muffins
   cuisine: unknown
   meal_type: baked_goods
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - oven
@@ -3366,18 +2376,12 @@
   source:
     type: html
     file: recipes/raw_html/Pomegranate Orange Muffins.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: porridge_fingers
   name: Porridge Fingers
   cuisine: unknown
   meal_type: snack_bar
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - stovetop
   main_veg:
@@ -3386,12 +2390,6 @@
   source:
     type: html
     file: recipes/raw_html/Porridge Fingers.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: pretzel_bites_with_cheese_sauce
   name: Pretzel Bites with Cheese Sauce
   cuisine: unknown
@@ -3407,12 +2405,6 @@
   source:
     type: html
     file: recipes/raw_html/Pretzel Bites with Cheese Sauce.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: pretzels
   name: Pretzels
   cuisine: unknown
@@ -3426,17 +2418,11 @@
   source:
     type: html
     file: recipes/raw_html/Pretzels.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: protein_banana_bread
   name: Protein Banana Bread
-  cuisine: unknown
+  cuisine: indian
   meal_type: baked_goods
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - oven
@@ -3445,38 +2431,12 @@
   source:
     type: html
     file: recipes/raw_html/Protein Banana Bread.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
-- id: protein_banana_muffins_2
-  name: Protein Banana Muffins
-  cuisine: unknown
-  meal_type: baked_goods
-  effort_level: no_chop
-  no_chop_compatible: true
-  appliances:
-  - instant_pot
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: html
-    file: recipes/raw_html/Protein Banana Muffins 2.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: protein_banana_muffins
   name: Protein Banana Muffins
-  cuisine: unknown
+  cuisine: indian
   meal_type: baked_goods
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   - oven
@@ -3485,17 +2445,11 @@
   source:
     type: html
     file: recipes/raw_html/Protein Banana Muffins.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: puree_pancakes
   name: Puree Pancakes
   cuisine: american
   meal_type: breakfast
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3504,12 +2458,6 @@
   source:
     type: html
     file: recipes/raw_html/Puree Pancakes.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: quick_refried_bean_tacos
   name: Quick Refried Bean Tacos
   cuisine: mexican
@@ -3529,12 +2477,6 @@
   source:
     type: html
     file: recipes/raw_html/Quick Refried Bean Tacos.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: quick_tortilla_pizzas
   name: Quick Tortilla Pizzas
   cuisine: mexican
@@ -3551,12 +2493,6 @@
   source:
     type: html
     file: recipes/raw_html/Quick Tortilla Pizzas.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: quinoa_fried_rice
   name: Quinoa Fried Rice
   cuisine: asian
@@ -3579,17 +2515,11 @@
   source:
     type: html
     file: recipes/raw_html/Quinoa Fried Rice.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: ragada_patty
   name: Ragada Patty
   cuisine: indian
   meal_type: unknown
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3600,22 +2530,16 @@
   - onion
   - potato
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Ragada Patty.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: ragda_patty
   name: Ragda Patty
   cuisine: indian
   meal_type: unknown
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3626,17 +2550,11 @@
   - onion
   - potato
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Ragda Patty.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: rainbow_tacos
   name: Rainbow Tacos
   cuisine: mexican
@@ -3653,18 +2571,12 @@
   - cucumber
   - onion
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains:
   - cabbage
   source:
     type: html
     file: recipes/raw_html/Rainbow Tacos.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: raisins
   name: Raisins
   cuisine: unknown
@@ -3678,12 +2590,6 @@
   source:
     type: html
     file: recipes/raw_html/Raisins.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: rajma_nachos
   name: Rajma Nachos
   cuisine: indian
@@ -3700,22 +2606,16 @@
   - lime
   - onion
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Rajma Nachos.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: rasam_recipe
   name: Rasam Recipe
   cuisine: indian
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3723,23 +2623,17 @@
   main_veg:
   - cilantro
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Rasam Recipe.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: refried_bean_burrito
   name: Refried Bean Burrito
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   main_veg:
@@ -3753,23 +2647,11 @@
   source:
     type: html
     file: recipes/raw_html/Refried Bean Burrito.html
-  lunch_suitable: true
-  kid_friendly: true
-  prep_style: component_based
-  prep_components:
-  - refried_pinto_beans
-  - shredded_mexican_blend_cheese
-  - cooked_brown_or_white_rice
-  component_storage_days: 3
-  reuses_dinner_ingredients:
-  - beans
-  - cheese
-  - rice
 - id: romesco_gnocchi
   name: Romesco Gnocchi
   cuisine: italian
   meal_type: pasta_noodles
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3778,17 +2660,11 @@
   - pepper
   - spinach
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Romesco Gnocchi.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: romesco_pasta_sauce
   name: Romesco Pasta Sauce
   cuisine: italian
@@ -3803,22 +2679,16 @@
   - parsley
   - pepper
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Romesco Pasta Sauce.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: salted_tahini_oatmeal_chocolate_chip_cookies
   name: Salted Tahini Oatmeal Chocolate Chip Cookies.
   cuisine: mediterranean
   meal_type: breakfast
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3828,17 +2698,11 @@
   source:
     type: html
     file: recipes/raw_html/Salted Tahini Oatmeal Chocolate Chip Cookies..html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: samosa_grilled_cheese
   name: Samosa Grilled Cheese
   cuisine: indian
   meal_type: sandwich
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3847,22 +2711,16 @@
   - garlic
   - onion
   - potato
-  - potato
+  - potatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Samosa Grilled Cheese.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: samosa_pinwheels_baked
   name: Samosa Pinwheels (Baked)
   cuisine: indian
   meal_type: appetizer
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - oven
@@ -3871,23 +2729,17 @@
   - lemon
   - peas
   - potato
-  - potato
+  - potatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Samosa Pinwheels (Baked).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: sheet_pan_black_bean_quesadillas_with_coleslaw
   name: Sheet Pan Black Bean Quesadillas with Coleslaw
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   - oven
@@ -3900,18 +2752,12 @@
   source:
     type: html
     file: recipes/raw_html/Sheet Pan Black Bean Quesadillas with Coleslaw.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: sheet_pan_black_bean_quesadillas
   name: Sheet Pan Black Bean Quesadillas
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   - oven
@@ -3924,18 +2770,6 @@
   source:
     type: html
     file: recipes/raw_html/Sheet Pan Black Bean Quesadillas.html
-  lunch_suitable: true
-  kid_friendly: true
-  prep_style: component_based
-  prep_components:
-  - cooked_black_beans
-  - shredded_cheddar_cheese
-  - corn
-  component_storage_days: 3
-  reuses_dinner_ingredients:
-  - black_beans
-  - cheese
-  - corn
 - id: sheet_pan_coconut_vegetable_curry
   name: Sheet Pan Coconut Vegetable Curry
   cuisine: indian
@@ -3958,12 +2792,6 @@
   source:
     type: html
     file: recipes/raw_html/Sheet Pan Coconut Vegetable Curry.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: shiro_wot_ground_chickpea_stew
   name: Shiro Wot (Ground-Chickpea Stew)
   cuisine: unknown
@@ -3977,17 +2805,11 @@
   - garlic
   - onion
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Shiro Wot (Ground-Chickpea Stew).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: simple_vegetarian_slow_cooked_beans
   name: Simple Vegetarian Slow-Cooked Beans
   cuisine: unknown
@@ -4004,17 +2826,11 @@
   - parsley
   - spinach
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Simple Vegetarian Slow-Cooked Beans.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: six_bean_chili
   name: Six-Bean Chili
   cuisine: unknown
@@ -4031,17 +2847,11 @@
   - garlic
   - onion
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Six-Bean Chili.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: sliced_cucumber
   name: Sliced Cucumber
   cuisine: unknown
@@ -4055,12 +2865,6 @@
   source:
     type: html
     file: recipes/raw_html/Sliced Cucumber.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: sliced_bell_pepper
   name: Sliced bell pepper
   cuisine: unknown
@@ -4074,17 +2878,11 @@
   source:
     type: html
     file: recipes/raw_html/Sliced bell pepper.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: snake_gourd_kootu
   name: Snake Gourd Kootu
   cuisine: indian
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -4093,17 +2891,11 @@
   source:
     type: html
     file: recipes/raw_html/Snake Gourd Kootu.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: so_good_chickpea_blondies
   name: So Good Chickpea Blondies
   cuisine: unknown
   meal_type: snack_bar
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -4115,18 +2907,12 @@
   source:
     type: html
     file: recipes/raw_html/So Good Chickpea Blondies.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: so_good_spinach_egg_muffins
   name: So Good Spinach Egg Muffins
   cuisine: mexican
   meal_type: baked_goods
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - oven
   main_veg:
@@ -4136,18 +2922,12 @@
   source:
     type: html
     file: recipes/raw_html/So Good Spinach Egg Muffins.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: soft_roasted_chickpeas
   name: Soft Roasted Chickpeas
   cuisine: unknown
   meal_type: side_dish
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - oven
   main_veg:
@@ -4156,18 +2936,12 @@
   source:
     type: html
     file: recipes/raw_html/Soft Roasted Chickpeas.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: soft_and_chewy_white_chocolate_chip_cookies
   name: Soft and Chewy White Chocolate Chip Cookies
   cuisine: unknown
   meal_type: baked_goods
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   - oven
@@ -4176,12 +2950,6 @@
   source:
     type: html
     file: recipes/raw_html/Soft and Chewy White Chocolate Chip Cookies.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: southwest_corn_chowder_freezer_meal_prep
   name: Southwest Corn Chowder (Freezer Meal Prep)
   cuisine: unknown
@@ -4199,18 +2967,12 @@
   source:
     type: html
     file: recipes/raw_html/Southwest Corn Chowder (Freezer Meal Prep).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: southwest_pasta_salad
   name: Southwest Pasta Salad
   cuisine: italian
   meal_type: salad
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - instant_pot
   main_veg:
@@ -4226,17 +2988,11 @@
   - parsley
   - scallion
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Southwest Pasta Salad.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: spinach_puffs
   name: Spinach Puffs
   cuisine: unknown
@@ -4253,37 +3009,6 @@
   source:
     type: html
     file: recipes/raw_html/Spinach Puffs.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
-- id: spinach_white_bean_enchiladas_2
-  name: Spinach White Bean Enchiladas
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - oven
-  - stovetop
-  main_veg:
-  - beans
-  - cilantro
-  - corn
-  - garlic
-  - spinach
-  avoid_contains: []
-  source:
-    type: html
-    file: recipes/raw_html/Spinach White Bean Enchiladas 2.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: spinach_white_bean_enchiladas
   name: Spinach White Bean Enchiladas
   cuisine: mexican
@@ -4303,12 +3028,6 @@
   source:
     type: html
     file: recipes/raw_html/Spinach White Bean Enchiladas.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: spinach_and_feta_stuffed_pita_with_a_side_of_greek_salad
   name: Spinach and Feta Stuffed Pita with a Side of Greek Salad
   cuisine: mediterranean
@@ -4324,23 +3043,17 @@
   - onion
   - spinach
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Spinach and Feta Stuffed Pita with a Side of Greek Salad.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: spinach_cilantro_pesto
   name: Spinach-Cilantro Pesto
   cuisine: italian
   meal_type: sauce_dip
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - stovetop
   main_veg:
@@ -4351,12 +3064,6 @@
   source:
     type: html
     file: recipes/raw_html/Spinach-Cilantro Pesto.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: stir_fry
   name: Stir Fry
   cuisine: asian
@@ -4374,17 +3081,12 @@
   - green onion
   - onion
   - peas
+  - pepper
   - spinach
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Stir Fry.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: strawberries
   name: Strawberries
   cuisine: unknown
@@ -4398,17 +3100,11 @@
   source:
     type: html
     file: recipes/raw_html/Strawberries.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: strawberry_muffins
   name: Strawberry Muffins
   cuisine: unknown
   meal_type: baked_goods
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - oven
@@ -4417,12 +3113,6 @@
   source:
     type: html
     file: recipes/raw_html/Strawberry Muffins.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: strawberry_spinach_feta_salad
   name: Strawberry Spinach Feta Salad
   cuisine: unknown
@@ -4440,12 +3130,6 @@
   source:
     type: html
     file: recipes/raw_html/Strawberry Spinach Feta Salad.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: string_cheese
   name: String cheese
   cuisine: unknown
@@ -4459,12 +3143,21 @@
   source:
     type: html
     file: recipes/raw_html/String cheese.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
+- id: sunflower_seed_cream_cheese_dairy_free
+  name: Petra A. | Sunglow Kitchen | Comment CHEESE and I Will Send You the Recipe!
+    Creamy, Thick, and Tangy, This Sunflower Seed Cream Cheese Is the Best Dairy-Free
+    Cream… | Instagram
+  cuisine: unknown
+  meal_type: sauce_dip
+  effort_level: normal
+  no_chop_compatible: false
+  appliances:
+  - instant_pot
+  main_veg: []
+  avoid_contains: []
+  source:
+    type: html
+    file: recipes/raw_html/Sunflower Seed Cream Cheese (Dairy-Free).html
 - id: sunflower_seeds
   name: Sunflower seeds
   cuisine: unknown
@@ -4478,12 +3171,6 @@
   source:
     type: html
     file: recipes/raw_html/Sunflower seeds.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: sweet_potato_tofu_chickpea_curry_make_sauce_ahead
   name: Sweet Potato, Tofu & Chickpea Curry (Make Sauce Ahead)
   cuisine: indian
@@ -4503,21 +3190,15 @@
   - onion
   - peas
   - potato
-  - potato
+  - potatoe
   - squash
   - sweet potato
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Sweet Potato, Tofu & Chickpea Curry (Make Sauce Ahead).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: sweet_potato_tofu_chickpea_curry
   name: Sweet Potato, Tofu & Chickpea Curry
   cuisine: indian
@@ -4537,26 +3218,20 @@
   - onion
   - peas
   - potato
-  - potato
+  - potatoe
   - squash
   - sweet potato
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Sweet Potato, Tofu & Chickpea Curry.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
-- id: sweet_potatos_with_thai_peanut_butter_sauce
+- id: sweet_potatoes_with_thai_peanut_butter_sauce
   name: Sweet Potatoes with Thai Peanut Butter Sauce
   cuisine: unknown
   meal_type: sauce_dip
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -4567,24 +3242,18 @@
   - lime
   - onion
   - potato
-  - potato
+  - potatoe
   - sweet potato
   avoid_contains:
   - cabbage
   source:
     type: html
     file: recipes/raw_html/Sweet Potatoes with Thai Peanut Butter Sauce.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: sweet_spinach_muffins_with_banana
   name: Sweet Spinach Muffins with Banana
   cuisine: unknown
   meal_type: baked_goods
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -4595,17 +3264,11 @@
   source:
     type: html
     file: recipes/raw_html/Sweet Spinach Muffins with Banana.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: sweet_and_sour_quinoa
   name: Sweet and Sour Quinoa
   cuisine: unknown
   meal_type: sauce_dip
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -4618,17 +3281,11 @@
   source:
     type: html
     file: recipes/raw_html/Sweet and Sour Quinoa.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: tandoori_veggie_quesadillas
   name: Tandoori Veggie Quesadillas
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -4642,12 +3299,6 @@
   source:
     type: html
     file: recipes/raw_html/Tandoori Veggie Quesadillas.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: tangy_cucumber_salad
   name: Tangy Cucumber Salad
   cuisine: unknown
@@ -4663,18 +3314,12 @@
   source:
     type: html
     file: recipes/raw_html/Tangy Cucumber Salad.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: thai_curry_pizza_with_naan_bread
   name: Thai Curry Pizza with Naan Bread
   cuisine: indian
   meal_type: pizza
-  effort_level: no_chop
-  no_chop_compatible: true
+  effort_level: normal
+  no_chop_compatible: false
   appliances:
   - oven
   main_veg:
@@ -4682,17 +3327,11 @@
   - green onion
   - onion
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Thai Curry Pizza with Naan Bread.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: tofu_scramble_freezer_meal_prep
   name: Tofu Scramble (Freezer Meal Prep)
   cuisine: unknown
@@ -4706,17 +3345,11 @@
   - onion
   - spinach
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Tofu Scramble (Freezer Meal Prep).html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: tomato_bisque_with_feta_pesto_panini
   name: Tomato Bisque with Feta-Pesto Panini
   cuisine: italian
@@ -4730,17 +3363,11 @@
   source:
     type: html
     file: recipes/raw_html/Tomato Bisque with Feta-Pesto Panini.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: tomato_rice
   name: Tomato Rice
   cuisine: indian
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -4753,12 +3380,6 @@
   source:
     type: html
     file: recipes/raw_html/Tomato Rice.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: tortellini_primavera
   name: Tortellini Primavera
   cuisine: unknown
@@ -4777,12 +3398,6 @@
   source:
     type: html
     file: recipes/raw_html/Tortellini Primavera.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: vegan_chocolate_mousse
   name: Vegan Chocolate Mousse
   cuisine: unknown
@@ -4796,17 +3411,11 @@
   source:
     type: html
     file: recipes/raw_html/Vegan Chocolate Mousse.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: vegan_lemon_pepper_tofu
   name: Vegan Lemon Pepper Tofu
   cuisine: italian
   meal_type: simple_snack
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -4820,17 +3429,11 @@
   source:
     type: html
     file: recipes/raw_html/Vegan Lemon Pepper Tofu.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: vegan_pad_thai
   name: Vegan Pad Thai
   cuisine: asian
   meal_type: pasta_noodles
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -4843,17 +3446,11 @@
   source:
     type: html
     file: recipes/raw_html/Vegan Pad Thai.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: vegan_spicy_thai_drunken_noodles_with_seared_tofu
   name: Vegan Spicy Thai Drunken Noodles with Seared Tofu
   cuisine: asian
   meal_type: pasta_noodles
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -4871,12 +3468,6 @@
   source:
     type: html
     file: recipes/raw_html/Vegan Spicy Thai Drunken Noodles with Seared Tofu.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: vegan_sweet_potato_beetroot_hotdogs
   name: Vegan Sweet Potato Beetroot Hotdogs
   cuisine: indian
@@ -4896,50 +3487,14 @@
   - onion
   - peas
   - potato
-  - potato
+  - potatoe
   - sweet potato
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Vegan Sweet Potato Beetroot Hotdogs.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
-- id: vegetable_gyoza_2
-  name: Vegetable Gyoza
-  cuisine: asian
-  meal_type: appetizer
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - cabbage
-  - carrot
-  - corn
-  - garlic
-  - ginger
-  - green onion
-  - onion
-  - potato
-  - scallion
-  avoid_contains:
-  - mushrooms
-  - cabbage
-  source:
-    type: html
-    file: recipes/raw_html/Vegetable Gyoza 2.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: vegetable_gyoza
   name: Vegetable Gyoza
   cuisine: asian
@@ -4964,12 +3519,6 @@
   source:
     type: html
     file: recipes/raw_html/Vegetable Gyoza.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: vegetable_lasagna
   name: Vegetable Lasagna
   cuisine: italian
@@ -4991,17 +3540,11 @@
   source:
     type: html
     file: recipes/raw_html/Vegetable Lasagna.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: vegetarian_burrito_bowl_with_avocado_crema
   name: Vegetarian Burrito Bowl with Avocado Crema
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -5020,12 +3563,6 @@
   source:
     type: html
     file: recipes/raw_html/Vegetarian Burrito Bowl with Avocado Crema.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: vegetarian_chili
   name: Vegetarian Chili
   cuisine: mexican
@@ -5043,19 +3580,13 @@
   - onion
   - pepper
   - potato
-  - potato
+  - potatoe
   - sweet potato
   - tomato
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Vegetarian Chili.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: vegetarian_enchiladas
   name: Vegetarian Enchiladas
   cuisine: mexican
@@ -5072,22 +3603,16 @@
   - cilantro
   - onion
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Vegetarian Enchiladas.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: vegetarian_tortilla_soup
   name: Vegetarian Tortilla Soup
   cuisine: mexican
   meal_type: soup_stew
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -5103,22 +3628,16 @@
   - onion
   - radish
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Vegetarian Tortilla Soup.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: veggie_marinara_sauce
   name: Veggie Marinara Sauce
   cuisine: italian
   meal_type: sauce_dip
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -5135,17 +3654,11 @@
   - squash
   - sweet potato
   - tomato
-  - tomato
+  - tomatoe
   avoid_contains: []
   source:
     type: html
     file: recipes/raw_html/Veggie Marinara Sauce.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: veggie_roti
   name: Veggie Roti
   cuisine: indian
@@ -5162,12 +3675,6 @@
   source:
     type: html
     file: recipes/raw_html/Veggie Roti.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: veggie_upma
   name: Veggie Upma
   cuisine: indian
@@ -5187,17 +3694,11 @@
   source:
     type: html
     file: recipes/raw_html/Veggie Upma.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: veggie_wrap
   name: Veggie Wrap
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: minimal_chop
+  effort_level: normal
   no_chop_compatible: false
   appliances:
   - oven
@@ -5216,12 +3717,6 @@
   source:
     type: html
     file: recipes/raw_html/Veggie Wrap.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: veggie_straws
   name: Veggie straws
   cuisine: unknown
@@ -5235,12 +3730,6 @@
   source:
     type: html
     file: recipes/raw_html/Veggie straws.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: vetha_kozhumbu
   name: Vetha Kozhumbu
   cuisine: indian
@@ -5256,12 +3745,6 @@
   source:
     type: html
     file: recipes/raw_html/Vetha Kozhumbu.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: wheat_thins_or_triscuits
   name: Wheat thins or triscuits
   cuisine: unknown
@@ -5275,32 +3758,6 @@
   source:
     type: html
     file: recipes/raw_html/Wheat thins or triscuits.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
-- id: whole_fruit_ice_pops_2
-  name: Whole Fruit Ice Pops
-  cuisine: unknown
-  meal_type: frozen_treat
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - lime
-  avoid_contains: []
-  source:
-    type: html
-    file: recipes/raw_html/Whole Fruit Ice Pops 2.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: whole_fruit_ice_pops
   name: Whole Fruit Ice Pops
   cuisine: unknown
@@ -5315,12 +3772,6 @@
   source:
     type: html
     file: recipes/raw_html/Whole Fruit Ice Pops.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: yogurt_bites
   name: Yogurt bites
   cuisine: unknown
@@ -5334,12 +3785,6 @@
   source:
     type: html
     file: recipes/raw_html/Yogurt bites.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []
 - id: zucchini_and_paneer_waffles
   name: Zucchini and Paneer Waffles
   cuisine: indian
@@ -5355,9 +3800,3 @@
   source:
     type: html
     file: recipes/raw_html/Zucchini and Paneer Waffles.html
-  lunch_suitable: false
-  kid_friendly: false
-  prep_style: null
-  prep_components: []
-  component_storage_days: 0
-  reuses_dinner_ingredients: []

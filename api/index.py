@@ -644,6 +644,47 @@ def bulk_add_inventory():
 def hello_world():
     return jsonify({"message": "Hello from Python on Vercel!"})
 
+@app.route("/api/recipes/import", methods=["POST"])
+def import_recipe():
+    try:
+        data = request.json or {}
+        url = data.get('url')
+        if not url:
+            return jsonify({"status": "error", "message": "URL is required"}), 400
+            
+        import sys
+        import subprocess
+        from pathlib import Path
+        
+        # Call the standalone script
+        # Note: In production (Vercel), we might need to handle this differently
+        # since we can't write to recipes/raw_html/ easily.
+        # But for local or GitHub-synced setups, this works.
+        
+        script_path = Path(__file__).parent.parent / 'scripts' / 'import_recipe.py'
+        result = subprocess.run([sys.executable, str(script_path), url], capture_output=True, text=True)
+        
+        if result.returncode == 0:
+            # Sync the new files to GitHub
+            from scripts.github_helper import sync_changes_to_github
+            # Get latest recipe ID from the output or just sync index.yml
+            sync_changes_to_github(['recipes/index.yml', 'recipes/parsed/recipes.json'])
+            
+            return jsonify({
+                "status": "success", 
+                "message": "Recipe imported and index updated!",
+                "output": result.stdout
+            })
+        else:
+            return jsonify({
+                "status": "error", 
+                "message": "Failed to import recipe",
+                "details": result.stderr or result.stdout
+            }), 500
+            
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 # For local development
 if __name__ == "__main__":
     app.run(port=5328, debug=True)

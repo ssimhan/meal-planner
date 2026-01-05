@@ -65,5 +65,42 @@ def sync_changes_to_github(changed_files):
     """
     repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
     
+    # Check if we can do a multi-file commit
+    # For now, let's keep it simple and just do sequential for the legacy function
     for file_path in changed_files:
         commit_file_to_github(repo_name, file_path, f"Update {file_path} via Web UI")
+
+def commit_multiple_files_to_github(repo_name, file_dict, commit_message):
+    """
+    Commits multiple files to GitHub in a single commit.
+    file_dict: { 'path/in/repo': 'content string' }
+    """
+    g = get_github_client()
+    if not g:
+        print("Skipping GitHub commit: GITHUB_TOKEN not found.")
+        return False
+
+    try:
+        repo = g.get_repo(repo_name)
+        master_ref = repo.get_git_ref("heads/main")
+        master_sha = master_ref.object.sha
+        base_tree = repo.get_git_tree(master_sha)
+
+        element_list = []
+        for path, content in file_dict.items():
+            # Create a blob or just use path/content in InputGitTreeElement
+            # Simplified using InputGitTreeElement
+            from github import InputGitTreeElement
+            element = InputGitTreeElement(path, "100644", "blob", content=content)
+            element_list.append(element)
+
+        tree = repo.create_git_tree(element_list, base_tree)
+        parent = repo.get_git_commit(master_sha)
+        commit = repo.create_git_commit(commit_message, tree, [parent])
+        master_ref.edit(commit.sha)
+        
+        print(f"Successfully committed {list(file_dict.keys())} to GitHub in one go.")
+        return True
+    except Exception as e:
+        print(f"Error committing multiple files to GitHub: {e}")
+        return False

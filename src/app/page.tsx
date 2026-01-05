@@ -50,9 +50,17 @@ export default function Dashboard() {
     try {
       setActionLoading(true);
       const vegList = vegInput.split(',').map(v => v.trim()).filter(v => v);
-      await confirmVeg(vegList);
+      const updatedStatus = await confirmVeg(vegList);
+
+      // Use the status returned by the API to update UI immediately
+      if (updatedStatus && updatedStatus.state) {
+        setStatus(prev => ({ ...prev, ...updatedStatus }));
+      }
+
       setSuccess({ message: 'Vegetables confirmed! You can now generate the plan.' });
       setVegInput('');
+
+      // Still fetch status as a background sync but the UI is already updated
       await fetchStatus();
     } catch (err: any) {
       setError(err.message || 'Failed to confirm vegetables');

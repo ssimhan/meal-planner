@@ -360,14 +360,10 @@ def confirm_veg():
         if not input_file:
             return jsonify({"status": "error", "message": "No active week found"}), 404
             
-        # We need to read the content. input_file is a Path object.
-        # If on Vercel, this file might not exist locally if it was created in a previous lambda
-        # unless it was included in the deployment. 
-        # Inputs should be in the repo, so they should available to read.
-        
         if not input_file.exists():
              return jsonify({"status": "error", "message": f"Input file {input_file} not found"}), 404
 
+        # 1. Update Input File
         with open(input_file, 'r') as f:
             week_data = yaml.safe_load(f)
             
@@ -377,30 +373,76 @@ def confirm_veg():
         week_data['farmers_market']['confirmed_veg'] = confirmed_veg
         week_data['farmers_market']['status'] = 'confirmed'
         
-        # Serialize to string
-        new_content = yaml.dump(week_data, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        # 2. Update History File
+        from scripts.log_execution import load_history, find_week, save_history
+        history = load_history()
+        history_week = find_week(history, week_str)
+        if not history_week:
+            # Create week in history if it doesn't exist (unlikely but safe)
+            history_week = {'week_of': week_str, 'dinners': []}
+            history['weeks'].append(history_week)
         
-        # Try to write locally (for dev), ignore if read-only
-        try:
-            with open(input_file, 'w') as f:
-                f.write(new_content)
-        except OSError:
-            print(f"Read-only filesystem, skipping local write for {input_file}")
-            
-        # Sync to GitHub directly with content
-        from scripts.github_helper import commit_file_to_github
+        history_week['fridge_vegetables'] = confirmed_veg
+
+        # 3. Update Inventory File
+        inventory_path = Path('data/inventory.yml')
+        inventory = {}
+        if inventory_path.exists():
+            with open(inventory_path, 'r') as f:
+                inventory = yaml.safe_load(f) or {}
+        
+        if 'fridge' not in inventory: inventory['fridge'] = []
+        
+        # Add new items to inventory, avoiding duplicates
+        existing_items = {i.get('item', '').lower() for i in inventory['fridge']}
+        for veg in confirmed_veg:
+            if veg.lower() not in existing_items:
+                inventory['fridge'].append({
+                    'item': veg,
+                    'quantity': 1,
+                    'unit': 'count',
+                    'added': datetime.now().strftime('%Y-%m-%d')
+                })
+        
+        inventory['last_updated'] = datetime.now().strftime('%Y-%m-%d')
+
+        # Prepare for sync
+        file_dict = {
+            str(input_file): yaml.dump(week_data, default_flow_style=False, sort_keys=False, allow_unicode=True),
+            'data/history.yml': yaml.dump(history, default_flow_style=False, sort_keys=False, allow_unicode=True),
+            'data/inventory.yml': yaml.dump(inventory, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        }
+
+        # Try to write locally if possible
+        for path, content in file_dict.items():
+            try:
+                with open(path, 'w') as f:
+                    f.write(content)
+            except OSError:
+                pass
+
+        # Sync to GitHub
+        from scripts.github_helper import commit_multiple_files_to_github
         repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
         
-        # input_file is likely absolute or relative. commit_file_to_github expects relative to repo root.
-        # If input_file is 'inputs/2025-01-05.yml', that's perfect.
-        rel_path = str(input_file)
-        
-        success = commit_file_to_github(repo_name, rel_path, f"Confirm veggies for {week_str}", content=new_content)
+        success = commit_multiple_files_to_github(repo_name, file_dict, f"Confirm veggies and update inventory for {week_str}")
         
         if not success:
              return jsonify({"status": "error", "message": "Failed to sync to GitHub"}), 500
         
-        return jsonify({"status": "success", "message": "Vegetables confirmed"})
+        # Return full updated status
+        # This prevents the frontend from showing stale data while Vercel re-deploys or cache clears
+        state, updated_data = get_workflow_state(input_file)
+        current_day = datetime.now().strftime('%a').lower()[:3]
+        
+        return jsonify({
+            "status": "success",
+            "message": "Vegetables confirmed and inventory updated",
+            "week_of": week_str,
+            "state": state,
+            "has_data": updated_data is not None,
+            "current_day": current_day
+        })
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 

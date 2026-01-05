@@ -152,12 +152,18 @@ If blocked, explain which constraint cannot be satisfied:
 
 ## Workflow
 
-**Automated:** System runs via `./mealplan next` command
-- Detects state from input files
-- Creates new weeks
-- Generates vegetable proposals
-- Generates meal plans
-- Updates history.yml
+**Web Dashboard Workflow (Primary):**
+- Access the **Web Dashboard** on Vercel.
+- Use interactive buttons for "Start New Week", "Confirm Veg", and "Generate Plan".
+- Logic is handled by Python Serverless Functions in `/api`.
+- Daily logging and feedback are performed on the dashboard "Check-in" card.
+- Inventory "Brain Dump" is available for rapid data entry.
+
+**CLI Workflow (Local/Maintenance):**
+- System runs via `./mealplan next` command or `python3 scripts/workflow.py`.
+- Detects state from input files.
+- Useful for local debugging and manual data fixes.
+- Updates history.yml and generates HTML plans.
 
 **Your tasks:**
 - Review/refine generated plans

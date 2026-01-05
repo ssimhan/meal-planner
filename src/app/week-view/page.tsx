@@ -2,12 +2,14 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { getStatus, WorkflowStatus } from '@/lib/api';
+import { getStatus, getRecipes, WorkflowStatus } from '@/lib/api';
+import MealCorrectionInput from '@/components/MealCorrectionInput';
 
 export default function WeekView() {
   const [status, setStatus] = useState<WorkflowStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
+  const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
 
   useEffect(() => {
     async function fetchWeekData() {
@@ -21,6 +23,22 @@ export default function WeekView() {
       }
     }
     fetchWeekData();
+  }, []);
+
+  useEffect(() => {
+    async function loadRecipes() {
+      try {
+        const data = await getRecipes();
+        const recipeList = data.recipes.map((r: any) => ({
+          id: r.id,
+          name: r.name
+        }));
+        setRecipes(recipeList);
+      } catch (err) {
+        console.error('Failed to load recipes:', err);
+      }
+    }
+    loadRecipes();
   }, []);
 
   if (loading) {
@@ -140,36 +158,24 @@ export default function WeekView() {
     }
   };
 
-  const CorrectionInput = ({ day, type, currentValue }: { day: string, type: string, currentValue?: string }) => {
-    const [inputValue, setInputValue] = useState(currentValue || '');
+  const CorrectionInput = ({ day, type, currentValue, onCancel }: { day: string, type: string, currentValue?: string, onCancel: () => void }) => {
     const [saving, setSaving] = useState(false);
 
-    const onSave = async () => {
-      if (!inputValue.trim()) return;
+    const onSave = async (mealName: string, requestRecipe: boolean) => {
       setSaving(true);
-      const shouldAddRecipe = window.confirm(`Correction saved: "${inputValue}".\n\nShould this be added as an official recipe to the index for future weeks?`);
-      await handleCorrectionSave(day, type, inputValue, shouldAddRecipe);
+      await handleCorrectionSave(day, type, mealName, requestRecipe);
       setSaving(false);
     };
 
     return (
-      <div className="mt-2 flex gap-1">
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          className="text-xs p-1 border border-red-300 rounded flex-1 focus:ring-1 focus:ring-red-500 outline-none bg-white"
-          placeholder="Correction..."
-          autoFocus
-          onKeyDown={(e) => e.key === 'Enter' && onSave()}
+      <div className="mt-2">
+        <MealCorrectionInput
+          recipes={recipes}
+          onSave={onSave}
+          onCancel={onCancel}
+          placeholder="Enter actual meal..."
+          existingValue={currentValue || ''}
         />
-        <button
-          onClick={onSave}
-          disabled={saving || !inputValue.trim()}
-          className="text-[10px] bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 disabled:opacity-50"
-        >
-          {saving ? '...' : 'Save'}
-        </button>
       </div>
     );
   };
@@ -269,6 +275,7 @@ export default function WeekView() {
                         day={day}
                         type="dinner"
                         currentValue={dinner.actual_meal}
+                        onCancel={() => toggleFix(day, 'dinner', true)}
                       />
                     )}
                   </div>
@@ -289,6 +296,7 @@ export default function WeekView() {
                         day={day}
                         type="kids_lunch"
                         currentValue={dailyFeedback?.kids_lunch}
+                        onCancel={() => toggleFix(day, 'kids_lunch', true)}
                       />
                     )}
                   </div>
@@ -313,6 +321,7 @@ export default function WeekView() {
                         day={day}
                         type="school_snack"
                         currentValue={dailyFeedback?.school_snack}
+                        onCancel={() => toggleFix(day, 'school_snack', true)}
                       />
                     )}
                   </div>
@@ -330,6 +339,7 @@ export default function WeekView() {
                         day={day}
                         type="home_snack"
                         currentValue={dailyFeedback?.home_snack}
+                        onCancel={() => toggleFix(day, 'home_snack', true)}
                       />
                     )}
                   </div>
@@ -397,6 +407,7 @@ export default function WeekView() {
                           day={day}
                           type="kids_lunch"
                           currentValue={dailyFeedback?.kids_lunch}
+                          onCancel={() => toggleFix(day, 'kids_lunch', true)}
                         />
                       )}
                     </td>
@@ -435,6 +446,7 @@ export default function WeekView() {
                           day={day}
                           type="school_snack"
                           currentValue={dailyFeedback?.school_snack}
+                          onCancel={() => toggleFix(day, 'school_snack', true)}
                         />
                       )}
                     </td>
@@ -473,6 +485,7 @@ export default function WeekView() {
                           day={day}
                           type="home_snack"
                           currentValue={dailyFeedback?.home_snack}
+                          onCancel={() => toggleFix(day, 'home_snack', true)}
                         />
                       )}
                     </td>
@@ -526,6 +539,7 @@ export default function WeekView() {
                           day={day}
                           type="dinner"
                           currentValue={dinner?.actual_meal}
+                          onCancel={() => toggleFix(day, 'dinner', true)}
                         />
                       )}
                     </td>
@@ -562,6 +576,7 @@ export default function WeekView() {
                           day={day}
                           type="adult_lunch"
                           currentValue={dailyFeedback?.adult_lunch}
+                          onCancel={() => toggleFix(day, 'adult_lunch', true)}
                         />
                       )}
                     </td>

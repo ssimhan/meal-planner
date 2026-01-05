@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
-import { getStatus, generatePlan, createWeek, confirmVeg, logMeal, WorkflowStatus } from '@/lib/api';
+import { getStatus, generatePlan, createWeek, confirmVeg, logMeal, getRecipes, WorkflowStatus } from '@/lib/api';
+import MealCorrectionInput from '@/components/MealCorrectionInput';
 
 export default function Dashboard() {
   const [status, setStatus] = useState<WorkflowStatus | null>(null);
@@ -14,6 +15,7 @@ export default function Dashboard() {
   const [vegInput, setVegInput] = useState('');
   const [logLoading, setLogLoading] = useState(false);
   const [completedPrep, setCompletedPrep] = useState<string[]>([]);
+  const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
 
   // Dinner Logging State (Lifted from inner component to prevent state loss on re-render)
   const [showAlternatives, setShowAlternatives] = useState(false);
@@ -25,6 +27,22 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchStatus(true);
+  }, []);
+
+  useEffect(() => {
+    async function loadRecipes() {
+      try {
+        const data = await getRecipes();
+        const recipeList = data.recipes.map((r: any) => ({
+          id: r.id,
+          name: r.name
+        }));
+        setRecipes(recipeList);
+      } catch (err) {
+        console.error('Failed to load recipes:', err);
+      }
+    }
+    loadRecipes();
   }, []);
 
   async function fetchStatus(isInitial = false) {
@@ -368,13 +386,9 @@ export default function Dashboard() {
                   const [isEditing, setIsEditing] = React.useState(false);
                   const [editInput, setEditInput] = React.useState('');
 
-                  const handleEditSubmit = () => {
-                    if (editInput.trim()) {
-                      const shouldAddRecipe = window.confirm(`Correction saved: "${editInput}".\n\nShould this be added as an official recipe to the index for future weeks?`);
-                      handleLogFeedback(feedbackType, '', true, editInput, false, shouldAddRecipe);
-                      setIsEditing(false);
-                      setEditInput('');
-                    }
+                  const handleEditSubmit = (mealName: string, requestRecipe: boolean) => {
+                    handleLogFeedback(feedbackType, '', true, mealName, false, requestRecipe);
+                    setIsEditing(false);
                   };
 
                   // Step 2b: If Made, show preference emojis + Fix button
@@ -408,30 +422,13 @@ export default function Dashboard() {
                     return (
                       <div className="flex flex-col gap-2">
                         <span className="text-[10px] text-[var(--text-muted)]">Correction / Actual details:</span>
-                        <input
-                          type="text"
-                          value={editInput}
-                          onChange={(e) => setEditInput(e.target.value)}
+                        <MealCorrectionInput
+                          recipes={recipes}
+                          onSave={handleEditSubmit}
+                          onCancel={() => setIsEditing(false)}
                           placeholder="e.g., Had apple instead"
-                          className="w-full px-2 py-1 text-xs border border-[var(--border-subtle)] rounded focus:outline-none focus:ring-1 focus:ring-[var(--accent-sage)]"
-                          disabled={logLoading}
+                          existingValue={currentFeedback || ''}
                         />
-                        <div className="flex gap-2">
-                          <button
-                            onClick={handleEditSubmit}
-                            disabled={logLoading || !editInput.trim()}
-                            className="flex-1 py-1 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
-                          >
-                            Save
-                          </button>
-                          <button
-                            onClick={() => setIsEditing(false)}
-                            disabled={logLoading}
-                            className="flex-1 py-1 border border-[var(--border-subtle)] text-xs rounded hover:bg-gray-50"
-                          >
-                            Cancel
-                          </button>
-                        </div>
                       </div>
                     );
                   }
@@ -546,25 +543,22 @@ export default function Dashboard() {
                           }
                         };
 
-                        const handleDinnerEditSubmitLocal = async () => {
-                          if (dinnerEditInput.trim()) {
-                            const currentMade = status?.today_dinner?.made;
-                            let freezerMealArg = '';
-                            if (currentMade === 'freezer_backup' && status?.today_dinner?.freezer_used?.meal) {
-                              freezerMealArg = status.today_dinner.freezer_used.meal;
-                            }
-
-                            const shouldAddRecipe = window.confirm(`Correction saved: "${dinnerEditInput}".\n\nShould this be added as an official recipe to the index for future weeks?`);
-
-                            await handleLogDay(
-                              currentMade!,
-                              status?.today_dinner?.kids_feedback || '',
-                              freezerMealArg,
-                              dinnerEditInput,
-                              false,
-                              shouldAddRecipe
-                            );
+                        const handleDinnerEditSubmitLocal = async (mealName: string, requestRecipe: boolean) => {
+                          const currentMade = status?.today_dinner?.made;
+                          let freezerMealArg = '';
+                          if (currentMade === 'freezer_backup' && status?.today_dinner?.freezer_used?.meal) {
+                            freezerMealArg = status.today_dinner.freezer_used.meal;
                           }
+
+                          await handleLogDay(
+                            currentMade!,
+                            status?.today_dinner?.kids_feedback || '',
+                            freezerMealArg,
+                            mealName,
+                            false,
+                            requestRecipe
+                          );
+                          setIsDinnerEditing(false);
                         };
 
                         // Already logged - show feedback emojis
@@ -597,30 +591,13 @@ export default function Dashboard() {
                           return (
                             <div className="flex flex-col gap-2">
                               <span className="text-[10px] text-[var(--text-muted)]">Correction / Actual meal:</span>
-                              <input
-                                type="text"
-                                value={dinnerEditInput}
-                                onChange={(e) => setDinnerEditInput(e.target.value)}
+                              <MealCorrectionInput
+                                recipes={recipes}
+                                onSave={handleDinnerEditSubmitLocal}
+                                onCancel={() => setIsDinnerEditing(false)}
                                 placeholder="e.g., Actually had Pizza"
-                                className="w-full px-2 py-1 text-xs border border-[var(--border-subtle)] rounded focus:outline-none focus:ring-1 focus:ring-[var(--accent-sage)]"
-                                disabled={logLoading}
+                                existingValue={status?.today_dinner?.actual_meal || ''}
                               />
-                              <div className="flex gap-2">
-                                <button
-                                  onClick={handleDinnerEditSubmitLocal}
-                                  disabled={logLoading || !dinnerEditInput.trim()}
-                                  className="flex-1 py-1 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
-                                >
-                                  Save
-                                </button>
-                                <button
-                                  onClick={() => setIsDinnerEditing(false)}
-                                  disabled={logLoading}
-                                  className="flex-1 py-1 border border-[var(--border-subtle)] text-xs rounded hover:bg-gray-50"
-                                >
-                                  Cancel
-                                </button>
-                              </div>
                             </div>
                           );
                         }

@@ -78,9 +78,11 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 -   **Web UX expansion:** Display suggested veggies, pantry/fridge/freezer details on live site
 
 ### Phase 8: Intelligence & Automation
--   **Inventory Ingest ("Brain Dump"):** Textbox input to paste lists -> auto-parse candidates -> user categorizes (Pantry/Fridge/Freezer) -> bulk append to inventory.
+### Phase 8: Intelligence & Automation
+-   **Inventory Ingest ("Brain Dump"):** Textbox input to paste lists -> auto-parse candidates -> editable table to fix typos and select category (Pantry/Fridge/Freezer) -> bulk append to inventory.
+-   **Dashboard Daily View:** Complete overhaul of "Today" view. Display separate cards for: Kids Lunch, School Snack, Adult Lunch, Kids Home Snack, Dinner.
+-   **Prep Interface:** Automatically display AM/PM prep instructions on relevant days (Monday-Wednesday) based on hardcoded prep windows, integrated into the Daily View timeline.
 -   **Recipe Success Scoring:** Weighted Random Sampling for meal generation based on emoji feedback (❤️=+3, 👍=+1, etc.).
--   **Prep Checklist Integration:** "Daily View" on Dashboard showing automated prep tasks (AM/PM) based on hardcoded schedule, alongside meals and snacks.
 -   **Analytics Dashboard:** Pre-computed `stats.json` generated via GitHub Actions to show Vegetable ROI, Freezer Velocity, and Top Recipes.
 
 ### Phase 9: Advanced Features

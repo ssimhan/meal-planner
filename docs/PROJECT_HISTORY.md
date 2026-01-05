@@ -640,3 +640,22 @@ The best tools are the ones you actually use. This system works because it reduc
 3.  **Public Plan Serving:** Start storing generated HTML plans in `public/plans` so they are served directly by Vercel without needing a separate GitHub Pages build step.
 
 **Status:** Migration Complete. The system is now a fully functional web app.
+
+---
+
+## Session: 2026-01-04 (Continued) - Daily Check-in & UI Feedback
+
+**Work Completed:**
+
+- **Backend API Expansion:**
+    -   Implemented `/api/log-meal` endpoint for robust logging and inventory updates.
+    -   Enhanced `/api/status` to serve "Today's Dinner" context.
+
+- **Frontend Dashboard Evolution:**
+    -   Built interactive "Daily Check-in" card on dashboard.
+    -   Added "Kids Feedback" buttons (❤️, 👍, 😐, 👎, ❌) for one-tap preference tracking.
+
+**Key Decisions:**
+-   **Direct API Integration:** Moved execution tracking from GitHub Issues to Web UI for better UX, synchronously updating `history.yml` and `inventory.yml`.
+
+**Status:** Phase 7 (UX Improvements) partially complete.

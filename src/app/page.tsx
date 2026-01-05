@@ -161,8 +161,8 @@ export default function Dashboard() {
         made: true // Keep this for backend compatibility
       };
 
-      // Build the feedback string: if not made, include override text
-      const feedbackValue = made ? emoji : (overrideText || 'Skipped');
+      // Build the feedback string: prioritize override text if provided (e.g. for corrections), else use emoji or Skipped default
+      const feedbackValue = overrideText || (made ? emoji : 'Skipped');
 
       // Map feedback type to the correct field
       if (feedbackType === 'school_snack') {
@@ -341,85 +341,21 @@ export default function Dashboard() {
                   </div>
                 );
 
-                const FeedbackButtons = ({
-                  feedbackType,
-                  currentFeedback,
-                  madeStatus,
-                  mealName
-                }: {
-                  feedbackType: 'school_snack' | 'home_snack' | 'kids_lunch' | 'adult_lunch',
-                  currentFeedback?: string,
-                  madeStatus?: boolean,
-                  mealName: string
-                }) => {
-                  const [showOverride, setShowOverride] = React.useState(false);
-                  const [overrideText, setOverrideText] = React.useState('');
+                const [isEditing, setIsEditing] = React.useState(false);
+                const [editInput, setEditInput] = React.useState('');
 
-                  const handleMadeClick = (made: boolean) => {
-                    if (!made) {
-                      setShowOverride(true);
-                    } else {
-                      handleLogFeedback(feedbackType, '', made);
-                    }
-                  };
-
-                  const handleOverrideSubmit = () => {
-                    if (overrideText.trim()) {
-                      handleLogFeedback(feedbackType, '', false, overrideText);
-                      setShowOverride(false);
-                      setOverrideText('');
-                    }
-                  };
-
-                  // Step 1: Made or Not Made
-                  if (madeStatus === undefined) {
-                    return (
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleMadeClick(true)}
-                          disabled={logLoading}
-                          className="flex-1 py-1 px-2 bg-[var(--accent-green)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
-                        >
-                          ✓ Made
-                        </button>
-                        <button
-                          onClick={() => handleMadeClick(false)}
-                          disabled={logLoading}
-                          className="flex-1 py-1 px-2 border border-[var(--border-subtle)] text-xs rounded hover:bg-gray-50 disabled:opacity-50"
-                        >
-                          ✗ Skip
-                        </button>
-                      </div>
-                    );
+                const handleEditSubmit = () => {
+                  if (editInput.trim()) {
+                    handleLogFeedback(feedbackType, '', true, editInput);
+                    setIsEditing(false);
+                    setEditInput('');
                   }
+                };
 
-                  // Step 2a: If Not Made, show override input
-                  if (madeStatus === false && showOverride) {
-                    return (
-                      <div className="flex flex-col gap-2">
-                        <span className="text-[10px] text-[var(--text-muted)]">What did you eat instead?</span>
-                        <input
-                          type="text"
-                          value={overrideText}
-                          onChange={(e) => setOverrideText(e.target.value)}
-                          placeholder="e.g., Restaurant pizza"
-                          className="w-full px-2 py-1 text-xs border border-[var(--border-subtle)] rounded focus:outline-none focus:ring-1 focus:ring-[var(--accent-sage)]"
-                          disabled={logLoading}
-                        />
-                        <button
-                          onClick={handleOverrideSubmit}
-                          disabled={logLoading || !overrideText.trim()}
-                          className="w-full py-1 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
-                        >
-                          Save
-                        </button>
-                      </div>
-                    );
-                  }
-
-                  // Step 2b: If Made, show preference emojis
-                  if (madeStatus === true) {
-                    return (
+                // Step 2b: If Made, show preference emojis + Fix button
+                if (madeStatus === true && !isEditing) {
+                  return (
+                    <div className="flex flex-col gap-2">
                       <div className="flex justify-around items-center bg-gray-50 p-1 rounded">
                         {['❤️', '👍', '😐', '👎', '❌'].map(emoji => (
                           <button
@@ -432,299 +368,411 @@ export default function Dashboard() {
                           </button>
                         ))}
                       </div>
-                    );
-                  }
-
-                  // Step 3: Show status badge if already logged
-                  return (
-                    <div className="text-xs text-[var(--text-muted)] text-center">
-                      {madeStatus === false ? `✗ Skipped: ${currentFeedback || 'No details'}` : `✓ Made ${currentFeedback || ''}`}
+                      <button
+                        onClick={() => { setIsEditing(true); setEditInput(currentFeedback || ''); }}
+                        className="text-[10px] text-[var(--text-muted)] hover:text-[var(--accent-sage)] underline decoration-dotted text-center"
+                      >
+                        🔧 Fix / Edit Details
+                      </button>
                     </div>
                   );
-                };
+                }
 
+                // Step 2c: Edit Mode
+                if (madeStatus === true && isEditing) {
+                  return (
+                    <div className="flex flex-col gap-2">
+                      <span className="text-[10px] text-[var(--text-muted)]">Correction / Actual details:</span>
+                      <input
+                        type="text"
+                        value={editInput}
+                        onChange={(e) => setEditInput(e.target.value)}
+                        placeholder="e.g., Had apple instead"
+                        className="w-full px-2 py-1 text-xs border border-[var(--border-subtle)] rounded focus:outline-none focus:ring-1 focus:ring-[var(--accent-sage)]"
+                        disabled={logLoading}
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleEditSubmit}
+                          disabled={logLoading || !editInput.trim()}
+                          className="flex-1 py-1 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => setIsEditing(false)}
+                          disabled={logLoading}
+                          className="flex-1 py-1 border border-[var(--border-subtle)] text-xs rounded hover:bg-gray-50"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  );
+                }
+
+                // Step 3: Show status badge if already logged (skipped)
                 return (
-                  <>
-                    {/* School Snack */}
-                    <Card
-                      title="School Snack"
-                      icon="🎒"
-                      content={status?.today_snacks?.school || "Fruit"}
-                      isConfirmed={status?.today_snacks?.school_snack_made !== undefined}
-                      action={<FeedbackButtons
-                        feedbackType="school_snack"
-                        currentFeedback={status?.today_snacks?.school_snack_feedback}
-                        madeStatus={status?.today_snacks?.school_snack_made}
-                        mealName={status?.today_snacks?.school || "Fruit"}
-                      />}
-                    />
+                  <div className="text-xs text-[var(--text-muted)] text-center">
+                    {madeStatus === false ? `✗ Skipped: ${currentFeedback || 'No details'}` : `✓ Made ${currentFeedback || ''}`}
+                  </div>
+                );
+              };
 
-                    {/* Kids Lunch */}
-                    <Card
-                      title="Kids Lunch"
-                      icon="🥪"
-                      content={status?.today_lunch?.recipe_name || "Leftovers"}
-                      subtitle={status?.today_lunch?.assembly_notes}
-                      isConfirmed={status?.today_lunch?.kids_lunch_made !== undefined}
-                      action={<FeedbackButtons
-                        feedbackType="kids_lunch"
-                        currentFeedback={status?.today_lunch?.kids_lunch_feedback}
-                        madeStatus={status?.today_lunch?.kids_lunch_made}
-                        mealName={status?.today_lunch?.recipe_name || "Leftovers"}
-                      />}
-                    />
+              return (
+              <>
+                {/* School Snack */}
+                <Card
+                  title="School Snack"
+                  icon="🎒"
+                  content={status?.today_snacks?.school || "Fruit"}
+                  isConfirmed={status?.today_snacks?.school_snack_made !== undefined}
+                  action={<FeedbackButtons
+                    feedbackType="school_snack"
+                    currentFeedback={status?.today_snacks?.school_snack_feedback}
+                    madeStatus={status?.today_snacks?.school_snack_made}
+                    mealName={status?.today_snacks?.school || "Fruit"}
+                  />}
+                />
 
-                    {/* Adult Lunch */}
-                    <Card
-                      title="Adult Lunch"
-                      icon="☕"
-                      content="Leftovers"
-                      subtitle="Grain bowl + dinner components"
-                      isConfirmed={status?.today_lunch?.adult_lunch_made !== undefined}
-                      action={<FeedbackButtons
-                        feedbackType="adult_lunch"
-                        currentFeedback={status?.today_lunch?.adult_lunch_feedback}
-                        madeStatus={status?.today_lunch?.adult_lunch_made}
-                        mealName="Leftovers"
-                      />}
-                    />
+                {/* Kids Lunch */}
+                <Card
+                  title="Kids Lunch"
+                  icon="🥪"
+                  content={status?.today_lunch?.recipe_name || "Leftovers"}
+                  subtitle={status?.today_lunch?.assembly_notes}
+                  isConfirmed={status?.today_lunch?.kids_lunch_made !== undefined}
+                  action={<FeedbackButtons
+                    feedbackType="kids_lunch"
+                    currentFeedback={status?.today_lunch?.kids_lunch_feedback}
+                    madeStatus={status?.today_lunch?.kids_lunch_made}
+                    mealName={status?.today_lunch?.recipe_name || "Leftovers"}
+                  />}
+                />
 
-                    {/* Home Snack */}
-                    <Card
-                      title="Home Snack"
-                      icon="🏠"
-                      content={status?.today_snacks?.home || "Cucumber"}
-                      isConfirmed={status?.today_snacks?.home_snack_made !== undefined}
-                      action={<FeedbackButtons
-                        feedbackType="home_snack"
-                        currentFeedback={status?.today_snacks?.home_snack_feedback}
-                        madeStatus={status?.today_snacks?.home_snack_made}
-                        mealName={status?.today_snacks?.home || "Cucumber"}
-                      />}
-                    />
+                {/* Adult Lunch */}
+                <Card
+                  title="Adult Lunch"
+                  icon="☕"
+                  content="Leftovers"
+                  subtitle="Grain bowl + dinner components"
+                  isConfirmed={status?.today_lunch?.adult_lunch_made !== undefined}
+                  action={<FeedbackButtons
+                    feedbackType="adult_lunch"
+                    currentFeedback={status?.today_lunch?.adult_lunch_feedback}
+                    madeStatus={status?.today_lunch?.adult_lunch_made}
+                    mealName="Leftovers"
+                  />}
+                />
 
-                    {/* Dinner */}
-                    {(() => {
-                      const DinnerLogging = () => {
-                        const [showAlternatives, setShowAlternatives] = React.useState(false);
-                        const [selectedAlternative, setSelectedAlternative] = React.useState<'freezer' | 'outside' | 'other' | null>(null);
-                        const [otherMealText, setOtherMealText] = React.useState('');
-                        const [selectedFreezerMeal, setSelectedFreezerMeal] = React.useState('');
+                {/* Home Snack */}
+                <Card
+                  title="Home Snack"
+                  icon="🏠"
+                  content={status?.today_snacks?.home || "Cucumber"}
+                  isConfirmed={status?.today_snacks?.home_snack_made !== undefined}
+                  action={<FeedbackButtons
+                    feedbackType="home_snack"
+                    currentFeedback={status?.today_snacks?.home_snack_feedback}
+                    madeStatus={status?.today_snacks?.home_snack_made}
+                    mealName={status?.today_snacks?.home || "Cucumber"}
+                  />}
+                />
 
-                        const freezerInventory = status?.week_data?.freezer_inventory || [];
+                {/* Dinner */}
+                {(() => {
+                  const DinnerLogging = () => {
+                    const [showAlternatives, setShowAlternatives] = React.useState(false);
+                    const [selectedAlternative, setSelectedAlternative] = React.useState<'freezer' | 'outside' | 'other' | null>(null);
+                    const [otherMealText, setOtherMealText] = React.useState('');
+                    const [selectedFreezerMeal, setSelectedFreezerMeal] = React.useState('');
 
-                        const handleMadeAsPlanned = () => {
-                          handleLogDay(true);
-                        };
+                    const freezerInventory = status?.week_data?.freezer_inventory || [];
 
-                        const handleNotMade = () => {
-                          setShowAlternatives(true);
-                        };
+                    const handleMadeAsPlanned = () => {
+                      handleLogDay(true);
+                    };
 
-                        const handleAlternativeSelect = (alt: 'freezer' | 'outside' | 'other') => {
-                          setSelectedAlternative(alt);
-                        };
+                    const handleNotMade = () => {
+                      setShowAlternatives(true);
+                    };
 
-                        const handleSubmitAlternative = async () => {
-                          if (selectedAlternative === 'freezer' && selectedFreezerMeal) {
-                            await handleLogDay('freezer_backup', '', selectedFreezerMeal);
-                            setShowAlternatives(false);
-                            setSelectedAlternative(null);
-                          } else if (selectedAlternative === 'outside') {
-                            await handleLogDay('outside_meal');
-                            setShowAlternatives(false);
-                            setSelectedAlternative(null);
-                          } else if (selectedAlternative === 'other' && otherMealText.trim()) {
-                            await handleLogDay(false, '', '', otherMealText);
-                            setShowAlternatives(false);
-                            setSelectedAlternative(null);
-                            setOtherMealText('');
-                          }
-                        };
+                    const handleAlternativeSelect = (alt: 'freezer' | 'outside' | 'other') => {
+                      setSelectedAlternative(alt);
+                    };
 
-                        // Already logged - show feedback emojis
-                        if (status?.today_dinner?.made) {
-                          return (
-                            <div className="flex justify-between items-center bg-gray-50 p-1 rounded">
-                              {['❤️', '👍', '😐', '👎', '❌'].map(emoji => (
-                                <button
-                                  key={emoji}
-                                  onClick={() => handleLogDay(true, emoji)}
-                                  disabled={logLoading}
-                                  className={`p-1 hover:scale-110 transition-transform ${status?.today_dinner?.kids_feedback?.includes(emoji) ? 'opacity-100' : 'opacity-40 grayscale'}`}
-                                >
-                                  {emoji}
-                                </button>
+                    const handleSubmitAlternative = async () => {
+                      if (selectedAlternative === 'freezer' && selectedFreezerMeal) {
+                        await handleLogDay('freezer_backup', '', selectedFreezerMeal);
+                        setShowAlternatives(false);
+                        setSelectedAlternative(null);
+                      } else if (selectedAlternative === 'outside') {
+                        await handleLogDay('outside_meal');
+                        setShowAlternatives(false);
+                        setSelectedAlternative(null);
+                      } else if (selectedAlternative === 'other' && otherMealText.trim()) {
+                        await handleLogDay(false, '', '', otherMealText);
+                        setShowAlternatives(false);
+                        setSelectedAlternative(null);
+                        setOtherMealText('');
+                      }
+                    };
+
+                    const [isDinnerEditing, setIsDinnerEditing] = React.useState(false);
+                    const [dinnerEditInput, setDinnerEditInput] = React.useState('');
+
+                    const handleDinnerEditSubmit = async () => {
+                      if (dinnerEditInput.trim()) {
+                        // Preserve existing made status but update actual_meal
+                        // If made is freezer_backup, we need to pass that.
+                        // Status.today_dinner.made can be boolean or string.
+                        const currentMade = status?.today_dinner?.made;
+                        // We also prefer to keep the freezer meal usage if known?
+                        // But handleLogDay args: (made, feedback(kids), freezerMeal, actualMeal)
+                        // If made=freezer_backup, we need the meal name.
+                        // We can try to extract it from history or just re-pass what we know.
+                        // Actually simpler: just update actual_meal.
+                        // If we call handleLogDay with same 'made' status, it should be fine.
+
+                        let freezerMealArg = '';
+                        if (currentMade === 'freezer_backup' && status?.today_dinner?.freezer_used?.meal) {
+                          freezerMealArg = status.today_dinner.freezer_used.meal;
+                        }
+
+                        await handleLogDay(
+                          currentMade!,
+                          status?.today_dinner?.kids_feedback || '',
+                          freezerMealArg,
+                          dinnerEditInput
+                        );
+                        setIsDinnerEditing(false);
+                        setDinnerEditInput('');
+                      }
+                    };
+
+                    // Already logged - show feedback emojis
+                    if (status?.today_dinner?.made && !isDinnerEditing) {
+                      return (
+                        <div className="flex flex-col gap-2">
+                          <div className="flex justify-between items-center bg-gray-50 p-1 rounded">
+                            {['❤️', '👍', '😐', '👎', '❌'].map(emoji => (
+                              <button
+                                key={emoji}
+                                onClick={() => handleLogDay(true, emoji)}
+                                disabled={logLoading}
+                                className={`p-1 hover:scale-110 transition-transform ${status?.today_dinner?.kids_feedback?.includes(emoji) ? 'opacity-100' : 'opacity-40 grayscale'}`}
+                              >
+                                {emoji}
+                              </button>
+                            ))}
+                          </div>
+                          <button
+                            onClick={() => { setIsDinnerEditing(true); setDinnerEditInput(status?.today_dinner?.actual_meal || ''); }}
+                            className="text-[10px] text-[var(--text-muted)] hover:text-[var(--accent-sage)] underline decoration-dotted text-center"
+                          >
+                            🔧 Fix / Edit Actual Meal
+                          </button>
+                        </div>
+                      );
+                    }
+
+                    if (status?.today_dinner?.made && isDinnerEditing) {
+                      return (
+                        <div className="flex flex-col gap-2">
+                          <span className="text-[10px] text-[var(--text-muted)]">Correction / Actual meal:</span>
+                          <input
+                            type="text"
+                            value={dinnerEditInput}
+                            onChange={(e) => setDinnerEditInput(e.target.value)}
+                            placeholder="e.g., Actually had Pizza"
+                            className="w-full px-2 py-1 text-xs border border-[var(--border-subtle)] rounded focus:outline-none focus:ring-1 focus:ring-[var(--accent-sage)]"
+                            disabled={logLoading}
+                          />
+                          <div className="flex gap-2">
+                            <button
+                              onClick={handleDinnerEditSubmit}
+                              disabled={logLoading || !dinnerEditInput.trim()}
+                              className="flex-1 py-1 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
+                            >
+                              Save
+                            </button>
+                            <button
+                              onClick={() => setIsDinnerEditing(false)}
+                              disabled={logLoading}
+                              className="flex-1 py-1 border border-[var(--border-subtle)] text-xs rounded hover:bg-gray-50"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    }
+
+                    // Step 1: Made as planned or not?
+                    if (!showAlternatives) {
+                      return (
+                        <div className="flex flex-col gap-2">
+                          <button
+                            onClick={handleMadeAsPlanned}
+                            disabled={logLoading}
+                            className="w-full py-2 bg-[var(--accent-green)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
+                          >
+                            ✓ Made as Planned
+                          </button>
+                          <button
+                            onClick={handleNotMade}
+                            disabled={logLoading}
+                            className="w-full py-1 border border-[var(--border-subtle)] text-xs rounded hover:bg-gray-50 disabled:opacity-50"
+                          >
+                            ✗ Did Not Make
+                          </button>
+                        </div>
+                      );
+                    }
+
+                    // Step 2: What did you eat instead?
+                    if (!selectedAlternative) {
+                      return (
+                        <div className="flex flex-col gap-2">
+                          <span className="text-[10px] text-[var(--text-muted)] mb-1">What did you eat instead?</span>
+                          <button
+                            onClick={() => handleAlternativeSelect('freezer')}
+                            className="w-full py-2 bg-[var(--accent-terracotta)] text-white text-xs rounded hover:opacity-90"
+                          >
+                            🧊 Freezer Meal
+                          </button>
+                          <button
+                            onClick={() => handleAlternativeSelect('outside')}
+                            className="w-full py-2 bg-[var(--accent-gold)] text-white text-xs rounded hover:opacity-90"
+                          >
+                            🍽️ Ate Out / Restaurant
+                          </button>
+                          <button
+                            onClick={() => handleAlternativeSelect('other')}
+                            className="w-full py-2 border border-[var(--border-subtle)] text-xs rounded hover:bg-gray-50"
+                          >
+                            📝 Something Else
+                          </button>
+                        </div>
+                      );
+                    }
+
+                    // Step 3a: Select freezer meal
+                    if (selectedAlternative === 'freezer') {
+                      return (
+                        <div className="flex flex-col gap-2">
+                          <span className="text-[10px] text-[var(--text-muted)]">Select freezer meal used:</span>
+                          {freezerInventory.length > 0 ? (
+                            <div className="max-h-32 overflow-y-auto space-y-1">
+                              {freezerInventory.map((item: any, idx: number) => (
+                                <label key={idx} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded cursor-pointer">
+                                  <input
+                                    type="radio"
+                                    name="freezer-meal"
+                                    value={item.meal}
+                                    checked={selectedFreezerMeal === item.meal}
+                                    onChange={(e) => setSelectedFreezerMeal(e.target.value)}
+                                    className="w-4 h-4"
+                                  />
+                                  <span className="text-xs">{item.meal}</span>
+                                </label>
                               ))}
                             </div>
-                          );
-                        }
-
-                        // Step 1: Made as planned or not?
-                        if (!showAlternatives) {
-                          return (
-                            <div className="flex flex-col gap-2">
-                              <button
-                                onClick={handleMadeAsPlanned}
-                                disabled={logLoading}
-                                className="w-full py-2 bg-[var(--accent-green)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
-                              >
-                                ✓ Made as Planned
-                              </button>
-                              <button
-                                onClick={handleNotMade}
-                                disabled={logLoading}
-                                className="w-full py-1 border border-[var(--border-subtle)] text-xs rounded hover:bg-gray-50 disabled:opacity-50"
-                              >
-                                ✗ Did Not Make
-                              </button>
-                            </div>
-                          );
-                        }
-
-                        // Step 2: What did you eat instead?
-                        if (!selectedAlternative) {
-                          return (
-                            <div className="flex flex-col gap-2">
-                              <span className="text-[10px] text-[var(--text-muted)] mb-1">What did you eat instead?</span>
-                              <button
-                                onClick={() => handleAlternativeSelect('freezer')}
-                                className="w-full py-2 bg-[var(--accent-terracotta)] text-white text-xs rounded hover:opacity-90"
-                              >
-                                🧊 Freezer Meal
-                              </button>
-                              <button
-                                onClick={() => handleAlternativeSelect('outside')}
-                                className="w-full py-2 bg-[var(--accent-gold)] text-white text-xs rounded hover:opacity-90"
-                              >
-                                🍽️ Ate Out / Restaurant
-                              </button>
-                              <button
-                                onClick={() => handleAlternativeSelect('other')}
-                                className="w-full py-2 border border-[var(--border-subtle)] text-xs rounded hover:bg-gray-50"
-                              >
-                                📝 Something Else
-                              </button>
-                            </div>
-                          );
-                        }
-
-                        // Step 3a: Select freezer meal
-                        if (selectedAlternative === 'freezer') {
-                          return (
-                            <div className="flex flex-col gap-2">
-                              <span className="text-[10px] text-[var(--text-muted)]">Select freezer meal used:</span>
-                              {freezerInventory.length > 0 ? (
-                                <div className="max-h-32 overflow-y-auto space-y-1">
-                                  {freezerInventory.map((item: any, idx: number) => (
-                                    <label key={idx} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded cursor-pointer">
-                                      <input
-                                        type="radio"
-                                        name="freezer-meal"
-                                        value={item.meal}
-                                        checked={selectedFreezerMeal === item.meal}
-                                        onChange={(e) => setSelectedFreezerMeal(e.target.value)}
-                                        className="w-4 h-4"
-                                      />
-                                      <span className="text-xs">{item.meal}</span>
-                                    </label>
-                                  ))}
-                                </div>
-                              ) : (
-                                <p className="text-xs text-[var(--text-muted)] italic">No freezer inventory available</p>
-                              )}
-                              <button
-                                onClick={handleSubmitAlternative}
-                                disabled={logLoading || !selectedFreezerMeal}
-                                className="w-full py-2 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
-                              >
-                                Save
-                              </button>
-                              <button
-                                onClick={() => { setSelectedAlternative(null); setSelectedFreezerMeal(''); }}
-                                className="w-full py-1 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-                              >
-                                ← Back
-                              </button>
-                            </div>
-                          );
-                        }
-
-                        // Step 3b: Ate out confirmation
-                        if (selectedAlternative === 'outside') {
-                          return (
-                            <div className="flex flex-col gap-2">
-                              <span className="text-xs text-[var(--text-muted)]">Confirm: Ate at restaurant or ordered out</span>
-                              <button
-                                onClick={handleSubmitAlternative}
-                                disabled={logLoading}
-                                className="w-full py-2 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
-                              >
-                                Confirm
-                              </button>
-                              <button
-                                onClick={() => setSelectedAlternative(null)}
-                                className="w-full py-1 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-                              >
-                                ← Back
-                              </button>
-                            </div>
-                          );
-                        }
-
-                        // Step 3c: Something else - text input
-                        if (selectedAlternative === 'other') {
-                          return (
-                            <div className="flex flex-col gap-2">
-                              <span className="text-[10px] text-[var(--text-muted)]">What did you eat?</span>
-                              <input
-                                type="text"
-                                value={otherMealText}
-                                onChange={(e) => setOtherMealText(e.target.value)}
-                                placeholder="e.g., Leftovers, Sandwiches, Cereal"
-                                className="w-full px-2 py-1 text-xs border border-[var(--border-subtle)] rounded focus:outline-none focus:ring-1 focus:ring-[var(--accent-sage)]"
-                                disabled={logLoading}
-                              />
-                              <button
-                                onClick={handleSubmitAlternative}
-                                disabled={logLoading || !otherMealText.trim()}
-                                className="w-full py-2 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
-                              >
-                                Save
-                              </button>
-                              <button
-                                onClick={() => { setSelectedAlternative(null); setOtherMealText(''); }}
-                                className="w-full py-1 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-                              >
-                                ← Back
-                              </button>
-                            </div>
-                          );
-                        }
-
-                        return null;
-                      };
-
-                      return (
-                        <Card
-                          title="Dinner"
-                          icon="🍽️"
-                          content={status?.today_dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Nothing planned'}
-                          subtitle={status?.today_dinner?.vegetables ? `Veggies: ${status.today_dinner.vegetables.join(', ')}` : null}
-                          isConfirmed={status?.today_dinner?.made !== undefined}
-                          badge={status?.today_dinner?.made !== undefined ? (
-                            status.today_dinner.made === true ? '✓ Made' :
-                              status.today_dinner.made === 'freezer_backup' ? '🧊 Freezer' :
-                                status.today_dinner.made === 'outside_meal' ? '🍽️ Restaurant' :
-                                  status.today_dinner.actual_meal ? `✗ ${status.today_dinner.actual_meal}` :
-                                    '✗ Skipped'
-                          ) : null}
-                          action={<DinnerLogging />}
-                        />
+                          ) : (
+                            <p className="text-xs text-[var(--text-muted)] italic">No freezer inventory available</p>
+                          )}
+                          <button
+                            onClick={handleSubmitAlternative}
+                            disabled={logLoading || !selectedFreezerMeal}
+                            className="w-full py-2 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={() => { setSelectedAlternative(null); setSelectedFreezerMeal(''); }}
+                            className="w-full py-1 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                          >
+                            ← Back
+                          </button>
+                        </div>
                       );
-                    })()}
-                  </>
-                );
+                    }
+
+                    // Step 3b: Ate out confirmation
+                    if (selectedAlternative === 'outside') {
+                      return (
+                        <div className="flex flex-col gap-2">
+                          <span className="text-xs text-[var(--text-muted)]">Confirm: Ate at restaurant or ordered out</span>
+                          <button
+                            onClick={handleSubmitAlternative}
+                            disabled={logLoading}
+                            className="w-full py-2 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
+                          >
+                            Confirm
+                          </button>
+                          <button
+                            onClick={() => setSelectedAlternative(null)}
+                            className="w-full py-1 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                          >
+                            ← Back
+                          </button>
+                        </div>
+                      );
+                    }
+
+                    // Step 3c: Something else - text input
+                    if (selectedAlternative === 'other') {
+                      return (
+                        <div className="flex flex-col gap-2">
+                          <span className="text-[10px] text-[var(--text-muted)]">What did you eat?</span>
+                          <input
+                            type="text"
+                            value={otherMealText}
+                            onChange={(e) => setOtherMealText(e.target.value)}
+                            placeholder="e.g., Leftovers, Sandwiches, Cereal"
+                            className="w-full px-2 py-1 text-xs border border-[var(--border-subtle)] rounded focus:outline-none focus:ring-1 focus:ring-[var(--accent-sage)]"
+                            disabled={logLoading}
+                          />
+                          <button
+                            onClick={handleSubmitAlternative}
+                            disabled={logLoading || !otherMealText.trim()}
+                            className="w-full py-2 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={() => { setSelectedAlternative(null); setOtherMealText(''); }}
+                            className="w-full py-1 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                          >
+                            ← Back
+                          </button>
+                        </div>
+                      );
+                    }
+
+                    return null;
+                  };
+
+                  return (
+                    <Card
+                      title="Dinner"
+                      icon="🍽️"
+                      content={status?.today_dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Nothing planned'}
+                      subtitle={status?.today_dinner?.vegetables ? `Veggies: ${status.today_dinner.vegetables.join(', ')}` : null}
+                      isConfirmed={status?.today_dinner?.made !== undefined}
+                      badge={status?.today_dinner?.made !== undefined ? (
+                        status.today_dinner.made === true ? (status.today_dinner.actual_meal ? `✓ Made (${status.today_dinner.actual_meal})` : '✓ Made') :
+                          status.today_dinner.made === 'freezer_backup' ? '🧊 Freezer' :
+                            status.today_dinner.made === 'outside_meal' ? '🍽️ Restaurant' :
+                              status.today_dinner.actual_meal ? `✗ ${status.today_dinner.actual_meal}` :
+                                '✗ Skipped'
+                      ) : null}
+                      action={<DinnerLogging />}
+                    />
+                  );
+                })()}
+              </>
+              );
               })()}
             </div>
 

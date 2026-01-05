@@ -184,12 +184,12 @@ export default function WeekView() {
                 </div>
 
                 <div className="space-y-3 text-sm">
-                  <div className={`pb-2 border-b border-[var(--border-subtle)] ${dinner?.made !== undefined ? 'opacity-60 grayscale-[0.5]' : ''}`}>
+                  <div className={`pb-2 border-b border-[var(--border-subtle)] ${(dinner?.made === true || dinner?.made === false || typeof dinner?.made === 'string') && !dinner?.needs_fix ? 'opacity-60 grayscale-[0.5]' : ''}`}>
                     <div className="flex justify-between items-start">
                       <span className="font-mono text-xs text-[var(--text-muted)] uppercase">Dinner</span>
                       {getFeedbackBadge(dailyFeedback?.dinner_feedback || dinner?.kids_feedback, dinner?.made, dinner?.needs_fix)}
                     </div>
-                    <p className={`font-medium mt-1 ${dinner?.made !== undefined ? 'text-[var(--text-muted)]' : 'text-[var(--text-primary)]'}`}>
+                    <p className={`font-medium mt-1 ${(dinner?.made === true || dinner?.made === false || typeof dinner?.made === 'string') && !dinner?.needs_fix ? 'text-[var(--text-muted)]' : 'text-[var(--text-primary)]'}`}>
                       {dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Not planned'}
                     </p>
                     {dinner?.vegetables && dinner.vegetables.length > 0 && (
@@ -199,12 +199,12 @@ export default function WeekView() {
                     )}
                   </div>
 
-                  <div className={`pb-2 border-b border-[var(--border-subtle)] ${dailyFeedback?.kids_lunch_made !== undefined ? 'opacity-60 grayscale-[0.5]' : ''}`}>
+                  <div className={`pb-2 border-b border-[var(--border-subtle)] ${(dailyFeedback?.kids_lunch_made === true || dailyFeedback?.kids_lunch_made === false) && !dailyFeedback?.kids_lunch_needs_fix ? 'opacity-60 grayscale-[0.5]' : ''}`}>
                     <div className="flex justify-between items-start">
                       <span className="font-mono text-xs text-[var(--text-muted)] uppercase">Kids Lunch</span>
                       {getFeedbackBadge(dailyFeedback?.kids_lunch, dailyFeedback?.kids_lunch_made, dailyFeedback?.kids_lunch_needs_fix)}
                     </div>
-                    <p className={`mt-1 ${dailyFeedback?.kids_lunch_made !== undefined ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>
+                    <p className={`mt-1 ${(dailyFeedback?.kids_lunch_made === true || dailyFeedback?.kids_lunch_made === false) && !dailyFeedback?.kids_lunch_needs_fix ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>
                       {lunch?.recipe_name || 'Leftovers'}
                     </p>
                     {lunch?.assembly_notes && (
@@ -212,12 +212,12 @@ export default function WeekView() {
                     )}
                   </div>
 
-                  <div className={`pb-2 border-b border-[var(--border-subtle)] ${dailyFeedback?.adult_lunch_made !== undefined ? 'opacity-60 grayscale-[0.5]' : ''}`}>
+                  <div className={`pb-2 border-b border-[var(--border-subtle)] ${(dailyFeedback?.adult_lunch_made === true || dailyFeedback?.adult_lunch_made === false) && !dailyFeedback?.adult_lunch_needs_fix ? 'opacity-60 grayscale-[0.5]' : ''}`}>
                     <span className="font-mono text-xs text-[var(--text-muted)] uppercase">Adult Lunch</span>
-                    <p className={`mt-1 ${dailyFeedback?.adult_lunch_made !== undefined ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>Leftovers</p>
+                    <p className={`mt-1 ${(dailyFeedback?.adult_lunch_made === true || dailyFeedback?.adult_lunch_made === false) && !dailyFeedback?.adult_lunch_needs_fix ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>Leftovers</p>
                   </div>
 
-                  <div className={`pb-2 border-b border-[var(--border-subtle)] ${dailyFeedback?.school_snack_made !== undefined ? 'opacity-60 grayscale-[0.5]' : ''}`}>
+                  <div className={`pb-2 border-b border-[var(--border-subtle)] ${(dailyFeedback?.school_snack_made === true || dailyFeedback?.school_snack_made === false) && !dailyFeedback?.school_snack_needs_fix ? 'opacity-60 grayscale-[0.5]' : ''}`}>
                     <div className="flex justify-between items-start">
                       <span className="font-mono text-xs text-[var(--text-muted)] uppercase">School Snack</span>
                       {getFeedbackBadge(dailyFeedback?.school_snack, dailyFeedback?.school_snack_made, dailyFeedback?.school_snack_needs_fix)}
@@ -279,7 +279,7 @@ export default function WeekView() {
                   const dailyFeedback = weekData.daily_feedback?.[day];
                   const isToday = status?.current_day === day;
                   const needsFix = dailyFeedback?.kids_lunch_needs_fix;
-                  const isConfirmed = dailyFeedback?.kids_lunch_made !== undefined;
+                  const isConfirmed = (dailyFeedback?.kids_lunch_made === true || dailyFeedback?.kids_lunch_made === false) && !needsFix;
                   return (
                     <td
                       key={day}
@@ -313,7 +313,7 @@ export default function WeekView() {
                   const dailyFeedback = weekData.daily_feedback?.[day];
                   const isToday = status?.current_day === day;
                   const needsFix = dailyFeedback?.school_snack_needs_fix;
-                  const isConfirmed = dailyFeedback?.school_snack_made !== undefined;
+                  const isConfirmed = (dailyFeedback?.school_snack_made === true || dailyFeedback?.school_snack_made === false) && !needsFix;
                   return (
                     <td
                       key={day}
@@ -344,7 +344,7 @@ export default function WeekView() {
                   const dailyFeedback = weekData.daily_feedback?.[day];
                   const isToday = status?.current_day === day;
                   const needsFix = dailyFeedback?.home_snack_needs_fix;
-                  const isConfirmed = dailyFeedback?.home_snack_made !== undefined;
+                  const isConfirmed = (dailyFeedback?.home_snack_made === true || dailyFeedback?.home_snack_made === false) && !needsFix;
                   return (
                     <td
                       key={day}
@@ -372,7 +372,7 @@ export default function WeekView() {
                   const dailyFeedback = weekData.daily_feedback?.[day];
                   const isToday = status?.current_day === day;
                   const needsFix = dinner?.needs_fix;
-                  const isConfirmed = dinner?.made !== undefined;
+                  const isConfirmed = (dinner?.made === true || dinner?.made === false || typeof dinner?.made === 'string') && !needsFix;
 
                   // Construct recipe link
                   const dinnerName = dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Not planned';

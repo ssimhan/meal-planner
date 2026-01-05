@@ -154,6 +154,11 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 
 ### Phase 11: Future Enhancements (Backlog)
 -   [x] **Recipe Importer**: Paste URL → auto-extract and add to index. (COMPLETED 2026-01-04)
+-   **Lazy Loading Recipe Details**: Optimize token usage by only loading full recipe data for selected weekly dinners
+    -   Currently reads all 226 recipes from `recipes/index.yml` during plan generation
+    -   Refactor to load metadata index first, then fetch full details only for 5-7 selected recipes
+    -   Reduce context window usage by ~80-90% during planning
+    -   Implement recipe detail caching for API performance
 -   **Prep Completion Tracking**: Add daily check-in question "What prep have you completed?" during re-plan workflow
     -   Track completed prep tasks in `history.yml` (e.g., "chopped vegetables", "batch cooked dal", "prepped lunches")
     -   Refresh remaining prep suggestions based on what's already done

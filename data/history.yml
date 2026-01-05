@@ -81,7 +81,7 @@ weeks:
     - carrot
     - peas
     - tomato
-    made: true
+    made: null
     vegetables_used:
     - bell pepper
     - carrot
@@ -93,6 +93,7 @@ weeks:
     - tomato
     made_2x_for_freezer: true
     actual_meal: Doubled Chickpea Wraps
+    needs_fix: true
   - recipe_id: curried_cauliflower_quinoa_salad
     cuisine: mediterranean
     meal_type: salad

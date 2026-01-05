@@ -104,3 +104,32 @@ def commit_multiple_files_to_github(repo_name, file_dict, commit_message):
     except Exception as e:
         print(f"Error committing multiple files to GitHub: {e}")
         return False
+
+def get_file_from_github(repo_name, file_path):
+    """Fetches a file content from GitHub."""
+    g = get_github_client()
+    if not g:
+        return None
+    try:
+        repo = g.get_repo(repo_name)
+        contents = repo.get_contents(str(file_path))
+        return base64.b64decode(contents.content).decode('utf-8')
+    except Exception as e:
+        # Don't print error for 404s, it might be expected
+        if not (isinstance(e, GithubException) and e.status == 404):
+            print(f"Error fetching {file_path} from GitHub: {e}")
+        return None
+
+def list_files_in_dir_from_github(repo_name, dir_path):
+    """Lists file paths in a directory on GitHub."""
+    g = get_github_client()
+    if not g:
+        return []
+    try:
+        repo = g.get_repo(repo_name)
+        contents = repo.get_contents(str(dir_path))
+        return [c.path for c in contents if c.type == 'file']
+    except Exception as e:
+        if not (isinstance(e, GithubException) and e.status == 404):
+            print(f"Error listing {dir_path} on GitHub: {e}")
+        return []

@@ -16,12 +16,12 @@ export default function Dashboard() {
   const [completedPrep, setCompletedPrep] = useState<string[]>([]);
 
   useEffect(() => {
-    fetchStatus();
+    fetchStatus(true);
   }, []);
 
-  async function fetchStatus() {
+  async function fetchStatus(isInitial = false) {
     try {
-      setLoading(true);
+      if (isInitial) setLoading(true);
       const data = await getStatus();
       setStatus(data);
       // Initialize completed prep from backend
@@ -33,16 +33,18 @@ export default function Dashboard() {
       setError('Failed to connect to the meal planner brain.');
       console.error(err);
     } finally {
-      setLoading(false);
+      if (isInitial) setLoading(false);
     }
   }
 
   async function handleCreateWeek() {
     try {
       setActionLoading(true);
+      setSuccess(null);
       await createWeek();
-      setSuccess({ message: 'New week initialization started!' });
-      await fetchStatus();
+      setSuccess({ message: 'New week initialized on GitHub. Syncing dashboard...' });
+      await fetchStatus(false);
+      setSuccess({ message: 'New week ready!' });
     } catch (err: any) {
       setError(err.message || 'Failed to create new week');
     } finally {
@@ -54,19 +56,15 @@ export default function Dashboard() {
     if (!vegInput.trim()) return;
     try {
       setActionLoading(true);
+      setSuccess(null);
       const vegList = vegInput.split(',').map(v => v.trim()).filter(v => v);
-      const updatedStatus = await confirmVeg(vegList);
+      await confirmVeg(vegList);
 
-      // Use the status returned by the API to update UI immediately
-      if (updatedStatus && updatedStatus.state) {
-        setStatus(prev => ({ ...prev, ...updatedStatus }));
-      }
-
-      setSuccess({ message: 'Vegetables confirmed! You can now generate the plan.' });
+      setSuccess({ message: 'Vegetables confirmed! Syncing dashboard...' });
       setVegInput('');
 
-      // Still fetch status as a background sync but the UI is already updated
-      await fetchStatus();
+      await fetchStatus(false);
+      setSuccess({ message: 'Vegetables confirmed! You can now generate the plan.' });
     } catch (err: any) {
       setError(err.message || 'Failed to confirm vegetables');
     } finally {
@@ -191,7 +189,7 @@ export default function Dashboard() {
     }
   }
 
-  if (loading) {
+  if (loading && !status) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
         <div className="text-[var(--accent-green)] font-mono animate-pulse">
@@ -639,7 +637,7 @@ export default function Dashboard() {
                                 Save
                               </button>
                               <button
-                                onClick={() => {setSelectedAlternative(null); setSelectedFreezerMeal('');}}
+                                onClick={() => { setSelectedAlternative(null); setSelectedFreezerMeal(''); }}
                                 className="w-full py-1 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
                               >
                                 ← Back
@@ -691,7 +689,7 @@ export default function Dashboard() {
                                 Save
                               </button>
                               <button
-                                onClick={() => {setSelectedAlternative(null); setOtherMealText('');}}
+                                onClick={() => { setSelectedAlternative(null); setOtherMealText(''); }}
                                 className="w-full py-1 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
                               >
                                 ← Back
@@ -711,10 +709,10 @@ export default function Dashboard() {
                           subtitle={status?.today_dinner?.vegetables ? `Veggies: ${status.today_dinner.vegetables.join(', ')}` : null}
                           badge={status?.today_dinner?.made !== undefined ? (
                             status.today_dinner.made === true ? '✓ Made' :
-                            status.today_dinner.made === 'freezer_backup' ? '🧊 Freezer' :
-                            status.today_dinner.made === 'outside_meal' ? '🍽️ Restaurant' :
-                            status.today_dinner.actual_meal ? `✗ ${status.today_dinner.actual_meal}` :
-                            '✗ Skipped'
+                              status.today_dinner.made === 'freezer_backup' ? '🧊 Freezer' :
+                                status.today_dinner.made === 'outside_meal' ? '🍽️ Restaurant' :
+                                  status.today_dinner.actual_meal ? `✗ ${status.today_dinner.actual_meal}` :
+                                    '✗ Skipped'
                           ) : null}
                           action={<DinnerLogging />}
                         />

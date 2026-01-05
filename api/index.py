@@ -22,40 +22,123 @@ import yaml
 app = Flask(__name__)
 CORS(app) # Enable CORS for all routes
 
+def get_actual_path(rel_path):
+    is_vercel = os.environ.get('VERCEL') == '1'
+    if is_vercel:
+        tmp_path = Path("/tmp") / rel_path
+        if tmp_path.exists():
+            return tmp_path
+    return Path(rel_path)
+
+def get_yaml_data(rel_path):
+    """Fetches YAML data, prioritizing GitHub Truth on Vercel."""
+    is_vercel = os.environ.get('VERCEL') == '1'
+    repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
+    from scripts.github_helper import get_file_from_github
+    
+    if is_vercel:
+        content = get_file_from_github(repo_name, rel_path)
+        if content:
+            # Sync to /tmp for other scripts
+            tmp_path = Path("/tmp") / rel_path
+            os.makedirs(tmp_path.parent, exist_ok=True)
+            with open(tmp_path, 'w') as f:
+                f.write(content)
+            return yaml.safe_load(content)
+            
+    # Fallback to local
+    path = Path(rel_path)
+    if path.exists():
+        with open(path, 'r') as f:
+            return yaml.safe_load(f)
+    return None
+
 @app.route("/api/status")
 def get_status():
     try:
-        from scripts.workflow import archive_expired_weeks, get_workflow_state, find_current_week_file
+        from scripts.workflow import get_workflow_state, find_current_week_file, archive_expired_weeks
+        from scripts.github_helper import get_file_from_github, list_files_in_dir_from_github
+        
+        repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
+        is_vercel = os.environ.get('VERCEL') == '1'
+
+        # Helper to sync a file from GitHub to /tmp
+        def sync_file(rel_path):
+            if not is_vercel: return Path(rel_path)
+            content = get_file_from_github(repo_name, rel_path)
+            if content:
+                tmp_path = Path("/tmp") / rel_path
+                os.makedirs(tmp_path.parent, exist_ok=True)
+                with open(tmp_path, 'w') as f:
+                    f.write(content)
+                return tmp_path
+            return Path(rel_path)
+
+        # 0. Background sync key files
+        if is_vercel:
+            sync_file('data/history.yml')
+            sync_file('data/inventory.yml')
+            sync_file('config.yml')
+            # Also sync any new files in inputs/
+            input_files = list_files_in_dir_from_github(repo_name, "inputs")
+            for f in input_files:
+                sync_file(f)
+
+        # Now we can use the local (or /tmp) files
+        # We need to tell the scripts where the files are. 
+        # For simplicity, we can pass absolute paths or let them find them if we change CWD.
+        # But our scripts often use relative paths.
+        
+        # We'll patch the environment or just use the local path if it exists in /tmp
+        def get_actual_path(rel_path):
+            if is_vercel:
+                tmp_path = Path("/tmp") / rel_path
+                if tmp_path.exists():
+                    return tmp_path
+            return Path(rel_path)
+
         try:
+            # Note: archive_expired_weeks might still fail to write, which is handled
             archive_expired_weeks()
         except Exception as e:
-            print(f"Warning: Failed to archive expired weeks (likely read-only filesystem): {e}")
+            print(f"Warning: Failed to archive: {e}")
         
         from datetime import datetime, timedelta
         import pytz
 
-        # Use Pacific timezone for all date/time operations
         pacific_tz = pytz.timezone('America/Los_Angeles')
         today = datetime.now(pacific_tz)
 
-        # Try to find the most relevant week for the dashboard
-        # Priority: This week if it exists, otherwise next week
         monday = today - timedelta(days=today.weekday())
         week_str = monday.strftime('%Y-%m-%d')
 
-        input_file = Path(f'inputs/{week_str}.yml')
+        input_file = get_actual_path(f'inputs/{week_str}.yml')
+        
         if not input_file.exists():
-            # Fallback to next Monday if today is late in the week
             if today.weekday() >= 4: # Friday or later
                 next_monday = monday + timedelta(days=7)
                 week_str = next_monday.strftime('%Y-%m-%d')
-                input_file = Path(f'inputs/{week_str}.yml')
+                input_file = get_actual_path(f'inputs/{week_str}.yml')
             else:
-                input_file, week_str = find_current_week_file()
+                # find_current_week_file needs to look in /tmp on Vercel
+                if is_vercel:
+                    # Monkeypatch find_current_week_file for this request? 
+                    # No, let's just implement a simple version here or use absolute paths.
+                    inputs_dir = Path("/tmp/inputs")
+                    if inputs_dir.exists():
+                        input_files = sorted(inputs_dir.glob('*.yml'))
+                        for f in input_files:
+                            with open(f, 'r') as yf:
+                                data = yaml.safe_load(yf)
+                                if data.get('workflow', {}).get('status') != 'plan_complete':
+                                    input_file = f
+                                    week_str = data.get('week_of')
+                                    break
+                else:
+                    input_file, week_str = find_current_week_file()
 
         state, data = get_workflow_state(input_file)
 
-        # Determine current day context for the dashboard (using Pacific time)
         current_day = today.strftime('%a').lower()[:3]
 
         today_dinner = None
@@ -65,9 +148,7 @@ def get_status():
             "home": "Cucumber or Crackers"
         }
         prep_tasks = []
-        week_data = None
         
-        # Default snacks from workflow.py
         DEFAULT_SNACKS = {
             'mon': 'Apple slices with peanut butter',
             'tue': 'Cheese and crackers',
@@ -79,10 +160,16 @@ def get_status():
 
         if state in ['active', 'waiting_for_checkin']:
             from scripts.log_execution import load_history, find_week
-            history = load_history()
+            
+            # Use safe loading for history
+            history_path = get_actual_path('data/history.yml')
+            history = {}
+            if history_path.exists():
+                with open(history_path, 'r') as f:
+                    history = yaml.safe_load(f) or {}
+            
             history_week = find_week(history, week_str)
 
-            # Load feedback data from daily_feedback
             if history_week and 'daily_feedback' in history_week:
                 day_feedback = history_week['daily_feedback'].get(current_day, {})
                 if 'school_snack' in day_feedback:
@@ -94,35 +181,26 @@ def get_status():
                 if 'home_snack_made' in day_feedback:
                     today_snacks['home_snack_made'] = day_feedback['home_snack_made']
             
-            # 1. Identify Dinners (History takes priority, then Input file)
             dinners = []
             if history_week and 'dinners' in history_week:
                 dinners = history_week['dinners']
-            elif data and 'dinners' in data: # Some systems store it in input
+            elif data and 'dinners' in data:
                 dinners = data['dinners']
-            elif data and 'schedule' in data: # Older systems
-                # This depends on how data is structured in the input yml
-                pass
             
             for dinner in dinners:
                 if dinner.get('day') == current_day:
                     today_dinner = dinner
                     break
             
-            # 2. Identify Lunches
             history_lunches = history_week.get('lunches', {}) if history_week else {}
             if current_day in history_lunches:
                 today_lunch = history_lunches[current_day]
-            elif data and 'selected_lunches' in data: # Check if saved in input
+            elif data and 'selected_lunches' in data:
                 today_lunch = data['selected_lunches'].get(current_day)
-
-            # 3. If still no lunch, it might be that workflow.py hasn't saved it to history yet
-            # but it was passed to generate_html_plan. We should really save it to history.
 
             if not today_lunch:
                  today_lunch = {"recipe_name": "Leftovers or Simple Lunch", "prep_style": "quick_fresh"}
 
-            # Add lunch feedback from daily_feedback
             if history_week and 'daily_feedback' in history_week:
                 day_feedback = history_week['daily_feedback'].get(current_day, {})
                 if 'kids_lunch' in day_feedback:
@@ -131,6 +209,39 @@ def get_status():
                     today_lunch['kids_lunch_made'] = day_feedback['kids_lunch_made']
                 if 'adult_lunch' in day_feedback:
                     today_lunch['adult_lunch_feedback'] = day_feedback['adult_lunch']
+                if 'adult_lunch_made' in day_feedback:
+                    today_lunch['adult_lunch_made'] = day_feedback['adult_lunch_made']
+
+        # Prep tasks - extract from input data
+        if data and 'prep_tasks' in data:
+            prep_tasks = data.get('prep_tasks', [])
+        
+        # Inventory for freezer selection
+        if is_vercel:
+            inventory_path = Path("/tmp/data/inventory.yml")
+        else:
+            inventory_path = Path("data/inventory.yml")
+            
+        inventory = {}
+        if inventory_path.exists():
+            with open(inventory_path, 'r') as f:
+                inventory = yaml.safe_load(f) or {}
+        
+        return jsonify({
+            "week_of": week_str,
+            "state": state,
+            "current_day": current_day,
+            "today_dinner": today_dinner,
+            "today_lunch": today_lunch,
+            "today_snacks": today_snacks,
+            "prep_tasks": prep_tasks,
+            "week_data": {
+                "freezer_inventory": inventory.get('freezer', [])
+            }
+        })
+    except Exception as e:
+        import traceback
+        return jsonify({"status": "error", "message": str(e), "traceback": traceback.format_exc()}), 500unch['adult_lunch_feedback'] = day_feedback['adult_lunch']
                 if 'adult_lunch_made' in day_feedback:
                     today_lunch['adult_lunch_made'] = day_feedback['adult_lunch_made']
 
@@ -217,13 +328,9 @@ def get_status():
 @app.route("/api/recipes")
 def get_recipes():
     try:
-        index_path = Path('recipes/index.yml')
-        if not index_path.exists():
+        recipes = get_yaml_data('recipes/index.yml')
+        if recipes is None:
             return jsonify({"status": "error", "message": "Recipe index not found"}), 404
-        
-        with open(index_path, 'r') as f:
-            recipes = yaml.safe_load(f)
-        
         return jsonify({"status": "success", "recipes": recipes})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
@@ -231,13 +338,9 @@ def get_recipes():
 @app.route("/api/inventory")
 def get_inventory():
     try:
-        inventory_path = Path('data/inventory.yml')
-        if not inventory_path.exists():
+        inventory = get_yaml_data('data/inventory.yml')
+        if inventory is None:
             return jsonify({"status": "error", "message": "Inventory file not found"}), 404
-        
-        with open(inventory_path, 'r') as f:
-            inventory = yaml.safe_load(f)
-        
         return jsonify({"status": "success", "inventory": inventory})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
@@ -245,17 +348,13 @@ def get_inventory():
 @app.route("/api/history")
 def get_history():
     try:
-        history_path = Path('data/history.yml')
-        if not history_path.exists():
+        history = get_yaml_data('data/history.yml')
+        if history is None:
             return jsonify({"status": "error", "message": "History file not found"}), 404
-        
-        with open(history_path, 'r') as f:
-            history = yaml.safe_load(f)
-        
         return jsonify({
             "status": "success", 
             "history": history,
-            "count": len(history) if history else 0
+            "count": len(history.get('weeks', [])) if history else 0
         })
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
@@ -305,12 +404,15 @@ def log_meal():
         # Refactoring log_execution to be more library-friendly would be better, 
         # but let's see if we can just import the core functions.
         
-        from scripts.log_execution import load_history, find_week, calculate_adherence, update_inventory_file, save_history
+        from scripts.log_execution import find_week, calculate_adherence, update_inventory_file, save_history
         from datetime import datetime
         
-        history = load_history()
-        week = find_week(history, week_str)
+        history = get_yaml_data('data/history.yml')
         
+        if not history:
+            return jsonify({"status": "error", "message": "History file not found"}), 404
+            
+        week = find_week(history, week_str)
         if not week:
             return jsonify({"status": "error", "message": f"Week {week_str} not found"}), 404
             
@@ -487,7 +589,6 @@ def create_week():
                 }
             }
         
-        # Create input data structure
         input_data = {
             'week_of': week_str,
             'timezone': config.get('timezone', 'America/Los_Angeles'),
@@ -509,14 +610,12 @@ def create_week():
         rollover_recipes = []
         prev_monday = datetime.strptime(week_str, '%Y-%m-%d') - timedelta(days=7)
         prev_monday_str = prev_monday.strftime('%Y-%m-%d')
-        if history_path.exists():
-            with open(history_path, 'r') as f:
-                history = yaml.safe_load(f)
-                if history:
-                    for week in history.get('weeks', []):
-                        if week.get('week_of') == prev_monday_str:
-                            rollover_recipes = week.get('rollover', [])
-                            break
+        history = get_yaml_data('data/history.yml')
+        if history:
+            for week in history.get('weeks', []):
+                if week.get('week_of') == prev_monday_str:
+                    rollover_recipes = week.get('rollover', [])
+                    break
         
         if rollover_recipes:
             input_data['rollover'] = rollover_recipes
@@ -570,8 +669,9 @@ def confirm_veg():
              return jsonify({"status": "error", "message": f"Input file {input_file} not found"}), 404
 
         # 1. Update Input File
-        with open(input_file, 'r') as f:
-            week_data = yaml.safe_load(f)
+        week_data = get_yaml_data(str(input_file))
+        if not week_data:
+             return jsonify({"status": "error", "message": f"Could not load input file {input_file}"}), 404
             
         if 'farmers_market' not in week_data:
             week_data['farmers_market'] = {}
@@ -580,8 +680,8 @@ def confirm_veg():
         week_data['farmers_market']['status'] = 'confirmed'
         
         # 2. Update History File
-        from scripts.log_execution import load_history, find_week, save_history
-        history = load_history()
+        from scripts.log_execution import find_week, save_history
+        history = get_yaml_data('data/history.yml') or {'weeks': []}
         history_week = find_week(history, week_str)
         if not history_week:
             # Create week in history if it doesn't exist (unlikely but safe)
@@ -591,11 +691,7 @@ def confirm_veg():
         history_week['fridge_vegetables'] = confirmed_veg
 
         # 3. Update Inventory File
-        inventory_path = Path('data/inventory.yml')
-        inventory = {}
-        if inventory_path.exists():
-            with open(inventory_path, 'r') as f:
-                inventory = yaml.safe_load(f) or {}
+        inventory = get_yaml_data('data/inventory.yml') or {}
         
         if 'fridge' not in inventory: inventory['fridge'] = []
         
@@ -662,12 +758,8 @@ def add_inventory():
         if not category or not item:
             return jsonify({"status": "error", "message": "Category and item required"}), 400
             
+        inventory = get_yaml_data('data/inventory.yml') or {}
         inventory_path = Path('data/inventory.yml')
-        if not inventory_path.exists():
-             return jsonify({"status": "error", "message": "Inventory file not found"}), 404
-
-        with open(inventory_path, 'r') as f:
-            inventory = yaml.safe_load(f) or {}
             
         if category == 'meals':
             if 'freezer' not in inventory: inventory['freezer'] = {}
@@ -725,12 +817,8 @@ def bulk_add_inventory():
         if not items:
             return jsonify({"status": "error", "message": "No items provided"}), 400
             
+        inventory = get_yaml_data('data/inventory.yml') or {}
         inventory_path = Path('data/inventory.yml')
-        if not inventory_path.exists():
-             return jsonify({"status": "error", "message": "Inventory file not found"}), 404
-
-        with open(inventory_path, 'r') as f:
-            inventory = yaml.safe_load(f) or {}
             
         for entry in items:
             category = entry.get('category')

@@ -99,30 +99,35 @@ def get_status():
         monday = today - timedelta(days=today.weekday())
         week_str = monday.strftime('%Y-%m-%d')
 
-        input_file = get_actual_path(f'inputs/{week_str}.yml')
+        input_file = None
+        week_str = None
         
-        if not input_file.exists():
-            if today.weekday() >= 4: # Friday or later
+        # 1. Look for incomplete weeks (planning in progress)
+        if is_vercel:
+            inputs_dir = Path("/tmp/inputs")
+            if inputs_dir.exists():
+                for f in sorted(inputs_dir.glob('*.yml')):
+                    with open(f, 'r') as yf:
+                        try:
+                            data = yaml.safe_load(yf)
+                            if data and data.get('workflow', {}).get('status') != 'plan_complete':
+                                input_file = f
+                                week_str = data.get('week_of')
+                                break
+                        except: continue
+        else:
+            input_file, week_str = find_current_week_file()
+
+        # 2. Fallback to current calendar week if no incomplete week found
+        if not input_file:
+            monday = today - timedelta(days=today.weekday())
+            week_str = monday.strftime('%Y-%m-%d')
+            input_file = get_actual_path(f'inputs/{week_str}.yml')
+            # If that doesn't exist either, check if we're looking ahead to next week
+            if not input_file.exists() and today.weekday() >= 4:
                 next_monday = monday + timedelta(days=7)
                 week_str = next_monday.strftime('%Y-%m-%d')
                 input_file = get_actual_path(f'inputs/{week_str}.yml')
-            else:
-                # find_current_week_file needs to look in /tmp on Vercel
-                if is_vercel:
-                    inputs_dir = Path("/tmp/inputs")
-                    if inputs_dir.exists():
-                        input_files = sorted(inputs_dir.glob('*.yml'))
-                        found = False
-                        for f in input_files:
-                            with open(f, 'r') as yf:
-                                data = yaml.safe_load(yf)
-                                if data.get('workflow', {}).get('status') != 'plan_complete':
-                                    input_file = f
-                                    week_str = data.get('week_of')
-                                    found = True
-                                    break
-                else:
-                    input_file, week_str = find_current_week_file()
 
         state, data = get_workflow_state(input_file)
         current_day = today.strftime('%a').lower()[:3]

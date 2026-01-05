@@ -106,11 +106,11 @@ def get_status():
         if is_vercel:
             inputs_dir = Path("/tmp/inputs")
             if inputs_dir.exists():
-                for f in sorted(inputs_dir.glob('*.yml')):
+                for f in sorted(inputs_dir.glob('*.yml'), reverse=True):
                     with open(f, 'r') as yf:
                         try:
                             data = yaml.safe_load(yf)
-                            if data and data.get('workflow', {}).get('status') != 'plan_complete':
+                            if data and data.get('workflow', {}).get('status') not in ('plan_complete', 'archived'):
                                 input_file = f
                                 week_str = data.get('week_of')
                                 break

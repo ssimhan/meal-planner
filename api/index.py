@@ -84,19 +84,6 @@ def get_status():
             for f in input_files:
                 sync_file(f)
 
-        # Now we can use the local (or /tmp) files
-        # We need to tell the scripts where the files are. 
-        # For simplicity, we can pass absolute paths or let them find them if we change CWD.
-        # But our scripts often use relative paths.
-        
-        # We'll patch the environment or just use the local path if it exists in /tmp
-        def get_actual_path(rel_path):
-            if is_vercel:
-                tmp_path = Path("/tmp") / rel_path
-                if tmp_path.exists():
-                    return tmp_path
-            return Path(rel_path)
-
         try:
             # Note: archive_expired_weeks might still fail to write, which is handled
             archive_expired_weeks()
@@ -122,23 +109,22 @@ def get_status():
             else:
                 # find_current_week_file needs to look in /tmp on Vercel
                 if is_vercel:
-                    # Monkeypatch find_current_week_file for this request? 
-                    # No, let's just implement a simple version here or use absolute paths.
                     inputs_dir = Path("/tmp/inputs")
                     if inputs_dir.exists():
                         input_files = sorted(inputs_dir.glob('*.yml'))
+                        found = False
                         for f in input_files:
                             with open(f, 'r') as yf:
                                 data = yaml.safe_load(yf)
                                 if data.get('workflow', {}).get('status') != 'plan_complete':
                                     input_file = f
                                     week_str = data.get('week_of')
+                                    found = True
                                     break
                 else:
                     input_file, week_str = find_current_week_file()
 
         state, data = get_workflow_state(input_file)
-
         current_day = today.strftime('%a').lower()[:3]
 
         today_dinner = None
@@ -158,35 +144,19 @@ def get_status():
         }
         today_snacks["school"] = DEFAULT_SNACKS.get(current_day, "Fruit")
 
+        history_week = None
         if state in ['active', 'waiting_for_checkin']:
-            from scripts.log_execution import load_history, find_week
-            
-            # Use safe loading for history
-            history_path = get_actual_path('data/history.yml')
-            history = {}
-            if history_path.exists():
-                with open(history_path, 'r') as f:
-                    history = yaml.safe_load(f) or {}
-            
+            from scripts.log_execution import find_week
+            history = get_yaml_data('data/history.yml') or {}
             history_week = find_week(history, week_str)
 
             if history_week and 'daily_feedback' in history_week:
                 day_feedback = history_week['daily_feedback'].get(current_day, {})
-                if 'school_snack' in day_feedback:
-                    today_snacks['school_snack_feedback'] = day_feedback['school_snack']
-                if 'school_snack_made' in day_feedback:
-                    today_snacks['school_snack_made'] = day_feedback['school_snack_made']
-                if 'home_snack' in day_feedback:
-                    today_snacks['home_snack_feedback'] = day_feedback['home_snack']
-                if 'home_snack_made' in day_feedback:
-                    today_snacks['home_snack_made'] = day_feedback['home_snack_made']
+                for key in ['school_snack', 'school_snack_made', 'home_snack', 'home_snack_made']:
+                    if key in day_feedback:
+                        today_snacks[key + ('_feedback' if 'feedback' not in key and 'made' not in key else '')] = day_feedback[key]
             
-            dinners = []
-            if history_week and 'dinners' in history_week:
-                dinners = history_week['dinners']
-            elif data and 'dinners' in data:
-                dinners = data['dinners']
-            
+            dinners = history_week.get('dinners', []) if history_week else (data.get('dinners', []) if data else [])
             for dinner in dinners:
                 if dinner.get('day') == current_day:
                     today_dinner = dinner
@@ -203,108 +173,25 @@ def get_status():
 
             if history_week and 'daily_feedback' in history_week:
                 day_feedback = history_week['daily_feedback'].get(current_day, {})
-                if 'kids_lunch' in day_feedback:
-                    today_lunch['kids_lunch_feedback'] = day_feedback['kids_lunch']
-                if 'kids_lunch_made' in day_feedback:
-                    today_lunch['kids_lunch_made'] = day_feedback['kids_lunch_made']
-                if 'adult_lunch' in day_feedback:
-                    today_lunch['adult_lunch_feedback'] = day_feedback['adult_lunch']
-                if 'adult_lunch_made' in day_feedback:
-                    today_lunch['adult_lunch_made'] = day_feedback['adult_lunch_made']
+                for key in ['kids_lunch', 'kids_lunch_made', 'adult_lunch', 'adult_lunch_made']:
+                    if key in day_feedback:
+                        today_lunch[key + ('_feedback' if 'feedback' not in key and 'made' not in key else '')] = day_feedback[key]
 
-        # Prep tasks - extract from input data
+        # Extract completed prep tasks from history
+        completed_prep = []
+        if history_week and 'daily_feedback' in history_week:
+            for day_idx, feedback in history_week['daily_feedback'].items():
+                if 'prep_completed' in feedback:
+                    completed_prep.extend(feedback['prep_completed'])
+
+        # Prep tasks from input data if available
         if data and 'prep_tasks' in data:
             prep_tasks = data.get('prep_tasks', [])
-        
-        # Inventory for freezer selection
-        if is_vercel:
-            inventory_path = Path("/tmp/data/inventory.yml")
-        else:
-            inventory_path = Path("data/inventory.yml")
-            
-        inventory = {}
-        if inventory_path.exists():
-            with open(inventory_path, 'r') as f:
-                inventory = yaml.safe_load(f) or {}
-        
-        return jsonify({
-            "week_of": week_str,
-            "state": state,
-            "current_day": current_day,
-            "today_dinner": today_dinner,
-            "today_lunch": today_lunch,
-            "today_snacks": today_snacks,
-            "prep_tasks": prep_tasks,
-            "week_data": {
-                "freezer_inventory": inventory.get('freezer', [])
-            }
-        })
-    except Exception as e:
-        import traceback
-        return jsonify({"status": "error", "message": str(e), "traceback": traceback.format_exc()}), 500unch['adult_lunch_feedback'] = day_feedback['adult_lunch']
-                if 'adult_lunch_made' in day_feedback:
-                    today_lunch['adult_lunch_made'] = day_feedback['adult_lunch_made']
 
-            # Prep Tasks Logic - Generate granular tasks using workflow logic
-            from scripts.workflow import generate_granular_prep_tasks, fuzzy_match_prep_task
-
-            # Extract completed prep tasks from history
-            completed_prep = []
-            if history_week and 'daily_feedback' in history_week:
-                for day, feedback in history_week['daily_feedback'].items():
-                    if 'prep_completed' in feedback:
-                        completed_prep.extend(feedback['prep_completed'])
-
-            # Build selected_dinners dict for granular task generation
-            selected_dinners = {}
-            for dinner in dinners:
-                day = dinner.get('day')
-                if day:
-                    # Load recipe details to get main_veg
-                    recipe_id = dinner.get('recipe_id')
-                    if recipe_id:
-                        try:
-                            index_path = Path('recipes/index.yml')
-                            if index_path.exists():
-                                with open(index_path, 'r') as f:
-                                    recipes = yaml.safe_load(f)
-                                    for recipe in recipes:
-                                        if recipe.get('id') == recipe_id:
-                                            selected_dinners[day] = recipe
-                                            break
-                        except Exception as e:
-                            print(f"Warning: Could not load recipe {recipe_id}: {e}")
-
-            # Build selected_lunches dict
-            selected_lunches = {}
-            # For now, we'll use empty prep_components as lunch data isn't fully structured
-            # This will be enhanced when LunchSelector is integrated
-
-            # Generate prep tasks based on day
-            if current_day == 'mon':
-                prep_tasks = generate_granular_prep_tasks(selected_dinners, selected_lunches, ['mon', 'tue'], "Mon/Tue", completed_prep)
-                prep_tasks.extend(['Portion snacks into grab-and-go containers for early week', 'Identify freezer-friendly dinner to double (batch cook)'])
-            elif current_day == 'tue':
-                am_tasks = ["Assemble Tuesday lunch", "Portion Monday's batch-cooked items", "Check freezer backup inventory (verify 3 meals)"]
-                am_tasks = [task for task in am_tasks if not fuzzy_match_prep_task(task, completed_prep)]
-                pm_tasks = generate_granular_prep_tasks(selected_dinners, selected_lunches, ['wed', 'thu', 'fri'], "Wed-Fri", completed_prep)
-                pm_tasks.append('Portion snacks for rest of week')
-                prep_tasks = [{"task": t, "time": "am"} for t in am_tasks] + [{"task": t, "time": "pm"} for t in pm_tasks]
-            elif current_day == 'wed':
-                prep_tasks = ['Finish any remaining veg/lunch prep for Thu/Fri', 'Load Instant Pot or slow cooker for Thursday if needed', 'Final check: All Thu/Fri components ready']
-                prep_tasks = [task for task in prep_tasks if not fuzzy_match_prep_task(task, completed_prep)]
-            elif current_day == 'thu':
-                prep_tasks = ['Light prep allowed (8-9am) if needed', 'NO chopping after noon', 'NO evening prep - only reheating/assembly', 'Fallback: Use freezer backup if energy is depleted']
-                prep_tasks = [task for task in prep_tasks if not fuzzy_match_prep_task(task, completed_prep)]
-            elif current_day == 'fri':
-                prep_tasks = ['ALL DAY: NO chopping allowed', 'ALL DAY: NO cooking allowed - only reheating', 'Only actions: reheating, simple assembly', 'Fallback: Use freezer backup if energy is depleted']
-
-        # Extract completed prep for current day for frontend checkbox initialization
         completed_prep_today = []
-        if state in ['active', 'waiting_for_checkin'] and history_week and 'daily_feedback' in history_week:
+        if history_week and 'daily_feedback' in history_week:
             day_feedback = history_week['daily_feedback'].get(current_day, {})
-            if 'prep_completed' in day_feedback:
-                completed_prep_today = day_feedback['prep_completed']
+            completed_prep_today = day_feedback.get('prep_completed', [])
 
         return jsonify({
             "week_of": week_str,
@@ -320,10 +207,9 @@ def get_status():
             "week_data": history_week if state in ['active', 'waiting_for_checkin'] else data
         })
     except Exception as e:
-        return jsonify({
-            "status": "error",
-            "message": str(e)
-        }), 500
+        import traceback
+        print(traceback.format_exc())
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route("/api/recipes")
 def get_recipes():

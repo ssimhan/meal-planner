@@ -280,12 +280,22 @@ def log_meal():
         # Prep completion tracking
         prep_completed = data.get('prep_completed', [])  # Array of completed task strings
 
+        # Needs Fix flags
+        school_snack_needs_fix = data.get('school_snack_needs_fix')
+        home_snack_needs_fix = data.get('home_snack_needs_fix')
+        kids_lunch_needs_fix = data.get('kids_lunch_needs_fix')
+        adult_lunch_needs_fix = data.get('adult_lunch_needs_fix')
+        dinner_needs_fix = data.get('dinner_needs_fix')
+
         # Allow logging feedback without a "made" status for snacks/lunch
         if not week_str or not day:
             return jsonify({"status": "error", "message": "Week and day are required"}), 400
 
         # If we're only logging snack/lunch feedback, skip dinner validation
-        is_feedback_only = (school_snack_feedback or home_snack_feedback or kids_lunch_feedback or adult_lunch_feedback) and not made
+        is_feedback_only = (school_snack_feedback or home_snack_feedback or kids_lunch_feedback or adult_lunch_feedback or
+                            school_snack_needs_fix is not None or home_snack_needs_fix is not None or
+                            kids_lunch_needs_fix is not None or adult_lunch_needs_fix is not None or
+                            dinner_needs_fix is not None) and not made
 
         if not is_feedback_only and not made:
             return jsonify({"status": "error", "message": "Made status is required for dinner logging"}), 400
@@ -307,11 +317,11 @@ def log_meal():
         if not week:
             return jsonify({"status": "error", "message": f"Week {week_str} not found"}), 404
             
-        # Find dinner (only required if not feedback-only)
+        # Find dinner (required if not feedback-only OR if we have dinner feedback/fix)
         target_day = day.lower()[:3]
         target_dinner = None
 
-        if not is_feedback_only:
+        if not is_feedback_only or dinner_needs_fix is not None:
             for dinner in week.get('dinners', []):
                 if dinner.get('day') == target_day:
                     target_dinner = dinner
@@ -358,12 +368,17 @@ def log_meal():
 
             if actual_meal: target_dinner['actual_meal'] = actual_meal
             if reason: target_dinner['reason'] = reason
+            
+        if target_dinner and dinner_needs_fix is not None:
+            target_dinner['needs_fix'] = dinner_needs_fix
 
         # Store snack/lunch feedback at the day level
         if (school_snack_feedback is not None or home_snack_feedback is not None or
             kids_lunch_feedback is not None or adult_lunch_feedback is not None or
             school_snack_made is not None or home_snack_made is not None or
-            kids_lunch_made is not None or adult_lunch_made is not None):
+            kids_lunch_made is not None or adult_lunch_made is not None or
+            school_snack_needs_fix is not None or home_snack_needs_fix is not None or
+            kids_lunch_needs_fix is not None or adult_lunch_needs_fix is not None):
             if 'daily_feedback' not in week:
                 week['daily_feedback'] = {}
             if target_day not in week['daily_feedback']:
@@ -388,6 +403,15 @@ def log_meal():
                 week['daily_feedback'][target_day]['adult_lunch'] = adult_lunch_feedback
             if adult_lunch_made is not None:
                 week['daily_feedback'][target_day]['adult_lunch_made'] = adult_lunch_made
+
+            if school_snack_needs_fix is not None:
+                week['daily_feedback'][target_day]['school_snack_needs_fix'] = school_snack_needs_fix
+            if home_snack_needs_fix is not None:
+                week['daily_feedback'][target_day]['home_snack_needs_fix'] = home_snack_needs_fix
+            if kids_lunch_needs_fix is not None:
+                week['daily_feedback'][target_day]['kids_lunch_needs_fix'] = kids_lunch_needs_fix
+            if adult_lunch_needs_fix is not None:
+                week['daily_feedback'][target_day]['adult_lunch_needs_fix'] = adult_lunch_needs_fix
 
             # Store prep completion data
             if prep_completed and len(prep_completed) > 0:

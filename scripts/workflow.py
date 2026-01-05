@@ -420,6 +420,35 @@ def generate_meal_plan(input_file, data):
             lunch = selected_lunches[day]
             print(f"  {day.upper()}: {lunch.recipe_name} ({lunch.prep_style})")
 
+    # Add weekend defaults (Sat/Sun)
+    weekend_days = ['sat', 'sun']
+    from lunch_selector import LunchSuggestion # Import specifically if not available
+    
+    for day in weekend_days:
+        # Default Dinner
+        selected_dinners[day] = {
+            'name': 'Make at home',
+            'id': 'make_at_home',
+            'cuisine': 'various', 
+            'meal_type': 'weekend_meal',
+            'main_veg': []
+        }
+        
+        # Default Lunch
+        selected_lunches[day] = LunchSuggestion(
+            recipe_id=f'weekend_lunch_{day}',
+            recipe_name='Make at home',
+            kid_friendly=True,
+            prep_style='fresh',
+            prep_components=[],
+            storage_days=0,
+            prep_day=day,
+            assembly_notes='Weekend flexibility',
+            reuses_ingredients=[],
+            default_option=None,
+            kid_profiles=None
+        )
+
     # Generate plan file
     print("\n[5/5] Writing plan file...")
     plans_dir = Path('public/plans')
@@ -1691,25 +1720,18 @@ def generate_weekend_tabs():
     html.append('            </div>')
     html.append('')
     html.append('            <div class="section" style="background: rgba(212, 165, 116, 0.08); padding: 20px; border-radius: 2px; margin: 20px 0;">')
-    html.append('                <h4 style="color: var(--accent-terracotta); margin-bottom: 10px;">☀️ Weekend Flexibility</h4>')
-    html.append('                <p style="font-size: var(--text-sm); color: var(--text-muted);">Meals for Saturday and Sunday are intentionally left flexible to allow for dining out, travel, or using up leftovers from the week.</p>')
+    html.append('                <h4 style="color: var(--accent-terracotta); margin-bottom: 10px;">🏠 Weekend Meals</h4>')
+    html.append('                <p style="font-size: var(--text-sm); color: var(--text-muted);">Meals for Saturday are set to "Make at home" by default. Check the dashboard to update what you actually made and identify any leftovers.</p>')
     html.append('            </div>')
     html.append('')
     html.append('            <div class="lunch-section">')
-    html.append('                <h4>🥪 Lunch</h4>')
-    html.append('                <p><strong>Family:</strong> Flexible - leftovers, eating out, or simple weekend meal</p>')
-    html.append('                <p><strong>Suggestions:</strong> Use up any remaining ingredients from the week</p>')
-    html.append('            </div>')
-    html.append('')
-    html.append('            <div class="snacks">')
-    html.append('                <h4>🍪 Snack</h4>')
-    html.append('                <p style="font-size: var(--text-sm); margin-top: 8px;">Fresh fruit or any remaining prepped snacks from the week</p>')
+    html.append('                <h4>🥪 Kids Lunch</h4>')
+    html.append('                <p><strong>Plan:</strong> Make at home</p>')
     html.append('            </div>')
     html.append('')
     html.append('            <div class="meal-card">')
     html.append('                <h3>🍽️ Dinner</h3>')
-    html.append('                <div class="meal-type">Flexible Weekend Meal</div>')
-    html.append('                <p style="padding: 0 16px 16px 16px; font-size: var(--text-sm);">Enjoy a meal out or cook something simple with remaining ingredients.</p>')
+    html.append('                <div class="meal-type">Make at home</div>')
     html.append('            </div>')
     html.append('')
     html.append('            <div class="prep-tasks">')
@@ -1741,13 +1763,14 @@ def generate_weekend_tabs():
     html.append('            </div>')
     html.append('')
     html.append('            <div class="lunch-section">')
-    html.append('                <h4>🥪 Lunch</h4>')
-    html.append('                <p><strong>Family:</strong> Simple meal - leftovers or easy weekend option</p>')
+    html.append('                <h4>🥪 Kids Lunch</h4>')
+    html.append('                <p><strong>Plan:</strong> Make at home</p>')
     html.append('            </div>')
     html.append('')
     html.append('            <div class="meal-card">')
     html.append('                <h3>🍽️ Dinner</h3>')
-    html.append('                <div class="meal-type">Flexible Weekend Meal</div>')
+    html.append('                <div class="meal-type">Make at home</div>')
+    html.append('            </div>')
     html.append('                <p style="padding: 0 16px 16px 16px; font-size: var(--text-sm);">Rest day - no cooking or prep in the evening. Save your energy for Monday prep!</p>')
     html.append('            </div>')
     html.append('')
@@ -2159,7 +2182,7 @@ def update_history(history_path, inputs, selected_dinners, selected_lunches=None
         'lunches': {}
     }
 
-    days = ['mon', 'tue', 'wed', 'thu', 'fri']
+    days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
     for day in days:
         if day in selected_dinners:
             recipe = selected_dinners[day]

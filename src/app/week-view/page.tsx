@@ -43,8 +43,8 @@ export default function WeekView() {
   }
 
   const weekData = status.week_data;
-  const days = ['mon', 'tue', 'wed', 'thu', 'fri'];
-  const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+  const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+  const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   // Helper to get feedback status badge
   const getFeedbackBadge = (feedback?: string, made?: boolean, needsFix?: boolean) => {
@@ -233,7 +233,7 @@ export default function WeekView() {
                       {getFeedbackBadge(dailyFeedback?.home_snack, dailyFeedback?.home_snack_made, dailyFeedback?.home_snack_needs_fix)}
                     </div>
                     <p className={`mt-1 ${dailyFeedback?.home_snack_made !== undefined ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>
-                      {snacks?.home || 'TBD'}
+                      {!(day === 'sat' || day === 'sun') ? (snacks?.home || 'TBD') : '-'}
                     </p>
                   </div>
                 </div>
@@ -306,6 +306,9 @@ export default function WeekView() {
                   🎒 School Snack
                 </td>
                 {days.map((day, idx) => {
+                  if (day === 'sat' || day === 'sun') {
+                    return <td key={day} className="p-4 text-sm border-b border-[var(--border-subtle)] bg-gray-50 text-center text-[var(--text-muted)]">-</td>;
+                  }
                   const snacks = weekData.snacks?.[day];
                   const dailyFeedback = weekData.daily_feedback?.[day];
                   const isToday = status?.current_day === day;
@@ -334,6 +337,9 @@ export default function WeekView() {
                   🏠 Home Snack
                 </td>
                 {days.map((day, idx) => {
+                  if (day === 'sat' || day === 'sun') {
+                    return <td key={day} className="p-4 text-sm border-b border-[var(--border-subtle)] bg-gray-50 text-center text-[var(--text-muted)]">-</td>;
+                  }
                   const snacks = weekData.snacks?.[day];
                   const dailyFeedback = weekData.daily_feedback?.[day];
                   const isToday = status?.current_day === day;

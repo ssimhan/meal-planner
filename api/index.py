@@ -457,23 +457,100 @@ def create_week():
         if not week_str:
             _, week_str = find_current_week_file()
         
-        from scripts.workflow import create_new_week
-        # This will still fail on Vercel if it tries to write locally without catching errors
-        # Ideally create_new_week should be refactored too, but let's see if we can patch it
-        # closer to the source or if we just need to handle the output.
-        # For now, let's assume create_new_week might fail to write but we can
-        # still sync if we generate the content in memory. 
-        # Actually create_new_week is too complex to inline here efficiently.
-        # Let's trust that we can run it and just catch the write error if needed?
-        # A better approach for create_week is needed later, but focusing on confirm_veg first.
+        # Generate farmers market proposal
+        from scripts.workflow import generate_farmers_market_proposal
+        from datetime import timedelta
         
-        create_new_week(week_str)
+        history_path = Path('data/history.yml')
+        index_path = Path('recipes/index.yml')
+        
+        proposed_veg, staples = generate_farmers_market_proposal(history_path, index_path)
+        
+        # Load configuration
+        config_path = Path('config.yml')
+        if config_path.exists():
+            with open(config_path, 'r') as f:
+                config = yaml.safe_load(f)
+        else:
+            # Fallback defaults
+            config = {
+                'timezone': 'America/Los_Angeles',
+                'schedule': {
+                    'office_days': ['mon', 'wed', 'fri'],
+                    'busy_days': ['thu', 'fri'],
+                    'late_class_days': [],
+                },
+                'preferences': {
+                    'vegetarian': True,
+                    'avoid_ingredients': ['eggplant', 'mushrooms', 'green_cabbage'],
+                    'novelty_recipe_limit': 1,
+                }
+            }
+        
+        # Create input data structure
+        input_data = {
+            'week_of': week_str,
+            'timezone': config.get('timezone', 'America/Los_Angeles'),
+            'workflow': {
+                'status': 'intake_complete',
+                'created_at': datetime.now().isoformat(),
+                'updated_at': datetime.now().isoformat(),
+            },
+            'schedule': config.get('schedule', {}),
+            'preferences': config.get('preferences', {}),
+            'farmers_market': {
+                'status': 'proposed',
+                'proposed_veg': proposed_veg + staples,
+                'confirmed_veg': [],
+            }
+        }
+        
+        # Check for rollover from previous week
+        rollover_recipes = []
+        prev_monday = datetime.strptime(week_str, '%Y-%m-%d') - timedelta(days=7)
+        prev_monday_str = prev_monday.strftime('%Y-%m-%d')
+        if history_path.exists():
+            with open(history_path, 'r') as f:
+                history = yaml.safe_load(f)
+                if history:
+                    for week in history.get('weeks', []):
+                        if week.get('week_of') == prev_monday_str:
+                            rollover_recipes = week.get('rollover', [])
+                            break
+        
+        if rollover_recipes:
+            input_data['rollover'] = rollover_recipes
+        
+        # Generate YAML content in memory
+        yaml_content = yaml.dump(input_data, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        
+        # Try to write locally if possible (for local development)
+        output_file = f"inputs/{week_str}.yml"
+        try:
+            inputs_dir = Path('inputs')
+            inputs_dir.mkdir(exist_ok=True)
+            with open(output_file, 'w') as f:
+                f.write(yaml_content)
+        except OSError:
+            # Read-only filesystem (Vercel), skip local write
+            pass
         
         # Sync to GitHub
-        from scripts.github_helper import sync_changes_to_github
-        sync_changes_to_github([f"inputs/{week_str}.yml"])
+        from scripts.github_helper import commit_file_to_github
+        repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
         
-        return jsonify({"status": "success", "message": f"Created week {week_str}"})
+        success = commit_file_to_github(repo_name, output_file, f"Create new week {week_str}", content=yaml_content)
+        
+        if not success:
+            return jsonify({"status": "error", "message": "Failed to sync to GitHub"}), 500
+        
+        return jsonify({
+            "status": "success", 
+            "message": f"Created week {week_str}",
+            "week_of": week_str,
+            "proposed_veg": proposed_veg + staples,
+            "rollover_count": len(rollover_recipes)
+        })
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 

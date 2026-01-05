@@ -10,19 +10,37 @@ from datetime import datetime
 HISTORY_FILE = Path('data/history.yml')
 INVENTORY_FILE = Path('data/inventory.yml')
 
+import os
+
+def get_actual_path(rel_path):
+    is_vercel = os.environ.get('VERCEL') == '1'
+    if is_vercel:
+        tmp_path = Path("/tmp") / rel_path
+        # For writing, we need to ensure the directory exists in /tmp
+        os.makedirs(tmp_path.parent, exist_ok=True)
+        return tmp_path
+    return Path(rel_path)
+
 def load_history():
     """Load history.yml or return empty structure."""
-    if not HISTORY_FILE.exists():
-        print(f"Error: {HISTORY_FILE} not found.")
+    path = get_actual_path('data/history.yml')
+    if not path.exists():
+        # Fallback to local if /tmp doesn't have it yet
+        path = Path('data/history.yml')
+    
+    if not path.exists():
+        print(f"Error: {path} not found.")
         sys.exit(1)
     
-    with open(HISTORY_FILE, 'r') as f:
+    with open(path, 'r') as f:
         return yaml.safe_load(f) or {'weeks': []}
 
 def save_history(history):
     """Save updated history to history.yml."""
-    with open(HISTORY_FILE, 'w') as f:
+    path = get_actual_path('data/history.yml')
+    with open(path, 'w') as f:
         yaml.dump(history, f, default_flow_style=False, sort_keys=False)
+    print(f"Saved history to {path}")
 
 def find_week(history, week_date):
     """Find the week entry in history."""
@@ -57,11 +75,15 @@ def calculate_adherence(week):
 
 def update_inventory_file(args, used_veggies=None):
     """Update the master data/inventory.yml file."""
-    if not INVENTORY_FILE.exists():
+    path = get_actual_path('data/inventory.yml')
+    if not path.exists():
+        path = Path('data/inventory.yml')
+        
+    if not path.exists():
         return
 
     try:
-        with open(INVENTORY_FILE, 'r') as f:
+        with open(path, 'r') as f:
             inventory = yaml.safe_load(f) or {}
         
         updated = False
@@ -110,7 +132,7 @@ def update_inventory_file(args, used_veggies=None):
 
         if updated:
             inventory['last_updated'] = datetime.now().strftime('%Y-%m-%d')
-            with open(INVENTORY_FILE, 'w') as f:
+            with open(path, 'w') as f:
                 yaml.dump(inventory, f, default_flow_style=False, sort_keys=False)
                 
     except Exception as e:

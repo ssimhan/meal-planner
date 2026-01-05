@@ -28,18 +28,25 @@ def commit_file_to_github(repo_name, file_path, commit_message, content=None):
         print(f"Error getting repo {repo_name}: {e}")
         return False
 
+    # Path in repo should be relative to root
+    rel_path = str(file_path)
+    
+    # On Vercel, we must read from /tmp if we want the latest changes we just wrote
+    is_vercel = os.environ.get('VERCEL') == '1'
     if content is None:
         try:
-            with open(file_path, 'r') as f:
+            actual_read_path = file_path
+            if is_vercel:
+                tmp_path = Path("/tmp") / rel_path
+                if tmp_path.exists():
+                    actual_read_path = tmp_path
+            
+            with open(actual_read_path, 'r') as f:
                 content = f.read()
+            print(f"Read content for {rel_path} from {actual_read_path}")
         except Exception as e:
             print(f"Error reading local file {file_path}: {e}")
             return False
-
-    # Path in repo should be relative to root
-    # If the file_path is already relative, use it. If absolute, we need to make it relative.
-    # For now assume it's relative from the root of the project.
-    rel_path = str(file_path)
 
     try:
         # Check if file exists to get its SHA

@@ -328,7 +328,16 @@ def log_meal():
                     break
 
             if not target_dinner:
-                return jsonify({"status": "error", "message": f"No dinner found for {target_day}"}), 404
+                # Create a placeholder dinner if it doesn't exist (e.g. for weekends or unplanned meals)
+                target_dinner = {
+                    'day': target_day,
+                    'recipe_id': 'unplanned_meal',
+                    'cuisine': 'various',
+                    'vegetables': []
+                }
+                if 'dinners' not in week: week['dinners'] = []
+                week['dinners'].append(target_dinner)
+                print(f"Created placeholder dinner for {target_day}")
 
             # Update execution data
             if str(made).lower() in ('yes', 'true', '1', 'y'):
@@ -378,7 +387,8 @@ def log_meal():
             school_snack_made is not None or home_snack_made is not None or
             kids_lunch_made is not None or adult_lunch_made is not None or
             school_snack_needs_fix is not None or home_snack_needs_fix is not None or
-            kids_lunch_needs_fix is not None or adult_lunch_needs_fix is not None):
+            kids_lunch_needs_fix is not None or adult_lunch_needs_fix is not None or
+            (prep_completed is not None and len(prep_completed) > 0)):
             if 'daily_feedback' not in week:
                 week['daily_feedback'] = {}
             if target_day not in week['daily_feedback']:

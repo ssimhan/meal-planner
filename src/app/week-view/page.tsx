@@ -159,12 +159,10 @@ export default function WeekView() {
   };
 
   const CorrectionInput = ({ day, type, currentValue, onCancel }: { day: string, type: string, currentValue?: string, onCancel: () => void }) => {
-    const [saving, setSaving] = useState(false);
-
     const onSave = async (mealName: string, requestRecipe: boolean) => {
-      setSaving(true);
       await handleCorrectionSave(day, type, mealName, requestRecipe);
-      setSaving(false);
+      // The component will automatically unmount when status refreshes
+      // because needs_fix is set to false in handleCorrectionSave
     };
 
     return (

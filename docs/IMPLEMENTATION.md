@@ -89,10 +89,10 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 - [x] **Mobile Responsive Dashboard**: Grid uses `grid-cols-1 md:grid-cols-2 lg:grid-cols-5` (cards stack vertically on mobile)
 - [x] **Full Week View**: Dedicated `/week-view` page with table layout (desktop) and card layout (mobile)
 
-**2. Smart Personalization (Effort: Medium)**
-- [ ] **Kid Profiles**: Update `lunch_selector.py` to handle multiple kid profiles (e.g., specific preferences/allergies like "Akira: nuts ok" vs "Anya: no nuts").
-- [ ] **Synced Lunches**: Logic to sync varying kid requirements (e.g., same base meal, different sides) and prioritize "loved" dinner leftovers for lunch.
-- [ ] **Snack Intelligence**: Update recipe metadata to distinguish between "School Safe" (room temp stable) and "Home Only" (warm/cold) snacks.
+**2. Smart Personalization (Effort: Medium) - COMPLETED 2026-01-04**
+- [x] **Kid Profiles**: Update `lunch_selector.py` to handle multiple kid profiles (e.g., specific preferences/allergies like "Akira: nuts ok" vs "Anya: no nuts").
+- [x] **Synced Lunches**: Logic to sync varying kid requirements (e.g., same base meal, different sides) and prioritize "loved" dinner leftovers for lunch.
+- [x] **Snack Intelligence**: Update recipe metadata to distinguish between "School Safe" (room temp stable) and "Home Only" (warm/cold) snacks.
 
 **3. Core Flow Optimization (Effort: High)**
 - [ ] **Leftover Optimizer**: Explicitly plan Dinner -> Lunch pipelines in the weekly generation logic.

@@ -15,5 +15,14 @@ preferences:
     - green_cabbage
   novelty_recipe_limit: 1
 
+kid_profiles:
+  Akira:
+    preferences: []
+    avoid_ingredients: []
+  Anya:
+    preferences: []
+    avoid_ingredients:
+      - nuts
+
 workflows:
   daily_check_in_time: "0 4 * * *" # 8pm PST

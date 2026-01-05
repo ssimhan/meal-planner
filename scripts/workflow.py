@@ -923,11 +923,14 @@ def generate_lunch_html(lunch_suggestion, day_name):
     html.append('            <div class="lunch-section">')
     html.append('                <h4>🥪 Lunch</h4>')
 
-    if lunch_suggestion.default_option:
+    # 1. Kids Section
+    if hasattr(lunch_suggestion, 'kid_profiles') and lunch_suggestion.kid_profiles:
+        # Per-profile display
+        for name, desc in lunch_suggestion.kid_profiles.items():
+            html.append(f'                <p><strong>{name}:</strong> {desc}</p>')
+    elif lunch_suggestion.default_option:
         # Using default repeatable option
         html.append(f'                <p><strong>Kids (2):</strong> {lunch_suggestion.recipe_name}</p>')
-        html.append(f'                <p><strong>Adult (1):</strong> Leftovers or grain bowl</p>')
-        html.append(f'                <p><strong>Prep:</strong> {lunch_suggestion.assembly_notes}</p>')
     else:
         # Using actual recipe
         html.append(f'                <p><strong>Kids (2):</strong> {lunch_suggestion.recipe_name}')
@@ -935,24 +938,31 @@ def generate_lunch_html(lunch_suggestion, day_name):
             html.append(' 👶')
         html.append('</p>')
 
+    # 2. Adult Section
+    if lunch_suggestion.default_option:
+        html.append(f'                <p><strong>Adult (1):</strong> Leftovers or grain bowl</p>')
+    else:
         html.append(f'                <p><strong>Adult (1):</strong> Leftovers or grain bowl with dinner components</p>')
 
+    # 3. Components (Non-default only)
+    if not lunch_suggestion.default_option:
         if lunch_suggestion.prep_components:
             components_str = ', '.join(lunch_suggestion.prep_components)
             html.append(f'                <p><strong>Components:</strong> {components_str}')
         else:
             html.append(f'                <p><strong>Components:</strong> Fresh ingredients')
-
+        
         if lunch_suggestion.reuses_ingredients:
             reused_str = ', '.join(lunch_suggestion.reuses_ingredients)
             html.append(f' <span style="color: var(--accent-sage);">♻️ Reuses: {reused_str}</span>')
         html.append('</p>')
 
-        html.append(f'                <p><strong>Prep:</strong> {lunch_suggestion.assembly_notes}</p>')
+    # 4. Prep (Always)
+    html.append(f'                <p><strong>Prep:</strong> {lunch_suggestion.assembly_notes}</p>')
 
-        # Add storage info if component-based
-        if lunch_suggestion.prep_style == 'component_based' and lunch_suggestion.storage_days > 0:
-            html.append(f'                <p style="font-size: var(--text-xs); color: var(--text-muted);"><em>Components last {lunch_suggestion.storage_days} days refrigerated</em></p>')
+    # 5. Storage (Non-default only)
+    if not lunch_suggestion.default_option and lunch_suggestion.prep_style == 'component_based' and lunch_suggestion.storage_days > 0:
+        html.append(f'                <p style="font-size: var(--text-xs); color: var(--text-muted);"><em>Components last {lunch_suggestion.storage_days} days refrigerated</em></p>')
 
     html.append('            </div>')
     return '\n'.join(html)
@@ -1116,7 +1126,18 @@ def generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe
         
         if selected_lunches and day_key in selected_lunches:
             lunch = selected_lunches[day_key]
-            kids_lunch = lunch.recipe_name
+            
+            if hasattr(lunch, 'kid_profiles') and lunch.kid_profiles:
+                 # Create summary line e.g. "Akira: PBJ / Anya: Sunbutter"
+                 # Simplify descriptions if they are long
+                 parts = []
+                 for n, d in lunch.kid_profiles.items():
+                     # If description is same as recipe name, just show name? 
+                     # Or just show "Name: Desc"
+                     parts.append(f"{n}: {d}")
+                 kids_lunch = " <br> ".join(parts)
+            else:
+                kids_lunch = lunch.recipe_name
             if lunch.default_option:
                 adult_lunch = 'Leftovers or grain bowl'
             else:
@@ -1215,17 +1236,58 @@ def generate_snack_section(day_key, late_class_days):
 
     is_late_class = day_key in late_class_days
 
+    def make_school_safe(snack_name):
+        """Substitute nut ingredients for school safety."""
+        safety_map = {
+            'peanut butter': 'Sunbutter',
+            'almond butter': 'Sunbutter',
+            'cashew': 'seeds',
+            'walnut': 'seeds',
+            'pecan': 'seeds',
+            'almond': 'seeds',
+            'nut': 'seed'
+        }
+        
+        safe_name = snack_name
+        changed = False
+        
+        for restricted, sub in safety_map.items():
+            if restricted in safe_name.lower():
+                safe_name = re.sub(re.escape(restricted), sub, safe_name, flags=re.IGNORECASE)
+                changed = True
+                
+        return safe_name, changed
+
+    html.append('            <div class="snacks">')
+    
+    # 1. School Snack
+    original_snack = default_snacks.get(day_key, "Simple snack")
+    safe_snack, changed = make_school_safe(original_snack)
+    html.append(f'                <h4>🏫 School Snack</h4>')
+    html.append(f'                <p style="font-size: var(--text-sm); margin-top: 4px;">{safe_snack}</p>')
+
+    # 2. Home Snack
+    # Only show if different OR if it's the weekend/after school context (but here we just show both for clarity)
+    # Actually, let's show "Home Snack" only if we had to change it? 
+    # Or just always show "After School Snack" separately?
+    # The prompt implies differentiation. "School Snack" vs "Home Snack".
+    
+    if changed:
+        html.append(f'                <h4 style="margin-top: 12px; color: var(--text-default);">🏠 Home Snack</h4>')
+        html.append(f'                <p style="font-size: var(--text-sm); margin-top: 4px;">{original_snack} (Nuts OK)</p>')
+    
+    html.append('            </div>')
+
     if is_late_class:
         html.append('            <div class="heavy-snack">')
         html.append('                <h4>🍎 Heavy Snack (Late Class Day)</h4>')
-        heavy_snack = 'Apple slices with peanut butter' if day_key == 'thu' else 'Banana with almond butter'
+        heavy_snack_original = 'Apple slices with peanut butter' if day_key == 'thu' else 'Banana with almond butter'
+        heavy_snack_safe, changed = make_school_safe(heavy_snack_original)
+        
         html.append(f'                <p style="font-size: var(--text-sm);">Format: Fruit + protein/fat for sustained energy</p>')
-        html.append(f'                <p><strong>{heavy_snack}</strong></p>')
-        html.append('            </div>')
-    else:
-        html.append('            <div class="snacks">')
-        html.append('                <h4>🍪 Snack</h4>')
-        html.append(f'                <p style="font-size: var(--text-sm); margin-top: 8px;">{default_snacks.get(day_key, "Simple snack")}</p>')
+        html.append(f'                <p><strong>{heavy_snack_safe}</strong></p>')
+        if changed:
+             html.append(f'                <p style="font-size: var(--text-xs); color: var(--text-muted);">(Home: {heavy_snack_original} ok)</p>')
         html.append('            </div>')
 
     return html

@@ -778,3 +778,12 @@ freezer_inventory:
 - **Mobile-First Matters:** Vertical stacking on mobile is critical (most logging happens on phone in kitchen)
 
 **Status:** Phase 10 logging system complete. Only remaining item: Full Week View page.
+
+### [2026-01-04] Smart Personalization & Snack Intelligence
+- **Goal:** Implement specific kid profiles (allergies/preferences) and context-aware snack logic.
+- **Changes:**
+  - Updated `config.yml` with `kid_profiles` (Akira/Anya).
+  - Refactored `lunch_selector.py` to resolve profile conflicts (e.g. flagging nuts for Anya).
+  - Updated `workflow.py` to render personalized lunch details and School vs. Home snack sections.
+  - Implemented automatic nut substitution (Sunbutter/Seeds) for School Snacks.
+- **Outcome:** System now safely handles Anya's nut restriction for school meals while allowing nuts at home.

@@ -14,7 +14,7 @@ from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
 from datetime import datetime
 import yaml
-
+import os
 
 @dataclass
 class LunchSuggestion:
@@ -29,6 +29,7 @@ class LunchSuggestion:
     assembly_notes: str
     reuses_ingredients: List[str]  # Ingredients from dinner plans
     default_option: Optional[str] = None  # Fallback repeatable option
+    kid_profiles: Optional[Dict[str, str]] = None  # {name: description}
 
 
 class LunchSelector:
@@ -52,11 +53,21 @@ class LunchSelector:
         ]
     }
 
-    def __init__(self, recipe_index_path: str = 'recipes/index.yml'):
+    def __init__(self, recipe_index_path: str = 'recipes/index.yml', config_path: str = 'config.yml'):
         """Initialize selector with recipe index."""
         self.recipe_index_path = recipe_index_path
+        self.config_path = config_path
         self.recipes = self._load_recipes()
+        self.config = self._load_config()
+        self.kid_profiles = self.config.get('kid_profiles', {})
         self.lunch_recipes = self._filter_lunch_suitable()
+
+    def _load_config(self) -> Dict[str, Any]:
+        """Load configuration."""
+        if os.path.exists(self.config_path):
+             with open(self.config_path, 'r') as f:
+                return yaml.safe_load(f) or {}
+        return {}
 
     def _load_recipes(self) -> List[Dict[str, Any]]:
         """Load recipe index from YAML."""
@@ -334,8 +345,36 @@ class LunchSelector:
             prep_day=prep_day,
             assembly_notes=assembly_notes,
             reuses_ingredients=overlap_ingredients,
-            default_option=None
+            default_option=None,
+            kid_profiles=self._resolve_profile_conflicts(recipe)
         )
+
+    def _resolve_profile_conflicts(self, recipe: Dict[str, Any]) -> Dict[str, str]:
+        """
+        Check if recipe works for each profile.
+        Returns map of Profile Name -> Recipe Description
+        """
+        if not self.kid_profiles:
+            return {}
+
+        results = {}
+        recipe_name = recipe.get('name', recipe.get('id'))
+        
+        for name, profile in self.kid_profiles.items():
+            avoid = set(profile.get('avoid_ingredients', []))
+            recipe_contains = set(recipe.get('avoid_contains', []))
+            
+            # Check for conflict
+            conflict = avoid.intersection(recipe_contains)
+            
+            if conflict:
+                # For now, just mark it. In future, could select alternative.
+                conflict_str = ", ".join(list(conflict))
+                results[name] = f"{recipe_name} (⚠️ Contains {conflict_str} - SUBSTITUTE)"
+            else:
+                results[name] = recipe_name
+                
+        return results
 
     def _create_leftovers_suggestion(
         self,
@@ -365,7 +404,8 @@ class LunchSelector:
             prep_day=previous_day,
             assembly_notes=f'Kids: {kids_default} (<10 mins) | Adult: Reheat {previous_day.capitalize()} dinner leftovers',
             reuses_ingredients=previous_dinner.get('vegetables', []),
-            default_option=kids_default
+            default_option=kids_default,
+            kid_profiles={name: kids_default for name in self.kid_profiles} if self.kid_profiles else None
         )
 
     def _create_default_suggestion(self, day: str) -> LunchSuggestion:
@@ -387,7 +427,8 @@ class LunchSelector:
             prep_day=day,
             assembly_notes='Make fresh in <10 minutes',
             reuses_ingredients=[],
-            default_option=default_option
+            default_option=default_option,
+            kid_profiles={name: default_option for name in self.kid_profiles} if self.kid_profiles else None
         )
 
     def _determine_prep_day(self, lunch_day: str, prep_style: str) -> str:
@@ -477,6 +518,7 @@ def main():
     )
 
     # Print results
+    # Print results
     for day, suggestion in lunches.items():
         print(f"\n{day.upper()}:")
         print(f"  Recipe: {suggestion.recipe_name}")
@@ -486,6 +528,12 @@ def main():
         print(f"  Components: {', '.join(suggestion.prep_components)}")
         print(f"  Assembly: {suggestion.assembly_notes}")
         print(f"  Reuses: {', '.join(suggestion.reuses_ingredients)}")
+        
+        if suggestion.kid_profiles:
+            print(f"  Kids:")
+            for name, desc in suggestion.kid_profiles.items():
+                print(f"    - {name}: {desc}")
+
         if suggestion.default_option:
             print(f"  Default option: {suggestion.default_option}")
 

@@ -10,6 +10,8 @@ export default function WeekView() {
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
+  const [selectedItems, setSelectedItems] = useState<{ day: string; type: string; label: string; value: string }[]>([]);
+  const [isFixing, setIsFixing] = useState(false);
 
   useEffect(() => {
     async function fetchWeekData() {
@@ -43,7 +45,7 @@ export default function WeekView() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen text-[var(--bg-primary)]">
         <p className="text-[var(--text-muted)] font-mono animate-pulse">LOADING WEEK VIEW...</p>
       </div>
     );
@@ -64,19 +66,6 @@ export default function WeekView() {
   const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
   const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-  // Helper to get feedback status badge
-  const getFeedbackBadge = (feedback?: string, made?: boolean, needsFix?: boolean) => {
-    if (needsFix) return <span className="text-xs text-red-600 font-bold">Needs Fix</span>;
-    if (made === false) return <span className="text-xs text-red-600">✗ Skipped</span>;
-    if (!feedback) return null;
-    if (feedback.includes('❤️')) return <span className="text-xs">❤️</span>;
-    if (feedback.includes('👍')) return <span className="text-xs">👍</span>;
-    if (feedback.includes('😐')) return <span className="text-xs">😐</span>;
-    if (feedback.includes('👎')) return <span className="text-xs">👎</span>;
-    if (feedback.includes('❌')) return <span className="text-xs">❌</span>;
-    return <span className="text-xs text-gray-500">✓</span>;
-  };
-
   const getDisplayName = (planned: string, actual?: string) => {
     if (!actual) return planned;
     const isEmoji = ['❤️', '👍', '😐', '👎', '❌'].some(emoji => actual.includes(emoji));
@@ -84,52 +73,25 @@ export default function WeekView() {
     return actual;
   };
 
-  const toggleFix = async (day: string, type: string, currentStatus: boolean) => {
-    if (!status?.week_data?.week_of) return;
+  const getFeedbackBadge = (feedback?: string, made?: boolean, needsFix?: boolean) => {
+    if (needsFix) return <span className="text-xs text-red-600 font-bold px-2 py-0.5 bg-red-50 rounded">Needs Fix</span>;
+    if (made === false) return <span className="text-xs text-red-600">✗ Skipped</span>;
+    if (!feedback) return null;
+    const emojis = ['❤️', '👍', '😐', '👎', '❌'];
+    const emojiMatch = emojis.find(e => feedback.includes(e));
+    if (emojiMatch) return <span className="text-xs bg-gray-50 px-2 py-0.5 rounded">{emojiMatch}</span>;
+    return <span className="text-xs text-gray-500">✓</span>;
+  };
 
-    const newStatus = !currentStatus;
-
-    // Optimistic update
-    setStatus(prev => {
-      if (!prev || !prev.week_data) return prev;
-      const next = { ...prev };
-      const weekData = { ...next.week_data };
-
-      if (type === 'dinner') {
-        if (weekData.dinners) {
-          weekData.dinners = weekData.dinners.map((d: any) =>
-            d.day === day ? { ...d, needs_fix: newStatus } : d
-          );
-        }
+  const toggleSelection = (day: string, type: string, label: string, value: string) => {
+    setSelectedItems(prev => {
+      const exists = prev.find(i => i.day === day && i.type === type);
+      if (exists) {
+        return prev.filter(i => !(i.day === day && i.type === type));
       } else {
-        const dailyFeedback = { ...(weekData.daily_feedback || {}) };
-        const dayFeedback = { ...(dailyFeedback[day] || {}) };
-        dayFeedback[`${type}_needs_fix`] = newStatus;
-        dailyFeedback[day] = dayFeedback;
-        weekData.daily_feedback = dailyFeedback;
+        return [...prev, { day, type, label, value }];
       }
-
-      next.week_data = weekData;
-      return next;
     });
-
-    try {
-      await fetch('/api/log-meal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          week: status.week_data.week_of,
-          day,
-          [`${type}_needs_fix`]: newStatus
-        })
-      });
-    } catch (e) {
-      console.error("Failed to toggle fix", e);
-      alert("Failed to save change");
-      // Optional: re-fetch to sync if failed
-      const data = await getStatus();
-      setStatus(data);
-    }
   };
 
   const handleCorrectionSave = async (day: string, type: string, value: string, requestRecipe: boolean = false) => {
@@ -149,7 +111,11 @@ export default function WeekView() {
         })
       });
 
-      // Refresh data to reflect changes
+      // Remove from selection if it was there
+      setSelectedItems(prev => prev.filter(i => !(i.day === day && i.type === type)));
+
+      // If all selected items are saved, we can return to main view
+      // But we should refresh data first
       const data = await getStatus();
       setStatus(data);
     } catch (e) {
@@ -158,40 +124,83 @@ export default function WeekView() {
     }
   };
 
-  const CorrectionInput = ({ day, type, currentValue, onCancel }: { day: string, type: string, currentValue?: string, onCancel: () => void }) => {
-    const onSave = async (mealName: string, requestRecipe: boolean) => {
-      await handleCorrectionSave(day, type, mealName, requestRecipe);
-      // The component will automatically unmount when status refreshes
-      // because needs_fix is set to false in handleCorrectionSave
-    };
-
-    return (
-      <div className="mt-2">
-        <MealCorrectionInput
-          recipes={recipes}
-          onSave={onSave}
-          onCancel={onCancel}
-          placeholder="Enter actual meal..."
-          existingValue={currentValue || ''}
-        />
-      </div>
-    );
-  };
-
-  const FixCheckbox = ({ day, type, current }: { day: string, type: string, current: boolean }) => {
+  const SelectionCheckbox = ({ day, type, label, value }: { day: string, type: string, label: string, value: string }) => {
     if (!editMode) return null;
+    const isSelected = !!selectedItems.find(i => i.day === day && i.type === type);
     return (
       <input
         type="checkbox"
-        checked={current}
-        onChange={() => toggleFix(day, type, current)}
-        className="mr-2 h-4 w-4 text-[var(--accent-sage)] rounded border-gray-300 focus:ring-[var(--accent-sage)]"
+        checked={isSelected}
+        onChange={() => toggleSelection(day, type, label, value)}
+        className="mr-3 h-5 w-5 text-[var(--accent-sage)] rounded border-gray-300 focus:ring-[var(--accent-sage)] cursor-pointer"
       />
     );
   };
 
+  if (isFixing) {
+    return (
+      <div className="min-h-screen bg-[var(--bg-primary)] p-4 md:p-8">
+        <div className="max-w-3xl mx-auto">
+          <header className="mb-8">
+            <button
+              onClick={() => setIsFixing(false)}
+              className="text-sm text-[var(--accent-sage)] hover:underline mb-4 flex items-center gap-1"
+            >
+              ← Back to Week View
+            </button>
+            <h1 className="text-3xl font-bold text-[var(--text-primary)]">Fixing {selectedItems.length} Meals</h1>
+            <p className="text-[var(--text-muted)]">Update the details below to correct the meal logs.</p>
+          </header>
+
+          <div className="space-y-8">
+            {selectedItems.map((item, idx) => (
+              <div key={`${item.day}-${item.type}`} className="card bg-white shadow-sm border border-[var(--border-subtle)] overflow-hidden">
+                <div className="bg-[var(--bg-secondary)] px-4 py-2 border-b border-[var(--border-subtle)] flex justify-between items-center">
+                  <span className="font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">
+                    {dayNames[days.indexOf(item.day)]} • {item.label}
+                  </span>
+                  <button
+                    onClick={() => setSelectedItems(prev => prev.filter(i => !(i.day === item.day && i.type === item.type)))}
+                    className="text-xs text-red-500 hover:text-red-700"
+                  >
+                    Remove from queue
+                  </button>
+                </div>
+                <div className="p-4">
+                  <div className="mb-4">
+                    <span className="text-xs text-[var(--text-muted)] block mb-1">Current logged value:</span>
+                    <span className="text-sm font-medium">{item.value || 'None'}</span>
+                  </div>
+                  <MealCorrectionInput
+                    recipes={recipes}
+                    onSave={(val, req) => handleCorrectionSave(item.day, item.type, val, req)}
+                    onCancel={() => { }}
+                    placeholder={`What was actually for ${item.label.toLowerCase()}?`}
+                    existingValue={item.value}
+                  />
+                </div>
+              </div>
+            ))}
+
+            {selectedItems.length === 0 && (
+              <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+                <p className="text-[var(--text-muted)]">All items fixed! Returning to week view...</p>
+                <button
+                  onClick={() => setIsFixing(false)}
+                  className="mt-4 btn-secondary"
+                >
+                  Return Now
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] p-4 md:p-8">
+    <div className="min-h-screen bg-[var(--bg-primary)] p-4 md:p-8 pb-32">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <header className="mb-8">
@@ -203,31 +212,61 @@ export default function WeekView() {
               <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-2">
                 Week at a Glance
               </h1>
-              <p className="text-[var(--text-muted)]">
-                Week of {weekData.week_of}
+              <p className="text-[var(--text-muted)] font-mono text-sm">
+                WEEK OF {weekData.week_of.toUpperCase()}
               </p>
             </div>
             <div className="flex items-center gap-4">
               <button
-                onClick={() => setEditMode(!editMode)}
-                className={`btn-secondary ${editMode ? 'bg-yellow-100 border-yellow-400' : ''}`}
+                onClick={() => {
+                  setEditMode(!editMode);
+                  if (editMode) setSelectedItems([]);
+                }}
+                className={`btn-secondary flex items-center gap-2 ${editMode ? 'bg-amber-50 border-amber-200 text-amber-900' : ''}`}
               >
-                {editMode ? 'Done Editing' : 'Mark for Fix'}
+                {editMode ? (
+                  <>
+                    <span>✕</span>
+                    <span>Cancel Selecting</span>
+                  </>
+                ) : (
+                  <>
+                    <span>✎</span>
+                    <span>Mark for Fix</span>
+                  </>
+                )}
               </button>
               {weekData.plan_url && (
                 <a
                   href={weekData.plan_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-secondary inline-flex items-center gap-2"
+                  className="btn-secondary hidden md:inline-flex items-center gap-2"
                 >
                   <span>View Full Plan</span>
-                  <span>→</span>
+                  <span>↗</span>
                 </a>
               )}
             </div>
           </div>
         </header>
+
+        {/* Floating Action Bar for Selections */}
+        {selectedItems.length > 0 && (
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md">
+            <div className="bg-gray-900 text-white rounded-full shadow-2xl p-2 pl-6 flex items-center justify-between animate-in slide-in-from-bottom-4 fade-in">
+              <span className="font-medium text-sm">
+                {selectedItems.length} meal{selectedItems.length > 1 ? 's' : ''} selected
+              </span>
+              <button
+                onClick={() => setIsFixing(true)}
+                className="bg-[var(--accent-sage)] text-white px-6 py-2 rounded-full text-sm font-bold hover:scale-105 transition-transform"
+              >
+                Fix Now
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Mobile: Card view */}
         <div className="md:hidden space-y-4">
@@ -241,105 +280,99 @@ export default function WeekView() {
             return (
               <div
                 key={day}
-                className={`card ${isToday ? 'border-2 border-[var(--accent-green)]' : ''}`}
+                className={`card ${isToday ? 'border-2 border-[var(--accent-sage)]' : ''} ${editMode ? 'ring-2 ring-amber-100' : ''}`}
               >
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-bold text-[var(--text-primary)]">
                     {dayNames[idx]}
                   </h3>
                   {isToday && (
-                    <span className="text-xs font-mono px-2 py-1 bg-[var(--accent-green)] text-white rounded">
+                    <span className="text-[10px] font-mono tracking-widest px-2 py-0.5 bg-[var(--accent-sage)] text-white rounded">
                       TODAY
                     </span>
                   )}
                 </div>
 
-                <div className="space-y-3 text-sm">
-                  <div className={`pb-2 border-b border-[var(--border-subtle)] ${(dinner?.made === true || dinner?.made === false || typeof dinner?.made === 'string') && !dinner?.needs_fix ? 'opacity-60 grayscale-[0.5]' : ''}`}>
-                    <div className="flex justify-between items-start">
-                      <span className="font-mono text-xs text-[var(--text-muted)] uppercase">Dinner</span>
-                      {getFeedbackBadge(dailyFeedback?.dinner_feedback || dinner?.kids_feedback, dinner?.made, dinner?.needs_fix)}
-                    </div>
-                    <p className={`font-medium mt-1 ${(dinner?.made === true || dinner?.made === false || typeof dinner?.made === 'string') && !dinner?.needs_fix ? 'text-[var(--text-muted)]' : 'text-[var(--text-primary)]'}`}>
-                      {getDisplayName(dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Not planned', dinner?.actual_meal)}
-                    </p>
-                    {dinner?.vegetables && dinner.vegetables.length > 0 && (
-                      <p className="text-xs text-[var(--text-muted)] mt-1">
-                        🥬 {dinner.vegetables.join(', ')}
+                <div className="space-y-4">
+                  {/* Dinner */}
+                  <div className="flex items-start">
+                    <SelectionCheckbox
+                      day={day}
+                      type="dinner"
+                      label="Dinner"
+                      value={dinner?.actual_meal || ''}
+                    />
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start">
+                        <span className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider">Dinner</span>
+                        {getFeedbackBadge(dailyFeedback?.dinner_feedback || dinner?.kids_feedback, dinner?.made, dinner?.needs_fix)}
+                      </div>
+                      <p className="font-medium text-[var(--text-primary)] leading-tight mt-0.5">
+                        {getDisplayName(dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Not planned', dinner?.actual_meal)}
                       </p>
-                    )}
-                    {dinner?.needs_fix && (
-                      <CorrectionInput
-                        day={day}
-                        type="dinner"
-                        currentValue={dinner.actual_meal}
-                        onCancel={() => toggleFix(day, 'dinner', true)}
-                      />
-                    )}
-                  </div>
-
-                  <div className={`pb-2 border-b border-[var(--border-subtle)] ${(dailyFeedback?.kids_lunch_made === true || dailyFeedback?.kids_lunch_made === false) && !dailyFeedback?.kids_lunch_needs_fix ? 'opacity-60 grayscale-[0.5]' : ''}`}>
-                    <div className="flex justify-between items-start">
-                      <span className="font-mono text-xs text-[var(--text-muted)] uppercase">Kids Lunch</span>
-                      {getFeedbackBadge(dailyFeedback?.kids_lunch, dailyFeedback?.kids_lunch_made, dailyFeedback?.kids_lunch_needs_fix)}
+                      {dinner?.vegetables && dinner.vegetables.length > 0 && (
+                        <p className="text-[11px] text-[var(--text-muted)] mt-1">
+                          🥬 {dinner.vegetables.join(', ')}
+                        </p>
+                      )}
                     </div>
-                    <p className={`mt-1 ${(dailyFeedback?.kids_lunch_made === true || dailyFeedback?.kids_lunch_made === false) && !dailyFeedback?.kids_lunch_needs_fix ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>
-                      {getDisplayName(lunch?.recipe_name || 'Leftovers', dailyFeedback?.kids_lunch)}
-                    </p>
-                    {lunch?.assembly_notes && (
-                      <p className="text-xs text-[var(--text-muted)] mt-1">{lunch.assembly_notes}</p>
-                    )}
-                    {dailyFeedback?.kids_lunch_needs_fix && (
-                      <CorrectionInput
-                        day={day}
-                        type="kids_lunch"
-                        currentValue={dailyFeedback?.kids_lunch}
-                        onCancel={() => toggleFix(day, 'kids_lunch', true)}
-                      />
-                    )}
                   </div>
 
-                  <div className={`pb-2 border-b border-[var(--border-subtle)] ${(dailyFeedback?.adult_lunch_made === true || dailyFeedback?.adult_lunch_made === false) && !dailyFeedback?.adult_lunch_needs_fix ? 'opacity-60 grayscale-[0.5]' : ''}`}>
-                    <span className="font-mono text-xs text-[var(--text-muted)] uppercase">Adult Lunch</span>
-                    <p className={`mt-1 ${(dailyFeedback?.adult_lunch_made === true || dailyFeedback?.adult_lunch_made === false) && !dailyFeedback?.adult_lunch_needs_fix ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>
-                      {getDisplayName('Leftovers', dailyFeedback?.adult_lunch)}
-                    </p>
-                  </div>
-
-                  <div className={`pb-2 border-b border-[var(--border-subtle)] ${(dailyFeedback?.school_snack_made === true || dailyFeedback?.school_snack_made === false) && !dailyFeedback?.school_snack_needs_fix ? 'opacity-60 grayscale-[0.5]' : ''}`}>
-                    <div className="flex justify-between items-start">
-                      <span className="font-mono text-xs text-[var(--text-muted)] uppercase">School Snack</span>
-                      {getFeedbackBadge(dailyFeedback?.school_snack, dailyFeedback?.school_snack_made, dailyFeedback?.school_snack_needs_fix)}
+                  {/* Kids Lunch */}
+                  <div className="flex items-start">
+                    <SelectionCheckbox
+                      day={day}
+                      type="kids_lunch"
+                      label="Kids Lunch"
+                      value={dailyFeedback?.kids_lunch || ''}
+                    />
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start">
+                        <span className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider">Kids Lunch</span>
+                        {getFeedbackBadge(dailyFeedback?.kids_lunch, dailyFeedback?.kids_lunch_made, dailyFeedback?.kids_lunch_needs_fix)}
+                      </div>
+                      <p className="text-sm font-medium text-[var(--text-primary)] mt-0.5">
+                        {getDisplayName(lunch?.recipe_name || 'Leftovers', dailyFeedback?.kids_lunch)}
+                      </p>
                     </div>
-                    <p className={`mt-1 ${(dailyFeedback?.school_snack_made === true || dailyFeedback?.school_snack_made === false) && !dailyFeedback?.school_snack_needs_fix ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>
-                      {getDisplayName(snacks?.school || 'TBD', dailyFeedback?.school_snack)}
-                    </p>
-                    {dailyFeedback?.school_snack_needs_fix && (
-                      <CorrectionInput
-                        day={day}
-                        type="school_snack"
-                        currentValue={dailyFeedback?.school_snack}
-                        onCancel={() => toggleFix(day, 'school_snack', true)}
-                      />
-                    )}
                   </div>
 
-                  <div className={`${(dailyFeedback?.home_snack_made === true || dailyFeedback?.home_snack_made === false) && !dailyFeedback?.home_snack_needs_fix ? 'opacity-60 grayscale-[0.5]' : ''}`}>
-                    <div className="flex justify-between items-start">
-                      <span className="font-mono text-xs text-[var(--text-muted)] uppercase">Home Snack</span>
-                      {getFeedbackBadge(dailyFeedback?.home_snack, dailyFeedback?.home_snack_made, dailyFeedback?.home_snack_needs_fix)}
+                  {/* School Snack */}
+                  <div className="flex items-start">
+                    <SelectionCheckbox
+                      day={day}
+                      type="school_snack"
+                      label="School Snack"
+                      value={dailyFeedback?.school_snack || ''}
+                    />
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start">
+                        <span className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider">School Snack</span>
+                        {getFeedbackBadge(dailyFeedback?.school_snack, dailyFeedback?.school_snack_made, dailyFeedback?.school_snack_needs_fix)}
+                      </div>
+                      <p className="text-sm font-medium text-[var(--text-primary)] mt-0.5">
+                        {getDisplayName(snacks?.school || 'TBD', dailyFeedback?.school_snack)}
+                      </p>
                     </div>
-                    <p className={`mt-1 ${(dailyFeedback?.home_snack_made === true || dailyFeedback?.home_snack_made === false) && !dailyFeedback?.home_snack_needs_fix ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>
-                      {getDisplayName(!(day === 'sat' || day === 'sun') ? (snacks?.home || 'TBD') : '-', dailyFeedback?.home_snack)}
-                    </p>
-                    {dailyFeedback?.home_snack_needs_fix && (
-                      <CorrectionInput
-                        day={day}
-                        type="home_snack"
-                        currentValue={dailyFeedback?.home_snack}
-                        onCancel={() => toggleFix(day, 'home_snack', true)}
-                      />
-                    )}
+                  </div>
+
+                  {/* Home Snack */}
+                  <div className="flex items-start">
+                    <SelectionCheckbox
+                      day={day}
+                      type="home_snack"
+                      label="Home Snack"
+                      value={dailyFeedback?.home_snack || ''}
+                    />
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start">
+                        <span className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider">Home Snack</span>
+                        {getFeedbackBadge(dailyFeedback?.home_snack, dailyFeedback?.home_snack_made, dailyFeedback?.home_snack_needs_fix)}
+                      </div>
+                      <p className="text-sm font-medium text-[var(--text-primary)] mt-0.5">
+                        {getDisplayName(snacks?.home || 'TBD', dailyFeedback?.home_snack)}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -348,11 +381,11 @@ export default function WeekView() {
         </div>
 
         {/* Desktop: Table view */}
-        <div className="hidden md:block overflow-x-auto card">
+        <div className="hidden md:block overflow-x-auto card p-0 overflow-hidden shadow-lg border-none">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-[var(--bg-secondary)]">
-                <th className="p-4 text-left font-mono text-xs uppercase text-[var(--text-muted)] border-b-2 border-[var(--border-subtle)]">
+              <tr className="bg-[var(--bg-secondary)] border-b border-[var(--border-subtle)]">
+                <th className="p-4 text-left font-mono text-[10px] uppercase tracking-widest text-[var(--text-muted)] bg-white w-40">
                   Meal Type
                 </th>
                 {dayNames.map((dayName, idx) => {
@@ -361,91 +394,119 @@ export default function WeekView() {
                   return (
                     <th
                       key={day}
-                      className={`p-4 text-left font-mono text-xs uppercase border-b-2 ${isToday
-                        ? 'bg-[var(--accent-green)] text-white border-[var(--accent-green)]'
-                        : 'text-[var(--text-muted)] border-[var(--border-subtle)]'
+                      className={`p-4 text-left font-mono text-[10px] uppercase tracking-widest border-l border-[var(--border-subtle)] ${isToday
+                        ? 'bg-[var(--accent-sage)] text-white'
+                        : 'text-[var(--text-muted)]'
                         }`}
                     >
                       {dayName}
-                      {isToday && <div className="text-[10px] mt-1">TODAY</div>}
+                      {isToday && <div className="text-[9px] mt-1 font-bold">TODAY</div>}
                     </th>
                   );
                 })}
               </tr>
             </thead>
             <tbody>
-              {/* Kids Lunch Row */}
-              <tr className="hover:bg-[var(--bg-secondary)] transition-colors">
-                <td className="p-4 font-bold text-[var(--text-primary)] border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
-                  🥪 Kids Lunch
+              {/* Dinner Row */}
+              <tr className="hover:bg-gray-50 transition-colors">
+                <td className="p-4 font-bold text-[var(--text-primary)] border-b border-[var(--border-subtle)] flex items-center gap-2">
+                  <span className="text-lg">🍽️</span>
+                  <span>Dinner</span>
                 </td>
-                {days.map((day, idx) => {
+                {days.map((day) => {
+                  const dinner = weekData.dinners?.find((d: any) => d.day === day);
+                  const dailyFeedback = weekData.daily_feedback?.[day];
+                  const dinnerName = dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Not planned';
+                  const needsFix = dinner?.needs_fix;
+
+                  return (
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)]`}>
+                      <div className="flex items-start gap-2">
+                        <SelectionCheckbox
+                          day={day}
+                          type="dinner"
+                          label="Dinner"
+                          value={dinner?.actual_meal || ''}
+                        />
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start gap-2">
+                            <span className="font-medium leading-tight">
+                              {dinner?.recipe_id ? (
+                                <Link href={`/recipes/${dinner.recipe_id}`} className="hover:text-[var(--accent-sage)] hover:underline">
+                                  {getDisplayName(dinnerName, dinner?.actual_meal)}
+                                </Link>
+                              ) : (
+                                getDisplayName(dinnerName, dinner?.actual_meal)
+                              )}
+                            </span>
+                            {getFeedbackBadge(dailyFeedback?.dinner_feedback || dinner?.kids_feedback, dinner?.made, needsFix)}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  );
+                })}
+              </tr>
+
+              {/* Kids Lunch Row */}
+              <tr className="hover:bg-gray-50 transition-colors">
+                <td className="p-4 font-bold text-[var(--text-primary)] border-b border-[var(--border-subtle)]">
+                  <span className="mr-2">🥪</span>
+                  <span>Kids Lunch</span>
+                </td>
+                {days.map((day) => {
                   const lunch = weekData.lunches?.[day];
                   const dailyFeedback = weekData.daily_feedback?.[day];
-                  const isToday = status?.current_day === day;
-                  const needsFix = dailyFeedback?.kids_lunch_needs_fix;
-                  const isConfirmed = (dailyFeedback?.kids_lunch_made === true || dailyFeedback?.kids_lunch_made === false) && !needsFix;
                   return (
-                    <td
-                      key={day}
-                      className={`p-4 text-sm border-b border-[var(--border-subtle)] ${isToday ? 'bg-green-50' : idx % 2 === 0 ? 'bg-gray-50' : ''} ${isConfirmed ? 'opacity-50' : ''}`}
-                    >
-                      <div className="flex justify-between items-start">
-                        <div className={`flex items-start ${isConfirmed ? 'text-[var(--text-muted)] italic' : ''}`}>
-                          <FixCheckbox day={day} type="kids_lunch" current={needsFix} />
-                          <span>{getDisplayName(lunch?.recipe_name || 'Leftovers', dailyFeedback?.kids_lunch)}</span>
-                        </div>
-                        {getFeedbackBadge(dailyFeedback?.kids_lunch, dailyFeedback?.kids_lunch_made, needsFix)}
-                      </div>
-                      {lunch?.assembly_notes && (
-                        <div className="text-xs text-[var(--text-muted)] mt-1">{lunch.assembly_notes}</div>
-                      )}
-                      {needsFix && (
-                        <CorrectionInput
+                    <td key={day} className="p-4 text-sm border-b border-l border-[var(--border-subtle)]">
+                      <div className="flex items-start gap-2">
+                        <SelectionCheckbox
                           day={day}
                           type="kids_lunch"
-                          currentValue={dailyFeedback?.kids_lunch}
-                          onCancel={() => toggleFix(day, 'kids_lunch', true)}
+                          label="Kids Lunch"
+                          value={dailyFeedback?.kids_lunch || ''}
                         />
-                      )}
+                        <div className="flex-1 flex justify-between items-start gap-2">
+                          <span className="text-gray-600 italic">
+                            {getDisplayName(lunch?.recipe_name || 'Leftovers', dailyFeedback?.kids_lunch)}
+                          </span>
+                          {getFeedbackBadge(dailyFeedback?.kids_lunch, dailyFeedback?.kids_lunch_made, dailyFeedback?.kids_lunch_needs_fix)}
+                        </div>
+                      </div>
                     </td>
                   );
                 })}
               </tr>
 
               {/* School Snack Row */}
-              <tr className="hover:bg-[var(--bg-secondary)] transition-colors">
-                <td className="p-4 font-bold text-[var(--text-primary)] border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
-                  🎒 School Snack
+              <tr className="hover:bg-gray-50 transition-colors">
+                <td className="p-4 font-bold text-[var(--text-primary)] border-b border-[var(--border-subtle)]">
+                  <span className="mr-2">🎒</span>
+                  <span>School Snack</span>
                 </td>
-                {days.map((day, idx) => {
-                  if (day === 'sat' || day === 'sun') {
-                    return <td key={day} className="p-4 text-sm border-b border-[var(--border-subtle)] bg-gray-50 text-center text-[var(--text-muted)]">-</td>;
-                  }
+                {days.map((day) => {
                   const snacks = weekData.snacks?.[day];
                   const dailyFeedback = weekData.daily_feedback?.[day];
-                  const isToday = status?.current_day === day;
-                  const needsFix = dailyFeedback?.school_snack_needs_fix;
-                  const isConfirmed = (dailyFeedback?.school_snack_made === true || dailyFeedback?.school_snack_made === false) && !needsFix;
+                  const isWeekend = day === 'sat' || day === 'sun';
                   return (
-                    <td
-                      key={day}
-                      className={`p-4 text-sm border-b border-[var(--border-subtle)] ${isToday ? 'bg-green-50' : idx % 2 === 0 ? 'bg-gray-50' : ''} ${isConfirmed ? 'opacity-50' : ''}`}
-                    >
-                      <div className="flex justify-between items-start">
-                        <div className={`flex items-start ${isConfirmed ? 'text-[var(--text-muted)] italic' : ''}`}>
-                          <FixCheckbox day={day} type="school_snack" current={needsFix} />
-                          <span>{getDisplayName(snacks?.school || 'TBD', dailyFeedback?.school_snack)}</span>
+                    <td key={day} className="p-4 text-sm border-b border-l border-[var(--border-subtle)]">
+                      {!isWeekend ? (
+                        <div className="flex items-start gap-2">
+                          <SelectionCheckbox
+                            day={day}
+                            type="school_snack"
+                            label="School Snack"
+                            value={dailyFeedback?.school_snack || ''}
+                          />
+                          <div className="flex-1 flex justify-between items-start gap-2">
+                            <span className="text-gray-600 font-mono text-xs">
+                              {getDisplayName(snacks?.school || 'TBD', dailyFeedback?.school_snack)}
+                            </span>
+                            {getFeedbackBadge(dailyFeedback?.school_snack, dailyFeedback?.school_snack_made, dailyFeedback?.school_snack_needs_fix)}
+                          </div>
                         </div>
-                        {getFeedbackBadge(dailyFeedback?.school_snack, dailyFeedback?.school_snack_made, needsFix)}
-                      </div>
-                      {needsFix && (
-                        <CorrectionInput
-                          day={day}
-                          type="school_snack"
-                          currentValue={dailyFeedback?.school_snack}
-                          onCancel={() => toggleFix(day, 'school_snack', true)}
-                        />
+                      ) : (
+                        <span className="text-gray-300 text-xs">-</span>
                       )}
                     </td>
                   );
@@ -453,92 +514,34 @@ export default function WeekView() {
               </tr>
 
               {/* Home Snack Row */}
-              <tr className="hover:bg-[var(--bg-secondary)] transition-colors">
-                <td className="p-4 font-bold text-[var(--text-primary)] border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
-                  🏠 Home Snack
+              <tr className="hover:bg-gray-50 transition-colors">
+                <td className="p-4 font-bold text-[var(--text-primary)] border-b border-[var(--border-subtle)]">
+                  <span className="mr-2">🏠</span>
+                  <span>Home Snack</span>
                 </td>
-                {days.map((day, idx) => {
-                  if (day === 'sat' || day === 'sun') {
-                    return <td key={day} className="p-4 text-sm border-b border-[var(--border-subtle)] bg-gray-50 text-center text-[var(--text-muted)]">-</td>;
-                  }
+                {days.map((day) => {
                   const snacks = weekData.snacks?.[day];
                   const dailyFeedback = weekData.daily_feedback?.[day];
-                  const isToday = status?.current_day === day;
-                  const needsFix = dailyFeedback?.home_snack_needs_fix;
-                  const isConfirmed = (dailyFeedback?.home_snack_made === true || dailyFeedback?.home_snack_made === false) && !needsFix;
+                  const isWeekend = day === 'sat' || day === 'sun';
                   return (
-                    <td
-                      key={day}
-                      className={`p-4 text-sm border-b border-[var(--border-subtle)] ${isToday ? 'bg-green-50' : idx % 2 === 0 ? 'bg-gray-50' : ''} ${isConfirmed ? 'opacity-50' : ''}`}
-                    >
-                      <div className="flex justify-between items-start">
-                        <div className={`flex items-start ${isConfirmed ? 'text-[var(--text-muted)] italic' : ''}`}>
-                          <FixCheckbox day={day} type="home_snack" current={needsFix} />
-                          <span>{getDisplayName(snacks?.home || 'TBD', dailyFeedback?.home_snack)}</span>
+                    <td key={day} className="p-4 text-sm border-b border-l border-[var(--border-subtle)]">
+                      {!isWeekend ? (
+                        <div className="flex items-start gap-2">
+                          <SelectionCheckbox
+                            day={day}
+                            type="home_snack"
+                            label="Home Snack"
+                            value={dailyFeedback?.home_snack || ''}
+                          />
+                          <div className="flex-1 flex justify-between items-start gap-2">
+                            <span className="text-gray-600 font-mono text-xs">
+                              {getDisplayName(snacks?.home || 'TBD', dailyFeedback?.home_snack)}
+                            </span>
+                            {getFeedbackBadge(dailyFeedback?.home_snack, dailyFeedback?.home_snack_made, dailyFeedback?.home_snack_needs_fix)}
+                          </div>
                         </div>
-                        {getFeedbackBadge(dailyFeedback?.home_snack, dailyFeedback?.home_snack_made, needsFix)}
-                      </div>
-                      {needsFix && (
-                        <CorrectionInput
-                          day={day}
-                          type="home_snack"
-                          currentValue={dailyFeedback?.home_snack}
-                          onCancel={() => toggleFix(day, 'home_snack', true)}
-                        />
-                      )}
-                    </td>
-                  );
-                })}
-              </tr>
-
-              {/* Dinner Row */}
-              <tr className="hover:bg-[var(--bg-secondary)] transition-colors">
-                <td className="p-4 font-bold text-[var(--text-primary)] border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
-                  🍽️ Dinner
-                </td>
-                {days.map((day, idx) => {
-                  const dinner = weekData.dinners?.find((d: any) => d.day === day);
-                  const dailyFeedback = weekData.daily_feedback?.[day];
-                  const isToday = status?.current_day === day;
-                  const needsFix = dinner?.needs_fix;
-                  const isConfirmed = (dinner?.made === true || dinner?.made === false || typeof dinner?.made === 'string') && !needsFix;
-
-                  // Construct recipe link
-                  const dinnerName = dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Not planned';
-                  const recipeLink = dinner?.recipe_id ? `/recipes/${dinner.recipe_id}` : null;
-
-                  return (
-                    <td
-                      key={day}
-                      className={`p-4 text-sm border-b border-[var(--border-subtle)] ${isToday ? 'bg-green-50' : idx % 2 === 0 ? 'bg-gray-50' : ''} ${isConfirmed ? 'opacity-50' : ''}`}
-                    >
-                      <div className="flex justify-between items-start">
-                        <div className={`flex items-start ${isConfirmed ? 'text-[var(--text-muted)] italic' : ''}`}>
-                          <FixCheckbox day={day} type="dinner" current={needsFix} />
-                          <span className="font-medium">
-                            {dinner?.recipe_id ? (
-                              <Link href={`/recipes/${dinner.recipe_id}`} className={`hover:underline ${isConfirmed ? 'text-[var(--text-muted)]' : 'text-blue-800'}`}>
-                                {getDisplayName(dinnerName, dinner?.actual_meal)}
-                              </Link>
-                            ) : (
-                              getDisplayName(dinnerName, dinner?.actual_meal)
-                            )}
-                          </span>
-                        </div>
-                        {getFeedbackBadge(dailyFeedback?.dinner_feedback || dinner?.kids_feedback, dinner?.made, needsFix)}
-                      </div>
-                      {dinner?.vegetables && dinner.vegetables.length > 0 && (
-                        <div className="text-xs text-[var(--text-muted)] mt-1">
-                          🥬 {dinner.vegetables.join(', ')}
-                        </div>
-                      )}
-                      {needsFix && (
-                        <CorrectionInput
-                          day={day}
-                          type="dinner"
-                          currentValue={dinner?.actual_meal}
-                          onCancel={() => toggleFix(day, 'dinner', true)}
-                        />
+                      ) : (
+                        <span className="text-gray-300 text-xs">-</span>
                       )}
                     </td>
                   );
@@ -546,37 +549,29 @@ export default function WeekView() {
               </tr>
 
               {/* Adult Lunch Row */}
-              <tr className="hover:bg-[var(--bg-secondary)] transition-colors">
-                <td className="p-4 font-bold text-[var(--text-primary)] border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
-                  ☕ Adult Lunch
+              <tr className="hover:bg-gray-50 transition-colors">
+                <td className="p-4 font-bold text-[var(--text-primary)] border-b border-[var(--border-subtle)]">
+                  <span className="mr-2">☕</span>
+                  <span>Adult Lunch</span>
                 </td>
-                {days.map((day, idx) => {
+                {days.map((day) => {
                   const dailyFeedback = weekData.daily_feedback?.[day];
-                  const isToday = status?.current_day === day;
-                  const needsFix = dailyFeedback?.adult_lunch_needs_fix;
-                  const isConfirmed = (dailyFeedback?.adult_lunch_made === true || dailyFeedback?.adult_lunch_made === false) && !needsFix;
                   return (
-                    <td
-                      key={day}
-                      className={`p-4 text-sm border-b border-[var(--border-subtle)] ${isToday ? 'bg-green-50' : idx % 2 === 0 ? 'bg-gray-50' : ''} ${isConfirmed ? 'opacity-50' : ''}`}
-                    >
-                      <div className="flex justify-between items-start">
-                        <div className={`flex items-start ${isConfirmed ? 'text-[var(--text-muted)] italic' : ''}`}>
-                          <FixCheckbox day={day} type="adult_lunch" current={needsFix} />
-                          <span className={isConfirmed ? 'text-[var(--text-muted)]' : ''}>
-                            {getDisplayName('Leftovers', dailyFeedback?.adult_lunch)}
-                          </span>
-                        </div>
-                        {getFeedbackBadge(dailyFeedback?.adult_lunch, dailyFeedback?.adult_lunch_made, needsFix)}
-                      </div>
-                      {needsFix && (
-                        <CorrectionInput
+                    <td key={day} className="p-4 text-sm border-b border-l border-[var(--border-subtle)]">
+                      <div className="flex items-start gap-2">
+                        <SelectionCheckbox
                           day={day}
                           type="adult_lunch"
-                          currentValue={dailyFeedback?.adult_lunch}
-                          onCancel={() => toggleFix(day, 'adult_lunch', true)}
+                          label="Adult Lunch"
+                          value={dailyFeedback?.adult_lunch || ''}
                         />
-                      )}
+                        <div className="flex-1 flex justify-between items-start gap-2">
+                          <span className="text-gray-500 italic text-xs">
+                            {getDisplayName('Leftovers', dailyFeedback?.adult_lunch)}
+                          </span>
+                          {getFeedbackBadge(dailyFeedback?.adult_lunch, dailyFeedback?.adult_lunch_made, dailyFeedback?.adult_lunch_needs_fix)}
+                        </div>
+                      </div>
                     </td>
                   );
                 })}
@@ -586,49 +581,52 @@ export default function WeekView() {
         </div>
 
         {/* Energy-Based Prep Schedule */}
-        <div className="mt-8">
-          <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
-            Energy-Based Prep Schedule
+        <div className="mt-12">
+          <h2 className="text-sm font-mono uppercase tracking-[0.2em] text-[var(--text-muted)] mb-6 flex items-center gap-3">
+            <span className="h-px bg-[var(--border-subtle)] flex-1"></span>
+            <span>Prep Schedule</span>
+            <span className="h-px bg-[var(--border-subtle)] flex-1"></span>
           </h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="card bg-[var(--accent-sage)] bg-opacity-10 border-l-4 border-[var(--accent-sage)]">
-              <h3 className="font-mono text-xs uppercase text-black mb-2">Monday PM</h3>
-              <ul className="text-sm text-[var(--text-primary)] list-disc pl-4 space-y-1">
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="card border-t-4 border-t-[var(--accent-sage)]">
+              <h3 className="font-mono text-xs uppercase tracking-wider text-[var(--accent-sage)] mb-4">Monday PM</h3>
+              <ul className="text-sm text-[var(--text-primary)] list-disc pl-4 space-y-2">
                 <li>Chop Mon/Tue/Wed vegetables</li>
                 <li>Batch cook grains/beans</li>
               </ul>
             </div>
-            <div className="card bg-[var(--accent-gold)] bg-opacity-10 border-l-4 border-[var(--accent-gold)]">
-              <h3 className="font-mono text-xs uppercase text-black mb-2">Tuesday AM + PM</h3>
+            <div className="card border-t-4 border-t-[var(--accent-gold)]">
+              <h3 className="font-mono text-xs uppercase tracking-wider text-amber-600 mb-4">Tuesday AM + PM</h3>
               <div className="text-sm text-[var(--text-primary)]">
-                <p><strong>AM:</strong> Portion lunch components</p>
-                <p className="mt-2"><strong>PM:</strong></p>
-                <ul className="list-disc pl-4 space-y-1">
+                <p className="font-medium text-xs text-[var(--text-muted)] uppercase mb-2">AM</p>
+                <p>Portion lunch components</p>
+                <p className="font-medium text-xs text-[var(--text-muted)] uppercase mt-4 mb-2">PM</p>
+                <ul className="list-disc pl-4 space-y-2">
                   <li>Portion Wed kids lunch</li>
                   <li>Chop Thu/Fri vegetables</li>
                 </ul>
               </div>
             </div>
-            <div className="card bg-[var(--accent-terracotta)] bg-opacity-10 border-l-4 border-[var(--accent-terracotta)]">
-              <h3 className="font-mono text-xs uppercase text-black mb-2">Wednesday PM</h3>
-              <ul className="text-sm text-[var(--text-primary)] list-disc pl-4 space-y-1">
+            <div className="card border-t-4 border-t-[var(--accent-terracotta)]">
+              <h3 className="font-mono text-xs uppercase tracking-wider text-orange-600 mb-4">Wednesday PM</h3>
+              <ul className="text-sm text-[var(--text-primary)] list-disc pl-4 space-y-2">
                 <li>Finish ALL remaining prep for Thu/Fri</li>
               </ul>
             </div>
           </div>
         </div>
-
         {/* Week Summary Stats */}
         {weekData.freezer_inventory && weekData.freezer_inventory.length > 0 && (
-          <div className="mt-8 card bg-blue-50 border-blue-200">
-            <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
-              🧊 Freezer Backup Meals
+          <div className="mt-12 card bg-blue-50 border-blue-200 shadow-sm">
+            <h2 className="text-sm font-mono uppercase tracking-widest text-blue-600 mb-4 flex items-center gap-2">
+              <span>🧊</span>
+              <span>Freezer Backup Meals</span>
             </h2>
-            <div className="grid md:grid-cols-3 gap-2">
+            <div className="grid md:grid-cols-3 gap-3">
               {weekData.freezer_inventory.map((item: any, idx: number) => (
-                <div key={idx} className="p-2 bg-white rounded border border-blue-200">
-                  <p className="text-sm font-medium text-blue-900">{item.meal}</p>
-                  <p className="text-xs text-blue-600">Frozen: {item.frozen_date}</p>
+                <div key={idx} className="p-3 bg-white rounded-lg border border-blue-100 shadow-sm">
+                  <p className="text-sm font-semibold text-blue-900 leading-tight">{item.meal}</p>
+                  <p className="text-[10px] text-blue-400 font-mono mt-1 uppercase">Frozen: {item.frozen_date}</p>
                 </div>
               ))}
             </div>

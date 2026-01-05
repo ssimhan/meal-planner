@@ -1,4 +1,4 @@
-last_updated: '2026-01-01'
+last_updated: '2026-01-05'
 fridge:
 - item: bell peppers
   quantity: 3
@@ -9,6 +9,34 @@ fridge:
   quantity: 5
   unit: count
   added: '2025-12-29'
+- item: Cubed cheddar
+  quantity: 1
+  unit: count
+  added: '2026-01-05'
+- item: Blackberries
+  quantity: 1
+  unit: count
+  added: '2026-01-05'
+- item: Pomegranates
+  quantity: 1
+  unit: count
+  added: '2026-01-05'
+- item: Grapes
+  quantity: 1
+  unit: count
+  added: '2026-01-05'
+- item: Pineapple
+  quantity: 1
+  unit: count
+  added: '2026-01-05'
+- item: Cauliflower florets
+  quantity: 1
+  unit: count
+  added: '2026-01-05'
+- item: Avocado packs
+  quantity: 1
+  unit: count
+  added: '2026-01-05'
 pantry:
 - item: black beans
   quantity: 4
@@ -16,6 +44,30 @@ pantry:
 - item: rice
   quantity: 5
   unit: cups
+- item: Bread
+  quantity: 1
+  unit: count
+- item: Dried mango
+  quantity: 1
+  unit: count
+- item: Pumpkin seeds
+  quantity: 1
+  unit: count
+- item: Sweet potato
+  quantity: 1
+  unit: count
+- item: Sweet corn
+  quantity: 1
+  unit: count
+- item: Gnocchi
+  quantity: 1
+  unit: count
+- item: Multi grain crackers
+  quantity: 1
+  unit: count
+- item: Sweet potato sticks
+  quantity: 1
+  unit: count
 freezer:
   backups:
   - meal: Black Bean Soup
@@ -27,3 +79,6 @@ freezer:
   - meal: Doubled Chickpea Wraps
     servings: 4
     frozen_date: '2026-01-01'
+  - meal: Parotta frozen
+    servings: 1
+    frozen_date: '2026-01-05'

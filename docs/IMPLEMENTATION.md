@@ -207,6 +207,9 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 - [x] **Phase 10 Logging System**: Complete redesign of feedback flow with Made/Not Made checkboxes, preference emojis, override logging, and sophisticated dinner alternatives (freezer selection, ate out, custom text input).
 
 
+### Recipe Index changes
+*Pending recipe additions from corrections:*
+
 ---
 
 ## System Requirements

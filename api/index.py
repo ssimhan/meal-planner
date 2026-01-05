@@ -468,6 +468,24 @@ def log_meal():
             calculate_adherence(week)
         save_history(history)
         
+        # Handle recipe addition requests
+        request_recipe = data.get('request_recipe', False)
+        if request_recipe:
+            meal_to_add = actual_meal or school_snack_feedback or home_snack_feedback or kids_lunch_feedback or adult_lunch_feedback
+            if meal_to_add:
+                repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
+                from scripts.github_helper import get_file_from_github, commit_file_to_github
+                
+                content = get_file_from_github(repo_name, 'docs/IMPLEMENTATION.md')
+                if content:
+                    section_marker = "### Recipe Index changes\n*Pending recipe additions from corrections:*"
+                    if section_marker in content:
+                        new_line = f"\n- [ ] Add recipe for: {meal_to_add} (requested on {datetime.now().strftime('%Y-%m-%d')})"
+                        # Check if already requested today to avoid duplicates
+                        if new_line.strip() not in content:
+                            updated_content = content.replace(section_marker, section_marker + new_line)
+                            commit_file_to_github(repo_name, 'docs/IMPLEMENTATION.md', f"Request recipe for {meal_to_add}", content=updated_content)
+
         # Sync to GitHub
         from scripts.github_helper import sync_changes_to_github
         sync_changes_to_github(['data/history.yml', 'data/inventory.yml'])

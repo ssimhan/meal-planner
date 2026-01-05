@@ -136,7 +136,8 @@ export default function Dashboard() {
     feedback?: string,
     freezerMeal?: string,
     actualMeal?: string,
-    needsFix?: boolean
+    needsFix?: boolean,
+    requestRecipe?: boolean
   ) {
     if (!status?.week_of || !status?.current_day) return;
 
@@ -149,7 +150,8 @@ export default function Dashboard() {
         kids_feedback: feedback,
         freezer_meal: freezerMeal,
         actual_meal: actualMeal,
-        dinner_needs_fix: needsFix
+        dinner_needs_fix: needsFix,
+        request_recipe: requestRecipe
       });
       setSuccess({ message: `Logged status for today (${status.current_day})!` });
       await fetchStatus();
@@ -173,7 +175,8 @@ export default function Dashboard() {
     emoji: string,
     made: boolean,
     overrideText?: string,
-    needsFix?: boolean
+    needsFix?: boolean,
+    requestRecipe?: boolean
   ) {
     if (!status?.week_of || !status?.current_day) return;
 
@@ -186,7 +189,8 @@ export default function Dashboard() {
         day: status.current_day,
         [`${feedbackType}_made`]: made,
         [`${feedbackType}_feedback`]: feedbackValue,
-        [`${feedbackType}_needs_fix`]: needsFix
+        [`${feedbackType}_needs_fix`]: needsFix,
+        request_recipe: requestRecipe
       });
 
       setSuccess({ message: `Logged ${feedbackType.replace(/_/g, ' ')} feedback!` });
@@ -366,7 +370,8 @@ export default function Dashboard() {
 
                   const handleEditSubmit = () => {
                     if (editInput.trim()) {
-                      handleLogFeedback(feedbackType, '', true, editInput);
+                      const shouldAddRecipe = window.confirm(`Correction saved: "${editInput}".\n\nShould this be added as an official recipe to the index for future weeks?`);
+                      handleLogFeedback(feedbackType, '', true, editInput, false, shouldAddRecipe);
                       setIsEditing(false);
                       setEditInput('');
                     }
@@ -543,27 +548,21 @@ export default function Dashboard() {
 
                         const handleDinnerEditSubmitLocal = async () => {
                           if (dinnerEditInput.trim()) {
-                            // Preserve existing made status but update actual_meal
-                            // If made is freezer_backup, we need to pass that.
-                            // Status.today_dinner.made can be boolean or string.
                             const currentMade = status?.today_dinner?.made;
-                            // We also prefer to keep the freezer meal usage if known?
-                            // But handleLogDay args: (made, feedback(kids), freezerMeal, actualMeal)
-                            // If made=freezer_backup, we need the meal name.
-                            // We can try to extract it from history or just re-pass what we know.
-                            // Actually simpler: just update actual_meal.
-                            // If we call handleLogDay with same 'made' status, it should be fine.
-
                             let freezerMealArg = '';
                             if (currentMade === 'freezer_backup' && status?.today_dinner?.freezer_used?.meal) {
                               freezerMealArg = status.today_dinner.freezer_used.meal;
                             }
 
+                            const shouldAddRecipe = window.confirm(`Correction saved: "${dinnerEditInput}".\n\nShould this be added as an official recipe to the index for future weeks?`);
+
                             await handleLogDay(
                               currentMade!,
                               status?.today_dinner?.kids_feedback || '',
                               freezerMealArg,
-                              dinnerEditInput
+                              dinnerEditInput,
+                              false,
+                              shouldAddRecipe
                             );
                           }
                         };

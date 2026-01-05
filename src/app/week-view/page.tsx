@@ -59,6 +59,13 @@ export default function WeekView() {
     return <span className="text-xs text-gray-500">✓</span>;
   };
 
+  const getDisplayName = (planned: string, actual?: string) => {
+    if (!actual) return planned;
+    const isEmoji = ['❤️', '👍', '😐', '👎', '❌'].some(emoji => actual.includes(emoji));
+    if (isEmoji || actual === 'Skipped') return planned;
+    return actual;
+  };
+
   const toggleFix = async (day: string, type: string, currentStatus: boolean) => {
     if (!status?.week_data?.week_of) return;
 
@@ -107,7 +114,7 @@ export default function WeekView() {
     }
   };
 
-  const handleCorrectionSave = async (day: string, type: string, value: string) => {
+  const handleCorrectionSave = async (day: string, type: string, value: string, requestRecipe: boolean = false) => {
     if (!status?.week_data?.week_of) return;
 
     try {
@@ -117,6 +124,7 @@ export default function WeekView() {
         body: JSON.stringify({
           week: status.week_data.week_of,
           day,
+          request_recipe: requestRecipe,
           ...(type === 'dinner'
             ? { actual_meal: value, dinner_needs_fix: false }
             : { [`${type}_feedback`]: value, [`${type}_needs_fix`]: false })
@@ -139,7 +147,8 @@ export default function WeekView() {
     const onSave = async () => {
       if (!inputValue.trim()) return;
       setSaving(true);
-      await handleCorrectionSave(day, type, inputValue);
+      const shouldAddRecipe = window.confirm(`Correction saved: "${inputValue}".\n\nShould this be added as an official recipe to the index for future weeks?`);
+      await handleCorrectionSave(day, type, inputValue, shouldAddRecipe);
       setSaving(false);
     };
 
@@ -248,7 +257,7 @@ export default function WeekView() {
                       {getFeedbackBadge(dailyFeedback?.dinner_feedback || dinner?.kids_feedback, dinner?.made, dinner?.needs_fix)}
                     </div>
                     <p className={`font-medium mt-1 ${(dinner?.made === true || dinner?.made === false || typeof dinner?.made === 'string') && !dinner?.needs_fix ? 'text-[var(--text-muted)]' : 'text-[var(--text-primary)]'}`}>
-                      {dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Not planned'}
+                      {getDisplayName(dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Not planned', dinner?.actual_meal)}
                     </p>
                     {dinner?.vegetables && dinner.vegetables.length > 0 && (
                       <p className="text-xs text-[var(--text-muted)] mt-1">
@@ -270,7 +279,7 @@ export default function WeekView() {
                       {getFeedbackBadge(dailyFeedback?.kids_lunch, dailyFeedback?.kids_lunch_made, dailyFeedback?.kids_lunch_needs_fix)}
                     </div>
                     <p className={`mt-1 ${(dailyFeedback?.kids_lunch_made === true || dailyFeedback?.kids_lunch_made === false) && !dailyFeedback?.kids_lunch_needs_fix ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>
-                      {lunch?.recipe_name || 'Leftovers'}
+                      {getDisplayName(lunch?.recipe_name || 'Leftovers', dailyFeedback?.kids_lunch)}
                     </p>
                     {lunch?.assembly_notes && (
                       <p className="text-xs text-[var(--text-muted)] mt-1">{lunch.assembly_notes}</p>
@@ -286,7 +295,9 @@ export default function WeekView() {
 
                   <div className={`pb-2 border-b border-[var(--border-subtle)] ${(dailyFeedback?.adult_lunch_made === true || dailyFeedback?.adult_lunch_made === false) && !dailyFeedback?.adult_lunch_needs_fix ? 'opacity-60 grayscale-[0.5]' : ''}`}>
                     <span className="font-mono text-xs text-[var(--text-muted)] uppercase">Adult Lunch</span>
-                    <p className={`mt-1 ${(dailyFeedback?.adult_lunch_made === true || dailyFeedback?.adult_lunch_made === false) && !dailyFeedback?.adult_lunch_needs_fix ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>Leftovers</p>
+                    <p className={`mt-1 ${(dailyFeedback?.adult_lunch_made === true || dailyFeedback?.adult_lunch_made === false) && !dailyFeedback?.adult_lunch_needs_fix ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>
+                      {getDisplayName('Leftovers', dailyFeedback?.adult_lunch)}
+                    </p>
                   </div>
 
                   <div className={`pb-2 border-b border-[var(--border-subtle)] ${(dailyFeedback?.school_snack_made === true || dailyFeedback?.school_snack_made === false) && !dailyFeedback?.school_snack_needs_fix ? 'opacity-60 grayscale-[0.5]' : ''}`}>
@@ -295,7 +306,7 @@ export default function WeekView() {
                       {getFeedbackBadge(dailyFeedback?.school_snack, dailyFeedback?.school_snack_made, dailyFeedback?.school_snack_needs_fix)}
                     </div>
                     <p className={`mt-1 ${(dailyFeedback?.school_snack_made === true || dailyFeedback?.school_snack_made === false) && !dailyFeedback?.school_snack_needs_fix ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>
-                      {snacks?.school || 'TBD'}
+                      {getDisplayName(snacks?.school || 'TBD', dailyFeedback?.school_snack)}
                     </p>
                     {dailyFeedback?.school_snack_needs_fix && (
                       <CorrectionInput
@@ -312,7 +323,7 @@ export default function WeekView() {
                       {getFeedbackBadge(dailyFeedback?.home_snack, dailyFeedback?.home_snack_made, dailyFeedback?.home_snack_needs_fix)}
                     </div>
                     <p className={`mt-1 ${(dailyFeedback?.home_snack_made === true || dailyFeedback?.home_snack_made === false) && !dailyFeedback?.home_snack_needs_fix ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>
-                      {!(day === 'sat' || day === 'sun') ? (snacks?.home || 'TBD') : '-'}
+                      {getDisplayName(!(day === 'sat' || day === 'sun') ? (snacks?.home || 'TBD') : '-', dailyFeedback?.home_snack)}
                     </p>
                     {dailyFeedback?.home_snack_needs_fix && (
                       <CorrectionInput
@@ -374,7 +385,7 @@ export default function WeekView() {
                       <div className="flex justify-between items-start">
                         <div className={`flex items-start ${isConfirmed ? 'text-[var(--text-muted)] italic' : ''}`}>
                           <FixCheckbox day={day} type="kids_lunch" current={needsFix} />
-                          <span>{lunch?.recipe_name || 'Leftovers'}</span>
+                          <span>{getDisplayName(lunch?.recipe_name || 'Leftovers', dailyFeedback?.kids_lunch)}</span>
                         </div>
                         {getFeedbackBadge(dailyFeedback?.kids_lunch, dailyFeedback?.kids_lunch_made, needsFix)}
                       </div>
@@ -415,7 +426,7 @@ export default function WeekView() {
                       <div className="flex justify-between items-start">
                         <div className={`flex items-start ${isConfirmed ? 'text-[var(--text-muted)] italic' : ''}`}>
                           <FixCheckbox day={day} type="school_snack" current={needsFix} />
-                          <span>{snacks?.school || 'TBD'}</span>
+                          <span>{getDisplayName(snacks?.school || 'TBD', dailyFeedback?.school_snack)}</span>
                         </div>
                         {getFeedbackBadge(dailyFeedback?.school_snack, dailyFeedback?.school_snack_made, needsFix)}
                       </div>
@@ -453,7 +464,7 @@ export default function WeekView() {
                       <div className="flex justify-between items-start">
                         <div className={`flex items-start ${isConfirmed ? 'text-[var(--text-muted)] italic' : ''}`}>
                           <FixCheckbox day={day} type="home_snack" current={needsFix} />
-                          <span>{snacks?.home || 'TBD'}</span>
+                          <span>{getDisplayName(snacks?.home || 'TBD', dailyFeedback?.home_snack)}</span>
                         </div>
                         {getFeedbackBadge(dailyFeedback?.home_snack, dailyFeedback?.home_snack_made, needsFix)}
                       </div>
@@ -496,10 +507,10 @@ export default function WeekView() {
                           <span className="font-medium">
                             {dinner?.recipe_id ? (
                               <Link href={`/recipes/${dinner.recipe_id}`} className={`hover:underline ${isConfirmed ? 'text-[var(--text-muted)]' : 'text-blue-800'}`}>
-                                {dinnerName}
+                                {getDisplayName(dinnerName, dinner?.actual_meal)}
                               </Link>
                             ) : (
-                              dinnerName
+                              getDisplayName(dinnerName, dinner?.actual_meal)
                             )}
                           </span>
                         </div>
@@ -540,7 +551,9 @@ export default function WeekView() {
                       <div className="flex justify-between items-start">
                         <div className={`flex items-start ${isConfirmed ? 'text-[var(--text-muted)] italic' : ''}`}>
                           <FixCheckbox day={day} type="adult_lunch" current={needsFix} />
-                          <span className="text-[var(--text-muted)]">Leftovers</span>
+                          <span className={isConfirmed ? 'text-[var(--text-muted)]' : ''}>
+                            {getDisplayName('Leftovers', dailyFeedback?.adult_lunch)}
+                          </span>
                         </div>
                         {getFeedbackBadge(dailyFeedback?.adult_lunch, dailyFeedback?.adult_lunch_made, needsFix)}
                       </div>

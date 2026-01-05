@@ -26,7 +26,10 @@ CORS(app) # Enable CORS for all routes
 def get_status():
     try:
         from scripts.workflow import archive_expired_weeks, get_workflow_state, find_current_week_file
-        archive_expired_weeks()
+        try:
+            archive_expired_weeks()
+        except Exception as e:
+            print(f"Warning: Failed to archive expired weeks (likely read-only filesystem): {e}")
         
         from datetime import datetime, timedelta
         # Try to find the most relevant week for the dashboard

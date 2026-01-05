@@ -598,7 +598,41 @@ def replan_meal_plan(input_file, data):
     with open(history_path, 'w') as f:
         yaml.dump(history, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
 
-    # 7. Regenerate HTML
+    # 7. Update input file (to keep dashboard in sync)
+    if input_file and input_file.exists():
+        data['dinners'] = []
+        for d in new_dinners:
+            # We want to store just the necessary info in input file for consistency
+            data['dinners'].append({
+                'day': d.get('day'),
+                'recipe_id': d.get('recipe_id')
+            })
+        
+        # Mark workflow status if needed
+        if 'workflow' in data:
+            data['workflow']['updated_at'] = datetime.now().isoformat()
+            
+        with open(input_file, 'w') as f:
+            yaml.dump(data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        print(f"   ✓ Updated: {input_file}")
+
+    # 8. Refresh Lunches based on updated dinner sequence
+    print("   🍱 Refreshing lunch plans to maintain pipelines...")
+    from scripts.lunch_selector import LunchSelector
+    
+    # Need to format dinners for LunchSelector (list of dicts with 'day' and 'recipe_id')
+    formatted_dinners = []
+    for d in new_dinners:
+        formatted_dinners.append({
+            'day': d.get('day'),
+            'recipe_id': d.get('recipe_id'),
+            'recipe_name': d.get('recipe_id').replace('_', ' ').title() # Fallback name
+        })
+    
+    selector = LunchSelector()
+    selected_lunches = selector.select_weekly_lunches(formatted_dinners, monday_str)
+
+    # 9. Regenerate HTML
     all_recipes = []
     index_path = Path('recipes/index.yml')
     if index_path.exists():
@@ -622,8 +656,11 @@ def replan_meal_plan(input_file, data):
             if recipe:
                 selected_dinners_objs[day] = recipe
 
+    # Add a notice for the UI
+    data['replan_notice'] = f"Plan updated on {datetime.now().strftime('%a at %-I:%M %p')} due to skips/shifts."
+
     print(f"   📄 Regenerating HTML plan for week of {monday_str}...")
-    plan_content = generate_html_plan(data, history, selected_dinners_objs)
+    plan_content = generate_html_plan(data, history, selected_dinners_objs, selected_lunches=selected_lunches)
     
     plans_dir = Path('public/plans')
     plans_dir.mkdir(exist_ok=True)
@@ -997,6 +1034,11 @@ def generate_html_plan(inputs, history, selected_dinners, from_scratch_recipe=No
     html.append('<body>')
     html.append('    <div class="container">')
     html.append(f'        <h1>📅 Weekly Meal Plan: {week_range}</h1>')
+    
+    # Add Re-plan Notice if present
+    if inputs.get('replan_notice'):
+        html.append(f'        <div style="background: var(--accent-gold); color: black; padding: 10px; margin-bottom: 20px; text-align: center; border-radius: 4px; font-weight: bold; font-size: 0.9rem;">🔄 {inputs["replan_notice"]}</div>')
+    
     html.append('')
     html.append('        <!-- Tab Navigation -->')
     html.append('        <div class="tab-nav">')

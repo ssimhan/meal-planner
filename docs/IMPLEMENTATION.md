@@ -96,7 +96,7 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 
 **3. Core Flow Optimization (Effort: High) - IN PROGRESS**
 - [x] **Leftover Optimizer**: Explicitly plan Dinner -> Lunch pipelines in the weekly generation logic. (COMPLETED 2026-01-04)
-- [ ] **Smart Re-plan Refinement**: Improve the "one-click re-plan" to handle complex mid-week shifts and auto-refresh the rest of the week to use up leftovers.
+- [x] **Smart Re-plan Refinement**: Improve the "one-click re-plan" to handle complex mid-week shifts and auto-refresh the rest of the week to use up leftovers. (COMPLETED 2026-01-04)
 
 ### Phase 11: Future Enhancements (Backlog)
 -   **Recipe Importer**: Paste URL → auto-extract and add to index.

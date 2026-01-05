@@ -796,3 +796,11 @@ freezer_inventory:
   - Linked Overview batch-cooking suggestions to specific planned pipelines.
   - Added dynamic "Pack leftovers" tasks to previous evening prep lists in `workflow.py`.
 - **Outcome:** More efficient cooking by doubling high-value meals, reducing decision fatigue for kid lunches.
+
+### [2026-01-04] Smart Re-plan Refinement
+- **Goal:** Improve the mid-week re-plan experience by auto-refreshing lunches and syncing all data sources.
+- **Changes:**
+  - Integrated `LunchSelector` into the `replan` command flow to auto-refresh leftover pipelines when dinner shifts.
+  - Added synchronization of `inputs/{date}.yml` during re-plan to keep the dashboard in sync.
+  - Added a visual notice in the HTML plan indicating when the plan was last re-planned.
+- **Outcome:** Re-planning no longer breaks lunch pipelines and provides clear visual feedback to the user.

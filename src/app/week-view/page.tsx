@@ -62,12 +62,31 @@ export default function WeekView() {
   const toggleFix = async (day: string, type: string, currentStatus: boolean) => {
     if (!status?.week_data?.week_of) return;
 
-    // Optimistic update
     const newStatus = !currentStatus;
-    // We would need to update local state here to see it immediately, 
-    // but for now let's just fire the API call and reload or wait for swr-like behavior (not implemented yet).
-    // Let's implement a simple local state update for the UI at least? 
-    // Complexity: The state is deeply nested. For now, we'll just fire-and-forget and maybe reload.
+
+    // Optimistic update
+    setStatus(prev => {
+      if (!prev || !prev.week_data) return prev;
+      const next = { ...prev };
+      const weekData = { ...next.week_data };
+
+      if (type === 'dinner') {
+        if (weekData.dinners) {
+          weekData.dinners = weekData.dinners.map((d: any) =>
+            d.day === day ? { ...d, needs_fix: newStatus } : d
+          );
+        }
+      } else {
+        const dailyFeedback = { ...(weekData.daily_feedback || {}) };
+        const dayFeedback = { ...(dailyFeedback[day] || {}) };
+        dayFeedback[`${type}_needs_fix`] = newStatus;
+        dailyFeedback[day] = dayFeedback;
+        weekData.daily_feedback = dailyFeedback;
+      }
+
+      next.week_data = weekData;
+      return next;
+    });
 
     try {
       await fetch('/api/log-meal', {
@@ -79,11 +98,12 @@ export default function WeekView() {
           [`${type}_needs_fix`]: newStatus
         })
       });
-      // Force reload or re-fetch
-      window.location.reload();
     } catch (e) {
       console.error("Failed to toggle fix", e);
       alert("Failed to save change");
+      // Optional: re-fetch to sync if failed
+      const data = await getStatus();
+      setStatus(data);
     }
   };
 
@@ -167,7 +187,7 @@ export default function WeekView() {
                   <div className="pb-2 border-b border-[var(--border-subtle)]">
                     <div className="flex justify-between items-start">
                       <span className="font-mono text-xs text-[var(--text-muted)] uppercase">Dinner</span>
-                      {getFeedbackBadge(dailyFeedback?.dinner_feedback || dinner?.kids_feedback, dinner?.made)}
+                      {getFeedbackBadge(dailyFeedback?.dinner_feedback || dinner?.kids_feedback, dinner?.made, dinner?.needs_fix)}
                     </div>
                     <p className="text-[var(--text-primary)] font-medium mt-1">
                       {dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Not planned'}
@@ -182,7 +202,7 @@ export default function WeekView() {
                   <div className="pb-2 border-b border-[var(--border-subtle)]">
                     <div className="flex justify-between items-start">
                       <span className="font-mono text-xs text-[var(--text-muted)] uppercase">Kids Lunch</span>
-                      {getFeedbackBadge(dailyFeedback?.kids_lunch, dailyFeedback?.kids_lunch_made)}
+                      {getFeedbackBadge(dailyFeedback?.kids_lunch, dailyFeedback?.kids_lunch_made, dailyFeedback?.kids_lunch_needs_fix)}
                     </div>
                     <p className="text-[var(--text-primary)] mt-1">
                       {lunch?.recipe_name || 'Leftovers'}
@@ -200,7 +220,7 @@ export default function WeekView() {
                   <div className="pb-2 border-b border-[var(--border-subtle)]">
                     <div className="flex justify-between items-start">
                       <span className="font-mono text-xs text-[var(--text-muted)] uppercase">School Snack</span>
-                      {getFeedbackBadge(dailyFeedback?.school_snack, dailyFeedback?.school_snack_made)}
+                      {getFeedbackBadge(dailyFeedback?.school_snack, dailyFeedback?.school_snack_made, dailyFeedback?.school_snack_needs_fix)}
                     </div>
                     <p className="text-[var(--text-primary)] mt-1">
                       {snacks?.school || 'TBD'}
@@ -210,7 +230,7 @@ export default function WeekView() {
                   <div>
                     <div className="flex justify-between items-start">
                       <span className="font-mono text-xs text-[var(--text-muted)] uppercase">Home Snack</span>
-                      {getFeedbackBadge(dailyFeedback?.home_snack, dailyFeedback?.home_snack_made)}
+                      {getFeedbackBadge(dailyFeedback?.home_snack, dailyFeedback?.home_snack_made, dailyFeedback?.home_snack_needs_fix)}
                     </div>
                     <p className="text-[var(--text-primary)] mt-1">
                       {snacks?.home || 'TBD'}
@@ -237,8 +257,8 @@ export default function WeekView() {
                     <th
                       key={day}
                       className={`p-4 text-left font-mono text-xs uppercase border-b-2 ${isToday
-                          ? 'bg-[var(--accent-green)] text-white border-[var(--accent-green)]'
-                          : 'text-[var(--text-muted)] border-[var(--border-subtle)]'
+                        ? 'bg-[var(--accent-green)] text-white border-[var(--accent-green)]'
+                        : 'text-[var(--text-muted)] border-[var(--border-subtle)]'
                         }`}
                     >
                       {dayName}

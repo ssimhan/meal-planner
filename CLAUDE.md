@@ -19,11 +19,13 @@ Generate weekly meal plans:
 ## Files to Read
 
 **Always read first:**
-- `README.md` - System architecture
-- `recipes/index.yml` - 234 recipes with metadata
+- `README.md` - System architecture and current status
+- `docs/IMPLEMENTATION.md` - Complete roadmap and phase status
+- `recipes/index.yml` - 226 recipes with metadata (cuisine, meal_type, leftover_potential, kid_favorite)
 - `data/history.yml` - Last 3+ weeks (anti-repetition)
 - `inputs/YYYY-MM-DD.yml` - Current week constraints
 - `recipes/taxonomy.yml` - Valid cuisines, meal types, effort levels
+- `config.yml` - Kid profiles with allergy tracking
 
 **After implementation:**
 - Update `docs/IMPLEMENTATION.md` and `docs/PROJECT_HISTORY.md`
@@ -93,6 +95,22 @@ Each dinner: 1+ vegetables (ideal: 2-3)
 Maintain 3 complete meals (<15 min reheat)
 Identify batch opportunities (dal, curry, pasta sauce, soup)
 Note: "Make 2x batch, freeze half"
+
+**Smart Personalization:**
+- Kid profiles in `config.yml` with individual allergies (e.g., Anya avoids nuts)
+- School snacks automatically nut-free
+- Lunch base meals synced across kids with personalized restrictions
+
+**Leftover Optimizer:**
+- Recipes with `leftover_potential: high` trigger planned pipelines
+- Dinner → next day lunch for entire family
+- Batch suggestions coordinated with lunch plan
+- Dynamic "Pack leftovers" prep tasks
+
+**Recipe Importing:**
+- Use `python3 scripts/import_recipe.py <URL>` to add new recipes
+- Parser preserves manual metadata (`leftover_potential`, `kid_favorite`)
+- API endpoint: `/api/recipes/import` for web UI
 
 ## Validation Checklist
 

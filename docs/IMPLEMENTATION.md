@@ -41,11 +41,27 @@ The Meal Planner is a detailed Hybrid Serverless application that manages weekly
 -   **Smart Re-plan:** Logic to shift skipped meals and handle rollover to the next week.
 -   **Fuzzy Matching:** Ingredients and meals are matched using fuzzy logic.
 
-### 3. Execution Tracking
+### 3. Smart Personalization
+-   **Kid Profiles:** Individual profiles in `config.yml` with allergy tracking (e.g., Anya avoids nuts).
+-   **Lunch Syncing:** Base meals synchronized across kids with personalized restrictions applied.
+-   **Snack Intelligence:** School vs. home logic with automatic nut-free substitutions for school snacks.
+
+### 4. Leftover Optimizer
+-   **Planned Pipelines:** Recipes with `leftover_potential: high` trigger dinner → lunch pipelines for the entire family.
+-   **Batch Coordination:** Overview tab suggests batch cooking based on actual lunch plans.
+-   **Dynamic Prep:** Prep lists automatically include "Pack leftovers" tasks when pipelines are active.
+-   **Metadata:** Recipes tagged with `leftover_potential` and `kid_favorite` flags.
+
+### 5. Recipe Management
+-   **Recipe Importer:** `scripts/import_recipe.py` fetches and parses recipes from URLs.
+-   **Metadata Preservation:** Parser preserves manual fields (`leftover_potential`, `kid_favorite`) across re-parses.
+-   **Enhanced Parsing:** Fallback HTML parsing for non-schema.org recipes.
+
+### 6. Execution Tracking
 -   **[log_execution.py](file:///Users/sandhyasimhan/Documents/3_Career/Coding%20Projects/meal-planner/scripts/log_execution.py):** Updates history and inventory based on daily logs.
 -   **Vegetable Tracking:** Auto-populates fridge stock from plans and tracks consumption.
 
-### 4. UI Framework
+### 7. UI Framework
 -   **Dashboard:** Interactive web UI (`src/app`) for managing the entire lifecycle.
 -   **Generated Plans:** Static HTML plans (`public/plans/`) with 9 tabs, responsive design, and dynamic grocery lists.
 -   **Design:** Solarpunk aesthetic with earth tones and Space Mono typography.

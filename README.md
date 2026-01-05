@@ -1,36 +1,135 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Meal Planner System
 
-## Getting Started
+An intelligent, hybrid serverless meal planning system that generates personalized weekly meal plans, manages inventory, tracks execution, and optimizes for family preferences and constraints.
 
-First, run the development server:
+## 🌟 Features
+
+### Core Planning
+- **Smart Dinner Selection**: Automatically selects 5 dinners per week based on schedule constraints, recent history, and available ingredients
+- **Lunch Optimization**: Intelligent lunch planning with leftover pipelines and kid-friendly options
+- **Snack Intelligence**: School vs. home snack logic with automatic allergy substitutions
+- **Grocery List Generation**: Auto-generated shopping lists organized by store section
+
+### Smart Personalization
+- **Kid Profiles**: Individual profiles with allergy tracking and preferences
+- **Leftover Optimizer**: Planned dinner → lunch pipelines for high-value meals
+- **Batch Cooking Suggestions**: Coordinated suggestions based on actual lunch plans
+- **Dynamic Prep Tasks**: Context-aware prep lists including "pack leftovers" reminders
+
+### Workflow Management
+- **Interactive Dashboard**: Web UI for managing the entire meal planning workflow
+- **Mid-Week Re-planning**: Smart re-plan that maintains leftover pipelines when meals shift
+- **Execution Tracking**: Log meals, track adherence, and capture feedback
+- **Inventory Management**: Track fridge, pantry, and freezer inventory
+
+### Recipe Management
+- **Recipe Importer**: Import recipes from URLs with automatic parsing
+- **Metadata Preservation**: Manual recipe metadata (leftover potential, kid favorites) preserved across re-parses
+- **226+ Recipes**: Curated collection with Indian, Mexican, Italian, and American cuisines
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.9+
+- Node.js 18+
+- Git
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/ssimhan/meal-planner.git
+cd meal-planner
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Install Node dependencies
+npm install
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to access the dashboard.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### CLI Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Create a new week
+python mealplan create-week
 
-## Learn More
+# Confirm farmers market vegetables
+python mealplan confirm-veg "broccoli, sweet potato, spinach"
 
-To learn more about Next.js, take a look at the following resources:
+# Generate weekly plan
+python mealplan generate
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Log meal execution
+python mealplan log --day mon --made yes --feedback "❤️"
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Re-plan mid-week
+python mealplan replan --skip tue --move-to wed
+```
 
-## Deploy on Vercel
+## 📁 Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+meal-planner/
+├── api/                    # Vercel serverless functions
+├── scripts/                # Core Python logic
+│   ├── workflow.py        # Main workflow orchestration
+│   ├── lunch_selector.py  # Lunch planning logic
+│   ├── parse_recipes.py   # Recipe parser
+│   └── import_recipe.py   # Recipe importer
+├── src/                    # Next.js web UI
+│   ├── app/               # App router pages
+│   └── lib/               # API client
+├── recipes/                # Recipe database
+│   ├── index.yml          # Curated recipe index
+│   └── raw_html/          # Source HTML files
+├── data/                   # State and history
+│   ├── history.yml        # Execution history
+│   └── inventory.yml      # Current inventory
+├── inputs/                 # Weekly input files
+└── public/plans/          # Generated HTML plans
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📖 Documentation
+
+- **[IMPLEMENTATION.md](docs/IMPLEMENTATION.md)**: Complete system architecture and roadmap
+- **[PROJECT_HISTORY.md](docs/PROJECT_HISTORY.md)**: Development history and session logs
+- **[CLAUDE.md](CLAUDE.md)**: AI assistant context and guidelines
+
+## 🎯 Current Status
+
+**Phase 10: Smart Personalization & Core Flow Optimization** ✅ Complete
+- Kid profiles with allergy tracking
+- Leftover optimizer with planned pipelines
+- Smart re-plan with auto-refreshing lunches
+
+**Phase 11: Future Enhancements** 🚧 In Progress
+- ✅ Recipe Importer (completed)
+- 🔜 Weather/Calendar Integration
+- 🔜 Weekly Summary Email
+- 🔜 Nutrition Tracking
+
+## 🛠️ Technology Stack
+
+- **Backend**: Python 3.9, Flask, PyYAML
+- **Frontend**: Next.js 15, React, TypeScript
+- **Deployment**: Vercel (serverless)
+- **Storage**: YAML files + GitHub as database
+- **Parsing**: BeautifulSoup4, lxml
+
+## 🤝 Contributing
+
+This is a personal project, but suggestions and feedback are welcome! Please open an issue to discuss proposed changes.
+
+## 📄 License
+
+MIT License - see LICENSE file for details
+
+## 🙏 Acknowledgments
+
+Built with assistance from Claude (Anthropic) and designed for a family of 4 with specific dietary preferences and scheduling constraints.

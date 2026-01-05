@@ -107,6 +107,64 @@ export default function WeekView() {
     }
   };
 
+  const handleCorrectionSave = async (day: string, type: string, value: string) => {
+    if (!status?.week_data?.week_of) return;
+
+    try {
+      await fetch('/api/log-meal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          week: status.week_data.week_of,
+          day,
+          ...(type === 'dinner'
+            ? { actual_meal: value, dinner_needs_fix: false }
+            : { [`${type}_feedback`]: value, [`${type}_needs_fix`]: false })
+        })
+      });
+
+      // Refresh data to reflect changes
+      const data = await getStatus();
+      setStatus(data);
+    } catch (e) {
+      console.error("Failed to save correction", e);
+      alert("Failed to save correction");
+    }
+  };
+
+  const CorrectionInput = ({ day, type, currentValue }: { day: string, type: string, currentValue?: string }) => {
+    const [inputValue, setInputValue] = useState(currentValue || '');
+    const [saving, setSaving] = useState(false);
+
+    const onSave = async () => {
+      if (!inputValue.trim()) return;
+      setSaving(true);
+      await handleCorrectionSave(day, type, inputValue);
+      setSaving(false);
+    };
+
+    return (
+      <div className="mt-2 flex gap-1">
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          className="text-xs p-1 border border-red-300 rounded flex-1 focus:ring-1 focus:ring-red-500 outline-none bg-white"
+          placeholder="Correction..."
+          autoFocus
+          onKeyDown={(e) => e.key === 'Enter' && onSave()}
+        />
+        <button
+          onClick={onSave}
+          disabled={saving || !inputValue.trim()}
+          className="text-[10px] bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 disabled:opacity-50"
+        >
+          {saving ? '...' : 'Save'}
+        </button>
+      </div>
+    );
+  };
+
   const FixCheckbox = ({ day, type, current }: { day: string, type: string, current: boolean }) => {
     if (!editMode) return null;
     return (
@@ -197,6 +255,13 @@ export default function WeekView() {
                         🥬 {dinner.vegetables.join(', ')}
                       </p>
                     )}
+                    {dinner?.needs_fix && (
+                      <CorrectionInput
+                        day={day}
+                        type="dinner"
+                        currentValue={dinner.actual_meal}
+                      />
+                    )}
                   </div>
 
                   <div className={`pb-2 border-b border-[var(--border-subtle)] ${(dailyFeedback?.kids_lunch_made === true || dailyFeedback?.kids_lunch_made === false) && !dailyFeedback?.kids_lunch_needs_fix ? 'opacity-60 grayscale-[0.5]' : ''}`}>
@@ -210,6 +275,13 @@ export default function WeekView() {
                     {lunch?.assembly_notes && (
                       <p className="text-xs text-[var(--text-muted)] mt-1">{lunch.assembly_notes}</p>
                     )}
+                    {dailyFeedback?.kids_lunch_needs_fix && (
+                      <CorrectionInput
+                        day={day}
+                        type="kids_lunch"
+                        currentValue={dailyFeedback?.kids_lunch}
+                      />
+                    )}
                   </div>
 
                   <div className={`pb-2 border-b border-[var(--border-subtle)] ${(dailyFeedback?.adult_lunch_made === true || dailyFeedback?.adult_lunch_made === false) && !dailyFeedback?.adult_lunch_needs_fix ? 'opacity-60 grayscale-[0.5]' : ''}`}>
@@ -222,19 +294,33 @@ export default function WeekView() {
                       <span className="font-mono text-xs text-[var(--text-muted)] uppercase">School Snack</span>
                       {getFeedbackBadge(dailyFeedback?.school_snack, dailyFeedback?.school_snack_made, dailyFeedback?.school_snack_needs_fix)}
                     </div>
-                    <p className={`mt-1 ${dailyFeedback?.school_snack_made !== undefined ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>
+                    <p className={`mt-1 ${(dailyFeedback?.school_snack_made === true || dailyFeedback?.school_snack_made === false) && !dailyFeedback?.school_snack_needs_fix ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>
                       {snacks?.school || 'TBD'}
                     </p>
+                    {dailyFeedback?.school_snack_needs_fix && (
+                      <CorrectionInput
+                        day={day}
+                        type="school_snack"
+                        currentValue={dailyFeedback?.school_snack}
+                      />
+                    )}
                   </div>
 
-                  <div className={`${dailyFeedback?.home_snack_made !== undefined ? 'opacity-60 grayscale-[0.5]' : ''}`}>
+                  <div className={`${(dailyFeedback?.home_snack_made === true || dailyFeedback?.home_snack_made === false) && !dailyFeedback?.home_snack_needs_fix ? 'opacity-60 grayscale-[0.5]' : ''}`}>
                     <div className="flex justify-between items-start">
                       <span className="font-mono text-xs text-[var(--text-muted)] uppercase">Home Snack</span>
                       {getFeedbackBadge(dailyFeedback?.home_snack, dailyFeedback?.home_snack_made, dailyFeedback?.home_snack_needs_fix)}
                     </div>
-                    <p className={`mt-1 ${dailyFeedback?.home_snack_made !== undefined ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>
+                    <p className={`mt-1 ${(dailyFeedback?.home_snack_made === true || dailyFeedback?.home_snack_made === false) && !dailyFeedback?.home_snack_needs_fix ? 'text-[var(--text-muted)] italic' : 'text-[var(--text-primary)]'}`}>
                       {!(day === 'sat' || day === 'sun') ? (snacks?.home || 'TBD') : '-'}
                     </p>
+                    {dailyFeedback?.home_snack_needs_fix && (
+                      <CorrectionInput
+                        day={day}
+                        type="home_snack"
+                        currentValue={dailyFeedback?.home_snack}
+                      />
+                    )}
                   </div>
                 </div>
               </div>
@@ -295,6 +381,13 @@ export default function WeekView() {
                       {lunch?.assembly_notes && (
                         <div className="text-xs text-[var(--text-muted)] mt-1">{lunch.assembly_notes}</div>
                       )}
+                      {needsFix && (
+                        <CorrectionInput
+                          day={day}
+                          type="kids_lunch"
+                          currentValue={dailyFeedback?.kids_lunch}
+                        />
+                      )}
                     </td>
                   );
                 })}
@@ -326,6 +419,13 @@ export default function WeekView() {
                         </div>
                         {getFeedbackBadge(dailyFeedback?.school_snack, dailyFeedback?.school_snack_made, needsFix)}
                       </div>
+                      {needsFix && (
+                        <CorrectionInput
+                          day={day}
+                          type="school_snack"
+                          currentValue={dailyFeedback?.school_snack}
+                        />
+                      )}
                     </td>
                   );
                 })}
@@ -357,6 +457,13 @@ export default function WeekView() {
                         </div>
                         {getFeedbackBadge(dailyFeedback?.home_snack, dailyFeedback?.home_snack_made, needsFix)}
                       </div>
+                      {needsFix && (
+                        <CorrectionInput
+                          day={day}
+                          type="home_snack"
+                          currentValue={dailyFeedback?.home_snack}
+                        />
+                      )}
                     </td>
                   );
                 })}
@@ -403,6 +510,13 @@ export default function WeekView() {
                           🥬 {dinner.vegetables.join(', ')}
                         </div>
                       )}
+                      {needsFix && (
+                        <CorrectionInput
+                          day={day}
+                          type="dinner"
+                          currentValue={dinner?.actual_meal}
+                        />
+                      )}
                     </td>
                   );
                 })}
@@ -417,7 +531,7 @@ export default function WeekView() {
                   const dailyFeedback = weekData.daily_feedback?.[day];
                   const isToday = status?.current_day === day;
                   const needsFix = dailyFeedback?.adult_lunch_needs_fix;
-                  const isConfirmed = dailyFeedback?.adult_lunch_made !== undefined;
+                  const isConfirmed = (dailyFeedback?.adult_lunch_made === true || dailyFeedback?.adult_lunch_made === false) && !needsFix;
                   return (
                     <td
                       key={day}
@@ -430,6 +544,13 @@ export default function WeekView() {
                         </div>
                         {getFeedbackBadge(dailyFeedback?.adult_lunch, dailyFeedback?.adult_lunch_made, needsFix)}
                       </div>
+                      {needsFix && (
+                        <CorrectionInput
+                          day={day}
+                          type="adult_lunch"
+                          currentValue={dailyFeedback?.adult_lunch}
+                        />
+                      )}
                     </td>
                   );
                 })}

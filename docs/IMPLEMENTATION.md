@@ -134,6 +134,7 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
     - Step 3b: Ate Out → Simple confirmation
     - Step 3c: Something Else → Text input for custom entry
 - [x] **Data Structure**: New `daily_feedback` structure in `history.yml` stores all feedback + made status
+- [x] **State Stability (Batch 3)**: Fixed dashboard re-render issues by lifting `DinnerLogging` state to the parent component, ensuring "Skip" alternatives remain open during data refreshes.
 
 **1.5 Mobile & UX Polish** ✅ - COMPLETED 2026-01-04
 - [x] **Mobile Responsive Dashboard**: Grid uses `grid-cols-1 md:grid-cols-2 lg:grid-cols-5` (cards stack vertically on mobile)
@@ -142,6 +143,8 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
     - **Mobile**: Card layout with collapsible sections and feedback indicators
     - **Features**: Vegetable tracking display, energy-based prep schedule, freezer inventory status
     - **Navigation**: Direct link from dashboard when plan is active
+    - **Correction Workflow (2026-01-04)**: Inline `CorrectionInput` for all meal types; "Actual Meal" priority display logic ensures history reflects what was actually eaten.
+    - **Recipe Harvest**: Integrated prompt to add corrections as official recipes to the index.
 
 **2. Smart Personalization (Effort: Medium) - COMPLETED 2026-01-04**
 - [x] **Kid Profiles**: Update `lunch_selector.py` to handle multiple kid profiles (e.g., specific preferences/allergies like "Akira: nuts ok" vs "Anya: no nuts").
@@ -204,7 +207,8 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 - [x] **Today's View**: Dashboard updated with distinct cards for AM prep, kid/adult lunches, dinner, PM prep, and snacks.
 - [x] **Inventory Ingest**: Text-to-inventory parsing.
 - [x] **Recipe Success Scoring**: Emoji-based feedback tracking.
-- [x] **Phase 10 Logging System**: Complete redesign of feedback flow with Made/Not Made checkboxes, preference emojis, override logging, and sophisticated dinner alternatives (freezer selection, ate out, custom text input).
+- [x] **Phase 10 Logging System**: Complete redesign of feedback flow with Made/Not Made checkboxes, preference emojis, override logging, and sophisticated dinner alternatives.
+- [x] **Meal Correction Workflow**: Inline editing in Week View with "Actual over Planned" display priority and automated recipe index request flow.
 
 
 ### Recipe Index changes

@@ -26,11 +26,11 @@ export default function MealCorrectionInput({
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Sort recipes alphabetically
-  const sortedRecipes = [...recipes].sort((a, b) => a.name.localeCompare(b.name));
-
   // Filter recipes based on input
   useEffect(() => {
+    // Sort recipes alphabetically
+    const sortedRecipes = [...recipes].sort((a, b) => a.name.localeCompare(b.name));
+
     if (inputValue.trim()) {
       const filtered = sortedRecipes.filter(recipe =>
         recipe.name.toLowerCase().includes(inputValue.toLowerCase())
@@ -46,7 +46,7 @@ export default function MealCorrectionInput({
       setFilteredRecipes([]);
       setIsExistingRecipe(false);
     }
-  }, [inputValue, sortedRecipes]);
+  }, [inputValue, recipes]);
 
   // Handle click outside to close dropdown
   useEffect(() => {

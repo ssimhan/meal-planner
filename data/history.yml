@@ -152,6 +152,8 @@ weeks:
     sun:
       school_snack: ''
       school_snack_made: true
+      adult_lunch: ''
+      adult_lunch_made: true
 - week_of: '2026-01-12'
   dinners:
   - recipe_id: cauliflower_rasam

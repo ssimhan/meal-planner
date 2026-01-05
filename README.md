@@ -107,6 +107,7 @@ meal-planner/
 - Kid profiles with allergy tracking
 - Leftover optimizer with planned pipelines
 - Smart re-plan with auto-refreshing lunches
+- Improved Week View UX (Selection Mode & Dedicated Edit Queue)
 
 **Phase 11: Future Enhancements** 🚧 In Progress
 - ✅ Recipe Importer (completed)

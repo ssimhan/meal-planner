@@ -63,10 +63,11 @@ weeks:
     meal_type: freezer
     day: mon
     vegetables: []
-    made: freezer_backup
+    made: null
     freezer_used:
       meal: Chana Masala
       frozen_date: Unknown
+    needs_fix: true
   - recipe_id: chickpea_salad_wrap
     cuisine: mexican
     meal_type: tacos_wraps

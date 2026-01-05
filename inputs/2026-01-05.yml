@@ -21,7 +21,7 @@ preferences:
   - green_cabbage
   novelty_recipe_limit: 1
 farmers_market:
-  status: proposed
+  status: confirmed
   proposed_veg:
   - broccoli
   - sweet potato
@@ -32,4 +32,20 @@ farmers_market:
   - onion
   - garlic
   - cilantro
-  confirmed_veg: []
+  confirmed_veg:
+  - Bread
+  - Dried mango
+  - Cubed cheddar
+  - Pumpkin seeds
+  - Parotta frozen
+  - Sweet potato
+  - Sweet corn
+  - Blackberries
+  - Pomegranates
+  - Gnocchi
+  - Grapes
+  - Pineapple
+  - Cauliflower florets
+  - Avocado packs
+  - Multi grain crackers
+  - Sweet potato sticks

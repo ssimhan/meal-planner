@@ -35,3 +35,14 @@ farmers_market:
   - white rice
   - brown rice
   - okra
+rollover:
+- recipe_id: aloo_corn_tikki_roll
+  source_week: '2025-12-29'
+- recipe_id: baked_black_bean_and_sweet_potato_flautas
+  source_week: '2025-12-29'
+- recipe_id: black_bean_quinoa_salad
+  source_week: '2025-12-29'
+- recipe_id: bhel_puri_chaat
+  source_week: '2025-12-29'
+- recipe_id: broccoli_spinach_pasta_sauce
+  source_week: '2025-12-29'

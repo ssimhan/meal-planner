@@ -24,6 +24,18 @@ fridge:
   quantity: 1
   unit: count
   added: '2026-01-05'
+- item: cut green beans
+  quantity: 1
+  unit: meal portion
+  added: '2026-01-05'
+- item: diced carrots
+  quantity: 1
+  unit: meal portion
+  added: '2026-01-05'
+- item: diced beetroot
+  quantity: 1
+  unit: meal portion
+  added: '2026-01-05'
 pantry:
 - item: black beans
   quantity: 4
@@ -56,4 +68,16 @@ freezer:
     frozen_date: '2026-01-01'
   - meal: Parotta frozen
     servings: 1
+    frozen_date: '2026-01-05'
+  - meal: Butternut squash sauce
+    servings: 2 cups
+    frozen_date: '2024-11-15'
+  - meal: Tomato onion gravy
+    servings: 3 cups
+    frozen_date: '2024-09-25'
+  - meal: Chow chow puli kootu
+    servings: 4
+    frozen_date: '2026-01-05'
+  - meal: Keerai maseeyil
+    servings: 4
     frozen_date: '2026-01-05'

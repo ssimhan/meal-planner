@@ -117,7 +117,7 @@ export default function MealCorrectionInput({
   };
 
   return (
-    <div className="mt-2 space-y-2">
+    <div className="mt-2 space-y-1.5">
       <div className="relative">
         <input
           ref={inputRef}
@@ -127,7 +127,7 @@ export default function MealCorrectionInput({
           onKeyDown={handleKeyDown}
           onFocus={() => setShowDropdown(true)}
           placeholder={placeholder}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-sage focus:border-transparent"
+          className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-sage focus:border-transparent"
           autoFocus
         />
 
@@ -155,12 +155,12 @@ export default function MealCorrectionInput({
 
       {/* Inline checkbox for new recipes */}
       {inputValue.trim() && !isExistingRecipe && (
-        <label className="flex items-center gap-2 text-sm text-gray-700">
+        <label className="flex items-center gap-1.5 text-xs text-gray-700">
           <input
             type="checkbox"
             checked={requestRecipe}
             onChange={(e) => setRequestRecipe(e.target.checked)}
-            className="rounded border-gray-300 text-sage focus:ring-sage"
+            className="rounded border-gray-300 text-sage focus:ring-sage h-3.5 w-3.5"
           />
           <span>Add this as a new recipe to the index</span>
         </label>
@@ -172,14 +172,14 @@ export default function MealCorrectionInput({
           type="button"
           onClick={handleSave}
           disabled={!inputValue.trim()}
-          className="px-4 py-2 bg-sage text-white rounded-md hover:bg-sage/90 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 px-3 py-1.5 text-sm bg-sage text-white rounded-md hover:bg-sage/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Save
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+          className="flex-1 px-3 py-1.5 text-sm bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
         >
           Cancel
         </button>

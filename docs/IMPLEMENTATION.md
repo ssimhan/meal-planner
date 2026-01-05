@@ -101,9 +101,13 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
     - Step 3c: Something Else → Text input for custom entry
 - [x] **Data Structure**: New `daily_feedback` structure in `history.yml` stores all feedback + made status
 
-**1.5 Mobile & UX Polish** ✅
+**1.5 Mobile & UX Polish** ✅ - COMPLETED 2026-01-04
 - [x] **Mobile Responsive Dashboard**: Grid uses `grid-cols-1 md:grid-cols-2 lg:grid-cols-5` (cards stack vertically on mobile)
-- [x] **Full Week View**: Dedicated `/week-view` page with table layout (desktop) and card layout (mobile)
+- [x] **Full Week View**: Dedicated `/week-view` page with enhanced features:
+    - **Desktop**: Table layout with alternating row colors, "Today" column highlighting, feedback badges
+    - **Mobile**: Card layout with collapsible sections and feedback indicators
+    - **Features**: Vegetable tracking display, energy-based prep schedule, freezer inventory status
+    - **Navigation**: Direct link from dashboard when plan is active
 
 **2. Smart Personalization (Effort: Medium) - COMPLETED 2026-01-04**
 - [x] **Kid Profiles**: Update `lunch_selector.py` to handle multiple kid profiles (e.g., specific preferences/allergies like "Akira: nuts ok" vs "Anya: no nuts").

@@ -815,3 +815,27 @@ freezer_inventory:
   - Added `/api/recipes/import` endpoint for web UI integration.
   - Verified that re-running the parser preserves all manually added metadata.
 - **Outcome:** Users can now paste a recipe URL and have it automatically added to the index without losing custom metadata.
+
+### [2026-01-04] Enhanced Full Week View
+- **Goal:** Improve week-at-a-glance visibility with better visual hierarchy and execution tracking.
+- **Implementation:**
+  - Enhanced `/week-view` page with comprehensive improvements:
+    - **Desktop Table**: Added alternating row colors, "Today" column highlighting (green background), emoji feedback badges
+    - **Mobile Cards**: Improved card layout with better spacing, today indicator, and section dividers
+    - **Data Display**: Shows vegetables per dinner, lunch assembly notes, logged feedback status
+    - **Energy-Based Prep**: Added visual schedule cards showing Mon/Tue/Wed prep requirements with color-coded borders
+    - **Freezer Status**: Display freezer inventory with frozen dates at bottom of page
+    - **Navigation**: Direct "View Full Plan" button linking to HTML plan when available
+  - Integrated with WorkflowStatus API to show real-time feedback and execution data
+  - Added helper function `getFeedbackBadge()` to display emoji feedback consistently
+- **Technical Decisions:**
+  1. **Color coding by meal type**: Each row has distinct icon (🍽️ 🥪 ☕ 🎒 🏠) for quick scanning
+  2. **Today highlighting**: Green background on current day column makes it immediately visible
+  3. **Responsive alternating rows**: Even/odd coloring on desktop, clean sections on mobile
+  4. **Feedback integration**: Shows logged emojis (❤️ 👍 😐 👎 ❌) and skip status (✗) inline
+  5. **Energy schedule emphasis**: Color-coded prep cards (sage/gold/terracotta) with critical Thu/Fri warning
+- **Learning:**
+  - Visual hierarchy reduces cognitive load - color coding by meal type makes scanning instant
+  - Real-time feedback display creates accountability - seeing the week's progress motivates completion
+  - Energy-based prep reminder reinforces the core workflow - visible schedule keeps users on track
+- **Status:** Phase 10 (UX Polish) fully complete. Ready for Phase 11 advanced features.

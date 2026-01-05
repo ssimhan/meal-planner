@@ -59,7 +59,8 @@ export async function getRecipes(): Promise<any> {
 export async function getInventory(): Promise<any> {
     const res = await fetch('/api/inventory');
     if (!res.ok) {
-        throw new Error('Failed to fetch inventory');
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to fetch inventory');
     }
     return res.json();
 }
@@ -69,7 +70,10 @@ export async function createWeek(week_of?: string): Promise<any> {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ week_of }),
     });
-    if (!res.ok) throw new Error('Failed to create week');
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to create week');
+    }
     return res.json();
 }
 
@@ -79,7 +83,10 @@ export async function confirmVeg(confirmed_veg: string[]): Promise<any> {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ confirmed_veg }),
     });
-    if (!res.ok) throw new Error('Failed to confirm vegetables');
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to confirm vegetables');
+    }
     return res.json();
 }
 
@@ -89,7 +96,10 @@ export async function addItemToInventory(category: string, item: string): Promis
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ category, item }),
     });
-    if (!res.ok) throw new Error('Failed to add item to inventory');
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to add item to inventory');
+    }
     return res.json();
 }
 
@@ -124,6 +134,9 @@ export async function bulkAddItemsToInventory(items: { category: string, item: s
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ items }),
     });
-    if (!res.ok) throw new Error('Failed to bulk add items to inventory');
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to bulk add items to inventory');
+    }
     return res.json();
 }

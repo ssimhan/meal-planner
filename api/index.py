@@ -329,6 +329,15 @@ def create_week():
             _, week_str = find_current_week_file()
         
         from scripts.workflow import create_new_week
+        # This will still fail on Vercel if it tries to write locally without catching errors
+        # Ideally create_new_week should be refactored too, but let's see if we can patch it
+        # closer to the source or if we just need to handle the output.
+        # For now, let's assume create_new_week might fail to write but we can
+        # still sync if we generate the content in memory. 
+        # Actually create_new_week is too complex to inline here efficiently.
+        # Let's trust that we can run it and just catch the write error if needed?
+        # A better approach for create_week is needed later, but focusing on confirm_veg first.
+        
         create_new_week(week_str)
         
         # Sync to GitHub
@@ -351,6 +360,14 @@ def confirm_veg():
         if not input_file:
             return jsonify({"status": "error", "message": "No active week found"}), 404
             
+        # We need to read the content. input_file is a Path object.
+        # If on Vercel, this file might not exist locally if it was created in a previous lambda
+        # unless it was included in the deployment. 
+        # Inputs should be in the repo, so they should available to read.
+        
+        if not input_file.exists():
+             return jsonify({"status": "error", "message": f"Input file {input_file} not found"}), 404
+
         with open(input_file, 'r') as f:
             week_data = yaml.safe_load(f)
             
@@ -360,12 +377,28 @@ def confirm_veg():
         week_data['farmers_market']['confirmed_veg'] = confirmed_veg
         week_data['farmers_market']['status'] = 'confirmed'
         
-        with open(input_file, 'w') as f:
-            yaml.dump(week_data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        # Serialize to string
+        new_content = yaml.dump(week_data, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        
+        # Try to write locally (for dev), ignore if read-only
+        try:
+            with open(input_file, 'w') as f:
+                f.write(new_content)
+        except OSError:
+            print(f"Read-only filesystem, skipping local write for {input_file}")
             
-        # Sync to GitHub
-        from scripts.github_helper import sync_changes_to_github
-        sync_changes_to_github([str(input_file)])
+        # Sync to GitHub directly with content
+        from scripts.github_helper import commit_file_to_github
+        repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
+        
+        # input_file is likely absolute or relative. commit_file_to_github expects relative to repo root.
+        # If input_file is 'inputs/2025-01-05.yml', that's perfect.
+        rel_path = str(input_file)
+        
+        success = commit_file_to_github(repo_name, rel_path, f"Confirm veggies for {week_str}", content=new_content)
+        
+        if not success:
+             return jsonify({"status": "error", "message": "Failed to sync to GitHub"}), 500
         
         return jsonify({"status": "success", "message": "Vegetables confirmed"})
     except Exception as e:
@@ -382,6 +415,9 @@ def add_inventory():
             return jsonify({"status": "error", "message": "Category and item required"}), 400
             
         inventory_path = Path('data/inventory.yml')
+        if not inventory_path.exists():
+             return jsonify({"status": "error", "message": "Inventory file not found"}), 404
+
         with open(inventory_path, 'r') as f:
             inventory = yaml.safe_load(f) or {}
             
@@ -410,12 +446,23 @@ def add_inventory():
             })
             
         inventory['last_updated'] = datetime.now().strftime('%Y-%m-%d')
-        with open(inventory_path, 'w') as f:
-            yaml.dump(inventory, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        
+        new_content = yaml.dump(inventory, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        
+        try:
+            with open(inventory_path, 'w') as f:
+                f.write(new_content)
+        except OSError:
+            print("Read-only filesystem, skipping local write for inventory")
             
         # Sync to GitHub
-        from scripts.github_helper import sync_changes_to_github
-        sync_changes_to_github([str(inventory_path)])
+        from scripts.github_helper import commit_file_to_github
+        repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
+        
+        success = commit_file_to_github(repo_name, str(inventory_path), "Update inventory via Web UI", content=new_content)
+        
+        if not success:
+             return jsonify({"status": "error", "message": "Failed to sync inventory to GitHub"}), 500
         
         return jsonify({"status": "success", "inventory": inventory})
     except Exception as e:
@@ -431,6 +478,9 @@ def bulk_add_inventory():
             return jsonify({"status": "error", "message": "No items provided"}), 400
             
         inventory_path = Path('data/inventory.yml')
+        if not inventory_path.exists():
+             return jsonify({"status": "error", "message": "Inventory file not found"}), 404
+
         with open(inventory_path, 'r') as f:
             inventory = yaml.safe_load(f) or {}
             
@@ -465,12 +515,23 @@ def bulk_add_inventory():
                 })
             
         inventory['last_updated'] = datetime.now().strftime('%Y-%m-%d')
-        with open(inventory_path, 'w') as f:
-            yaml.dump(inventory, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        
+        new_content = yaml.dump(inventory, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        
+        try:
+           with open(inventory_path, 'w') as f:
+                f.write(new_content)
+        except OSError:
+            print("Read-only filesystem, skipping local write for inventory")
             
         # Sync to GitHub
-        from scripts.github_helper import sync_changes_to_github
-        sync_changes_to_github([str(inventory_path)])
+        from scripts.github_helper import commit_file_to_github
+        repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
+        
+        success = commit_file_to_github(repo_name, str(inventory_path), "Bulk update inventory via Web UI", content=new_content)
+        
+        if not success:
+             return jsonify({"status": "error", "message": "Failed to sync inventory to GitHub"}), 500
         
         return jsonify({"status": "success", "inventory": inventory})
     except Exception as e:

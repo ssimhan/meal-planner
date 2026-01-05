@@ -285,6 +285,8 @@
   prep_components: []
   component_storage_days: 0
   reuses_dinner_ingredients: []
+  leftover_potential: high
+  kid_favorite: true
 - id: black_bean_brownie_bites
   name: Black Bean Brownie Bites
   cuisine: unknown
@@ -417,6 +419,8 @@
   prep_components: []
   component_storage_days: 0
   reuses_dinner_ingredients: []
+  leftover_potential: high
+  kid_favorite: true
 - id: caramel_delight_energy_balls
   name: Caramel Delight Energy Balls
   cuisine: unknown
@@ -551,6 +555,8 @@
   prep_components: []
   component_storage_days: 0
   reuses_dinner_ingredients: []
+  leftover_potential: high
+  kid_favorite: true
 - id: cheddar_and_spinach_muffins
   name: Cheddar and Spinach Muffins
   cuisine: unknown
@@ -646,6 +652,8 @@
   - cheese
   - bell_peppers
   - onions
+  leftover_potential: high
+  kid_favorite: true
 - id: chef_s_paniyaram
   name: Chef’s Paniyaram
   cuisine: indian

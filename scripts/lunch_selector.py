@@ -387,12 +387,39 @@ class LunchSelector:
         current_day_idx = day_order.index(day)
         previous_day = day_order[current_day_idx - 1]
 
+        # Look up the full recipe to check for leftover potential/kid favorite
+        recipe = self._find_recipe_by_id(previous_dinner['recipe_id'])
+        dinner_name = previous_dinner.get('recipe_name', 'previous dinner')
+        
+        is_pipeline = False
+        if recipe:
+            leftover_pot = recipe.get('leftover_potential', 'low')
+            is_kid_fav = recipe.get('kid_favorite', False)
+            if leftover_pot == 'high' or is_kid_fav:
+                is_pipeline = True
+
+        if is_pipeline:
+            # PLANNED PIPELINE: Everyone eats leftovers
+            pipeline_name = f"Leftovers: {dinner_name}"
+            return LunchSuggestion(
+                recipe_id=f'pipeline_{day}',
+                recipe_name=pipeline_name,
+                kid_friendly=True,
+                prep_style='quick_fresh',
+                prep_components=[],
+                storage_days=1,
+                prep_day=previous_day,
+                assembly_notes=f'Planned Leftover Pipeline: Reheat {previous_day.capitalize()} dinner for everyone. Pack in morning.',
+                reuses_ingredients=previous_dinner.get('vegetables', []),
+                default_option=None,
+                kid_profiles={name: f"Reheated {dinner_name}" for name in self.kid_profiles} if self.kid_profiles else None
+            )
+
+        # STANDARD LEFTOVERS: Adult only
         # Get default for kids (rotate through defaults)
         day_idx = day_order.index(day)
         default_idx = day_idx % len(self.DEFAULTS['kids'])
         kids_default = self.DEFAULTS['kids'][default_idx]
-
-        dinner_name = previous_dinner.get('recipe_name', 'previous dinner')
 
         return LunchSuggestion(
             recipe_id=f'leftovers_{day}',

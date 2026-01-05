@@ -787,3 +787,12 @@ freezer_inventory:
   - Updated `workflow.py` to render personalized lunch details and School vs. Home snack sections.
   - Implemented automatic nut substitution (Sunbutter/Seeds) for School Snacks.
 - **Outcome:** System now safely handles Anya's nut restriction for school meals while allowing nuts at home.
+
+### [2026-01-04] Leftover Optimizer (Planned Pipelines)
+- **Goal:** Transform adult-only leftovers into intentional "Planned Pipelines" for the whole family.
+- **Changes:**
+  - Added `leftover_potential: high` and `kid_favorite: true` metadata to key recipes in `index.yml`.
+  - Refactored `lunch_selector.py` to detect these flags and plan family-wide leftover lunches.
+  - Linked Overview batch-cooking suggestions to specific planned pipelines.
+  - Added dynamic "Pack leftovers" tasks to previous evening prep lists in `workflow.py`.
+- **Outcome:** More efficient cooking by doubling high-value meals, reducing decision fatigue for kid lunches.

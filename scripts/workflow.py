@@ -921,6 +921,8 @@ def generate_lunch_html(lunch_suggestion, day_name):
     """
     html = []
     html.append('            <div class="lunch-section">')
+    if lunch_suggestion.recipe_id.startswith('pipeline_'):
+        html.append('                <span class="energy-level energy-morning-ok" style="float: right; font-size: 0.7rem;">PLANNED PIPELINE</span>')
     html.append('                <h4>🥪 Lunch</h4>')
 
     # 1. Kids Section
@@ -1082,10 +1084,29 @@ def generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe
     # Identify batch cooking suggestion
     batch_suggestion = "[None identified yet]"
     days_of_week = ['mon', 'tue', 'wed', 'thu', 'fri']
-    for day, recipe in selected_dinners.items():
-         if day in days_of_week and recipe.get('meal_type') in ['soup_stew', 'curry', 'pasta_noodles']:
-             batch_suggestion = f"Double the <strong>{recipe.get('name')}</strong> on {day.capitalize()}"
-             break
+    
+    # Priority 1: Check for planned pipelines
+    if selected_lunches:
+        for day, suggestion in selected_lunches.items():
+            if suggestion.recipe_id.startswith('pipeline_'):
+                # Extract dinner name e.g. "Leftovers: Dal Tadka" -> "Dal Tadka"
+                recipe_n = suggestion.recipe_name.replace("Leftovers: ", "")
+                # Find previous day
+                day_order = ['mon', 'tue', 'wed', 'thu', 'fri']
+                try:
+                    curr_idx = day_order.index(day)
+                    prev_day = day_order[curr_idx - 1]
+                    batch_suggestion = f"Double the <strong>{recipe_n}</strong> on {prev_day.capitalize()} (Planned for {day.capitalize()} lunch)"
+                    break
+                except (ValueError, IndexError):
+                    continue
+
+    # Priority 2: Fallback to meal type check if no pipeline found
+    if batch_suggestion == "[None identified yet]":
+        for day, recipe in selected_dinners.items():
+             if day in days_of_week and recipe.get('meal_type') in ['soup_stew', 'curry', 'pasta_noodles']:
+                 batch_suggestion = f"Double the <strong>{recipe.get('name')}</strong> on {day.capitalize()}"
+                 break
              
     html.append(f'                <p style="margin-top: 15px;"><strong>This week\'s suggestion:</strong> {batch_suggestion}</p>')
     html.append('            </div>')
@@ -1401,6 +1422,8 @@ def generate_prep_section(day_key, day_name, selected_dinners, selected_lunches)
             html.append(f'                    <li>{sp}</li>')
         html.append('                    <li>Portion snacks into grab-and-go containers for early week</li>')
         html.append('                    <li>Identify freezer-friendly dinner to double (batch cook)</li>')
+        if 'tue' in selected_lunches and selected_lunches['tue'].recipe_id.startswith('pipeline_'):
+            html.append(f"                    <li><strong>Pack leftovers:</strong> Tomorrow's lunch is {selected_lunches['tue'].recipe_name}</li>")
         html.append('                </ul>')
         html.append('            </div>')
 
@@ -1444,6 +1467,8 @@ def generate_prep_section(day_key, day_name, selected_dinners, selected_lunches)
         html.append(f'                        <li><strong>Chop vegetables (Wed-Fri):</strong> {veg_list_str}</li>')
         html.append(f'                        <li><strong>Prep components (Wed-Fri):</strong> {comp_list_str}</li>')
         html.append('                        <li>Portion snacks for rest of week</li>')
+        if 'wed' in selected_lunches and selected_lunches['wed'].recipe_id.startswith('pipeline_'):
+            html.append(f"                        <li><strong>Pack leftovers:</strong> Tomorrow's lunch is {selected_lunches['wed'].recipe_name}</li>")
         html.append('                    </ul>')
         html.append('                </div>')
         html.append('            </div>')
@@ -1455,6 +1480,8 @@ def generate_prep_section(day_key, day_name, selected_dinners, selected_lunches)
         html.append('                    <li><strong>Backup day:</strong> Finish any remaining veg/lunch prep for Thu/Fri</li>')
         html.append('                    <li>Load Instant Pot or slow cooker for Thursday if needed</li>')
         html.append('                    <li>Final check: All Thu/Fri components ready</li>')
+        if 'thu' in selected_lunches and selected_lunches['thu'].recipe_id.startswith('pipeline_'):
+            html.append(f"                    <li><strong>Pack leftovers:</strong> Tomorrow's lunch is {selected_lunches['thu'].recipe_name}</li>")
         html.append('                </ul>')
         html.append('            </div>')
 
@@ -1476,6 +1503,8 @@ def generate_prep_section(day_key, day_name, selected_dinners, selected_lunches)
         html.append('                    <li><strong>NO chopping after noon</strong></li>')
         html.append('                    <li><strong>NO evening prep</strong> - only reheating/assembly</li>')
         html.append('                    <li>Fallback: Use freezer backup if energy is depleted</li>')
+        if 'fri' in selected_lunches and selected_lunches['fri'].recipe_id.startswith('pipeline_'):
+            html.append(f"                    <li><strong>Pack leftovers:</strong> Tomorrow's lunch is {selected_lunches['fri'].recipe_name}</li>")
         html.append('                </ul>')
         html.append('            </div>')
 

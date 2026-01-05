@@ -94,8 +94,8 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 - [x] **Synced Lunches**: Logic to sync varying kid requirements (e.g., same base meal, different sides) and prioritize "loved" dinner leftovers for lunch.
 - [x] **Snack Intelligence**: Update recipe metadata to distinguish between "School Safe" (room temp stable) and "Home Only" (warm/cold) snacks.
 
-**3. Core Flow Optimization (Effort: High)**
-- [ ] **Leftover Optimizer**: Explicitly plan Dinner -> Lunch pipelines in the weekly generation logic.
+**3. Core Flow Optimization (Effort: High) - IN PROGRESS**
+- [x] **Leftover Optimizer**: Explicitly plan Dinner -> Lunch pipelines in the weekly generation logic. (COMPLETED 2026-01-04)
 - [ ] **Smart Re-plan Refinement**: Improve the "one-click re-plan" to handle complex mid-week shifts and auto-refresh the rest of the week to use up leftovers.
 
 ### Phase 11: Future Enhancements (Backlog)

@@ -983,10 +983,17 @@ freezer_inventory:
 - **Batches Implemented:**
   - **Batch 1:** Removed "Chickpea Salad Wrap" recipe index and HTML; renamed button from "✓ Made as Planned" to "✓ Made".
   - **Batch 2:** Fixed Week View opacity logic (only grayscale when actually logged AND not marked for fix); created dynamic recipe viewer at `/recipes/[id]`.
-  - **Batch 3:** Fixed Dashboard "Skip" button popup by lifting state from `DinnerLogging` IIFE to `Dashboard` component, preventing state loss on re-render.
-  - **Batch 4:** Implemented inline `CorrectionInput` in Week View for all meal types, allowing users to save corrections directly from the table.
+  - **Batch 3: Fix Dashboard "Skip" Workflow:**
+    - **Problem:** Clicking "Did Not Make" (Skip) would trigger a status refresh, causing the `DinnerLogging` component (previously an IIFE) to lose its local state and immediately close the alternatives popup.
+    - **Solution:** Lifted all dinner logging UI states (`showAlternatives`, `selectedAlternative`, `otherMealText`, `selectedFreezerMeal`, `isDinnerEditing`, `dinnerEditInput`) to the parent `Dashboard` component.
+    - **Result:** The skipping workflow (Freezer backup, outside meal, other) is now robust across re-renders.
+  - **Batch 4: Week View Correction Workflow & Recipe Requests:**
+    - **Inline Corrections:** Implemented `CorrectionInput` in `WeekView` for both mobile (card view) and desktop (table view), allowing quick fixes for any meal marked "Needs Fix".
+    - **Meal Display Priority:** Updated `WeekView` to prioritize displaying the `actual_meal` or feedback text over the planned recipe name when a correction exists, providing a more accurate historical record.
+    - **Recipe Index Integration:** Added a confirmation flow when saving corrections that prompts to add the new meal as an official recipe.
+    - **Backend Automation:** The `/api/log-meal` endpoint now appends recipe requests to a new "Recipe Index changes" section in `docs/IMPLEMENTATION.md`.
 - **Technical Improvements:**
-  - State lifting in `Dashboard` to manage dinner logging flow.
-  - Improved `handleLogDay` and `handleLogFeedback` in `src/app/page.tsx` to handle `needs_fix` and reset UI state.
-  - Updated `src/lib/api.ts` with explicit `needs_fix` properties for all meal types.
-- **Status:** All fixes successfully re-implemented and verified on Vercel.
+  - State lifting in `Dashboard` to manage complex multi-step logging flows.
+  - Refactored `handleLogDay` and `handleLogFeedback` in `src/app/page.tsx` to handle `needs_fix` flags and `request_recipe` triggers.
+  - Updated `src/lib/api.ts` with explicit `needs_fix` properties to maintain type safety across the full stack.
+- **Status:** Complete. The system is now significantly more resilient and provides better data quality for both week-view tracking and future recipe planning.

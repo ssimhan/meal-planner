@@ -233,10 +233,7 @@ export default function Dashboard() {
   return (
     <main className="container mx-auto max-w-4xl px-4 py-12">
       <header className="mb-12">
-        <h1 className="text-5xl mb-4">Meal Planner</h1>
-        <p className="text-[var(--text-muted)] font-medium">
-          Hybrid Serverless Engine • Option 2
-        </p>
+        <h1 className="text-5xl mb-4">Sandhya's Meal Planner</h1>
       </header>
 
       {/* Success Message */}

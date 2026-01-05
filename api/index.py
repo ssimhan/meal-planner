@@ -92,33 +92,40 @@ def get_status():
         }
         today_snacks["school"] = DEFAULT_SNACKS.get(current_day, "Fruit")
         
-        if state == 'week_complete':
+        if state in ['active', 'waiting_for_checkin']:
             from scripts.log_execution import load_history, find_week
             history = load_history()
-            week_data = find_week(history, week_str)
-            if week_data and 'dinners' in week_data:
-                for dinner in week_data['dinners']:
-                    if dinner.get('day') == current_day:
-                        today_dinner = dinner
-                        break
+            history_week = find_week(history, week_str)
             
-            # Identify lunches
-            if week_data and 'lunches' in week_data:
-                if isinstance(week_data['lunches'], dict):
-                    today_lunch = week_data['lunches'].get(current_day)
-                elif isinstance(week_data['lunches'], list):
-                    for lunch in week_data['lunches']:
-                        if lunch.get('day') == current_day:
-                            today_lunch = lunch
-                            break
+            # 1. Identify Dinners (History takes priority, then Input file)
+            dinners = []
+            if history_week and 'dinners' in history_week:
+                dinners = history_week['dinners']
+            elif data and 'dinners' in data: # Some systems store it in input
+                dinners = data['dinners']
+            elif data and 'schedule' in data: # Older systems
+                # This depends on how data is structured in the input yml
+                pass
             
-            # If no lunch in history, try to derive it (as workflow.py does)
-            if not today_lunch and state == 'week_complete':
-                # This would require running lunch_selector logic, 
-                # but for simplicity we'll just note it's missing or use a placeholder
-                today_lunch = {"recipe_name": "Leftovers or Simple Lunch", "prep_style": "quick_fresh"}
+            for dinner in dinners:
+                if dinner.get('day') == current_day:
+                    today_dinner = dinner
+                    break
+            
+            # 2. Identify Lunches
+            history_lunches = history_week.get('lunches', {}) if history_week else {}
+            if current_day in history_lunches:
+                today_lunch = history_lunches[current_day]
+            elif data and 'selected_lunches' in data: # Check if saved in input
+                today_lunch = data['selected_lunches'].get(current_day)
+            
+            # 3. If still no lunch, it might be that workflow.py hasn't saved it to history yet
+            # but it was passed to generate_html_plan. We should really save it to history.
+            
+            if not today_lunch:
+                 today_lunch = {"recipe_name": "Leftovers or Simple Lunch", "prep_style": "quick_fresh"}
 
-            # Prep Tasks Logic
+            # Prep Tasks Logic (Unified)
             if current_day == 'mon':
                 prep_tasks = ["Chop vegetables for Mon/Tue", "Prep lunch components", "Identify batch cooking meal"]
             elif current_day == 'tue':
@@ -140,7 +147,7 @@ def get_status():
             "today_lunch": today_lunch,
             "today_snacks": today_snacks,
             "prep_tasks": prep_tasks,
-            "week_data": week_data
+            "week_data": history_week if state in ['active', 'waiting_for_checkin'] else data
         })
     except Exception as e:
         return jsonify({

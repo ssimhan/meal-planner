@@ -438,7 +438,7 @@ def generate_meal_plan(input_file, data):
 
     # Update history
     print("\nUpdating history...")
-    update_history(history_path, data, selected_dinners)
+    update_history(history_path, data, selected_dinners, selected_lunches)
     print(f"  ✓ Updated: {history_path}")
 
     # Update workflow status (create if doesn't exist - for legacy files)
@@ -1900,14 +1900,15 @@ def generate_plan_content(inputs, selected_dinners, from_scratch_recipe=None, se
     return '\n'.join(lines)
 
 
-def update_history(history_path, inputs, selected_dinners):
-    """Update history.yml with the new week's dinners."""
+def update_history(history_path, inputs, selected_dinners, selected_lunches=None):
+    """Update history.yml with the new week's dinners and lunches."""
     history = load_history(history_path)
 
     week_of = inputs['week_of']
     new_week = {
         'week_of': week_of,
-        'dinners': []
+        'dinners': [],
+        'lunches': {}
     }
 
     days = ['mon', 'tue', 'wed', 'thu', 'fri']
@@ -1921,6 +1922,15 @@ def update_history(history_path, inputs, selected_dinners):
                 'day': day,
                 'vegetables': recipe.get('main_veg', [])
             })
+        
+        if selected_lunches and day in selected_lunches:
+            lunch = selected_lunches[day]
+            new_week['lunches'][day] = {
+                'recipe_id': getattr(lunch, 'recipe_id', None),
+                'recipe_name': getattr(lunch, 'recipe_name', 'Unknown'),
+                'prep_style': getattr(lunch, 'prep_style', 'quick_fresh'),
+                'assembly_notes': getattr(lunch, 'assembly_notes', '')
+            }
 
     # Find or update existing week entry
     week_entry = None
@@ -1930,8 +1940,9 @@ def update_history(history_path, inputs, selected_dinners):
             break
 
     if week_entry:
-        # Update dinners list in existing week
+        # Update dinners and lunches
         week_entry['dinners'] = new_week['dinners']
+        week_entry['lunches'] = new_week['lunches']
     else:
         # Append new week
         history.setdefault('weeks', []).append(new_week)

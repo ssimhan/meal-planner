@@ -226,7 +226,7 @@ export default function Dashboard() {
               {(() => {
                 const Card = ({ title, icon, subtitle, content, badge, action }: any) => (
                   <div className="card flex flex-col h-full border-t-2 border-t-[var(--accent-sage)] shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex justify-between items-<ctrl94>">
+                    <div className="flex justify-between items-center">
                       <span className="text-xs font-mono uppercase text-[var(--text-muted)]">{title}</span>
                       <span className="text-xl">{icon}</span>
                     </div>

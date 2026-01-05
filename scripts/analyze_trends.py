@@ -3,6 +3,7 @@
 
 import argparse
 import yaml
+import json
 from pathlib import Path
 from collections import Counter, defaultdict
 from datetime import datetime
@@ -167,7 +168,7 @@ def get_recipe_scores(weeks):
         '❌': -3
     }
     
-    scores = defaultdict(int)
+    scores = defaultdict(float)
     counts = defaultdict(int)
     
     for week in weeks:
@@ -185,29 +186,9 @@ def get_recipe_scores(weeks):
                 scores[r_id] += score
                 counts[r_id] += 1
                 
-    # Return average score per entry, or 0
     return {r_id: scores[r_id] / counts[r_id] if counts[r_id] > 0 else 0 for r_id in scores}
 
-    if args.output:
-        if args.output.endswith('.json'):
-            import json
-            stats_data = {
-                'recipes': recipe_stats,
-                'vegetables': {veg: count for veg, count in veg_counts.items()},
-                'adherence': adherence,
-                'freezer': freezer_stats,
-                'recipe_scores': get_recipe_scores(weeks)
-            }
-            with open(args.output, 'w') as f:
-                json.dump(stats_data, f, indent=2)
-        else:
-            with open(args.output, 'w') as f:
-                f.write(report)
-        print(f"Report written to {args.output}")
-    else:
-        print(report)
-
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(description='Analyze meal plan execution trends.')
     parser.add_argument('--output', help='Output file path (use .json for json)')
     parser.add_argument('--history-file', default=str(DEFAULT_HISTORY_FILE), help='Path to history file')
@@ -226,6 +207,25 @@ if __name__ == '__main__':
     adherence = calculate_adherence(weeks)
     freezer_stats = calculate_freezer_stats(weeks)
     
-    report = generate_markdown_report(recipe_stats, veg_counts, weeks_logged, adherence, freezer_stats)
-    
+    if args.output and args.output.endswith('.json'):
+        stats_data = {
+            'recipes': {k: dict(v) for k, v in recipe_stats.items()},
+            'vegetables': dict(veg_counts),
+            'adherence': adherence,
+            'freezer': freezer_stats,
+            'recipe_scores': get_recipe_scores(weeks)
+        }
+        with open(args.output, 'w') as f:
+            json.dump(stats_data, f, indent=2)
+        print(f"Report written to {args.output}")
+    else:
+        report = generate_markdown_report(recipe_stats, veg_counts, weeks_logged, adherence, freezer_stats)
+        if args.output:
+            with open(args.output, 'w') as f:
+                f.write(report)
+            print(f"Report written to {args.output}")
+        else:
+            print(report)
+
+if __name__ == '__main__':
     main()

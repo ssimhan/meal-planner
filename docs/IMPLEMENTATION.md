@@ -92,6 +92,16 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 -   **Meal swap feature:** Drag-and-drop to reorder dinner schedule mid-week
 -   **Smart substitutions:** Suggest recipe swaps based on current inventory
 
+### other feature requests 
+- inventory add feature in web ux should work
+- keep track of what each kid likes (set up profile for multiple kids, quick emoji response in daily check in for each kid, all tracked in appropriate history files)
+- kid lunches are synced when possible (Peanut butter and jelly sandwich for Akira who can take nuts to school vs jelly sandwich for Anya who can't take nuts) but if one kid really loves a dinner, then they can get the leftover for lunch
+- update recipe index for snack category to account for whether something can be a school snack (relatively room temp stable) or home snack (best served warm or cold) or both. 
+- daily view cards updated to include differentiation between am prep, lunch for each kid, dinner, pm prep, home snack and school snack
+- after daily check in, the meal plan for the rest of the week is refreshed automatically to use up what's leftover. 
+- add option for "outside meal" which means we bought food or went to someone's house
+
+
 ---
 
 ## System Requirements

@@ -33,6 +33,7 @@ export interface WorkflowStatus {
         home_snack_made?: boolean;
     };
     prep_tasks?: (string | { task: string; time: string })[];
+    completed_prep?: string[];
     week_data?: any;
 }
 

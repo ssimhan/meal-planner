@@ -32,12 +32,17 @@ def get_status():
             print(f"Warning: Failed to archive expired weeks (likely read-only filesystem): {e}")
         
         from datetime import datetime, timedelta
+        import pytz
+
+        # Use Pacific timezone for all date/time operations
+        pacific_tz = pytz.timezone('America/Los_Angeles')
+        today = datetime.now(pacific_tz)
+
         # Try to find the most relevant week for the dashboard
         # Priority: This week if it exists, otherwise next week
-        today = datetime.now()
         monday = today - timedelta(days=today.weekday())
         week_str = monday.strftime('%Y-%m-%d')
-        
+
         input_file = Path(f'inputs/{week_str}.yml')
         if not input_file.exists():
             # Fallback to next Monday if today is late in the week
@@ -47,11 +52,11 @@ def get_status():
                 input_file = Path(f'inputs/{week_str}.yml')
             else:
                 input_file, week_str = find_current_week_file()
-        
+
         state, data = get_workflow_state(input_file)
 
-        # Determine current day context for the dashboard
-        current_day = datetime.now().strftime('%a').lower()[:3]
+        # Determine current day context for the dashboard (using Pacific time)
+        current_day = today.strftime('%a').lower()[:3]
 
         today_dinner = None
         today_lunch = None
@@ -183,6 +188,13 @@ def get_status():
             elif current_day == 'fri':
                 prep_tasks = ['ALL DAY: NO chopping allowed', 'ALL DAY: NO cooking allowed - only reheating', 'Only actions: reheating, simple assembly', 'Fallback: Use freezer backup if energy is depleted']
 
+        # Extract completed prep for current day for frontend checkbox initialization
+        completed_prep_today = []
+        if state in ['active', 'waiting_for_checkin'] and history_week and 'daily_feedback' in history_week:
+            day_feedback = history_week['daily_feedback'].get(current_day, {})
+            if 'prep_completed' in day_feedback:
+                completed_prep_today = day_feedback['prep_completed']
+
         return jsonify({
             "week_of": week_str,
             "state": state,
@@ -193,6 +205,7 @@ def get_status():
             "today_lunch": today_lunch,
             "today_snacks": today_snacks,
             "prep_tasks": prep_tasks,
+            "completed_prep": completed_prep_today,
             "week_data": history_week if state in ['active', 'waiting_for_checkin'] else data
         })
     except Exception as e:

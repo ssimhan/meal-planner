@@ -51,16 +51,16 @@ def find_current_week_file():
         week_str = next_monday.strftime('%Y-%m-%d')
         return None, week_str
 
-    # Get all input files and check their status
-    input_files = sorted(inputs_dir.glob('*.yml'))
+    # Get all input files and check their status (newest first)
+    input_files = sorted(inputs_dir.glob('*.yml'), reverse=True)
 
     for input_file in input_files:
         with open(input_file, 'r') as f:
             data = yaml.safe_load(f)
 
-        # Check if this week is not yet complete
+        # Check if this week is not yet complete (skip archived weeks)
         status = data.get('workflow', {}).get('status', 'intake_complete')
-        if status != 'plan_complete':
+        if status not in ('plan_complete', 'archived'):
             week_str = data.get('week_of')
             return input_file, week_str
 

@@ -70,45 +70,49 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 
 ## Future Roadmap
 
-### Phase 7: User Experience & Logging Improvements
-- the full workflow can be managed and viewed in webpage (currently github page but maybe should switch to vercel or webapp)
--   **Quick feedback buttons:** Thumbs up/down in daily check-ins for faster logging
--   **Leftover optimizer:** Explicitly plan dinner → lunch pipelines
--   **Weekly summary email:** Adherence %, vegetables used, freezer status, upcoming week preview
--   **Web UX expansion:** Display suggested veggies, pantry/fridge/freezer details on live site
+### Phase 10: Immediate Priorities (High ROI) - COMPLETED 2026-01-04
+**1. Logging Completeness** ✅
+- [x] **Enhanced Feedback System**: Redesigned all meal logging with multi-step flow
+    - **Made/Not Made First**: Binary choice (✓ Made or ✗ Skip) for all meal slots
+    - **Preference Emojis**: After "Made" → show ❤️ 👍 😐 👎 ❌ for feedback
+    - **Override Logging**: After "Skip" → text input for "What did you eat instead?"
+    - **Applied to**: School Snack, Kids Lunch, Adult Lunch, Home Snack, Dinner
+- [x] **Sophisticated Dinner Flow**: Multi-step alternatives when plan not followed
+    - Step 1: Made as Planned or Did Not Make
+    - Step 2: If not made → Choose: Freezer Meal / Ate Out / Something Else
+    - Step 3a: Freezer → Radio button selection from inventory (auto-removes used meal)
+    - Step 3b: Ate Out → Simple confirmation
+    - Step 3c: Something Else → Text input for custom entry
+- [x] **Data Structure**: New `daily_feedback` structure in `history.yml` stores all feedback + made status
 
-### Phase 8: Intelligence & Automation
-### Phase 8: Dashboard Overhaul & Intelligence (Completed)
--   **Inventory Ingest ("Brain Dump")**: ✅ Implemented text-to-inventory parsing with editable confirmation table.
--   **Today's Schedule View**: ✅ Comprehensive card-based view on the main dashboard showing:
-    -   School Snack (rotating default schedule)
-    -   Kids Lunch (recipe-specific with assembly notes)
-    -   Adult Lunch (leftover pipelines)
-    -   Home Snack
-    -   Dinner (with integrated logging and feedback buttons)
--   **Prep Interface Timeline**: ✅ Dynamic timeline displaying specific AM/PM tasks (chopping, batch cooking, assembly) based on the current day's plan.
--   **Unified Data Engine**: ✅ API merges current plan inputs with historical execution data for seamless "Today" views.
--   **Recipe Success Scoring**: ✅ Implemented emoji-to-score calculation (❤️=+3) for better meal selection.
--   **Analytics Exports**: ✅ Added support for `.json` stats generation in `analyze_trends.py`.
+**1.5 Mobile & UX Polish** ✅
+- [x] **Mobile Responsive Dashboard**: Grid uses `grid-cols-1 md:grid-cols-2 lg:grid-cols-5` (cards stack vertically on mobile)
+- [ ] **Full Week View**: Add a dedicated "Weekly Overview" page (or section) showing the entire week's plan in a clear table format.
 
-### Phase 9: Intelligence & Automation (Ongoing)
--   **Automated Re-planning**: Further refine the "one-click re-plan" to handle complex mid-week shifts.
--   **Weather/calendar integration**: Auto-detect busy days, suggest soups on rainy days.
--   **Recipe importer**: Paste URL → auto-extract and add to index.
--   **Weather/calendar integration:** Auto-detect busy days, suggest soups on rainy days
--   **Recipe importer:** Paste URL → auto-extract and add to index
--   **Nutrition tracking:** Calculate macros, show weekly vegetable diversity scores
--   **Meal swap feature:** Drag-and-drop to reorder dinner schedule mid-week
--   **Smart substitutions:** Suggest recipe swaps based on current inventory
+**2. Smart Personalization (Effort: Medium)**
+- [ ] **Kid Profiles**: Update `lunch_selector.py` to handle multiple kid profiles (e.g., specific preferences/allergies like "Akira: nuts ok" vs "Anya: no nuts").
+- [ ] **Synced Lunches**: Logic to sync varying kid requirements (e.g., same base meal, different sides) and prioritize "loved" dinner leftovers for lunch.
+- [ ] **Snack Intelligence**: Update recipe metadata to distinguish between "School Safe" (room temp stable) and "Home Only" (warm/cold) snacks.
 
-### other feature requests 
-- inventory add feature in web ux should work
-- keep track of what each kid likes (set up profile for multiple kids, quick emoji response in daily check in for each kid, all tracked in appropriate history files)
-- kid lunches are synced when possible (Peanut butter and jelly sandwich for Akira who can take nuts to school vs jelly sandwich for Anya who can't take nuts) but if one kid really loves a dinner, then they can get the leftover for lunch
-- update recipe index for snack category to account for whether something can be a school snack (relatively room temp stable) or home snack (best served warm or cold) or both. 
-- daily view cards updated to include differentiation between am prep, lunch for each kid, dinner, pm prep, home snack and school snack
-- after daily check in, the meal plan for the rest of the week is refreshed automatically to use up what's leftover. 
-- add option for "outside meal" which means we bought food or went to someone's house
+**3. Core Flow Optimization (Effort: High)**
+- [ ] **Leftover Optimizer**: Explicitly plan Dinner -> Lunch pipelines in the weekly generation logic.
+- [ ] **Smart Re-plan Refinement**: Improve the "one-click re-plan" to handle complex mid-week shifts and auto-refresh the rest of the week to use up leftovers.
+
+### Phase 11: Future Enhancements (Backlog)
+-   **Recipe Importer**: Paste URL → auto-extract and add to index.
+-   **Weather/Calendar Integration**: Auto-detect busy days, suggest soups on rainy days.
+-   **Weekly Summary Email**: Adherence %, vegetables used, freezer status.
+-   **Nutrition Tracking**: Calculate macros, show weekly vegetable diversity scores.
+-   **Meal Swap Feature**: Drag-and-drop to reorder dinner schedule mid-week.
+-   **Smart Substitutions**: Suggest recipe swaps based on current inventory.
+
+### Recently Completed (Phase 7-10)
+- [x] **Web Workflow**: Full workflow managed via webpage.
+- [x] **Inventory Management**: "Brain Dump" and quick add features implemented in Web UX.
+- [x] **Today's View**: Dashboard updated with distinct cards for AM prep, kid/adult lunches, dinner, PM prep, and snacks.
+- [x] **Inventory Ingest**: Text-to-inventory parsing.
+- [x] **Recipe Success Scoring**: Emoji-based feedback tracking.
+- [x] **Phase 10 Logging System**: Complete redesign of feedback flow with Made/Not Made checkboxes, preference emojis, override logging, and sophisticated dinner alternatives (freezer selection, ate out, custom text input).
 
 
 ---

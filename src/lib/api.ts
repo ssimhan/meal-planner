@@ -11,16 +11,26 @@ export interface WorkflowStatus {
         made?: boolean | string;
         vegetables?: string[];
         kids_feedback?: string;
+        actual_meal?: string;
+        freezer_used?: { meal: string; frozen_date?: string };
     };
     today_lunch?: {
         recipe_id?: string;
         recipe_name?: string;
         prep_style?: string;
         assembly_notes?: string;
+        kids_lunch_feedback?: string;
+        adult_lunch_feedback?: string;
+        kids_lunch_made?: boolean;
+        adult_lunch_made?: boolean;
     };
     today_snacks?: {
         school: string;
         home: string;
+        school_snack_feedback?: string;
+        home_snack_feedback?: string;
+        school_snack_made?: boolean;
+        home_snack_made?: boolean;
     };
     prep_tasks?: string[];
     week_data?: any;
@@ -114,6 +124,16 @@ export interface LogMealData {
     made_2x?: boolean;
     freezer_meal?: string;
     reason?: string;
+    // New fields for snack/lunch feedback
+    school_snack_feedback?: string;
+    home_snack_feedback?: string;
+    kids_lunch_feedback?: string;
+    adult_lunch_feedback?: string;
+    // Made status for each meal type
+    school_snack_made?: boolean;
+    home_snack_made?: boolean;
+    kids_lunch_made?: boolean;
+    adult_lunch_made?: boolean;
 }
 
 export async function logMeal(data: LogMealData): Promise<any> {

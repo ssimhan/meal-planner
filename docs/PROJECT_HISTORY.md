@@ -975,4 +975,18 @@ freezer_inventory:
   - `cabe650`, `65bb8ed`, `8a0705e`, `dc15774` - Various syntax fix attempts
   - `a03a1d3` - Title change to "Sandhya's Meal Planner"
 - **Next Steps:** Carefully re-implement the desired features with proper testing before pushing.
-- **Lesson Learned:** Complex JSX refactoring (especially IIFEs with component definitions) requires validating builds locally before pushing to production.
+- **Lesson Learned:** Complex JSX refactoring (especially IIFEs with component definitions) requires incremental changes and verification of each deployment.
+
+---
+### [2026-01-04] Incremental Bug Fixes & Feature Re-implementation
+- **Goal:** Safe re-implementation of UI/UX improvements after build failure recovery.
+- **Batches Implemented:**
+  - **Batch 1:** Removed "Chickpea Salad Wrap" recipe index and HTML; renamed button from "✓ Made as Planned" to "✓ Made".
+  - **Batch 2:** Fixed Week View opacity logic (only grayscale when actually logged AND not marked for fix); created dynamic recipe viewer at `/recipes/[id]`.
+  - **Batch 3:** Fixed Dashboard "Skip" button popup by lifting state from `DinnerLogging` IIFE to `Dashboard` component, preventing state loss on re-render.
+  - **Batch 4:** Implemented inline `CorrectionInput` in Week View for all meal types, allowing users to save corrections directly from the table.
+- **Technical Improvements:**
+  - State lifting in `Dashboard` to manage dinner logging flow.
+  - Improved `handleLogDay` and `handleLogFeedback` in `src/app/page.tsx` to handle `needs_fix` and reset UI state.
+  - Updated `src/lib/api.ts` with explicit `needs_fix` properties for all meal types.
+- **Status:** All fixes successfully re-implemented and verified on Vercel.

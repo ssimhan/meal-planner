@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { getStatus, getRecipes, WorkflowStatus } from '@/lib/api';
+import { getStatus, getRecipes, WorkflowStatus, replan } from '@/lib/api';
 import MealCorrectionInput from '@/components/MealCorrectionInput';
 
 export default function WeekView() {
@@ -12,6 +12,7 @@ export default function WeekView() {
   const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
   const [selectedItems, setSelectedItems] = useState<{ day: string; type: string; label: string; value: string }[]>([]);
   const [isFixing, setIsFixing] = useState(false);
+  const [isReplanning, setIsReplanning] = useState(false);
 
   useEffect(() => {
     async function fetchWeekData() {
@@ -124,6 +125,27 @@ export default function WeekView() {
     }
   };
 
+  const handleReplan = async () => {
+    if (!confirm('Replan the remaining days of the week based on current inventory?\n\nThis will reorganize your meal plan to prioritize recipes that use ingredients you have on hand.')) {
+      return;
+    }
+
+    setIsReplanning(true);
+    try {
+      const result = await replan();
+      alert('✓ Week replanned successfully!\n\n' + (result.message || 'Meals reorganized based on inventory.'));
+
+      // Refresh the status to show updated plan
+      const data = await getStatus();
+      setStatus(data);
+    } catch (e: any) {
+      console.error("Replan failed:", e);
+      alert('Failed to replan week: ' + (e.message || 'Unknown error'));
+    } finally {
+      setIsReplanning(false);
+    }
+  };
+
   const SelectionCheckbox = ({ day, type, label, value }: { day: string, type: string, label: string, value: string }) => {
     if (!editMode) return null;
     const isSelected = !!selectedItems.find(i => i.day === day && i.type === type);
@@ -216,7 +238,25 @@ export default function WeekView() {
                 WEEK OF {weekData.week_of.toUpperCase()}
               </p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleReplan}
+                disabled={isReplanning}
+                className="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Reorganize remaining meals based on current inventory"
+              >
+                {isReplanning ? (
+                  <>
+                    <span className="animate-spin">⟳</span>
+                    <span className="hidden sm:inline">Replanning...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>📦</span>
+                    <span className="hidden sm:inline">Replan with Inventory</span>
+                  </>
+                )}
+              </button>
               <button
                 onClick={() => {
                   setEditMode(!editMode);
@@ -227,12 +267,12 @@ export default function WeekView() {
                 {editMode ? (
                   <>
                     <span>✕</span>
-                    <span>Cancel Selecting</span>
+                    <span className="hidden sm:inline">Cancel</span>
                   </>
                 ) : (
                   <>
                     <span>✎</span>
-                    <span>Mark for Fix</span>
+                    <span className="hidden sm:inline">Mark for Fix</span>
                   </>
                 )}
               </button>

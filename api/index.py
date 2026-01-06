@@ -818,6 +818,61 @@ def bulk_add_inventory():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@app.route("/api/replan", methods=["POST"])
+def replan():
+    """
+    Trigger inventory-aware replanning for the current week.
+    Calls scripts/workflow.py replan function.
+    """
+    try:
+        import sys
+        import subprocess
+        from pathlib import Path
+
+        # Call the workflow script with replan command
+        script_path = Path(__file__).parent.parent / 'scripts' / 'workflow.py'
+        result = subprocess.run(
+            [sys.executable, str(script_path), 'replan'],
+            capture_output=True,
+            text=True,
+            timeout=60
+        )
+
+        if result.returncode == 0:
+            # Sync changes to GitHub if on Vercel
+            is_vercel = os.environ.get('VERCEL') == '1'
+            if is_vercel:
+                from scripts.github_helper import sync_changes_to_github
+                # Sync updated files
+                sync_changes_to_github([
+                    'data/history.yml',
+                    'inputs/*.yml',
+                    'plans/*.html'
+                ])
+
+            return jsonify({
+                "status": "success",
+                "message": "Week replanned with inventory optimization!",
+                "output": result.stdout
+            })
+        else:
+            return jsonify({
+                "status": "error",
+                "message": "Replan failed",
+                "details": result.stderr or result.stdout
+            }), 500
+
+    except subprocess.TimeoutExpired:
+        return jsonify({
+            "status": "error",
+            "message": "Replan timed out (>60s)"
+        }), 500
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
 @app.route("/api/hello")
 def hello_world():
     return jsonify({"message": "Hello from Python on Vercel!"})

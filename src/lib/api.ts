@@ -190,3 +190,17 @@ export async function importRecipe(url: string): Promise<any> {
     }
     return res.json();
 }
+
+export async function replan(): Promise<any> {
+    const res = await fetch('/api/replan', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to replan week');
+    }
+    return res.json();
+}

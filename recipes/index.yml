@@ -702,7 +702,7 @@
     type: html
     file: recipes/raw_html/Creamy Macaroni Pasta Salad.html
 - id: crispy_chipotle_sweet_potato_tacos_with_lime_crema
-  name: Crispy Chipotle Sweet Potato Tacos with Lime Crema.
+  name: Crispy Chipotle Sweet Potato Tacos with Lime Crema
   cuisine: mexican
   meal_type: tacos_wraps
   effort_level: normal
@@ -722,7 +722,7 @@
   avoid_contains: []
   source:
     type: html
-    file: recipes/raw_html/Crispy Chipotle Sweet Potato Tacos with Lime Crema..html
+    file: recipes/raw_html/Crispy Chipotle Sweet Potato Tacos with Lime Crema.html
 - id: cubed_fried_tofu
   name: Cubed, fried tofu
   cuisine: unknown
@@ -2105,19 +2105,6 @@
   source:
     type: html
     file: recipes/raw_html/Pachai Payaru, Moong Dal Sundal.html
-- id: page_not_found_8211_smitten_kitchen
-  name: Whoops!
-  cuisine: unknown
-  meal_type: unknown
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: html
-    file: recipes/raw_html/Page_not_found___8211__smitten_kitchen.html
 - id: palak_paneer_spinach
   name: Palak Paneer Spinach
   cuisine: indian
@@ -2719,7 +2706,7 @@
     type: html
     file: recipes/raw_html/Romesco Pasta Sauce.html
 - id: salted_tahini_oatmeal_chocolate_chip_cookies
-  name: Salted Tahini Oatmeal Chocolate Chip Cookies.
+  name: Salted Tahini Oatmeal Chocolate Chip Cookies
   cuisine: mediterranean
   meal_type: breakfast
   effort_level: normal
@@ -2731,7 +2718,7 @@
   avoid_contains: []
   source:
     type: html
-    file: recipes/raw_html/Salted Tahini Oatmeal Chocolate Chip Cookies..html
+    file: recipes/raw_html/Salted Tahini Oatmeal Chocolate Chip Cookies.html
 - id: samosa_grilled_cheese
   name: Samosa Grilled Cheese
   cuisine: indian
@@ -3177,21 +3164,6 @@
   source:
     type: html
     file: recipes/raw_html/String cheese.html
-- id: sunflower_seed_cream_cheese_dairy_free
-  name: Petra A. | Sunglow Kitchen | Comment CHEESE and I Will Send You the Recipe!
-    Creamy, Thick, and Tangy, This Sunflower Seed Cream Cheese Is the Best Dairy-Free
-    Cream… | Instagram
-  cuisine: unknown
-  meal_type: sauce_dip
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: html
-    file: recipes/raw_html/Sunflower Seed Cream Cheese (Dairy-Free).html
 - id: sunflower_seeds
   name: Sunflower seeds
   cuisine: unknown

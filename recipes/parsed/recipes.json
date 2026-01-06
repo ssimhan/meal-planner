@@ -1602,7 +1602,7 @@
   },
   {
     "id": "crispy_chipotle_sweet_potato_tacos_with_lime_crema",
-    "name": "Crispy Chipotle Sweet Potato Tacos with Lime Crema.",
+    "name": "Crispy Chipotle Sweet Potato Tacos with Lime Crema",
     "categories": [
       "Mexican"
     ],
@@ -1650,7 +1650,7 @@
     "avoid_contains": [],
     "instructions": "Peel and cube the sweet potatoes.Seed and chop the poblano.\nPreheat the oven to 425° F.\nPlace the sweet potatoes on a baking sheet and toss with olive oil, chili powder, paprika, cumin, garlic powder, red pepper flakes, oregano, and salt.\nAdd the poblano and toss to combine.\nArrange in an even layer.\nBake 35 to 40 minutes, until the potatoes are tender and beginning to char on the edges.\nRemove from the oven and stir in the black beans.\nMeanwhile, make the crema.\nCombine all ingredients in a glass jar and shake or stir until creamy.\nLine the taco shells up on a sheet pan or in a 9×13 inch baking dish.\nTransfer to the oven and bake 5 minutes. Evenly divide the sweet potatoes among each taco shell and top with cheese.\nBake 10 minutes, until the cheese has melted.\nMix the cilantro and jalapeño in a small bowl. Serve the tacos topped with crema, avocado, and the spicy cilantro. Enjoy!",
     "source_url": null,
-    "source_file": "Crispy Chipotle Sweet Potato Tacos with Lime Crema..html"
+    "source_file": "Crispy Chipotle Sweet Potato Tacos with Lime Crema.html"
   },
   {
     "id": "cubed_fried_tofu",
@@ -6226,7 +6226,7 @@
   },
   {
     "id": "salted_tahini_oatmeal_chocolate_chip_cookies",
-    "name": "Salted Tahini Oatmeal Chocolate Chip Cookies.",
+    "name": "Salted Tahini Oatmeal Chocolate Chip Cookies",
     "categories": [
       "Dessert"
     ],
@@ -6257,7 +6257,7 @@
     "avoid_contains": [],
     "instructions": "1. Preheat the oven to 350° F. Line a baking sheet with parchment paper.\n2. In a mixing bowl, beat together the oats, almond flour, baking soda, salt, coconut oil, tahini, maple syrup, egg, and vanilla. Fold in the chocolate chips/chunks.\n3. Scoop the dough out into rounded tablespoon size balls - the dough will be a little wet. Place 2 inches apart on the prepared baking sheet.\n4. Bake 10-12 minutes, until browning on the edges, but not fully set in the center. Let the cookies cool on the baking sheet. Sprinkle with flaky salt. Eat warm (highly recommend) or let cool and store in an airtight container for up to 5 days.",
     "source_url": null,
-    "source_file": "Salted Tahini Oatmeal Chocolate Chip Cookies..html"
+    "source_file": "Salted Tahini Oatmeal Chocolate Chip Cookies.html"
   },
   {
     "id": "samosa_grilled_cheese",
@@ -7237,31 +7237,6 @@
     "instructions": "",
     "source_url": null,
     "source_file": "String cheese.html"
-  },
-  {
-    "id": "sunflower_seed_cream_cheese_dairy_free",
-    "name": "Petra A. | Sunglow Kitchen | Comment CHEESE and I Will Send You the Recipe! Creamy, Thick, and Tangy, This Sunflower Seed Cream Cheese Is the Best Dairy-Free Cream… | Instagram",
-    "categories": [
-      ""
-    ],
-    "cuisine": "unknown",
-    "meal_type": "sauce_dip",
-    "effort_level": "normal",
-    "no_chop_compatible": false,
-    "prep_time_minutes": null,
-    "cook_time_minutes": null,
-    "appliances": [
-      "instant_pot"
-    ],
-    "ingredients": [
-      "Cheese",
-      "cheese"
-    ],
-    "main_veg": [],
-    "avoid_contains": [],
-    "instructions": "",
-    "source_url": null,
-    "source_file": "Sunflower Seed Cream Cheese (Dairy-Free).html"
   },
   {
     "id": "sunflower_seeds",

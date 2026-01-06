@@ -1043,3 +1043,125 @@ freezer_inventory:
 - Moving field updates outside conditional blocks ensures they execute when the data is present
 
 **Status:** Fix deployed and verified. Dinner corrections now persist correctly in `history.yml`.
+
+---
+
+## Session: 2026-01-05 (Evening) - Inventory-Aware Replanning & Web UI Integration
+
+**Work Completed:**
+
+### Part 1: Core Inventory Scoring System
+- **Problem:** Replanning redistributes meals chronologically without considering what ingredients are actually available, potentially scheduling recipes requiring ingredients you don't have.
+- **Solution:** Enhanced `replan_meal_plan()` in [scripts/workflow.py](../scripts/workflow.py) with inventory-aware scoring.
+
+**Implementation Details:**
+
+1. **Helper Functions Added (Lines 519-728):**
+   - `_normalize_ingredient_name()` - Normalizes ingredient names for consistent matching
+     - Handles plurals (tomatoes → tomato), aliases (black_bean → bean), noise removal
+     - Example: "sweet potatoes" → "sweet_potato", "Green beans" → "bean"
+   - `_calculate_ingredient_freshness()` - Tracks ingredient age from `added` dates
+     - Returns `{item_name: days_old}` for priority scoring
+   - `_load_inventory_data()` - Loads and structures [data/inventory.yml](../data/inventory.yml)
+     - Returns: `{fridge_items: set, pantry_items: set, freezer_backups: list, freshness: dict}`
+   - `score_recipe_by_inventory()` - Main scoring algorithm (0-100 points)
+     - **Weighted scoring:**
+       - Fridge items: +20 points each (perishable priority)
+       - Pantry items: +5 points each (stable items)
+       - Freshness bonus: +10 for items 5+ days old
+     - Returns: `(score, details)` with match breakdown
+
+2. **Enhanced Replan Flow (Lines 809-850):**
+   - Automatically loads inventory on every replan
+   - Scores all `to_be_planned` recipes by inventory match
+   - Sorts recipes by score (highest inventory match first)
+   - **Freezer backup suggestion:** If best score < 30/100, suggests using freezer meals instead
+   - Console output shows detailed scores: `recipe_name: 45/100 (fridge: tomato, pantry: bean)`
+   - Graceful fallback: Uses original order if inventory empty/unavailable
+
+**Technical Decisions:**
+1. **Soft constraint approach:** Scoring reorders meals but doesn't exclude valid recipes
+2. **Perishable priority:** Fridge items weighted 4x higher than pantry (20 vs 5 points)
+3. **Freshness awareness:** Older items get bonus points to reduce waste
+4. **Zero configuration:** Runs automatically every replan, no flags needed
+5. **Preserves all constraints:** History anti-repetition, busy days, rollover priority, lunch re-sync all maintained
+
+### Part 2: Web UI Integration
+- **Problem:** Inventory-aware replanning only accessible via CLI (`python3 scripts/workflow.py replan`), requiring terminal access.
+- **Solution:** Added "Replan with Inventory" button to Week at a Glance page for one-click access.
+
+**Implementation Details:**
+
+1. **Backend API Endpoint ([api/index.py:821-874](../api/index.py#L821-L874)):**
+   - New `/api/replan` POST endpoint
+   - Calls `scripts/workflow.py replan` as subprocess with 60s timeout
+   - Returns inventory scoring output and success status
+   - Auto-syncs to GitHub on Vercel deployments
+
+2. **Frontend API Function ([src/lib/api.ts:194-206](../src/lib/api.ts#L194-L206)):**
+   - `replan()` async function for calling backend
+   - Handles errors and returns structured response
+
+3. **UI Button ([src/app/week-view/page.tsx](../src/app/week-view/page.tsx)):**
+   - "📦 Replan with Inventory" button in page header
+   - Confirmation dialog before execution
+   - Loading spinner during processing (`⟳ Replanning...`)
+   - Success alert with output message
+   - Auto-refreshes week view after completion
+   - Responsive design (icon-only on mobile)
+
+**User Flow:**
+1. Navigate to Week at a Glance page
+2. Click "📦 Replan with Inventory"
+3. Confirm action in dialog
+4. Backend scores recipes by inventory (2-5 seconds)
+5. Success message shows results
+6. Page refreshes with updated meal plan
+
+**Example Output:**
+```
+Recipe inventory scores:
+  • easy_zucchini_pasta_sauce: 5/100 (fridge: none, pantry: bean)
+  • black_bean_quinoa_salad: 25/100 (fridge: tomato, pantry: bean)
+  • freezer_meal: 0/100 (no matches)
+
+⚠️ Low inventory match (best: 25/100).
+💡 Available freezer backups: Black Bean Soup, Vegetable Curry, ...
+Continuing with current recipes. Use freezer backups manually if preferred.
+```
+
+**Testing & Validation:**
+- ✅ API endpoint tested via curl - successful execution
+- ✅ Inventory scoring correctly detects fridge/pantry items
+- ✅ Low-match detection triggers freezer backup suggestions
+- ✅ Bean aliasing works (`black_bean` → `bean` for matching)
+- ✅ Week plan regenerated with sorted meals
+- ✅ Lunches auto-refreshed to maintain pipelines
+
+**Technical Learning:**
+- **Token efficiency:** Pure Python logic (no LLM calls) makes feature cost-free to run repeatedly
+- **Soft constraints create flexibility:** Scoring reorders but doesn't break plans when inventory is sparse
+- **Progressive enhancement:** CLI still works, web UI adds convenience layer
+- **Ingredient normalization is critical:** "black beans" vs "beans" vs "black bean" must all match
+- **Freshness tracking adds intelligence:** System naturally prioritizes using older items first
+
+**Files Modified:**
+- [scripts/workflow.py](../scripts/workflow.py) - Added 4 helpers + modified replan logic (~215 new lines)
+- [api/index.py](../api/index.py) - Added `/api/replan` endpoint (~54 lines)
+- [src/lib/api.ts](../src/lib/api.ts) - Added `replan()` function (~13 lines)
+- [src/app/week-view/page.tsx](../src/app/week-view/page.tsx) - Added button + handler (~40 lines)
+
+**Architectural Insights:**
+- **Inventory as context, not constraint:** Low inventory scores don't block meals, just reorder them
+- **Automation without magic:** Clear console output shows exactly how decisions were made
+- **Mobile-first UX:** Button prioritizes icon on small screens, full text on desktop
+- **Vercel subprocess pattern:** Python scripts callable via API while maintaining GitHub as database
+
+**Status:** Inventory-aware replanning complete and deployed. System now optimizes remaining week's meals based on actual available ingredients with zero manual intervention.
+
+**Next Steps (Future Enhancements):**
+- Consider extending inventory scoring to initial weekly plan generation (not just replanning)
+- Add configuration for scoring weights in `config.yml` (fridge vs pantry priority)
+- Track "saved from waste" metrics (how often high-freshness items got used)
+
+---

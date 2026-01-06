@@ -26,6 +26,25 @@ The Meal Planner is a detailed Hybrid Serverless application that manages weekly
 -   **[recipes/](file:///Users/sandhyasimhan/Documents/3_Career/Coding%20Projects/meal-planner/recipes/):** Directory of YAML recipe files with meal types and ingredients.
 -   **[config.yml](file:///Users/sandhyasimhan/Documents/3_Career/Coding%20Projects/meal-planner/config.yml):** Global settings (timezones, schedules, default counts).
 
+### Freezer Inventory Structure
+
+The `inventory.yml` distinguishes between two types of freezer items:
+
+**1. Freezer Backups (`freezer.backups`)**
+Complete, ready-to-eat meals for emergency dinner use (<15 min reheat):
+- Full dinner entries with meal name, servings, frozen date
+- Selected from dashboard "Skip Dinner → Freezer Meal" flow
+- Auto-removed from inventory when logged as consumed
+- **Success Goal:** Maintain >= 3 complete backup meals
+- Examples: "Black Bean Soup (6 servings)", "Vegetable Curry (2 servings)"
+
+**2. Freezer Ingredients** *(future implementation)*
+Raw/partial components for future meal planning:
+- Individual ingredients or meal components (e.g., frozen peas, pre-chopped onions)
+- Used during weekly plan generation for recipe selection
+- Not directly logged as "eaten" but consumed during cooking
+- Examples: "Butternut squash sauce (2 cups)", "Tomato onion gravy (3 cups)"
+
 ---
 
 ## Key Components & Features
@@ -181,11 +200,16 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
   - Add "Busy Day" detection (calendar integration or manual toggle) to force "Quick Prep" meals.
 
 #### Block 4: Inventory Intelligence (Logic)
-**Focus:** Smart Substitutions
+**Focus:** Smart Substitutions & Freezer Management
 - **Goal:** Help users use up what they have.
 - **Tasks:**
   - Implement logic to scan `inventory.yml` against the recipe index.
   - Create a "What can I replace this with?" suggestion modal on the Dashboard.
+  - **BUG FIX:** Separate freezer backups (complete meals) from freezer ingredients (components)
+    - Currently all items mixed in `freezer.backups` array
+    - Need distinct `freezer.backups` vs `freezer.ingredients` structures
+    - Only backups should appear in "Skip Dinner → Freezer Meal" flow
+    - Only backups count toward ">= 3 backup meals" success metric
 
 #### Block 5: Analytics & Health (Data)
 **Focus:** Nutrition Tracking

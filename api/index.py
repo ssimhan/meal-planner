@@ -67,16 +67,23 @@ CACHE_TTL = 300  # 5 minutes
 
 def get_cached_data(key, path):
     """Get data from cache or load from file."""
+    is_vercel = os.environ.get('VERCEL') == '1'
+
+    # On Vercel, disable caching for frequently updated files since each
+    # serverless invocation may not share memory and GitHub is source of truth
+    if is_vercel and key in ['history', 'inventory']:
+        return get_yaml_data(path)
+
     now = datetime.now().timestamp()
     cache_entry = CACHE.get(key)
-    
+
     if cache_entry and cache_entry['data'] and (now - cache_entry['timestamp'] < CACHE_TTL):
         return cache_entry['data']
-        
+
     data = get_yaml_data(path)
     if data:
         CACHE[key] = {'data': data, 'timestamp': now}
-        
+
     return data
 
 def invalidate_cache(key=None):

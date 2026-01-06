@@ -285,6 +285,7 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 
 ### Recipe Index changes
 *Pending recipe additions from corrections:*
+- [ ] Add recipe for: Cheese cubes (requested on 2026-01-06)
 - [ ] Add recipe for: Avocado packs (requested on 2026-01-06)
 - [x] Add recipe for: Crackers and cheese cubes (requested on 2026-01-06, added on 2026-01-06)
 - [x] Add recipe for: Blackberries (requested on 2026-01-06, added on 2026-01-06)

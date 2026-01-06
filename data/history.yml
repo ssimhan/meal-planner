@@ -161,6 +161,8 @@ weeks:
       kids_lunch: Pesto gnocchi
       school_snack: Grapes
       school_snack_needs_fix: false
+      home_snack: Blackberries
+      home_snack_needs_fix: false
 - week_of: '2026-01-12'
   dinners:
   - recipe_id: cauliflower_rasam

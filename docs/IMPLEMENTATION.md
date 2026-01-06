@@ -1,6 +1,6 @@
 # Meal Planner Implementation Guide
 
-**Last Updated:** 2026-01-04
+**Last Updated:** 2026-01-05
 **Live Site:** [ssimhan.github.io/meal-planner/](https://ssimhan.github.io/meal-planner/)
 
 ---
@@ -192,14 +192,7 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
   - [x] Implement logic to switch dinner slots (e.g., move Tuesday's Tacos to Thursday).
   - [x] Update prep instructions to reflect the new order.
 
-#### Block 3: Context-Aware Planning (Intelligence) - SKIPPED/DEFERRED
-**Focus:** Weather & Calendar Integration
-- **Goal:** Make the planner smarter about real-life constraints.
-- **Tasks:**
-  - [ ] Integrate a simple weather API to detect rain/cold (boost soup probability).
-  - [ ] Add "Busy Day" detection (calendar integration or manual toggle) to force "Quick Prep" meals.
-
-#### Block 4: Inventory Intelligence (Logic) - COMPLETED 2026-01-06
+#### Block 3: Inventory Intelligence (Logic) - COMPLETED 2026-01-06
 **Focus:** Smart Substitutions & Freezer Management
 - **Goal:** Help users use up what they have.
 - **Tasks:**
@@ -211,37 +204,36 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
     - [x] Only backups should appear in "Skip Dinner → Freezer Meal" flow
     - [x] Only backups count toward ">= 3 backup meals" success metric
 
-#### Block 5: Analytics & Health (Data)
-**Focus:** Nutrition Tracking
-- **Goal:** Provide health insights without manual tracking.
+#### Block 4: Recipe & Family Analytics (Data)
+**Focus:** Recipe Performance & Family Preferences
+- **Goal:** Surface insights on what's working and what kids actually enjoy.
 - **Tasks:**
-  - Add macro estimation fields to recipe metadata.
-  - specialized "Vegetable Diversity Score" calculation displayed on the Weekly Plan.
+  - [ ] **Recipe Popularity Dashboard**: Display recipes ranked by frequency and average feedback score
+  - [ ] **Kid Preference Tracker**: Per-child analytics showing favorite recipes, most-loved cuisines, and emoji trends
+  - [ ] **Dinner Success Patterns**: Identify which recipes consistently get made vs. skipped (adherence tracking)
+  - [ ] **Leftover Pipeline Analytics**: Track which dinners successfully convert to lunch vs. get wasted
+  - [ ] **Cuisine Diversity Metrics**: Visualize weekly/monthly rotation variety (Indian vs. Mexican vs. Italian balance)
+  - [ ] **Snack Hit Rate**: Track which school/home snacks are most successful with kids
+  - [ ] **Recipe Retirement Suggestions**: Flag recipes with consistently low feedback for removal or tweaking
+  - [ ] **Family Favorites Widget**: Dashboard card showing top 5 recipes this month for quick re-planning
 
-#### Block 6: User Retention & Reporting (Notification)
-**Focus:** Weekly Summary Email
-- **Goal:** Close the feedback loop.
-- **Tasks:**
-  - Create a summary generator (Adherence %, Veggies consumed, Freezer items banked).
-  - Implement an email transport (e.g., SMTP or SendGrid free tier) to send the report on Sunday nights.
-
-#### Block 7: Recipe Format Migration (Efficiency)
+#### Block 5: Recipe Format Migration (Efficiency)
 **Focus:** Token Efficiency & Context Window
 - **Goal:** Reduce recipe token count by >70% by migrating from HTML to Markdown.
 - **Tasks:**
-  - Create migration script (`scripts/migrate_html_to_md.py`) to convert HTML to Frontmatter+MDX.
-  - Update `scripts/parse_recipes.py` to support new format.
-  - Create React component for rendering MD recipes.
-  - Bulk migrate all existing recipes.
+  - [ ] Create migration script (`scripts/migrate_html_to_md.py`) to convert HTML to Frontmatter+MDX.
+  - [ ] Update `scripts/parse_recipes.py` to support new format.
+  - [ ] Create React component for rendering MD recipes.
+  - [ ] Bulk migrate all existing recipes.
 
-#### Block 8: Homepage Data Consistency (Detailed Bug Fix)
+#### Block 6: Homepage Data Consistency (Bug Fix)
 **Focus:** UI State Sync
 - **Goal:** Ensure homepage accurately reflects current meal plan and confirmation status.
 - **Tasks:**
   - [ ] Fix issue where homepage doesn't reflect active meal slots.
   - [ ] Fix issue where homepage doesn't reflect what's been confirmed.
 
-#### Block 9: Inventory Management Enhancements (UI)
+#### Block 7: Inventory Management Enhancements (UI)
 **Focus:** CRUD Operations
 - **Goal:** Allow full control over inventory items from the UI.
 - **Tasks:**

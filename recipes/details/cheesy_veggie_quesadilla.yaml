@@ -1,0 +1,47 @@
+id: cheesy_veggie_quesadilla
+name: Cheesy Veggie Quesadilla
+categories:
+- Mexican
+- REW
+cuisine: mexican
+meal_type: tacos_wraps
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- instant_pot
+ingredients:
+- 1tbspoil
+- 1tbspgarlic
+- 1/4 th cup onion
+- 1/2cupmixed bell pepper
+- 1/2cupcorn
+- 1/2cuppaneer
+- 1tspsweet chilli sauce
+- Salt to taste
+- Black pepper for seasoning
+- Oregano
+- Red chilli flakes
+- 1tbspOil
+- Tortillas
+- 8ozmozzarella cheese
+main_veg:
+- bell pepper
+- corn
+- garlic
+- onion
+avoid_contains: []
+instructions: 'Set a pan on a medium flame and add oil, garlic, onion, mixed bell
+  pepper, corn, paneer, sweet chilli sauce, salt to taste, black pepper for seasoning,
+  oregano and red chilli flakes
+
+  Mix well and cook for some time
+
+  In a fresh pan, add some oil, tortilla, veggie mixture and mozzarella.
+
+  Place an another tortilla over it and cook from both the sides as shown in the video
+
+  Cut it using pizza cutter and serve with mayo dip'
+source_url: null
+source_file: Cheesy Veggie Quesadilla.html

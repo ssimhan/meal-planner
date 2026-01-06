@@ -1165,3 +1165,29 @@ Continuing with current recipes. Use freezer backups manually if preferred.
 - Track "saved from waste" metrics (how often high-freshness items got used)
 
 ---
+
+### Phase 11 Block 1: Performance Optimization (Backend)
+**Date:** 2026-01-06
+
+**Objective:** Reduce backend overhead, improve response times, and reduce token usage for meal generation.
+
+**Problem:**
+- Monolithic `recipes.json` was being fully parsed on every request and every script execution.
+- Redundant loading in `workflow.py` and `lunch_selector.py`.
+- No API caching meant every dashboard refresh hit the filesystem.
+
+**Solution:**
+1.  **Data Structure:** Split the >2MB `recipes.json` into ~227 individual YAML files in `recipes/details/`.
+2.  **Workflow Optimization:** Refactored `workflow.py` to load the lightweight `recipes/index.yml` once and pass it to `LunchSelector`.
+3.  **API Caching:** Implemented in-memory caching in `api/index.py` for recipes, inventory, and history (5-minute TTL, invalidation on write).
+4.  **On-Demand Loading:** Added `GET /api/recipes/<id>` to fetch detailed instructions only when needed.
+
+**Changes:**
+- [recipes/details/*.yaml](../recipes/details/) - Created individual recipe files (Splitting monolithic JSON)
+- [scripts/split_recipes.py](../scripts/split_recipes.py) - Migration script
+- [scripts/workflow.py](../scripts/workflow.py) - Optimization to avoid double-loading
+- [scripts/lunch_selector.py](../scripts/lunch_selector.py) - Updated to accept pre-loaded data
+- [api/index.py](../api/index.py) - Added `CACHE` global, `get_cached_data`, and new endpoints (~60 lines)
+- [tests/test_api_perf.py](../tests/test_api_perf.py) - Verification suite
+
+**Status:** Completed and verified. API response times for repeated calls are instant (<10ms).

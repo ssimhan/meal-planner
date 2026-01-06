@@ -34,6 +34,13 @@ def generate_plan_api(app):
             
             plan_url = f"/plans/{week_str}-weekly-plan.html"
             
+            # Invalidate Cache (since history/inputs changed)
+            try:
+                from api.index import invalidate_cache
+                invalidate_cache()
+            except ImportError:
+                print("Warning: Could not import invalidate_cache from api.index")
+                
             return jsonify({
                 "status": "success",
                 "message": f"Successfully generated plan for week of {week_str}",

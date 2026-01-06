@@ -1,0 +1,59 @@
+id: cheese_and_tomato_quinoa_balls
+name: Cheese and Tomato Quinoa Balls
+categories:
+- Dinner
+- School Entrees
+- School Snacks
+cuisine: unknown
+meal_type: soup_stew
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- oven
+- stovetop
+ingredients:
+- 1/2cupquinoa
+- 1tbspoil
+- 1/2 medium onion
+- 1clovegarlic
+- ½cup tomatoes
+- 1/2cupvegetable broth
+- 1/2cupcheddar cheese
+- 1tbspFresh Basil leaves
+- 1 Egg
+main_veg:
+- basil
+- garlic
+- onion
+- tomato
+- tomatoe
+avoid_contains: []
+instructions: 'Grate cheddar cheese. Heat water for broth.
+
+  Chop tomatoes and measure out. Make egg substitute.
+
+  Preheat oven to 350F
+
+  In a bowl soak the quinoa in water. Chop onion, tomatoes, basil. Grate the cheddar.
+
+  Heat oil, over medium heat, in a pan and gently sauté the onions and garlic until
+  the onions become translucent. Around 5 mins.
+
+  Using a fine-mesh sieve, drain and thoroughly rinse the quinoa.
+
+  To the onions and garlic, add the tomatoes, stock, quinoa and stir. Bring to the
+  boil, reduce the heat to low, cover and allow to simmer for 15 mins.
+
+  Turn the heat off and leave the quinoa to sit covered for a further 5 mins.
+
+  Stir in the cheddar cheese & basil.
+
+  Allow to cool and then stir in the beaten egg.
+
+  Form heaped tablespoon sized balls.
+
+  Bake in the oven for 25 mins or until golden.'
+source_url: null
+source_file: Cheese and Tomato Quinoa Balls.html

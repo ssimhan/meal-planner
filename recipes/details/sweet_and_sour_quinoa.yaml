@@ -1,0 +1,46 @@
+id: sweet_and_sour_quinoa
+name: Sweet and Sour Quinoa
+categories:
+- School Entrees
+cuisine: unknown
+meal_type: sauce_dip
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- stovetop
+ingredients:
+- 1 tablespoon Oil
+- 1 Red Onion ,finely chopped
+- 2 Garlic Cloves ,minced
+- 1 teaspoon Minced Ginger
+- 2 tablespoon White Wine Vinegar
+- 1 tablespoon Soy Sauce
+- 1 tablespoon Tomato Paste
+- 1/2cuppineapple juice
+- ½cup Water
+- ½cup Quinoa
+- 1 Egg (optional)
+main_veg:
+- garlic
+- ginger
+- onion
+- tomato
+avoid_contains: []
+instructions: 'Heat oil in pan over medium / high heat. Reduce heat and gently fry
+  the onion until softened (approx. 5 mins). Add the garlic and ginger and fry for
+  a further min.
+
+  Add the vinegar, soy sauce, tomato paste, pineapple juice, water and quinoa and
+  then stir to combine.
+
+  Bring to a boil, reduce the heat to low, cover and allow to simmer for 15 mins,
+  until the liquid has been absorbed.
+
+  Turn the heat off, fluff with a fork, replace lid and leave the quinoa to sit for
+  a further 5 mins.
+
+  Stir in the chopped pineapple and serve'
+source_url: null
+source_file: Sweet and Sour Quinoa.html

@@ -1,0 +1,46 @@
+id: zucchini_and_paneer_waffles
+name: Zucchini and Paneer Waffles
+categories:
+- ''
+cuisine: indian
+meal_type: breakfast
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- instant_pot
+ingredients:
+- 1 zucchini
+- Salt
+- Red chili powder
+- Turmeric
+- Amchur powder
+- Shredded paneer
+- Cilantro
+- Olive oil
+- Rice flour
+main_veg:
+- cilantro
+- zucchini
+avoid_contains: []
+instructions: 'Shred the Zucchini and add salt to it and leave it for 10 minutes
+
+  Drain and squeeze the water out of the Zucchini
+
+  Add chopped cilantro and shredded paneer
+
+  Add red chili powder, turmeric powder, amchur powder and salt only if needed
+
+  Add the rice flour and mix it well to form a thick batter (the longer the batter
+  sits you may need more rice flour)
+
+  Grease the waffle maker with oil
+
+  Spread the batter on the waffle maker and cook for 10 minutes
+
+  Flip it mid way and cook on the other side
+
+  Garnish with chopped cilantro and serve it along with Dill and Pepper Dip'
+source_url: null
+source_file: Zucchini and Paneer Waffles.html

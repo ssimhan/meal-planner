@@ -1,0 +1,84 @@
+id: stir_fry
+name: Stir Fry
+categories:
+- Asian
+- Dinner
+cuisine: asian
+meal_type: stir_fry
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- instant_pot
+ingredients:
+- 16oztofu
+- Garlic
+- 1 package of green onions
+- Ginger
+- Soy sauce
+- Rice vinegar
+- Brown sugar
+- Broth
+- Cornstarch
+- Black pepper or ketchup (optional)
+- Sesame oil
+- 1 onion
+- 2 bell peppers, green
+- Broccoli
+- Frozen peas or corn
+- Baby spinach (optional)
+- Bean sprouts (optional)
+- Baby corn (optional)
+- Sugar snap peas (optional)
+main_veg:
+- bell pepper
+- broccoli
+- corn
+- garlic
+- ginger
+- green onion
+- onion
+- peas
+- pepper
+- spinach
+avoid_contains: []
+instructions: 'Check the infographic here: https://www.cooksmarts.com/articles/guide-to-stir-frying/
+
+  Choose a protein (1 pound)Tofu: cubed, extra firmSeiten: choppedTempeh: chopped
+
+  Choose aromatics (1 tablespoon)Garlic, shallots, green onions, ginger
+
+  Prep vegetables (4 cups)Onions - thinly slicedBell peppers - slicedCarrots - thinly
+  slicedBroccoli - chopped and microwaved with damp paper towel for 2 minutesBaby
+  spinachFrozen peas, edamame or cornSugar snap peas, trimmed and left wholeBean sproutsMushrooms
+  - slicedGreen beans - trimmedBaby corn - drained and rinsed
+
+  Make the sauceOptions listed in infographic: https://www.cooksmarts.com/articles/guide-to-stir-frying/
+
+  Make the stir fryHeat a wok over medium high heat.
+
+  Once hot, add 2 tbsp sesame oil and protein and let sit for 4 minutes before tossing
+  to coat in oil.
+
+  Saute until tofu is golden, remove from pan and set aside.
+
+  Wipe wok with paper towel if needed, return to medium-high heat.
+
+  Add cooking oil and aromatics (garlic, shallots, green onion, ginger).
+
+  Once you can smell them, add veggies to heated oil with sprinkle of salt.
+
+  Stir fry for 10 minutes until tender but still crunchy. If pan ever looks too dry,
+  add splash of water or broth
+
+  Add protein back to wok, push all ingredients to sides forming a hole int he middle.
+
+  Place sauce in the hole, wait for it to bubble and darken before tossing everything
+  through and making sure ll the ingredients are coated.
+
+  Cook until all ingredients are tender, then remove from heat.
+
+  Garnish with lemon juice, salt, cilantro, basil, green onion, cashews or peanuts.'
+source_url: null
+source_file: Stir Fry.html

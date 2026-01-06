@@ -176,13 +176,13 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 
 ### Phase 11: Future Enhancements (Backlog)
 
-#### Block 1: Performance Optimization (Backend)
+#### Block 1: Performance Optimization (Backend) - COMPLETED 2026-01-06
 **Focus:** Lazy Loading Recipe Details
 - **Goal:** Reduce token usage and improve plan generation speed by 80-90%.
 - **Tasks:**
-  - Refactor `workflow.py` to load lightweight `recipes/index.yml` first.
-  - Implement on-demand fetching of full recipe YAMLs only for selected meals.
-  - Add simple in-memory caching for recipe details in the API.
+  - [x] Refactor `workflow.py` to load lightweight `recipes/index.yml` first.
+  - [x] Implement on-demand fetching of full recipe YAMLs only for selected meals.
+  - [x] Add simple in-memory caching for recipe details in the API.
 
 #### Block 2: Drag-and-Drop Schedule Management (Frontend/UI)
 **Focus:** Meal Swap Feature
@@ -225,6 +225,15 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
   - Create a summary generator (Adherence %, Veggies consumed, Freezer items banked).
   - Implement an email transport (e.g., SMTP or SendGrid free tier) to send the report on Sunday nights.
 
+#### Block 7: Recipe Format Migration (Efficiency)
+**Focus:** Token Efficiency & Context Window
+- **Goal:** Reduce recipe token count by >70% by migrating from HTML to Markdown.
+- **Tasks:**
+  - Create migration script (`scripts/migrate_html_to_md.py`) to convert HTML to Frontmatter+MDX.
+  - Update `scripts/parse_recipes.py` to support new format.
+  - Create React component for rendering MD recipes.
+  - Bulk migrate all existing recipes.
+
 ### Recently Completed (Phase 7-10)
 - [x] **Web Workflow**: Full workflow managed via webpage.
 - [x] **Inventory Management**: "Brain Dump" and quick add features implemented in Web UX.
@@ -237,11 +246,11 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 
 ### Recipe Index changes
 *Pending recipe additions from corrections:*
-- [ ] Add recipe for: Crackers and cheese cubes (requested on 2026-01-06)
-- [ ] Add recipe for: Blackberries (requested on 2026-01-06)
+- [x] Add recipe for: Crackers and cheese cubes (requested on 2026-01-06, added on 2026-01-06)
+- [x] Add recipe for: Blackberries (requested on 2026-01-06, added on 2026-01-06)
 - [x] Add recipe for: Rasam rice and beetroot (requested on 2026-01-06, added on 2026-01-06)
 - [x] Add recipe for: Rasam rice and carrot (added on 2026-01-06)
-- [ ] Add recipe for: Pesto gnocchi (requested on 2026-01-06)
+- [x] Add recipe for: Pesto gnocchi (requested on 2026-01-06, added on 2026-01-06)
 - [x] Add recipe for: Rasam rice and broccoli (requested on 2026-01-05, added on 2026-01-05)
 
 ---

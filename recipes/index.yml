@@ -803,6 +803,7 @@
   source:
     type: html
     file: recipes/raw_html/Curried Egg Salad Sandwich.html
+
 - id: date_cookies
   name: Date Cookies
   cuisine: unknown
@@ -3806,3 +3807,40 @@
   source:
     type: html
     file: recipes/raw_html/Zucchini and Paneer Waffles.html
+- id: crackers_and_cheese_cubes
+  name: Crackers and Cheese Cubes
+  cuisine: unknown
+  meal_type: simple_snack
+  effort_level: no_chop
+  no_chop_compatible: true
+  appliances: []
+  main_veg: []
+  avoid_contains: []
+  source:
+    type: html
+    file: recipes/raw_html/Crackers and Cheese Cubes.html
+- id: blackberries
+  name: Blackberries
+  cuisine: unknown
+  meal_type: simple_snack
+  effort_level: no_chop
+  no_chop_compatible: true
+  appliances: []
+  main_veg: []
+  avoid_contains: []
+  source:
+    type: html
+    file: recipes/raw_html/Blackberries.html
+- id: pesto_gnocchi
+  name: Pesto Gnocchi
+  cuisine: italian
+  meal_type: pasta_noodles
+  effort_level: no_chop
+  no_chop_compatible: true
+  appliances:
+  - stovetop
+  main_veg: []
+  avoid_contains: []
+  source:
+    type: html
+    file: recipes/raw_html/Pesto Gnocchi.html

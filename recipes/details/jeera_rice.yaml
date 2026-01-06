@@ -1,0 +1,52 @@
+id: jeera_rice
+name: Jeera Rice
+categories:
+- Dinner
+- Weekend Only
+cuisine: unknown
+meal_type: unknown
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- instant_pot
+ingredients:
+- 'using cooked basmati rice (way 1):'
+- ½cup basmati rice
+- 1tspoil
+- ½tsp salt
+- 1tspghee / clarified butter
+- 1tspcumin / jeera
+- 2tbspcoriander (finely chopped)
+- water (to soak & boil)
+- 'using pressure cooker (way 2):'
+- 1tspghee / clarified butter
+- 1tspcumin / jeera
+- ½cup basmati rice
+- 1cupwater
+- ¼tsp salt
+- 2tbspcoriander (finely chopped)
+main_veg: []
+avoid_contains: []
+instructions: 'using cooked basmati rice:
+
+  now in a large heat 1 tsp ghee and splutter 1 tsp cumin seeds.
+
+  now add in cooked basmati rice, ¼ tsp salt and mix gently.
+
+  finally, add 2 tbsp coriander leaves and enjoy jeera rice with dal.
+
+  using pressure cooker:
+
+  firstly, in a cooker heat 1 tsp ghee and splutter 1 tsp cumin seeds.
+
+  now add ½ cup basmati rice (soaked 20 minutes) and saute for a minute.
+
+  add 1 cup of water, ¼ tsp salt and mix well.
+
+  cover and pressure cook for 2 whistles.
+
+  finally, add 2 tbsp coriander leaves and enjoy jeera rice with dal.'
+source_url: null
+source_file: Jeera Rice.html

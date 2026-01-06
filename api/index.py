@@ -53,6 +53,40 @@ def get_yaml_data(rel_path):
             return yaml.safe_load(f)
     return None
 
+# ============================================================================
+# Caching Logic
+# ============================================================================
+CACHE = {
+    'recipes': {'data': None, 'timestamp': 0},
+    'inventory': {'data': None, 'timestamp': 0},
+    'history': {'data': None, 'timestamp': 0}
+}
+
+CACHE_TTL = 300  # 5 minutes
+
+def get_cached_data(key, path):
+    """Get data from cache or load from file."""
+    now = datetime.now().timestamp()
+    cache_entry = CACHE.get(key)
+    
+    if cache_entry and cache_entry['data'] and (now - cache_entry['timestamp'] < CACHE_TTL):
+        return cache_entry['data']
+        
+    data = get_yaml_data(path)
+    if data:
+        CACHE[key] = {'data': data, 'timestamp': now}
+        
+    return data
+
+def invalidate_cache(key=None):
+    """Clear specific cache key or all keys."""
+    if key:
+        if key in CACHE:
+            CACHE[key] = {'data': None, 'timestamp': 0}
+    else:
+        for k in CACHE:
+            CACHE[k] = {'data': None, 'timestamp': 0}
+
 @app.route("/api/status")
 def get_status():
     try:
@@ -83,7 +117,7 @@ def get_status():
             input_files = list_files_in_dir_from_github(repo_name, "inputs")
             for f in input_files:
                 sync_file(f)
-
+ 
         try:
             # Note: archive_expired_weeks might still fail to write, which is handled
             archive_expired_weeks()
@@ -152,7 +186,8 @@ def get_status():
         history_week = None
         if state in ['active', 'waiting_for_checkin']:
             from scripts.log_execution import find_week
-            history = get_yaml_data('data/history.yml') or {}
+            # Use Cached History
+            history = get_cached_data('history', 'data/history.yml') or {}
             history_week = find_week(history, week_str)
 
             if history_week and 'daily_feedback' in history_week:
@@ -219,19 +254,39 @@ def get_status():
 @app.route("/api/recipes")
 def get_recipes():
     try:
-        recipes = get_yaml_data('recipes/index.yml')
+        # Use Cached Recipes
+        recipes = get_cached_data('recipes', 'recipes/index.yml')
         if recipes is None:
             return jsonify({"status": "error", "message": "Recipe index not found"}), 404
         return jsonify({"status": "success", "recipes": recipes})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@app.route("/api/recipes/<recipe_id>")
+def get_recipe_details(recipe_id):
+    """Fetch full recipe details on demand."""
+    try:
+        # Look for the recipe details yaml
+        detail_path = Path(f'recipes/details/{recipe_id}.yaml')
+        if detail_path.exists():
+             with open(detail_path, 'r') as f:
+                data = yaml.safe_load(f)
+                return jsonify({"status": "success", "recipe": data})
+        else:
+             # Fallback to index if detail not found (or return 404)
+             return jsonify({"status": "error", "message": "Recipe details not found"}), 404
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 @app.route("/api/inventory")
 def get_inventory():
     try:
-        inventory = get_yaml_data('data/inventory.yml')
+        # Use Cached Inventory
+        inventory = get_cached_data('inventory', 'data/inventory.yml')
         if inventory is None:
-            return jsonify({"status": "error", "message": "Inventory file not found"}), 404
+            # Fallback empty inventory if file missing
+            inventory = {'fridge':[], 'pantry':[], 'freezer':{}}
+        
         return jsonify({"status": "success", "inventory": inventory})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
@@ -239,9 +294,10 @@ def get_inventory():
 @app.route("/api/history")
 def get_history():
     try:
-        history = get_yaml_data('data/history.yml')
+        # Use Cached History
+        history = get_cached_data('history', 'data/history.yml')
         if history is None:
-            return jsonify({"status": "error", "message": "History file not found"}), 404
+             return jsonify({"status": "error", "message": "History file not found"}), 404
         return jsonify({
             "status": "success", 
             "history": history,
@@ -491,6 +547,10 @@ def log_meal():
         # Sync to GitHub
         from scripts.github_helper import sync_changes_to_github
         sync_changes_to_github(['data/history.yml', 'data/inventory.yml'])
+        
+        # Invalidate Cache
+        invalidate_cache('history')
+        invalidate_cache('inventory')
         
         return jsonify({"status": "success", "message": "Meal logged successfully"})
     except Exception as e:

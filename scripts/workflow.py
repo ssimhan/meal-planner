@@ -396,7 +396,7 @@ def generate_meal_plan(input_file, data):
 
     # Select lunches based on dinner plan
     print("\n[4.5/5] Selecting lunches...")
-    lunch_selector = LunchSelector(index_path)
+    lunch_selector = LunchSelector(index_path, recipes=recipes)
 
     # Build dinner plan list for lunch selector
     dinner_plan_list = []

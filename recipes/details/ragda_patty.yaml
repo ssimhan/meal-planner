@@ -1,0 +1,62 @@
+id: ragda_patty
+name: Ragda Patty
+categories:
+- Dinner
+- Guest Apps
+- Indian
+cuisine: indian
+meal_type: unknown
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- stovetop
+ingredients:
+- 1cupvatana
+- 1 medium potato
+- 3cupwater
+- oil
+- 1 medium onion
+- 1tspginger garlic paste
+- 1 chilli, finely chopped
+- 2 medium tomatoes
+- turmeric
+- red chilli powder
+- coriander powder
+- cumin powder
+- garam masala
+- salt
+- cilantro
+main_veg:
+- cilantro
+- garlic
+- ginger
+- onion
+- potato
+- tomato
+- tomatoe
+avoid_contains: []
+instructions: 'pressure cook vatana, potato, turmeric, salt and water for 5 whistles.
+
+  Chop one onion and two tomatoes.
+
+  now in a large kadai heat 3 tsp oil and saute 1 onion, 1 tsp ginger garlic paste
+  and 1 chilli.
+
+  also saute 1 tomato until it turns soft and mushy.
+
+  furthermore add ¼ tsp turmeric, ½ tsp chilli powder, ½ tsp coriander powder, ¼ tsp
+  cumin powder, ¼ tsp garam masala and ¼ tsp salt.
+
+  saute on low flame until the oil is released from sides.
+
+  now add boiled peas and mix well.
+
+  boil for 5 minutes or until the spices is absorbed.
+
+  mash the peas and potato slightly, to thicken the consistency.
+
+  Top with cilantro'
+source_url: null
+source_file: Ragda Patty.html

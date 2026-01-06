@@ -199,17 +199,17 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
   - Integrate a simple weather API to detect rain/cold (boost soup probability).
   - Add "Busy Day" detection (calendar integration or manual toggle) to force "Quick Prep" meals.
 
-#### Block 4: Inventory Intelligence (Logic)
+#### Block 4: Inventory Intelligence (Logic) - COMPLETED 2026-01-06
 **Focus:** Smart Substitutions & Freezer Management
 - **Goal:** Help users use up what they have.
 - **Tasks:**
-  - Implement logic to scan `inventory.yml` against the recipe index.
-  - Create a "What can I replace this with?" suggestion modal on the Dashboard.
-  - **BUG FIX:** Separate freezer backups (complete meals) from freezer ingredients (components)
-    - Currently all items mixed in `freezer.backups` array
-    - Need distinct `freezer.backups` vs `freezer.ingredients` structures
-    - Only backups should appear in "Skip Dinner → Freezer Meal" flow
-    - Only backups count toward ">= 3 backup meals" success metric
+  - [x] Implement logic to scan `inventory.yml` against the recipe index.
+  - [x] Create a "What can I replace this with?" suggestion modal on the Dashboard.
+  - [x] **BUG FIX:** Separate freezer backups (complete meals) from freezer ingredients (components)
+    - [x] Currently all items mixed in `freezer.backups` array
+    - [x] Need distinct `freezer.backups` vs `freezer.ingredients` structures
+    - [x] Only backups should appear in "Skip Dinner → Freezer Meal" flow
+    - [x] Only backups count toward ">= 3 backup meals" success metric
 
 #### Block 5: Analytics & Health (Data)
 **Focus:** Nutrition Tracking

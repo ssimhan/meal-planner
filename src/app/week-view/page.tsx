@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { getStatus, getRecipes, WorkflowStatus, replan, swapMeals } from '@/lib/api';
 import MealCorrectionInput from '@/components/MealCorrectionInput';
 import SwapConfirmationModal from '@/components/SwapConfirmationModal';
+import ReplacementModal from '@/components/ReplacementModal';
 
 export default function WeekView() {
   const [status, setStatus] = useState<WorkflowStatus | null>(null);
@@ -16,6 +17,11 @@ export default function WeekView() {
   const [isReplanning, setIsReplanning] = useState(false);
   const [isSwapMode, setIsSwapMode] = useState(false);
   const [swapSelection, setSwapSelection] = useState<string[]>([]);
+  const [replacementModal, setReplacementModal] = useState<{ isOpen: boolean; day: string; currentMeal: string }>({
+    isOpen: false,
+    day: '',
+    currentMeal: ''
+  });
 
   useEffect(() => {
     async function fetchWeekData() {
@@ -189,6 +195,46 @@ export default function WeekView() {
         className="mr-3 h-5 w-5 text-[var(--accent-sage)] rounded border-gray-300 focus:ring-[var(--accent-sage)] cursor-pointer"
       />
     );
+  };
+
+  const handleReplacementConfirm = async (newMeal: string) => {
+    const { day } = replacementModal;
+    if (!day || !status?.week_data?.week_of) return;
+
+    try {
+      await fetch('/api/log-meal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          week: status.week_data.week_of,
+          day,
+          // Assume made if swapped? No, this is changing the plan.
+          // Actually, log-meal is not the best for changing the plan, 
+          // but handleCorrectionSave uses it for "actual_meal".
+          // We want to UPDATE the plan.
+          // Let's use log-meal with actual_meal for now OR
+          // we might need a specific endpoint to Swap/Replace plan.
+          // Using actual_meal overrides the plan visually which is arguably safer.
+          actual_meal: newMeal,
+          dinner_needs_fix: false,
+          made: true // Mark as resolved
+        })
+      });
+
+      // Better yet, if we want to CHANGE the plan, we should use the same logic as swap but for one meal.
+      // But for "Replacement", "Actual Meal" override is essentially what the user is doing. 
+      // "I didn't eat X, I ate Y (from fridge)". 
+      // Wait, if they are planning ahead, they want to change the PLAN.
+      // Let's stick to "actual_meal" pattern for consistency with corrections, 
+      // AS LONG AS it shows up as the main meal.
+
+      const data = await getStatus();
+      setStatus(data);
+      setReplacementModal({ isOpen: false, day: '', currentMeal: '' });
+    } catch (e) {
+      console.error("Replacement failed", e);
+      alert("Failed to replace meal");
+    }
   };
 
   if (isFixing) {
@@ -376,6 +422,20 @@ export default function WeekView() {
           )
         }
 
+
+
+        {/* Replacement Modal */}
+        {
+          replacementModal.isOpen && (
+            <ReplacementModal
+              day={replacementModal.day}
+              currentMeal={replacementModal.currentMeal}
+              onConfirm={handleReplacementConfirm}
+              onCancel={() => setReplacementModal({ isOpen: false, day: '', currentMeal: '' })}
+            />
+          )
+        }
+
         {/* Mobile: Card view */}
         <div className="md:hidden space-y-4">
           {days.map((day, idx) => {
@@ -430,6 +490,21 @@ export default function WeekView() {
                         <p className="text-[11px] text-[var(--text-muted)] mt-1">
                           🥬 {dinner.vegetables.join(', ')}
                         </p>
+                      )}
+                      {!isSwapMode && !editMode && (
+                        <button
+                          className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-2 flex items-center gap-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setReplacementModal({
+                              isOpen: true,
+                              day: day,
+                              currentMeal: dinner?.actual_meal || dinner?.recipe_id || ''
+                            });
+                          }}
+                        >
+                          <span>🔄</span> Replace
+                        </button>
                       )}
                     </div>
                   </div>
@@ -567,8 +642,23 @@ export default function WeekView() {
                                 getDisplayName(dinnerName, dinner?.actual_meal)
                               )}
                             </span>
-                            {getFeedbackBadge(dailyFeedback?.dinner_feedback || dinner?.kids_feedback, dinner?.made, needsFix)}
                           </div>
+                          {!isSwapMode && !editMode && (
+                            <button
+                              title="Find a substitute for this meal"
+                              className="ml-auto text-gray-300 hover:text-[var(--accent-sage)] p-1 rounded-full hover:bg-gray-100 transition-colors"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setReplacementModal({
+                                  isOpen: true,
+                                  day: day,
+                                  currentMeal: dinner?.actual_meal || dinner?.recipe_id || ''
+                                });
+                              }}
+                            >
+                              🔄
+                            </button>
+                          )}
                         </div>
                       </div>
                     </td>

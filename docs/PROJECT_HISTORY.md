@@ -1210,3 +1210,23 @@ Continuing with current recipes. Use freezer backups manually if preferred.
 - **Dynamic Prep Regeneration:** Crucial logic step - simply swapping meals isn't enough; the *prep instructions* must also move (e.g., moving a Monday meal to Friday means you don't need to chop for it on Sunday anymore).
 
 **Status:** Phase 11 Block 2 Complete.
+
+### 2026-01-06: Phase 11 Block 4 - Inventory Intelligence
+
+**Goal:** Help users effectively use up their inventory by implementing "Smart Substitutions" and separating "Freezer Backups" (complete meals) from "Freezer Ingredients" (components).
+
+**Changes:**
+*   **Inventory Data Structure:** Updated `data/inventory.yml` to split `freezer` into `backups` (ready-to-eat) and `ingredients` (components like frozen peas).
+    *   *Bug Fix:* Prevents ingredients from showing up in the "Skip Dinner -> Freezer Meal" dropdown, which is reserved for complete meals.
+*   **Inventory Intelligence Engine:** Created `scripts/inventory_intelligence.py` to analyze existing inventory and suggest recipes.
+    *   **Logic:** Scores recipes based on how many ingredients you already have in the Fridge/Pantry.
+*   **API:** Added `/api/suggestions` endpoint to serve these smart recommendations.
+*   **Frontend (Week View):**
+    *   Added a **"Replace"** button to meal cards.
+    *   Created **"Replacement Modal"** with 3 distinct tabs:
+        1.  **Shop Your Fridge:** Suggests recipes using ingredients you have.
+        2.  **Freezer Stash:** Lists available complete freezer meals.
+        3.  **Quick Fix:** Shows 15-minute or low-effort recipes.
+    *   This feature is designed to be complementary to "Swap" (moving planned days) and "Replan" (global reshuffle).
+
+**Status:** Phase 11 Block 4 Complete.

@@ -938,6 +938,15 @@ def add_inventory():
                 'servings': 4,
                 'frozen_date': datetime.now().strftime('%Y-%m-%d')
             })
+        elif category == 'frozen_ingredient':
+            if 'freezer' not in inventory: inventory['freezer'] = {}
+            if 'ingredients' not in inventory['freezer']: inventory['freezer']['ingredients'] = []
+            inventory['freezer']['ingredients'].append({
+                'item': item,
+                'quantity': 1,
+                'unit': 'count',
+                'frozen_date': datetime.now().strftime('%Y-%m-%d')
+            })
         elif category == 'pantry':
             if 'pantry' not in inventory: inventory['pantry'] = []
             inventory['pantry'].append({
@@ -1143,5 +1152,18 @@ def import_recipe():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 # For local development
-if __name__ == "__main__":
-    app.run(port=5328, debug=True)
+@app.route("/api/suggestions")
+def get_meal_suggestions():
+    try:
+        from scripts.inventory_intelligence import get_substitutions
+        suggestions = get_substitutions(limit=5)
+        return jsonify({
+            "status": "success",
+            "suggestions": suggestions
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5332))
+    app.run(host='0.0.0.0', port=port)

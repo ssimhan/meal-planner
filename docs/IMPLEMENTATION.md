@@ -192,12 +192,12 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
   - [x] Implement logic to switch dinner slots (e.g., move Tuesday's Tacos to Thursday).
   - [x] Update prep instructions to reflect the new order.
 
-#### Block 3: Context-Aware Planning (Intelligence)
+#### Block 3: Context-Aware Planning (Intelligence) - SKIPPED/DEFERRED
 **Focus:** Weather & Calendar Integration
 - **Goal:** Make the planner smarter about real-life constraints.
 - **Tasks:**
-  - Integrate a simple weather API to detect rain/cold (boost soup probability).
-  - Add "Busy Day" detection (calendar integration or manual toggle) to force "Quick Prep" meals.
+  - [ ] Integrate a simple weather API to detect rain/cold (boost soup probability).
+  - [ ] Add "Busy Day" detection (calendar integration or manual toggle) to force "Quick Prep" meals.
 
 #### Block 4: Inventory Intelligence (Logic) - COMPLETED 2026-01-06
 **Focus:** Smart Substitutions & Freezer Management

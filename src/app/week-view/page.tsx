@@ -286,7 +286,11 @@ export default function WeekView() {
               <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
                 <p className="text-[var(--text-muted)]">All items fixed! Returning to week view...</p>
                 <button
-                  onClick={() => setIsFixing(false)}
+                  onClick={async () => {
+                    const data = await getStatus();
+                    setStatus(data);
+                    setIsFixing(false);
+                  }}
                   className="mt-4 btn-secondary"
                 >
                   Return Now

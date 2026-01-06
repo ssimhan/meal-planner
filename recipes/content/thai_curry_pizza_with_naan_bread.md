@@ -1,0 +1,46 @@
+---
+id: thai_curry_pizza_with_naan_bread
+name: Thai Curry Pizza with Naan Bread
+categories:
+- Asian
+- Dinner
+cuisine: indian
+meal_type: pizza
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- oven
+main_veg:
+- cilantro
+- green onion
+- onion
+- tomato
+- tomatoe
+avoid_contains: []
+source_url: null
+source_file: Thai Curry Pizza with Naan Bread.html
+---
+
+# Thai Curry Pizza with Naan Bread
+
+### Ingredients
+- 4piecesnaan bread
+- 15 ounces Muir Glen crushed fire-roasted tomatoes
+- 1½tablespoons red curry paste
+- 2 teaspoons Sriracha hot sauce
+- 1 red pepper
+- 2 green onions
+- 1cupshredded mozzarella cheese
+- ¼cup cashews
+- 1 handful fresh cilantro
+- Kosher salt
+
+### Instructions
+1. Preheat oven to 450°F. Place naan directly on the oven grate and pre-bake 3 to 4 minutes per side until crisp.
+2. Meanwhile, in a medium bowl, combine Muir Glen crushed fire-roasted tomatoes with red curry paste, Sriracha, and a few pinches of kosher salt.
+3. Thinly slice the red pepper. Thinly slice the green onions.
+4. When the naan is ready, spread each with the tomato mixture, then top with mozzarella cheese, vegetables, cashews, and a sprinkle of kosher salt. Bake for 5 minutes, until the cheese is melted.
+5. Meanwhile, chop the cilantro. Remove the pizza from the oven and garnish with a few cilantro leaves. Slice and serve immediately.
+

@@ -9,8 +9,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/3-Ingredient Cereal Bars.html
+    type: markdown
+    file: recipes/content/3_ingredient_cereal_bars.md
 - id: aloo_corn_tikki_roll
   name: Aloo Corn Tikki Roll
   cuisine: indian
@@ -29,8 +29,8 @@
   - potato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Aloo Corn Tikki Roll.html
+    type: markdown
+    file: recipes/content/aloo_corn_tikki_roll.md
 - id: apple_cinnamon_carrot_muffin
   name: Apple Cinnamon Carrot Muffin
   cuisine: unknown
@@ -45,8 +45,8 @@
   - carrot
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Apple Cinnamon Carrot Muffin.html
+    type: markdown
+    file: recipes/content/apple_cinnamon_carrot_muffin.md
 - id: apple_sauce
   name: Apple sauce
   cuisine: unknown
@@ -58,8 +58,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Apple sauce.html
+    type: markdown
+    file: recipes/content/apple_sauce.md
 - id: arisi_upma_mix
   name: Arisi Upma Mix
   cuisine: indian
@@ -71,8 +71,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Arisi Upma Mix.html
+    type: markdown
+    file: recipes/content/arisi_upma_mix.md
 - id: baby_carrots
   name: Baby Carrots
   cuisine: unknown
@@ -84,8 +84,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Baby Carrots.html
+    type: markdown
+    file: recipes/content/baby_carrots.md
 - id: baked_black_bean_and_sweet_potato_flautas
   name: Baked Black Bean and Sweet Potato Flautas
   cuisine: mexican
@@ -106,8 +106,8 @@
   - sweet potato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Baked Black Bean and Sweet Potato Flautas.html
+    type: markdown
+    file: recipes/content/baked_black_bean_and_sweet_potato_flautas.md
 - id: balsamic_bruschetta
   name: Balsamic Bruschetta
   cuisine: italian
@@ -123,8 +123,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Balsamic Bruschetta.html
+    type: markdown
+    file: recipes/content/balsamic_bruschetta.md
 - id: banana_bread_muffins
   name: Banana Bread Muffins
   cuisine: unknown
@@ -136,8 +136,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Banana Bread Muffins.html
+    type: markdown
+    file: recipes/content/banana_bread_muffins.md
 - id: beans_poriyal
   name: Beans Poriyal
   cuisine: indian
@@ -151,8 +151,8 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Beans Poriyal.html
+    type: markdown
+    file: recipes/content/beans_poriyal.md
 - id: best_ever_banana_nut_muffins
   name: Best Ever Banana Nut Muffins
   cuisine: unknown
@@ -164,8 +164,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Best Ever Banana Nut Muffins.html
+    type: markdown
+    file: recipes/content/best_ever_banana_nut_muffins.md
 - id: bhel_puri_chaat
   name: Bhel Puri Chaat
   cuisine: indian
@@ -183,8 +183,8 @@
   - tomato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Bhel Puri Chaat.html
+    type: markdown
+    file: recipes/content/bhel_puri_chaat.md
 - id: bisi_bele_bath
   name: Bisi Bele Bath
   cuisine: indian
@@ -205,8 +205,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Bisi Bele Bath.html
+    type: markdown
+    file: recipes/content/bisi_bele_bath.md
   leftover_potential: high
   kid_favorite: true
 - id: black_bean_brownie_bites
@@ -222,8 +222,8 @@
   - beans
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Black Bean Brownie Bites.html
+    type: markdown
+    file: recipes/content/black_bean_brownie_bites.md
 - id: black_bean_quinoa_salad
   name: Black Bean Quinoa Salad
   cuisine: unknown
@@ -240,8 +240,21 @@
   - tomato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Black Bean Quinoa Salad.html
+    type: markdown
+    file: recipes/content/black_bean_quinoa_salad.md
+- id: blackberries
+  name: Blackberries
+  cuisine: unknown
+  meal_type: unknown
+  effort_level: normal
+  no_chop_compatible: false
+  appliances:
+  - stovetop
+  main_veg: []
+  avoid_contains: []
+  source:
+    type: markdown
+    file: recipes/content/blackberries.md
 - id: blueberry_chocolate_chip_muffin
   name: Blueberry Chocolate Chip Muffin
   cuisine: unknown
@@ -257,8 +270,8 @@
   - sweet potato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Blueberry Chocolate Chip Muffin.html
+    type: markdown
+    file: recipes/content/blueberry_chocolate_chip_muffin.md
 - id: blueberry_date_oatmeal
   name: Blueberry Date Oatmeal
   cuisine: unknown
@@ -271,8 +284,8 @@
   - cauliflower
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Blueberry Date Oatmeal.html
+    type: markdown
+    file: recipes/content/blueberry_date_oatmeal.md
 - id: broccoli_spinach_pasta_sauce
   name: Broccoli Spinach Pasta Sauce
   cuisine: italian
@@ -288,8 +301,8 @@
   - spinach
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Broccoli Spinach Pasta Sauce.html
+    type: markdown
+    file: recipes/content/broccoli_spinach_pasta_sauce.md
 - id: butternut_squash_mac_and_cheese
   name: Butternut Squash Mac and Cheese
   cuisine: american
@@ -303,8 +316,8 @@
   - squash
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Butternut Squash Mac and Cheese.html
+    type: markdown
+    file: recipes/content/butternut_squash_mac_and_cheese.md
   leftover_potential: high
   kid_favorite: true
 - id: caramel_delight_energy_balls
@@ -318,8 +331,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Caramel Delight Energy Balls.html
+    type: markdown
+    file: recipes/content/caramel_delight_energy_balls.md
 - id: carrot_cake_bars
   name: Carrot Cake Bars
   cuisine: indian
@@ -333,8 +346,8 @@
   - carrot
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Carrot Cake Bars.html
+    type: markdown
+    file: recipes/content/carrot_cake_bars.md
 - id: carrot_poriyal
   name: Carrot Poriyal
   cuisine: indian
@@ -348,8 +361,8 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Carrot Poriyal.html
+    type: markdown
+    file: recipes/content/carrot_poriyal.md
 - id: cauliflower_alfredo_sauce
   name: Cauliflower Alfredo Sauce
   cuisine: italian
@@ -364,8 +377,8 @@
   - garlic
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Cauliflower Alfredo Sauce.html
+    type: markdown
+    file: recipes/content/cauliflower_alfredo_sauce.md
 - id: cauliflower_rasam
   name: Cauliflower Rasam
   cuisine: indian
@@ -382,8 +395,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Cauliflower Rasam.html
+    type: markdown
+    file: recipes/content/cauliflower_rasam.md
 - id: chana_masala_ip
   name: Chana Masala (IP)
   cuisine: indian
@@ -403,8 +416,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Chana Masala (IP).html
+    type: markdown
+    file: recipes/content/chana_masala_ip.md
   leftover_potential: high
   kid_favorite: true
 - id: cheddar_and_spinach_muffins
@@ -420,8 +433,8 @@
   - spinach
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Cheddar and Spinach Muffins.html
+    type: markdown
+    file: recipes/content/cheddar_and_spinach_muffins.md
 - id: cheese_and_tomato_quinoa_balls
   name: Cheese and Tomato Quinoa Balls
   cuisine: unknown
@@ -439,8 +452,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Cheese and Tomato Quinoa Balls.html
+    type: markdown
+    file: recipes/content/cheese_and_tomato_quinoa_balls.md
 - id: cheese_sticks
   name: Cheese sticks
   cuisine: unknown
@@ -452,8 +465,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Cheese sticks.html
+    type: markdown
+    file: recipes/content/cheese_sticks.md
 - id: cheesy_veggie_quesadilla
   name: Cheesy Veggie Quesadilla
   cuisine: mexican
@@ -469,8 +482,8 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Cheesy Veggie Quesadilla.html
+    type: markdown
+    file: recipes/content/cheesy_veggie_quesadilla.md
   leftover_potential: high
   kid_favorite: true
 - id: chef_s_paniyaram
@@ -486,8 +499,8 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Chef’s Paniyaram.html
+    type: markdown
+    file: recipes/content/chef_s_paniyaram.md
 - id: cherry_tomato_salad
   name: Cherry Tomato Salad
   cuisine: unknown
@@ -502,8 +515,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Cherry Tomato Salad.html
+    type: markdown
+    file: recipes/content/cherry_tomato_salad.md
 - id: cherry_tomatoes
   name: Cherry tomatoes
   cuisine: unknown
@@ -515,8 +528,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Cherry tomatoes.html
+    type: markdown
+    file: recipes/content/cherry_tomatoes.md
 - id: chex_cereal
   name: Chex cereal
   cuisine: unknown
@@ -528,8 +541,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Chex cereal.html
+    type: markdown
+    file: recipes/content/chex_cereal.md
 - id: chickpea_chaat_salad
   name: Chickpea Chaat Salad
   cuisine: indian
@@ -550,8 +563,8 @@
   - tomato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Chickpea Chaat Salad.html
+    type: markdown
+    file: recipes/content/chickpea_chaat_salad.md
 - id: chocolate_banana_bark
   name: Chocolate Banana Bark
   cuisine: unknown
@@ -563,8 +576,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Chocolate Banana Bark.html
+    type: markdown
+    file: recipes/content/chocolate_banana_bark.md
 - id: chocolate_banana_lentil_muffins_rew
   name: Chocolate Banana Lentil Muffins (REW)
   cuisine: unknown
@@ -577,8 +590,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Chocolate Banana Lentil Muffins (REW).html
+    type: markdown
+    file: recipes/content/chocolate_banana_lentil_muffins_rew.md
 - id: chocolate_chip_mini_muffins_little_bites_copycat
   name: Chocolate Chip Mini Muffins (Little Bites Copycat)
   cuisine: unknown
@@ -591,8 +604,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Chocolate Chip Mini Muffins (Little Bites Copycat).html
+    type: markdown
+    file: recipes/content/chocolate_chip_mini_muffins_little_bites_copycat.md
 - id: chocolate_protein_muffins_with_veggies
   name: Chocolate Protein Muffins (with Veggies!)
   cuisine: unknown
@@ -607,8 +620,8 @@
   - zucchini
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Chocolate Protein Muffins (with Veggies!).html
+    type: markdown
+    file: recipes/content/chocolate_protein_muffins_with_veggies.md
 - id: chow_chow_kootu
   name: Chow Chow Kootu
   cuisine: indian
@@ -620,8 +633,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Chow Chow Kootu.html
+    type: markdown
+    file: recipes/content/chow_chow_kootu.md
 - id: cilantro_lime_crema
   name: Cilantro Lime Crema
   cuisine: unknown
@@ -637,8 +650,8 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Cilantro Lime Crema.html
+    type: markdown
+    file: recipes/content/cilantro_lime_crema.md
 - id: corn_black_bean_dip_tcl
   name: Corn & Black Bean Dip TCL
   cuisine: unknown
@@ -659,8 +672,8 @@
   - serrano
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Corn & Black Bean Dip TCL.html
+    type: markdown
+    file: recipes/content/corn_black_bean_dip_tcl.md
 - id: cowboy_caviar_salad
   name: Cowboy Caviar Salad
   cuisine: unknown
@@ -683,8 +696,21 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Cowboy Caviar Salad.html
+    type: markdown
+    file: recipes/content/cowboy_caviar_salad.md
+- id: crackers_and_cheese_cubes
+  name: Crackers and Cheese Cubes
+  cuisine: unknown
+  meal_type: simple_snack
+  effort_level: normal
+  no_chop_compatible: false
+  appliances:
+  - stovetop
+  main_veg: []
+  avoid_contains: []
+  source:
+    type: markdown
+    file: recipes/content/crackers_and_cheese_cubes.md
 - id: creamy_macaroni_pasta_salad
   name: Creamy Macaroni Pasta Salad
   cuisine: italian
@@ -699,8 +725,8 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Creamy Macaroni Pasta Salad.html
+    type: markdown
+    file: recipes/content/creamy_macaroni_pasta_salad.md
 - id: crispy_chipotle_sweet_potato_tacos_with_lime_crema
   name: Crispy Chipotle Sweet Potato Tacos with Lime Crema
   cuisine: mexican
@@ -721,8 +747,8 @@
   - sweet potato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Crispy Chipotle Sweet Potato Tacos with Lime Crema.html
+    type: markdown
+    file: recipes/content/crispy_chipotle_sweet_potato_tacos_with_lime_crema.md
 - id: cubed_fried_tofu
   name: Cubed, fried tofu
   cuisine: unknown
@@ -734,8 +760,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Cubed, fried tofu.html
+    type: markdown
+    file: recipes/content/cubed_fried_tofu.md
 - id: cucumber_cream_cheese_bagel
   name: Cucumber Cream Cheese Bagel
   cuisine: unknown
@@ -748,8 +774,8 @@
   - cucumber
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Cucumber Cream Cheese Bagel.html
+    type: markdown
+    file: recipes/content/cucumber_cream_cheese_bagel.md
 - id: cucumber_sandwiches
   name: Cucumber Sandwiches
   cuisine: unknown
@@ -765,8 +791,8 @@
   - lemon
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Cucumber Sandwiches.html
+    type: markdown
+    file: recipes/content/cucumber_sandwiches.md
 - id: curried_cauliflower_quinoa_salad
   name: Curried Cauliflower Quinoa Salad
   cuisine: mediterranean
@@ -786,8 +812,8 @@
   avoid_contains:
   - cabbage
   source:
-    type: html
-    file: recipes/raw_html/Curried Cauliflower Quinoa Salad.html
+    type: markdown
+    file: recipes/content/curried_cauliflower_quinoa_salad.md
 - id: curried_egg_salad_sandwich
   name: Curried Egg Salad Sandwich
   cuisine: indian
@@ -801,9 +827,8 @@
   - garlic
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Curried Egg Salad Sandwich.html
-
+    type: markdown
+    file: recipes/content/curried_egg_salad_sandwich.md
 - id: date_cookies
   name: Date Cookies
   cuisine: unknown
@@ -815,8 +840,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Date Cookies.html
+    type: markdown
+    file: recipes/content/date_cookies.md
 - id: dry_paneer_masala
   name: Dry Paneer Masala
   cuisine: indian
@@ -833,8 +858,8 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Dry Paneer Masala.html
+    type: markdown
+    file: recipes/content/dry_paneer_masala.md
 - id: easiest_animal_crackers
   name: Easiest Animal Crackers
   cuisine: unknown
@@ -847,8 +872,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Easiest Animal Crackers.html
+    type: markdown
+    file: recipes/content/easiest_animal_crackers.md
 - id: easy_cheese_crackers
   name: Easy Cheese Crackers
   cuisine: unknown
@@ -861,8 +886,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Easy Cheese Crackers.html
+    type: markdown
+    file: recipes/content/easy_cheese_crackers.md
 - id: easy_chickpea_fritters
   name: Easy Chickpea Fritters
   cuisine: mediterranean
@@ -878,8 +903,8 @@
   - peas
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Easy Chickpea Fritters.html
+    type: markdown
+    file: recipes/content/easy_chickpea_fritters.md
 - id: easy_french_toast_sticks
   name: Easy French Toast Sticks
   cuisine: american
@@ -893,8 +918,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Easy French Toast Sticks.html
+    type: markdown
+    file: recipes/content/easy_french_toast_sticks.md
 - id: easy_fruit_snacks_gummies
   name: Easy Fruit Snacks (Gummies)
   cuisine: unknown
@@ -907,8 +932,8 @@
   - carrot
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Easy Fruit Snacks (Gummies).html
+    type: markdown
+    file: recipes/content/easy_fruit_snacks_gummies.md
 - id: easy_homemade_granola_bars
   name: Easy Homemade Granola Bars
   cuisine: unknown
@@ -926,8 +951,8 @@
   - sweet potato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Easy Homemade Granola Bars.html
+    type: markdown
+    file: recipes/content/easy_homemade_granola_bars.md
 - id: easy_oatmeal_bars_with_blueberry_and_carrot
   name: Easy Oatmeal Bars (with Blueberry and Carrot)
   cuisine: unknown
@@ -941,8 +966,8 @@
   - carrot
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Easy Oatmeal Bars (with Blueberry and Carrot).html
+    type: markdown
+    file: recipes/content/easy_oatmeal_bars_with_blueberry_and_carrot.md
 - id: easy_pancake_muffins_favorite_pancake_bites
   name: Easy Pancake Muffins (Favorite Pancake Bites)
   cuisine: american
@@ -955,8 +980,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Easy Pancake Muffins (Favorite Pancake Bites).html
+    type: markdown
+    file: recipes/content/easy_pancake_muffins_favorite_pancake_bites.md
 - id: easy_pear_popsicles
   name: Easy Pear Popsicles
   cuisine: unknown
@@ -968,8 +993,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Easy Pear Popsicles.html
+    type: markdown
+    file: recipes/content/easy_pear_popsicles.md
 - id: easy_zucchini_pasta_sauce
   name: Easy Zucchini Pasta Sauce
   cuisine: italian
@@ -988,8 +1013,8 @@
   - zucchini
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Easy Zucchini Pasta Sauce.html
+    type: markdown
+    file: recipes/content/easy_zucchini_pasta_sauce.md
 - id: edamame
   name: Edamame
   cuisine: unknown
@@ -1001,8 +1026,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Edamame.html
+    type: markdown
+    file: recipes/content/edamame.md
 - id: enchilada_sauce
   name: Enchilada Sauce
   cuisine: mexican
@@ -1016,8 +1041,8 @@
   - tomato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Enchilada Sauce.html
+    type: markdown
+    file: recipes/content/enchilada_sauce.md
 - id: esquites_mexican_street_corn_salad
   name: Esquites (Mexican Street Corn Salad)
   cuisine: unknown
@@ -1033,8 +1058,8 @@
   - lime
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Esquites (Mexican Street Corn Salad).html
+    type: markdown
+    file: recipes/content/esquites_mexican_street_corn_salad.md
 - id: favorite_bliss_balls
   name: Favorite Bliss Balls
   cuisine: unknown
@@ -1046,8 +1071,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Favorite Bliss Balls.html
+    type: markdown
+    file: recipes/content/favorite_bliss_balls.md
 - id: favorite_mango_smoothie
   name: Favorite Mango Smoothie
   cuisine: unknown
@@ -1061,8 +1086,8 @@
   - squash
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Favorite Mango Smoothie.html
+    type: markdown
+    file: recipes/content/favorite_mango_smoothie.md
 - id: favorite_pizza_rolls_with_spinach_and_cheese
   name: Favorite Pizza Rolls (with Spinach and Cheese)
   cuisine: italian
@@ -1076,8 +1101,8 @@
   - spinach
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Favorite Pizza Rolls (with Spinach and Cheese).html
+    type: markdown
+    file: recipes/content/favorite_pizza_rolls_with_spinach_and_cheese.md
 - id: favorite_toddler_smoothie_with_veggies
   name: Favorite Toddler Smoothie (with Veggies!)
   cuisine: unknown
@@ -1099,8 +1124,8 @@
   - zucchini
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Favorite Toddler Smoothie (with Veggies!).html
+    type: markdown
+    file: recipes/content/favorite_toddler_smoothie_with_veggies.md
 - id: favorite_yogurt_drinks
   name: Favorite Yogurt Drinks
   cuisine: unknown
@@ -1116,8 +1141,8 @@
   - sweet potato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Favorite Yogurt Drinks.html
+    type: markdown
+    file: recipes/content/favorite_yogurt_drinks.md
 - id: favorite_yogurt_melts
   name: Favorite Yogurt Melts
   cuisine: unknown
@@ -1129,8 +1154,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Favorite Yogurt Melts.html
+    type: markdown
+    file: recipes/content/favorite_yogurt_melts.md
 - id: favorite_yogurt_muffins
   name: Favorite Yogurt Muffins
   cuisine: unknown
@@ -1146,8 +1171,8 @@
   - lemon
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Favorite Yogurt Muffins.html
+    type: markdown
+    file: recipes/content/favorite_yogurt_muffins.md
 - id: freeze_dried_fruits
   name: Freeze dried fruits
   cuisine: unknown
@@ -1159,8 +1184,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Freeze dried fruits.html
+    type: markdown
+    file: recipes/content/freeze_dried_fruits.md
 - id: freezer_ready_mini_pizzas
   name: Freezer Ready Mini Pizzas
   cuisine: italian
@@ -1174,8 +1199,8 @@
   avoid_contains:
   - mushrooms
   source:
-    type: html
-    file: recipes/raw_html/Freezer Ready Mini Pizzas.html
+    type: markdown
+    file: recipes/content/freezer_ready_mini_pizzas.md
 - id: froyo_pouch
   name: Froyo pouch
   cuisine: unknown
@@ -1187,8 +1212,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Froyo pouch.html
+    type: markdown
+    file: recipes/content/froyo_pouch.md
 - id: frozen_yogurt_bark
   name: Frozen Yogurt Bark
   cuisine: unknown
@@ -1200,8 +1225,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Frozen Yogurt Bark.html
+    type: markdown
+    file: recipes/content/frozen_yogurt_bark.md
 - id: fruit_and_nut_bars_copycat_larabar
   name: Fruit and Nut Bars (Copycat Larabar)
   cuisine: unknown
@@ -1213,8 +1238,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Fruit and Nut Bars (Copycat Larabar).html
+    type: markdown
+    file: recipes/content/fruit_and_nut_bars_copycat_larabar.md
 - id: fruit_bar
   name: Fruit bar
   cuisine: unknown
@@ -1226,8 +1251,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Fruit bar.html
+    type: markdown
+    file: recipes/content/fruit_bar.md
 - id: garlic_parmesan_white_beans
   name: Garlic Parmesan White Beans
   cuisine: unknown
@@ -1245,8 +1270,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Garlic Parmesan White Beans.html
+    type: markdown
+    file: recipes/content/garlic_parmesan_white_beans.md
 - id: ginger_chutney_allam_chutney
   name: Ginger Chutney Allam Chutney
   cuisine: indian
@@ -1259,8 +1284,8 @@
   - ginger
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Ginger Chutney Allam Chutney.html
+    type: markdown
+    file: recipes/content/ginger_chutney_allam_chutney.md
 - id: granny_eggs
   name: Granny Eggs
   cuisine: unknown
@@ -1272,8 +1297,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Granny Eggs.html
+    type: markdown
+    file: recipes/content/granny_eggs.md
 - id: granola_bar
   name: Granola bar
   cuisine: unknown
@@ -1285,8 +1310,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Granola bar.html
+    type: markdown
+    file: recipes/content/granola_bar.md
 - id: grapes
   name: Grapes
   cuisine: unknown
@@ -1298,8 +1323,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Grapes.html
+    type: markdown
+    file: recipes/content/grapes.md
 - id: greek_quesadillas
   name: Greek Quesadillas
   cuisine: mexican
@@ -1314,8 +1339,8 @@
   - spinach
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Greek Quesadillas.html
+    type: markdown
+    file: recipes/content/greek_quesadillas.md
 - id: grilled_cheese_and_tomato_soup
   name: Grilled Cheese and Tomato Soup
   cuisine: american
@@ -1330,8 +1355,8 @@
   - tomato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Grilled Cheese and Tomato Soup.html
+    type: markdown
+    file: recipes/content/grilled_cheese_and_tomato_soup.md
 - id: guacamole
   name: Guacamole
   cuisine: mexican
@@ -1348,8 +1373,8 @@
   - tomato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Guacamole.html
+    type: markdown
+    file: recipes/content/guacamole.md
 - id: high_protein_marry_me_breakfast_toast
   name: HIGH PROTEIN ‘MARRY ME’ BREAKFAST TOAST
   cuisine: mediterranean
@@ -1366,8 +1391,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/HIGH PROTEIN ‘MARRY ME’ BREAKFAST TOAST.html
+    type: markdown
+    file: recipes/content/high_protein_marry_me_breakfast_toast.md
 - id: hard_boiled_egg
   name: Hard boiled egg
   cuisine: unknown
@@ -1379,8 +1404,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Hard boiled egg.html
+    type: markdown
+    file: recipes/content/hard_boiled_egg.md
 - id: healthy_breakfast_bars_with_jam
   name: Healthy Breakfast Bars with Jam
   cuisine: unknown
@@ -1392,8 +1417,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Healthy Breakfast Bars with Jam.html
+    type: markdown
+    file: recipes/content/healthy_breakfast_bars_with_jam.md
 - id: healthy_homemade_fruit_roll_ups_flavor_guide
   name: Healthy Homemade Fruit Roll Ups (+ Flavor Guide)
   cuisine: unknown
@@ -1407,8 +1432,8 @@
   - lemon
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Healthy Homemade Fruit Roll Ups (+ Flavor Guide).html
+    type: markdown
+    file: recipes/content/healthy_homemade_fruit_roll_ups_flavor_guide.md
 - id: healthy_vegetable_sheet_pan_frittata
   name: Healthy Vegetable Sheet Pan Frittata
   cuisine: unknown
@@ -1425,8 +1450,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Healthy Vegetable Sheet Pan Frittata.html
+    type: markdown
+    file: recipes/content/healthy_vegetable_sheet_pan_frittata.md
 - id: homemade_frozen_yogurt
   name: Homemade Frozen Yogurt
   cuisine: unknown
@@ -1438,8 +1463,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Homemade Frozen Yogurt.html
+    type: markdown
+    file: recipes/content/homemade_frozen_yogurt.md
 - id: homemade_larabars
   name: Homemade Larabars
   cuisine: unknown
@@ -1451,8 +1476,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Homemade Larabars.html
+    type: markdown
+    file: recipes/content/homemade_larabars.md
 - id: homemade_oatmeal_cream_pies
   name: Homemade Oatmeal Cream Pies
   cuisine: unknown
@@ -1465,8 +1490,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Homemade Oatmeal Cream Pies.html
+    type: markdown
+    file: recipes/content/homemade_oatmeal_cream_pies.md
 - id: homemade_popcorn
   name: Homemade popcorn
   cuisine: unknown
@@ -1478,8 +1503,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Homemade popcorn.html
+    type: markdown
+    file: recipes/content/homemade_popcorn.md
 - id: hotel_sambar
   name: Hotel Sambar
   cuisine: indian
@@ -1497,8 +1522,8 @@
   - tomato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Hotel Sambar.html
+    type: markdown
+    file: recipes/content/hotel_sambar.md
 - id: how_to_make_coconut_rice
   name: How to Make Coconut Rice
   cuisine: unknown
@@ -1512,8 +1537,8 @@
   - ginger
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/How to Make Coconut Rice.html
+    type: markdown
+    file: recipes/content/how_to_make_coconut_rice.md
 - id: ip_dal_tadka
   name: IP Dal Tadka
   cuisine: indian
@@ -1530,8 +1555,8 @@
   - tomato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/IP Dal Tadka.html
+    type: markdown
+    file: recipes/content/ip_dal_tadka.md
 - id: ip_masoor_dal_red_lentils
   name: IP Masoor Dal / Red Lentils
   cuisine: indian
@@ -1551,8 +1576,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/IP Masoor Dal  Red Lentils.html
+    type: markdown
+    file: recipes/content/ip_masoor_dal_red_lentils.md
 - id: ip_no_soak_kidney_beans_rajma
   name: IP No Soak Kidney Beans / Rajma
   cuisine: unknown
@@ -1566,8 +1591,8 @@
   - beans
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/IP No Soak Kidney Beans  Rajma.html
+    type: markdown
+    file: recipes/content/ip_no_soak_kidney_beans_rajma.md
 - id: ip_quinoa_chili
   name: IP Quinoa Chili
   cuisine: unknown
@@ -1589,8 +1614,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/IP Quinoa Chili.html
+    type: markdown
+    file: recipes/content/ip_quinoa_chili.md
 - id: ip_ven_pongal
   name: IP Ven Pongal
   cuisine: indian
@@ -1605,8 +1630,8 @@
   - ginger
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/IP Ven Pongal.html
+    type: markdown
+    file: recipes/content/ip_ven_pongal.md
 - id: idli_dosa_batter
   name: Idli Dosa Batter
   cuisine: indian
@@ -1618,8 +1643,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Idli Dosa Batter.html
+    type: markdown
+    file: recipes/content/idli_dosa_batter.md
 - id: instant_nei_appam
   name: Instant Nei Appam
   cuisine: indian
@@ -1631,8 +1656,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Instant Nei Appam.html
+    type: markdown
+    file: recipes/content/instant_nei_appam.md
 - id: instant_pot_lasagna_soup
   name: Instant Pot Lasagna Soup
   cuisine: italian
@@ -1651,8 +1676,8 @@
   - spinach
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Instant Pot Lasagna Soup.html
+    type: markdown
+    file: recipes/content/instant_pot_lasagna_soup.md
 - id: instant_pot_mexican_rice_beans
   name: Instant Pot Mexican Rice & Beans
   cuisine: mexican
@@ -1671,8 +1696,8 @@
   - serrano
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Instant Pot Mexican Rice & Beans.html
+    type: markdown
+    file: recipes/content/instant_pot_mexican_rice_beans.md
 - id: jeera_rice
   name: Jeera Rice
   cuisine: unknown
@@ -1684,8 +1709,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Jeera Rice.html
+    type: markdown
+    file: recipes/content/jeera_rice.md
 - id: khaman_dhokla_ip
   name: Khaman Dhokla IP
   cuisine: indian
@@ -1700,8 +1725,8 @@
   - lime
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Khaman Dhokla IP.html
+    type: markdown
+    file: recipes/content/khaman_dhokla_ip.md
 - id: kondakadalai_kala_channa_masala_sundal
   name: Kondakadalai Kala Channa Masala Sundal
   cuisine: indian
@@ -1713,8 +1738,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Kondakadalai Kala Channa Masala Sundal.html
+    type: markdown
+    file: recipes/content/kondakadalai_kala_channa_masala_sundal.md
 - id: lemon_crinkle_cookies
   name: Lemon Crinkle Cookies
   cuisine: unknown
@@ -1729,8 +1754,8 @@
   - lemon
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Lemon Crinkle Cookies.html
+    type: markdown
+    file: recipes/content/lemon_crinkle_cookies.md
 - id: loaded_greek_chickpea_pasta_salad
   name: Loaded Greek Chickpea Pasta Salad
   cuisine: italian
@@ -1749,8 +1774,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Loaded Greek Chickpea Pasta Salad.html
+    type: markdown
+    file: recipes/content/loaded_greek_chickpea_pasta_salad.md
 - id: mango_yogurt
   name: Mango Yogurt
   cuisine: indian
@@ -1763,8 +1788,8 @@
   - lime
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Mango Yogurt.html
+    type: markdown
+    file: recipes/content/mango_yogurt.md
 - id: masoor_dal
   name: Masoor Dal
   cuisine: indian
@@ -1782,8 +1807,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Masoor Dal.html
+    type: markdown
+    file: recipes/content/masoor_dal.md
 - id: mattar_paneer_sabji
   name: Mattar Paneer Sabji
   cuisine: indian
@@ -1801,8 +1826,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Mattar Paneer Sabji.html
+    type: markdown
+    file: recipes/content/mattar_paneer_sabji.md
 - id: mediterranean_diet_black_bean_brownies
   name: Mediterranean Diet Black Bean Brownies
   cuisine: unknown
@@ -1816,8 +1841,8 @@
   - beans
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Mediterranean Diet Black Bean Brownies.html
+    type: markdown
+    file: recipes/content/mediterranean_diet_black_bean_brownies.md
 - id: mediterranean_quinoa_salad
   name: Mediterranean Quinoa Salad
   cuisine: unknown
@@ -1833,8 +1858,8 @@
   - tomato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Mediterranean Quinoa Salad.html
+    type: markdown
+    file: recipes/content/mediterranean_quinoa_salad.md
 - id: mexican_papdi_chaat
   name: Mexican Papdi Chaat
   cuisine: indian
@@ -1852,8 +1877,8 @@
   - scallion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Mexican Papdi Chaat.html
+    type: markdown
+    file: recipes/content/mexican_papdi_chaat.md
 - id: mexican_pinwheels
   name: Mexican Pinwheels
   cuisine: mexican
@@ -1870,8 +1895,8 @@
   - tomato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Mexican Pinwheels.html
+    type: markdown
+    file: recipes/content/mexican_pinwheels.md
 - id: mexican_risotto_ip
   name: Mexican Risotto (IP)
   cuisine: mexican
@@ -1888,8 +1913,8 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Mexican Risotto (IP).html
+    type: markdown
+    file: recipes/content/mexican_risotto_ip.md
 - id: mexican_sabudana_khichdi
   name: Mexican Sabudana Khichdi
   cuisine: indian
@@ -1908,8 +1933,8 @@
   - scallion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Mexican Sabudana Khichdi.html
+    type: markdown
+    file: recipes/content/mexican_sabudana_khichdi.md
 - id: mexican_street_corn_pasta_salad
   name: Mexican Street Corn Pasta Salad
   cuisine: italian
@@ -1927,8 +1952,8 @@
   - scallion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Mexican Street Corn Pasta Salad.html
+    type: markdown
+    file: recipes/content/mexican_street_corn_pasta_salad.md
 - id: mini_crustless_quiches
   name: Mini Crustless Quiches
   cuisine: unknown
@@ -1943,8 +1968,8 @@
   - spinach
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Mini Crustless Quiches.html
+    type: markdown
+    file: recipes/content/mini_crustless_quiches.md
 - id: mini_egg_muffins_with_cheese_and_veggies
   name: Mini Egg Muffins with Cheese and Veggies
   cuisine: unknown
@@ -1963,8 +1988,8 @@
   - squash
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Mini Egg Muffins with Cheese and Veggies.html
+    type: markdown
+    file: recipes/content/mini_egg_muffins_with_cheese_and_veggies.md
 - id: mini_orange
   name: Mini orange
   cuisine: unknown
@@ -1976,8 +2001,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Mini orange.html
+    type: markdown
+    file: recipes/content/mini_orange.md
 - id: moong_dal_chilla
   name: Moong Dal Chilla
   cuisine: indian
@@ -1993,8 +2018,8 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Moong Dal Chilla.html
+    type: markdown
+    file: recipes/content/moong_dal_chilla.md
 - id: moroccan_chickpea_stew
   name: Moroccan Chickpea Stew
   cuisine: unknown
@@ -2019,8 +2044,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Moroccan Chickpea Stew.html
+    type: markdown
+    file: recipes/content/moroccan_chickpea_stew.md
 - id: no_bake_chocolate_granola_bars
   name: No-Bake Chocolate Granola Bars
   cuisine: unknown
@@ -2033,8 +2058,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/No-Bake Chocolate Granola Bars.html
+    type: markdown
+    file: recipes/content/no_bake_chocolate_granola_bars.md
 - id: one_pan_enchilada_quinoa
   name: One Pan Enchilada Quinoa
   cuisine: mexican
@@ -2051,8 +2076,8 @@
   - scallion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/One Pan Enchilada Quinoa.html
+    type: markdown
+    file: recipes/content/one_pan_enchilada_quinoa.md
 - id: one_pot_broccoli_cheddar_quinoa
   name: One Pot Broccoli Cheddar Quinoa
   cuisine: unknown
@@ -2068,8 +2093,8 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/One Pot Broccoli Cheddar Quinoa.html
+    type: markdown
+    file: recipes/content/one_pot_broccoli_cheddar_quinoa.md
 - id: oven_baked_crispy_black_bean_tacos
   name: Oven-Baked Crispy Black Bean Tacos
   cuisine: mexican
@@ -2090,8 +2115,8 @@
   - tomato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Oven-Baked Crispy Black Bean Tacos.html
+    type: markdown
+    file: recipes/content/oven_baked_crispy_black_bean_tacos.md
 - id: pachai_payaru_moong_dal_sundal
   name: Pachai Payaru, Moong Dal Sundal
   cuisine: indian
@@ -2104,8 +2129,8 @@
   - ginger
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Pachai Payaru, Moong Dal Sundal.html
+    type: markdown
+    file: recipes/content/pachai_payaru_moong_dal_sundal.md
 - id: palak_paneer_spinach
   name: Palak Paneer Spinach
   cuisine: indian
@@ -2123,8 +2148,8 @@
   - tomato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Palak Paneer Spinach.html
+    type: markdown
+    file: recipes/content/palak_paneer_spinach.md
 - id: panchmel_dal
   name: Panchmel Dal
   cuisine: indian
@@ -2143,8 +2168,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Panchmel Dal.html
+    type: markdown
+    file: recipes/content/panchmel_dal.md
 - id: paneeer_corn_utthapam
   name: Paneeer & Corn Utthapam
   cuisine: indian
@@ -2158,8 +2183,8 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Paneeer & Corn Utthapam.html
+    type: markdown
+    file: recipes/content/paneeer_corn_utthapam.md
 - id: paruppu_thogayal
   name: Paruppu Thogayal
   cuisine: indian
@@ -2172,8 +2197,8 @@
   - garlic
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Paruppu Thogayal.html
+    type: markdown
+    file: recipes/content/paruppu_thogayal.md
 - id: paruppu_usili
   name: Paruppu Usili
   cuisine: indian
@@ -2187,8 +2212,8 @@
   - green bean
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Paruppu Usili.html
+    type: markdown
+    file: recipes/content/paruppu_usili.md
 - id: pasta_with_veggie_sauce
   name: Pasta with Veggie Sauce
   cuisine: italian
@@ -2203,8 +2228,8 @@
   - potato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Pasta with Veggie Sauce.html
+    type: markdown
+    file: recipes/content/pasta_with_veggie_sauce.md
 - id: pav_bhaji
   name: Pav Bhaji
   cuisine: indian
@@ -2230,8 +2255,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Pav Bhaji.html
+    type: markdown
+    file: recipes/content/pav_bhaji.md
 - id: peanut_chutney
   name: Peanut Chutney
   cuisine: indian
@@ -2244,8 +2269,8 @@
   - garlic
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Peanut Chutney.html
+    type: markdown
+    file: recipes/content/peanut_chutney.md
 - id: pesarattu
   name: Pesarattu
   cuisine: indian
@@ -2260,8 +2285,21 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Pesarattu.html
+    type: markdown
+    file: recipes/content/pesarattu.md
+- id: pesto_gnocchi
+  name: Pesto Gnocchi
+  cuisine: italian
+  meal_type: pasta_noodles
+  effort_level: normal
+  no_chop_compatible: false
+  appliances:
+  - stovetop
+  main_veg: []
+  avoid_contains: []
+  source:
+    type: markdown
+    file: recipes/content/pesto_gnocchi.md
 - id: pickled_red_onions
   name: Pickled Red Onions
   cuisine: unknown
@@ -2276,8 +2314,8 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Pickled Red Onions.html
+    type: markdown
+    file: recipes/content/pickled_red_onions.md
 - id: pinto_bean_casserole
   name: Pinto Bean Casserole
   cuisine: mexican
@@ -2301,8 +2339,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Pinto Bean Casserole.html
+    type: markdown
+    file: recipes/content/pinto_bean_casserole.md
 - id: pizza_muffins_with_veggies
   name: Pizza Muffins (with Veggies!)
   cuisine: italian
@@ -2315,8 +2353,8 @@
   - carrot
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Pizza Muffins (with Veggies!).html
+    type: markdown
+    file: recipes/content/pizza_muffins_with_veggies.md
 - id: poblano_cream_enchilada_sauce
   name: Poblano Cream Enchilada Sauce
   cuisine: mexican
@@ -2332,8 +2370,8 @@
   - poblano
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Poblano Cream Enchilada Sauce.html
+    type: markdown
+    file: recipes/content/poblano_cream_enchilada_sauce.md
 - id: pomegranate_orange_muffins
   name: Pomegranate Orange Muffins
   cuisine: unknown
@@ -2345,8 +2383,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Pomegranate Orange Muffins.html
+    type: markdown
+    file: recipes/content/pomegranate_orange_muffins.md
 - id: porridge_fingers
   name: Porridge Fingers
   cuisine: unknown
@@ -2359,8 +2397,8 @@
   - carrot
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Porridge Fingers.html
+    type: markdown
+    file: recipes/content/porridge_fingers.md
 - id: pretzel_bites_with_cheese_sauce
   name: Pretzel Bites with Cheese Sauce
   cuisine: unknown
@@ -2374,8 +2412,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Pretzel Bites with Cheese Sauce.html
+    type: markdown
+    file: recipes/content/pretzel_bites_with_cheese_sauce.md
 - id: pretzels
   name: Pretzels
   cuisine: unknown
@@ -2387,8 +2425,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Pretzels.html
+    type: markdown
+    file: recipes/content/pretzels.md
 - id: protein_banana_bread
   name: Protein Banana Bread
   cuisine: indian
@@ -2400,8 +2438,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Protein Banana Bread.html
+    type: markdown
+    file: recipes/content/protein_banana_bread.md
 - id: protein_banana_muffins
   name: Protein Banana Muffins
   cuisine: indian
@@ -2414,8 +2452,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Protein Banana Muffins.html
+    type: markdown
+    file: recipes/content/protein_banana_muffins.md
 - id: puree_pancakes
   name: Puree Pancakes
   cuisine: american
@@ -2427,8 +2465,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Puree Pancakes.html
+    type: markdown
+    file: recipes/content/puree_pancakes.md
 - id: quick_refried_bean_tacos
   name: Quick Refried Bean Tacos
   cuisine: mexican
@@ -2446,8 +2484,8 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Quick Refried Bean Tacos.html
+    type: markdown
+    file: recipes/content/quick_refried_bean_tacos.md
 - id: quick_tortilla_pizzas
   name: Quick Tortilla Pizzas
   cuisine: mexican
@@ -2462,8 +2500,8 @@
   avoid_contains:
   - mushrooms
   source:
-    type: html
-    file: recipes/raw_html/Quick Tortilla Pizzas.html
+    type: markdown
+    file: recipes/content/quick_tortilla_pizzas.md
 - id: quinoa_fried_rice
   name: Quinoa Fried Rice
   cuisine: asian
@@ -2484,8 +2522,8 @@
   - spinach
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Quinoa Fried Rice.html
+    type: markdown
+    file: recipes/content/quinoa_fried_rice.md
 - id: ragada_patty
   name: Ragada Patty
   cuisine: indian
@@ -2504,8 +2542,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Ragada Patty.html
+    type: markdown
+    file: recipes/content/ragada_patty.md
 - id: ragda_patty
   name: Ragda Patty
   cuisine: indian
@@ -2524,8 +2562,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Ragda Patty.html
+    type: markdown
+    file: recipes/content/ragda_patty.md
 - id: rainbow_tacos
   name: Rainbow Tacos
   cuisine: mexican
@@ -2546,8 +2584,8 @@
   avoid_contains:
   - cabbage
   source:
-    type: html
-    file: recipes/raw_html/Rainbow Tacos.html
+    type: markdown
+    file: recipes/content/rainbow_tacos.md
 - id: raisins
   name: Raisins
   cuisine: unknown
@@ -2559,8 +2597,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Raisins.html
+    type: markdown
+    file: recipes/content/raisins.md
 - id: rajma_nachos
   name: Rajma Nachos
   cuisine: indian
@@ -2580,8 +2618,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Rajma Nachos.html
+    type: markdown
+    file: recipes/content/rajma_nachos.md
 - id: rasam_recipe
   name: Rasam Recipe
   cuisine: indian
@@ -2597,59 +2635,56 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Rasam Recipe.html
+    type: markdown
+    file: recipes/content/rasam_recipe.md
 - id: rasam_rice_with_beetroot_kai
   name: Rasam Rice with Beetroot Kai
-  cuisine: indian
+  cuisine: unknown
   meal_type: soup_stew
   effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
   main_veg:
-  - beetroot
   - garlic
   - tomato
   avoid_contains: []
-  leftover_potential: high
   source:
-    type: html
-    file: recipes/raw_html/Rasam Rice with Beetroot Kai.html
+    type: markdown
+    file: recipes/content/rasam_rice_with_beetroot_kai.md
+  leftover_potential: high
 - id: rasam_rice_with_broccoli_kai
   name: Rasam Rice with Broccoli Kai
-  cuisine: indian
+  cuisine: unknown
   meal_type: soup_stew
   effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
   main_veg:
-  - broccoli
   - garlic
   - tomato
   avoid_contains: []
-  leftover_potential: high
   source:
-    type: html
-    file: recipes/raw_html/Rasam Rice with Broccoli Kai.html
+    type: markdown
+    file: recipes/content/rasam_rice_with_broccoli_kai.md
+  leftover_potential: high
 - id: rasam_rice_with_carrot_kai
   name: Rasam Rice with Carrot Kai
-  cuisine: indian
+  cuisine: unknown
   meal_type: soup_stew
   effort_level: normal
   no_chop_compatible: false
   appliances:
   - stovetop
   main_veg:
-  - carrot
   - garlic
   - tomato
   avoid_contains: []
-  leftover_potential: high
   source:
-    type: html
-    file: recipes/raw_html/Rasam Rice with Carrot Kai.html
+    type: markdown
+    file: recipes/content/rasam_rice_with_carrot_kai.md
+  leftover_potential: high
 - id: refried_bean_burrito
   name: Refried Bean Burrito
   cuisine: mexican
@@ -2667,8 +2702,8 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Refried Bean Burrito.html
+    type: markdown
+    file: recipes/content/refried_bean_burrito.md
 - id: romesco_gnocchi
   name: Romesco Gnocchi
   cuisine: italian
@@ -2685,8 +2720,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Romesco Gnocchi.html
+    type: markdown
+    file: recipes/content/romesco_gnocchi.md
 - id: romesco_pasta_sauce
   name: Romesco Pasta Sauce
   cuisine: italian
@@ -2704,8 +2739,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Romesco Pasta Sauce.html
+    type: markdown
+    file: recipes/content/romesco_pasta_sauce.md
 - id: salted_tahini_oatmeal_chocolate_chip_cookies
   name: Salted Tahini Oatmeal Chocolate Chip Cookies
   cuisine: mediterranean
@@ -2718,8 +2753,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Salted Tahini Oatmeal Chocolate Chip Cookies.html
+    type: markdown
+    file: recipes/content/salted_tahini_oatmeal_chocolate_chip_cookies.md
 - id: samosa_grilled_cheese
   name: Samosa Grilled Cheese
   cuisine: indian
@@ -2736,8 +2771,8 @@
   - potatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Samosa Grilled Cheese.html
+    type: markdown
+    file: recipes/content/samosa_grilled_cheese.md
 - id: samosa_pinwheels_baked
   name: Samosa Pinwheels (Baked)
   cuisine: indian
@@ -2754,8 +2789,8 @@
   - potatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Samosa Pinwheels (Baked).html
+    type: markdown
+    file: recipes/content/samosa_pinwheels_baked.md
 - id: sheet_pan_black_bean_quesadillas_with_coleslaw
   name: Sheet Pan Black Bean Quesadillas with Coleslaw
   cuisine: mexican
@@ -2772,8 +2807,8 @@
   - lime
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Sheet Pan Black Bean Quesadillas with Coleslaw.html
+    type: markdown
+    file: recipes/content/sheet_pan_black_bean_quesadillas_with_coleslaw.md
 - id: sheet_pan_black_bean_quesadillas
   name: Sheet Pan Black Bean Quesadillas
   cuisine: mexican
@@ -2790,8 +2825,8 @@
   - sweet potato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Sheet Pan Black Bean Quesadillas.html
+    type: markdown
+    file: recipes/content/sheet_pan_black_bean_quesadillas.md
 - id: sheet_pan_coconut_vegetable_curry
   name: Sheet Pan Coconut Vegetable Curry
   cuisine: indian
@@ -2812,8 +2847,8 @@
   - sweet potato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Sheet Pan Coconut Vegetable Curry.html
+    type: markdown
+    file: recipes/content/sheet_pan_coconut_vegetable_curry.md
 - id: shiro_wot_ground_chickpea_stew
   name: Shiro Wot (Ground-Chickpea Stew)
   cuisine: unknown
@@ -2830,8 +2865,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Shiro Wot (Ground-Chickpea Stew).html
+    type: markdown
+    file: recipes/content/shiro_wot_ground_chickpea_stew.md
 - id: simple_vegetarian_slow_cooked_beans
   name: Simple Vegetarian Slow-Cooked Beans
   cuisine: unknown
@@ -2851,8 +2886,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Simple Vegetarian Slow-Cooked Beans.html
+    type: markdown
+    file: recipes/content/simple_vegetarian_slow_cooked_beans.md
 - id: six_bean_chili
   name: Six-Bean Chili
   cuisine: unknown
@@ -2872,8 +2907,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Six-Bean Chili.html
+    type: markdown
+    file: recipes/content/six_bean_chili.md
 - id: sliced_cucumber
   name: Sliced Cucumber
   cuisine: unknown
@@ -2885,8 +2920,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Sliced Cucumber.html
+    type: markdown
+    file: recipes/content/sliced_cucumber.md
 - id: sliced_bell_pepper
   name: Sliced bell pepper
   cuisine: unknown
@@ -2898,8 +2933,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Sliced bell pepper.html
+    type: markdown
+    file: recipes/content/sliced_bell_pepper.md
 - id: snake_gourd_kootu
   name: Snake Gourd Kootu
   cuisine: indian
@@ -2911,8 +2946,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Snake Gourd Kootu.html
+    type: markdown
+    file: recipes/content/snake_gourd_kootu.md
 - id: so_good_chickpea_blondies
   name: So Good Chickpea Blondies
   cuisine: unknown
@@ -2927,8 +2962,8 @@
   - peas
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/So Good Chickpea Blondies.html
+    type: markdown
+    file: recipes/content/so_good_chickpea_blondies.md
 - id: so_good_spinach_egg_muffins
   name: So Good Spinach Egg Muffins
   cuisine: mexican
@@ -2942,8 +2977,8 @@
   - spinach
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/So Good Spinach Egg Muffins.html
+    type: markdown
+    file: recipes/content/so_good_spinach_egg_muffins.md
 - id: soft_roasted_chickpeas
   name: Soft Roasted Chickpeas
   cuisine: unknown
@@ -2956,8 +2991,8 @@
   - peas
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Soft Roasted Chickpeas.html
+    type: markdown
+    file: recipes/content/soft_roasted_chickpeas.md
 - id: soft_and_chewy_white_chocolate_chip_cookies
   name: Soft and Chewy White Chocolate Chip Cookies
   cuisine: unknown
@@ -2970,8 +3005,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Soft and Chewy White Chocolate Chip Cookies.html
+    type: markdown
+    file: recipes/content/soft_and_chewy_white_chocolate_chip_cookies.md
 - id: southwest_corn_chowder_freezer_meal_prep
   name: Southwest Corn Chowder (Freezer Meal Prep)
   cuisine: unknown
@@ -2987,8 +3022,8 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Southwest Corn Chowder (Freezer Meal Prep).html
+    type: markdown
+    file: recipes/content/southwest_corn_chowder_freezer_meal_prep.md
 - id: southwest_pasta_salad
   name: Southwest Pasta Salad
   cuisine: italian
@@ -3013,8 +3048,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Southwest Pasta Salad.html
+    type: markdown
+    file: recipes/content/southwest_pasta_salad.md
 - id: spinach_puffs
   name: Spinach Puffs
   cuisine: unknown
@@ -3029,8 +3064,8 @@
   - spinach
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Spinach Puffs.html
+    type: markdown
+    file: recipes/content/spinach_puffs.md
 - id: spinach_white_bean_enchiladas
   name: Spinach White Bean Enchiladas
   cuisine: mexican
@@ -3048,8 +3083,8 @@
   - spinach
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Spinach White Bean Enchiladas.html
+    type: markdown
+    file: recipes/content/spinach_white_bean_enchiladas.md
 - id: spinach_and_feta_stuffed_pita_with_a_side_of_greek_salad
   name: Spinach and Feta Stuffed Pita with a Side of Greek Salad
   cuisine: mediterranean
@@ -3068,8 +3103,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Spinach and Feta Stuffed Pita with a Side of Greek Salad.html
+    type: markdown
+    file: recipes/content/spinach_and_feta_stuffed_pita_with_a_side_of_greek_salad.md
 - id: spinach_cilantro_pesto
   name: Spinach-Cilantro Pesto
   cuisine: italian
@@ -3084,8 +3119,8 @@
   - spinach
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Spinach-Cilantro Pesto.html
+    type: markdown
+    file: recipes/content/spinach_cilantro_pesto.md
 - id: stir_fry
   name: Stir Fry
   cuisine: asian
@@ -3107,8 +3142,8 @@
   - spinach
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Stir Fry.html
+    type: markdown
+    file: recipes/content/stir_fry.md
 - id: strawberries
   name: Strawberries
   cuisine: unknown
@@ -3120,8 +3155,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Strawberries.html
+    type: markdown
+    file: recipes/content/strawberries.md
 - id: strawberry_muffins
   name: Strawberry Muffins
   cuisine: unknown
@@ -3133,8 +3168,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Strawberry Muffins.html
+    type: markdown
+    file: recipes/content/strawberry_muffins.md
 - id: strawberry_spinach_feta_salad
   name: Strawberry Spinach Feta Salad
   cuisine: unknown
@@ -3150,8 +3185,8 @@
   - spinach
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Strawberry Spinach Feta Salad.html
+    type: markdown
+    file: recipes/content/strawberry_spinach_feta_salad.md
 - id: string_cheese
   name: String cheese
   cuisine: unknown
@@ -3163,8 +3198,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/String cheese.html
+    type: markdown
+    file: recipes/content/string_cheese.md
 - id: sunflower_seeds
   name: Sunflower seeds
   cuisine: unknown
@@ -3176,8 +3211,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Sunflower seeds.html
+    type: markdown
+    file: recipes/content/sunflower_seeds.md
 - id: sweet_potato_tofu_chickpea_curry_make_sauce_ahead
   name: Sweet Potato, Tofu & Chickpea Curry (Make Sauce Ahead)
   cuisine: indian
@@ -3204,8 +3239,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Sweet Potato, Tofu & Chickpea Curry (Make Sauce Ahead).html
+    type: markdown
+    file: recipes/content/sweet_potato_tofu_chickpea_curry_make_sauce_ahead.md
 - id: sweet_potato_tofu_chickpea_curry
   name: Sweet Potato, Tofu & Chickpea Curry
   cuisine: indian
@@ -3232,8 +3267,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Sweet Potato, Tofu & Chickpea Curry.html
+    type: markdown
+    file: recipes/content/sweet_potato_tofu_chickpea_curry.md
 - id: sweet_potatoes_with_thai_peanut_butter_sauce
   name: Sweet Potatoes with Thai Peanut Butter Sauce
   cuisine: unknown
@@ -3254,8 +3289,8 @@
   avoid_contains:
   - cabbage
   source:
-    type: html
-    file: recipes/raw_html/Sweet Potatoes with Thai Peanut Butter Sauce.html
+    type: markdown
+    file: recipes/content/sweet_potatoes_with_thai_peanut_butter_sauce.md
 - id: sweet_spinach_muffins_with_banana
   name: Sweet Spinach Muffins with Banana
   cuisine: unknown
@@ -3269,8 +3304,8 @@
   - spinach
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Sweet Spinach Muffins with Banana.html
+    type: markdown
+    file: recipes/content/sweet_spinach_muffins_with_banana.md
 - id: sweet_and_sour_quinoa
   name: Sweet and Sour Quinoa
   cuisine: unknown
@@ -3286,8 +3321,8 @@
   - tomato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Sweet and Sour Quinoa.html
+    type: markdown
+    file: recipes/content/sweet_and_sour_quinoa.md
 - id: tandoori_veggie_quesadillas
   name: Tandoori Veggie Quesadillas
   cuisine: mexican
@@ -3304,8 +3339,8 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Tandoori Veggie Quesadillas.html
+    type: markdown
+    file: recipes/content/tandoori_veggie_quesadillas.md
 - id: tangy_cucumber_salad
   name: Tangy Cucumber Salad
   cuisine: unknown
@@ -3319,8 +3354,8 @@
   - cucumber
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Tangy Cucumber Salad.html
+    type: markdown
+    file: recipes/content/tangy_cucumber_salad.md
 - id: thai_curry_pizza_with_naan_bread
   name: Thai Curry Pizza with Naan Bread
   cuisine: indian
@@ -3337,8 +3372,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Thai Curry Pizza with Naan Bread.html
+    type: markdown
+    file: recipes/content/thai_curry_pizza_with_naan_bread.md
 - id: tofu_scramble_freezer_meal_prep
   name: Tofu Scramble (Freezer Meal Prep)
   cuisine: unknown
@@ -3355,8 +3390,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Tofu Scramble (Freezer Meal Prep).html
+    type: markdown
+    file: recipes/content/tofu_scramble_freezer_meal_prep.md
 - id: tomato_bisque_with_feta_pesto_panini
   name: Tomato Bisque with Feta-Pesto Panini
   cuisine: italian
@@ -3368,8 +3403,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Tomato Bisque with Feta-Pesto Panini.html
+    type: markdown
+    file: recipes/content/tomato_bisque_with_feta_pesto_panini.md
 - id: tomato_rice
   name: Tomato Rice
   cuisine: indian
@@ -3385,8 +3420,8 @@
   - tomato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Tomato Rice.html
+    type: markdown
+    file: recipes/content/tomato_rice.md
 - id: tortellini_primavera
   name: Tortellini Primavera
   cuisine: unknown
@@ -3403,8 +3438,8 @@
   - peas
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Tortellini Primavera.html
+    type: markdown
+    file: recipes/content/tortellini_primavera.md
 - id: vegan_chocolate_mousse
   name: Vegan Chocolate Mousse
   cuisine: unknown
@@ -3416,8 +3451,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Vegan Chocolate Mousse.html
+    type: markdown
+    file: recipes/content/vegan_chocolate_mousse.md
 - id: vegan_lemon_pepper_tofu
   name: Vegan Lemon Pepper Tofu
   cuisine: italian
@@ -3434,8 +3469,8 @@
   - lemon
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Vegan Lemon Pepper Tofu.html
+    type: markdown
+    file: recipes/content/vegan_lemon_pepper_tofu.md
 - id: vegan_pad_thai
   name: Vegan Pad Thai
   cuisine: asian
@@ -3451,8 +3486,8 @@
   - lime
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Vegan Pad Thai.html
+    type: markdown
+    file: recipes/content/vegan_pad_thai.md
 - id: vegan_spicy_thai_drunken_noodles_with_seared_tofu
   name: Vegan Spicy Thai Drunken Noodles with Seared Tofu
   cuisine: asian
@@ -3473,8 +3508,8 @@
   - peas
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Vegan Spicy Thai Drunken Noodles with Seared Tofu.html
+    type: markdown
+    file: recipes/content/vegan_spicy_thai_drunken_noodles_with_seared_tofu.md
 - id: vegan_sweet_potato_beetroot_hotdogs
   name: Vegan Sweet Potato Beetroot Hotdogs
   cuisine: indian
@@ -3500,8 +3535,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Vegan Sweet Potato Beetroot Hotdogs.html
+    type: markdown
+    file: recipes/content/vegan_sweet_potato_beetroot_hotdogs.md
 - id: vegetable_gyoza
   name: Vegetable Gyoza
   cuisine: asian
@@ -3524,8 +3559,8 @@
   - mushrooms
   - cabbage
   source:
-    type: html
-    file: recipes/raw_html/Vegetable Gyoza.html
+    type: markdown
+    file: recipes/content/vegetable_gyoza.md
 - id: vegetable_lasagna
   name: Vegetable Lasagna
   cuisine: italian
@@ -3545,8 +3580,8 @@
   - zucchini
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Vegetable Lasagna.html
+    type: markdown
+    file: recipes/content/vegetable_lasagna.md
 - id: vegetarian_burrito_bowl_with_avocado_crema
   name: Vegetarian Burrito Bowl with Avocado Crema
   cuisine: mexican
@@ -3568,8 +3603,8 @@
   - onion
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Vegetarian Burrito Bowl with Avocado Crema.html
+    type: markdown
+    file: recipes/content/vegetarian_burrito_bowl_with_avocado_crema.md
 - id: vegetarian_chili
   name: Vegetarian Chili
   cuisine: mexican
@@ -3592,8 +3627,8 @@
   - tomato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Vegetarian Chili.html
+    type: markdown
+    file: recipes/content/vegetarian_chili.md
 - id: vegetarian_enchiladas
   name: Vegetarian Enchiladas
   cuisine: mexican
@@ -3613,8 +3648,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Vegetarian Enchiladas.html
+    type: markdown
+    file: recipes/content/vegetarian_enchiladas.md
 - id: vegetarian_tortilla_soup
   name: Vegetarian Tortilla Soup
   cuisine: mexican
@@ -3638,8 +3673,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Vegetarian Tortilla Soup.html
+    type: markdown
+    file: recipes/content/vegetarian_tortilla_soup.md
 - id: veggie_marinara_sauce
   name: Veggie Marinara Sauce
   cuisine: italian
@@ -3664,8 +3699,8 @@
   - tomatoe
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Veggie Marinara Sauce.html
+    type: markdown
+    file: recipes/content/veggie_marinara_sauce.md
 - id: veggie_roti
   name: Veggie Roti
   cuisine: indian
@@ -3680,8 +3715,8 @@
   - sweet potato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Veggie Roti.html
+    type: markdown
+    file: recipes/content/veggie_roti.md
 - id: veggie_upma
   name: Veggie Upma
   cuisine: indian
@@ -3699,8 +3734,8 @@
   - peas
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Veggie Upma.html
+    type: markdown
+    file: recipes/content/veggie_upma.md
 - id: veggie_wrap
   name: Veggie Wrap
   cuisine: mexican
@@ -3722,8 +3757,8 @@
   - tomato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Veggie Wrap.html
+    type: markdown
+    file: recipes/content/veggie_wrap.md
 - id: veggie_straws
   name: Veggie straws
   cuisine: unknown
@@ -3735,8 +3770,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Veggie straws.html
+    type: markdown
+    file: recipes/content/veggie_straws.md
 - id: vetha_kozhumbu
   name: Vetha Kozhumbu
   cuisine: indian
@@ -3750,8 +3785,8 @@
   - tomato
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Vetha Kozhumbu.html
+    type: markdown
+    file: recipes/content/vetha_kozhumbu.md
 - id: wheat_thins_or_triscuits
   name: Wheat thins or triscuits
   cuisine: unknown
@@ -3763,8 +3798,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Wheat thins or triscuits.html
+    type: markdown
+    file: recipes/content/wheat_thins_or_triscuits.md
 - id: whole_fruit_ice_pops
   name: Whole Fruit Ice Pops
   cuisine: unknown
@@ -3777,8 +3812,8 @@
   - lime
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Whole Fruit Ice Pops.html
+    type: markdown
+    file: recipes/content/whole_fruit_ice_pops.md
 - id: yogurt_bites
   name: Yogurt bites
   cuisine: unknown
@@ -3790,8 +3825,8 @@
   main_veg: []
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Yogurt bites.html
+    type: markdown
+    file: recipes/content/yogurt_bites.md
 - id: zucchini_and_paneer_waffles
   name: Zucchini and Paneer Waffles
   cuisine: indian
@@ -3805,42 +3840,5 @@
   - zucchini
   avoid_contains: []
   source:
-    type: html
-    file: recipes/raw_html/Zucchini and Paneer Waffles.html
-- id: crackers_and_cheese_cubes
-  name: Crackers and Cheese Cubes
-  cuisine: unknown
-  meal_type: simple_snack
-  effort_level: no_chop
-  no_chop_compatible: true
-  appliances: []
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: html
-    file: recipes/raw_html/Crackers and Cheese Cubes.html
-- id: blackberries
-  name: Blackberries
-  cuisine: unknown
-  meal_type: simple_snack
-  effort_level: no_chop
-  no_chop_compatible: true
-  appliances: []
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: html
-    file: recipes/raw_html/Blackberries.html
-- id: pesto_gnocchi
-  name: Pesto Gnocchi
-  cuisine: italian
-  meal_type: pasta_noodles
-  effort_level: no_chop
-  no_chop_compatible: true
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: html
-    file: recipes/raw_html/Pesto Gnocchi.html
+    type: markdown
+    file: recipes/content/zucchini_and_paneer_waffles.md

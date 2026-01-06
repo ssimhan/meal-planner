@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
-import { getStatus, generatePlan, createWeek, confirmVeg, logMeal, getRecipes, WorkflowStatus } from '@/lib/api';
+import { getStatus, generatePlan, createWeek, confirmVeg, logMeal, getRecipes, getAnalytics, WorkflowStatus } from '@/lib/api';
 import MealCorrectionInput from '@/components/MealCorrectionInput';
 
 export default function Dashboard() {
@@ -16,6 +16,7 @@ export default function Dashboard() {
   const [logLoading, setLogLoading] = useState(false);
   const [completedPrep, setCompletedPrep] = useState<string[]>([]);
   const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
+  const [analytics, setAnalytics] = useState<any>(null);
 
   // Dinner Logging State (Lifted from inner component to prevent state loss on re-render)
   const [showAlternatives, setShowAlternatives] = useState(false);
@@ -42,7 +43,16 @@ export default function Dashboard() {
         console.error('Failed to load recipes:', err);
       }
     }
+    async function loadStats() {
+      try {
+        const stats = await getAnalytics();
+        setAnalytics(stats);
+      } catch (err) {
+        console.error('Failed to load analytics:', err);
+      }
+    }
     loadRecipes();
+    loadStats();
   }, []);
 
   async function fetchStatus(isInitial = false) {
@@ -325,8 +335,37 @@ export default function Dashboard() {
               <span>Update Inventory</span>
               <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
             </Link>
+
+            <Link href="/analytics" className="btn-secondary w-full text-left flex justify-between items-center group">
+              <span>Family Analytics & Insights</span>
+              <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+            </Link>
           </div>
         </section>
+
+        {/* Family Favorites Widget */}
+        {analytics?.popularity && (
+          <section className="card md:col-span-2">
+            <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
+              Top Family Favorites
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+              {analytics.popularity.slice(0, 5).map((recipe: any) => (
+                <Link
+                  key={recipe.id}
+                  href="/analytics"
+                  className="p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded hover:border-[var(--accent-sage)] transition-colors group"
+                >
+                  <p className="text-xs font-bold truncate group-hover:text-[var(--accent-sage)]">{recipe.name}</p>
+                  <div className="flex justify-between items-center mt-1">
+                    <span className="text-[10px] font-mono text-[var(--text-muted)]">{recipe.count}x</span>
+                    <span className="text-xs">{recipe.last_feedback || '👍'}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Today's Schedule (Show when plan is active or waiting for check-in) */}
         {(status?.state === 'active' || status?.state === 'waiting_for_checkin') && (

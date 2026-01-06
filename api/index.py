@@ -18,6 +18,7 @@ except ImportError as e:
 from api.generate_plan import generate_plan_api
 
 import yaml
+from scripts.compute_analytics import compute_analytics
 
 app = Flask(__name__)
 CORS(app) # Enable CORS for all routes
@@ -264,17 +265,30 @@ def get_recipes():
 
 @app.route("/api/recipes/<recipe_id>")
 def get_recipe_details(recipe_id):
-    """Fetch full recipe details on demand."""
+    """Fetch full recipe details on demand from Markdown."""
     try:
-        # Look for the recipe details yaml
-        detail_path = Path(f'recipes/details/{recipe_id}.yaml')
+        detail_path = Path(f'recipes/content/{recipe_id}.md')
         if detail_path.exists():
              with open(detail_path, 'r') as f:
-                data = yaml.safe_load(f)
-                return jsonify({"status": "success", "recipe": data})
+                content = f.read()
+                
+                # Basic frontmatter parsing (assuming standard --- format)
+                if content.startswith('---'):
+                    try:
+                        _, fm_text, body = content.split('---', 2)
+                        metadata = yaml.safe_load(fm_text)
+                        return jsonify({
+                            "status": "success", 
+                            "recipe": metadata,
+                            "markdown": body.strip()
+                        })
+                    except Exception as e:
+                        print(f"Error parsing frontmatter for {recipe_id}: {e}")
+                        return jsonify({"status": "success", "markdown": content})
+                
+                return jsonify({"status": "success", "markdown": content})
         else:
-             # Fallback to index if detail not found (or return 404)
-             return jsonify({"status": "error", "message": "Recipe details not found"}), 404
+             return jsonify({"status": "error", "message": f"Recipe details not found for {recipe_id}"}), 404
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
@@ -470,8 +484,19 @@ def get_history():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-# Register plan generation route
+# Register plan generation routes
 generate_plan_api(app)
+
+@app.route("/api/analytics")
+def get_analytics():
+    try:
+        # We can add caching here if history.yml is large
+        stats = compute_analytics()
+        return jsonify(stats)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route("/api/log-meal", methods=["POST"])
 def log_meal():

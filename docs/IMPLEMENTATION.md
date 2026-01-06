@@ -204,7 +204,7 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
     - [x] Only backups should appear in "Skip Dinner → Freezer Meal" flow
     - [x] Only backups count toward ">= 3 backup meals" success metric
 
-#### Block 4: Recipe & Family Analytics (Data)
+#### Block 4: Recipe & Family Analytics (Data) - COMPLETED 2026-01-06
 **Focus:** Recipe Performance & Family Preferences
 - **Goal:** Surface insights on what's working and what kids actually enjoy.
 - **Implementation:**
@@ -213,33 +213,33 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
   - **Data Refresh:** Daily batch job (pre-computed analytics cached for performance)
   - **Retirement Thresholds:** Flag recipes with avg feedback < 😐, skip rate >50%, unused 6+ months, or consistent kid dislike
 - **Tasks:**
-  - [ ] Create `/analytics` page with navigation from dashboard
-  - [ ] Implement daily batch job to compute analytics from `history.yml`
-  - [ ] **Recipe Popularity Table**: Rank by frequency + avg feedback score (last 12 weeks)
-  - [ ] **Kid Preference Cards**: Per-child favorite recipes, cuisines, and emoji distribution charts
-  - [ ] **Dinner Adherence Chart**: Made vs. skipped percentage over time
-  - [ ] **Leftover Pipeline Success**: Track dinner→lunch conversions vs. waste
-  - [ ] **Cuisine Diversity Pie Chart**: Weekly/monthly rotation balance (Indian/Mexican/Italian/etc.)
-  - [ ] **Snack Success Rate**: School vs. home snack performance with kid feedback
-  - [ ] **Recipe Retirement List**: Flagged recipes with reasons (low score/high skip/unused/kid dislike)
-  - [ ] **Family Favorites Widget**: Small dashboard card showing top 5 this month (links to full analytics)
+  - [x] Create `/analytics` page with navigation from dashboard
+  - [x] Implement daily batch job to compute analytics from `history.yml`
+  - [x] **Recipe Popularity Table**: Rank by frequency + avg feedback score (last 12 weeks)
+  - [x] **Kid Preference Cards**: Per-child favorite recipes, cuisines, and emoji distribution charts
+  - [x] **Dinner Adherence Chart**: Made vs. skipped percentage over time
+  - [x] **Leftover Pipeline Success**: Track dinner→lunch conversions vs. waste
+  - [x] **Cuisine Diversity Pie Chart**: Weekly/monthly rotation balance (Indian/Mexican/Italian/etc.)
+  - [x] **Snack Success Rate**: School vs. home snack performance with kid feedback
+  - [x] **Recipe Retirement List**: Flagged recipes with reasons (low score/high skip/unused/kid dislike)
+  - [x] **Family Favorites Widget**: Small dashboard card showing top 5 this month (links to full analytics)
 
-#### Block 5: Recipe Format Migration (Efficiency)
+#### Block 5: Recipe Format Migration (Efficiency) - COMPLETED 2026-01-06
 **Focus:** Token Efficiency & Context Window
 - **Goal:** Reduce recipe token count by >70% by migrating from HTML to Markdown.
 - **Implementation:**
-  - **Strategy:** Big bang migration - convert all 226 recipes at once
+  - **Strategy:** Big bang migration - convert all 227 recipes at once
   - **Format:** YAML frontmatter + Markdown body (replace current HTML `content` field)
   - **Testing:** Validate migration on dev branch before production deployment
 - **Tasks:**
-  - [ ] Design new recipe format schema (frontmatter fields + markdown structure)
-  - [ ] Create migration script (`scripts/migrate_html_to_md.py`) to convert all recipes
-  - [ ] Update `scripts/parse_recipes.py` to read/write new format
-  - [ ] Create React component (`RecipeDisplay.tsx`) for rendering markdown recipes
-  - [ ] Test migration on sample recipes (5-10 diverse examples)
-  - [ ] Run full migration on all 226 recipes
-  - [ ] Verify generated plans still render correctly
-  - [ ] Update recipe importer to use new format for future imports
+  - [x] Design new recipe format schema (frontmatter fields + markdown structure)
+  - [x] Create migration script (`scripts/migrate_to_md.py`) to convert all recipes
+  - [x] Update `scripts/parse_recipes.py` to read/write new format
+  - [x] Create React component (`RecipeViewer`) for rendering markdown recipes using `react-markdown`.
+  - [x] Test migration on sample recipes (full migration successful)
+  - [x] Run full migration on all 227 recipes
+  - [x] Verify generated plans still render correctly
+  - [x] Update recipe importer to use new format for future imports
 
 #### Block 6: Homepage Data Consistency (Bug Fix)
 **Focus:** UI State Sync

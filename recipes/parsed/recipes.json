@@ -571,6 +571,31 @@
     "source_file": "Black Bean Quinoa Salad.html"
   },
   {
+    "id": "blackberries",
+    "name": "Blackberries",
+    "categories": [
+      "Fruit",
+      "Simple Snacks"
+    ],
+    "cuisine": "unknown",
+    "meal_type": "unknown",
+    "effort_level": "normal",
+    "no_chop_compatible": false,
+    "prep_time_minutes": null,
+    "cook_time_minutes": null,
+    "appliances": [
+      "stovetop"
+    ],
+    "ingredients": [
+      "Blackberries"
+    ],
+    "main_veg": [],
+    "avoid_contains": [],
+    "instructions": "Wash and serve.",
+    "source_url": null,
+    "source_file": "Blackberries.html"
+  },
+  {
     "id": "blueberry_chocolate_chip_muffin",
     "name": "Blueberry Chocolate Chip Muffin",
     "categories": [
@@ -1562,6 +1587,31 @@
     "instructions": "In a small bowl, mix together the dressing ingredients.\nCook corn in microwave.\nAdd all of the salad ingredients to a large bowl and drizzle the dressing on top.\nEnjoy! Serve plain or as a dip for tortilla chips. Optionally, refrigerate 10 - 15 minutes before serving to let the flavors marinate.",
     "source_url": null,
     "source_file": "Cowboy Caviar Salad.html"
+  },
+  {
+    "id": "crackers_and_cheese_cubes",
+    "name": "Crackers and Cheese Cubes",
+    "categories": [
+      "Simple Snacks"
+    ],
+    "cuisine": "unknown",
+    "meal_type": "simple_snack",
+    "effort_level": "normal",
+    "no_chop_compatible": false,
+    "prep_time_minutes": null,
+    "cook_time_minutes": null,
+    "appliances": [
+      "stovetop"
+    ],
+    "ingredients": [
+      "Crackers",
+      "Cheese cubes"
+    ],
+    "main_veg": [],
+    "avoid_contains": [],
+    "instructions": "Serve crackers with cheese cubes.",
+    "source_url": null,
+    "source_file": "Crackers and Cheese Cubes.html"
   },
   {
     "id": "creamy_macaroni_pasta_salad",
@@ -4807,26 +4857,6 @@
     "source_file": "Pachai Payaru, Moong Dal Sundal.html"
   },
   {
-    "id": "page_not_found_8211_smitten_kitchen",
-    "name": "Whoops!",
-    "categories": [],
-    "cuisine": "unknown",
-    "meal_type": "unknown",
-    "effort_level": "normal",
-    "no_chop_compatible": false,
-    "prep_time_minutes": null,
-    "cook_time_minutes": null,
-    "appliances": [
-      "stovetop"
-    ],
-    "ingredients": [],
-    "main_veg": [],
-    "avoid_contains": [],
-    "instructions": null,
-    "source_url": "https://smittenkitchen.com/",
-    "source_file": "Page_not_found___8211__smitten_kitchen.html"
-  },
-  {
     "id": "palak_paneer_spinach",
     "name": "Palak Paneer Spinach",
     "categories": [
@@ -5192,6 +5222,32 @@
     "instructions": "Rinse well a few times until the water runs clear.\nPour fresh water and soak in enough water for about 4 to 6 hours. If using rice soak it along with dal. I don’t use rice most of the times.\nOnce the green gram is soaked, rinse them well.\nBlend with ginger, salt, green chilies, cumin seeds.\nChop onions. Sauté with ghee, cumin, green chilies until slightly brown\nWhen making the peasrattu, sprinkle fried onions on topping\nTo make the next one, ensure the pan is not very hot. If it is too hot, reduce the flame or turn off the stove for a while and then make the next one.\nIf you are unable to spread the batter on the tawa it means the batter is very thick. Add back to the blender with little water and blend again. Adding water directly to the batter most times doesn’t yield me good ones.",
     "source_url": null,
     "source_file": "Pesarattu.html"
+  },
+  {
+    "id": "pesto_gnocchi",
+    "name": "Pesto Gnocchi",
+    "categories": [
+      "Italian",
+      "Pasta"
+    ],
+    "cuisine": "italian",
+    "meal_type": "pasta_noodles",
+    "effort_level": "normal",
+    "no_chop_compatible": false,
+    "prep_time_minutes": null,
+    "cook_time_minutes": null,
+    "appliances": [
+      "stovetop"
+    ],
+    "ingredients": [
+      "Gnocchi (Costco)",
+      "Pesto sauce"
+    ],
+    "main_veg": [],
+    "avoid_contains": [],
+    "instructions": "Boil gnocchi according to package directions.\nDrain and toss with pesto sauce.",
+    "source_url": null,
+    "source_file": "Pesto Gnocchi.html"
   },
   {
     "id": "pickled_red_onions",

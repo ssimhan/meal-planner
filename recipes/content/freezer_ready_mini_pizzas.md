@@ -1,0 +1,39 @@
+---
+id: freezer_ready_mini_pizzas
+name: Freezer Ready Mini Pizzas
+categories:
+- Italian
+cuisine: italian
+meal_type: pizza
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- oven
+main_veg:
+- bell pepper
+avoid_contains:
+- mushrooms
+source_url: null
+source_file: Freezer Ready Mini Pizzas.html
+---
+
+# Freezer Ready Mini Pizzas
+
+### Ingredients
+- Bagels
+- Pizza sauce
+- Mozzarella
+- 1 bell pepper, green
+- Sliced olives
+- Mushrooms
+
+### Instructions
+1. Line two small baking sheets with foil or parchment paper (or do one sheet at a time, preparing the second batch the second day).
+2. Open the bagels and line them up on the baking sheets with cut sides facing up.
+3. Spread about 1 Tbsp pizza sauce over the surface of each muffin, then top with about 2 Tbsp shredded mozzarella.
+4. Chop the salad bar vegetables into very small pieces, then divide them evenly among the pizzas. Press down lightly on top of each pizza to help compact the toppings and keep them in place as they freeze. Cover the baking sheets with plastic wrap and freeze for about 8 hours, or until the pizzas are solid.
+5. Once the pizzas are frozen solid, carefully transfer them to a gallon sized freezer bag for long term storage (you may need two bags). For the best results, the pizzas should be cooked and eaten within 3 months.
+6. To bake the pizzas, take out the number you wish to bake, place them on a baking sheet, and let them partially thaw as you preheat the oven to 400ºF (about 7 minutes). Once the oven is fully preheated, bake the pizzas for about 15 minutes, or until the edges are golden brown and the cheese is melted. Baking time will vary depending on your oven and the amount of toppings on the pizzas.
+

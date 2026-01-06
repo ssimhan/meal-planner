@@ -1,0 +1,44 @@
+---
+id: tortellini_primavera
+name: Tortellini Primavera
+categories:
+- Dinner
+- Italian
+- School Entrees
+cuisine: unknown
+meal_type: soup_stew
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- stovetop
+main_veg:
+- broccoli
+- carrot
+- chive
+- garlic
+- peas
+avoid_contains: []
+source_url: null
+source_file: Tortellini Primavera.html
+---
+
+# Tortellini Primavera
+
+### Ingredients
+- 114-ounce can vegetable broth
+- 2 tablespoons all-purpose flour
+- 1 tablespoon extra-virgin olive oil
+- 3clovesgarlic
+- 3/4cupshredded Parmesan cheese
+- 1 tablespoon tarragon, dill or chives
+- ⅛teaspoon salt
+- 4cupschopped vegetables, such as broccoli, carrots and snap peas, or 16-ounce bag frozen mixed vegetables
+- 116-ounce package frozen cheese tortellini
+
+### Instructions
+1. Put a large pot of water on to boil.
+2. Meanwhile, whisk broth and flour in a small bowl. Heat oil in a large skillet over medium heat. Add garlic and cook, stirring, until just beginning to brown, 1 to 2 minutes. Add the broth mixture to the pan, bring to a boil and cook, stirring occasionally, until the sauce is thick enough to coat the back of a spoon, about 3 minutes. Remove from the heat and stir in cheese, tarragon (or dill or chives) and salt.
+3. Add vegetables and tortellini to the boiling water; return the water to a simmer and cook until the vegetables and tortellini are tender, 3 to 5 minutes. Drain; add to the pan with the sauce and stir to coat.
+

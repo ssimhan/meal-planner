@@ -1,0 +1,39 @@
+---
+id: cauliflower_alfredo_sauce
+name: Cauliflower Alfredo Sauce
+categories:
+- Italian
+cuisine: italian
+meal_type: sauce_dip
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- oven
+- stovetop
+main_veg:
+- cauliflower
+- garlic
+avoid_contains: []
+source_url: null
+source_file: Cauliflower Alfredo Sauce.html
+---
+
+# Cauliflower Alfredo Sauce
+
+### Ingredients
+- 2cupraw cauliflower florets
+- 2tspgarlic powder
+- Salt
+- 2tbspbutter
+- 1cupmilk
+- 1/2cupnutritional yeast
+- Shredded mozzarella
+
+### Instructions
+1. Put all ingredients into a medium pot and bring to a complete boil, then cover and simmer 15 minutes or until the cauliflower is fall-apart tender.
+2. Pulverize with either an immersion or regular blender.
+3. Serve over pasta, or spaghetti squash, rice, roasted vegetables, or whatever you wish.
+4. Makes about 2 cups, and it gets much thicker as it sits.
+

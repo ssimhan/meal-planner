@@ -219,3 +219,11 @@ export async function swapMeals(week: string, day1: string, day2: string): Promi
     }
     return res.json();
 }
+
+export async function getAnalytics(): Promise<any> {
+    const res = await fetch('/api/analytics');
+    if (!res.ok) {
+        throw new Error('Failed to fetch analytics');
+    }
+    return res.json();
+}

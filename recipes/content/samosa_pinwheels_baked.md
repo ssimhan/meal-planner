@@ -1,0 +1,51 @@
+---
+id: samosa_pinwheels_baked
+name: Samosa Pinwheels (Baked)
+categories:
+- Guest Apps
+cuisine: indian
+meal_type: appetizer
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- oven
+main_veg:
+- ginger
+- lemon
+- peas
+- potato
+- potatoe
+avoid_contains: []
+source_url: null
+source_file: Samosa Pinwheels (Baked).html
+---
+
+# Samosa Pinwheels (Baked)
+
+### Ingredients
+- 116 ozpuff pastry
+- 2largepotatoes
+- 1cupfrozen peas
+- 2tbspoil
+- 1tspcumin
+- ½tsp asofoetida hing
+- 5-6 curry leaves
+- 2tspginger shredded
+- 1tspgaram masala
+- 1tspmango powder amchur
+- ¼tsp red chilli powder
+- 1tsplemon juice
+- 1tspsugar
+- ½cup coriander chopped (optional)
+
+### Instructions
+1. Boil potatoes or use microwave method to cook. Microwave method: Pierce potatoes with a fork about 4 times on each side. Wrap potatoes in moist paper towels. Microwave for 5 minutes on each side. Let cool, peel and mash lightly.
+2. Temper spices: Heat oil in pan on medium and add cumin once oil is hot. After about a minute add asofoetida. Now add curry leaves then ginger. Put on low-medium and cook for 1-2 minutes, keep mixing so it doesn't burn.
+3. Add potato mash/peas to pan and add remaining ingredients mixingthoroughly. Cook until heated through, about 5 minutes. Turn off stove and add 1/2 cup coriander (optional) and mix. Let mixture cool
+4. Prepare puff pastry: Cut puff pastry in half. Flour working area and roll out 1 puff pastry to about 12 inches in length and 6 inches in width
+5. Make pinwheels: Take half of mixture and spread layer evenly across puff pastryleaving about an inch at one end (long side). Roll pastry up across the longend. Wrap roll in plastic wrap and freeze for about 10-15 minutes. Then, take out roll and cut into 1/2 inch pieces
+6. Bake pinwheels: Preheat oven to 400F. Assemble pinwheels on baking sheeting leaving a little room as they expand. Bake for about 20-25 minutes until golden brown
+7. Serve and enjoy them while they are hot! Note: directions are for half of the puff pastry and mix, repeat to finish baking all the pinwheels
+

@@ -1,0 +1,52 @@
+---
+id: spinach_white_bean_enchiladas
+name: Spinach White Bean Enchiladas
+categories:
+- ''
+cuisine: mexican
+meal_type: tacos_wraps
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- oven
+- stovetop
+main_veg:
+- beans
+- cilantro
+- corn
+- garlic
+- spinach
+avoid_contains: []
+source_url: null
+source_file: Spinach White Bean Enchiladas.html
+---
+
+# Spinach White Bean Enchiladas
+
+### Ingredients
+- 126-inch corn tortillas ($1.10)
+- 4ozpepper jack cheese ($1.00)
+- 1/2lbfrozen chopped spinach ($0.85)
+- 15ozcan white beans* ($1.00)
+- 1/4tspgarlic powder ($0.02)
+- 1/2tspcumin ($0.05)
+- 1/4tspsalt ($0.02)
+- Pepper
+- Handful fresh chopped cilantro for garnish (optional) ($0.13)
+- PEPPER JACK SAUCE
+- 1Tbspbutter ($0.14)
+- 1clovegarlic, minced ($0.08)
+- 4ozcream cheese ($1.00)
+- 3/4cupwhole milk ($0.29)
+- 1/4tspsalt ($0.02)
+- 4ozpepper jack cheese ($1.00)
+
+### Instructions
+1. Toast the tortillas on each side in a dry skillet over medium-low heat until they are a slightly stiff and have browned just a bit on the edges. Stack them on a plate until ready to use. Toasting the tortillas increases the flavor and helps prevent them from cracking. Shred an 8oz. block of pepper jack cheese. Half will be used for the enchilada filling and half will be used for the sauce.
+2. Defrost the frozen spinach in a microwave or take it out of the freezer before beginning to allow it time to defrost naturally. Squeeze as much moisture out of the thawed spinach as possible. Place the spinach in a large bowl. Rinse and drain the white beans, then add them to the bowl with the spinach. Also add 4oz. of the shredded cheese, garlic powder, cumin, salt, and a little freshly cracked pepper. Stir until the mixture is evenly combined.
+3. Preheat the oven to 350ºF. Begin preparing the pepper jack sauce by adding the butter and minced garlic to a small sauce pot. Sauté the garlic in the butter for one minute over medium heat. Add the milk and cream cheese to the pot. Stir and heat until the cream cheese has fully melted into the milk and the mixture has thickened slightly. Season with salt. Begin adding the remaining shredded pepper jack, a handful at a time, and stirring it in until fully melted before adding more. Once all the cheese has been melted into the sauce, turn the heat off and allow it to cool slightly.
+4. Coat the inside of a casserole dish with non-stick spray. Begin filling the toasted tortillas with the spinach and white bean mixture and rolling them closed. Line up the filled tortillas in the casserole dish, seam sides facing down. Choose a casserole dish that fits 12 of the rolled enchiladas snugly to help keep them from unrolling.
+5. Once the tortillas are filled and in the casserole dish, pour the pepper jack sauce over top. Bake the enchiladas in the preheated oven for 35-40 minutes, or until the edges of the tortillas are brown and the pepper jack sauce is thick and browned on the edges. Sprinkle chopped cilantro over top, if desired.
+

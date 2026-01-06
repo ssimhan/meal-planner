@@ -1230,3 +1230,29 @@ Continuing with current recipes. Use freezer backups manually if preferred.
     *   This feature is designed to be complementary to "Swap" (moving planned days) and "Replan" (global reshuffle).
 
 **Status:** Phase 11 Block 4 Complete.
+---
+
+## Session: 2026-01-06 - Recipe Format Migration (Block 5)
+
+**Work Completed:**
+- **Goal:** Improve token efficiency and readability by migrating recipes from HTML to Markdown with YAML frontmatter.
+- **Implementation:**
+    - Created `scripts/migrate_to_md.py` to batch convert 227 recipes from YAML details to Markdown.
+    - Updated `scripts/parse_recipes.py` to natively output individual Markdown files with frontmatter instead of a monolithic JSON.
+    - Modified `api/index.py` to read and parse the new Markdown files on demand, including frontmatter extraction.
+    - overhauling the backend to point `recipes/index.yml` sources to `recipes/content/*.md`.
+- **Frontend Enhancements:**
+    - Updated `src/app/recipes/[id]/page.tsx` with a premium Recipe Viewer.
+    - Integrated `react-markdown` and `gray-matter` for rich rendering.
+    - Added Tailwind Typography (`@tailwindcss/typography`) for beautiful formatting.
+    - Implemented a Solarpunk-themed metadata sidebar for quick scanning of cuisine, effort level, and appliances.
+
+**Technical Decisions:**
+1. **Markdown over HTML:** Markdown is significantly more token-efficient for LLMs and more ergonomic for humans to edit.
+2. **YAML Frontmatter:** Keeps metadata structured and separate from the rich text content.
+3. **Lazy Loading:** Frontend now fetches only the specific Markdown file needed, rather than loading a massive JSON blob.
+4. **Typography Plugin:** Used `@plugin "@tailwindcss/typography"` for consistent, professional recipe rendering with minimal custom CSS.
+
+**Status:** Block 5 Complete. All recipes are now in high-efficiency Markdown format.
+
+**Learning:** Migrating to a simpler, text-based format like Markdown often reveals hidden data inconsistencies and provides an immediate boost to both system performance and developer experience.

@@ -162,6 +162,8 @@ weeks:
       home_snack_needs_fix: false
       kids_lunch: Rasam Rice with Beetroot Kai
       kids_lunch_needs_fix: false
+      school_snack: Avocado packs
+      school_snack_needs_fix: false
 - week_of: '2026-01-12'
   dinners:
   - recipe_id: cauliflower_rasam

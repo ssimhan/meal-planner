@@ -163,6 +163,9 @@ weeks:
       school_snack_needs_fix: false
       home_snack: Blackberries
       home_snack_needs_fix: false
+    tue:
+      home_snack: Crackers and cheese cubes
+      home_snack_needs_fix: false
 - week_of: '2026-01-12'
   dinners:
   - recipe_id: cauliflower_rasam

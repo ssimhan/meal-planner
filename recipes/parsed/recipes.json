@@ -571,6 +571,31 @@
     "source_file": "Black Bean Quinoa Salad.html"
   },
   {
+    "id": "blackberries",
+    "name": "Blackberries",
+    "categories": [
+      "Fruit",
+      "Simple Snacks"
+    ],
+    "cuisine": "unknown",
+    "meal_type": "unknown",
+    "effort_level": "normal",
+    "no_chop_compatible": false,
+    "prep_time_minutes": null,
+    "cook_time_minutes": null,
+    "appliances": [
+      "stovetop"
+    ],
+    "ingredients": [
+      "Blackberries"
+    ],
+    "main_veg": [],
+    "avoid_contains": [],
+    "instructions": "Wash and serve.",
+    "source_url": null,
+    "source_file": "Blackberries.html"
+  },
+  {
     "id": "blueberry_chocolate_chip_muffin",
     "name": "Blueberry Chocolate Chip Muffin",
     "categories": [
@@ -1247,41 +1272,6 @@
     "source_file": "Chickpea Chaat Salad.html"
   },
   {
-    "id": "chickpea_salad_wrap",
-    "name": "Chickpea Salad Wrap",
-    "categories": [
-      "REW",
-      "School Entrees"
-    ],
-    "cuisine": "indian",
-    "meal_type": "tacos_wraps",
-    "effort_level": "normal",
-    "no_chop_compatible": false,
-    "prep_time_minutes": null,
-    "cook_time_minutes": null,
-    "appliances": [
-      "stovetop"
-    ],
-    "ingredients": [
-      "1cupmashed chickpeas",
-      "3mediumpickles, diced",
-      "2 tbs mayo",
-      "1smallcarrot, shredded",
-      "Tortillas",
-      "Bell pepper, snap peas, tomato (optional sides)"
-    ],
-    "main_veg": [
-      "bell pepper",
-      "carrot",
-      "peas",
-      "tomato"
-    ],
-    "avoid_contains": [],
-    "instructions": "1. Combine chickpeas, pickles, mayo and carrots2. Roll up into the wrap, soaking up any extra liquid with paper towel3. Hold it from with a toothpick4. Serve with red bell peppers, snap peas and tomatoes on the side",
-    "source_url": null,
-    "source_file": "Chickpea Salad Wrap.html"
-  },
-  {
     "id": "chocolate_banana_bark",
     "name": "Chocolate Banana Bark",
     "categories": [
@@ -1599,6 +1589,31 @@
     "source_file": "Cowboy Caviar Salad.html"
   },
   {
+    "id": "crackers_and_cheese_cubes",
+    "name": "Crackers and Cheese Cubes",
+    "categories": [
+      "Simple Snacks"
+    ],
+    "cuisine": "unknown",
+    "meal_type": "simple_snack",
+    "effort_level": "normal",
+    "no_chop_compatible": false,
+    "prep_time_minutes": null,
+    "cook_time_minutes": null,
+    "appliances": [
+      "stovetop"
+    ],
+    "ingredients": [
+      "Crackers",
+      "Cheese cubes"
+    ],
+    "main_veg": [],
+    "avoid_contains": [],
+    "instructions": "Serve crackers with cheese cubes.",
+    "source_url": null,
+    "source_file": "Crackers and Cheese Cubes.html"
+  },
+  {
     "id": "creamy_macaroni_pasta_salad",
     "name": "Creamy Macaroni Pasta Salad",
     "categories": [
@@ -1637,7 +1652,7 @@
   },
   {
     "id": "crispy_chipotle_sweet_potato_tacos_with_lime_crema",
-    "name": "Crispy Chipotle Sweet Potato Tacos with Lime Crema.",
+    "name": "Crispy Chipotle Sweet Potato Tacos with Lime Crema",
     "categories": [
       "Mexican"
     ],
@@ -1685,7 +1700,7 @@
     "avoid_contains": [],
     "instructions": "Peel and cube the sweet potatoes.Seed and chop the poblano.\nPreheat the oven to 425° F.\nPlace the sweet potatoes on a baking sheet and toss with olive oil, chili powder, paprika, cumin, garlic powder, red pepper flakes, oregano, and salt.\nAdd the poblano and toss to combine.\nArrange in an even layer.\nBake 35 to 40 minutes, until the potatoes are tender and beginning to char on the edges.\nRemove from the oven and stir in the black beans.\nMeanwhile, make the crema.\nCombine all ingredients in a glass jar and shake or stir until creamy.\nLine the taco shells up on a sheet pan or in a 9×13 inch baking dish.\nTransfer to the oven and bake 5 minutes. Evenly divide the sweet potatoes among each taco shell and top with cheese.\nBake 10 minutes, until the cheese has melted.\nMix the cilantro and jalapeño in a small bowl. Serve the tacos topped with crema, avocado, and the spicy cilantro. Enjoy!",
     "source_url": null,
-    "source_file": "Crispy Chipotle Sweet Potato Tacos with Lime Crema..html"
+    "source_file": "Crispy Chipotle Sweet Potato Tacos with Lime Crema.html"
   },
   {
     "id": "cubed_fried_tofu",
@@ -4842,26 +4857,6 @@
     "source_file": "Pachai Payaru, Moong Dal Sundal.html"
   },
   {
-    "id": "page_not_found_8211_smitten_kitchen",
-    "name": "Whoops!",
-    "categories": [],
-    "cuisine": "unknown",
-    "meal_type": "unknown",
-    "effort_level": "normal",
-    "no_chop_compatible": false,
-    "prep_time_minutes": null,
-    "cook_time_minutes": null,
-    "appliances": [
-      "stovetop"
-    ],
-    "ingredients": [],
-    "main_veg": [],
-    "avoid_contains": [],
-    "instructions": null,
-    "source_url": "https://smittenkitchen.com/",
-    "source_file": "Page_not_found___8211__smitten_kitchen.html"
-  },
-  {
     "id": "palak_paneer_spinach",
     "name": "Palak Paneer Spinach",
     "categories": [
@@ -5227,6 +5222,32 @@
     "instructions": "Rinse well a few times until the water runs clear.\nPour fresh water and soak in enough water for about 4 to 6 hours. If using rice soak it along with dal. I don’t use rice most of the times.\nOnce the green gram is soaked, rinse them well.\nBlend with ginger, salt, green chilies, cumin seeds.\nChop onions. Sauté with ghee, cumin, green chilies until slightly brown\nWhen making the peasrattu, sprinkle fried onions on topping\nTo make the next one, ensure the pan is not very hot. If it is too hot, reduce the flame or turn off the stove for a while and then make the next one.\nIf you are unable to spread the batter on the tawa it means the batter is very thick. Add back to the blender with little water and blend again. Adding water directly to the batter most times doesn’t yield me good ones.",
     "source_url": null,
     "source_file": "Pesarattu.html"
+  },
+  {
+    "id": "pesto_gnocchi",
+    "name": "Pesto Gnocchi",
+    "categories": [
+      "Italian",
+      "Pasta"
+    ],
+    "cuisine": "italian",
+    "meal_type": "pasta_noodles",
+    "effort_level": "normal",
+    "no_chop_compatible": false,
+    "prep_time_minutes": null,
+    "cook_time_minutes": null,
+    "appliances": [
+      "stovetop"
+    ],
+    "ingredients": [
+      "Gnocchi (Costco)",
+      "Pesto sauce"
+    ],
+    "main_veg": [],
+    "avoid_contains": [],
+    "instructions": "Boil gnocchi according to package directions.\nDrain and toss with pesto sauce.",
+    "source_url": null,
+    "source_file": "Pesto Gnocchi.html"
   },
   {
     "id": "pickled_red_onions",
@@ -6015,6 +6036,120 @@
     "source_file": "Rasam Recipe.html"
   },
   {
+    "id": "rasam_rice_with_beetroot_kai",
+    "name": "Rasam Rice with Beetroot Kai",
+    "categories": [
+      "South Indian",
+      "Fusion",
+      "Soup-Rice",
+      "Comfort Food"
+    ],
+    "cuisine": "unknown",
+    "meal_type": "soup_stew",
+    "effort_level": "normal",
+    "no_chop_compatible": false,
+    "prep_time_minutes": null,
+    "cook_time_minutes": null,
+    "appliances": [
+      "stovetop"
+    ],
+    "ingredients": [
+      "1 tsp tamarind concentrate",
+      "1 medium tomato, chopped",
+      "1 tsp black pepper (coarsely crushed)",
+      "1 tsp cumin seeds",
+      "2 garlic cloves, crushed",
+      "1/4 tsp turmeric powder",
+      "1/2 tsp rasam powder (or use more black pepper + cumin if unavailable)",
+      "Salt to taste",
+      "3 cups water"
+    ],
+    "main_veg": [
+      "garlic",
+      "tomato"
+    ],
+    "avoid_contains": [],
+    "instructions": "Chop 1 medium tomato.\nCrush 2 garlic cloves.\nPeel and dice 1 medium beetroot into small cubes.\nCook 1 cup rice and keep it ready (preferably slightly mushy, like for rasam rice).\nIn a pot, mix 1 tsp tamarind concentrate with 3 cups water.\nAdd chopped tomato, crushed garlic, 1/4 tsp turmeric powder, 1 tsp black pepper, 1 tsp cumin seeds, 1/2 tsp rasam powder, and salt.\nLet it simmer on medium heat for 10–12 minutes until tomatoes soften and flavors blend. Don't boil too hard—rasam should be light.\nIn a small pan, heat 1 tsp ghee or oil.\nAdd 1 tsp mustard seeds. When they splutter, add 1/2 tsp cumin seeds, 1 red chilli, pinch of hing, and curry leaves.\nPour this tempering into the simmering rasam. Turn off heat.\nHeat 1 tsp oil in a pan.\nAdd diced beetroot and sauté on medium heat for 5–6 minutes.\nSprinkle 1/4 tsp turmeric powder, 1/2 tsp red chilli powder, and salt.\nStir and cook until beetroot is tender (about 6–8 more minutes, adding a splash of water if needed).\nIn a bowl or plate, mix cooked rice with hot rasam.\nTop or serve it with the sautéed beetroot kai on the side or mixed in.",
+    "source_url": null,
+    "source_file": "Rasam Rice with Beetroot Kai.html"
+  },
+  {
+    "id": "rasam_rice_with_broccoli_kai",
+    "name": "Rasam Rice with Broccoli Kai",
+    "categories": [
+      "South Indian",
+      "Fusion",
+      "Soup-Rice",
+      "Comfort Food"
+    ],
+    "cuisine": "unknown",
+    "meal_type": "soup_stew",
+    "effort_level": "normal",
+    "no_chop_compatible": false,
+    "prep_time_minutes": null,
+    "cook_time_minutes": null,
+    "appliances": [
+      "stovetop"
+    ],
+    "ingredients": [
+      "1 tsp tamarind concentrate",
+      "1 medium tomato, chopped",
+      "1 tsp black pepper (coarsely crushed)",
+      "1 tsp cumin seeds",
+      "2 garlic cloves, crushed",
+      "1/4 tsp turmeric powder",
+      "1/2 tsp rasam powder (or use more black pepper + cumin if unavailable)",
+      "Salt to taste",
+      "3 cups water"
+    ],
+    "main_veg": [
+      "garlic",
+      "tomato"
+    ],
+    "avoid_contains": [],
+    "instructions": "Chop 1 medium tomato.\nCrush 2 garlic cloves.\nCut 1/2 head of broccoli into small florets.\nCook 1 cup rice and keep it ready (preferably slightly mushy, like for rasam rice).\nIn a pot, mix 1 tsp tamarind concentrate with 3 cups water.\nAdd chopped tomato, crushed garlic, 1/4 tsp turmeric powder, 1 tsp black pepper, 1 tsp cumin seeds, 1/2 tsp rasam powder, and salt.\nLet it simmer on medium heat for 10–12 minutes until tomatoes soften and flavors blend. Don't boil too hard—rasam should be light.\nIn a small pan, heat 1 tsp ghee or oil.\nAdd 1 tsp mustard seeds. When they splutter, add 1/2 tsp cumin seeds, 1 red chilli, pinch of hing, and curry leaves.\nPour this tempering into the simmering rasam. Turn off heat.\nHeat 1 tsp oil in a pan.\nAdd broccoli florets and sauté on medium heat for 4–5 minutes.\nSprinkle 1/4 tsp turmeric powder, 1/2 tsp red chilli powder, and salt.\nStir and cook until broccoli is tender but not mushy (about 3–4 more minutes).\nIn a bowl or plate, mix cooked rice with hot rasam.\nTop or serve it with the sautéed broccoli kai on the side or mixed in.",
+    "source_url": null,
+    "source_file": "Rasam Rice with Broccoli Kai.html"
+  },
+  {
+    "id": "rasam_rice_with_carrot_kai",
+    "name": "Rasam Rice with Carrot Kai",
+    "categories": [
+      "South Indian",
+      "Fusion",
+      "Soup-Rice",
+      "Comfort Food"
+    ],
+    "cuisine": "unknown",
+    "meal_type": "soup_stew",
+    "effort_level": "normal",
+    "no_chop_compatible": false,
+    "prep_time_minutes": null,
+    "cook_time_minutes": null,
+    "appliances": [
+      "stovetop"
+    ],
+    "ingredients": [
+      "1 tsp tamarind concentrate",
+      "1 medium tomato, chopped",
+      "1 tsp black pepper (coarsely crushed)",
+      "1 tsp cumin seeds",
+      "2 garlic cloves, crushed",
+      "1/4 tsp turmeric powder",
+      "1/2 tsp rasam powder (or use more black pepper + cumin if unavailable)",
+      "Salt to taste",
+      "3 cups water"
+    ],
+    "main_veg": [
+      "garlic",
+      "tomato"
+    ],
+    "avoid_contains": [],
+    "instructions": "Chop 1 medium tomato.\nCrush 2 garlic cloves.\nPeel and dice 2 medium carrots into small cubes.\nCook 1 cup rice and keep it ready (preferably slightly mushy, like for rasam rice).\nIn a pot, mix 1 tsp tamarind concentrate with 3 cups water.\nAdd chopped tomato, crushed garlic, 1/4 tsp turmeric powder, 1 tsp black pepper, 1 tsp cumin seeds, 1/2 tsp rasam powder, and salt.\nLet it simmer on medium heat for 10–12 minutes until tomatoes soften and flavors blend. Don't boil too hard—rasam should be light.\nIn a small pan, heat 1 tsp ghee or oil.\nAdd 1 tsp mustard seeds. When they splutter, add 1/2 tsp cumin seeds, 1 red chilli, pinch of hing, and curry leaves.\nPour this tempering into the simmering rasam. Turn off heat.\nHeat 1 tsp oil in a pan.\nAdd diced carrots and sauté on medium heat for 4–5 minutes.\nSprinkle 1/4 tsp turmeric powder, 1/2 tsp red chilli powder, and salt.\nStir and cook until carrots are tender (about 5–6 more minutes).\nIn a bowl or plate, mix cooked rice with hot rasam.\nTop or serve it with the sautéed carrot kai on the side or mixed in.",
+    "source_url": null,
+    "source_file": "Rasam Rice with Carrot Kai.html"
+  },
+  {
     "id": "refried_bean_burrito",
     "name": "Refried Bean Burrito",
     "categories": [
@@ -6147,7 +6282,7 @@
   },
   {
     "id": "salted_tahini_oatmeal_chocolate_chip_cookies",
-    "name": "Salted Tahini Oatmeal Chocolate Chip Cookies.",
+    "name": "Salted Tahini Oatmeal Chocolate Chip Cookies",
     "categories": [
       "Dessert"
     ],
@@ -6178,7 +6313,7 @@
     "avoid_contains": [],
     "instructions": "1. Preheat the oven to 350° F. Line a baking sheet with parchment paper.\n2. In a mixing bowl, beat together the oats, almond flour, baking soda, salt, coconut oil, tahini, maple syrup, egg, and vanilla. Fold in the chocolate chips/chunks.\n3. Scoop the dough out into rounded tablespoon size balls - the dough will be a little wet. Place 2 inches apart on the prepared baking sheet.\n4. Bake 10-12 minutes, until browning on the edges, but not fully set in the center. Let the cookies cool on the baking sheet. Sprinkle with flaky salt. Eat warm (highly recommend) or let cool and store in an airtight container for up to 5 days.",
     "source_url": null,
-    "source_file": "Salted Tahini Oatmeal Chocolate Chip Cookies..html"
+    "source_file": "Salted Tahini Oatmeal Chocolate Chip Cookies.html"
   },
   {
     "id": "samosa_grilled_cheese",
@@ -7158,31 +7293,6 @@
     "instructions": "",
     "source_url": null,
     "source_file": "String cheese.html"
-  },
-  {
-    "id": "sunflower_seed_cream_cheese_dairy_free",
-    "name": "Petra A. | Sunglow Kitchen | Comment CHEESE and I Will Send You the Recipe! Creamy, Thick, and Tangy, This Sunflower Seed Cream Cheese Is the Best Dairy-Free Cream… | Instagram",
-    "categories": [
-      ""
-    ],
-    "cuisine": "unknown",
-    "meal_type": "sauce_dip",
-    "effort_level": "normal",
-    "no_chop_compatible": false,
-    "prep_time_minutes": null,
-    "cook_time_minutes": null,
-    "appliances": [
-      "instant_pot"
-    ],
-    "ingredients": [
-      "Cheese",
-      "cheese"
-    ],
-    "main_veg": [],
-    "avoid_contains": [],
-    "instructions": "",
-    "source_url": null,
-    "source_file": "Sunflower Seed Cream Cheese (Dairy-Free).html"
   },
   {
     "id": "sunflower_seeds",

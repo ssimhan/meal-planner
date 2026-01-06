@@ -58,10 +58,29 @@ weeks:
     - spinach
 - week_of: '2026-01-05'
   dinners:
+  - recipe_id: curried_cauliflower_quinoa_salad
+    cuisine: mediterranean
+    meal_type: salad
+    day: mon
+    vegetables:
+    - arugula
+    - cabbage
+    - cauliflower
+    - cilantro
+    - cucumber
+    - garlic
+    - lemon
+    - arugula
+    - cabbage
+    - cauliflower
+    - cilantro
+    - cucumber
+    - garlic
+    - lemon
   - recipe_id: freezer_meal
     cuisine: various
     meal_type: freezer
-    day: mon
+    day: tue
     vegetables: []
     made: null
     freezer_used:
@@ -71,7 +90,7 @@ weeks:
   - recipe_id: chickpea_salad_wrap
     cuisine: mexican
     meal_type: tacos_wraps
-    day: tue
+    day: wed
     vegetables:
     - bell pepper
     - carrot
@@ -92,36 +111,11 @@ weeks:
     - peas
     - tomato
     made_2x_for_freezer: true
-    actual_meal: Doubled Chickpea Wraps
     needs_fix: false
-  - recipe_id: curried_cauliflower_quinoa_salad
-    cuisine: mediterranean
-    meal_type: salad
-    day: wed
-    vegetables:
-    - arugula
-    - cabbage
-    - cauliflower
-    - cilantro
-    - cucumber
-    - garlic
-    - lemon
-    - arugula
-    - cabbage
-    - cauliflower
-    - cilantro
-    - cucumber
-    - garlic
-    - lemon
-  - recipe_id: easy_french_toast_sticks
-    cuisine: american
-    meal_type: sandwich
-    day: thu
-    vegetables: []
   - recipe_id: easy_zucchini_pasta_sauce
     cuisine: italian
     meal_type: pasta_noodles
-    day: fri
+    day: thu
     vegetables:
     - basil
     - beans
@@ -137,11 +131,11 @@ weeks:
     - parsley
     - spinach
     - zucchini
-  - day: sun
-    recipe_id: unplanned_meal
-    cuisine: various
+  - recipe_id: easy_french_toast_sticks
+    cuisine: american
+    meal_type: sandwich
+    day: fri
     vegetables: []
-    made: true
   fridge_vegetables:
   - white rice
   - brown rice
@@ -159,6 +153,15 @@ weeks:
     mon:
       kids_lunch_needs_fix: false
       kids_lunch: Pesto gnocchi
+      school_snack: Grapes
+      school_snack_needs_fix: false
+      home_snack: Blackberries
+      home_snack_needs_fix: false
+    tue:
+      home_snack: Crackers and cheese cubes
+      home_snack_needs_fix: false
+      kids_lunch: Rasam Rice with Beetroot Kai
+      kids_lunch_needs_fix: false
 - week_of: '2026-01-12'
   dinners:
   - recipe_id: cauliflower_rasam

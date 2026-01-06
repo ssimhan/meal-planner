@@ -396,7 +396,7 @@ def generate_meal_plan(input_file, data):
 
     # Select lunches based on dinner plan
     print("\n[4.5/5] Selecting lunches...")
-    lunch_selector = LunchSelector(index_path)
+    lunch_selector = LunchSelector(index_path, recipes=recipes)
 
     # Build dinner plan list for lunch selector
     dinner_plan_list = []
@@ -512,6 +512,225 @@ def show_week_complete(input_file, data):
     print(f"\n💡 Tip: Run 'python3 scripts/workflow.py replan' to update for remaining days.")
 
 
+# ============================================================================
+# Inventory-Aware Replanning Helpers
+# ============================================================================
+
+def _normalize_ingredient_name(name):
+    """
+    Normalize ingredient names for consistent matching.
+
+    Examples:
+    - "sweet potatoes" → "sweet_potato"
+    - "Green beans" → "green_bean"
+    - "bell pepper, red" → "bell_pepper"
+
+    Returns normalized string for inventory matching.
+    """
+    if not name:
+        return ""
+
+    # Convert to lowercase
+    name = name.lower().strip()
+
+    # Remove common suffixes/noise
+    name = re.sub(r'\s*\(.*?\)', '', name)  # Remove parentheses content
+    name = re.sub(r',.*', '', name)  # Remove comma and everything after
+
+    # Plurals to singular
+    if name.endswith('oes'):
+        name = name[:-2]  # tomatoes → tomato
+    elif name.endswith('ies'):
+        name = name[:-3] + 'y'  # berries → berry
+    elif name.endswith('s') and not name.endswith('ss'):
+        name = name[:-1]  # beans → bean
+
+    # Replace spaces with underscores
+    name = name.replace(' ', '_')
+
+    # Common aliases
+    aliases = {
+        'green_bean': 'bean',
+        'bell_pepper': 'pepper',
+        'cherry_tomato': 'tomato',
+        'roma_tomato': 'tomato',
+        'red_onion': 'onion',
+        'yellow_onion': 'onion',
+        'white_onion': 'onion',
+        'black_bean': 'bean',
+        'kidney_bean': 'bean',
+        'pinto_bean': 'bean'
+    }
+
+    return aliases.get(name, name)
+
+
+def _calculate_ingredient_freshness(inventory):
+    """
+    Calculate freshness score for inventory items (older = higher priority).
+
+    Returns dict: {item_name: days_old}
+    """
+    freshness = {}
+    today = datetime.now().date()
+
+    for section in ['fridge', 'pantry']:
+        items = inventory.get(section, [])
+        for item_data in items:
+            item_name = _normalize_ingredient_name(item_data.get('item', ''))
+            added_str = item_data.get('added')
+
+            if added_str:
+                try:
+                    added_date = datetime.strptime(added_str, '%Y-%m-%d').date()
+                    days_old = (today - added_date).days
+                    freshness[item_name] = days_old
+                except ValueError:
+                    freshness[item_name] = 0
+            else:
+                freshness[item_name] = 0
+
+    return freshness
+
+
+def _load_inventory_data(inventory_path='data/inventory.yml'):
+    """
+    Load and normalize inventory data.
+
+    Returns dict with structure:
+    {
+        'fridge_items': set of normalized item names,
+        'pantry_items': set of normalized item names,
+        'freezer_backups': list of backup meal names,
+        'freshness': {item: days_since_added}
+    }
+    """
+    inv_path = Path(inventory_path)
+
+    if not inv_path.exists():
+        return {
+            'fridge_items': set(),
+            'pantry_items': set(),
+            'freezer_backups': [],
+            'freshness': {}
+        }
+
+    with open(inv_path, 'r') as f:
+        inventory = yaml.safe_load(f) or {}
+
+    # Normalize fridge items
+    fridge_items = set()
+    for item_data in inventory.get('fridge', []):
+        normalized = _normalize_ingredient_name(item_data.get('item', ''))
+        if normalized:
+            fridge_items.add(normalized)
+
+    # Normalize pantry items
+    pantry_items = set()
+    for item_data in inventory.get('pantry', []):
+        normalized = _normalize_ingredient_name(item_data.get('item', ''))
+        if normalized:
+            pantry_items.add(normalized)
+
+    # Extract freezer backup meals
+    freezer_backups = []
+    for backup in inventory.get('freezer', {}).get('backups', []):
+        meal_name = backup.get('meal', '')
+        if meal_name:
+            freezer_backups.append(meal_name)
+
+    # Calculate freshness
+    freshness = _calculate_ingredient_freshness(inventory)
+
+    return {
+        'fridge_items': fridge_items,
+        'pantry_items': pantry_items,
+        'freezer_backups': freezer_backups,
+        'freshness': freshness
+    }
+
+
+def score_recipe_by_inventory(recipe_id, recipe_obj, inventory, all_recipes):
+    """
+    Score a recipe based on how well it uses current inventory.
+
+    Args:
+        recipe_id: Recipe identifier
+        recipe_obj: Recipe dict with 'main_veg' list or just recipe_id
+        inventory: Dict from _load_inventory_data()
+        all_recipes: Full recipe index for ingredient lookup
+
+    Returns:
+        Tuple (score, details) where:
+        - score: float 0-100 (higher = better inventory match)
+        - details: dict with match breakdown
+
+    Scoring:
+    - Fridge match: +20 per ingredient (perishable priority)
+    - Pantry match: +5 per ingredient (stable items)
+    - Freshness bonus: +10 for items 5+ days old
+    - Max score: 100
+    """
+    # Get recipe ingredients
+    main_veg = recipe_obj.get('main_veg', [])
+
+    # Fallback: lookup in all_recipes if main_veg not in recipe_obj
+    if not main_veg and all_recipes:
+        recipe_full = next((r for r in all_recipes if r.get('id') == recipe_id), None)
+        if recipe_full:
+            main_veg = recipe_full.get('main_veg', [])
+
+    if not main_veg:
+        return 0.0, {'fridge_matches': [], 'pantry_matches': [], 'missing': []}
+
+    # Normalize recipe ingredients
+    normalized_veg = [_normalize_ingredient_name(v) for v in main_veg]
+    normalized_veg = [v for v in normalized_veg if v]  # Remove empty strings
+
+    if not normalized_veg:
+        return 0.0, {'fridge_matches': [], 'pantry_matches': [], 'missing': []}
+
+    # Match against inventory
+    fridge_matches = []
+    pantry_matches = []
+    missing = []
+
+    for veg in normalized_veg:
+        if veg in inventory['fridge_items']:
+            fridge_matches.append(veg)
+        elif veg in inventory['pantry_items']:
+            pantry_matches.append(veg)
+        else:
+            missing.append(veg)
+
+    # Calculate base score
+    score = 0.0
+
+    # Fridge items: 20 points each (perishable priority)
+    score += len(fridge_matches) * 20
+
+    # Pantry items: 5 points each (stable items)
+    score += len(pantry_matches) * 5
+
+    # Freshness bonus: +10 for items 5+ days old
+    for item in fridge_matches:
+        days_old = inventory['freshness'].get(item, 0)
+        if days_old >= 5:
+            score += 10
+
+    # Cap at 100
+    score = min(score, 100.0)
+
+    details = {
+        'fridge_matches': fridge_matches,
+        'pantry_matches': pantry_matches,
+        'missing': missing,
+        'match_ratio': (len(fridge_matches) + len(pantry_matches)) / len(normalized_veg) if normalized_veg else 0
+    }
+
+    return score, details
+
+
 def replan_meal_plan(input_file, data):
     """
     Re-distribute remaining and skipped meals across the rest of the week.
@@ -590,7 +809,56 @@ def replan_meal_plan(input_file, data):
     remaining_days = days_list[current_day_idx:]
     print(f"   📅 Remaining days: {', '.join(remaining_days).upper()}")
 
-    # 5. Distribute recipes
+    # 5. Load inventory and score recipes
+    inventory_data = _load_inventory_data()
+
+    # Load full recipe index for ingredient lookup
+    all_recipes = []
+    index_path = Path('recipes/index.yml')
+    if index_path.exists():
+        with open(index_path, 'r') as f:
+            all_recipes = yaml.safe_load(f) or []
+
+    # Sort to_be_planned by inventory match if inventory exists
+    if inventory_data['fridge_items'] or inventory_data['pantry_items']:
+        print("   📦 Scoring recipes by inventory availability...")
+        scored_recipes = []
+
+        for recipe_entry in to_be_planned:
+            recipe_id = recipe_entry.get('recipe_id')
+
+            # Score this recipe
+            score, details = score_recipe_by_inventory(
+                recipe_id=recipe_id,
+                recipe_obj=recipe_entry,
+                inventory=inventory_data,
+                all_recipes=all_recipes
+            )
+            scored_recipes.append((recipe_entry, score, details))
+
+        # Sort by score descending (highest inventory match first)
+        scored_recipes.sort(key=lambda x: x[1], reverse=True)
+
+        # Debug output: show scores
+        print("   Recipe inventory scores:")
+        for recipe_entry, score, details in scored_recipes:
+            recipe_name = recipe_entry.get('recipe_id', 'unknown')
+            fridge = ', '.join(details['fridge_matches']) if details['fridge_matches'] else 'none'
+            pantry = ', '.join(details['pantry_matches']) if details['pantry_matches'] else 'none'
+            print(f"     • {recipe_name}: {score:.0f}/100 (fridge: {fridge}, pantry: {pantry})")
+
+        # Check if best score is very low - suggest freezer backup
+        if scored_recipes and scored_recipes[0][1] < 30 and inventory_data['freezer_backups']:
+            print(f"\n   ⚠️  Low inventory match (best: {scored_recipes[0][1]:.0f}/100).")
+            print(f"   💡 Available freezer backups: {', '.join(inventory_data['freezer_backups'])}")
+            print(f"   Continuing with current recipes. Use freezer backups manually if preferred.\n")
+
+        # Extract sorted recipe entries
+        to_be_planned = [r[0] for r in scored_recipes]
+    else:
+        print("   ⚠️  Inventory empty or unavailable, using default order")
+
+    # 6. Distribute recipes
     new_dinners = list(successful_dinners)
     rollover_recipes = []
 
@@ -621,13 +889,13 @@ def replan_meal_plan(input_file, data):
     # Sort new_dinners by day
     new_dinners.sort(key=lambda d: days_list.index(d['day']) if d['day'] in days_list else 99)
 
-    # 6. Update history
+    # 7. Update history
     week_entry['dinners'] = new_dinners
 
     with open(history_path, 'w') as f:
         yaml.dump(history, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
 
-    # 7. Update input file (to keep dashboard in sync)
+    # 8. Update input file (to keep dashboard in sync)
     if input_file and input_file.exists():
         data['dinners'] = []
         for d in new_dinners:
@@ -645,9 +913,9 @@ def replan_meal_plan(input_file, data):
             yaml.dump(data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
         print(f"   ✓ Updated: {input_file}")
 
-    # 8. Refresh Lunches based on updated dinner sequence
+    # 9. Refresh Lunches based on updated dinner sequence
     print("   🍱 Refreshing lunch plans to maintain pipelines...")
-    from scripts.lunch_selector import LunchSelector
+    from lunch_selector import LunchSelector
     
     # Need to format dinners for LunchSelector (list of dicts with 'day' and 'recipe_id')
     formatted_dinners = []
@@ -661,7 +929,7 @@ def replan_meal_plan(input_file, data):
     selector = LunchSelector()
     selected_lunches = selector.select_weekly_lunches(formatted_dinners, monday_str)
 
-    # 9. Regenerate HTML
+    # 10. Regenerate HTML
     all_recipes = []
     index_path = Path('recipes/index.yml')
     if index_path.exists():

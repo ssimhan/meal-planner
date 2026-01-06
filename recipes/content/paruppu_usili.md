@@ -1,0 +1,51 @@
+---
+id: paruppu_usili
+name: Paruppu Usili
+categories:
+- Indian
+cuisine: indian
+meal_type: soup_stew
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- instant_pot
+main_veg:
+- beans
+- green bean
+avoid_contains: []
+source_url: null
+source_file: Paruppu Usili.html
+---
+
+# Paruppu Usili
+
+### Ingredients
+- 200 grams Green beans
+- 1 tablespoon Gingelly oil
+- 1 teaspoon Mustard seeds
+- 1 teaspoon Urad Dal
+- 2 sprig Curry leaves
+- 1/2 teaspoon Asafoetida
+- For the Paruppu Usili
+- 1cuptoor dal
+- 4 Dry Red Chillies
+- Salt
+- 1/2 teaspoon Turmeric
+
+### Instructions
+1. To begin making the Green Beans Paruppu Usili Recipe, soak the toor dal in water for about 1 hour.
+2. Once the dal is soaked until soft; drain the excess water.
+3. Into a food processor/mixer, add in the toor dal, turmeric powder and dried red chillies and blend to make a coarse mixture. You want the Paruppu Usili to have a coarse texture when steamed.
+4. Grease the steamer plates or idli plates with a oil and spoon the ground paruppu usili mixture into the steamer plates.
+5. Place the filled steamer plates into the steamer and steam for 10 minutes on high heat. Once steamed, turn off the heat and keep aside and allow it to cool.
+6. Once the cooled, transfer to a large mixing bowl and crumble the steamed paruppu - this mixture is called the paruppu usili (crumbled dal). Keep this aside.
+7. The next step is to cook the green beans.
+8. In a pressure cooker, add the chopped green beans along with 2 tablespoons of water. Sprinkle in a little salt.
+9. Pressure cook the green beans for 2 whistles on high heat, turn off the heat and run the pressure cooker under water to release pressure immediately. The beans will be cooked perfectly without loss of colour and nutrition.
+10. Place a wok or kadai on medium heat and add a teaspoon of oil. Once the oil is hot, add mustard seeds and urad dal and allow it to crackle and the dal to turn golden brown.
+11. After the seeds have crackled, add asafoetida, the curry leaves and the steamed paruppu usili and mix thoroughly.
+12. Saute the dal in the oil for a good 3 to 4 minutes until it gets a perfect crumbly texture. Once you have a good texture, stir in the green beans and turn off the heat. Check the salt and adjust to taste accordingly.
+13. Serve with Vathal Kuzhambu Recipe and Rice for a weekday meal.
+

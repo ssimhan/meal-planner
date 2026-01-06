@@ -1,0 +1,59 @@
+---
+id: easiest_animal_crackers
+name: Easiest Animal Crackers
+categories:
+- ''
+cuisine: unknown
+meal_type: simple_snack
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- instant_pot
+- oven
+main_veg: []
+avoid_contains: []
+source_url: null
+source_file: Easiest Animal Crackers.html
+---
+
+# Easiest Animal Crackers
+
+### Ingredients
+- AD
+- Whole-wheat flour
+- Baking powder
+- Milk
+- Unsalted butter
+- Maple syrup
+- AD
+- 1cupwhole-wheat flour
+- 1/2 teaspoon baking powder
+- 1/8 teaspoon salt
+- 1/4cupunsalted butter softened at room temperature
+- 2 tablespoons milk
+- 2 tablespoons maple syrup
+- 1/2 teaspoon vanilla extract
+
+### Instructions
+1. Here’s a look at how to make this easy animal cookies recipe. Scroll down to the bottom of the post for the full recipe.
+2. AD
+3. Add the ingredients to a bowl.
+4. Mix together with a wooden spoon or your hands. Form a ball.
+5. Roll out between parchment paper pieces, cut out with mini cookie cutters.
+6. Bake and enjoy.
+7. Best Tips for Success
+8. I prefer to roll the dough out between parchment paper since it’s easy, but you can also do it by coating the rolling pin with a little flour to prevent sticking.
+9. You can use all-purpose flour if you prefer or if that’s what you have. I like the flavor from whole-wheat, but both will work.
+10. We like to make them using mini cookie cutters, but any size will work.
+11. Store leftovers in an airtight container for 3-5 days at room temperature.
+12. You can also store any dough you don’t use in a zip top plastic bag, tightly sealed and with as much air removed as possible, for up to a week in the fridge. Let sit at room temperature for about 30 minutes before using.
+13. AD
+14. Preheat the oven to 375°F and line two baking sheets with parchment paper.
+15. Place all ingredients into a bowl and use your hand to mix together to form a dough. (If the dough is a little crumbly, be sure that it’s throughly combined and then if it’s still crumbly, add 1/2-1 tablespoon additional milk until it comes together.)
+16. Make a flattened disc of dough.
+17. Roll the dough ¼-inch thick between two pieces of lightly floured pieces of parchment paper. (The flour will ensure that the cut outs are easy to move.)
+18. Cut out the dough with a cookie cutter and transfer to the prepared baking sheets. Bake for 7-9 minutes, until lightly browned around the edges.
+19. Remove from the oven, let cool on the baking sheet for a minute, and transfer to a wire rack to cool completely.
+

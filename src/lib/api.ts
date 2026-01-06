@@ -190,3 +190,40 @@ export async function importRecipe(url: string): Promise<any> {
     }
     return res.json();
 }
+
+export async function replan(): Promise<any> {
+    const res = await fetch('/api/replan', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to replan week');
+    }
+    return res.json();
+}
+
+export async function swapMeals(week: string, day1: string, day2: string): Promise<any> {
+    const res = await fetch('/api/swap-meals', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ week, day1, day2 }),
+    });
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to swap meals');
+    }
+    return res.json();
+}
+
+export async function getAnalytics(): Promise<any> {
+    const res = await fetch('/api/analytics');
+    if (!res.ok) {
+        throw new Error('Failed to fetch analytics');
+    }
+    return res.json();
+}

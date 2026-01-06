@@ -1,0 +1,44 @@
+---
+id: mini_crustless_quiches
+name: Mini Crustless Quiches
+categories:
+- Breakfast
+- School Entrees
+cuisine: unknown
+meal_type: breakfast
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- oven
+main_veg:
+- bell pepper
+- onion
+- spinach
+avoid_contains: []
+source_url: null
+source_file: Mini Crustless Quiches.html
+---
+
+# Mini Crustless Quiches
+
+### Ingredients
+- 1tbspButter
+- ½Onion
+- ½Red Bell Pepper
+- 2cupsspinach, chopped
+- 1cupcheddar cheese
+- 5 Eggs
+- 300mlcream
+
+### Instructions
+1. Pre heat oven to 180c / 350F / Gas 4
+2. Melt the butter in a frying pan and fry the onion, over a medium/low heat for two minutes, add the bell pepper and continue to saute one minute. Finally, add the spinach and fry for a further minute.
+3. Whisk the eggs and cream together and then stir through the cheese.
+4. Grease a 12 hole muffin tray or fill with greased silicon cases.
+5. Add the vegetable mixture to the base of each muffin section.
+6. Pour the egg mixture into each muffin section.
+7. Bake for 25 mins, until set and golden.
+8. Allow to cool slightly before removing from tin / case.
+

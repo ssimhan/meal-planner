@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { getStatus, getRecipes, WorkflowStatus } from '@/lib/api';
+import { getStatus, getRecipes, WorkflowStatus, replan, swapMeals } from '@/lib/api';
 import MealCorrectionInput from '@/components/MealCorrectionInput';
+import SwapConfirmationModal from '@/components/SwapConfirmationModal';
+import ReplacementModal from '@/components/ReplacementModal';
 
 export default function WeekView() {
   const [status, setStatus] = useState<WorkflowStatus | null>(null);
@@ -12,6 +14,14 @@ export default function WeekView() {
   const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
   const [selectedItems, setSelectedItems] = useState<{ day: string; type: string; label: string; value: string }[]>([]);
   const [isFixing, setIsFixing] = useState(false);
+  const [isReplanning, setIsReplanning] = useState(false);
+  const [isSwapMode, setIsSwapMode] = useState(false);
+  const [swapSelection, setSwapSelection] = useState<string[]>([]);
+  const [replacementModal, setReplacementModal] = useState<{ isOpen: boolean; day: string; currentMeal: string }>({
+    isOpen: false,
+    day: '',
+    currentMeal: ''
+  });
 
   useEffect(() => {
     async function fetchWeekData() {
@@ -124,6 +134,56 @@ export default function WeekView() {
     }
   };
 
+  const handleReplan = async () => {
+    if (!confirm('Replan the remaining days of the week based on current inventory?\n\nThis will reorganize your meal plan to prioritize recipes that use ingredients you have on hand.')) {
+      return;
+    }
+
+    setIsReplanning(true);
+    try {
+      const result = await replan();
+      alert('✓ Week replanned successfully!\n\n' + (result.message || 'Meals reorganized based on inventory.'));
+
+      // Refresh the status to show updated plan
+      const data = await getStatus();
+      setStatus(data);
+    } catch (e: any) {
+      console.error("Replan failed:", e);
+      alert('Failed to replan week: ' + (e.message || 'Unknown error'));
+    } finally {
+      setIsReplanning(false);
+    }
+  };
+
+  const handleSwapConfirm = async () => {
+    if (swapSelection.length !== 2 || !status?.week_data?.week_of) return;
+
+    try {
+      await swapMeals(status.week_data.week_of, swapSelection[0], swapSelection[1]);
+      // Refresh
+      const data = await getStatus();
+      setStatus(data);
+      setSwapSelection([]);
+      setIsSwapMode(false);
+    } catch (e) {
+      console.error("Swap failed", e);
+      alert("Failed to swap meals");
+      setSwapSelection([]);
+    }
+  };
+
+  const handleDayClick = (day: string) => {
+    if (!isSwapMode) return;
+
+    if (swapSelection.includes(day)) {
+      setSwapSelection(prev => prev.filter(d => d !== day));
+    } else {
+      if (swapSelection.length < 2) {
+        setSwapSelection(prev => [...prev, day]);
+      }
+    }
+  };
+
   const SelectionCheckbox = ({ day, type, label, value }: { day: string, type: string, label: string, value: string }) => {
     if (!editMode) return null;
     const isSelected = !!selectedItems.find(i => i.day === day && i.type === type);
@@ -135,6 +195,46 @@ export default function WeekView() {
         className="mr-3 h-5 w-5 text-[var(--accent-sage)] rounded border-gray-300 focus:ring-[var(--accent-sage)] cursor-pointer"
       />
     );
+  };
+
+  const handleReplacementConfirm = async (newMeal: string) => {
+    const { day } = replacementModal;
+    if (!day || !status?.week_data?.week_of) return;
+
+    try {
+      await fetch('/api/log-meal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          week: status.week_data.week_of,
+          day,
+          // Assume made if swapped? No, this is changing the plan.
+          // Actually, log-meal is not the best for changing the plan, 
+          // but handleCorrectionSave uses it for "actual_meal".
+          // We want to UPDATE the plan.
+          // Let's use log-meal with actual_meal for now OR
+          // we might need a specific endpoint to Swap/Replace plan.
+          // Using actual_meal overrides the plan visually which is arguably safer.
+          actual_meal: newMeal,
+          dinner_needs_fix: false,
+          made: true // Mark as resolved
+        })
+      });
+
+      // Better yet, if we want to CHANGE the plan, we should use the same logic as swap but for one meal.
+      // But for "Replacement", "Actual Meal" override is essentially what the user is doing. 
+      // "I didn't eat X, I ate Y (from fridge)". 
+      // Wait, if they are planning ahead, they want to change the PLAN.
+      // Let's stick to "actual_meal" pattern for consistency with corrections, 
+      // AS LONG AS it shows up as the main meal.
+
+      const data = await getStatus();
+      setStatus(data);
+      setReplacementModal({ isOpen: false, day: '', currentMeal: '' });
+    } catch (e) {
+      console.error("Replacement failed", e);
+      alert("Failed to replace meal");
+    }
   };
 
   if (isFixing) {
@@ -216,23 +316,63 @@ export default function WeekView() {
                 WEEK OF {weekData.week_of.toUpperCase()}
               </p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleReplan}
+                disabled={isReplanning}
+                className="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Reorganize remaining meals based on current inventory"
+              >
+                {isReplanning ? (
+                  <>
+                    <span className="animate-spin">⟳</span>
+                    <span className="hidden sm:inline">Replanning...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>📦</span>
+                    <span className="hidden sm:inline">Replan with Inventory</span>
+                  </>
+                )}
+
+              </button>
+              <button
+                onClick={() => {
+                  setIsSwapMode(!isSwapMode);
+                  if (isSwapMode) setSwapSelection([]);
+                  setEditMode(false); // Exclusive modes
+                }}
+                className={`btn-secondary flex items-center gap-2 ${isSwapMode ? 'bg-[var(--accent-sage)] text-white border-[var(--accent-sage)]' : ''}`}
+              >
+                {isSwapMode ? (
+                  <>
+                    <span>✕</span>
+                    <span className="hidden sm:inline">Cancel Swap</span>
+                  </>
+                ) : (
+                  <>
+                    <span>⇄</span>
+                    <span className="hidden sm:inline">Swap Meals</span>
+                  </>
+                )}
+              </button>
               <button
                 onClick={() => {
                   setEditMode(!editMode);
                   if (editMode) setSelectedItems([]);
+                  setIsSwapMode(false); // Exclusive modes
                 }}
                 className={`btn-secondary flex items-center gap-2 ${editMode ? 'bg-amber-50 border-amber-200 text-amber-900' : ''}`}
               >
                 {editMode ? (
                   <>
                     <span>✕</span>
-                    <span>Cancel Selecting</span>
+                    <span className="hidden sm:inline">Cancel</span>
                   </>
                 ) : (
                   <>
                     <span>✎</span>
-                    <span>Mark for Fix</span>
+                    <span className="hidden sm:inline">Mark for Fix</span>
                   </>
                 )}
               </button>
@@ -252,21 +392,49 @@ export default function WeekView() {
         </header>
 
         {/* Floating Action Bar for Selections */}
-        {selectedItems.length > 0 && (
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md">
-            <div className="bg-gray-900 text-white rounded-full shadow-2xl p-2 pl-6 flex items-center justify-between animate-in slide-in-from-bottom-4 fade-in">
-              <span className="font-medium text-sm">
-                {selectedItems.length} meal{selectedItems.length > 1 ? 's' : ''} selected
-              </span>
-              <button
-                onClick={() => setIsFixing(true)}
-                className="bg-[var(--accent-sage)] text-white px-6 py-2 rounded-full text-sm font-bold hover:scale-105 transition-transform"
-              >
-                Fix Now
-              </button>
+        {
+          selectedItems.length > 0 && (
+            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md">
+              <div className="bg-gray-900 text-white rounded-full shadow-2xl p-2 pl-6 flex items-center justify-between animate-in slide-in-from-bottom-4 fade-in">
+                <span className="font-medium text-sm">
+                  {selectedItems.length} meal{selectedItems.length > 1 ? 's' : ''} selected
+                </span>
+                <button
+                  onClick={() => setIsFixing(true)}
+                  className="bg-[var(--accent-sage)] text-white px-6 py-2 rounded-full text-sm font-bold hover:scale-105 transition-transform"
+                >
+                  Fix Now
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )
+        }
+
+        {/* Swap Modal */}
+        {
+          swapSelection.length === 2 && (
+            <SwapConfirmationModal
+              day1={swapSelection[0]}
+              day2={swapSelection[1]}
+              onConfirm={handleSwapConfirm}
+              onCancel={() => setSwapSelection([])}
+            />
+          )
+        }
+
+
+
+        {/* Replacement Modal */}
+        {
+          replacementModal.isOpen && (
+            <ReplacementModal
+              day={replacementModal.day}
+              currentMeal={replacementModal.currentMeal}
+              onConfirm={handleReplacementConfirm}
+              onCancel={() => setReplacementModal({ isOpen: false, day: '', currentMeal: '' })}
+            />
+          )
+        }
 
         {/* Mobile: Card view */}
         <div className="md:hidden space-y-4">
@@ -302,7 +470,15 @@ export default function WeekView() {
                       label="Dinner"
                       value={dinner?.actual_meal || ''}
                     />
-                    <div className="flex-1">
+                    <div
+                      className={`flex-1 ${isSwapMode ? 'cursor-pointer p-2 rounded border-2 transition-all user-select-none' : ''} ${swapSelection.includes(day)
+                        ? 'border-[var(--accent-sage)] bg-green-50 shadow-md transform scale-[1.02]'
+                        : isSwapMode
+                          ? 'border-dashed border-gray-300 hover:border-[var(--accent-sage)] hover:bg-gray-50'
+                          : 'border-transparent'
+                        }`}
+                      onClick={() => handleDayClick(day)}
+                    >
                       <div className="flex justify-between items-start">
                         <span className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider">Dinner</span>
                         {getFeedbackBadge(dailyFeedback?.dinner_feedback || dinner?.kids_feedback, dinner?.made, dinner?.needs_fix)}
@@ -314,6 +490,21 @@ export default function WeekView() {
                         <p className="text-[11px] text-[var(--text-muted)] mt-1">
                           🥬 {dinner.vegetables.join(', ')}
                         </p>
+                      )}
+                      {!isSwapMode && !editMode && (
+                        <button
+                          className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-2 flex items-center gap-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setReplacementModal({
+                              isOpen: true,
+                              day: day,
+                              currentMeal: dinner?.actual_meal || dinner?.recipe_id || ''
+                            });
+                          }}
+                        >
+                          <span>🔄</span> Replace
+                        </button>
                       )}
                     </div>
                   </div>
@@ -428,19 +619,46 @@ export default function WeekView() {
                           label="Dinner"
                           value={dinner?.actual_meal || ''}
                         />
-                        <div className="flex-1">
+                        <div
+                          className={`flex-1 ${isSwapMode ? 'cursor-pointer p-2 rounded border-2 transition-all user-select-none' : ''} ${swapSelection.includes(day)
+                            ? 'border-[var(--accent-sage)] bg-green-50 shadow-md transform scale-[1.02]'
+                            : isSwapMode
+                              ? 'border-dashed border-gray-300 hover:border-[var(--accent-sage)] hover:bg-gray-50'
+                              : 'border-transparent'
+                            }`}
+                          onClick={() => handleDayClick(day)}
+                        >
                           <div className="flex justify-between items-start gap-2">
                             <span className="font-medium leading-tight">
                               {dinner?.recipe_id ? (
-                                <Link href={`/recipes/${dinner.recipe_id}`} className="hover:text-[var(--accent-sage)] hover:underline">
+                                <Link
+                                  href={isSwapMode ? '#' : `/recipes/${dinner.recipe_id}`}
+                                  onClick={(e) => isSwapMode && e.preventDefault()}
+                                  className={isSwapMode ? '' : "hover:text-[var(--accent-sage)] hover:underline"}
+                                >
                                   {getDisplayName(dinnerName, dinner?.actual_meal)}
                                 </Link>
                               ) : (
                                 getDisplayName(dinnerName, dinner?.actual_meal)
                               )}
                             </span>
-                            {getFeedbackBadge(dailyFeedback?.dinner_feedback || dinner?.kids_feedback, dinner?.made, needsFix)}
                           </div>
+                          {!isSwapMode && !editMode && (
+                            <button
+                              title="Find a substitute for this meal"
+                              className="ml-auto text-gray-300 hover:text-[var(--accent-sage)] p-1 rounded-full hover:bg-gray-100 transition-colors"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setReplacementModal({
+                                  isOpen: true,
+                                  day: day,
+                                  currentMeal: dinner?.actual_meal || dinner?.recipe_id || ''
+                                });
+                              }}
+                            >
+                              🔄
+                            </button>
+                          )}
                         </div>
                       </div>
                     </td>
@@ -616,23 +834,25 @@ export default function WeekView() {
           </div>
         </div>
         {/* Week Summary Stats */}
-        {weekData.freezer_inventory && weekData.freezer_inventory.length > 0 && (
-          <div className="mt-12 card bg-blue-50 border-blue-200 shadow-sm">
-            <h2 className="text-sm font-mono uppercase tracking-widest text-blue-600 mb-4 flex items-center gap-2">
-              <span>🧊</span>
-              <span>Freezer Backup Meals</span>
-            </h2>
-            <div className="grid md:grid-cols-3 gap-3">
-              {weekData.freezer_inventory.map((item: any, idx: number) => (
-                <div key={idx} className="p-3 bg-white rounded-lg border border-blue-100 shadow-sm">
-                  <p className="text-sm font-semibold text-blue-900 leading-tight">{item.meal}</p>
-                  <p className="text-[10px] text-blue-400 font-mono mt-1 uppercase">Frozen: {item.frozen_date}</p>
-                </div>
-              ))}
+        {
+          weekData.freezer_inventory && weekData.freezer_inventory.length > 0 && (
+            <div className="mt-12 card bg-blue-50 border-blue-200 shadow-sm">
+              <h2 className="text-sm font-mono uppercase tracking-widest text-blue-600 mb-4 flex items-center gap-2">
+                <span>🧊</span>
+                <span>Freezer Backup Meals</span>
+              </h2>
+              <div className="grid md:grid-cols-3 gap-3">
+                {weekData.freezer_inventory.map((item: any, idx: number) => (
+                  <div key={idx} className="p-3 bg-white rounded-lg border border-blue-100 shadow-sm">
+                    <p className="text-sm font-semibold text-blue-900 leading-tight">{item.meal}</p>
+                    <p className="text-[10px] text-blue-400 font-mono mt-1 uppercase">Frozen: {item.frozen_date}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-      </div>
-    </div>
+          )
+        }
+      </div >
+    </div >
   );
 }

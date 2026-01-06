@@ -1,0 +1,48 @@
+---
+id: protein_banana_muffins
+name: Protein Banana Muffins
+categories: []
+cuisine: indian
+meal_type: baked_goods
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- instant_pot
+- oven
+main_veg: []
+avoid_contains: []
+source_url: null
+source_file: Protein Banana Muffins.html
+---
+
+# Protein Banana Muffins
+
+### Ingredients
+- 1cupGreek yogurt
+- 1cupmashed banana (2 large)
+- ½cup creamy peanut butter
+- ⅓cup maple syrup
+- 3 eggs (lightly beaten)
+- 2 teaspoons vanilla extract
+- 1½cups all-purpose flour
+- 1 teaspoon baking powder
+- ½teaspoon baking soda
+- 1 teaspoon cinnamon
+- ¼teaspoon salt
+- ⅓cup protein powder (optional)
+- mini chocolate chips (optional)
+
+### Instructions
+1. Prep:
+2. Preheat your oven to 375°F (190°C).
+3. Grease a standard 12-cup muffin tin with nonstick spray or line with paper liners.
+4. Cook:
+5. In a large bowl, combine the Greek yogurt, mashed bananas, peanut butter, maple syrup, eggs, and vanilla extract. Mix until smooth.
+6. Add the flour, baking powder, baking soda, cinnamon, and salt to the wet ingredients. If using protein powder or other optional add-ins like chocolate chips or blueberries, fold them in now. Stir gently until just combined; avoid overmixing.
+7. Divide the batter evenly among the prepared muffin cups, filling each about three-quarters full.
+8. Bake for 14-16 minutes, or until the edges are lightly golden and a toothpick inserted into the center of a muffin comes out clean.
+9. Allow the muffins to cool in the pan for a few minutes before transferring them to a wire rack to cool completely.
+10. Enjoy your muffins!
+

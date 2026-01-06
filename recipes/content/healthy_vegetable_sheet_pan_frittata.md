@@ -1,0 +1,47 @@
+---
+id: healthy_vegetable_sheet_pan_frittata
+name: Healthy Vegetable Sheet Pan Frittata
+categories:
+- Dinner
+cuisine: unknown
+meal_type: breakfast
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- oven
+main_veg:
+- garlic
+- onion
+- spinach
+- tomato
+- tomatoe
+avoid_contains: []
+source_url: null
+source_file: Healthy Vegetable Sheet Pan Frittata.html
+---
+
+# Healthy Vegetable Sheet Pan Frittata
+
+### Ingredients
+- 1 teaspoon olive oil
+- ½cup onion, chopped
+- 1cupcherry tomatoes, halved
+- 3cupsbaby spinach, loosely packed
+- ¼teaspoon garlic powder
+- 12 eggs
+- 2 tablespoons milk
+- ¼cup ricotta
+- 2 teaspoons italian seasoning
+- 2 tablespoons feta
+- salt and pepper
+- cooking spray
+
+### Instructions
+1. Preheat the oven to 425 degrees and put a quarter sheet pan (9x13 inches) in the oven.
+2. In a large saute pan heat the olive oil over medium heat. Add the onion and saute a few minutes until starting to turn tender. Add the tomato and cook another couple of minutes until they start to break. Add the spinach and cook just until it starts to wilt. Generously sprinkle with salt, pepper, and garlic powder.
+3. While that's cooking whisk together the eggs, milk, ricotta and italliann seasoning. Then salt and pepper the mixture. I used ½ teaspon of each.
+4. Remove the sheet pan from the oven and spray with cooking spray. Pour the egg mixture into the pan and carefully spoon the veggie mixture on top. Sprinkle with the feta cheese.
+5. Bake for 10-12 minutes or until the eggs are cooked.
+

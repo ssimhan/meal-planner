@@ -3,7 +3,7 @@ timezone: America/Los_Angeles
 workflow:
   status: intake_complete
   created_at: '2026-01-05T05:41:17.346399'
-  updated_at: '2026-01-05T05:41:17.346412'
+  updated_at: '2026-01-05T22:25:25.387557'
 schedule:
   office_days:
   - mon
@@ -46,3 +46,31 @@ rollover:
   source_week: '2025-12-29'
 - recipe_id: broccoli_spinach_pasta_sauce
   source_week: '2025-12-29'
+dinners:
+- day: mon
+  recipe_id: curried_cauliflower_quinoa_salad
+- day: tue
+  recipe_id: freezer_meal
+- day: wed
+  recipe_id: chickpea_salad_wrap
+- day: thu
+  recipe_id: easy_zucchini_pasta_sauce
+- day: fri
+  recipe_id: easy_french_toast_sticks
+prep_tasks:
+- 'Monday Prep (for Mon/Tue meals):'
+- '- [ ] Chop arugula for Mon Curried Cauliflower Quinoa Salad'
+- '- [ ] Chop cabbage for Mon Curried Cauliflower Quinoa Salad'
+- '- [ ] Chop cauliflower for Mon Curried Cauliflower Quinoa Salad'
+- '- [ ] Chop cilantro for Mon Curried Cauliflower Quinoa Salad'
+- '- [ ] Chop cucumber for Mon Curried Cauliflower Quinoa Salad'
+- '- [ ] Chop garlic for Mon Curried Cauliflower Quinoa Salad'
+- '- [ ] Chop lemon for Mon Curried Cauliflower Quinoa Salad'
+- 'Wednesday Prep (for Thu/Fri meals):'
+- '- [ ] Chop basil for Thu Easy Zucchini Pasta Sauce'
+- '- [ ] Chop beans for Thu Easy Zucchini Pasta Sauce'
+- '- [ ] Chop garlic for Thu Easy Zucchini Pasta Sauce'
+- '- [ ] Chop lemon for Thu Easy Zucchini Pasta Sauce'
+- '- [ ] Chop parsley for Thu Easy Zucchini Pasta Sauce'
+- '- [ ] Chop spinach for Thu Easy Zucchini Pasta Sauce'
+- '- [ ] Chop zucchini for Thu Easy Zucchini Pasta Sauce'

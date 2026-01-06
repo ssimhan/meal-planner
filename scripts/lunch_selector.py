@@ -53,11 +53,14 @@ class LunchSelector:
         ]
     }
 
-    def __init__(self, recipe_index_path: str = 'recipes/index.yml', config_path: str = 'config.yml'):
+    def __init__(self, recipe_index_path: str = 'recipes/index.yml', config_path: str = 'config.yml', recipes: List[Dict[str, Any]] = None):
         """Initialize selector with recipe index."""
         self.recipe_index_path = recipe_index_path
         self.config_path = config_path
-        self.recipes = self._load_recipes()
+        if recipes:
+            self.recipes = recipes
+        else:
+            self.recipes = self._load_recipes()
         self.config = self._load_config()
         self.kid_profiles = self.config.get('kid_profiles', {})
         self.lunch_recipes = self._filter_lunch_suitable()

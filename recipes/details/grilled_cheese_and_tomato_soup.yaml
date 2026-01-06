@@ -1,0 +1,55 @@
+id: grilled_cheese_and_tomato_soup
+name: Grilled Cheese and Tomato Soup
+categories:
+- Dinner
+- Sandwich
+- Soup
+cuisine: american
+meal_type: soup_stew
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- instant_pot
+- stovetop
+ingredients:
+- Wheat bread
+- Cheese, sliced or shredded
+- Butter
+- Garlic powder (optional)
+- 2 cartons Trader Joe's tomato soup
+- 1/2cupmilk
+main_veg:
+- garlic
+- tomato
+avoid_contains: []
+instructions: 'Spread a thin layer of butter on one side of each slice of bread.
+
+  (Optional) Sprinkle a pinch of garlic powde inside the sandwich for added flavor.
+
+  Place one slice of bread, buttered side down, on the preheated pan.
+
+  Add the cheese slices on top, along with a slice of tomato if desired, then cover
+  with the second slice of bread, buttered side up.
+
+  Cook on medium heat for about 2-3 minutes on one side, pressing gently with a spatula,
+  until golden brown.
+
+  Flip carefully and cook the other side for another 2-3 minutes until the bread is
+  crispy and the cheese is fully melted.
+
+  Pour the Trader Joe''s tomato soup into a small pot or microwave-safe bowl.
+
+  Heat on the stovetop for 5 minutes, stirring occasionally, or microwave for 2-3
+  minutes.
+
+  For a creamier soup, stir in a splash of milk or cream while heating.
+
+  Cut the grilled cheese in half (diagonally for a classic touch!).
+
+  Pour the hot tomato soup into a bowl.
+
+  Pair your sandwich with the soup and enjoy dipping for extra flavor.'
+source_url: null
+source_file: Grilled Cheese and Tomato Soup.html

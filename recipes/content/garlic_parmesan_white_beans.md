@@ -1,0 +1,48 @@
+---
+id: garlic_parmesan_white_beans
+name: Garlic Parmesan White Beans
+categories:
+- ''
+cuisine: unknown
+meal_type: side_dish
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- stovetop
+main_veg:
+- beans
+- garlic
+- lemon
+- parsley
+- tomato
+- tomatoe
+avoid_contains: []
+source_url: null
+source_file: Garlic Parmesan White Beans.html
+---
+
+# Garlic Parmesan White Beans
+
+### Ingredients
+- 1 X 2 X 3 X
+- 3to 4 garlic cloves, minced
+- Extra virgin olive oil
+- 215-ounce cans cannellini beans, drained
+- 1cupcherry tomatoes, halved
+- Salt and pepper
+- 1 teaspoon Aleppo pepper
+- ½teaspoon cumin
+- 1cupchopped fresh parsley
+- ¼ to ⅓cup shaved Parmesan cheese
+- ¼cup grated Pecorino Romano
+- Juice of half a lemon
+
+### Instructions
+1. In a large pan, warm 2 tablespoons extra virgin olive oil over medium heat. Add the garlic and cook briefly, tossing regularly, until just golden.
+2. Add the cannellini beans and ½ cup water. Season with kosher salt, black pepper, and the spices. Add the tomatoes. Cook, stirring occasionally until warmed through (about 10 minutes)
+3. Stir in the parsley, cheese, and lemon juice.
+4. AD
+5. Finish with a generous drizzle of extra virgin olive oil. Serve immediately with pita or your favorite crusty bread.
+

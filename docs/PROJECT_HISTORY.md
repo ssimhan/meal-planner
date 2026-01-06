@@ -1011,3 +1011,248 @@ freezer_inventory:
   - Refactored `handleLogDay` and `handleLogFeedback` in `src/app/page.tsx` to handle `needs_fix` flags and `request_recipe` triggers.
   - Updated `src/lib/api.ts` with explicit `needs_fix` properties to maintain type safety across the full stack.
 - **Status:** Complete. The system is now significantly more resilient and provides better data quality for both week-view tracking and future recipe planning.
+
+---
+
+## Session: 2026-01-05 (Morning) - Bug Fix: Dinner Corrections Not Saving
+
+**Issue:** Week View "Mark for Fix" workflow successfully updated Tuesday kids lunch but failed to save Monday dinner corrections.
+
+**Root Cause:**
+- Line 295-298 in `api/index.py` incorrectly included `dinner_needs_fix is not None` in the `is_feedback_only` calculation
+- When correcting a dinner, frontend sends `{actual_meal: "...", dinner_needs_fix: false}`
+- This triggered `is_feedback_only=True`, which blocked line 378 (`if actual_meal: target_dinner['actual_meal'] = actual_meal`) from executing
+- The `needs_fix` flag was cleared, but the actual meal correction was never saved
+
+**Fix Applied:**
+1. **Line 295-297**: Removed `dinner_needs_fix is not None or` from `is_feedback_only` calculation
+   - Ensures dinner corrections don't incorrectly trigger feedback-only mode
+2. **Line 323**: Updated condition to `if not is_feedback_only or dinner_needs_fix is not None or actual_meal:`
+   - Properly finds dinner when `actual_meal` is sent
+3. **Lines 379-384**: Moved dinner correction logic outside `if not is_feedback_only:` block
+   - Critical fix: `actual_meal` and `dinner_needs_fix` updates now happen regardless of feedback mode
+
+**Impact:**
+- Dinner corrections (all days, not just Monday) now save correctly
+- Snack/lunch corrections continue to work as before (no regression)
+- User can now properly track when planned meals were substituted
+
+**Technical Learning:**
+- Conditional logic bugs can appear as silent failures (API returns success, but data doesn't update)
+- `is_feedback_only` flag should only apply to meal types that allow feedback without "made" status
+- Moving field updates outside conditional blocks ensures they execute when the data is present
+
+**Status:** Fix deployed and verified. Dinner corrections now persist correctly in `history.yml`.
+
+---
+
+## Session: 2026-01-05 (Evening) - Inventory-Aware Replanning & Web UI Integration
+
+**Work Completed:**
+
+### Part 1: Core Inventory Scoring System
+- **Problem:** Replanning redistributes meals chronologically without considering what ingredients are actually available, potentially scheduling recipes requiring ingredients you don't have.
+- **Solution:** Enhanced `replan_meal_plan()` in [scripts/workflow.py](../scripts/workflow.py) with inventory-aware scoring.
+
+**Implementation Details:**
+
+1. **Helper Functions Added (Lines 519-728):**
+   - `_normalize_ingredient_name()` - Normalizes ingredient names for consistent matching
+     - Handles plurals (tomatoes → tomato), aliases (black_bean → bean), noise removal
+     - Example: "sweet potatoes" → "sweet_potato", "Green beans" → "bean"
+   - `_calculate_ingredient_freshness()` - Tracks ingredient age from `added` dates
+     - Returns `{item_name: days_old}` for priority scoring
+   - `_load_inventory_data()` - Loads and structures [data/inventory.yml](../data/inventory.yml)
+     - Returns: `{fridge_items: set, pantry_items: set, freezer_backups: list, freshness: dict}`
+   - `score_recipe_by_inventory()` - Main scoring algorithm (0-100 points)
+     - **Weighted scoring:**
+       - Fridge items: +20 points each (perishable priority)
+       - Pantry items: +5 points each (stable items)
+       - Freshness bonus: +10 for items 5+ days old
+     - Returns: `(score, details)` with match breakdown
+
+2. **Enhanced Replan Flow (Lines 809-850):**
+   - Automatically loads inventory on every replan
+   - Scores all `to_be_planned` recipes by inventory match
+   - Sorts recipes by score (highest inventory match first)
+   - **Freezer backup suggestion:** If best score < 30/100, suggests using freezer meals instead
+   - Console output shows detailed scores: `recipe_name: 45/100 (fridge: tomato, pantry: bean)`
+   - Graceful fallback: Uses original order if inventory empty/unavailable
+
+**Technical Decisions:**
+1. **Soft constraint approach:** Scoring reorders meals but doesn't exclude valid recipes
+2. **Perishable priority:** Fridge items weighted 4x higher than pantry (20 vs 5 points)
+3. **Freshness awareness:** Older items get bonus points to reduce waste
+4. **Zero configuration:** Runs automatically every replan, no flags needed
+5. **Preserves all constraints:** History anti-repetition, busy days, rollover priority, lunch re-sync all maintained
+
+### Part 2: Web UI Integration
+- **Problem:** Inventory-aware replanning only accessible via CLI (`python3 scripts/workflow.py replan`), requiring terminal access.
+- **Solution:** Added "Replan with Inventory" button to Week at a Glance page for one-click access.
+
+**Implementation Details:**
+
+1. **Backend API Endpoint ([api/index.py:821-874](../api/index.py#L821-L874)):**
+   - New `/api/replan` POST endpoint
+   - Calls `scripts/workflow.py replan` as subprocess with 60s timeout
+   - Returns inventory scoring output and success status
+   - Auto-syncs to GitHub on Vercel deployments
+
+2. **Frontend API Function ([src/lib/api.ts:194-206](../src/lib/api.ts#L194-L206)):**
+   - `replan()` async function for calling backend
+   - Handles errors and returns structured response
+
+3. **UI Button ([src/app/week-view/page.tsx](../src/app/week-view/page.tsx)):**
+   - "📦 Replan with Inventory" button in page header
+   - Confirmation dialog before execution
+   - Loading spinner during processing (`⟳ Replanning...`)
+   - Success alert with output message
+   - Auto-refreshes week view after completion
+   - Responsive design (icon-only on mobile)
+
+**User Flow:**
+1. Navigate to Week at a Glance page
+2. Click "📦 Replan with Inventory"
+3. Confirm action in dialog
+4. Backend scores recipes by inventory (2-5 seconds)
+5. Success message shows results
+6. Page refreshes with updated meal plan
+
+**Example Output:**
+```
+Recipe inventory scores:
+  • easy_zucchini_pasta_sauce: 5/100 (fridge: none, pantry: bean)
+  • black_bean_quinoa_salad: 25/100 (fridge: tomato, pantry: bean)
+  • freezer_meal: 0/100 (no matches)
+
+⚠️ Low inventory match (best: 25/100).
+💡 Available freezer backups: Black Bean Soup, Vegetable Curry, ...
+Continuing with current recipes. Use freezer backups manually if preferred.
+```
+
+**Testing & Validation:**
+- ✅ API endpoint tested via curl - successful execution
+- ✅ Inventory scoring correctly detects fridge/pantry items
+- ✅ Low-match detection triggers freezer backup suggestions
+- ✅ Bean aliasing works (`black_bean` → `bean` for matching)
+- ✅ Week plan regenerated with sorted meals
+- ✅ Lunches auto-refreshed to maintain pipelines
+
+**Technical Learning:**
+- **Token efficiency:** Pure Python logic (no LLM calls) makes feature cost-free to run repeatedly
+- **Soft constraints create flexibility:** Scoring reorders but doesn't break plans when inventory is sparse
+- **Progressive enhancement:** CLI still works, web UI adds convenience layer
+- **Ingredient normalization is critical:** "black beans" vs "beans" vs "black bean" must all match
+- **Freshness tracking adds intelligence:** System naturally prioritizes using older items first
+
+**Files Modified:**
+- [scripts/workflow.py](../scripts/workflow.py) - Added 4 helpers + modified replan logic (~215 new lines)
+- [api/index.py](../api/index.py) - Added `/api/replan` endpoint (~54 lines)
+- [src/lib/api.ts](../src/lib/api.ts) - Added `replan()` function (~13 lines)
+- [src/app/week-view/page.tsx](../src/app/week-view/page.tsx) - Added button + handler (~40 lines)
+
+**Architectural Insights:**
+- **Inventory as context, not constraint:** Low inventory scores don't block meals, just reorder them
+- **Automation without magic:** Clear console output shows exactly how decisions were made
+- **Mobile-first UX:** Button prioritizes icon on small screens, full text on desktop
+- **Vercel subprocess pattern:** Python scripts callable via API while maintaining GitHub as database
+
+**Status:** Inventory-aware replanning complete and deployed. System now optimizes remaining week's meals based on actual available ingredients with zero manual intervention.
+
+**Next Steps (Future Enhancements):**
+- Consider extending inventory scoring to initial weekly plan generation (not just replanning)
+- Add configuration for scoring weights in `config.yml` (fridge vs pantry priority)
+- Track "saved from waste" metrics (how often high-freshness items got used)
+
+---
+
+### Phase 11 Block 1: Performance Optimization (Backend)
+**Date:** 2026-01-06
+
+**Objective:** Reduce backend overhead, improve response times, and reduce token usage for meal generation.
+
+**Problem:**
+- Monolithic `recipes.json` was being fully parsed on every request and every script execution.
+- Redundant loading in `workflow.py` and `lunch_selector.py`.
+- No API caching meant every dashboard refresh hit the filesystem.
+
+**Solution:**
+1.  **Data Structure:** Split the >2MB `recipes.json` into ~227 individual YAML files in `recipes/details/`.
+2.  **Workflow Optimization:** Refactored `workflow.py` to load the lightweight `recipes/index.yml` once and pass it to `LunchSelector`.
+3.  **API Caching:** Implemented in-memory caching in `api/index.py` for recipes, inventory, and history (5-minute TTL, invalidation on write).
+4.  **On-Demand Loading:** Added `GET /api/recipes/<id>` to fetch detailed instructions only when needed.
+
+**Changes:**
+- [recipes/details/*.yaml](../recipes/details/) - Created individual recipe files (Splitting monolithic JSON)
+- [scripts/split_recipes.py](../scripts/split_recipes.py) - Migration script
+- [scripts/workflow.py](../scripts/workflow.py) - Optimization to avoid double-loading
+- [scripts/lunch_selector.py](../scripts/lunch_selector.py) - Updated to accept pre-loaded data
+- [api/index.py](../api/index.py) - Added `CACHE` global, `get_cached_data`, and new endpoints (~60 lines)
+- [tests/test_api_perf.py](../tests/test_api_perf.py) - Verification suite
+
+**Status:** Completed and verified. API response times for repeated calls are instant (<10ms).
+
+## Session: 2026-01-06 - Meal Swap Feature
+
+**Work Completed:**
+- **Phase 11 Block 2 (Meal Swap):** Implemented a drag-and-drop style meal checking feature to swap dinners between days.
+    - **Backend:** Created `POST /api/swap-meals` endpoint that:
+        1. Swaps dinner entries in `inputs/{week}.yml` and `history.yml`.
+        2. Regenerates prep tasks using `generate_granular_prep_tasks` to ensure veggies are chopped on the correct days (e.g., chopping Monday's ingredients on Sunday/Monday).
+        3. Persists changes to GitHub.
+    - **Frontend:**
+        - Added "Swap Mode" toggle to `WeekView`.
+        - Implemented `SwapConfirmationModal` component.
+        - Verified logic with manual test scripts.
+
+**Technical Decisions:**
+- **State-Based Swapping:** Used a simple 2-click selection model (click Day A, click Day B -> Confirm) instead of complex drag-and-drop libraries, which simplifies mobile interaction.
+- **Dynamic Prep Regeneration:** Crucial logic step - simply swapping meals isn't enough; the *prep instructions* must also move (e.g., moving a Monday meal to Friday means you don't need to chop for it on Sunday anymore).
+
+**Status:** Phase 11 Block 2 Complete.
+
+### 2026-01-06: Phase 11 Block 4 - Inventory Intelligence
+
+**Goal:** Help users effectively use up their inventory by implementing "Smart Substitutions" and separating "Freezer Backups" (complete meals) from "Freezer Ingredients" (components).
+
+**Changes:**
+*   **Inventory Data Structure:** Updated `data/inventory.yml` to split `freezer` into `backups` (ready-to-eat) and `ingredients` (components like frozen peas).
+    *   *Bug Fix:* Prevents ingredients from showing up in the "Skip Dinner -> Freezer Meal" dropdown, which is reserved for complete meals.
+*   **Inventory Intelligence Engine:** Created `scripts/inventory_intelligence.py` to analyze existing inventory and suggest recipes.
+    *   **Logic:** Scores recipes based on how many ingredients you already have in the Fridge/Pantry.
+*   **API:** Added `/api/suggestions` endpoint to serve these smart recommendations.
+*   **Frontend (Week View):**
+    *   Added a **"Replace"** button to meal cards.
+    *   Created **"Replacement Modal"** with 3 distinct tabs:
+        1.  **Shop Your Fridge:** Suggests recipes using ingredients you have.
+        2.  **Freezer Stash:** Lists available complete freezer meals.
+        3.  **Quick Fix:** Shows 15-minute or low-effort recipes.
+    *   This feature is designed to be complementary to "Swap" (moving planned days) and "Replan" (global reshuffle).
+
+**Status:** Phase 11 Block 4 Complete.
+---
+
+## Session: 2026-01-06 - Recipe Format Migration (Block 5)
+
+**Work Completed:**
+- **Goal:** Improve token efficiency and readability by migrating recipes from HTML to Markdown with YAML frontmatter.
+- **Implementation:**
+    - Created `scripts/migrate_to_md.py` to batch convert 227 recipes from YAML details to Markdown.
+    - Updated `scripts/parse_recipes.py` to natively output individual Markdown files with frontmatter instead of a monolithic JSON.
+    - Modified `api/index.py` to read and parse the new Markdown files on demand, including frontmatter extraction.
+    - overhauling the backend to point `recipes/index.yml` sources to `recipes/content/*.md`.
+- **Frontend Enhancements:**
+    - Updated `src/app/recipes/[id]/page.tsx` with a premium Recipe Viewer.
+    - Integrated `react-markdown` and `gray-matter` for rich rendering.
+    - Added Tailwind Typography (`@tailwindcss/typography`) for beautiful formatting.
+    - Implemented a Solarpunk-themed metadata sidebar for quick scanning of cuisine, effort level, and appliances.
+
+**Technical Decisions:**
+1. **Markdown over HTML:** Markdown is significantly more token-efficient for LLMs and more ergonomic for humans to edit.
+2. **YAML Frontmatter:** Keeps metadata structured and separate from the rich text content.
+3. **Lazy Loading:** Frontend now fetches only the specific Markdown file needed, rather than loading a massive JSON blob.
+4. **Typography Plugin:** Used `@plugin "@tailwindcss/typography"` for consistent, professional recipe rendering with minimal custom CSS.
+
+**Status:** Block 5 Complete. All recipes are now in high-efficiency Markdown format.
+
+**Learning:** Migrating to a simpler, text-based format like Markdown often reveals hidden data inconsistencies and provides an immediate boost to both system performance and developer experience.

@@ -9,15 +9,16 @@ from flask_cors import CORS
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 try:
-    from scripts.workflow import find_current_week_file, get_workflow_state
+    from scripts.workflow import find_current_week_file, get_workflow_state, generate_granular_prep_tasks
 except ImportError as e:
     # Fallback for local development
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../scripts")))
-    from workflow import find_current_week_file, get_workflow_state
+    from workflow import find_current_week_file, get_workflow_state, generate_granular_prep_tasks
 
 from api.generate_plan import generate_plan_api
 
 import yaml
+from scripts.compute_analytics import compute_analytics
 
 app = Flask(__name__)
 CORS(app) # Enable CORS for all routes
@@ -53,6 +54,40 @@ def get_yaml_data(rel_path):
             return yaml.safe_load(f)
     return None
 
+# ============================================================================
+# Caching Logic
+# ============================================================================
+CACHE = {
+    'recipes': {'data': None, 'timestamp': 0},
+    'inventory': {'data': None, 'timestamp': 0},
+    'history': {'data': None, 'timestamp': 0}
+}
+
+CACHE_TTL = 300  # 5 minutes
+
+def get_cached_data(key, path):
+    """Get data from cache or load from file."""
+    now = datetime.now().timestamp()
+    cache_entry = CACHE.get(key)
+    
+    if cache_entry and cache_entry['data'] and (now - cache_entry['timestamp'] < CACHE_TTL):
+        return cache_entry['data']
+        
+    data = get_yaml_data(path)
+    if data:
+        CACHE[key] = {'data': data, 'timestamp': now}
+        
+    return data
+
+def invalidate_cache(key=None):
+    """Clear specific cache key or all keys."""
+    if key:
+        if key in CACHE:
+            CACHE[key] = {'data': None, 'timestamp': 0}
+    else:
+        for k in CACHE:
+            CACHE[k] = {'data': None, 'timestamp': 0}
+
 @app.route("/api/status")
 def get_status():
     try:
@@ -83,7 +118,7 @@ def get_status():
             input_files = list_files_in_dir_from_github(repo_name, "inputs")
             for f in input_files:
                 sync_file(f)
-
+ 
         try:
             # Note: archive_expired_weeks might still fail to write, which is handled
             archive_expired_weeks()
@@ -152,7 +187,8 @@ def get_status():
         history_week = None
         if state in ['active', 'waiting_for_checkin']:
             from scripts.log_execution import find_week
-            history = get_yaml_data('data/history.yml') or {}
+            # Use Cached History
+            history = get_cached_data('history', 'data/history.yml') or {}
             history_week = find_week(history, week_str)
 
             if history_week and 'daily_feedback' in history_week:
@@ -219,29 +255,227 @@ def get_status():
 @app.route("/api/recipes")
 def get_recipes():
     try:
-        recipes = get_yaml_data('recipes/index.yml')
+        # Use Cached Recipes
+        recipes = get_cached_data('recipes', 'recipes/index.yml')
         if recipes is None:
             return jsonify({"status": "error", "message": "Recipe index not found"}), 404
         return jsonify({"status": "success", "recipes": recipes})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@app.route("/api/recipes/<recipe_id>")
+def get_recipe_details(recipe_id):
+    """Fetch full recipe details on demand from Markdown."""
+    try:
+        detail_path = Path(f'recipes/content/{recipe_id}.md')
+        if detail_path.exists():
+             with open(detail_path, 'r') as f:
+                content = f.read()
+                
+                # Basic frontmatter parsing (assuming standard --- format)
+                if content.startswith('---'):
+                    try:
+                        _, fm_text, body = content.split('---', 2)
+                        metadata = yaml.safe_load(fm_text)
+                        return jsonify({
+                            "status": "success", 
+                            "recipe": metadata,
+                            "markdown": body.strip()
+                        })
+                    except Exception as e:
+                        print(f"Error parsing frontmatter for {recipe_id}: {e}")
+                        return jsonify({"status": "success", "markdown": content})
+                
+                return jsonify({"status": "success", "markdown": content})
+        else:
+             return jsonify({"status": "error", "message": f"Recipe details not found for {recipe_id}"}), 404
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 @app.route("/api/inventory")
 def get_inventory():
     try:
-        inventory = get_yaml_data('data/inventory.yml')
+        # Use Cached Inventory
+        inventory = get_cached_data('inventory', 'data/inventory.yml')
         if inventory is None:
-            return jsonify({"status": "error", "message": "Inventory file not found"}), 404
+            # Fallback empty inventory if file missing
+            inventory = {'fridge':[], 'pantry':[], 'freezer':{}}
+        
         return jsonify({"status": "success", "inventory": inventory})
     except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route("/api/swap-meals", methods=["POST"])
+def swap_meals():
+    try:
+        data = request.json or {}
+        week_str = data.get('week')
+        day1 = data.get('day1') # e.g. "mon"
+        day2 = data.get('day2') # e.g. "thu"
+
+        if not week_str or not day1 or not day2:
+             return jsonify({"status": "error", "message": "Week, day1, and day2 are required"}), 400
+
+        # Load Input File
+        from scripts.workflow import find_current_week_file
+        
+        input_file = None
+        # Try to find specific week file
+        potential_file = Path(f'inputs/{week_str}.yml')
+        if potential_file.exists():
+             input_file = potential_file
+        else:
+             # Fallback logic
+             f, w = find_current_week_file()
+             if w == week_str:
+                 input_file = f
+        
+        if not input_file or not input_file.exists():
+             return jsonify({"status": "error", "message": f"Input file for week {week_str} not found"}), 404
+
+        week_data = get_yaml_data(str(input_file))
+        if not week_data:
+             return jsonify({"status": "error", "message": "Could not load input file"}), 500
+
+        # Load History File
+        history = get_yaml_data('data/history.yml')
+        history_week = None
+        if history:
+            from scripts.log_execution import find_week
+            history_week = find_week(history, week_str)
+
+        # Helper to find dinner in list
+        def get_dinner(dinners_list, d):
+            for i, dinner in enumerate(dinners_list):
+                 if dinner.get('day') == d:
+                     return i, dinner
+            return -1, None
+
+        # Swap in Input File
+        if 'dinners' in week_data:
+            idx1, dinner1 = get_dinner(week_data['dinners'], day1)
+            idx2, dinner2 = get_dinner(week_data['dinners'], day2)
+
+            if dinner1 and dinner2:
+                # Update days
+                dinner1['day'] = day2
+                dinner2['day'] = day1
+                # Swap positions in list (optional but good for consistency)
+                week_data['dinners'][idx1] = dinner2
+                week_data['dinners'][idx2] = dinner1
+            elif dinner1:
+                dinner1['day'] = day2
+            elif dinner2:
+                dinner2['day'] = day1
+        
+        # Swap in History File
+        if history_week and 'dinners' in history_week:
+            idx1, dinner1 = get_dinner(history_week['dinners'], day1)
+            idx2, dinner2 = get_dinner(history_week['dinners'], day2)
+
+            if dinner1 and dinner2:
+                dinner1['day'] = day2
+                dinner2['day'] = day1
+                history_week['dinners'][idx1] = dinner2
+                history_week['dinners'][idx2] = dinner1
+            elif dinner1:
+                dinner1['day'] = day2
+            elif dinner2:
+                dinner2['day'] = day1
+
+        # Regenerate Prep Tasks
+        # 1. Load Recipes
+        recipes = get_cached_data('recipes', 'recipes/index.yml') or []
+        
+        # 2. Reconstruct selected_dinners and selected_lunches for generator
+        selected_dinners = {}
+        if history_week:
+             for d in history_week.get('dinners', []):
+                 d_day = d.get('day')
+                 # Enrich with name/veg from recipe index if needed
+                 # History usually has minimal data, but let's check
+                 if 'recipe_id' in d:
+                     r_match = next((r for r in recipes if r['id'] == d['recipe_id']), None)
+                     if r_match:
+                         # Merge details for the generator
+                         full_d = d.copy()
+                         full_d['name'] = r_match.get('name', d['recipe_id'])
+                         full_d['main_veg'] = r_match.get('main_veg', [])
+                         selected_dinners[d_day] = full_d
+        
+        selected_lunches = {}
+        
+        class SimpleLunch:
+             def __init__(self, data):
+                 self.prep_components = data.get('prep_components', [])
+                 self.recipe_name = data.get('recipe_name', 'Lunch')
+        
+        if history_week and 'lunches' in history_week:
+             for day, lunch_data in history_week['lunches'].items():
+                 selected_lunches[day] = SimpleLunch(lunch_data)
+        elif week_data and 'selected_lunches' in week_data:
+              for day, lunch_data in week_data['selected_lunches'].items():
+                 selected_lunches[day] = SimpleLunch(lunch_data)
+
+        # 3. Call Generator
+        # We need to preserve completed tasks
+        completed_prep = []
+        if history_week and 'daily_feedback' in history_week:
+             for df in history_week['daily_feedback'].values():
+                 if 'prep_completed' in df:
+                     completed_prep.extend(df['prep_completed'])
+        
+        # Regenerate for Mon/Tue and Wed-Fri
+        tasks_mon_tue = generate_granular_prep_tasks(selected_dinners, selected_lunches, ['mon', 'tue'], "Mon/Tue", completed_prep)
+        tasks_wed_fri = generate_granular_prep_tasks(selected_dinners, selected_lunches, ['wed', 'thu', 'fri'], "Wed-Fri", completed_prep)
+        
+        new_prep_tasks = []
+        if tasks_mon_tue:
+             new_prep_tasks.append("Monday Prep (for Mon/Tue meals):")
+             new_prep_tasks.extend([f"- [ ] {t}" for t in tasks_mon_tue])
+        
+        if tasks_wed_fri:
+              new_prep_tasks.append("Wednesday Prep (for Thu/Fri meals):")
+              new_prep_tasks.extend([f"- [ ] {t}" for t in tasks_wed_fri])
+
+        # Update Week Data
+        week_data['prep_tasks'] = new_prep_tasks
+
+        # Save Files
+        file_dict = {
+            str(input_file): yaml.dump(week_data, default_flow_style=False, sort_keys=False, allow_unicode=True),
+        }
+        if history:
+             file_dict['data/history.yml'] = yaml.dump(history, default_flow_style=False, sort_keys=False, allow_unicode=True)
+
+        # Write locally
+        for path, content in file_dict.items():
+            try:
+                with open(path, 'w') as f:
+                    f.write(content)
+            except OSError: pass
+
+        # Sync to GitHub
+        from scripts.github_helper import commit_multiple_files_to_github
+        repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
+        commit_multiple_files_to_github(repo_name, file_dict, f"Swap meals {day1}<->{day2} for week {week_str}")
+        
+        invalidate_cache()
+
+        return jsonify({"status": "success", "message": "Meals swapped and prep tasks updated", "week_data": week_data})
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route("/api/history")
 def get_history():
     try:
-        history = get_yaml_data('data/history.yml')
+        # Use Cached History
+        history = get_cached_data('history', 'data/history.yml')
         if history is None:
-            return jsonify({"status": "error", "message": "History file not found"}), 404
+             return jsonify({"status": "error", "message": "History file not found"}), 404
         return jsonify({
             "status": "success", 
             "history": history,
@@ -250,8 +484,19 @@ def get_history():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-# Register plan generation route
+# Register plan generation routes
 generate_plan_api(app)
+
+@app.route("/api/analytics")
+def get_analytics():
+    try:
+        # We can add caching here if history.yml is large
+        stats = compute_analytics()
+        return jsonify(stats)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route("/api/log-meal", methods=["POST"])
 def log_meal():
@@ -294,8 +539,7 @@ def log_meal():
         # If we're only logging snack/lunch feedback, skip dinner validation
         is_feedback_only = (school_snack_feedback or home_snack_feedback or kids_lunch_feedback or adult_lunch_feedback or
                             school_snack_needs_fix is not None or home_snack_needs_fix is not None or
-                            kids_lunch_needs_fix is not None or adult_lunch_needs_fix is not None or
-                            dinner_needs_fix is not None) and not made
+                            kids_lunch_needs_fix is not None or adult_lunch_needs_fix is not None) and not made
 
         if not is_feedback_only and not made:
             return jsonify({"status": "error", "message": "Made status is required for dinner logging"}), 400
@@ -317,11 +561,11 @@ def log_meal():
         if not week:
             return jsonify({"status": "error", "message": f"Week {week_str} not found"}), 404
             
-        # Find dinner (required if not feedback-only OR if we have dinner feedback/fix)
+        # Find dinner if we have dinner-related data
         target_day = day.lower()[:3]
         target_dinner = None
 
-        if not is_feedback_only or dinner_needs_fix is not None:
+        if not is_feedback_only or dinner_needs_fix is not None or actual_meal:
             for dinner in week.get('dinners', []):
                 if dinner.get('day') == target_day:
                     target_dinner = dinner
@@ -375,11 +619,14 @@ def log_meal():
                     'recipe': target_dinner.get('recipe_id')
                 })
 
-            if actual_meal: target_dinner['actual_meal'] = actual_meal
             if reason: target_dinner['reason'] = reason
-            
-        if target_dinner and dinner_needs_fix is not None:
-            target_dinner['needs_fix'] = dinner_needs_fix
+
+        # Handle dinner corrections outside is_feedback_only block
+        if target_dinner:
+            if actual_meal:
+                target_dinner['actual_meal'] = actual_meal
+            if dinner_needs_fix is not None:
+                target_dinner['needs_fix'] = dinner_needs_fix
 
         # Store snack/lunch feedback at the day level
         if (school_snack_feedback is not None or home_snack_feedback is not None or
@@ -489,6 +736,10 @@ def log_meal():
         # Sync to GitHub
         from scripts.github_helper import sync_changes_to_github
         sync_changes_to_github(['data/history.yml', 'data/inventory.yml'])
+        
+        # Invalidate Cache
+        invalidate_cache('history')
+        invalidate_cache('inventory')
         
         return jsonify({"status": "success", "message": "Meal logged successfully"})
     except Exception as e:
@@ -712,6 +963,15 @@ def add_inventory():
                 'servings': 4,
                 'frozen_date': datetime.now().strftime('%Y-%m-%d')
             })
+        elif category == 'frozen_ingredient':
+            if 'freezer' not in inventory: inventory['freezer'] = {}
+            if 'ingredients' not in inventory['freezer']: inventory['freezer']['ingredients'] = []
+            inventory['freezer']['ingredients'].append({
+                'item': item,
+                'quantity': 1,
+                'unit': 'count',
+                'frozen_date': datetime.now().strftime('%Y-%m-%d')
+            })
         elif category == 'pantry':
             if 'pantry' not in inventory: inventory['pantry'] = []
             inventory['pantry'].append({
@@ -816,6 +1076,61 @@ def bulk_add_inventory():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@app.route("/api/replan", methods=["POST"])
+def replan():
+    """
+    Trigger inventory-aware replanning for the current week.
+    Calls scripts/workflow.py replan function.
+    """
+    try:
+        import sys
+        import subprocess
+        from pathlib import Path
+
+        # Call the workflow script with replan command
+        script_path = Path(__file__).parent.parent / 'scripts' / 'workflow.py'
+        result = subprocess.run(
+            [sys.executable, str(script_path), 'replan'],
+            capture_output=True,
+            text=True,
+            timeout=60
+        )
+
+        if result.returncode == 0:
+            # Sync changes to GitHub if on Vercel
+            is_vercel = os.environ.get('VERCEL') == '1'
+            if is_vercel:
+                from scripts.github_helper import sync_changes_to_github
+                # Sync updated files
+                sync_changes_to_github([
+                    'data/history.yml',
+                    'inputs/*.yml',
+                    'plans/*.html'
+                ])
+
+            return jsonify({
+                "status": "success",
+                "message": "Week replanned with inventory optimization!",
+                "output": result.stdout
+            })
+        else:
+            return jsonify({
+                "status": "error",
+                "message": "Replan failed",
+                "details": result.stderr or result.stdout
+            }), 500
+
+    except subprocess.TimeoutExpired:
+        return jsonify({
+            "status": "error",
+            "message": "Replan timed out (>60s)"
+        }), 500
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
 @app.route("/api/hello")
 def hello_world():
     return jsonify({"message": "Hello from Python on Vercel!"})
@@ -862,5 +1177,18 @@ def import_recipe():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 # For local development
-if __name__ == "__main__":
-    app.run(port=5328, debug=True)
+@app.route("/api/suggestions")
+def get_meal_suggestions():
+    try:
+        from scripts.inventory_intelligence import get_substitutions
+        suggestions = get_substitutions(limit=5)
+        return jsonify({
+            "status": "success",
+            "suggestions": suggestions
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5332))
+    app.run(host='0.0.0.0', port=port)

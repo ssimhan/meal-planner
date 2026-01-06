@@ -1,0 +1,43 @@
+---
+id: shiro_wot_ground_chickpea_stew
+name: Shiro Wot (Ground-Chickpea Stew)
+categories: []
+cuisine: unknown
+meal_type: soup_stew
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- oven
+- stovetop
+main_veg:
+- garlic
+- onion
+- tomato
+- tomatoe
+avoid_contains: []
+source_url: null
+source_file: Shiro Wot (Ground-Chickpea Stew).html
+---
+
+# Shiro Wot (Ground-Chickpea Stew)
+
+### Ingredients
+- 1largered onion, coarsely chopped
+- 10 garlic cloves, peeled
+- 1/2cupcanola oil
+- 2 tablespoons homemade or store-bought berbere spice mix
+- Fine sea salt
+- 3mediumvine-ripened tomatoes (about 11 ounces), coarsely chopped
+- 1/2cupchickpea flour
+- 1to 2 jalapeños, stemmed and thinly sliced
+- Injera or baguette, for serving
+
+### Instructions
+1. Place the onion and garlic in a food processor, and pulse until very finely minced, stopping periodically to scrape down the sides of the bowl with a rubber spatula to ensure even chopping. Set aside.
+2. Set a large Dutch oven or similar pot over medium-low heat. When the pot is warm, add oil, onion purée, 2 tablespoons berbere and a large pinch of salt. Stir to combine, then cover pot, and let aromatics cook gently while you prepare tomatoes.
+3. Place tomatoes in the food processor, and pulse until puréed. Add to onion mixture, and increase heat to high. When mixture boils, reduce heat to low, and whisk in chickpea flour. The mixture will be quite thick, like peanut butter. While stirring, slowly pour in 2 cups water in a thin stream to loosen the mixture. Keep stirring until the mixture becomes smooth and integrated.
+4. Increase heat to medium-high to bring shiro to a boil, then reduce heat to low, and simmer for about 5 minutes to cook off the raw taste of the chickpea flour and integrate all the flavors. Stir in the jalapeños and season to taste with salt.
+5. Serve immediately. (Leftovers can be stored in an airtight container in the refrigerator for up to a few days. Store unused berbere in a cool, dark place for up to 3 months.)
+

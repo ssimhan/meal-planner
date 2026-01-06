@@ -1,0 +1,51 @@
+---
+id: homemade_oatmeal_cream_pies
+name: Homemade Oatmeal Cream Pies
+categories:
+- Dessert
+cuisine: unknown
+meal_type: breakfast
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- instant_pot
+- oven
+main_veg: []
+avoid_contains: []
+source_url: null
+source_file: Homemade Oatmeal Cream Pies.html
+---
+
+# Homemade Oatmeal Cream Pies
+
+### Ingredients
+- For the Cookies:
+- 1cupunsalted butter, softened
+- 3/4cupfirmly packed light brown sugar
+- 1/2cupgranulated sugar
+- 2largeeggs
+- 1 teaspoon pure vanilla extract
+- 11/2 cups all-purpose flour
+- 1 teaspoon baking soda
+- 1 teaspoon ground cinnamon
+- 1/2 teaspoon salt
+- 3cupsquick or old fashioned oatmeal
+- For the Cream Filling:
+- 3/4cup(1 1/2 sticks) cup unsalted butter, softened
+- 21/2 cups confectioners' sugar, sifted
+- 1 teaspoon pure vanilla extract
+- 1 tablespoon milk or half and half
+
+### Instructions
+1. Preheat oven to 350°F. Line cookie sheets with parchment paper.
+2. In the bowl of a stand mixer fitted with the paddle attachment, or in a large bowl with an electric mixer, cream together butter and sugars until light and fluffy, about 3 minutes. Add in eggs and vanilla and mix until combined.
+3. In a medium bowl, whisk together the flour, baking soda, cinnamon and salt. Slowly add the flour mixture to the wet ingredients, mixing until just combined. Add in oats and mix until incorporated.
+4. To make large cookies, use a large cookie scoop (about 3 tablespoons) to drop dough onto prepared cookie sheets. Bake in preheated oven for 13-15 minutes or until golden brown. Allow cookies to sit on cookie sheets for about 5 minutes before removing them to a wire rack to cool completely. To makes small cookies, use a medium cookie scoop (about 1.5 tablespoons) of dough per cookie and bake for 10-12 minutes. Once cookies have cooled completely, prepare the cream filling.
+5. Prepare the Cream Filling:
+6. In the bowl of a stand mixer fitted with the paddle attachment, beat butter on medium-high speed for about 5 minutes. This process will lighten the color of the butter and ensure you buttercream in extra fluffy.
+7. Turn the speed down to low and gradually add in the powdered sugar. Continue mixing on low speed until the powdered sugar is completely incorporated. Add in vanilla extract and milk and mix until combined.
+8. Turn mixer back up to medium-high speed and beat the mixture for an additional 3-5 minutes. If needed, add in a little more cream 1 teaspoon at a time until you reach the consistency you desire.
+9. To assemble the cookies, pipe or spread the cream filling on the flat side of half of the cookies and put the remaining cookies on top.
+

@@ -1,6 +1,6 @@
 # Meal Planner Implementation Guide
 
-**Last Updated:** 2026-01-04
+**Last Updated:** 2026-01-05
 **Live Site:** [ssimhan.github.io/meal-planner/](https://ssimhan.github.io/meal-planner/)
 
 ---
@@ -25,6 +25,25 @@ The Meal Planner is a detailed Hybrid Serverless application that manages weekly
 -   **[inventory.yml](file:///Users/sandhyasimhan/Documents/3_Career/Coding%20Projects/meal-planner/data/inventory.yml):** Central tracking for Freezer, Fridge, and Pantry stock.
 -   **[recipes/](file:///Users/sandhyasimhan/Documents/3_Career/Coding%20Projects/meal-planner/recipes/):** Directory of YAML recipe files with meal types and ingredients.
 -   **[config.yml](file:///Users/sandhyasimhan/Documents/3_Career/Coding%20Projects/meal-planner/config.yml):** Global settings (timezones, schedules, default counts).
+
+### Freezer Inventory Structure
+
+The `inventory.yml` distinguishes between two types of freezer items:
+
+**1. Freezer Backups (`freezer.backups`)**
+Complete, ready-to-eat meals for emergency dinner use (<15 min reheat):
+- Full dinner entries with meal name, servings, frozen date
+- Selected from dashboard "Skip Dinner → Freezer Meal" flow
+- Auto-removed from inventory when logged as consumed
+- **Success Goal:** Maintain >= 3 complete backup meals
+- Examples: "Black Bean Soup (6 servings)", "Vegetable Curry (2 servings)"
+
+**2. Freezer Ingredients** *(future implementation)*
+Raw/partial components for future meal planning:
+- Individual ingredients or meal components (e.g., frozen peas, pre-chopped onions)
+- Used during weekly plan generation for recipe selection
+- Not directly logged as "eaten" but consumed during cooking
+- Examples: "Butternut squash sauce (2 cups)", "Tomato onion gravy (3 cups)"
 
 ---
 
@@ -157,49 +176,102 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 
 ### Phase 11: Future Enhancements (Backlog)
 
-#### Block 1: Performance Optimization (Backend)
+#### Block 1: Performance Optimization (Backend) - COMPLETED 2026-01-06
 **Focus:** Lazy Loading Recipe Details
 - **Goal:** Reduce token usage and improve plan generation speed by 80-90%.
 - **Tasks:**
-  - Refactor `workflow.py` to load lightweight `recipes/index.yml` first.
-  - Implement on-demand fetching of full recipe YAMLs only for selected meals.
-  - Add simple in-memory caching for recipe details in the API.
+  - [x] Refactor `workflow.py` to load lightweight `recipes/index.yml` first.
+  - [x] Implement on-demand fetching of full recipe YAMLs only for selected meals.
+  - [x] Add simple in-memory caching for recipe details in the API.
 
-#### Block 2: Drag-and-Drop Schedule Management (Frontend/UI)
+#### Block 2: Drag-and-Drop Schedule Management (Frontend/UI) - COMPLETED 2026-01-06
 **Focus:** Meal Swap Feature
 - **Goal:** Allow users to easily rearrange their week when plans change.
 - **Tasks:**
-  - Create a "Swap" UI in the Week View (or Dashboard).
-  - Implement logic to switch dinner slots (e.g., move Tuesday's Tacos to Thursday).
-  - Update prep instructions to reflect the new order.
+  - [x] Create a "Swap" UI in the Week View (or Dashboard).
+  - [x] Implement logic to switch dinner slots (e.g., move Tuesday's Tacos to Thursday).
+  - [x] Update prep instructions to reflect the new order.
 
-#### Block 3: Context-Aware Planning (Intelligence)
-**Focus:** Weather & Calendar Integration
-- **Goal:** Make the planner smarter about real-life constraints.
-- **Tasks:**
-  - Integrate a simple weather API to detect rain/cold (boost soup probability).
-  - Add "Busy Day" detection (calendar integration or manual toggle) to force "Quick Prep" meals.
-
-#### Block 4: Inventory Intelligence (Logic)
-**Focus:** Smart Substitutions
+#### Block 3: Inventory Intelligence (Logic) - COMPLETED 2026-01-06
+**Focus:** Smart Substitutions & Freezer Management
 - **Goal:** Help users use up what they have.
 - **Tasks:**
-  - Implement logic to scan `inventory.yml` against the recipe index.
-  - Create a "What can I replace this with?" suggestion modal on the Dashboard.
+  - [x] Implement logic to scan `inventory.yml` against the recipe index.
+  - [x] Create a "What can I replace this with?" suggestion modal on the Dashboard.
+  - [x] **BUG FIX:** Separate freezer backups (complete meals) from freezer ingredients (components)
+    - [x] Currently all items mixed in `freezer.backups` array
+    - [x] Need distinct `freezer.backups` vs `freezer.ingredients` structures
+    - [x] Only backups should appear in "Skip Dinner → Freezer Meal" flow
+    - [x] Only backups count toward ">= 3 backup meals" success metric
 
-#### Block 5: Analytics & Health (Data)
-**Focus:** Nutrition Tracking
-- **Goal:** Provide health insights without manual tracking.
+#### Block 4: Recipe & Family Analytics (Data) - COMPLETED 2026-01-06
+**Focus:** Recipe Performance & Family Preferences
+- **Goal:** Surface insights on what's working and what kids actually enjoy.
+- **Implementation:**
+  - **UI Location:** Dedicated `/analytics` page (linked from dashboard)
+  - **Time Range:** Default to last 12 weeks (3 months), with option to view all-time
+  - **Data Refresh:** Daily batch job (pre-computed analytics cached for performance)
+  - **Retirement Thresholds:** Flag recipes with avg feedback < 😐, skip rate >50%, unused 6+ months, or consistent kid dislike
 - **Tasks:**
-  - Add macro estimation fields to recipe metadata.
-  - specialized "Vegetable Diversity Score" calculation displayed on the Weekly Plan.
+  - [x] Create `/analytics` page with navigation from dashboard
+  - [x] Implement daily batch job to compute analytics from `history.yml`
+  - [x] **Recipe Popularity Table**: Rank by frequency + avg feedback score (last 12 weeks)
+  - [x] **Kid Preference Cards**: Per-child favorite recipes, cuisines, and emoji distribution charts
+  - [x] **Dinner Adherence Chart**: Made vs. skipped percentage over time
+  - [x] **Leftover Pipeline Success**: Track dinner→lunch conversions vs. waste
+  - [x] **Cuisine Diversity Pie Chart**: Weekly/monthly rotation balance (Indian/Mexican/Italian/etc.)
+  - [x] **Snack Success Rate**: School vs. home snack performance with kid feedback
+  - [x] **Recipe Retirement List**: Flagged recipes with reasons (low score/high skip/unused/kid dislike)
+  - [x] **Family Favorites Widget**: Small dashboard card showing top 5 this month (links to full analytics)
 
-#### Block 6: User Retention & Reporting (Notification)
-**Focus:** Weekly Summary Email
-- **Goal:** Close the feedback loop.
+#### Block 5: Recipe Format Migration (Efficiency) - COMPLETED 2026-01-06
+**Focus:** Token Efficiency & Context Window
+- **Goal:** Reduce recipe token count by >70% by migrating from HTML to Markdown.
+- **Implementation:**
+  - **Strategy:** Big bang migration - convert all 227 recipes at once
+  - **Format:** YAML frontmatter + Markdown body (replace current HTML `content` field)
+  - **Testing:** Validate migration on dev branch before production deployment
 - **Tasks:**
-  - Create a summary generator (Adherence %, Veggies consumed, Freezer items banked).
-  - Implement an email transport (e.g., SMTP or SendGrid free tier) to send the report on Sunday nights.
+  - [x] Design new recipe format schema (frontmatter fields + markdown structure)
+  - [x] Create migration script (`scripts/migrate_to_md.py`) to convert all recipes
+  - [x] Update `scripts/parse_recipes.py` to read/write new format
+  - [x] Create React component (`RecipeViewer`) for rendering markdown recipes using `react-markdown`.
+  - [x] Test migration on sample recipes (full migration successful)
+  - [x] Run full migration on all 227 recipes
+  - [x] Verify generated plans still render correctly
+  - [x] Update recipe importer to use new format for future imports
+
+#### Block 6: Homepage Data Consistency (Bug Fix)
+**Focus:** UI State Sync
+- **Goal:** Ensure homepage accurately reflects current meal plan and confirmation status.
+- **Known Issues:**
+  - **Stale Meal Data:** Today's Schedule shows outdated meals/prep after logging
+  - **Farmers Market Status:** Vegetable confirmation doesn't reflect actual state in input file
+  - **General Investigation:** Need to audit all data refresh triggers
+- **Tasks:**
+  - [ ] Audit dashboard data fetching (identify all API calls and refresh triggers)
+  - [ ] Fix stale "Today's Schedule" after meal logging (ensure immediate refresh)
+  - [ ] Fix farmers market confirmation status sync with input file
+  - [ ] Add client-side cache invalidation strategy (when to force refetch)
+  - [ ] Test rapid logging scenarios (multiple meals in quick succession)
+  - [ ] Add loading states to prevent showing stale data during refresh
+
+#### Block 7: Inventory Management Enhancements (UI)
+**Focus:** CRUD Operations
+- **Goal:** Allow full control over inventory items from the UI.
+- **Implementation:**
+  - **UI Location:** Inline controls on existing dashboard inventory display
+  - **Edit UX:** Click item to open inline edit mode (quantity/servings field)
+  - **Delete UX:** Trash icon per item, no confirmation dialog, 5-second undo toast
+  - **Undo Buffer:** Track last deletion for quick restore
+- **Tasks:**
+  - [ ] Add edit/delete icons to each inventory item (freezer, fridge, pantry)
+  - [ ] Implement inline edit mode for quantities (enter to save, esc to cancel)
+  - [ ] Create delete API endpoint (`/api/inventory/delete`)
+  - [ ] Implement undo toast notification with restore action
+  - [ ] Add optimistic UI updates (instant feedback before API response)
+  - [ ] Handle edge cases (delete while undo pending, rapid edits)
+  - [ ] Add keyboard shortcuts (e for edit, delete key to remove selected item)
 
 ### Recently Completed (Phase 7-10)
 - [x] **Web Workflow**: Full workflow managed via webpage.
@@ -213,7 +285,12 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 
 ### Recipe Index changes
 *Pending recipe additions from corrections:*
-- [ ] Add recipe for: Rasam rice and broccoli (requested on 2026-01-05)
+- [x] Add recipe for: Crackers and cheese cubes (requested on 2026-01-06, added on 2026-01-06)
+- [x] Add recipe for: Blackberries (requested on 2026-01-06, added on 2026-01-06)
+- [x] Add recipe for: Rasam rice and beetroot (requested on 2026-01-06, added on 2026-01-06)
+- [x] Add recipe for: Rasam rice and carrot (added on 2026-01-06)
+- [x] Add recipe for: Pesto gnocchi (requested on 2026-01-06, added on 2026-01-06)
+- [x] Add recipe for: Rasam rice and broccoli (requested on 2026-01-05, added on 2026-01-05)
 
 ---
 

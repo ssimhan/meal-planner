@@ -1,0 +1,45 @@
+---
+id: pomegranate_orange_muffins
+name: Pomegranate Orange Muffins
+categories: []
+cuisine: unknown
+meal_type: baked_goods
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- oven
+main_veg: []
+avoid_contains: []
+source_url: null
+source_file: Pomegranate Orange Muffins.html
+---
+
+# Pomegranate Orange Muffins
+
+### Ingredients
+- 1cuprolled oats
+- 1/2cupapple/orange juice
+- 1/2cupboiling water
+- 1/2cupapplesauce (or typically, butter)
+- 1/2cuppacked brown sugar
+- 1/3cupwhite sugar
+- 2 eggs, lightly beaten
+- 1cupall-purpose flour
+- 1 teaspoon baking powder
+- 1 teaspoon baking soda
+- 3/4 teaspoon salt
+- 1/4 teaspoon ground nutmeg
+- 1 teaspoon vanilla extract
+- 1 pomegranate (seeds only)
+- 1–2 tablespoons orange zest
+- Cook Mode Prevent your screen from going dark
+
+### Instructions
+1. Preheat oven to 350 degrees F. Grease muffin pans.
+2. In a small bowl soak oats in orange juice and water for 15 minutes.
+3. In a large bowl cream together butter, vanilla, and sugars. Beat in eggs and oat mixture.
+4. In a separate bowl, blend flour, baking powder, soda, salt, and nutmeg. Stir into batter. Stir in pomegranate seeds and orange zest. Spoon batter into prepared muffin pans, filling almost to the top.
+5. Bake at 350 degrees F (175 degrees C) until golden brown, about 20 minutes. 1 muffin has 140 calories and 3g fat.
+

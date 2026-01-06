@@ -1,0 +1,50 @@
+id: pasta_with_veggie_sauce
+name: Pasta with Veggie Sauce
+categories:
+- Dinner
+- Instant Pot
+- Italian
+cuisine: italian
+meal_type: pasta_noodles
+effort_level: normal
+no_chop_compatible: false
+prep_time_minutes: null
+cook_time_minutes: null
+appliances:
+- instant_pot
+ingredients:
+- 1 beetroot
+- 1 medium potato
+- 1 medium onion
+- Cashews, soaked
+- Salt
+- Cumin powder
+- Pasta, penne
+main_veg:
+- beet
+- onion
+- potato
+avoid_contains: []
+instructions: 'Soak handful or two of cashews in small stainless steel bowl
+
+  Peel and quarter all veggies (can also use minimal carrot)
+
+  Boil water for pasta (1L+)
+
+  Place 2 cups water in IP pot with trivet on top
+
+  Balance the veggies on top of trivet and nut bowl on top of that
+
+  Set IP on manual for 5 minutes (double check online)
+
+  Cook pasta while IP is working
+
+  Quick release IP once done
+
+  Blend all veggies and nuts
+
+  Add salt, cumin powder, pepper and other spices as needed to make it tasty
+
+  Mix sauce with pasta and serve'
+source_url: null
+source_file: Pasta with Veggie Sauce.html

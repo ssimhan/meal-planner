@@ -427,8 +427,8 @@ def write_index_yml(recipes: List[Recipe], output_path: Path):
             'main_veg': r.main_veg,
             'avoid_contains': r.avoid_contains,
             'source': {
-                'type': 'html',
-                'file': f'recipes/raw_html/{r.source_file}'
+                'type': 'markdown',
+                'file': f'recipes/content/{r.id}.md'
             }
         }
         
@@ -445,6 +445,45 @@ def write_index_yml(recipes: List[Recipe], output_path: Path):
 
     with open(output_path, 'w', encoding='utf-8') as f:
         yaml.dump(index_data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+
+
+def write_recipe_markdown(recipes: List[Recipe], output_dir: Path):
+    """Write individual recipe markdown files with frontmatter."""
+    output_dir.mkdir(parents=True, exist_ok=True)
+    for r in recipes:
+        recipe_dict = asdict(r)
+        
+        # Split into frontmatter and content
+        frontmatter = {k: v for k, v in recipe_dict.items() if k not in ['ingredients', 'instructions']}
+        
+        md_content = "---\n"
+        md_content += yaml.dump(frontmatter, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        md_content += "---\n\n"
+        
+        md_content += f"# {r.name}\n\n"
+        
+        if r.ingredients:
+            md_content += "### Ingredients\n"
+            for ing in r.ingredients:
+                md_content += f"- {ing}\n"
+            md_content += "\n"
+            
+        if r.instructions:
+            md_content += "### Instructions\n"
+            steps = r.instructions.split('\n')
+            step_num = 1
+            for step in steps:
+                s = step.strip()
+                if not s: continue
+                if s[0].isdigit() and ('. ' in s[:4] or ') ' in s[:4]):
+                    md_content += f"{s}\n"
+                else:
+                    md_content += f"{step_num}. {s}\n"
+                    step_num += 1
+            md_content += "\n"
+            
+        with open(output_dir / f"{r.id}.md", 'w', encoding='utf-8') as f:
+            f.write(md_content)
 
 
 def print_summary(recipes: List[Recipe]):
@@ -570,6 +609,9 @@ def main():
 
         write_index_yml(recipes, Path('recipes/index.yml'))
         print(f"  ✓ Wrote: recipes/index.yml")
+
+        write_recipe_markdown(recipes, Path('recipes/content'))
+        print(f"  ✓ Wrote individual MD files to: recipes/content/")
     except Exception as e:
         print(f"  ✗ ERROR writing output files: {e}")
         return

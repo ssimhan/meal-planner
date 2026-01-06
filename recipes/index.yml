@@ -552,7 +552,6 @@
   source:
     type: html
     file: recipes/raw_html/Chickpea Chaat Salad.html
-
 - id: chocolate_banana_bark
   name: Chocolate Banana Bark
   cuisine: unknown
@@ -2612,6 +2611,57 @@
   source:
     type: html
     file: recipes/raw_html/Rasam Recipe.html
+- id: rasam_rice_with_beetroot_kai
+  name: Rasam Rice with Beetroot Kai
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  no_chop_compatible: false
+  appliances:
+  - stovetop
+  main_veg:
+  - beetroot
+  - garlic
+  - tomato
+  avoid_contains: []
+  leftover_potential: high
+  source:
+    type: html
+    file: recipes/raw_html/Rasam Rice with Beetroot Kai.html
+- id: rasam_rice_with_broccoli_kai
+  name: Rasam Rice with Broccoli Kai
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  no_chop_compatible: false
+  appliances:
+  - stovetop
+  main_veg:
+  - broccoli
+  - garlic
+  - tomato
+  avoid_contains: []
+  leftover_potential: high
+  source:
+    type: html
+    file: recipes/raw_html/Rasam Rice with Broccoli Kai.html
+- id: rasam_rice_with_carrot_kai
+  name: Rasam Rice with Carrot Kai
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  no_chop_compatible: false
+  appliances:
+  - stovetop
+  main_veg:
+  - carrot
+  - garlic
+  - tomato
+  avoid_contains: []
+  leftover_potential: high
+  source:
+    type: html
+    file: recipes/raw_html/Rasam Rice with Carrot Kai.html
 - id: refried_bean_burrito
   name: Refried Bean Burrito
   cuisine: mexican

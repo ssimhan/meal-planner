@@ -1247,41 +1247,6 @@
     "source_file": "Chickpea Chaat Salad.html"
   },
   {
-    "id": "chickpea_salad_wrap",
-    "name": "Chickpea Salad Wrap",
-    "categories": [
-      "REW",
-      "School Entrees"
-    ],
-    "cuisine": "indian",
-    "meal_type": "tacos_wraps",
-    "effort_level": "normal",
-    "no_chop_compatible": false,
-    "prep_time_minutes": null,
-    "cook_time_minutes": null,
-    "appliances": [
-      "stovetop"
-    ],
-    "ingredients": [
-      "1cupmashed chickpeas",
-      "3mediumpickles, diced",
-      "2 tbs mayo",
-      "1smallcarrot, shredded",
-      "Tortillas",
-      "Bell pepper, snap peas, tomato (optional sides)"
-    ],
-    "main_veg": [
-      "bell pepper",
-      "carrot",
-      "peas",
-      "tomato"
-    ],
-    "avoid_contains": [],
-    "instructions": "1. Combine chickpeas, pickles, mayo and carrots2. Roll up into the wrap, soaking up any extra liquid with paper towel3. Hold it from with a toothpick4. Serve with red bell peppers, snap peas and tomatoes on the side",
-    "source_url": null,
-    "source_file": "Chickpea Salad Wrap.html"
-  },
-  {
     "id": "chocolate_banana_bark",
     "name": "Chocolate Banana Bark",
     "categories": [
@@ -6013,6 +5978,120 @@
     "instructions": "Rinse ½ cup toor dal until the water runs clear.\nChop 2 medium tomatoes.\nIn a pressure cooker, add the rinsed dal, chopped tomatoes, 1½ cups water, 1 tsp tamarind concentrate, slit green chilies, 1 tsp jaggery, 1 tsp rasam powder, and salt.\nClose the lid and cook on medium heat for 3 to 4 whistles.\nLet the pressure release naturally. Open the lid and gently mash the dal and tomatoes.\nIn a small pan, heat 1 tsp ghee. Add mustard seeds and let them splutter.\nAdd cumin seeds, dried red chili, a pinch of hing, and curry leaves. Sauté for a few seconds until fragrant.\nPour the tempering into the rasam. Stir to combine.\nGarnish with chopped coriander leaves.",
     "source_url": null,
     "source_file": "Rasam Recipe.html"
+  },
+  {
+    "id": "rasam_rice_with_beetroot_kai",
+    "name": "Rasam Rice with Beetroot Kai",
+    "categories": [
+      "South Indian",
+      "Fusion",
+      "Soup-Rice",
+      "Comfort Food"
+    ],
+    "cuisine": "unknown",
+    "meal_type": "soup_stew",
+    "effort_level": "normal",
+    "no_chop_compatible": false,
+    "prep_time_minutes": null,
+    "cook_time_minutes": null,
+    "appliances": [
+      "stovetop"
+    ],
+    "ingredients": [
+      "1 tsp tamarind concentrate",
+      "1 medium tomato, chopped",
+      "1 tsp black pepper (coarsely crushed)",
+      "1 tsp cumin seeds",
+      "2 garlic cloves, crushed",
+      "1/4 tsp turmeric powder",
+      "1/2 tsp rasam powder (or use more black pepper + cumin if unavailable)",
+      "Salt to taste",
+      "3 cups water"
+    ],
+    "main_veg": [
+      "garlic",
+      "tomato"
+    ],
+    "avoid_contains": [],
+    "instructions": "Chop 1 medium tomato.\nCrush 2 garlic cloves.\nPeel and dice 1 medium beetroot into small cubes.\nCook 1 cup rice and keep it ready (preferably slightly mushy, like for rasam rice).\nIn a pot, mix 1 tsp tamarind concentrate with 3 cups water.\nAdd chopped tomato, crushed garlic, 1/4 tsp turmeric powder, 1 tsp black pepper, 1 tsp cumin seeds, 1/2 tsp rasam powder, and salt.\nLet it simmer on medium heat for 10–12 minutes until tomatoes soften and flavors blend. Don't boil too hard—rasam should be light.\nIn a small pan, heat 1 tsp ghee or oil.\nAdd 1 tsp mustard seeds. When they splutter, add 1/2 tsp cumin seeds, 1 red chilli, pinch of hing, and curry leaves.\nPour this tempering into the simmering rasam. Turn off heat.\nHeat 1 tsp oil in a pan.\nAdd diced beetroot and sauté on medium heat for 5–6 minutes.\nSprinkle 1/4 tsp turmeric powder, 1/2 tsp red chilli powder, and salt.\nStir and cook until beetroot is tender (about 6–8 more minutes, adding a splash of water if needed).\nIn a bowl or plate, mix cooked rice with hot rasam.\nTop or serve it with the sautéed beetroot kai on the side or mixed in.",
+    "source_url": null,
+    "source_file": "Rasam Rice with Beetroot Kai.html"
+  },
+  {
+    "id": "rasam_rice_with_broccoli_kai",
+    "name": "Rasam Rice with Broccoli Kai",
+    "categories": [
+      "South Indian",
+      "Fusion",
+      "Soup-Rice",
+      "Comfort Food"
+    ],
+    "cuisine": "unknown",
+    "meal_type": "soup_stew",
+    "effort_level": "normal",
+    "no_chop_compatible": false,
+    "prep_time_minutes": null,
+    "cook_time_minutes": null,
+    "appliances": [
+      "stovetop"
+    ],
+    "ingredients": [
+      "1 tsp tamarind concentrate",
+      "1 medium tomato, chopped",
+      "1 tsp black pepper (coarsely crushed)",
+      "1 tsp cumin seeds",
+      "2 garlic cloves, crushed",
+      "1/4 tsp turmeric powder",
+      "1/2 tsp rasam powder (or use more black pepper + cumin if unavailable)",
+      "Salt to taste",
+      "3 cups water"
+    ],
+    "main_veg": [
+      "garlic",
+      "tomato"
+    ],
+    "avoid_contains": [],
+    "instructions": "Chop 1 medium tomato.\nCrush 2 garlic cloves.\nCut 1/2 head of broccoli into small florets.\nCook 1 cup rice and keep it ready (preferably slightly mushy, like for rasam rice).\nIn a pot, mix 1 tsp tamarind concentrate with 3 cups water.\nAdd chopped tomato, crushed garlic, 1/4 tsp turmeric powder, 1 tsp black pepper, 1 tsp cumin seeds, 1/2 tsp rasam powder, and salt.\nLet it simmer on medium heat for 10–12 minutes until tomatoes soften and flavors blend. Don't boil too hard—rasam should be light.\nIn a small pan, heat 1 tsp ghee or oil.\nAdd 1 tsp mustard seeds. When they splutter, add 1/2 tsp cumin seeds, 1 red chilli, pinch of hing, and curry leaves.\nPour this tempering into the simmering rasam. Turn off heat.\nHeat 1 tsp oil in a pan.\nAdd broccoli florets and sauté on medium heat for 4–5 minutes.\nSprinkle 1/4 tsp turmeric powder, 1/2 tsp red chilli powder, and salt.\nStir and cook until broccoli is tender but not mushy (about 3–4 more minutes).\nIn a bowl or plate, mix cooked rice with hot rasam.\nTop or serve it with the sautéed broccoli kai on the side or mixed in.",
+    "source_url": null,
+    "source_file": "Rasam Rice with Broccoli Kai.html"
+  },
+  {
+    "id": "rasam_rice_with_carrot_kai",
+    "name": "Rasam Rice with Carrot Kai",
+    "categories": [
+      "South Indian",
+      "Fusion",
+      "Soup-Rice",
+      "Comfort Food"
+    ],
+    "cuisine": "unknown",
+    "meal_type": "soup_stew",
+    "effort_level": "normal",
+    "no_chop_compatible": false,
+    "prep_time_minutes": null,
+    "cook_time_minutes": null,
+    "appliances": [
+      "stovetop"
+    ],
+    "ingredients": [
+      "1 tsp tamarind concentrate",
+      "1 medium tomato, chopped",
+      "1 tsp black pepper (coarsely crushed)",
+      "1 tsp cumin seeds",
+      "2 garlic cloves, crushed",
+      "1/4 tsp turmeric powder",
+      "1/2 tsp rasam powder (or use more black pepper + cumin if unavailable)",
+      "Salt to taste",
+      "3 cups water"
+    ],
+    "main_veg": [
+      "garlic",
+      "tomato"
+    ],
+    "avoid_contains": [],
+    "instructions": "Chop 1 medium tomato.\nCrush 2 garlic cloves.\nPeel and dice 2 medium carrots into small cubes.\nCook 1 cup rice and keep it ready (preferably slightly mushy, like for rasam rice).\nIn a pot, mix 1 tsp tamarind concentrate with 3 cups water.\nAdd chopped tomato, crushed garlic, 1/4 tsp turmeric powder, 1 tsp black pepper, 1 tsp cumin seeds, 1/2 tsp rasam powder, and salt.\nLet it simmer on medium heat for 10–12 minutes until tomatoes soften and flavors blend. Don't boil too hard—rasam should be light.\nIn a small pan, heat 1 tsp ghee or oil.\nAdd 1 tsp mustard seeds. When they splutter, add 1/2 tsp cumin seeds, 1 red chilli, pinch of hing, and curry leaves.\nPour this tempering into the simmering rasam. Turn off heat.\nHeat 1 tsp oil in a pan.\nAdd diced carrots and sauté on medium heat for 4–5 minutes.\nSprinkle 1/4 tsp turmeric powder, 1/2 tsp red chilli powder, and salt.\nStir and cook until carrots are tender (about 5–6 more minutes).\nIn a bowl or plate, mix cooked rice with hot rasam.\nTop or serve it with the sautéed carrot kai on the side or mixed in.",
+    "source_url": null,
+    "source_file": "Rasam Rice with Carrot Kai.html"
   },
   {
     "id": "refried_bean_burrito",

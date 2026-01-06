@@ -215,9 +215,10 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 *Pending recipe additions from corrections:*
 - [ ] Add recipe for: Crackers and cheese cubes (requested on 2026-01-06)
 - [ ] Add recipe for: Blackberries (requested on 2026-01-06)
-- [ ] Add recipe for: Rasam rice and beetroot (requested on 2026-01-06)
+- [x] Add recipe for: Rasam rice and beetroot (requested on 2026-01-06, added on 2026-01-06)
+- [x] Add recipe for: Rasam rice and carrot (added on 2026-01-06)
 - [ ] Add recipe for: Pesto gnocchi (requested on 2026-01-06)
-- [ ] Add recipe for: Rasam rice and broccoli (requested on 2026-01-05)
+- [x] Add recipe for: Rasam rice and broccoli (requested on 2026-01-05, added on 2026-01-05)
 
 ---
 

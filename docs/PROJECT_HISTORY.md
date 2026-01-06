@@ -1191,3 +1191,22 @@ Continuing with current recipes. Use freezer backups manually if preferred.
 - [tests/test_api_perf.py](../tests/test_api_perf.py) - Verification suite
 
 **Status:** Completed and verified. API response times for repeated calls are instant (<10ms).
+
+## Session: 2026-01-06 - Meal Swap Feature
+
+**Work Completed:**
+- **Phase 11 Block 2 (Meal Swap):** Implemented a drag-and-drop style meal checking feature to swap dinners between days.
+    - **Backend:** Created `POST /api/swap-meals` endpoint that:
+        1. Swaps dinner entries in `inputs/{week}.yml` and `history.yml`.
+        2. Regenerates prep tasks using `generate_granular_prep_tasks` to ensure veggies are chopped on the correct days (e.g., chopping Monday's ingredients on Sunday/Monday).
+        3. Persists changes to GitHub.
+    - **Frontend:**
+        - Added "Swap Mode" toggle to `WeekView`.
+        - Implemented `SwapConfirmationModal` component.
+        - Verified logic with manual test scripts.
+
+**Technical Decisions:**
+- **State-Based Swapping:** Used a simple 2-click selection model (click Day A, click Day B -> Confirm) instead of complex drag-and-drop libraries, which simplifies mobile interaction.
+- **Dynamic Prep Regeneration:** Crucial logic step - simply swapping meals isn't enough; the *prep instructions* must also move (e.g., moving a Monday meal to Friday means you don't need to chop for it on Sunday anymore).
+
+**Status:** Phase 11 Block 2 Complete.

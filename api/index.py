@@ -9,11 +9,11 @@ from flask_cors import CORS
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 try:
-    from scripts.workflow import find_current_week_file, get_workflow_state
+    from scripts.workflow import find_current_week_file, get_workflow_state, generate_granular_prep_tasks
 except ImportError as e:
     # Fallback for local development
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../scripts")))
-    from workflow import find_current_week_file, get_workflow_state
+    from workflow import find_current_week_file, get_workflow_state, generate_granular_prep_tasks
 
 from api.generate_plan import generate_plan_api
 
@@ -289,6 +289,170 @@ def get_inventory():
         
         return jsonify({"status": "success", "inventory": inventory})
     except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route("/api/swap-meals", methods=["POST"])
+def swap_meals():
+    try:
+        data = request.json or {}
+        week_str = data.get('week')
+        day1 = data.get('day1') # e.g. "mon"
+        day2 = data.get('day2') # e.g. "thu"
+
+        if not week_str or not day1 or not day2:
+             return jsonify({"status": "error", "message": "Week, day1, and day2 are required"}), 400
+
+        # Load Input File
+        from scripts.workflow import find_current_week_file
+        
+        input_file = None
+        # Try to find specific week file
+        potential_file = Path(f'inputs/{week_str}.yml')
+        if potential_file.exists():
+             input_file = potential_file
+        else:
+             # Fallback logic
+             f, w = find_current_week_file()
+             if w == week_str:
+                 input_file = f
+        
+        if not input_file or not input_file.exists():
+             return jsonify({"status": "error", "message": f"Input file for week {week_str} not found"}), 404
+
+        week_data = get_yaml_data(str(input_file))
+        if not week_data:
+             return jsonify({"status": "error", "message": "Could not load input file"}), 500
+
+        # Load History File
+        history = get_yaml_data('data/history.yml')
+        history_week = None
+        if history:
+            from scripts.log_execution import find_week
+            history_week = find_week(history, week_str)
+
+        # Helper to find dinner in list
+        def get_dinner(dinners_list, d):
+            for i, dinner in enumerate(dinners_list):
+                 if dinner.get('day') == d:
+                     return i, dinner
+            return -1, None
+
+        # Swap in Input File
+        if 'dinners' in week_data:
+            idx1, dinner1 = get_dinner(week_data['dinners'], day1)
+            idx2, dinner2 = get_dinner(week_data['dinners'], day2)
+
+            if dinner1 and dinner2:
+                # Update days
+                dinner1['day'] = day2
+                dinner2['day'] = day1
+                # Swap positions in list (optional but good for consistency)
+                week_data['dinners'][idx1] = dinner2
+                week_data['dinners'][idx2] = dinner1
+            elif dinner1:
+                dinner1['day'] = day2
+            elif dinner2:
+                dinner2['day'] = day1
+        
+        # Swap in History File
+        if history_week and 'dinners' in history_week:
+            idx1, dinner1 = get_dinner(history_week['dinners'], day1)
+            idx2, dinner2 = get_dinner(history_week['dinners'], day2)
+
+            if dinner1 and dinner2:
+                dinner1['day'] = day2
+                dinner2['day'] = day1
+                history_week['dinners'][idx1] = dinner2
+                history_week['dinners'][idx2] = dinner1
+            elif dinner1:
+                dinner1['day'] = day2
+            elif dinner2:
+                dinner2['day'] = day1
+
+        # Regenerate Prep Tasks
+        # 1. Load Recipes
+        recipes = get_cached_data('recipes', 'recipes/index.yml') or []
+        
+        # 2. Reconstruct selected_dinners and selected_lunches for generator
+        selected_dinners = {}
+        if history_week:
+             for d in history_week.get('dinners', []):
+                 d_day = d.get('day')
+                 # Enrich with name/veg from recipe index if needed
+                 # History usually has minimal data, but let's check
+                 if 'recipe_id' in d:
+                     r_match = next((r for r in recipes if r['id'] == d['recipe_id']), None)
+                     if r_match:
+                         # Merge details for the generator
+                         full_d = d.copy()
+                         full_d['name'] = r_match.get('name', d['recipe_id'])
+                         full_d['main_veg'] = r_match.get('main_veg', [])
+                         selected_dinners[d_day] = full_d
+        
+        selected_lunches = {}
+        
+        class SimpleLunch:
+             def __init__(self, data):
+                 self.prep_components = data.get('prep_components', [])
+                 self.recipe_name = data.get('recipe_name', 'Lunch')
+        
+        if history_week and 'lunches' in history_week:
+             for day, lunch_data in history_week['lunches'].items():
+                 selected_lunches[day] = SimpleLunch(lunch_data)
+        elif week_data and 'selected_lunches' in week_data:
+              for day, lunch_data in week_data['selected_lunches'].items():
+                 selected_lunches[day] = SimpleLunch(lunch_data)
+
+        # 3. Call Generator
+        # We need to preserve completed tasks
+        completed_prep = []
+        if history_week and 'daily_feedback' in history_week:
+             for df in history_week['daily_feedback'].values():
+                 if 'prep_completed' in df:
+                     completed_prep.extend(df['prep_completed'])
+        
+        # Regenerate for Mon/Tue and Wed-Fri
+        tasks_mon_tue = generate_granular_prep_tasks(selected_dinners, selected_lunches, ['mon', 'tue'], "Mon/Tue", completed_prep)
+        tasks_wed_fri = generate_granular_prep_tasks(selected_dinners, selected_lunches, ['wed', 'thu', 'fri'], "Wed-Fri", completed_prep)
+        
+        new_prep_tasks = []
+        if tasks_mon_tue:
+             new_prep_tasks.append("Monday Prep (for Mon/Tue meals):")
+             new_prep_tasks.extend([f"- [ ] {t}" for t in tasks_mon_tue])
+        
+        if tasks_wed_fri:
+              new_prep_tasks.append("Wednesday Prep (for Thu/Fri meals):")
+              new_prep_tasks.extend([f"- [ ] {t}" for t in tasks_wed_fri])
+
+        # Update Week Data
+        week_data['prep_tasks'] = new_prep_tasks
+
+        # Save Files
+        file_dict = {
+            str(input_file): yaml.dump(week_data, default_flow_style=False, sort_keys=False, allow_unicode=True),
+        }
+        if history:
+             file_dict['data/history.yml'] = yaml.dump(history, default_flow_style=False, sort_keys=False, allow_unicode=True)
+
+        # Write locally
+        for path, content in file_dict.items():
+            try:
+                with open(path, 'w') as f:
+                    f.write(content)
+            except OSError: pass
+
+        # Sync to GitHub
+        from scripts.github_helper import commit_multiple_files_to_github
+        repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
+        commit_multiple_files_to_github(repo_name, file_dict, f"Swap meals {day1}<->{day2} for week {week_str}")
+        
+        invalidate_cache()
+
+        return jsonify({"status": "success", "message": "Meals swapped and prep tasks updated", "week_data": week_data})
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route("/api/history")

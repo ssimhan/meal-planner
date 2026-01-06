@@ -184,13 +184,13 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
   - [x] Implement on-demand fetching of full recipe YAMLs only for selected meals.
   - [x] Add simple in-memory caching for recipe details in the API.
 
-#### Block 2: Drag-and-Drop Schedule Management (Frontend/UI)
+#### Block 2: Drag-and-Drop Schedule Management (Frontend/UI) - COMPLETED 2026-01-06
 **Focus:** Meal Swap Feature
 - **Goal:** Allow users to easily rearrange their week when plans change.
 - **Tasks:**
-  - Create a "Swap" UI in the Week View (or Dashboard).
-  - Implement logic to switch dinner slots (e.g., move Tuesday's Tacos to Thursday).
-  - Update prep instructions to reflect the new order.
+  - [x] Create a "Swap" UI in the Week View (or Dashboard).
+  - [x] Implement logic to switch dinner slots (e.g., move Tuesday's Tacos to Thursday).
+  - [x] Update prep instructions to reflect the new order.
 
 #### Block 3: Context-Aware Planning (Intelligence)
 **Focus:** Weather & Calendar Integration
@@ -233,6 +233,20 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
   - Update `scripts/parse_recipes.py` to support new format.
   - Create React component for rendering MD recipes.
   - Bulk migrate all existing recipes.
+
+#### Block 8: Homepage Data Consistency (Detailed Bug Fix)
+**Focus:** UI State Sync
+- **Goal:** Ensure homepage accurately reflects current meal plan and confirmation status.
+- **Tasks:**
+  - [ ] Fix issue where homepage doesn't reflect active meal slots.
+  - [ ] Fix issue where homepage doesn't reflect what's been confirmed.
+
+#### Block 9: Inventory Management Enhancements (UI)
+**Focus:** CRUD Operations
+- **Goal:** Allow full control over inventory items from the UI.
+- **Tasks:**
+  - [ ] Implement "Edit Quantity" functionality for inventory items.
+  - [ ] Implement "Delete Item" functionality for inventory items.
 
 ### Recently Completed (Phase 7-10)
 - [x] **Web Workflow**: Full workflow managed via webpage.

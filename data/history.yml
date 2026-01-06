@@ -58,25 +58,25 @@ weeks:
     - spinach
 - week_of: '2026-01-05'
   dinners:
-  - recipe_id: easy_zucchini_pasta_sauce
-    cuisine: italian
-    meal_type: pasta_noodles
+  - recipe_id: curried_cauliflower_quinoa_salad
+    cuisine: mediterranean
+    meal_type: salad
     day: mon
     vegetables:
-    - basil
-    - beans
+    - arugula
+    - cabbage
+    - cauliflower
+    - cilantro
+    - cucumber
     - garlic
     - lemon
-    - parsley
-    - spinach
-    - zucchini
-    - basil
-    - beans
+    - arugula
+    - cabbage
+    - cauliflower
+    - cilantro
+    - cucumber
     - garlic
     - lemon
-    - parsley
-    - spinach
-    - zucchini
   - recipe_id: freezer_meal
     cuisine: various
     meal_type: freezer
@@ -112,25 +112,25 @@ weeks:
     - tomato
     made_2x_for_freezer: true
     needs_fix: false
-  - recipe_id: curried_cauliflower_quinoa_salad
-    cuisine: mediterranean
-    meal_type: salad
+  - recipe_id: easy_zucchini_pasta_sauce
+    cuisine: italian
+    meal_type: pasta_noodles
     day: thu
     vegetables:
-    - arugula
-    - cabbage
-    - cauliflower
-    - cilantro
-    - cucumber
+    - basil
+    - beans
     - garlic
     - lemon
-    - arugula
-    - cabbage
-    - cauliflower
-    - cilantro
-    - cucumber
+    - parsley
+    - spinach
+    - zucchini
+    - basil
+    - beans
     - garlic
     - lemon
+    - parsley
+    - spinach
+    - zucchini
   - recipe_id: easy_french_toast_sticks
     cuisine: american
     meal_type: sandwich

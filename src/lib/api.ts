@@ -204,3 +204,18 @@ export async function replan(): Promise<any> {
     }
     return res.json();
 }
+
+export async function swapMeals(week: string, day1: string, day2: string): Promise<any> {
+    const res = await fetch('/api/swap-meals', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ week, day1, day2 }),
+    });
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to swap meals');
+    }
+    return res.json();
+}

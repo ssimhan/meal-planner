@@ -294,8 +294,7 @@ def log_meal():
         # If we're only logging snack/lunch feedback, skip dinner validation
         is_feedback_only = (school_snack_feedback or home_snack_feedback or kids_lunch_feedback or adult_lunch_feedback or
                             school_snack_needs_fix is not None or home_snack_needs_fix is not None or
-                            kids_lunch_needs_fix is not None or adult_lunch_needs_fix is not None or
-                            dinner_needs_fix is not None) and not made
+                            kids_lunch_needs_fix is not None or adult_lunch_needs_fix is not None) and not made
 
         if not is_feedback_only and not made:
             return jsonify({"status": "error", "message": "Made status is required for dinner logging"}), 400
@@ -317,11 +316,11 @@ def log_meal():
         if not week:
             return jsonify({"status": "error", "message": f"Week {week_str} not found"}), 404
             
-        # Find dinner (required if not feedback-only OR if we have dinner feedback/fix)
+        # Find dinner if we have dinner-related data
         target_day = day.lower()[:3]
         target_dinner = None
 
-        if not is_feedback_only or dinner_needs_fix is not None:
+        if not is_feedback_only or dinner_needs_fix is not None or actual_meal:
             for dinner in week.get('dinners', []):
                 if dinner.get('day') == target_day:
                     target_dinner = dinner
@@ -375,11 +374,14 @@ def log_meal():
                     'recipe': target_dinner.get('recipe_id')
                 })
 
-            if actual_meal: target_dinner['actual_meal'] = actual_meal
             if reason: target_dinner['reason'] = reason
-            
-        if target_dinner and dinner_needs_fix is not None:
-            target_dinner['needs_fix'] = dinner_needs_fix
+
+        # Handle dinner corrections outside is_feedback_only block
+        if target_dinner:
+            if actual_meal:
+                target_dinner['actual_meal'] = actual_meal
+            if dinner_needs_fix is not None:
+                target_dinner['needs_fix'] = dinner_needs_fix
 
         # Store snack/lunch feedback at the day level
         if (school_snack_feedback is not None or home_snack_feedback is not None or

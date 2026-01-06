@@ -1011,3 +1011,35 @@ freezer_inventory:
   - Refactored `handleLogDay` and `handleLogFeedback` in `src/app/page.tsx` to handle `needs_fix` flags and `request_recipe` triggers.
   - Updated `src/lib/api.ts` with explicit `needs_fix` properties to maintain type safety across the full stack.
 - **Status:** Complete. The system is now significantly more resilient and provides better data quality for both week-view tracking and future recipe planning.
+
+---
+
+## Session: 2026-01-05 (Morning) - Bug Fix: Dinner Corrections Not Saving
+
+**Issue:** Week View "Mark for Fix" workflow successfully updated Tuesday kids lunch but failed to save Monday dinner corrections.
+
+**Root Cause:**
+- Line 295-298 in `api/index.py` incorrectly included `dinner_needs_fix is not None` in the `is_feedback_only` calculation
+- When correcting a dinner, frontend sends `{actual_meal: "...", dinner_needs_fix: false}`
+- This triggered `is_feedback_only=True`, which blocked line 378 (`if actual_meal: target_dinner['actual_meal'] = actual_meal`) from executing
+- The `needs_fix` flag was cleared, but the actual meal correction was never saved
+
+**Fix Applied:**
+1. **Line 295-297**: Removed `dinner_needs_fix is not None or` from `is_feedback_only` calculation
+   - Ensures dinner corrections don't incorrectly trigger feedback-only mode
+2. **Line 323**: Updated condition to `if not is_feedback_only or dinner_needs_fix is not None or actual_meal:`
+   - Properly finds dinner when `actual_meal` is sent
+3. **Lines 379-384**: Moved dinner correction logic outside `if not is_feedback_only:` block
+   - Critical fix: `actual_meal` and `dinner_needs_fix` updates now happen regardless of feedback mode
+
+**Impact:**
+- Dinner corrections (all days, not just Monday) now save correctly
+- Snack/lunch corrections continue to work as before (no regression)
+- User can now properly track when planned meals were substituted
+
+**Technical Learning:**
+- Conditional logic bugs can appear as silent failures (API returns success, but data doesn't update)
+- `is_feedback_only` flag should only apply to meal types that allow feedback without "made" status
+- Moving field updates outside conditional blocks ensures they execute when the data is present
+
+**Status:** Fix deployed and verified. Dinner corrections now persist correctly in `history.yml`.

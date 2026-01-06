@@ -207,38 +207,71 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 #### Block 4: Recipe & Family Analytics (Data)
 **Focus:** Recipe Performance & Family Preferences
 - **Goal:** Surface insights on what's working and what kids actually enjoy.
+- **Implementation:**
+  - **UI Location:** Dedicated `/analytics` page (linked from dashboard)
+  - **Time Range:** Default to last 12 weeks (3 months), with option to view all-time
+  - **Data Refresh:** Daily batch job (pre-computed analytics cached for performance)
+  - **Retirement Thresholds:** Flag recipes with avg feedback < 😐, skip rate >50%, unused 6+ months, or consistent kid dislike
 - **Tasks:**
-  - [ ] **Recipe Popularity Dashboard**: Display recipes ranked by frequency and average feedback score
-  - [ ] **Kid Preference Tracker**: Per-child analytics showing favorite recipes, most-loved cuisines, and emoji trends
-  - [ ] **Dinner Success Patterns**: Identify which recipes consistently get made vs. skipped (adherence tracking)
-  - [ ] **Leftover Pipeline Analytics**: Track which dinners successfully convert to lunch vs. get wasted
-  - [ ] **Cuisine Diversity Metrics**: Visualize weekly/monthly rotation variety (Indian vs. Mexican vs. Italian balance)
-  - [ ] **Snack Hit Rate**: Track which school/home snacks are most successful with kids
-  - [ ] **Recipe Retirement Suggestions**: Flag recipes with consistently low feedback for removal or tweaking
-  - [ ] **Family Favorites Widget**: Dashboard card showing top 5 recipes this month for quick re-planning
+  - [ ] Create `/analytics` page with navigation from dashboard
+  - [ ] Implement daily batch job to compute analytics from `history.yml`
+  - [ ] **Recipe Popularity Table**: Rank by frequency + avg feedback score (last 12 weeks)
+  - [ ] **Kid Preference Cards**: Per-child favorite recipes, cuisines, and emoji distribution charts
+  - [ ] **Dinner Adherence Chart**: Made vs. skipped percentage over time
+  - [ ] **Leftover Pipeline Success**: Track dinner→lunch conversions vs. waste
+  - [ ] **Cuisine Diversity Pie Chart**: Weekly/monthly rotation balance (Indian/Mexican/Italian/etc.)
+  - [ ] **Snack Success Rate**: School vs. home snack performance with kid feedback
+  - [ ] **Recipe Retirement List**: Flagged recipes with reasons (low score/high skip/unused/kid dislike)
+  - [ ] **Family Favorites Widget**: Small dashboard card showing top 5 this month (links to full analytics)
 
 #### Block 5: Recipe Format Migration (Efficiency)
 **Focus:** Token Efficiency & Context Window
 - **Goal:** Reduce recipe token count by >70% by migrating from HTML to Markdown.
+- **Implementation:**
+  - **Strategy:** Big bang migration - convert all 226 recipes at once
+  - **Format:** YAML frontmatter + Markdown body (replace current HTML `content` field)
+  - **Testing:** Validate migration on dev branch before production deployment
 - **Tasks:**
-  - [ ] Create migration script (`scripts/migrate_html_to_md.py`) to convert HTML to Frontmatter+MDX.
-  - [ ] Update `scripts/parse_recipes.py` to support new format.
-  - [ ] Create React component for rendering MD recipes.
-  - [ ] Bulk migrate all existing recipes.
+  - [ ] Design new recipe format schema (frontmatter fields + markdown structure)
+  - [ ] Create migration script (`scripts/migrate_html_to_md.py`) to convert all recipes
+  - [ ] Update `scripts/parse_recipes.py` to read/write new format
+  - [ ] Create React component (`RecipeDisplay.tsx`) for rendering markdown recipes
+  - [ ] Test migration on sample recipes (5-10 diverse examples)
+  - [ ] Run full migration on all 226 recipes
+  - [ ] Verify generated plans still render correctly
+  - [ ] Update recipe importer to use new format for future imports
 
 #### Block 6: Homepage Data Consistency (Bug Fix)
 **Focus:** UI State Sync
 - **Goal:** Ensure homepage accurately reflects current meal plan and confirmation status.
+- **Known Issues:**
+  - **Stale Meal Data:** Today's Schedule shows outdated meals/prep after logging
+  - **Farmers Market Status:** Vegetable confirmation doesn't reflect actual state in input file
+  - **General Investigation:** Need to audit all data refresh triggers
 - **Tasks:**
-  - [ ] Fix issue where homepage doesn't reflect active meal slots.
-  - [ ] Fix issue where homepage doesn't reflect what's been confirmed.
+  - [ ] Audit dashboard data fetching (identify all API calls and refresh triggers)
+  - [ ] Fix stale "Today's Schedule" after meal logging (ensure immediate refresh)
+  - [ ] Fix farmers market confirmation status sync with input file
+  - [ ] Add client-side cache invalidation strategy (when to force refetch)
+  - [ ] Test rapid logging scenarios (multiple meals in quick succession)
+  - [ ] Add loading states to prevent showing stale data during refresh
 
 #### Block 7: Inventory Management Enhancements (UI)
 **Focus:** CRUD Operations
 - **Goal:** Allow full control over inventory items from the UI.
+- **Implementation:**
+  - **UI Location:** Inline controls on existing dashboard inventory display
+  - **Edit UX:** Click item to open inline edit mode (quantity/servings field)
+  - **Delete UX:** Trash icon per item, no confirmation dialog, 5-second undo toast
+  - **Undo Buffer:** Track last deletion for quick restore
 - **Tasks:**
-  - [ ] Implement "Edit Quantity" functionality for inventory items.
-  - [ ] Implement "Delete Item" functionality for inventory items.
+  - [ ] Add edit/delete icons to each inventory item (freezer, fridge, pantry)
+  - [ ] Implement inline edit mode for quantities (enter to save, esc to cancel)
+  - [ ] Create delete API endpoint (`/api/inventory/delete`)
+  - [ ] Implement undo toast notification with restore action
+  - [ ] Add optimistic UI updates (instant feedback before API response)
+  - [ ] Handle edge cases (delete while undo pending, rapid edits)
+  - [ ] Add keyboard shortcuts (e for edit, delete key to remove selected item)
 
 ### Recently Completed (Phase 7-10)
 - [x] **Web Workflow**: Full workflow managed via webpage.

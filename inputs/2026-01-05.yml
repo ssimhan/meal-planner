@@ -56,12 +56,10 @@ dinners:
 - day: thu
   recipe_id: cauliflower_black_bean_tacos
 - day: fri
-  recipe_id: sweet_potato_black_bean_quesadilla
-- day: sat
   recipe_id: veggie_fried_rice
+- day: sat
+  recipe_id: sweet_potato_black_bean_quesadilla
 prep_tasks:
-- 'Wednesday Prep (for Thu/Fri/Sat meals):'
-- '- [ ] Cut okra'
-- '- [ ] Cut sweet potatoes (for Friday quesadilla)'
-- '- [ ] Chop onions for Thu Cauliflower Black Bean Tacos'
-- '- [ ] Chop cauliflower for Thu Cauliflower Black Bean Tacos'
+- 'Monday Prep (for Mon/Tue meals):'
+- '- [ ] Chop garlic for Mon Rasam Rice with Beetroot Kai'
+- '- [ ] Chop tomato for Mon Rasam Rice with Beetroot Kai'

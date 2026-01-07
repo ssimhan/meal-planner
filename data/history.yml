@@ -99,24 +99,24 @@ weeks:
     - onion
     - tomato
     notes: New recipe to be added to index
-  - recipe_id: sweet_potato_black_bean_quesadilla
-    cuisine: mexican
-    meal_type: tacos_wraps
-    day: fri
-    vegetables:
-    - sweet potato
-    - onion
-    notes: New recipe to be added to index. Prep sweet potatoes on Wednesday
   - recipe_id: veggie_fried_rice
     cuisine: asian
     meal_type: rice_grain
-    day: sat
+    day: fri
     vegetables:
     - carrot
     - corn
     - peas
     - edamame
     notes: New recipe to be added to index
+  - recipe_id: sweet_potato_black_bean_quesadilla
+    cuisine: mexican
+    meal_type: tacos_wraps
+    day: sat
+    vegetables:
+    - sweet potato
+    - onion
+    notes: New recipe to be added to index. Prep sweet potatoes on Wednesday
   fridge_vegetables:
   - white rice
   - okra

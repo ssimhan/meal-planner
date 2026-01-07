@@ -1259,6 +1259,27 @@ Continuing with current recipes. Use freezer backups manually if preferred.
 
 ---
 
+## Session: 2026-01-06 (Late Night) - Architecture & UX Hardening
+
+**Work Completed:**
+- **Refining Data Architecture:** Selected and implemented a **Hybrid Model** to resolve data inconsistencies between `inputs/` and `history.yml`.
+    - Implemented **Auto-Archiving**: Active weeks are now automatically archived when the week's end date passes, or when a new week is started.
+    - Simplified the "Source of Truth" for meal status, ensuring frontend logging updates both the active plan and the historical record.
+- **Replacement UI & Logic Refinements:**
+    - **Conditional Visibility**: The "Replace" button (🔄) is now only visible when "Mark for Fix" mode is active, reducing visual clutter.
+    - **Diverse Suggestions**: Improved the "Shop Fridge" algorithm to filter out recipes with identical main vegetables or similar profiles to provide more variety.
+    - **Type-Specific Logging**: Fixed a bug where replacements for non-dinner meals (snacks/lunches) weren't correctly updating their respective feedback entries.
+- **Vercel Resilience & Workflow Fixes:**
+    - **Cache Invalidation**: Disabled aggressive caching for `history.yml` and `inventory.yml` in serverless modes to prevent stale data display after logging.
+    - **Refresh Triggers**: Added explicit state-refresh triggers in `WeekView` and `Dashboard` after every write operation.
+    - **Replan Workflow**: Integrated the inventory-aware replan directly into the Vercel-compatible API.
+
+**Technical Decisions:**
+1. **Hybrid Architecture:** Combining file-based persistence with in-memory state management (during a request) provides the best balance of performance and GitOps reliability.
+2. **Contextual UI:** Using "Modes" (like Mark for Fix) allows the application to stay clean for daily reading while remaining powerful for editing.
+
+---
+
 ## Session: 2026-01-07 - Inventory CRUD & Dashboard Optimizations
 
 **Work Completed:**

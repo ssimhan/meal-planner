@@ -221,6 +221,76 @@ def archive_expired_weeks():
         except Exception as e:
             print(f"Sync failed: {e}")
 
+
+def archive_all_input_files():
+    """Archive ALL input files to history.yml (called before creating new week).
+    
+    This ensures only one active input file exists at a time.
+    When creating a new week (even on Sunday morning), this archives the current week.
+    """
+    from scripts.log_execution import load_history, save_history
+    
+    inputs_dir = get_actual_path('inputs')
+    if not inputs_dir.exists():
+        return  # Nothing to archive
+    
+    history_path = get_actual_path('data/history.yml')
+    history = load_history()
+    
+    if 'weeks' not in history:
+        history['weeks'] = []
+    
+    archived_count = 0
+    
+    # Archive each input file
+    for input_file in inputs_dir.glob('*.yml'):
+        if input_file.name == '.gitkeep':
+            continue
+        
+        try:
+            with open(input_file, 'r') as f:
+                week_data = yaml.safe_load(f)
+            
+            if not week_data:
+                continue
+                
+            week_of = week_data.get('week_of')
+            if not week_of:
+                print(f"Warning: Input file {input_file.name} has no week_of field, skipping")
+                continue
+            
+            # Remove existing entry for this week in history (if any)
+            history['weeks'] = [w for w in history['weeks'] 
+                               if w.get('week_of') != week_of]
+            
+            # Add to history
+            history['weeks'].append(week_data)
+            archived_count += 1
+            
+            # Delete input file
+            input_file.unlink()
+            print(f"  ✓ Archived {week_of} to history.yml")
+            
+        except Exception as e:
+            print(f"Warning: Failed to archive {input_file.name}: {e}")
+            continue
+    
+    if archived_count > 0:
+        # Sort weeks chronologically
+        history['weeks'].sort(key=lambda w: w.get('week_of', ''))
+        
+        # Save history
+        save_history(history)
+        
+        # Sync to GitHub
+        try:
+            from scripts.github_helper import sync_changes_to_github
+            sync_changes_to_github(['data/history.yml'])
+        except Exception as e:
+            print(f"Warning: GitHub sync failed: {e}")
+        
+        print(f"\n✓ Archived {archived_count} week(s) to history.yml")
+
 # ============================================================================
 # Workflow Steps
 # ============================================================================
@@ -230,8 +300,13 @@ def create_new_week(week_str):
     print("\n" + "="*60)
     print(f"CREATING NEW WEEK: {week_str}")
     print("="*60)
+    
+    # FIRST: Archive any existing input files
+    print("\n[Step 1/5] Archiving existing input files...")
+    archive_all_input_files()
 
     # Generate farmers market proposal
+    print("\n[Step 2/5] Generating farmers market proposal...")
     history_path = Path('data/history.yml')
     index_path = Path('recipes/index.yml')
 

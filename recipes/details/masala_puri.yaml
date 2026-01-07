@@ -1,0 +1,62 @@
+id: masala_puri
+name: Masala Puri
+categories:
+- Indian
+- Street Food
+- Vegetarian
+cuisine: indian
+meal_type: appetizer
+effort_level: easy
+no_chop_compatible: false
+prep_time_minutes: 15
+cook_time_minutes: 20
+appliances:
+- stovetop
+ingredients:
+- 2 medium potatoes, boiled and mashed
+- 2 medium tomatoes, finely chopped
+- 1 large onion, finely chopped
+- 2 cloves garlic, minced
+- 1/2 cup cilantro, chopped
+- 2 tbsp oil
+- 1 tsp mustard seeds
+- 1 tsp cumin seeds
+- 1/2 tsp turmeric powder
+- 1 tsp red chili powder
+- 1 tsp coriander powder
+- Salt to taste
+- 1 package puris (store-bought or homemade)
+- Optional: sev, chopped onions, cilantro for topping
+- Optional: tamarind chutney, green chutney
+main_veg:
+- potato
+- tomato
+- onion
+- cilantro
+avoid_contains: []
+instructions: |
+  Boil potatoes until tender, peel and mash them. Set aside.
+  
+  Heat oil in a large pan over medium heat.
+  Add mustard seeds and cumin seeds. Let them splutter.
+  
+  Add chopped onions and garlic, sauté until golden brown (5-6 minutes).
+  
+  Add chopped tomatoes and cook until they soften and become mushy (5-7 minutes).
+  
+  Add turmeric, red chili powder, coriander powder, and salt. Mix well.
+  
+  Add mashed potatoes and mix thoroughly. Cook for 3-4 minutes.
+  Add a little water if the mixture is too thick. It should be slightly saucy.
+  
+  Add chopped cilantro and mix well. Adjust seasoning to taste.
+  
+  To serve: Place puris on a plate, top with the hot masala mixture.
+  Optionally garnish with sev, extra chopped onions, cilantro, and chutneys.
+  
+  Serve immediately while puris are crispy.
+source_url: null
+source_file: null
+kid_favorite: true
+leftover_potential: medium
+notes: Classic Indian street food. The masala can be made ahead and reheated. Puris are best fresh and crispy.

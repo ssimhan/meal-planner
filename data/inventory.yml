@@ -1,9 +1,10 @@
-last_updated: '2026-01-05'
+last_updated: '2026-01-06'
 fridge:
 - item: pomegranates
   quantity: 4
   unit: count
   added: '2026-01-04'
+  notes: For Wednesday home snack
 - item: tomatoes
   quantity: 10
   unit: count
@@ -12,18 +13,12 @@ fridge:
   quantity: 1
   unit: bag
   added: '2026-01-04'
+  notes: Prep tomorrow - cut okra
 - item: avocado packs
-  quantity: 10
+  quantity: 14
   unit: count
   added: '2026-01-04'
-- item: white rice
-  quantity: 1
-  unit: count
-  added: '2026-01-05'
-- item: brown rice
-  quantity: 1
-  unit: count
-  added: '2026-01-05'
+  notes: Started with 16, used 2 on Tuesday
 - item: cut green beans
   quantity: 1
   unit: meal portion
@@ -32,10 +27,41 @@ fridge:
   quantity: 1
   unit: meal portion
   added: '2026-01-05'
-- item: diced beetroot
+- item: kiwi
   quantity: 1
-  unit: meal portion
-  added: '2026-01-05'
+  unit: bag
+  added: '2026-01-06'
+  notes: Good for home snacks
+- item: grapes
+  quantity: 1
+  unit: bag
+  added: '2026-01-06'
+  notes: Good for home snacks
+- item: blueberries
+  quantity: 1
+  unit: container
+  added: '2026-01-06'
+  notes: Good for school snacks
+- item: corn
+  quantity: 1
+  unit: bag
+  added: '2026-01-06'
+- item: lettuce
+  quantity: 1
+  unit: head
+  added: '2026-01-06'
+- item: cauliflower florets
+  quantity: 1
+  unit: bag
+  added: '2026-01-06'
+- item: flour tortillas
+  quantity: 1
+  unit: package
+  added: '2026-01-06'
+- item: salsa
+  quantity: 1
+  unit: jar
+  added: '2026-01-06'
 pantry:
 - item: black beans
   quantity: 4
@@ -43,6 +69,9 @@ pantry:
 - item: rice
   quantity: 5
   unit: cups
+- item: white rice
+  quantity: 1
+  unit: bag
 - item: onions
   quantity: 3
   unit: count
@@ -51,31 +80,44 @@ pantry:
   quantity: 7
   unit: count
   added: '2026-01-04'
+  notes: Prep tomorrow - cut sweet potatoes
 - item: potato
   quantity: 3
   unit: count
   added: '2026-01-04'
+- item: pineapple
+  quantity: 1
+  unit: count
+  added: '2026-01-06'
+  notes: Will be ripe Friday or Saturday
+- item: soy sauce
+  quantity: 1
+  unit: bottle
+- item: sesame oil
+  quantity: 1
+  unit: bottle
+- item: cilantro
+  quantity: 1
+  unit: bunch
+  added: '2026-01-06'
 freezer:
   backups:
-  - meal: Black Bean Soup
-    servings: 6
-    frozen_date: '2025-12-15'
-  - meal: Vegetable Curry
-    servings: 2
-    frozen_date: '2026-01-01'
-  - meal: Doubled Chickpea Wraps
-    servings: 4
-    frozen_date: '2026-01-01'
-  - meal: Chow chow puli kootu
-    servings: 4
-    frozen_date: '2026-01-05'
   - meal: Keerai maseeyil
     servings: 4
     frozen_date: '2026-01-05'
+  - meal: Chow chow puli kootu leftover
+    servings: 1
+    frozen_date: '2026-01-06'
+  - meal: Protein muffins
+    servings: 5
+    frozen_date: unknown
+  - meal: Spinach ravioli leftover
+    servings: 1
+    frozen_date: unknown
   ingredients:
   - item: Parotta frozen
-    quantity: 1
-    unit: count
+    quantity: 8
+    unit: servings
     frozen_date: '2026-01-05'
   - item: Butternut squash sauce
     quantity: 2
@@ -85,3 +127,35 @@ freezer:
     quantity: 3
     unit: cups
     frozen_date: '2024-09-25'
+  - item: Frozen blueberries
+    quantity: 1
+    unit: bag
+    frozen_date: unknown
+  - item: Green peas
+    quantity: 1
+    unit: bag
+    frozen_date: unknown
+  - item: Edamame
+    quantity: 1
+    unit: bag
+    frozen_date: unknown
+  - item: Mixed peas and carrots
+    quantity: 1
+    unit: bag
+    frozen_date: unknown
+  - item: Mozzarella cheese shredded
+    quantity: 1
+    unit: bag
+    frozen_date: unknown
+  - item: Mexican style cheese shredded
+    quantity: 1
+    unit: bag
+    frozen_date: unknown
+  - item: Parmesan cheese shredded
+    quantity: 1
+    unit: bag
+    frozen_date: unknown
+  - item: Pepper jack cheese shredded
+    quantity: 1
+    unit: bag
+    frozen_date: unknown

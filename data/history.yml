@@ -58,92 +58,91 @@ weeks:
     - spinach
 - week_of: '2026-01-05'
   dinners:
-  - recipe_id: curried_cauliflower_quinoa_salad
-    cuisine: mediterranean
-    meal_type: salad
+  - recipe_id: rasam_rice_with_beetroot_kai
+    cuisine: indian
+    meal_type: soup_stew
     day: mon
     vegetables:
-    - arugula
-    - cabbage
-    - cauliflower
-    - cilantro
-    - cucumber
-    - garlic
-    - lemon
-    - arugula
-    - cabbage
-    - cauliflower
-    - cilantro
-    - cucumber
-    - garlic
-    - lemon
+    - beetroot
+    - tomato
+    made: true
+    actual_meal: Rasam Rice with Beetroot Kai
+    needs_fix: false
   - recipe_id: freezer_meal
-    cuisine: various
+    cuisine: indian
     meal_type: freezer
     day: tue
     vegetables: []
-    made: null
+    made: true
     freezer_used:
-      meal: Chana Masala
-      frozen_date: Unknown
+      meal: Chow chow puli kootu
+      frozen_date: '2026-01-05'
+    leftover_for_adult_lunch: true
     needs_fix: false
-  - recipe_id: chickpea_salad_wrap
+  - recipe_id: masala_puri
+    cuisine: indian
+    meal_type: appetizer
+    day: wed
+    vegetables:
+    - potato
+    - tomato
+    - onion
+    - cilantro
+    notes: New recipe to be added to index
+  - recipe_id: cauliflower_black_bean_tacos
     cuisine: mexican
     meal_type: tacos_wraps
-    day: sat
-    vegetables:
-    - bell pepper
-    - carrot
-    - peas
-    - tomato
-    - bell pepper
-    - carrot
-    - peas
-    - tomato
-    made: null
-    vegetables_used:
-    - bell pepper
-    - carrot
-    - peas
-    - tomato
-    - bell pepper
-    - carrot
-    - peas
-    - tomato
-    made_2x_for_freezer: true
-    needs_fix: false
-  - recipe_id: easy_zucchini_pasta_sauce
-    cuisine: italian
-    meal_type: pasta_noodles
     day: thu
     vegetables:
-    - basil
-    - beans
-    - garlic
-    - lemon
-    - parsley
-    - spinach
-    - zucchini
-    - basil
-    - beans
-    - garlic
-    - lemon
-    - parsley
-    - spinach
-    - zucchini
-  - recipe_id: easy_french_toast_sticks
-    cuisine: american
-    meal_type: sandwich
+    - cauliflower
+    - corn
+    - onion
+    - tomato
+    notes: New recipe to be added to index
+  - recipe_id: sweet_potato_black_bean_quesadilla
+    cuisine: mexican
+    meal_type: tacos_wraps
     day: fri
-    vegetables: []
+    vegetables:
+    - sweet potato
+    - onion
+    notes: New recipe to be added to index. Prep sweet potatoes on Wednesday
+  - recipe_id: veggie_fried_rice
+    cuisine: asian
+    meal_type: rice_grain
+    day: sat
+    vegetables:
+    - carrot
+    - corn
+    - peas
+    - edamame
+    notes: New recipe to be added to index
   fridge_vegetables:
   - white rice
-  - brown rice
   - okra
-  plan_adherence_pct: 33
+  - cut green beans
+  - diced carrots
+  - corn
+  - lettuce
+  - cauliflower florets
+  - kiwi
+  - grapes
+  - blueberries
+  plan_adherence_pct: 0
   freezer_inventory:
-  - meal: Chickpea Salad Wrap
-    frozen_date: '2026-01-01'
+  - meal: Chow chow puli kootu leftover
+    frozen_date: '2026-01-06'
+  - meal: Keerai maseeyil
+    frozen_date: '2026-01-05'
+  - meal: Protein muffins
+    frozen_date: unknown
+  - meal: Spinach ravioli leftover
+    frozen_date: unknown
+  prep_reminders:
+  - task: Cut okra
+    day: wed
+  - task: Cut sweet potatoes (for Friday quesadilla)
+    day: wed
   daily_feedback:
     sun:
       school_snack: ''
@@ -151,19 +150,26 @@ weeks:
       adult_lunch: ''
       adult_lunch_made: true
     mon:
-      kids_lunch_needs_fix: false
       kids_lunch: Pesto gnocchi
+      kids_lunch_needs_fix: false
       school_snack: Grapes
       school_snack_needs_fix: false
       home_snack: Blackberries
       home_snack_needs_fix: false
     tue:
-      home_snack: Cheese cubes
-      home_snack_needs_fix: false
       kids_lunch: Rasam Rice with Beetroot Kai
       kids_lunch_needs_fix: false
       school_snack: Avocado packs
       school_snack_needs_fix: false
+      home_snack: Cheese cubes
+      home_snack_needs_fix: false
+    wed:
+      kids_lunch: PBJ sandwich
+      kids_lunch_needs_fix: false
+      adult_lunch: Chow chow puli kootu leftover
+      adult_lunch_needs_fix: false
+      home_snack: Pomegranates
+      home_snack_needs_fix: false
 - week_of: '2026-01-12'
   dinners:
   - recipe_id: cauliflower_rasam

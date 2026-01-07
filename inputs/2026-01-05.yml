@@ -48,29 +48,20 @@ rollover:
   source_week: '2025-12-29'
 dinners:
 - day: mon
-  recipe_id: curried_cauliflower_quinoa_salad
+  recipe_id: rasam_rice_with_beetroot_kai
 - day: tue
   recipe_id: freezer_meal
-- day: sat
-  recipe_id: chickpea_salad_wrap
+- day: wed
+  recipe_id: masala_puri
 - day: thu
-  recipe_id: easy_zucchini_pasta_sauce
+  recipe_id: cauliflower_black_bean_tacos
 - day: fri
-  recipe_id: easy_french_toast_sticks
+  recipe_id: sweet_potato_black_bean_quesadilla
+- day: sat
+  recipe_id: veggie_fried_rice
 prep_tasks:
-- 'Monday Prep (for Mon/Tue meals):'
-- '- [ ] Chop arugula for Mon Curried Cauliflower Quinoa Salad'
-- '- [ ] Chop cabbage for Mon Curried Cauliflower Quinoa Salad'
-- '- [ ] Chop cauliflower for Mon Curried Cauliflower Quinoa Salad'
-- '- [ ] Chop cilantro for Mon Curried Cauliflower Quinoa Salad'
-- '- [ ] Chop cucumber for Mon Curried Cauliflower Quinoa Salad'
-- '- [ ] Chop garlic for Mon Curried Cauliflower Quinoa Salad'
-- '- [ ] Chop lemon for Mon Curried Cauliflower Quinoa Salad'
-- 'Wednesday Prep (for Thu/Fri meals):'
-- '- [ ] Chop basil for Thu Easy Zucchini Pasta Sauce'
-- '- [ ] Chop beans for Thu Easy Zucchini Pasta Sauce'
-- '- [ ] Chop garlic for Thu Easy Zucchini Pasta Sauce'
-- '- [ ] Chop lemon for Thu Easy Zucchini Pasta Sauce'
-- '- [ ] Chop parsley for Thu Easy Zucchini Pasta Sauce'
-- '- [ ] Chop spinach for Thu Easy Zucchini Pasta Sauce'
-- '- [ ] Chop zucchini for Thu Easy Zucchini Pasta Sauce'
+- 'Wednesday Prep (for Thu/Fri/Sat meals):'
+- '- [ ] Cut okra'
+- '- [ ] Cut sweet potatoes (for Friday quesadilla)'
+- '- [ ] Chop onions for Thu Cauliflower Black Bean Tacos'
+- '- [ ] Chop cauliflower for Thu Cauliflower Black Bean Tacos'

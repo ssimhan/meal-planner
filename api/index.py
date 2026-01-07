@@ -561,16 +561,28 @@ def log_meal():
         # but let's see if we can just import the core functions.
         
         from scripts.log_execution import find_week, calculate_adherence, update_inventory_file, save_history
+        from scripts.workflow import generate_granular_prep_tasks
         from datetime import datetime
         
-        history = get_yaml_data('data/history.yml')
+        # Check if week is in inputs/ (active) or history.yml (archived)
+        input_file = get_actual_path(f'inputs/{week_str}.yml')
+        is_active_week = input_file.exists()
         
-        if not history:
-            return jsonify({"status": "error", "message": "History file not found"}), 404
-            
-        week = find_week(history, week_str)
-        if not week:
-            return jsonify({"status": "error", "message": f"Week {week_str} not found"}), 404
+        if is_active_week:
+            # Active week - update input file
+            with open(input_file, 'r') as f:
+                week_data = yaml.safe_load(f)
+            week = week_data  # The input file IS the week data
+            is_input_file = True
+        else:
+            # Archived week - update history.yml
+            history = get_yaml_data('data/history.yml')
+            if not history:
+                return jsonify({"status": "error", "message": "History file not found"}), 404
+            week = find_week(history, week_str)
+            if not week:
+                return jsonify({"status": "error", "message": f"Week {week_str} not found"}), 404
+            is_input_file = False
             
         # Find dinner if we have dinner-related data
         target_day = day.lower()[:3]
@@ -724,24 +736,69 @@ def log_meal():
                                   [v.strip() for v in vegetables.split(',')] if vegetables else None)
 
             calculate_adherence(week)
-        save_history(history)
         
-        if request_recipe:
-            meal_to_add = actual_meal or school_snack_feedback or home_snack_feedback or kids_lunch_feedback or adult_lunch_feedback
-            if meal_to_add:
-                repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
-                from scripts.github_helper import get_file_from_github, commit_file_to_github
+        # Save to appropriate file
+        if is_active_week:
+            # Active week - regenerate prep tasks and save to input file
+            try:
+                # Load recipes for prep task generation
+                recipes = get_cached_data('recipes', 'recipes/index.yml') or []
                 
-                content = get_file_from_github(repo_name, 'docs/IMPLEMENTATION.md')
-                if content:
-                    section_marker = "### Recipe Index changes\n*Pending recipe additions from corrections:*"
-                    if section_marker in content:
-                        new_line = f"\n- [ ] Add recipe for: {meal_to_add} (requested on {datetime.now().strftime('%Y-%m-%d')})"
-                        # Check if already requested today to avoid duplicates
-                        if new_line.strip() not in content:
-                            updated_content = content.replace(section_marker, section_marker + new_line)
-                            commit_file_to_github(repo_name, 'docs/IMPLEMENTATION.md', f"Request recipe for {meal_to_add}", content=updated_content)
-
+                # Build selected_dinners dict for prep task generator
+                selected_dinners = {}
+                for dinner in week.get('dinners', []):
+                    day = dinner.get('day')
+                    if day:
+                        # Find recipe details
+                        recipe_match = next((r for r in recipes if r['id'] == dinner.get('recipe_id')), None)
+                        if recipe_match:
+                            selected_dinners[day] = {
+                                'id': dinner.get('recipe_id'),
+                                'name': recipe_match.get('name', dinner.get('recipe_id')),
+                                'main_veg': recipe_match.get('main_veg', [])
+                            }
+                
+                # Regenerate prep tasks
+                completed_prep = []
+                if 'daily_feedback' in week:
+                    for day_feedback in week['daily_feedback'].values():
+                        if 'prep_completed' in day_feedback:
+                            completed_prep.extend(day_feedback['prep_completed'])
+                
+                tasks_mon_tue = generate_granular_prep_tasks(selected_dinners, {}, ['mon', 'tue'], "Mon/Tue", completed_prep)
+                tasks_wed_fri = generate_granular_prep_tasks(selected_dinners, {}, ['wed', 'thu', 'fri'], "Wed-Fri", completed_prep)
+                
+                new_prep_tasks = []
+                if tasks_mon_tue:
+                    new_prep_tasks.append("Monday Prep (for Mon/Tue meals):")
+                    new_prep_tasks.extend([f"- [ ] {t}" for t in tasks_mon_tue])
+                if tasks_wed_fri:
+                    new_prep_tasks.append("Wednesday Prep (for Wed-Fri meals):")
+                    new_prep_tasks.extend([f"- [ ] {t}" for t in tasks_wed_fri])
+                
+                week['prep_tasks'] = new_prep_tasks
+            except Exception as e:
+                print(f"Warning: Failed to regenerate prep tasks: {e}")
+            
+            # Save input file
+            with open(input_file, 'w') as f:
+                yaml.dump(week, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+            
+            # Sync input file to GitHub
+            from scripts.github_helper import sync_changes_to_github
+            sync_changes_to_github([f'inputs/{week_str}.yml', 'data/inventory.yml'])
+        else:
+            # Archived week - save to history.yml
+            save_history(history)
+            
+            # Sync history to GitHub
+            from scripts.github_helper import sync_changes_to_github
+            sync_changes_to_github(['data/history.yml', 'data/inventory.yml'])
+        
+        # Invalidate Cache
+        invalidate_cache('history')
+        invalidate_cache('inventory')
+        
         # Get fresh status BEFORE syncing to GitHub (so we read local tmp changes)
         # passing skip_sync=True to avoid overwriting local changes with stale GitHub data
         updated_status = _get_current_status(skip_sync=True)
@@ -766,6 +823,10 @@ def create_week():
         week_str = data.get('week_of')
         if not week_str:
             _, week_str = find_current_week_file()
+        
+        # FIRST: Archive any existing input files
+        from scripts.workflow import archive_all_input_files
+        archive_all_input_files()
         
         # Generate farmers market proposal
         from scripts.workflow import generate_farmers_market_proposal

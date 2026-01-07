@@ -1003,17 +1003,7 @@ def confirm_veg():
         
         # Return full updated status
         # This prevents the frontend from showing stale data while Vercel re-deploys or cache clears
-        state, updated_data = get_workflow_state(input_file)
-        current_day = datetime.now().strftime('%a').lower()[:3]
-        
-        return jsonify({
-            "status": "success",
-            "message": "Vegetables confirmed and inventory updated",
-            "week_of": week_str,
-            "state": state,
-            "has_data": updated_data is not None,
-            "current_day": current_day
-        })
+        return _get_current_status(skip_sync=True)
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
@@ -1150,6 +1140,136 @@ def bulk_add_inventory():
         return jsonify({"status": "success", "inventory": inventory})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route("/api/inventory/delete", methods=["POST"])
+def delete_inventory():
+    try:
+        data = request.json or {}
+        category = data.get('category')
+        item_name = data.get('item')
+        
+        if not category or not item_name:
+            return jsonify({"status": "error", "message": "Category and item required"}), 400
+            
+        inventory = get_yaml_data('data/inventory.yml') or {}
+        inventory_path = Path('data/inventory.yml')
+        
+        removed = False
+        if category == 'meals':
+            if 'freezer' in inventory and 'backups' in inventory['freezer']:
+                initial_len = len(inventory['freezer']['backups'])
+                inventory['freezer']['backups'] = [i for i in inventory['freezer']['backups'] if i.get('meal') != item_name]
+                removed = len(inventory['freezer']['backups']) < initial_len
+        elif category == 'frozen_ingredient':
+            if 'freezer' in inventory and 'ingredients' in inventory['freezer']:
+                initial_len = len(inventory['freezer']['ingredients'])
+                inventory['freezer']['ingredients'] = [i for i in inventory['freezer']['ingredients'] if i.get('item') != item_name]
+                removed = len(inventory['freezer']['ingredients']) < initial_len
+        elif category == 'pantry':
+            if 'pantry' in inventory:
+                initial_len = len(inventory['pantry'])
+                inventory['pantry'] = [i for i in inventory['pantry'] if i.get('item') != item_name]
+                removed = len(inventory['pantry']) < initial_len
+        elif category == 'fridge':
+            if 'fridge' in inventory:
+                initial_len = len(inventory['fridge'])
+                inventory['fridge'] = [i for i in inventory['fridge'] if i.get('item') != item_name]
+                removed = len(inventory['fridge']) < initial_len
+        
+        if not removed:
+             return jsonify({"status": "error", "message": f"Item '{item_name}' not found in category '{category}'"}), 404
+
+        inventory['last_updated'] = datetime.now().strftime('%Y-%m-%d')
+        new_content = yaml.dump(inventory, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        
+        try:
+            with open(inventory_path, 'w') as f:
+                f.write(new_content)
+        except OSError:
+            pass
+            
+        # Sync to GitHub
+        from scripts.github_helper import commit_file_to_github
+        repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
+        success = commit_file_to_github(repo_name, str(inventory_path), f"Delete {item_name} from {category} inventory", content=new_content)
+        
+        if not success:
+             return jsonify({"status": "error", "message": "Failed to sync inventory to GitHub"}), 500
+             
+        invalidate_cache('inventory')
+        return jsonify({"status": "success", "inventory": inventory})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route("/api/inventory/update", methods=["POST"])
+def update_inventory():
+    try:
+        data = request.json or {}
+        category = data.get('category')
+        item_name = data.get('item')
+        updates = data.get('updates', {}) # e.g. {'quantity': 2, 'unit': 'lb'}
+        
+        if not category or not item_name:
+            return jsonify({"status": "error", "message": "Category and item required"}), 400
+            
+        inventory = get_yaml_data('data/inventory.yml') or {}
+        inventory_path = Path('data/inventory.yml')
+        
+        updated = False
+        if category == 'meals':
+            if 'freezer' in inventory and 'backups' in inventory['freezer']:
+                for itm in inventory['freezer']['backups']:
+                    if itm.get('meal') == item_name:
+                        itm.update(updates)
+                        updated = True
+                        break
+        elif category == 'frozen_ingredient':
+            if 'freezer' in inventory and 'ingredients' in inventory['freezer']:
+                for itm in inventory['freezer']['ingredients']:
+                    if itm.get('item') == item_name:
+                        itm.update(updates)
+                        updated = True
+                        break
+        elif category == 'pantry':
+            if 'pantry' in inventory:
+                for itm in inventory['pantry']:
+                    if itm.get('item') == item_name:
+                        itm.update(updates)
+                        updated = True
+                        break
+        elif category == 'fridge':
+            if 'fridge' in inventory:
+                for itm in inventory['fridge']:
+                    if itm.get('item') == item_name:
+                        itm.update(updates)
+                        updated = True
+                        break
+        
+        if not updated:
+             return jsonify({"status": "error", "message": f"Item '{item_name}' not found in category '{category}'"}), 404
+
+        inventory['last_updated'] = datetime.now().strftime('%Y-%m-%d')
+        new_content = yaml.dump(inventory, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        
+        try:
+            with open(inventory_path, 'w') as f:
+                f.write(new_content)
+        except OSError:
+            pass
+            
+        # Sync to GitHub
+        from scripts.github_helper import commit_file_to_github
+        repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
+        success = commit_file_to_github(repo_name, str(inventory_path), f"Update {item_name} in {category} inventory", content=new_content)
+        
+        if not success:
+             return jsonify({"status": "error", "message": "Failed to sync inventory to GitHub"}), 500
+             
+        invalidate_cache('inventory')
+        return jsonify({"status": "success", "inventory": inventory})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 
 @app.route("/api/replan", methods=["POST"])
 def replan():

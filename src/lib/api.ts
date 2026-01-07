@@ -119,6 +119,33 @@ export async function addItemToInventory(category: string, item: string): Promis
     return res.json();
 }
 
+export async function deleteItemFromInventory(category: string, item: string): Promise<any> {
+    const res = await fetch('/api/inventory/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category, item }),
+    });
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to delete item from inventory');
+    }
+    return res.json();
+}
+
+export async function updateInventoryItem(category: string, item: string, updates: any): Promise<any> {
+    const res = await fetch('/api/inventory/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category, item, updates }),
+    });
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to update inventory item');
+    }
+    return res.json();
+}
+
+
 export interface LogMealData {
     week?: string;
     day?: string;

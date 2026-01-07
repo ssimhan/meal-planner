@@ -11,6 +11,20 @@
   source:
     type: markdown
     file: recipes/content/3_ingredient_cereal_bars.md
+- id: avocado_packs
+  name: Avocado packs
+  cuisine: unknown
+  meal_type: simple_snack
+  effort_level: normal
+  no_chop_compatible: true
+  appliances:
+  - none
+  main_veg:
+  - avocado
+  avoid_contains: []
+  source:
+    type: markdown
+    file: recipes/content/avocado_packs.md
 - id: aloo_corn_tikki_roll
   name: Aloo Corn Tikki Roll
   cuisine: indian
@@ -454,6 +468,19 @@
   source:
     type: markdown
     file: recipes/content/cheese_and_tomato_quinoa_balls.md
+- id: cheese_cubes
+  name: Cheese cubes
+  cuisine: unknown
+  meal_type: simple_snack
+  effort_level: normal
+  no_chop_compatible: true
+  appliances:
+  - none
+  main_veg: []
+  avoid_contains: []
+  source:
+    type: markdown
+    file: recipes/content/cheese_cubes.md
 - id: cheese_sticks
   name: Cheese sticks
   cuisine: unknown

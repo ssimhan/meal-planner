@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getInventory, addItemToInventory, bulkAddItemsToInventory } from '@/lib/api';
+import { getInventory, addItemToInventory, bulkAddItemsToInventory, deleteItemFromInventory, updateInventoryItem } from '@/lib/api';
 import Link from 'next/link';
 
 export default function InventoryPage() {
@@ -10,6 +10,14 @@ export default function InventoryPage() {
     const [error, setError] = useState<string | null>(null);
     const [newItem, setNewItem] = useState({ category: 'meals', name: '' });
     const [updating, setUpdating] = useState(false);
+
+    // Edit states
+    const [editingItem, setEditingItem] = useState<{ category: string, name: string, original: any } | null>(null);
+    const [editValue, setEditValue] = useState<any>({});
+
+    // Undo states
+    const [lastDeleted, setLastDeleted] = useState<{ category: string, item: any } | null>(null);
+    const [showUndo, setShowUndo] = useState(false);
 
     // Brain Dump states
     const [brainDump, setBrainDump] = useState('');
@@ -41,6 +49,77 @@ export default function InventoryPage() {
             setNewItem({ ...newItem, name: '' });
         } catch (err) {
             setError('Failed to add item.');
+        } finally {
+            setUpdating(false);
+        }
+    }
+
+    async function handleDeleteItem(category: string, item: any) {
+        try {
+            const itemName = category === 'meals' ? item.meal : item.item;
+            setUpdating(true);
+            const result = await deleteItemFromInventory(category, itemName);
+
+            // Set up undo
+            setLastDeleted({ category, item });
+            setShowUndo(true);
+            setTimeout(() => setShowUndo(false), 5000); // Hide after 5 seconds
+
+            setInventory(result.inventory);
+        } catch (err) {
+            setError('Failed to delete item.');
+        } finally {
+            setUpdating(false);
+        }
+    }
+
+    async function handleUndoDelete() {
+        if (!lastDeleted) return;
+        try {
+            setUpdating(true);
+            // Re-add the item (we might need a more specific re-add if it has multiple fields)
+            // For now, let's use bulkAdd for simplicity if it supports all fields, 
+            // or just add it back.
+            const itemName = lastDeleted.category === 'meals' ? lastDeleted.item.meal : lastDeleted.item.item;
+            const result = await addItemToInventory(lastDeleted.category, itemName);
+
+            // If it had extra fields like quantity or servings, update it immediately
+            if (lastDeleted.category !== 'meals' && (lastDeleted.item.quantity > 1 || lastDeleted.item.unit)) {
+                await updateInventoryItem(lastDeleted.category, itemName, {
+                    quantity: lastDeleted.item.quantity,
+                    unit: lastDeleted.item.unit
+                });
+                const final = await getInventory();
+                setInventory(final.inventory);
+            } else if (lastDeleted.category === 'meals' && lastDeleted.item.servings) {
+                await updateInventoryItem(lastDeleted.category, itemName, {
+                    servings: lastDeleted.item.servings
+                });
+                const final = await getInventory();
+                setInventory(final.inventory);
+            } else {
+                setInventory(result.inventory);
+            }
+
+            setLastDeleted(null);
+            setShowUndo(false);
+        } catch (err) {
+            setError('Failed to undo deletion.');
+        } finally {
+            setUpdating(false);
+        }
+    }
+
+    async function handleUpdateItem() {
+        if (!editingItem) return;
+        try {
+            setUpdating(true);
+            const result = await updateInventoryItem(editingItem.category, editingItem.name, editValue);
+            setInventory(result.inventory);
+            setEditingItem(null);
+            setEditValue({});
+        } catch (err) {
+            setError('Failed to update item.');
         } finally {
             setUpdating(false);
         }
@@ -108,6 +187,23 @@ export default function InventoryPage() {
 
             {error && (
                 <div className="card text-red-700 mb-8 border-red-200 bg-red-50">{error}</div>
+            )}
+
+            {/* Undo Toast */}
+            {showUndo && lastDeleted && (
+                <div className="fixed bottom-8 right-8 z-50 animate-in slide-in-from-bottom-4">
+                    <div className="bg-gray-900 text-white px-6 py-4 rounded-lg shadow-2xl flex items-center gap-6 border border-gray-700">
+                        <span className="text-sm font-medium">
+                            Deleted <span className="text-[var(--accent-sage)]">{lastDeleted.category === 'meals' ? lastDeleted.item.meal : lastDeleted.item.item}</span>
+                        </span>
+                        <button
+                            onClick={handleUndoDelete}
+                            className="text-xs font-bold uppercase tracking-widest text-[var(--accent-sage)] hover:text-white transition-colors"
+                        >
+                            Undo
+                        </button>
+                    </div>
+                </div>
             )}
 
             {/* Brain Dump Section */}
@@ -247,17 +343,58 @@ milk"
                         </button>
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-4">
                         {inventory?.freezer?.backups && inventory.freezer.backups.length > 0 ? (
                             inventory.freezer.backups.map((item: any, idx: number) => (
-                                <div key={idx} className="flex justify-between items-center py-2 border-b border-[var(--border-subtle)]">
-                                    <div className="flex flex-col">
-                                        <span className="font-medium">{item.meal}</span>
-                                        <span className="text-[10px] text-[var(--text-muted)] font-mono">{item.frozen_date}</span>
-                                    </div>
-                                    <span className="px-3 py-1 bg-[var(--bg-secondary)] rounded-sm font-mono font-bold text-[var(--accent-green)]">
-                                        {item.servings || 4}p
-                                    </span>
+                                <div key={idx} className="group flex justify-between items-center py-3 border-b border-[var(--border-subtle)] hover:bg-[var(--bg-secondary)]/10 px-2 -mx-2 rounded transition-colors">
+                                    {editingItem?.category === 'meals' && editingItem.name === item.meal ? (
+                                        <div className="flex-1 flex gap-2 items-center">
+                                            <input
+                                                className="flex-1 bg-white border border-[var(--border-subtle)] p-1 text-sm rounded"
+                                                value={editValue.meal || ''}
+                                                onChange={(e) => setEditValue({ ...editValue, meal: e.target.value })}
+                                            />
+                                            <input
+                                                type="number"
+                                                className="w-16 bg-white border border-[var(--border-subtle)] p-1 text-sm rounded font-mono"
+                                                value={editValue.servings || 4}
+                                                onChange={(e) => setEditValue({ ...editValue, servings: parseInt(e.target.value) })}
+                                            />
+                                            <button onClick={handleUpdateItem} className="text-[var(--accent-green)] text-xs font-bold uppercase">Save</button>
+                                            <button onClick={() => setEditingItem(null)} className="text-[var(--text-muted)] text-xs">Esc</button>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <div className="flex flex-col flex-1">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-medium">{item.meal}</span>
+                                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                                                        <button
+                                                            onClick={() => {
+                                                                setEditingItem({ category: 'meals', name: item.meal, original: item });
+                                                                setEditValue({ ...item });
+                                                            }}
+                                                            className="text-xs hover:scale-120 transition-transform"
+                                                            title="Edit"
+                                                        >
+                                                            ✏️
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDeleteItem('meals', item)}
+                                                            className="text-xs hover:scale-120 transition-transform"
+                                                            title="Delete"
+                                                        >
+                                                            🗑️
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <span className="text-[10px] text-[var(--text-muted)] font-mono">{item.frozen_date}</span>
+                                            </div>
+                                            <span className="px-3 py-1 bg-[var(--bg-secondary)] rounded-sm font-mono font-bold text-[var(--accent-green)]">
+                                                {item.servings || 4}p
+                                            </span>
+                                        </>
+                                    )}
                                 </div>
                             ))
                         ) : (
@@ -290,10 +427,47 @@ milk"
                             {inventory?.fridge && inventory.fridge.length > 0 ? (
                                 <div className="flex flex-wrap gap-2">
                                     {inventory.fridge.map((item: any, idx: number) => (
-                                        <span key={idx} className="px-2 py-1 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm group relative">
-                                            {item.item}
-                                            {item.quantity > 1 && <span className="ml-1 opacity-50">x{item.quantity}</span>}
-                                        </span>
+                                        <div key={idx} className="group relative">
+                                            {editingItem?.category === 'fridge' && editingItem.name === item.item ? (
+                                                <div className="flex gap-1 items-center bg-white border border-[var(--accent-sage)] rounded px-1 py-0.5 shadow-sm">
+                                                    <input
+                                                        className="w-24 bg-transparent border-none p-0 text-sm focus:ring-0"
+                                                        value={editValue.item || ''}
+                                                        onChange={(e) => setEditValue({ ...editValue, item: e.target.value })}
+                                                    />
+                                                    <input
+                                                        type="number"
+                                                        className="w-8 bg-transparent border-none p-0 text-sm focus:ring-0 font-mono"
+                                                        value={editValue.quantity || 1}
+                                                        onChange={(e) => setEditValue({ ...editValue, quantity: parseInt(e.target.value) })}
+                                                    />
+                                                    <button onClick={handleUpdateItem} className="text-[var(--accent-green)] text-[10px] font-bold">✓</button>
+                                                    <button onClick={() => setEditingItem(null)} className="text-[var(--text-muted)] text-[10px]">✗</button>
+                                                </div>
+                                            ) : (
+                                                <span className="inline-flex items-center gap-1 px-2 py-1 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm hover:border-[var(--accent-sage)] transition-colors">
+                                                    {item.item}
+                                                    {item.quantity > 1 && <span className="opacity-50">x{item.quantity}</span>}
+                                                    <div className="opacity-0 group-hover:opacity-100 flex gap-1 ml-1 scale-90 origin-left transition-all">
+                                                        <button
+                                                            onClick={() => {
+                                                                setEditingItem({ category: 'fridge', name: item.item, original: item });
+                                                                setEditValue({ ...item });
+                                                            }}
+                                                            className="hover:scale-120"
+                                                        >
+                                                            ✏️
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDeleteItem('fridge', item)}
+                                                            className="hover:scale-120"
+                                                        >
+                                                            🗑️
+                                                        </button>
+                                                    </div>
+                                                </span>
+                                            )}
+                                        </div>
                                     ))}
                                 </div>
                             ) : <p className="text-[var(--text-muted)] italic">Empty</p>}
@@ -323,10 +497,47 @@ milk"
                             {inventory?.pantry && inventory.pantry.length > 0 ? (
                                 <div className="flex flex-wrap gap-2">
                                     {inventory.pantry.map((item: any, idx: number) => (
-                                        <span key={idx} className="px-2 py-1 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm">
-                                            {item.item}
-                                            {item.quantity > 1 && <span className="ml-1 opacity-50">x{item.quantity}</span>}
-                                        </span>
+                                        <div key={idx} className="group relative">
+                                            {editingItem?.category === 'pantry' && editingItem.name === item.item ? (
+                                                <div className="flex gap-1 items-center bg-white border border-[var(--accent-sage)] rounded px-1 py-0.5 shadow-sm">
+                                                    <input
+                                                        className="w-24 bg-transparent border-none p-0 text-sm focus:ring-0"
+                                                        value={editValue.item || ''}
+                                                        onChange={(e) => setEditValue({ ...editValue, item: e.target.value })}
+                                                    />
+                                                    <input
+                                                        type="number"
+                                                        className="w-8 bg-transparent border-none p-0 text-sm focus:ring-0 font-mono"
+                                                        value={editValue.quantity || 1}
+                                                        onChange={(e) => setEditValue({ ...editValue, quantity: parseInt(e.target.value) })}
+                                                    />
+                                                    <button onClick={handleUpdateItem} className="text-[var(--accent-green)] text-[10px] font-bold">✓</button>
+                                                    <button onClick={() => setEditingItem(null)} className="text-[var(--text-muted)] text-[10px]">✗</button>
+                                                </div>
+                                            ) : (
+                                                <span className="inline-flex items-center gap-1 px-2 py-1 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm hover:border-[var(--accent-sage)] transition-colors">
+                                                    {item.item}
+                                                    {item.quantity > 1 && <span className="opacity-50">x{item.quantity}</span>}
+                                                    <div className="opacity-0 group-hover:opacity-100 flex gap-1 ml-1 scale-90 origin-left transition-all">
+                                                        <button
+                                                            onClick={() => {
+                                                                setEditingItem({ category: 'pantry', name: item.item, original: item });
+                                                                setEditValue({ ...item });
+                                                            }}
+                                                            className="hover:scale-120"
+                                                        >
+                                                            ✏️
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDeleteItem('pantry', item)}
+                                                            className="hover:scale-120"
+                                                        >
+                                                            🗑️
+                                                        </button>
+                                                    </div>
+                                                </span>
+                                            )}
+                                        </div>
                                     ))}
                                 </div>
                             ) : <p className="text-[var(--text-muted)] italic">Empty</p>}

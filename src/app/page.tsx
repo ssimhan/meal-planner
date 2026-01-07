@@ -94,13 +94,20 @@ export default function Dashboard() {
       setActionLoading(true);
       setSuccess(null);
       const vegList = vegInput.split(',').map(v => v.trim()).filter(v => v);
-      await confirmVeg(vegList);
+      const updatedStatus = await confirmVeg(vegList);
 
-      setSuccess({ message: 'Vegetables confirmed! Syncing dashboard...' });
+      setSuccess({ message: 'Vegetables confirmed!' });
       setVegInput('');
 
-      await fetchStatus(false);
-      setSuccess({ message: 'Vegetables confirmed! You can now generate the plan.' });
+      // Update status directly from the response
+      setStatus(prev => ({
+        ...prev,
+        ...updatedStatus,
+        state: updatedStatus.state,
+        week_of: updatedStatus.week_of,
+        has_data: updatedStatus.has_data
+      } as WorkflowStatus));
+
     } catch (err: any) {
       setError(err.message || 'Failed to confirm vegetables');
     } finally {
@@ -232,13 +239,39 @@ export default function Dashboard() {
     }
   }
 
+  const Skeleton = ({ className }: { className?: string }) => (
+    <div className={`bg-gray-200 animate-pulse rounded ${className}`} />
+  );
+
   if (loading && !status) {
     return (
-      <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="text-[var(--accent-green)] font-mono animate-pulse">
-          CONNECTING TO BRAIN...
+      <main className="container mx-auto max-w-4xl px-4 py-12">
+        <header className="mb-12">
+          <Skeleton className="h-12 w-3/4 mb-4" />
+        </header>
+        <div className="grid gap-8 md:grid-cols-2">
+          <section className="card">
+            <Skeleton className="h-4 w-1/4 mb-4" />
+            <div className="space-y-4">
+              <Skeleton className="h-8 w-1/2" />
+              <Skeleton className="h-8 w-1/3" />
+            </div>
+          </section>
+          <section className="card">
+            <Skeleton className="h-4 w-1/4 mb-4" />
+            <div className="space-y-4">
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          </section>
+          <section className="card md:col-span-2">
+            <Skeleton className="h-4 w-1/4 mb-4" />
+            <div className="grid grid-cols-5 gap-3">
+              {[1, 2, 3, 4, 5].map(i => <Skeleton key={i} className="h-16 w-full" />)}
+            </div>
+          </section>
         </div>
-      </div>
+      </main>
     );
   }
 

@@ -1256,3 +1256,25 @@ Continuing with current recipes. Use freezer backups manually if preferred.
 **Status:** Block 5 Complete. All recipes are now in high-efficiency Markdown format.
 
 **Learning:** Migrating to a simpler, text-based format like Markdown often reveals hidden data inconsistencies and provides an immediate boost to both system performance and developer experience.
+
+---
+
+## Session: 2026-01-07 - Inventory CRUD & Dashboard Optimizations
+
+**Work Completed:**
+- **Inventory CRUD (Block 7):**
+    - Implemented `/api/inventory/delete` and `/api/inventory/update` endpoints for full item management.
+    - Added Edit (✏️) and Delete (🗑️) controls to the Inventory UI.
+    - Implemented a 5-second "Undo" toast for deletions to prevent accidental data loss.
+- **Homepage Optimization (Block 6):**
+    - Enhanced `/api/confirm-veg` to return the full application state for immediate UI updates.
+    - Replaced global loading spinners with granular skeletons for better perceived performance.
+- **Recipe Maintenance:**
+    - Added "Cheese cubes" and "Avocado packs" to the recipe index and content library.
+
+**Technical Decisions:**
+1. **Full API Response on Write:** Having POST endpoints return the complete updated state prevents stale data issues in serverless environments where cache invalidation is tricky.
+2. **Optimistic UI with Undo:** For inventory management, providing an "Undo" path is more user-friendly than a "Confirm" dialog for every deletion.
+3. **Granular Skeletons:** Loading individual sections (System Status, Schedule) separately makes the app feel faster and more reliable.
+
+**Status:** Blocks 6 and 7 complete.

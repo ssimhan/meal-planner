@@ -241,7 +241,7 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
   - [x] Verify generated plans still render correctly
   - [x] Update recipe importer to use new format for future imports
 
-#### Block 6: Homepage Data Consistency (Bug Fix)
+#### Block 6: Homepage Data Consistency (Bug Fix) - COMPLETED 2026-01-07
 **Focus:** UI State Sync
 - **Goal:** Ensure homepage accurately reflects current meal plan and confirmation status.
 - **Known Issues:**
@@ -249,14 +249,14 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
   - **Farmers Market Status:** Vegetable confirmation doesn't reflect actual state in input file
   - **General Investigation:** Need to audit all data refresh triggers
 - **Tasks:**
-  - [ ] Audit dashboard data fetching (identify all API calls and refresh triggers)
-  - [ ] Fix stale "Today's Schedule" after meal logging (ensure immediate refresh)
-  - [ ] Fix farmers market confirmation status sync with input file
-  - [ ] Add client-side cache invalidation strategy (when to force refetch)
-  - [ ] Test rapid logging scenarios (multiple meals in quick succession)
-  - [ ] Add loading states to prevent showing stale data during refresh
+  - [x] Audit dashboard data fetching (identify all API calls and refresh triggers)
+  - [x] Fix stale "Today's Schedule" after meal logging (ensure immediate refresh)
+  - [x] Fix farmers market confirmation status sync with input file
+  - [x] Add client-side cache invalidation strategy (when to force refetch)
+  - [x] Test rapid logging scenarios (multiple meals in quick succession)
+  - [x] Add loading states to prevent showing stale data during refresh
 
-#### Block 7: Inventory Management Enhancements (UI)
+#### Block 7: Inventory Management Enhancements (UI) - COMPLETED 2026-01-07
 **Focus:** CRUD Operations
 - **Goal:** Allow full control over inventory items from the UI.
 - **Implementation:**
@@ -265,13 +265,13 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
   - **Delete UX:** Trash icon per item, no confirmation dialog, 5-second undo toast
   - **Undo Buffer:** Track last deletion for quick restore
 - **Tasks:**
-  - [ ] Add edit/delete icons to each inventory item (freezer, fridge, pantry)
-  - [ ] Implement inline edit mode for quantities (enter to save, esc to cancel)
-  - [ ] Create delete API endpoint (`/api/inventory/delete`)
-  - [ ] Implement undo toast notification with restore action
-  - [ ] Add optimistic UI updates (instant feedback before API response)
-  - [ ] Handle edge cases (delete while undo pending, rapid edits)
-  - [ ] Add keyboard shortcuts (e for edit, delete key to remove selected item)
+  - [x] Add edit/delete icons to each inventory item (freezer, fridge, pantry)
+  - [x] Implement inline edit mode for quantities (enter to save, esc to cancel)
+  - [x] Create delete API endpoint (`/api/inventory/delete`)
+  - [x] Implement undo toast notification with restore action
+  - [x] Add optimistic UI updates (instant feedback before API response)
+  - [x] Handle edge cases (delete while undo pending, rapid edits)
+  - [x] Add keyboard shortcuts (e for edit, delete key to remove selected item)
 
 ### Recently Completed (Phase 7-10)
 - [x] **Web Workflow**: Full workflow managed via webpage.
@@ -285,8 +285,8 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 
 ### Recipe Index changes
 *Pending recipe additions from corrections:*
-- [ ] Add recipe for: Cheese cubes (requested on 2026-01-06)
-- [ ] Add recipe for: Avocado packs (requested on 2026-01-06)
+- [x] Add recipe for: Cheese cubes (added on 2026-01-07)
+- [x] Add recipe for: Avocado packs (added on 2026-01-07)
 - [x] Add recipe for: Crackers and cheese cubes (requested on 2026-01-06, added on 2026-01-06)
 - [x] Add recipe for: Blackberries (requested on 2026-01-06, added on 2026-01-06)
 - [x] Add recipe for: Rasam rice and beetroot (requested on 2026-01-06, added on 2026-01-06)

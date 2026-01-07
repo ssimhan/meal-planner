@@ -196,16 +196,17 @@ export default function WeekView() {
     const payload: any = {
       week: status.week_data.week_of,
       day,
-      made: true,
       request_recipe: requestRecipe
     };
 
     if (type === 'dinner') {
       payload.actual_meal = newMeal;
       payload.dinner_needs_fix = false;
+      payload.made = true; // Keep 'made' for dinner for backward compatibility
     } else {
       payload[`${type}_feedback`] = newMeal;
       payload[`${type}_needs_fix`] = false;
+      payload[`${type}_made`] = true;
     }
 
     try {

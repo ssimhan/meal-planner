@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import MealCorrectionInput from './MealCorrectionInput';
 
 interface RecipeSuggestion {
     id: string;
@@ -18,17 +19,17 @@ interface RecipeSuggestion {
 interface ReplacementModalProps {
     currentMeal: string;
     day: string;
-    onConfirm: (newMeal: string) => void;
+    recipes: { id: string; name: string }[];
+    onConfirm: (newMeal: string, requestRecipe?: boolean) => void;
     onCancel: () => void;
 }
 
-export default function ReplacementModal({ currentMeal, day, onConfirm, onCancel }: ReplacementModalProps) {
-    const [activeTab, setActiveTab] = useState<'fridge' | 'freezer' | 'quick'>('fridge');
+export default function ReplacementModal({ currentMeal, day, recipes, onConfirm, onCancel }: ReplacementModalProps) {
+    const [activeTab, setActiveTab] = useState<'fridge' | 'freezer' | 'manual'>('fridge');
     const [loading, setLoading] = useState(true);
     const [suggestions, setSuggestions] = useState<{
         fridge_shop: RecipeSuggestion[];
         freezer_stash: RecipeSuggestion[];
-        quick_fix: RecipeSuggestion[];
     } | null>(null);
 
     useEffect(() => {
@@ -41,7 +42,7 @@ export default function ReplacementModal({ currentMeal, day, onConfirm, onCancel
                     // Set initial tab based on availability
                     if (data.suggestions.fridge_shop.length > 0) setActiveTab('fridge');
                     else if (data.suggestions.freezer_stash.length > 0) setActiveTab('freezer');
-                    else setActiveTab('quick');
+                    else setActiveTab('manual');
                 }
             } catch (err) {
                 console.error('Failed to fetch suggestions:', err);
@@ -53,6 +54,23 @@ export default function ReplacementModal({ currentMeal, day, onConfirm, onCancel
     }, []);
 
     const renderActiveTabContent = () => {
+        if (activeTab === 'manual') {
+            return (
+                <div className="pt-2">
+                    <p className="text-sm text-gray-500 mb-4">
+                        Search for a recipe from your index or enter a new meal description.
+                    </p>
+                    <MealCorrectionInput
+                        recipes={recipes}
+                        onSave={onConfirm}
+                        onCancel={onCancel}
+                        placeholder="What are you making instead?"
+                        existingValue=""
+                    />
+                </div>
+            );
+        }
+
         if (!suggestions) return null;
 
         let items: RecipeSuggestion[] = [];
@@ -66,10 +84,6 @@ export default function ReplacementModal({ currentMeal, day, onConfirm, onCancel
             case 'freezer':
                 items = suggestions.freezer_stash;
                 emptyMessage = "Your freezer backup stash is empty.";
-                break;
-            case 'quick':
-                items = suggestions.quick_fix;
-                emptyMessage = "No quick recipes found.";
                 break;
         }
 
@@ -101,11 +115,6 @@ export default function ReplacementModal({ currentMeal, day, onConfirm, onCancel
                                     {item.servings} serving{item.servings !== 1 ? 's' : ''} • Frozen since {item.frozen_date || 'unknown'}
                                 </p>
                             )}
-                            {activeTab === 'quick' && (
-                                <p className="text-xs text-orange-600 mt-1">
-                                    ⚡ {item.active_time ? `${item.active_time}m active` : item.effort_level}
-                                </p>
-                            )}
                         </div>
                         <span className="text-sage opacity-0 group-hover:opacity-100 transition-opacity font-medium text-sm">
                             Select →
@@ -118,7 +127,7 @@ export default function ReplacementModal({ currentMeal, day, onConfirm, onCancel
 
     return (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
-            <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col max-h-[80vh]">
+            <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col max-h-[80vh] min-h-[400px]">
                 <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                     <div>
                         <h3 className="font-bold text-gray-800">Replace Meal</h3>
@@ -142,10 +151,10 @@ export default function ReplacementModal({ currentMeal, day, onConfirm, onCancel
                         🧊 Freezer
                     </button>
                     <button
-                        onClick={() => setActiveTab('quick')}
-                        className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'quick' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+                        onClick={() => setActiveTab('manual')}
+                        className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'manual' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
                     >
-                        ⚡ Quick Fix
+                        ✎ Manual Entry
                     </button>
                 </div>
 

@@ -111,7 +111,43 @@ def get_substitutions(limit=3):
             
     # Sort by score descending
     scored_recipes.sort(key=lambda x: x['score'], reverse=True)
-    suggestions['fridge_shop'] = [s['recipe'] for s in scored_recipes[:limit]]
+    
+    # Diversity filter
+    selected_for_fridge = []
+    seen_titles = []
+    
+    def get_title_tokens(text):
+        # normalize and split into set of words
+        text = text.lower()
+        # remove parens content
+        text = re.sub(r'\s*\(.*?\)', '', text)
+        return set(re.findall(r'\w+', text))
+
+    for item in scored_recipes:
+        if len(selected_for_fridge) >= limit:
+            break
+            
+        recipe = item['recipe']
+        title = recipe.get('name', '')
+        title_tokens = get_title_tokens(title)
+        
+        is_similar = False
+        for seen_tokens in seen_titles:
+            # Jaccard similarity or high overlap
+            intersection = len(title_tokens.intersection(seen_tokens))
+            union = len(title_tokens.union(seen_tokens))
+            
+            # If 50% overlap in distinct words, consider it too similar
+            # e.g. "Sweet Potato Curry" vs "Sweet Potato Tofu Curry" -> 3/4 overlap = 0.75 -> Skip
+            if union > 0 and (intersection / union) > 0.5:
+                is_similar = True
+                break
+        
+        if not is_similar:
+            selected_for_fridge.append(recipe)
+            seen_titles.append(title_tokens)
+            
+    suggestions['fridge_shop'] = selected_for_fridge
     
     # 3. Quick Fix (Effort level low or time < 30)
     quick_recipes = [

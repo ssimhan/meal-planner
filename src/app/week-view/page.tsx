@@ -18,10 +18,11 @@ export default function WeekView() {
   const [showReplanModal, setShowReplanModal] = useState(false);
   const [isSwapMode, setIsSwapMode] = useState(false);
   const [swapSelection, setSwapSelection] = useState<string[]>([]);
-  const [replacementModal, setReplacementModal] = useState<{ isOpen: boolean; day: string; currentMeal: string }>({
+  const [replacementModal, setReplacementModal] = useState<{ isOpen: boolean; day: string; currentMeal: string; type: string }>({
     isOpen: false,
     day: '',
-    currentMeal: ''
+    currentMeal: '',
+    type: 'dinner'
   });
 
   useEffect(() => {
@@ -188,21 +189,30 @@ export default function WeekView() {
     );
   };
 
-  const handleReplacementConfirm = async (newMeal: string) => {
-    const { day } = replacementModal;
+  const handleReplacementConfirm = async (newMeal: string, requestRecipe: boolean = false) => {
+    const { day, type } = replacementModal;
     if (!day || !status?.week_data?.week_of) return;
+
+    const payload: any = {
+      week: status.week_data.week_of,
+      day,
+      made: true,
+      request_recipe: requestRecipe
+    };
+
+    if (type === 'dinner') {
+      payload.actual_meal = newMeal;
+      payload.dinner_needs_fix = false;
+    } else {
+      payload[`${type}_feedback`] = newMeal;
+      payload[`${type}_needs_fix`] = false;
+    }
 
     try {
       const res = await fetch('/api/log-meal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          week: status.week_data.week_of,
-          day,
-          actual_meal: newMeal,
-          dinner_needs_fix: false,
-          made: true
-        })
+        body: JSON.stringify(payload)
       });
 
       if (!res.ok) throw new Error("Correction failed");
@@ -214,7 +224,7 @@ export default function WeekView() {
         setStatus(newData);
       }
 
-      setReplacementModal({ isOpen: false, day: '', currentMeal: '' });
+      setReplacementModal({ isOpen: false, day: '', currentMeal: '', type: 'dinner' });
     } catch (e) {
       console.error("Replacement failed", e);
       alert("Failed to replace meal");
@@ -407,8 +417,9 @@ export default function WeekView() {
             <ReplacementModal
               day={replacementModal.day}
               currentMeal={replacementModal.currentMeal}
+              recipes={recipes}
               onConfirm={handleReplacementConfirm}
-              onCancel={() => setReplacementModal({ isOpen: false, day: '', currentMeal: '' })}
+              onCancel={() => setReplacementModal({ isOpen: false, day: '', currentMeal: '', type: 'dinner' })}
             />
           )
         }
@@ -482,7 +493,7 @@ export default function WeekView() {
                           🥬 {dinner.vegetables.join(', ')}
                         </p>
                       )}
-                      {!isSwapMode && !editMode && (
+                      {!isSwapMode && editMode && (
                         <button
                           className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-2 flex items-center gap-1"
                           onClick={(e) => {
@@ -490,7 +501,8 @@ export default function WeekView() {
                             setReplacementModal({
                               isOpen: true,
                               day: day,
-                              currentMeal: dinner?.actual_meal || dinner?.recipe_id || ''
+                              currentMeal: dinner?.actual_meal || dinner?.recipe_id || '',
+                              type: 'dinner'
                             });
                           }}
                         >
@@ -516,6 +528,24 @@ export default function WeekView() {
                       <p className="text-sm font-medium text-[var(--text-primary)] mt-0.5">
                         {getDisplayName(lunch?.recipe_name || 'Leftovers', dailyFeedback?.kids_lunch)}
                       </p>
+                      {!isSwapMode && editMode && (
+                        <button
+                          className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-1 flex items-center gap-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (editMode) {
+                              setReplacementModal({
+                                isOpen: true,
+                                day: day,
+                                currentMeal: dailyFeedback?.kids_lunch || '',
+                                type: 'kids_lunch'
+                              });
+                            }
+                          }}
+                        >
+                          <span>🔄</span> Replace
+                        </button>
+                      )}
                     </div>
                   </div>
 
@@ -535,6 +565,22 @@ export default function WeekView() {
                       <p className="text-sm font-medium text-[var(--text-primary)] mt-0.5">
                         {getDisplayName(snacks?.school || 'TBD', dailyFeedback?.school_snack)}
                       </p>
+                      {!isSwapMode && editMode && (
+                        <button
+                          className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-1 flex items-center gap-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setReplacementModal({
+                              isOpen: true,
+                              day: day,
+                              currentMeal: dailyFeedback?.school_snack || '',
+                              type: 'school_snack'
+                            });
+                          }}
+                        >
+                          <span>🔄</span> Replace
+                        </button>
+                      )}
                     </div>
                   </div>
 
@@ -554,6 +600,22 @@ export default function WeekView() {
                       <p className="text-sm font-medium text-[var(--text-primary)] mt-0.5">
                         {getDisplayName(snacks?.home || 'TBD', dailyFeedback?.home_snack)}
                       </p>
+                      {!isSwapMode && editMode && (
+                        <button
+                          className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-1 flex items-center gap-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setReplacementModal({
+                              isOpen: true,
+                              day: day,
+                              currentMeal: dailyFeedback?.home_snack || '',
+                              type: 'home_snack'
+                            });
+                          }}
+                        >
+                          <span>🔄</span> Replace
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -634,7 +696,7 @@ export default function WeekView() {
                               )}
                             </span>
                           </div>
-                          {!isSwapMode && !editMode && (
+                          {!isSwapMode && editMode && (
                             <button
                               title="Find a substitute for this meal"
                               className="ml-auto text-gray-300 hover:text-[var(--accent-sage)] p-1 rounded-full hover:bg-gray-100 transition-colors"
@@ -643,7 +705,8 @@ export default function WeekView() {
                                 setReplacementModal({
                                   isOpen: true,
                                   day: day,
-                                  currentMeal: dinner?.actual_meal || dinner?.recipe_id || ''
+                                  currentMeal: dinner?.actual_meal || dinner?.recipe_id || '',
+                                  type: 'dinner'
                                 });
                               }}
                             >
@@ -675,11 +738,30 @@ export default function WeekView() {
                           label="Kids Lunch"
                           value={dailyFeedback?.kids_lunch || ''}
                         />
-                        <div className="flex-1 flex justify-between items-start gap-2">
-                          <span className="text-gray-600 italic">
-                            {getDisplayName(lunch?.recipe_name || 'Leftovers', dailyFeedback?.kids_lunch)}
-                          </span>
-                          {getFeedbackBadge(dailyFeedback?.kids_lunch, dailyFeedback?.kids_lunch_made, dailyFeedback?.kids_lunch_needs_fix)}
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start gap-2">
+                            <span className="text-gray-600 italic">
+                              {getDisplayName(lunch?.recipe_name || 'Leftovers', dailyFeedback?.kids_lunch)}
+                            </span>
+                            {getFeedbackBadge(dailyFeedback?.kids_lunch, dailyFeedback?.kids_lunch_made, dailyFeedback?.kids_lunch_needs_fix)}
+                          </div>
+                          {!isSwapMode && editMode && (
+                            <button
+                              title="Replace"
+                              className="text-[10px] text-gray-300 hover:text-[var(--accent-sage)] flex items-center gap-1 mt-1"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setReplacementModal({
+                                  isOpen: true,
+                                  day: day,
+                                  currentMeal: dailyFeedback?.kids_lunch || '',
+                                  type: 'kids_lunch'
+                                });
+                              }}
+                            >
+                              🔄 Replace
+                            </button>
+                          )}
                         </div>
                       </div>
                     </td>
@@ -707,11 +789,30 @@ export default function WeekView() {
                             label="School Snack"
                             value={dailyFeedback?.school_snack || ''}
                           />
-                          <div className="flex-1 flex justify-between items-start gap-2">
-                            <span className="text-gray-600 font-mono text-xs">
-                              {getDisplayName(snacks?.school || 'TBD', dailyFeedback?.school_snack)}
-                            </span>
-                            {getFeedbackBadge(dailyFeedback?.school_snack, dailyFeedback?.school_snack_made, dailyFeedback?.school_snack_needs_fix)}
+                          <div className="flex-1">
+                            <div className="flex justify-between items-start gap-2">
+                              <span className="text-gray-600 font-mono text-xs">
+                                {getDisplayName(snacks?.school || 'TBD', dailyFeedback?.school_snack)}
+                              </span>
+                              {getFeedbackBadge(dailyFeedback?.school_snack, dailyFeedback?.school_snack_made, dailyFeedback?.school_snack_needs_fix)}
+                            </div>
+                            {!isSwapMode && editMode && (
+                              <button
+                                title="Replace"
+                                className="text-[10px] text-gray-300 hover:text-[var(--accent-sage)] flex items-center gap-1 mt-1"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setReplacementModal({
+                                    isOpen: true,
+                                    day: day,
+                                    currentMeal: dailyFeedback?.school_snack || '',
+                                    type: 'school_snack'
+                                  });
+                                }}
+                              >
+                                🔄 Replace
+                              </button>
+                            )}
                           </div>
                         </div>
                       ) : (
@@ -742,11 +843,30 @@ export default function WeekView() {
                             label="Home Snack"
                             value={dailyFeedback?.home_snack || ''}
                           />
-                          <div className="flex-1 flex justify-between items-start gap-2">
-                            <span className="text-gray-600 font-mono text-xs">
-                              {getDisplayName(snacks?.home || 'TBD', dailyFeedback?.home_snack)}
-                            </span>
-                            {getFeedbackBadge(dailyFeedback?.home_snack, dailyFeedback?.home_snack_made, dailyFeedback?.home_snack_needs_fix)}
+                          <div className="flex-1">
+                            <div className="flex justify-between items-start gap-2">
+                              <span className="text-gray-600 font-mono text-xs">
+                                {getDisplayName(snacks?.home || 'TBD', dailyFeedback?.home_snack)}
+                              </span>
+                              {getFeedbackBadge(dailyFeedback?.home_snack, dailyFeedback?.home_snack_made, dailyFeedback?.home_snack_needs_fix)}
+                            </div>
+                            {!isSwapMode && editMode && (
+                              <button
+                                title="Replace"
+                                className="text-[10px] text-gray-300 hover:text-[var(--accent-sage)] flex items-center gap-1 mt-1"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setReplacementModal({
+                                    isOpen: true,
+                                    day: day,
+                                    currentMeal: dailyFeedback?.home_snack || '',
+                                    type: 'home_snack'
+                                  });
+                                }}
+                              >
+                                🔄 Replace
+                              </button>
+                            )}
                           </div>
                         </div>
                       ) : (
@@ -774,11 +894,30 @@ export default function WeekView() {
                           label="Adult Lunch"
                           value={dailyFeedback?.adult_lunch || ''}
                         />
-                        <div className="flex-1 flex justify-between items-start gap-2">
-                          <span className="text-gray-500 italic text-xs">
-                            {getDisplayName('Leftovers', dailyFeedback?.adult_lunch)}
-                          </span>
-                          {getFeedbackBadge(dailyFeedback?.adult_lunch, dailyFeedback?.adult_lunch_made, dailyFeedback?.adult_lunch_needs_fix)}
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start gap-2">
+                            <span className="text-gray-500 italic text-xs">
+                              {getDisplayName('Leftovers', dailyFeedback?.adult_lunch)}
+                            </span>
+                            {getFeedbackBadge(dailyFeedback?.adult_lunch, dailyFeedback?.adult_lunch_made, dailyFeedback?.adult_lunch_needs_fix)}
+                          </div>
+                          {!isSwapMode && editMode && (
+                            <button
+                              title="Replace"
+                              className="text-[10px] text-gray-300 hover:text-[var(--accent-sage)] flex items-center gap-1 mt-1"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setReplacementModal({
+                                  isOpen: true,
+                                  day: day,
+                                  currentMeal: dailyFeedback?.adult_lunch || '',
+                                  type: 'adult_lunch'
+                                });
+                              }}
+                            >
+                              🔄 Replace
+                            </button>
+                          )}
                         </div>
                       </div>
                     </td>

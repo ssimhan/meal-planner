@@ -6,6 +6,7 @@ import { getStatus, getRecipes, WorkflowStatus, replan, swapMeals } from '@/lib/
 import MealCorrectionInput from '@/components/MealCorrectionInput';
 import SwapConfirmationModal from '@/components/SwapConfirmationModal';
 import ReplacementModal from '@/components/ReplacementModal';
+import ReplanWorkflowModal from '@/components/ReplanWorkflowModal';
 
 export default function WeekView() {
   const [status, setStatus] = useState<WorkflowStatus | null>(null);
@@ -14,7 +15,7 @@ export default function WeekView() {
   const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
   const [selectedItems, setSelectedItems] = useState<{ day: string; type: string; label: string; value: string }[]>([]);
   const [isFixing, setIsFixing] = useState(false);
-  const [isReplanning, setIsReplanning] = useState(false);
+  const [showReplanModal, setShowReplanModal] = useState(false);
   const [isSwapMode, setIsSwapMode] = useState(false);
   const [swapSelection, setSwapSelection] = useState<string[]>([]);
   const [replacementModal, setReplacementModal] = useState<{ isOpen: boolean; day: string; currentMeal: string }>({
@@ -84,13 +85,16 @@ export default function WeekView() {
   };
 
   const getFeedbackBadge = (feedback?: string, made?: boolean, needsFix?: boolean) => {
-    if (needsFix) return <span className="text-xs text-red-600 font-bold px-2 py-0.5 bg-red-50 rounded">Needs Fix</span>;
-    if (made === false) return <span className="text-xs text-red-600">✗ Skipped</span>;
-    if (!feedback) return null;
+    if (needsFix) return <span className="text-xs text-red-600 font-bold px-2 py-0.5 bg-red-50 rounded border border-red-200">Needs Fix</span>;
+    if (made === false) return <span className="text-xs text-red-600 font-medium px-2 py-0.5 bg-red-50 rounded">✗ Skipped</span>;
+
     const emojis = ['❤️', '👍', '😐', '👎', '❌'];
-    const emojiMatch = emojis.find(e => feedback.includes(e));
-    if (emojiMatch) return <span className="text-xs bg-gray-50 px-2 py-0.5 rounded">{emojiMatch}</span>;
-    return <span className="text-xs text-gray-500">✓</span>;
+    const emojiMatch = feedback && emojis.find(e => feedback.includes(e));
+    if (emojiMatch) return <span className="text-xs bg-gray-100 px-2 py-0.5 rounded border border-gray-200">{emojiMatch}</span>;
+
+    if (made === true) return <span className="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 uppercase tracking-wide">CONFIRMED</span>;
+
+    return null;
   };
 
   const toggleSelection = (day: string, type: string, label: string, value: string) => {
@@ -108,7 +112,7 @@ export default function WeekView() {
     if (!status?.week_data?.week_of) return;
 
     try {
-      await fetch('/api/log-meal', {
+      const res = await fetch('/api/log-meal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -121,13 +125,18 @@ export default function WeekView() {
         })
       });
 
+      if (!res.ok) throw new Error("Failed to save correction");
+      const data = await res.json();
+
+      if (data.week_of) {
+        setStatus(data);
+      } else {
+        const newData = await getStatus();
+        setStatus(newData);
+      }
+
       // Remove from selection if it was there
       setSelectedItems(prev => prev.filter(i => !(i.day === day && i.type === type)));
-
-      // If all selected items are saved, we can return to main view
-      // But we should refresh data first
-      const data = await getStatus();
-      setStatus(data);
     } catch (e) {
       console.error("Failed to save correction", e);
       alert("Failed to save correction");
@@ -135,24 +144,7 @@ export default function WeekView() {
   };
 
   const handleReplan = async () => {
-    if (!confirm('Replan the remaining days of the week based on current inventory?\n\nThis will reorganize your meal plan to prioritize recipes that use ingredients you have on hand.')) {
-      return;
-    }
-
-    setIsReplanning(true);
-    try {
-      const result = await replan();
-      alert('✓ Week replanned successfully!\n\n' + (result.message || 'Meals reorganized based on inventory.'));
-
-      // Refresh the status to show updated plan
-      const data = await getStatus();
-      setStatus(data);
-    } catch (e: any) {
-      console.error("Replan failed:", e);
-      alert('Failed to replan week: ' + (e.message || 'Unknown error'));
-    } finally {
-      setIsReplanning(false);
-    }
+    setShowReplanModal(true);
   };
 
   const handleSwapConfirm = async () => {
@@ -160,7 +152,6 @@ export default function WeekView() {
 
     try {
       await swapMeals(status.week_data.week_of, swapSelection[0], swapSelection[1]);
-      // Refresh
       const data = await getStatus();
       setStatus(data);
       setSwapSelection([]);
@@ -202,34 +193,27 @@ export default function WeekView() {
     if (!day || !status?.week_data?.week_of) return;
 
     try {
-      await fetch('/api/log-meal', {
+      const res = await fetch('/api/log-meal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           week: status.week_data.week_of,
           day,
-          // Assume made if swapped? No, this is changing the plan.
-          // Actually, log-meal is not the best for changing the plan, 
-          // but handleCorrectionSave uses it for "actual_meal".
-          // We want to UPDATE the plan.
-          // Let's use log-meal with actual_meal for now OR
-          // we might need a specific endpoint to Swap/Replace plan.
-          // Using actual_meal overrides the plan visually which is arguably safer.
           actual_meal: newMeal,
           dinner_needs_fix: false,
-          made: true // Mark as resolved
+          made: true
         })
       });
 
-      // Better yet, if we want to CHANGE the plan, we should use the same logic as swap but for one meal.
-      // But for "Replacement", "Actual Meal" override is essentially what the user is doing. 
-      // "I didn't eat X, I ate Y (from fridge)". 
-      // Wait, if they are planning ahead, they want to change the PLAN.
-      // Let's stick to "actual_meal" pattern for consistency with corrections, 
-      // AS LONG AS it shows up as the main meal.
+      if (!res.ok) throw new Error("Correction failed");
+      const data = await res.json();
+      if (data.week_of) {
+        setStatus(data);
+      } else {
+        const newData = await getStatus();
+        setStatus(newData);
+      }
 
-      const data = await getStatus();
-      setStatus(data);
       setReplacementModal({ isOpen: false, day: '', currentMeal: '' });
     } catch (e) {
       console.error("Replacement failed", e);
@@ -323,22 +307,13 @@ export default function WeekView() {
             <div className="flex items-center gap-3">
               <button
                 onClick={handleReplan}
-                disabled={isReplanning}
-                className="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-primary flex items-center gap-2"
                 title="Reorganize remaining meals based on current inventory"
               >
-                {isReplanning ? (
-                  <>
-                    <span className="animate-spin">⟳</span>
-                    <span className="hidden sm:inline">Replanning...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>📦</span>
-                    <span className="hidden sm:inline">Replan with Inventory</span>
-                  </>
-                )}
-
+                <>
+                  <span>📦</span>
+                  <span className="hidden sm:inline">Replan with Inventory</span>
+                </>
               </button>
               <button
                 onClick={() => {
@@ -426,8 +401,6 @@ export default function WeekView() {
           )
         }
 
-
-
         {/* Replacement Modal */}
         {
           replacementModal.isOpen && (
@@ -439,6 +412,20 @@ export default function WeekView() {
             />
           )
         }
+
+        {/* Replan Workflow Modal */}
+        {showReplanModal && status && (
+          <ReplanWorkflowModal
+            status={status}
+            recipes={recipes}
+            onComplete={async () => {
+              setShowReplanModal(false);
+              const data = await getStatus();
+              setStatus(data);
+            }}
+            onCancel={() => setShowReplanModal(false)}
+          />
+        )}
 
         {/* Mobile: Card view */}
         <div className="md:hidden space-y-4">
@@ -801,62 +788,7 @@ export default function WeekView() {
             </tbody>
           </table>
         </div>
-
-        {/* Energy-Based Prep Schedule */}
-        <div className="mt-12">
-          <h2 className="text-sm font-mono uppercase tracking-[0.2em] text-[var(--text-muted)] mb-6 flex items-center gap-3">
-            <span className="h-px bg-[var(--border-subtle)] flex-1"></span>
-            <span>Prep Schedule</span>
-            <span className="h-px bg-[var(--border-subtle)] flex-1"></span>
-          </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="card border-t-4 border-t-[var(--accent-sage)]">
-              <h3 className="font-mono text-xs uppercase tracking-wider text-[var(--accent-sage)] mb-4">Monday PM</h3>
-              <ul className="text-sm text-[var(--text-primary)] list-disc pl-4 space-y-2">
-                <li>Chop Mon/Tue/Wed vegetables</li>
-                <li>Batch cook grains/beans</li>
-              </ul>
-            </div>
-            <div className="card border-t-4 border-t-[var(--accent-gold)]">
-              <h3 className="font-mono text-xs uppercase tracking-wider text-amber-600 mb-4">Tuesday AM + PM</h3>
-              <div className="text-sm text-[var(--text-primary)]">
-                <p className="font-medium text-xs text-[var(--text-muted)] uppercase mb-2">AM</p>
-                <p>Portion lunch components</p>
-                <p className="font-medium text-xs text-[var(--text-muted)] uppercase mt-4 mb-2">PM</p>
-                <ul className="list-disc pl-4 space-y-2">
-                  <li>Portion Wed kids lunch</li>
-                  <li>Chop Thu/Fri vegetables</li>
-                </ul>
-              </div>
-            </div>
-            <div className="card border-t-4 border-t-[var(--accent-terracotta)]">
-              <h3 className="font-mono text-xs uppercase tracking-wider text-orange-600 mb-4">Wednesday PM</h3>
-              <ul className="text-sm text-[var(--text-primary)] list-disc pl-4 space-y-2">
-                <li>Finish ALL remaining prep for Thu/Fri</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        {/* Week Summary Stats */}
-        {
-          weekData.freezer_inventory && weekData.freezer_inventory.length > 0 && (
-            <div className="mt-12 card bg-blue-50 border-blue-200 shadow-sm">
-              <h2 className="text-sm font-mono uppercase tracking-widest text-blue-600 mb-4 flex items-center gap-2">
-                <span>🧊</span>
-                <span>Freezer Backup Meals</span>
-              </h2>
-              <div className="grid md:grid-cols-3 gap-3">
-                {weekData.freezer_inventory.map((item: any, idx: number) => (
-                  <div key={idx} className="p-3 bg-white rounded-lg border border-blue-100 shadow-sm">
-                    <p className="text-sm font-semibold text-blue-900 leading-tight">{item.meal}</p>
-                    <p className="text-[10px] text-blue-400 font-mono mt-1 uppercase">Frozen: {item.frozen_date}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )
-        }
-      </div >
-    </div >
+      </div>
+    </div>
   );
 }

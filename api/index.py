@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 from datetime import datetime
 from flask_cors import CORS
+import traceback
 
 # Add the parent directory to sys.path so we can import from scripts/
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -97,6 +98,9 @@ def invalidate_cache(key=None):
 
 @app.route("/api/status")
 def get_status():
+    return _get_current_status(skip_sync=False)
+
+def _get_current_status(skip_sync=False):
     try:
         from scripts.workflow import get_workflow_state, find_current_week_file, archive_expired_weeks
         from scripts.github_helper import get_file_from_github, list_files_in_dir_from_github
@@ -117,7 +121,7 @@ def get_status():
             return Path(rel_path)
 
         # 0. Background sync key files
-        if is_vercel:
+        if is_vercel and not skip_sync:
             sync_file('data/history.yml')
             sync_file('data/inventory.yml')
             sync_file('config.yml')
@@ -722,8 +726,6 @@ def log_meal():
             calculate_adherence(week)
         save_history(history)
         
-        # Handle recipe addition requests
-        request_recipe = data.get('request_recipe', False)
         if request_recipe:
             meal_to_add = actual_meal or school_snack_feedback or home_snack_feedback or kids_lunch_feedback or adult_lunch_feedback
             if meal_to_add:
@@ -740,6 +742,10 @@ def log_meal():
                             updated_content = content.replace(section_marker, section_marker + new_line)
                             commit_file_to_github(repo_name, 'docs/IMPLEMENTATION.md', f"Request recipe for {meal_to_add}", content=updated_content)
 
+        # Get fresh status BEFORE syncing to GitHub (so we read local tmp changes)
+        # passing skip_sync=True to avoid overwriting local changes with stale GitHub data
+        updated_status = _get_current_status(skip_sync=True)
+        
         # Sync to GitHub
         from scripts.github_helper import sync_changes_to_github
         sync_changes_to_github(['data/history.yml', 'data/inventory.yml'])
@@ -748,7 +754,8 @@ def log_meal():
         invalidate_cache('history')
         invalidate_cache('inventory')
         
-        return jsonify({"status": "success", "message": "Meal logged successfully"})
+        # Return the updated status data directly
+        return updated_status
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
@@ -1087,55 +1094,59 @@ def bulk_add_inventory():
 def replan():
     """
     Trigger inventory-aware replanning for the current week.
-    Calls scripts/workflow.py replan function.
+    Calls scripts/workflow.py replan_meal_plan function directly.
     """
     try:
-        import sys
-        import subprocess
-        from pathlib import Path
+        # Import directly to share same environment (and /tmp paths on Vercel)
+        from scripts.workflow import replan_meal_plan
+        
+        # We need to capture stdout to return it to the user
+        import io
+        import contextlib
+        
+        f = io.StringIO()
+        with contextlib.redirect_stdout(f):
+            # replan_meal_plan(None, None) automatically finds the current week and performs replan
+            replan_meal_plan(None, None)
+            
+        output = f.getvalue()
+        
+        # On Vercel, we need to ensure the updated files are synced to GitHub
+        # logs/workflow.py now uses get_actual_path which writes to /tmp.
+        # We should trigger a sync of /tmp/data/history.yml, /tmp/inputs/*.yml, /tmp/public/plans/*.html
+        
+        is_vercel = os.environ.get('VERCEL') == '1'
+        if is_vercel:
+            from scripts.github_helper import sync_changes_to_github
+            # Sync updated files
+            # Note: sync_changes_to_github implementation dictates what paths it looks at. 
+            # It usually expects relative paths and handles /tmp internally if configured, 
+            # OR we pass the /tmp paths?
+            # Let's check github_helper. It likely expects relative paths and prepends /tmp if on Vercel.
+            # Based on previous index.py usage: sync_changes_to_github(['data/history.yml', ...])
+            
+            sync_changes_to_github([
+                'data/history.yml',
+                'inputs/*.yml',
+                'public/plans/*.html'
+            ])
+            
+            # Also invalidate cache
+            if 'history' in CACHE: del CACHE['history']
+            if 'inventory' in CACHE: del CACHE['inventory']
+            if 'recipes' in CACHE: del CACHE['recipes']
 
-        # Call the workflow script with replan command
-        script_path = Path(__file__).parent.parent / 'scripts' / 'workflow.py'
-        result = subprocess.run(
-            [sys.executable, str(script_path), 'replan'],
-            capture_output=True,
-            text=True,
-            timeout=60
-        )
-
-        if result.returncode == 0:
-            # Sync changes to GitHub if on Vercel
-            is_vercel = os.environ.get('VERCEL') == '1'
-            if is_vercel:
-                from scripts.github_helper import sync_changes_to_github
-                # Sync updated files
-                sync_changes_to_github([
-                    'data/history.yml',
-                    'inputs/*.yml',
-                    'plans/*.html'
-                ])
-
-            return jsonify({
-                "status": "success",
-                "message": "Week replanned with inventory optimization!",
-                "output": result.stdout
-            })
-        else:
-            return jsonify({
-                "status": "error",
-                "message": "Replan failed",
-                "details": result.stderr or result.stdout
-            }), 500
-
-    except subprocess.TimeoutExpired:
         return jsonify({
-            "status": "error",
-            "message": "Replan timed out (>60s)"
-        }), 500
+            "status": "success",
+            "message": "Week replanned with inventory optimization!",
+            "output": output
+        })
+
     except Exception as e:
         return jsonify({
             "status": "error",
-            "message": str(e)
+            "message": str(e),
+            "traceback": traceback.format_exc()
         }), 500
 
 @app.route("/api/hello")

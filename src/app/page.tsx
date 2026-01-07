@@ -171,7 +171,7 @@ export default function Dashboard() {
 
     try {
       setLogLoading(true);
-      await logMeal({
+      const updatedStatus = await logMeal({
         week: status.week_of,
         day: status.current_day,
         made: made,
@@ -182,7 +182,8 @@ export default function Dashboard() {
         request_recipe: requestRecipe
       });
       setSuccess({ message: `Logged status for today (${status.current_day})!` });
-      await fetchStatus();
+      // Update status directly with the fresh data from the backend
+      setStatus(updatedStatus);
 
       // RESET dinner states upon successful log
       setShowAlternatives(false);
@@ -212,7 +213,7 @@ export default function Dashboard() {
       setLogLoading(true);
       const feedbackValue = overrideText || (made ? emoji : 'Skipped');
 
-      await logMeal({
+      const updatedStatus = await logMeal({
         week: status.week_of,
         day: status.current_day,
         [`${feedbackType}_made`]: made,
@@ -222,7 +223,8 @@ export default function Dashboard() {
       });
 
       setSuccess({ message: `Logged ${feedbackType.replace(/_/g, ' ')} feedback!` });
-      await fetchStatus();
+      // Update status directly with the fresh data
+      setStatus(updatedStatus);
     } catch (err: any) {
       setError(err.message || 'Failed to log feedback');
     } finally {

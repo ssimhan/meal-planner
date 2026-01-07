@@ -45,7 +45,7 @@ def find_current_week_file():
     1. Look for incomplete weeks (not plan_complete)
     2. If all weeks are complete or no files exist, return next Monday
     """
-    inputs_dir = Path('inputs')
+    inputs_dir = get_actual_path('inputs')
     if not inputs_dir.exists():
         next_monday = get_next_monday()
         week_str = next_monday.strftime('%Y-%m-%d')
@@ -140,7 +140,7 @@ def get_workflow_state(input_file):
 
 def archive_expired_weeks():
     """Find weeks that have passed their end date and handle rollover."""
-    from scripts.log_execution import load_history, save_history
+    from scripts.log_execution import load_history, save_history, get_actual_path
     history = load_history()
     dirty = False
     
@@ -451,7 +451,7 @@ def generate_meal_plan(input_file, data):
 
     # Generate plan file
     print("\n[5/5] Writing plan file...")
-    plans_dir = Path('public/plans')
+    plans_dir = get_actual_path('public/plans')
     plans_dir.mkdir(exist_ok=True)
 
     history = load_history(history_path)
@@ -596,16 +596,8 @@ def _calculate_ingredient_freshness(inventory):
 def _load_inventory_data(inventory_path='data/inventory.yml'):
     """
     Load and normalize inventory data.
-
-    Returns dict with structure:
-    {
-        'fridge_items': set of normalized item names,
-        'pantry_items': set of normalized item names,
-        'freezer_backups': list of backup meal names,
-        'freshness': {item: days_since_added}
-    }
     """
-    inv_path = Path(inventory_path)
+    inv_path = get_actual_path(inventory_path)
 
     if not inv_path.exists():
         return {
@@ -745,7 +737,7 @@ def replan_meal_plan(input_file, data):
     # robust data loading for replan (handles cases where find_current_week_file skips active weeks)
     if data is None:
         if not input_file:
-            input_file = Path(f'inputs/{monday_str}.yml')
+            input_file = get_actual_path(f'inputs/{monday_str}.yml')
         
         if input_file.exists():
             with open(input_file, 'r') as f:
@@ -754,7 +746,7 @@ def replan_meal_plan(input_file, data):
             print(f"Error: No input file found for active week {monday_str} at {input_file}")
             return
 
-    history_path = Path('data/history.yml')
+    history_path = get_actual_path('data/history.yml')
     history = load_history(history_path)
 
     days_list = ['mon', 'tue', 'wed', 'thu', 'fri']
@@ -960,7 +952,8 @@ def replan_meal_plan(input_file, data):
     plan_content = generate_html_plan(data, history, selected_dinners_objs, selected_lunches=selected_lunches)
     
     plans_dir = Path('public/plans')
-    plans_dir.mkdir(exist_ok=True)
+    plans_dir = get_actual_path('public/plans')
+    plans_dir.mkdir(exist_ok=True, parents=True)
     plan_file = plans_dir / f'{monday_str}-weekly-plan.html'
     with open(plan_file, 'w') as f:
         f.write(plan_content)
@@ -985,7 +978,7 @@ def generate_farmers_market_proposal(history_path, index_path):
     - Check freezer backup count
     """
     # Load inventory if available
-    inventory_path = Path('data/inventory.yml')
+    inventory_path = get_actual_path('data/inventory.yml')
     current_fridge_items = set()
     freezer_backup_count = 0
 

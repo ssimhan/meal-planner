@@ -51,7 +51,7 @@ dinners:
   recipe_id: curried_cauliflower_quinoa_salad
 - day: tue
   recipe_id: freezer_meal
-- day: wed
+- day: sat
   recipe_id: chickpea_salad_wrap
 - day: thu
   recipe_id: easy_zucchini_pasta_sauce

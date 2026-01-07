@@ -90,7 +90,7 @@ weeks:
   - recipe_id: chickpea_salad_wrap
     cuisine: mexican
     meal_type: tacos_wraps
-    day: wed
+    day: sat
     vegetables:
     - bell pepper
     - carrot

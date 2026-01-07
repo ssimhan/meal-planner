@@ -148,21 +148,7 @@ export default function WeekView() {
     setShowReplanModal(true);
   };
 
-  const handleSwapConfirm = async () => {
-    if (swapSelection.length !== 2 || !status?.week_data?.week_of) return;
-
-    try {
-      await swapMeals(status.week_data.week_of, swapSelection[0], swapSelection[1]);
-      const data = await getStatus();
-      setStatus(data);
-      setSwapSelection([]);
-      setIsSwapMode(false);
-    } catch (e) {
-      console.error("Swap failed", e);
-      alert("Failed to swap meals");
-      setSwapSelection([]);
-    }
-  };
+  const [isSwapping, setIsSwapping] = useState(false);
 
   const handleDayClick = (day: string) => {
     if (!isSwapMode) return;
@@ -173,6 +159,25 @@ export default function WeekView() {
       if (swapSelection.length < 2) {
         setSwapSelection(prev => [...prev, day]);
       }
+    }
+  };
+
+  const handleSwapConfirm = async () => {
+    if (swapSelection.length !== 2 || !status?.week_data?.week_of) return;
+
+    try {
+      setIsSwapping(true);
+      await swapMeals(status.week_data.week_of, swapSelection[0], swapSelection[1]);
+      const data = await getStatus();
+      setStatus(data);
+      setSwapSelection([]);
+      setIsSwapMode(false);
+    } catch (e) {
+      console.error("Swap failed", e);
+      alert("Failed to swap meals");
+      setSwapSelection([]);
+    } finally {
+      setIsSwapping(false);
     }
   };
 
@@ -408,6 +413,7 @@ export default function WeekView() {
               day2={swapSelection[1]}
               onConfirm={handleSwapConfirm}
               onCancel={() => setSwapSelection([])}
+              isLoading={isSwapping}
             />
           )
         }

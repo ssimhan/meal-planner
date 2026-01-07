@@ -239,6 +239,13 @@ export default function Dashboard() {
     }
   }
 
+  const getDisplayName = (planned: string, actual?: string) => {
+    if (!actual) return planned;
+    const isEmoji = ['❤️', '👍', '😐', '👎', '❌'].some(emoji => actual.includes(emoji));
+    if (isEmoji || actual === 'Skipped') return planned;
+    return actual;
+  };
+
   const Skeleton = ({ className }: { className?: string }) => (
     <div className={`bg-gray-200 animate-pulse rounded ${className}`} />
   );
@@ -518,7 +525,7 @@ export default function Dashboard() {
                     <Card
                       title="School Snack"
                       icon="🎒"
-                      content={status?.today_snacks?.school || "Fruit"}
+                      content={getDisplayName(status?.today_snacks?.school || "Fruit", status?.today_snacks?.school_snack_feedback)}
                       isConfirmed={status?.today_snacks?.school_snack_made !== undefined}
                       action={<FeedbackButtons
                         feedbackType="school_snack"
@@ -532,7 +539,7 @@ export default function Dashboard() {
                     <Card
                       title="Kids Lunch"
                       icon="🥪"
-                      content={status?.today_lunch?.recipe_name || "Leftovers"}
+                      content={getDisplayName(status?.today_lunch?.recipe_name || "Leftovers", status?.today_lunch?.kids_lunch_feedback)}
                       subtitle={status?.today_lunch?.assembly_notes}
                       isConfirmed={status?.today_lunch?.kids_lunch_made !== undefined}
                       action={<FeedbackButtons
@@ -547,7 +554,7 @@ export default function Dashboard() {
                     <Card
                       title="Adult Lunch"
                       icon="☕"
-                      content="Leftovers"
+                      content={getDisplayName("Leftovers", status?.today_lunch?.adult_lunch_feedback)}
                       subtitle="Grain bowl + dinner components"
                       isConfirmed={status?.today_lunch?.adult_lunch_made !== undefined}
                       action={<FeedbackButtons
@@ -562,7 +569,7 @@ export default function Dashboard() {
                     <Card
                       title="Home Snack"
                       icon="🏠"
-                      content={status?.today_snacks?.home || "Cucumber"}
+                      content={getDisplayName(status?.today_snacks?.home || "Cucumber", status?.today_snacks?.home_snack_feedback)}
                       isConfirmed={status?.today_snacks?.home_snack_made !== undefined}
                       action={<FeedbackButtons
                         feedbackType="home_snack"
@@ -822,7 +829,7 @@ export default function Dashboard() {
                         <Card
                           title="Dinner"
                           icon="🍽️"
-                          content={status?.today_dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Nothing planned'}
+                          content={getDisplayName(status?.today_dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Nothing planned', status?.today_dinner?.actual_meal)}
                           subtitle={status?.today_dinner?.vegetables ? `Veggies: ${status.today_dinner.vegetables.join(', ')}` : null}
                           isConfirmed={status?.today_dinner?.made !== undefined}
                           badge={status?.today_dinner?.made !== undefined ? (

@@ -377,56 +377,59 @@ The best tools are the ones you actually use. This system works because it reduc
 
 **Key Design Decisions:**
 
-1. **Single source of truth:** Use `history.yml` only - no separate execution files
-   - Rationale: Minimize duplication, optimize LLM context usage, simpler data management
-   - Learning: More files ≠ better organization - single file with clear structure beats multiple files
+1.  **Single source of truth:** Use `history.yml` only - no separate execution files
+    -   Rationale: Minimize duplication, optimize LLM context usage, simpler data management
+    -   Learning: More files ≠ better organization - single file with clear structure beats multiple files
 
-2. **Minimal required fields:** `made` (yes/no/freezer) + `vegetables_used` only
-   - Removed: prep time tracking, energy levels, lunch tracking
-   - Rationale: Focus on high-value data (actual execution, vegetable consumption, kids preferences)
-   - Learning: Start simple, expand only if needed - avoid premature complexity
+2.  **Minimal required fields:** `made` (yes/no/freezer) + `vegetables_used` only
+    -   [x] Test rapid logging scenarios (multiple meals in quick succession)
+    -   [x] Add loading states to prevent showing stale data during refresh (COMPLETED 2026-01-07)
+    -   [x] **UX Enhancement**: Prioritize actual meals over planned meals in dashboard display (COMPLETED 2026-01-07)
+    -   Removed: prep time tracking, energy levels, lunch tracking
+    -   Rationale: Focus on high-value data (actual execution, vegetable consumption, kids preferences)
+    -   Learning: Start simple, expand only if needed - avoid premature complexity
 
-3. **Vegetable tracking per dinner:** Track actual vegetables used each night
-   - Rationale: Enables waste reduction, family consumption analysis, fridge inventory management
-   - Use case: "We buy cucumbers every week but only use them 20% of the time"
+3.  **Vegetable tracking per dinner:** Track actual vegetables used each night
+    -   Rationale: Enables waste reduction, family consumption analysis, fridge inventory management
+    -   Use case: "We buy cucumbers every week but only use them 20% of the time"
 
-4. **Freezer inventory management:** Track additions (2x batches) and usage
-   - Auto-update when logging: made_2x_for_freezer adds meal, freezer_used removes meal
-   - Goal: Maintain 3 backup meals at all times
-   - Learning: Automation works best when it's invisible - track state changes automatically
+4.  **Freezer inventory management:** Track additions (2x batches) and usage
+    -   Auto-update when logging: made_2x_for_freezer adds meal, freezer_used removes meal
+    -   Goal: Maintain 3 backup meals at all times
+    -   Learning: Automation works best when it's invisible - track state changes automatically
 
-5. **Kids preferences tracking:** Two-part system
-   - Quick feedback: Multiple choice (Loved it ❤️ / Liked it 👍 / Neutral 😐 / Didn't like 👎 / Refused ❌)
-   - Dislikes accumulation: Optional complaints field → persistent kids_dislikes list
-   - Learning: Track both favorites (what to repeat) and dislikes (what to avoid)
+5.  **Kids preferences tracking:** Two-part system
+    -   Quick feedback: Multiple choice (Loved it ❤️ / Liked it 👍 / Neutral 😐 / Didn't like 👎 / Refused ❌)
+    -   Dislikes accumulation: Optional complaints field → persistent kids_dislikes list
+    -   Learning: Track both favorites (what to repeat) and dislikes (what to avoid)
 
-6. **Phased implementation:** Build → Test → Automate
-   - Phase 6.1: CLI logging script (`log_execution.py`)
-   - Phase 6.2: Manual testing for 3-5 days
-   - Phase 6.3: GitHub Actions integration (structured forms)
-   - Phase 6.4: Vegetable initialization from HTML Groceries tab
-   - Learning: Test each component before integrating - validate assumptions early
+6.  **Phased implementation:** Build → Test → Automate
+    -   Phase 6.1: CLI logging script (`log_execution.py`)
+    -   Phase 6.2: Manual testing for 3-5 days
+    -   Phase 6.3: GitHub Actions integration (structured forms)
+    -   Phase 6.4: Vegetable initialization from HTML Groceries tab
+    -   Learning: Test each component before integrating - validate assumptions early
 
-7. **GitHub Actions evolution:** Structured forms instead of free text
-   - Current: Free text parsing ("Dinner: quesadillas - kids loved it")
-   - Planned: Checkboxes for vegetables, kids feedback, freezer meals
-   - Rationale: Reduce parsing complexity, mobile-friendly interaction
-   - Learning: Structured input > AI parsing - let users pick from lists when possible
+7.  **GitHub Actions evolution:** Structured forms instead of free text
+    -   Current: Free text parsing ("Dinner: quesadillas - kids loved it")
+    -   Planned: Checkboxes for vegetables, kids feedback, freezer meals
+    -   Rationale: Reduce parsing complexity, mobile-friendly interaction
+    -   Learning: Structured input > AI parsing - let users pick from lists when possible
 
-8. **Fridge vegetables initialization:** Extract from HTML Groceries tab
-   - Source: "Fresh Produce" section in weekly plan HTML
-   - Updated: As vegetables used daily via execution logging
-   - Use case: "What vegetables do I have left for Thursday/Friday?"
+8.  **Fridge vegetables initialization:** Extract from HTML Groceries tab
+    -   Source: "Fresh Produce" section in weekly plan HTML
+    -   Updated: As vegetables used daily via execution logging
+    -   Use case: "What vegetables do I have left for Thursday/Friday?"
 
 **Future Phase 7 (Analytics):**
-- Depends on 4-8 weeks of Phase 6 data
-- Insights: Recipe success rates, vegetable waste patterns, kids preferences, plan adherence trends
-- Output: Markdown reports with recommendations (recipes to remove, vegetables to skip, favorites to increase)
+-   Depends on 4-8 weeks of Phase 6 data
+-   Insights: Recipe success rates, vegetable waste patterns, kids preferences, plan adherence trends
+-   Output: Markdown reports with recommendations (recipes to remove, vegetables to skip, favorites to increase)
 
 **Architectural Insights:**
-- Context efficiency matters: Single YAML file keeps token usage low for LLM workflows
-- Default behaviors reduce friction: If not logged, assume "made as planned"
-- State management via auto-calculation: `plan_adherence_pct` computed, not manual
+-   Context efficiency matters: Single YAML file keeps token usage low for LLM workflows
+-   Default behaviors reduce friction: If not logged, assume "made as planned"
+-   State management via auto-calculation: `plan_adherence_pct` computed, not manual
 
 **Status:** Phase 6.1 ready to implement - next session will build `log_execution.py`
 
@@ -437,20 +440,20 @@ The best tools are the ones you actually use. This system works because it reduc
 ## Session: 2026-01-01 (Continued) - Phase 6 Implementation (Execution Tracking)
 
 **Work Completed:**
-- **Phase 6.1 (Core Logging):** Implemented `scripts/log_execution.py` to handle meal logging, inventory updates, and adherence calculation.
-- **Phase 6.2 (Simulation):** Verified system integrity by simulating a full week of logging (making 2x batches, using freezer backups, skipping meals).
-- **Phase 6.3 (GitHub Actions):** Updated `daily-checkin-create.yml` to use structured checkboxes and `scripts/parse_daily_log.py` to invoke the logging script.
-- **Phase 6.4 (Veg Init):** Created `scripts/init_week_vegetables.py` to auto-populate fridge inventory from the weekly plan.
+-   **Phase 6.1 (Core Logging):** Implemented `scripts/log_execution.py` to handle meal logging, inventory updates, and adherence calculation.
+-   **Phase 6.2 (Simulation):** Verified system integrity by simulating a full week of logging (making 2x batches, using freezer backups, skipping meals).
+-   **Phase 6.3 (GitHub Actions):** Updated `daily-checkin-create.yml` to use structured checkboxes and `scripts/parse_daily_log.py` to invoke the logging script.
+-   **Phase 6.4 (Veg Init):** Created `scripts/init_week_vegetables.py` to auto-populate fridge inventory from the weekly plan.
 
 **Technical Decisions:**
-- **Structured Inputs:** Switched from free-text parsing to GitHub Issue checkboxes.
-    - *Why:* Higher reliability, better mobile UX (tap to select), effortless data entry.
-- **Inventory as Queue:** Freezer inventory logic treats adding/removing as simple list operations, simplifying the mental model.
-- **Integration:** Hooked vegetable initialization into the `Generate Meal Plan` workflow so it happens automatically when a plan is merged.
+-   **Structured Inputs:** Switched from free-text parsing to GitHub Issue checkboxes.
+    -   *Why:* Higher reliability, better mobile UX (tap to select), effortless data entry.
+-   **Inventory as Queue:** Freezer inventory logic treats adding/removing as simple list operations, simplifying the mental model.
+-   **Integration:** Hooked vegetable initialization into the `Generate Meal Plan` workflow so it happens automatically when a plan is merged.
 
 **Validation:**
-- Simulated end-to-end flow: `Weekly Plan` -> `Init Veggies` -> `Daily Log` -> `History Update`.
-- System correctly handles edge cases like "Made 2x for freezer" (adds to inventory) and "Used freezer backup" (removes from inventory).
+-   Simulated end-to-end flow: `Weekly Plan` -> `Init Veggies` -> `Daily Log` -> `History Update`.
+-   System correctly handles edge cases like "Made 2x for freezer" (adds to inventory) and "Used freezer backup" (removes from inventory).
 
 **Status:** Phase 6 Complete. Ready for real-world usage.
 
@@ -459,35 +462,34 @@ The best tools are the ones you actually use. This system works because it reduc
 ## Session: 2026-01-01 (Continued) - Phase 7 Implementation (Analytics)
 
 **Work Completed:**
-- **Phase 7 (Analytics):** Implemented `scripts/analyze_trends.py` to generate markdown insight reports from history.
-- **Metrics Tracked:**
-    - Recipe Success Rate (Planned vs. Made)
-    - Vegetable Consumption Frequency
-    - Weekly Adherence Trends
-    - Freezer Inventory Flux
+-   **Phase 7 (Analytics):** Implemented `scripts/analyze_trends.py` to generate markdown insight reports from history.
+-   **Metrics Tracked:**
+    -   Recipe Success Rate (Planned vs. Made)
+    -   Vegetable Consumption Frequency
+    -   Weekly Adherence Trends
+    -   Freezer Inventory Flux
 
 **Status:** Initial framework complete. Script is ready to run once data accumulates.
-
 
 ### Note on Workflow (2026-01-01)
 *This session and the implementation of Phases 6 & 7 were conducted using **Google Antigravity** (Advanced Agentic Coding), differentiating it from previous sessions using the standard Claude Code plugin.*
 
 ### Phase 8: Architecture & Robustness (2026-01-01)
 **Goal:** Harden the system against data loss and errors.
-- **Backups:** Added automated backups for `history.yml`.
-- **Validation:** Implemented strict YAML validation in CI (`data-integrity.yml`).
-- **Configuration:** Centralized settings into `config.yml`.
-- **Maintenance:** Created `archive_history.py` to manage long-term data growth and implemented fuzzy matching for ingredient tracking.
-- **Documentation:** Conducted and implemented a full architectural review.
+-   **Backups:** Added automated backups for `history.yml`.
+-   **Validation:** Implemented strict YAML validation in CI (`data-integrity.yml`).
+-   **Configuration:** Centralized settings into `config.yml`.
+-   **Maintenance:** Created `archive_history.py` to manage long-term data growth and implemented fuzzy matching for ingredient tracking.
+-   **Documentation:** Conducted and implemented a full architectural review.
 
 ---
 
 ## Session: 2026-01-01 (Final) - Live Development Setup
 
 **Work Completed:**
-- **Problem:** Static HTML is hard to iterate on - manually running `workflow.py` and refreshing the browser is slow.
-- **Solution:** Created `scripts/dev.sh` using `nodemon` and `browser-sync`.
-- **Result:** Changes to recipes, templates, or inputs automatically regenerate the plan and refresh the browser.
+-   **Problem:** Static HTML is hard to iterate on - manually running `workflow.py` and refreshing the browser is slow.
+-   **Solution:** Created `scripts/dev.sh` using `nodemon` and `browser-sync`.
+-   **Result:** Changes to recipes, templates, or inputs automatically regenerate the plan and refresh the browser.
 **Learning:** Real-time feedback loops are critical for developer (and user) happiness.
 
 ---
@@ -497,52 +499,52 @@ The best tools are the ones you actually use. This system works because it reduc
 **Commit:** `504` (Refined Week at a Glance, fixed Groceries tab, and persistent meal substitutions), `771` (Unify inventory tracking)
 
 **Work Completed:**
-- **Refined Week at a Glance**: Split lunch into distinct "Kids Lunch" and "Adult Lunch" columns. Added alternating row colors for better mobile readability.
-- **Dynamic Grocery Generation**: Replaced placeholder grocery list with a real aggregator that scans selected dinner and lunch recipes for produce, dairy, grains, and canned goods.
-- **Persistent Meal Substitutions**: Implemented "sticky" logic in `select_dinners`. If a meal is manually changed in `history.yml` (e.g., to a "Freezer Backup Meal"), the generator respects that choice and updates prep/grocery tasks accordingly.
-- **Unified Inventory Tracking**: Moved inventory stock management to `data/inventory.yml` as the single source of truth. The Overview tab and `log_execution.py` now both sync with this file.
-- **Data Sanitization**: Used `sed` to fix systematic misspellings ("tomatoe" -> "tomato", "potatoe" -> "potato") across 5,000+ lines of `recipes/index.yml`.
-- **Prep Schedule Balancing**: Redistributed prep load: Monday handles Mon-Tue, Tuesday handles Wed-Fri, Wednesday serves as a backup/buffer day.
+-   **Refined Week at a Glance**: Split lunch into distinct "Kids Lunch" and "Adult Lunch" columns. Added alternating row colors for better mobile readability.
+-   **Dynamic Grocery Generation**: Replaced placeholder grocery list with a real aggregator that scans selected dinner and lunch recipes for produce, dairy, grains, and canned goods.
+-   **Persistent Meal Substitutions**: Implemented "sticky" logic in `select_dinners`. If a meal is manually changed in `history.yml` (e.g., to a "Freezer Backup Meal"), the generator respects that choice and updates prep/grocery tasks accordingly.
+-   **Unified Inventory Tracking**: Moved inventory stock management to `data/inventory.yml` as the single source of truth. The Overview tab and `log_execution.py` now both sync with this file.
+-   **Data Sanitization**: Used `sed` to fix systematic misspellings ("tomatoe" -> "tomato", "potatoe" -> "potato") across 5,000+ lines of `recipes/index.yml`.
+-   **Prep Schedule Balancing**: Redistributed prep load: Monday handles Mon-Tue, Tuesday handles Wed-Fri, Wednesday serves as a backup/buffer day.
 
 **Learning:**
-- **Respect User Overrides**: Automation should be a starting point, not a cage. Allowing users to manually "pin" a freezer meal in history makes the tool feel collaborative rather than prescriptive.
-- **Data Fragmentation is Technical Debt**: Having inventory tracked in two different YAML files created a "split brain" problem. Consolidating to one source of truth simplified both the planning logic and the UI generation.
-- **Dumb Regex is Powerful**: Cleaning up thousands of lines of misspellings via `sed` was much faster and less error-prone than trying to build a complex Python cleanup script.
+-   **Respect User Overrides**: Automation should be a starting point, not a cage. Allowing users to manually "pin" a freezer meal in history makes the tool feel collaborative rather than prescriptive.
+-   **Data Fragmentation is Technical Debt**: Having inventory tracked in two different YAML files created a "split brain" problem. Consolidating to one source of truth simplified both the planning logic and the UI generation.
+-   **Dumb Regex is Powerful**: Cleaning up thousands of lines of misspellings via `sed` was much faster and less error-prone than trying to build a complex Python cleanup script.
 
 ---
 
 ## Session: 2026-01-01 (Evening) - Recipe Measurement Standardization
 
 **Work Completed:**
-- **Problem:** 83 recipes (35%) had inconsistent or missing measurements for core ingredients (vegetables and grains), making grocery shopping difficult.
-- **Solution:** Created automated audit and fix scripts to standardize measurements to store-bought quantities.
-- **Tools Built:**
-  - `scripts/audit_recipe_measurements_v2.py` - Comprehensive audit script to identify measurement issues
-  - `scripts/fix_recipe_measurements.py` - Automated fix script for common patterns
-  - `scripts/interactive_recipe_fixer.py` - Interactive CLI for rapid manual fixes
-- **Results:**
-  - Fixed 171 recipe HTML files automatically
-  - Reduced issues from 83 recipes (35%) to 22 recipes (9.4%)
-  - Remaining 22 are acceptable edge cases (optional ingredients, canned goods with measurements, suggestions)
-  - Standardized to store-bought quantities (e.g., "1 medium onion" instead of "1 cup diced onion")
+-   **Problem:** 83 recipes (35%) had inconsistent or missing measurements for core ingredients (vegetables and grains), making grocery shopping difficult.
+-   **Solution:** Created automated audit and fix scripts to standardize measurements to store-bought quantities.
+-   **Tools Built:**
+    -   `scripts/audit_recipe_measurements_v2.py` - Comprehensive audit script to identify measurement issues
+    -   `scripts/fix_recipe_measurements.py` - Automated fix script for common patterns
+    -   `scripts/interactive_recipe_fixer.py` - Interactive CLI for rapid manual fixes
+-   **Results:**
+    -   Fixed 171 recipe HTML files automatically
+    -   Reduced issues from 83 recipes (35%) to 22 recipes (9.4%)
+    -   Remaining 22 are acceptable edge cases (optional ingredients, canned goods with measurements, suggestions)
+    -   Standardized to store-bought quantities (e.g., "1 medium onion" instead of "1 cup diced onion")
 
 **Technical Decisions:**
-1. **Store-bought quantities over recipe-specific:** "1 medium onion" is more useful for shopping than "1 cup diced onion"
-2. **Automated fixes for common patterns:** Missing spaces (`1onion` → `1 medium onion`) and size descriptors
-3. **Interactive CLI for edge cases:** Rapid feedback loop for recipes needing manual review
-4. **BeautifulSoup for HTML editing:** Preserved HTML structure while updating ingredient text
+1.  **Store-bought quantities over recipe-specific:** "1 medium onion" is more useful for shopping than "1 cup diced onion"
+2.  **Automated fixes for common patterns:** Missing spaces (`1onion` → `1 medium onion`) and size descriptors
+3.  **Interactive CLI for edge cases:** Rapid feedback loop for recipes needing manual review
+4.  **BeautifulSoup for HTML editing:** Preserved HTML structure while updating ingredient text
 
 **Measurement Standards Established:**
-- Vegetables: Use size descriptors (small/medium/large) or counts (e.g., "2 medium tomatoes")
-- Canned goods: Include size (e.g., "1 (15 oz) can black beans")
-- Herbs: Use volume for chopped (e.g., "1/4 cup chopped cilantro")
-- Spices/condiments: No measurement required (used to taste)
+-   Vegetables: Use size descriptors (small/medium/large) or counts (e.g., "2 medium tomatoes")
+-   Canned goods: Include size (e.g., "1 (15 oz) can black beans")
+-   Herbs: Use volume for chopped (e.g., "1/4 cup chopped cilantro")
+-   Spices/condiments: No measurement required (used to taste)
 
 **Learning:**
-- **Data quality compounds:** Good measurements make grocery lists accurate, which reduces food waste and shopping stress
-- **Automation + human review:** Scripts handle 70% automatically, interactive CLI makes the remaining 30% fast
-- **Edge cases are features:** Optional ingredients and suggestions don't need precise measurements - that's intentional flexibility
-- **Standardization enables automation:** Consistent data format unlocks future features (auto-generated grocery lists, nutrition tracking)
+-   **Data quality compounds:** Good measurements make grocery lists accurate, which reduces food waste and shopping stress
+-   **Automation + human review:** Scripts handle 70% automatically, interactive CLI makes the remaining 30% fast
+-   **Edge cases are features:** Optional ingredients and suggestions don't need precise measurements - that's intentional flexibility
+-   **Standardization enables automation:** Consistent data format unlocks future features (auto-generated grocery lists, nutrition tracking)
 
 **Status:** Recipe measurement standardization complete. All 234 recipes now have consistent, store-bought measurements for core ingredients.
 
@@ -551,41 +553,40 @@ The best tools are the ones you actually use. This system works because it reduc
 ## Session: 2026-01-01 (Late Night) - Smart Re-planning & Rollover
 
 **Work Completed:**
-- **Problem:** When life happens and meals get skipped (e.g., "Ate out"), the plan breaks. Meals are lost, and upcoming days are over-scheduled.
-- **Solution:** Implemented `python3 scripts/workflow.py replan` which automatically:
-  1. Detects skipped meals in `history.yml` (marked as `made: false`)
-  2. Shifts skipped meals to the first available future day
-  3. Moves "overflow" meals (recipes that no longer fit in the week) to a `rollover` list
-  4. Automatically rebuilds the Weekly Plan HTML to reflect these changes
-- **Integration:** Integrated into the Daily Check-in workflow (`daily-checkin-parse.yml`), so re-planning happens automatically every time you log a status update.
+-   **Problem:** When life happens and meals get skipped (e.g., "Ate out"), the plan breaks. Meals are lost, and upcoming days are over-scheduled.
+-   **Solution:** Implemented `python3 scripts/workflow.py replan` which automatically:
+    1.  Detects skipped meals in `history.yml` (marked as `made: false`)
+    2.  Shifts skipped meals to the first available future day
+    3.  Moves "overflow" meals (recipes that no longer fit in the week) to a `rollover` list
+    4.  Automatically rebuilds the Weekly Plan HTML to reflect these changes
+-   **Integration:** Integrated into the Daily Check-in workflow (`daily-checkin-parse.yml`), so re-planning happens automatically every time you log a status update.
 
 **Technical Details:**
-- **Robust Rollover:** "Overflow" recipes are stored in `history.yml` under a `rollover` key.
-- **Priority Scheduling:** When generating the *next* week's plan (`create_new_week`), the system checks for `rollover` items and prioritizes them above all other constraints.
-- **Verification:** Simulated end-to-end flow where a skipped Monday meal pushed Wednesday's meal to Friday, knocking Friday's original meal into next week's rollover queue.
+-   **Robust Rollover:** "Overflow" recipes are stored in `history.yml` under a `rollover` key.
+-   **Priority Scheduling:** When generating the *next* week's plan (`create_new_week`), the system checks for `rollover` items and prioritizes them above all other constraints.
+-   **Verification:** Simulated end-to-end flow where a skipped Monday meal pushed Wednesday's meal to Friday, knocking Friday's original meal into next week's rollover queue.
 
 **Learning:**
-- **Plans must be fluid:** A static plan that breaks on the first error is useless. A dynamic plan that heals itself is resilient.
-- **Automated housekeeping:** Users shouldn't have to manually "move" meals. The system should infer intent from status updates ("I didn't make this" implies "I still need to make this").
+-   **Plans must be fluid:** A static plan that breaks on the first error is useless. A dynamic plan that heals itself is resilient.
+-   **Automated housekeeping:** Users shouldn't have to manually "move" meals. The system should infer intent from status updates ("I didn't make this" implies "I still need to make this").
 
 **Status:** Smart Re-planning live. System now self-corrects based on execution reality.
-
 
 ---
 
 ## Session: 2026-01-01 (Night) - Grocery List Enhancements
 
 **Work Completed:**
-- **Problem:** Snack categorization was poor (all lumped under "Snacks"), and shelf-stable items like crackers/nut butters were hard to find in the list.
-- **Solution:**
-  - Implemented logic to split composite snacks (e.g., "Apple and peanut butter") into individual components.
-  - Added categorical sorting for components (Apple -> Produce, Peanut Butter -> Shelf Stable).
-  - Created a dedicated "Shelf Stable" section in the grocery list.
-  - Removed the redundant "Snacks" category in favor of aisle-based organization.
+-   **Problem:** Snack categorization was poor (all lumped under "Snacks"), and shelf-stable items like crackers/nut butters were hard to find in the list.
+-   **Solution:**
+    -   Implemented logic to split composite snacks (e.g., "Apple and peanut butter") into individual components.
+    -   Added categorical sorting for components (Apple -> Produce, Peanut Butter -> Shelf Stable).
+    -   Created a dedicated "Shelf Stable" section in the grocery list.
+    -   Removed the redundant "Snacks" category in favor of aisle-based organization.
 
 **Decisions:**
-- **Peanut Butter is Shelf Stable:** Explicitly categorized as shelf-stable, not a dairy variant/butter.
-- **Section Naming:** Removed aisle numbers (e.g., "Aisle 3/4") from section headers to keep the design clean and store-agnostic.
+-   **Peanut Butter is Shelf Stable:** Explicitly categorized as shelf-stable, not a dairy variant/butter.
+-   **Section Naming:** Removed aisle numbers (e.g., "Aisle 3/4") from section headers to keep the design clean and store-agnostic.
 
 **Status:** Complete. Grocery list now organized purely by aisle/category, significantly improving the shopping experience.
 
@@ -598,14 +599,14 @@ The best tools are the ones you actually use. This system works because it reduc
 **Decision: Move to Option 2 (Hybrid Serverless Python App on Vercel).**
 
 **Rationale:**
-- **Flexibility:** Vercel allows for dynamic server-side logic (Python Serverless Functions) alongside a modern React (Next.js) frontend.
-- **Maintain Logic:** Porting 2,500+ lines of complex Python logic (`workflow.py`, `lunch_selector.py`) to TypeScript would be high-effort; keeping it in Python but running it in the cloud is the "sweet spot."
-- **Data Persistence:** Using the GitHub API as a temporary database allows for a "GitOps" workflow while moving towards a true web app interface.
-- **Cost:** $0/mo on Vercel Hobby tier.
+-   **Flexibility:** Vercel allows for dynamic server-side logic (Python Serverless Functions) alongside a modern React (Next.js) frontend.
+-   **Maintain Logic:** Porting 2,500+ lines of complex Python logic (`workflow.py`, `lunch_selector.py`) to TypeScript would be high-effort; keeping it in Python but running it in the cloud is the "sweet spot."
+-   **Data Persistence:** Using the GitHub API as a temporary database allows for a "GitOps" workflow while moving towards a true web app interface.
+-   **Cost:** $0/mo on Vercel Hobby tier.
 
 **Backups Created:**
-- Git Branch: `legacy-static-backup`
-- Physical Folder: `_legacy_backup/`
+-   Git Branch: `legacy-static-backup`
+-   Physical Folder: `_legacy_backup/`
 
 **Status:** Implementation started. Next step is initializing the Next.js project and refactoring Python scripts into API endpoints.
 
@@ -615,24 +616,24 @@ The best tools are the ones you actually use. This system works because it reduc
 
 **Work Completed:**
 
-- **Backend Migration:** Refactored `workflow.py` and `generate_plan.py` to work as serverless functions.
-    - Replaced `sys.exit()` with exception handling.
-    - Implemented `github_helper.py` to persist data (history, plans, inventory) back to GitHub via API.
-    - Created `/api` endpoints: `status`, `generate-plan`, `create-week`, `confirm-veg`, `inventory`.
+-   **Backend Migration:** Refactored `workflow.py` and `generate_plan.py` to work as serverless functions.
+    -   Replaced `sys.exit()` with exception handling.
+    -   Implemented `github_helper.py` to persist data (history, plans, inventory) back to GitHub via API.
+    -   Created `/api` endpoints: `status`, `generate-plan`, `create-week`, `confirm-veg`, `inventory`.
 
-- **Frontend Dashboard (Next.js):**
-    - Built a modern, Solarpunk-themed dashboard using Tailwind CSS.
-    - **Interactive Features:**
-        - **Start New Week:** Initialize the next planning cycle with one click.
-        - **Confirm Veg:** Input farmers market purchases directly from the UI.
-        - **Generate Plan:** Trigger the Python engine and view the resulting HTML plan instantly.
-        - **Quick Add Inventory:** Update freezer, pantry, and fridge stocks in real-time.
-    - **Viewers:** Added `/recipes` and `/inventory` pages for easy browsing.
+-   **Frontend Dashboard (Next.js):**
+    -   Built a modern, Solarpunk-themed dashboard using Tailwind CSS.
+    -   **Interactive Features:**
+        -   **Start New Week:** Initialize the next planning cycle with one click.
+        -   **Confirm Veg:** Input farmers market purchases directly from the UI.
+        -   **Generate Plan:** Trigger the Python engine and view the resulting HTML plan instantly.
+        -   **Quick Add Inventory:** Update freezer, pantry, and fridge stocks in real-time.
+    -   **Viewers:** Added `/recipes` and `/inventory` pages for easy browsing.
 
-- **Deployment:**
-    - Live on Vercel: `meal-planner-eta-seven.vercel.app`
-    - configured `vercel.json` to route API requests to Python and frontend to Next.js.
-    - Set up `GITHUB_TOKEN` for secure data persistence.
+-   **Deployment:**
+    -   Live on Vercel: `meal-planner-eta-seven.vercel.app`
+    -   configured `vercel.json` to route API requests to Python and frontend to Next.js.
+    -   Set up `GITHUB_TOKEN` for secure data persistence.
 
 **Key Technical Decisions:**
 1.  **GitOps Persistence:** Even though the app runs on Vercel, the "database" is still the YAML files in the GitHub repo. The app uses the GitHub API to commit changes back to itself, ensuring we never lose the benefits of version control.
@@ -647,11 +648,11 @@ The best tools are the ones you actually use. This system works because it reduc
 
 **Work Completed:**
 
-- **Backend API Expansion:**
+-   **Backend API Expansion:**
     -   Implemented `/api/log-meal` endpoint for robust logging and inventory updates.
     -   Enhanced `/api/status` to serve "Today's Dinner" context.
 
-- **Frontend Dashboard Evolution:**
+-   **Frontend Dashboard Evolution:**
     -   Built interactive "Daily Check-in" card on dashboard.
     -   Added "Kids Feedback" buttons (❤️, 👍, 😐, 👎, ❌) for one-tap preference tracking.
 
@@ -666,18 +667,18 @@ The best tools are the ones you actually use. This system works because it reduc
 
 **Work Completed:**
 
-- **Overhauled "Today" View**: Replaced the simple check-in with a comprehensive "Today's Schedule" featuring 5 distinct cards (School Snack, Kids Lunch, Adult Lunch, Home Snack, Dinner).
-- **Prep Interface Timeline**: Integrated a dynamic task list that surfaces specific prep requirements (AM/PM) based on the day of the week, pulling from the core energy-based prep model.
-- **Inventory "Brain Dump"**: Added a powerful text-parsing interface to the inventory page, allowing users to paste raw lists and bulk-add items to specialized storage categories.
-- **Intelligence & Scoring**: 
-    - Updated `scripts/analyze_trends.py` to calculate numerical "Success Scores" from emoji feedback.
-    - Added support for JSON exports to enable real-time dashboard stats.
-- **Unified Data API**: Refactored the `/api/status` endpoint to merge current plan inputs with historical data, providing a coherent view even before a week is "logged."
+-   **Overhauled "Today" View**: Replaced the simple check-in with a comprehensive "Today's Schedule" featuring 5 distinct cards (School Snack, Kids Lunch, Adult Lunch, Home Snack, Dinner).
+-   **Prep Interface Timeline**: Integrated a dynamic task list that surfaces specific prep requirements (AM/PM) based on the day of the week, pulling from the core energy-based prep model.
+-   **Inventory "Brain Dump"**: Added a powerful text-parsing interface to the inventory page, allowing users to paste raw lists and bulk-add items to specialized storage categories.
+-   **Intelligence & Scoring**:
+    -   Updated `scripts/analyze_trends.py` to calculate numerical "Success Scores" from emoji feedback.
+    -   Added support for JSON exports to enable real-time dashboard stats.
+-   **Unified Data API**: Refactored the `/api/status` endpoint to merge current plan inputs with historical data, providing a coherent view even before a week is "logged."
 
 **Lessons:**
-- **Context is king**: Seeing the *entire* day's schedule (not just dinner) reduces cognitive load for the family.
-- **Actionable Analytics**: Translating emojis into scores creates a feedback loop that directly improves the quality of future automated plans.
-- **Lowering Friction**: The "Brain Dump" tool transforms one of the most tedious tasks (inventory updates) into a 10-second activity.
+-   **Context is king**: Seeing the *entire* day's schedule (not just dinner) reduces cognitive load for the family.
+-   **Actionable Analytics**: Translating emojis into scores creates a feedback loop that directly improves the quality of future automated plans.
+-   **Lowering Friction**: The "Brain Dump" tool transforms one of the most tedious tasks (inventory updates) into a 10-second activity.
 
 ---
 
@@ -685,15 +686,15 @@ The best tools are the ones you actually use. This system works because it reduc
 
 **Issue:** Dashboard crashed with "Failed to connect to the meal planner brain" (500 Internal Server Error).
 **Root Cause:**
-- Vercel servers run in UTC.
-- When UTC time crosses into the next week (Monday), the `archive_expired_weeks()` function triggers.
-- This function attempts to write to `inputs/*.yml` and `history.yml` to archive the old week.
-- Vercel's filesystem is read-only at runtime, causing the API to crash.
+-   Vercel servers run in UTC.
+-   When UTC time crosses into the next week (Monday), the `archive_expired_weeks()` function triggers.
+-   This function attempts to write to `inputs/*.yml` and `history.yml` to archive the old week.
+-   Vercel's filesystem is read-only at runtime, causing the API to crash.
 
 **Fix:** Wrappped the archival logic in `api/index.py` with a `try...except` block.
-- If writing fails (e.g., on Vercel), it logs a warning and proceeds without crashing.
-- The dashboard remains functional even if archival cannot be performed automatically on the server.
-- Users can still trigger proper archival by running the script locally and pushing to GitHub.
+-   If writing fails (e.g., on Vercel), it logs a warning and proceeds without crashing.
+-   The dashboard remains functional even if archival cannot be performed automatically on the server.
+-   Users can still trigger proper archival by running the script locally and pushing to GitHub.
 
 **Learning:** Serverless environments often have read-only filesystems. Side-effects (like file updates) should be handled via API calls (GitHub API) or skipped gracefully, not by direct file I/O.
 
@@ -703,41 +704,41 @@ The best tools are the ones you actually use. This system works because it reduc
 
 **Work Completed:**
 
-- **Redesigned Feedback Flow for All Meals:**
-    - Implemented a universal 3-step feedback system for School Snack, Kids Lunch, Adult Lunch, Home Snack, and Dinner
-    - **Step 1:** Made or Not Made (✓/✗) binary choice
-    - **Step 2a:** If Made → Preference emojis (❤️ 👍 😐 👎 ❌)
-    - **Step 2b:** If Not Made → Text input for "What did you eat instead?"
-    - **Data Storage:** New `daily_feedback` structure in `history.yml` at the day level
+-   **Redesigned Feedback Flow for All Meals:**
+    -   Implemented a universal 3-step feedback system for School Snack, Kids Lunch, Adult Lunch, Home Snack, and Dinner
+    -   **Step 1:** Made or Not Made (✓/✗) binary choice
+    -   **Step 2a:** If Made → Preference emojis (❤️ 👍 😐 👎 ❌)
+    -   **Step 2b:** If Not Made → Text input for "What did you eat instead?"
+    -   **Data Storage:** New `daily_feedback` structure in `history.yml` at the day level
 
-- **Sophisticated Dinner Logging:**
-    - Multi-step flow when dinner plan not followed:
-        - Step 1: Made as Planned vs. Did Not Make
-        - Step 2: If not made → Choose: Freezer Meal / Ate Out / Something Else
-        - Step 3a: Freezer Meal → Radio button selection from `freezer_inventory` with auto-removal of used meal
-        - Step 3b: Ate Out → Simple confirmation (stores `made: 'outside_meal'`)
-        - Step 3c: Something Else → Text input (stores in `actual_meal` field)
-    - **State Management:** Multi-step React component with `showAlternatives`, `selectedAlternative`, `otherMealText`, `selectedFreezerMeal`
+-   **Sophisticated Dinner Logging:**
+    -   Multi-step flow when dinner plan not followed:
+        -   Step 1: Made as Planned vs. Did Not Make
+        -   Step 2: If not made → Choose: Freezer Meal / Ate Out / Something Else
+        -   Step 3a: Freezer Meal → Radio button selection from `freezer_inventory` with auto-removal of used meal
+        -   Step 3b: Ate Out → Simple confirmation (stores `made: 'outside_meal'`)
+        -   Step 3c: Something Else → Text input (stores in `actual_meal` field)
+    -   **State Management:** Multi-step React component with `showAlternatives`, `selectedAlternative`, `otherMealText`, `selectedFreezerMeal`
 
-- **Backend Enhancements:**
-    - Updated `/api/log-meal` to handle all new feedback fields (`school_snack_made`, `home_snack_made`, `kids_lunch_made`, `adult_lunch_made`)
-    - Added freezer inventory auto-removal when `freezer_meal` is used
-    - Modified `/api/status` to return feedback + made status for all meal types
-    - Implemented `is_feedback_only` flag to allow logging snack/lunch feedback without dinner status
+-   **Backend Enhancements:**
+    -   Updated `/api/log-meal` to handle all new feedback fields (`school_snack_made`, `home_snack_made`, `kids_lunch_made`, `adult_lunch_made`)
+    -   Added freezer inventory auto-removal when `freezer_meal` is used
+    -   Modified `/api/status` to return feedback + made status for all meal types
+    -   Implemented `is_feedback_only` flag to allow logging snack/lunch feedback without dinner status
 
-- **Frontend Components:**
-    - `FeedbackButtons` component: Handles 3-step flow for snacks/lunches
-    - `DinnerLogging` component: Sophisticated multi-step flow with freezer selection
-    - Mobile-responsive grid (`grid-cols-1 md:grid-cols-2 lg:grid-cols-5`)
+-   **Frontend Components:**
+    -   `FeedbackButtons` component: Handles 3-step flow for snacks/lunches
+    -   `DinnerLogging` component: Sophisticated multi-step flow with freezer selection
+    -   Mobile-responsive grid (`grid-cols-1 md:grid-cols-2 lg:grid-cols-5`)
 
 **Technical Decisions:**
 
-1. **Unified Feedback Pattern:** Same flow for all meal types (consistency reduces learning curve)
-2. **Made Status First:** Binary choice before details (reduces decision fatigue)
-3. **Freezer as Inventory:** Radio button selection from actual inventory (prevents typos, ensures data quality)
-4. **Auto-removal:** Used freezer meals automatically removed from inventory (zero manual bookkeeping)
-5. **Day-level Storage:** `daily_feedback.{day}.{meal_type}` structure (cleaner than per-meal objects)
-6. **Validation Logic:** `is_feedback_only` flag allows snack/lunch logging without dinner requirement
+1.  **Unified Feedback Pattern:** Same flow for all meal types (consistency reduces learning curve)
+2.  **Made Status First:** Binary choice before details (reduces decision fatigue)
+3.  **Freezer as Inventory:** Radio button selection from actual inventory (prevents typos, ensures data quality)
+4.  **Auto-removal:** Used freezer meals automatically removed from inventory (zero manual bookkeeping)
+5.  **Day-level Storage:** `daily_feedback.{day}.{meal_type}` structure (cleaner than per-meal objects)
+6.  **Validation Logic:** `is_feedback_only` flag allows snack/lunch logging without dinner requirement
 
 **Data Structure Example:**
 ```yaml
@@ -766,150 +767,150 @@ freezer_inventory:
 ```
 
 **UI/UX Improvements:**
-- **Step Navigation:** Clear back buttons at each step
-- **Visual States:** Different button colors for each option (green=made, terracotta=freezer, gold=outside)
-- **Scrollable Inventory:** Freezer list has `max-h-32 overflow-y-auto` for long lists
-- **Status Badges:** Dynamic badge updates (`✓ Made`, `🧊 Freezer`, `🍽️ Restaurant`, `✗ {actual_meal}`)
+-   **Step Navigation:** Clear back buttons at each step
+-   **Visual States:** Different button colors for each option (green=made, terracotta=freezer, gold=outside)
+-   **Scrollable Inventory:** Freezer list has `max-h-32 overflow-y-auto` for long lists
+-   **Status Badges:** Dynamic badge updates (`✓ Made`, `🧊 Freezer`, `🍽️ Restaurant`, `✗ {actual_meal}`)
 
 **Learning:**
-- **Progressive Disclosure:** Multi-step flows reduce cognitive load (show only relevant options at each stage)
-- **Data Quality via UI:** Radio buttons > text input for preventing typos and ensuring consistent data
-- **Automation Delights:** Auto-removing used freezer meals feels like magic (system "remembers" for you)
-- **Mobile-First Matters:** Vertical stacking on mobile is critical (most logging happens on phone in kitchen)
+-   **Progressive Disclosure:** Multi-step flows reduce cognitive load (show only relevant options at each stage)
+-   **Data Quality via UI:** Radio buttons > text input for preventing typos and ensuring consistent data
+-   **Automation Delights:** Auto-removing used freezer meals feels like magic (system "remembers" for you)
+-   **Mobile-First Matters:** Vertical stacking on mobile is critical (most logging happens on phone in kitchen)
 
 **Status:** Phase 10 logging system complete. Only remaining item: Full Week View page.
 
 ### [2026-01-04] Smart Personalization & Snack Intelligence
-- **Goal:** Implement specific kid profiles (allergies/preferences) and context-aware snack logic.
-- **Changes:**
-  - Updated `config.yml` with `kid_profiles` (Akira/Anya).
-  - Refactored `lunch_selector.py` to resolve profile conflicts (e.g. flagging nuts for Anya).
-  - Updated `workflow.py` to render personalized lunch details and School vs. Home snack sections.
-  - Implemented automatic nut substitution (Sunbutter/Seeds) for School Snacks.
-- **Outcome:** System now safely handles Anya's nut restriction for school meals while allowing nuts at home.
+-   **Goal:** Implement specific kid profiles (allergies/preferences) and context-aware snack logic.
+-   **Changes:**
+    -   Updated `config.yml` with `kid_profiles` (Akira/Anya).
+    -   Refactored `lunch_selector.py` to resolve profile conflicts (e.g. flagging nuts for Anya).
+    -   Updated `workflow.py` to render personalized lunch details and School vs. Home snack sections.
+    -   Implemented automatic nut substitution (Sunbutter/Seeds) for School Snacks.
+-   **Outcome:** System now safely handles Anya's nut restriction for school meals while allowing nuts at home.
 
 ## Session: 2026-01-05 - Week View UX & Vercel Issues
 
 **Work Completed:**
-- **Problem:** "Week at a Glance" meal editing was cramped on mobile with inline inputs.
-- **Solution:** Implemented "Selection & Dedicated Edit Queue" model (Option 1).
-    - **Batch Selection:** "Mark for Fix" mode with checkboxes.
-    - **Edit Queue:** Dedicated full-screen view for processing corrections one by one.
-    - **Visuals:** Floating action bar, clear "Fix Now" calls to action.
-- **Deployment Issue:** Vercel builds stopped triggering.
-    - **Diagnosis:** Hit Vercel daily build rate limit.
-    - **Workaround:** Configured local development environment (`npm run dev` + `python3 api/index.py`) to bypass Vercel for testing.
+-   **Problem:** "Week at a Glance" meal editing was cramped on mobile with inline inputs.
+-   **Solution:** Implemented "Selection & Dedicated Edit Queue" model (Option 1).
+    -   **Batch Selection:** "Mark for Fix" mode with checkboxes.
+    -   **Edit Queue:** Dedicated full-screen view for processing corrections one by one.
+    -   **Visuals:** Floating action bar, clear "Fix Now" calls to action.
+-   **Deployment Issue:** Vercel builds stopped triggering.
+    -   **Diagnosis:** Hit Vercel daily build rate limit.
+    -   **Workaround:** Configured local development environment (`npm run dev` + `python3 api/index.py`) to bypass Vercel for testing.
 
 **Status:** Week View UX complete and verified locally. Waiting for Vercel rate limit to reset (approx 15h) for production deployment.
 
 ### [2026-01-04] Leftover Optimizer (Planned Pipelines)
-- **Goal:** Transform adult-only leftovers into intentional "Planned Pipelines" for the whole family.
-- **Changes:**
-  - Added `leftover_potential: high` and `kid_favorite: true` metadata to key recipes in `index.yml`.
-  - Refactored `lunch_selector.py` to detect these flags and plan family-wide leftover lunches.
-  - Linked Overview batch-cooking suggestions to specific planned pipelines.
-  - Added dynamic "Pack leftovers" tasks to previous evening prep lists in `workflow.py`.
-- **Outcome:** More efficient cooking by doubling high-value meals, reducing decision fatigue for kid lunches.
+-   **Goal:** Transform adult-only leftovers into intentional "Planned Pipelines" for the whole family.
+-   **Changes:**
+    -   Added `leftover_potential: high` and `kid_favorite: true` metadata to key recipes in `index.yml`.
+    -   Refactored `lunch_selector.py` to detect these flags and plan family-wide leftover lunches.
+    -   Linked Overview batch-cooking suggestions to specific planned pipelines.
+    -   Added dynamic "Pack leftovers" tasks to previous evening prep lists in `workflow.py`.
+-   **Outcome:** More efficient cooking by doubling high-value meals, reducing decision fatigue for kid lunches.
 
 ### [2026-01-04] Smart Re-plan Refinement
-- **Goal:** Improve the mid-week re-plan experience by auto-refreshing lunches and syncing all data sources.
-- **Changes:**
-  - Integrated `LunchSelector` into the `replan` command flow to auto-refresh leftover pipelines when dinner shifts.
-  - Added synchronization of `inputs/{date}.yml` during re-plan to keep the dashboard in sync.
-  - Added a visual notice in the HTML plan indicating when the plan was last re-planned.
-- **Outcome:** Re-planning no longer breaks lunch pipelines and provides clear visual feedback to the user.
+-   **Goal:** Improve the mid-week re-plan experience by auto-refreshing lunches and syncing all data sources.
+-   **Changes:**
+    -   Integrated `LunchSelector` into the `replan` command flow to auto-refresh leftover pipelines when dinner shifts.
+    -   Added synchronization of `inputs/{date}.yml` during re-plan to keep the dashboard in sync.
+    -   Added a visual notice in the HTML plan indicating when the plan was last re-planned.
+-   **Outcome:** Re-planning no longer breaks lunch pipelines and provides clear visual feedback to the user.
 
 ### [2026-01-04] Phase 11: Recipe Importer
-- **Goal:** Enable users to import recipes from URLs without manual HTML editing.
-- **Implementation:**
-  - Created `scripts/import_recipe.py` to fetch, parse, and auto-add recipes from URLs.
-  - Enhanced `scripts/parse_recipes.py` with:
-    - Fallback HTML parsing for non-schema.org recipes (class-based selectors).
-    - Metadata preservation logic to retain manual fields like `leftover_potential` and `kid_favorite` across re-parses.
-  - Added `/api/recipes/import` endpoint for web UI integration.
-  - Verified that re-running the parser preserves all manually added metadata.
-- **Outcome:** Users can now paste a recipe URL and have it automatically added to the index without losing custom metadata.
+-   **Goal:** Enable users to import recipes from URLs without manual HTML editing.
+-   **Implementation:**
+    -   Created `scripts/import_recipe.py` to fetch, parse, and auto-add recipes from URLs.
+    -   Enhanced `scripts/parse_recipes.py` with:
+        -   Fallback HTML parsing for non-schema.org recipes (class-based selectors).
+        -   Metadata preservation logic to retain manual fields like `leftover_potential` and `kid_favorite` across re-parses.
+    -   Added `/api/recipes/import` endpoint for web UI integration.
+    -   Verified that re-running the parser preserves all manually added metadata.
+-   **Outcome:** Users can now paste a recipe URL and have it automatically added to the index without losing custom metadata.
 
 ### [2026-01-04] Enhanced Full Week View
-- **Goal:** Improve week-at-a-glance visibility with better visual hierarchy and execution tracking.
-- **Implementation:**
-  - Enhanced `/week-view` page with comprehensive improvements:
-    - **Desktop Table**: Added alternating row colors, "Today" column highlighting (green background), emoji feedback badges
-    - **Mobile Cards**: Improved card layout with better spacing, today indicator, and section dividers
-    - **Data Display**: Shows vegetables per dinner, lunch assembly notes, logged feedback status
-    - **Energy-Based Prep**: Added visual schedule cards showing Mon/Tue/Wed prep requirements with color-coded borders
-    - **Freezer Status**: Display freezer inventory with frozen dates at bottom of page
-    - **Navigation**: Direct "View Full Plan" button linking to HTML plan when available
-  - Integrated with WorkflowStatus API to show real-time feedback and execution data
-  - Added helper function `getFeedbackBadge()` to display emoji feedback consistently
-- **Technical Decisions:**
-  1. **Color coding by meal type**: Each row has distinct icon (🍽️ 🥪 ☕ 🎒 🏠) for quick scanning
-  2. **Today highlighting**: Green background on current day column makes it immediately visible
-  3. **Responsive alternating rows**: Even/odd coloring on desktop, clean sections on mobile
-  4. **Feedback integration**: Shows logged emojis (❤️ 👍 😐 👎 ❌) and skip status (✗) inline
-  5. **Energy schedule emphasis**: Color-coded prep cards (sage/gold/terracotta) with critical Thu/Fri warning
-- **Learning:**
-  - Visual hierarchy reduces cognitive load - color coding by meal type makes scanning instant
-  - Real-time feedback display creates accountability - seeing the week's progress motivates completion
-  - Energy-based prep reminder reinforces the core workflow - visible schedule keeps users on track
-- **Status:** Phase 10 (UX Polish) fully complete. Ready for Phase 11 advanced features.
+-   **Goal:** Improve week-at-a-glance visibility with better visual hierarchy and execution tracking.
+-   **Implementation:**
+    -   Enhanced `/week-view` page with comprehensive improvements:
+        -   **Desktop Table**: Added alternating row colors, "Today" column highlighting (green background), emoji feedback badges
+        -   **Mobile Cards**: Improved card layout with better spacing, today indicator, and section dividers
+        -   **Data Display**: Shows vegetables per dinner, lunch assembly notes, logged feedback status
+        -   **Energy-Based Prep**: Added visual schedule cards showing Mon/Tue/Wed prep requirements with color-coded borders
+        -   **Freezer Status**: Display freezer inventory with frozen dates at bottom of page
+        -   **Navigation**: Direct "View Full Plan" button linking to HTML plan when available
+    -   Integrated with WorkflowStatus API to show real-time feedback and execution data
+    -   Added helper function `getFeedbackBadge()` to display emoji feedback consistently
+-   **Technical Decisions:**
+    1.  **Color coding by meal type**: Each row has distinct icon (🍽️ 🥪 ☕ 🎒 🏠) for quick scanning
+    2.  **Today highlighting**: Green background on current day column makes it immediately visible
+    3.  **Responsive alternating rows**: Even/odd coloring on desktop, clean sections on mobile
+    4.  **Feedback integration**: Shows logged emojis (❤️ 👍 😐 👎 ❌) and skip status (✗) inline
+    5.  **Energy schedule emphasis**: Color-coded prep cards (sage/gold/terracotta) with critical Thu/Fri warning
+-   **Learning:**
+    -   Visual hierarchy reduces cognitive load - color coding by meal type makes scanning instant
+    -   Real-time feedback display creates accountability - seeing the week's progress motivates completion
+    -   Energy-based prep reminder reinforces the core workflow - visible schedule keeps users on track
+-   **Status:** Phase 10 (UX Polish) fully complete. Ready for Phase 11 advanced features.
 
 ### [2026-01-04] Energy-Based Prep Schedule Documentation
-- **Goal:** Document specific prep tasks for each prep slot to improve planning clarity.
-- **Implementation:**
-  - Added detailed "Energy-Based Prep Schedule" section to IMPLEMENTATION.md under Planning Logic
-  - Documented specific tasks for each prep window:
-    - **Monday PM**: Vegetable chopping for Mon/Tue/Wed, batch cooking, freezer prep
-    - **Tuesday AM**: Lunch assembly for Wed/Thu/Fri, eggs, snack portioning
-    - **Tuesday PM**: Thu/Fri vegetable chopping, remaining lunch prep, marinades
-    - **Wednesday PM**: Final push to complete all remaining prep
-    - **Thursday AM**: Light assembly only (8-9am), strict no-chopping after noon
-    - **Friday**: Zero prep - only reheating/assembly
-  - Added to Phase 11 backlog: Prep Completion Tracking feature
-    - Track completed prep tasks during daily check-in
-    - Refresh remaining suggestions based on what's done
-    - Dynamic adjustment to avoid duplicate suggestions
-- **Learning:**
-  - Documentation serves dual purpose: guides AI planning and provides user reference
-  - Specific task lists reduce ambiguity and improve execution consistency
-  - Backlog items capture good ideas without derailing current work
-- **Status:** Documentation complete. Prep tracking feature added to Phase 11 backlog.
+-   **Goal:** Document specific prep tasks for each prep slot to improve planning clarity.
+-   **Implementation:**
+    -   Added detailed "Energy-Based Prep Schedule" section to IMPLEMENTATION.md under Planning Logic
+    -   Documented specific tasks for each prep window:
+        -   **Monday PM**: Vegetable chopping for Mon/Tue/Wed, batch cooking, freezer prep
+        -   **Tuesday AM**: Lunch assembly for Wed/Thu/Fri, eggs, snack portioning
+        -   **Tuesday PM**: Thu/Fri vegetable chopping, remaining lunch prep, marinades
+        -   **Wednesday PM**: Final push to complete all remaining prep
+        -   **Thursday AM**: Light assembly only (8-9am), strict no-chopping after noon
+        -   **Friday**: Zero prep - only reheating/assembly
+    -   Added to Phase 11 backlog: Prep Completion Tracking feature
+        -   Track completed prep tasks during daily check-in
+        -   Refresh remaining suggestions based on what's done
+        -   Dynamic adjustment to avoid duplicate suggestions
+-   **Learning:**
+    -   Documentation serves dual purpose: guides AI planning and provides user reference
+    -   Specific task lists reduce ambiguity and improve execution consistency
+    -   Backlog items capture good ideas without derailing current work
+-   **Status:** Documentation complete. Prep tracking feature added to Phase 11 backlog.
 
 ### [2026-01-04] Prep Completion Tracking Implementation
-- **Goal:** Enable users to track completed prep tasks with interactive checkboxes and smart filtering.
-- **Implementation:**
-  - **Backend (Python):**
-    - Created `generate_granular_prep_tasks()` in workflow.py to generate ingredient-level tasks
-    - Added `fuzzy_match_prep_task()` with 60% keyword overlap detection for smart filtering
-    - Updated `generate_prep_section()` to accept week history and filter completed tasks
-    - Enhanced `/api/status` to generate granular prep tasks and return completed tasks
-    - Modified `/api/log-meal` to accept `prep_completed` array and store in `daily_feedback`
-  - **Frontend (Next.js/React):**
-    - Added interactive checkboxes to Prep Interface card on dashboard
-    - Implemented `togglePrepTask()` for real-time task completion and backend sync
-    - Added visual feedback (strikethrough, muted color) for completed tasks
-    - Integrated checkbox state initialization from backend on page load
-    - Added AM/PM time labels for Tuesday tasks
-  - **Data Structure:**
-    - Tasks stored in `history.yml` under `daily_feedback.{day}.prep_completed` as array of strings
-    - Example: `["Chop carrots for Monday curry", "Prep rice for Monday lunch"]`
-- **Technical Decisions:**
-  1. **Granular tasks over generic**: "Chop carrots for Monday curry" instead of "Chop vegetables for Mon/Tue"
-  2. **Fuzzy matching for intelligence**: Detects similar completed tasks to avoid duplication
-  3. **Real-time sync**: Checkbox clicks save immediately to backend via `/api/log-meal`
-  4. **Persistent state**: Frontend loads completed tasks from API on page load
-  5. **Day-level storage**: Prep tasks stored at day level in `daily_feedback` for consistency
-- **Challenges & Fixes:**
-  - **Issue 1**: Duplicate Path import caused API 500 error → Removed nested import
-  - **Issue 2**: UTC timezone showed Monday when it's Sunday in California → Added pytz for Pacific time
-  - **Issue 3**: Checkboxes didn't stay checked → Added completed_prep to API response and initialized frontend state
-  - **Issue 4**: Missing pytz module on Vercel → Added pytz==2024.1 to requirements.txt
-- **Learning:**
-  - Granular tasks provide better tracking and accountability than generic categories
-  - Fuzzy matching creates intelligent automation without exact string matching requirements
-  - Timezone handling is critical for serverless apps (Vercel uses UTC, users expect local time)
-  - Persistent state requires both backend storage AND frontend initialization
-- **Status:** Prep Completion Tracking fully implemented and deployed. Users can now check off tasks and see them persist across sessions.
+-   **Goal:** Enable users to track completed prep tasks with interactive checkboxes and smart filtering.
+-   **Implementation:**
+    -   **Backend (Python):**
+        -   Created `generate_granular_prep_tasks()` in workflow.py to generate ingredient-level tasks
+        -   Added `fuzzy_match_prep_task()` with 60% keyword overlap detection for smart filtering
+        -   Updated `generate_prep_section()` to accept week history and filter completed tasks
+        -   Enhanced `/api/status` to generate granular prep tasks and return completed tasks
+        -   Modified `/api/log-meal` to accept `prep_completed` array and store in `daily_feedback`
+    -   **Frontend (Next.js/React):**
+        -   Added interactive checkboxes to Prep Interface card on dashboard
+        -   Implemented `togglePrepTask()` for real-time task completion and backend sync
+        -   Added visual feedback (strikethrough, muted color) for completed tasks
+        -   Integrated checkbox state initialization from backend on page load
+        -   Added AM/PM time labels for Tuesday tasks
+    -   **Data Structure:**
+        -   Tasks stored in `history.yml` under `daily_feedback.{day}.prep_completed` as array of strings
+        -   Example: `["Chop carrots for Monday curry", "Prep rice for Monday lunch"]`
+-   **Technical Decisions:**
+    1.  **Granular tasks over generic**: "Chop carrots for Monday curry" instead of "Chop vegetables for Mon/Tue"
+    2.  **Fuzzy matching for intelligence**: Detects similar completed tasks to avoid duplication
+    3.  **Real-time sync**: Checkbox clicks save immediately to backend via `/api/log-meal`
+    4.  **Persistent state**: Frontend loads completed tasks from API on page load
+    5.  **Day-level storage**: Prep tasks stored at day level in `daily_feedback` for consistency
+-   **Challenges & Fixes:**
+    -   **Issue 1**: Duplicate Path import caused API 500 error → Removed nested import
+    -   **Issue 2**: UTC timezone showed Monday when it's Sunday in California → Added pytz for Pacific time
+    -   **Issue 3**: Checkboxes didn't stay checked → Added completed_prep to API response and initialized frontend state
+    -   **Issue 4**: Missing pytz module on Vercel → Added pytz==2024.1 to requirements.txt
+-   **Learning:**
+    -   Granular tasks provide better tracking and accountability than generic categories
+    -   Fuzzy matching creates intelligent automation without exact string matching requirements
+    -   Timezone handling is critical for serverless apps (Vercel uses UTC, users expect local time)
+    -   Persistent state requires both backend storage AND frontend initialization
+-   **Status:** Prep Completion Tracking fully implemented and deployed. Users can now check off tasks and see them persist across sessions.
 
 ---
 
@@ -918,27 +919,27 @@ freezer_inventory:
 **Issue:** `/api/create-week` endpoint crashed with `[Errno 30] Read-only file system: 'inputs/2026-01-05.yml'` on Vercel deployment.
 
 **Root Cause:**
-- The endpoint was calling `create_new_week()` which writes files locally before syncing to GitHub
-- Vercel's serverless environment has a read-only filesystem at runtime
-- Local file writes fail with OSError, causing the API to crash
+-   The endpoint was calling `create_new_week()` which writes files locally before syncing to GitHub
+-   Vercel's serverless environment has a read-only filesystem at runtime
+-   Local file writes fail with OSError, causing the API to crash
 
 **Fix:** Refactored `/api/create-week` to follow the same pattern as `/api/confirm-veg`:
-1. Generate YAML content in memory (no local file writes)
-2. Push directly to GitHub using `commit_file_to_github()` API
-3. Gracefully handle OSError for local development compatibility (try/except block)
-4. Return enhanced response with proposed vegetables and rollover count
+1.  Generate YAML content in memory (no local file writes)
+2.  Push directly to GitHub using `commit_file_to_github()` API
+3.  Gracefully handle OSError for local development compatibility (try/except block)
+4.  Return enhanced response with proposed vegetables and rollover count
 
 **Technical Changes:**
-- Inlined the logic from `create_new_week()` directly in the API endpoint
-- Replaced `sync_changes_to_github()` with `commit_file_to_github()` for direct content push
-- Added try/except around local file write (works locally, skips on Vercel)
-- Enhanced response payload with `proposed_veg` and `rollover_count` for better UX
+-   Inlined the logic from `create_new_week()` directly in the API endpoint
+-   Replaced `sync_changes_to_github()` with `commit_file_to_github()` for direct content push
+-   Added try/except around local file write (works locally, skips on Vercel)
+-   Enhanced response payload with `proposed_veg` and `rollover_count` for better UX
 
 **Learning:**
-- **Serverless constraints require different patterns:** Functions that work locally may fail in read-only environments
-- **GitHub API as database:** Using `commit_file_to_github()` with in-memory content bypasses filesystem entirely
-- **Graceful degradation:** Try local write for dev convenience, catch OSError for production compatibility
-- **Consistency matters:** Following the same pattern as `confirm_veg` made the fix straightforward
+-   **Serverless constraints require different patterns:** Functions that work locally may fail in read-only environments
+-   **GitHub API as database:** Using `commit_file_to_github()` with in-memory content bypasses filesystem entirely
+-   **Graceful degradation:** Try local write for dev convenience, catch OSError for production compatibility
+-   **Consistency matters:** Following the same pattern as `confirm_veg` made the fix straightforward
 
 **Status:** Create week endpoint now works on Vercel. Users can start new weeks directly from the web UI without filesystem errors.
 
@@ -947,70 +948,70 @@ freezer_inventory:
 **Issue:** Dashboard was showing stale data after "Start New Week" or "Confirm Veg" because Vercel was reading from its local (stale) filesystem instead of the updated GitHub repository.
 
 **Root Cause:**
-- Vercel's local filesystem is snapshotted at deployment and doesn't sync with the repository at runtime.
-- API endpoints were using `Path.exists()` and `open()` on local paths, missing changes pushed to GitHub.
+-   Vercel's local filesystem is snapshotted at deployment and doesn't sync with the repository at runtime.
+-   API endpoints were using `Path.exists()` and `open()` on local paths, missing changes pushed to GitHub.
 
 **Fix:**
-1. **GitHub as Source of Truth:** Implemented `get_yaml_data` which fetches the latest files directly from GitHub using the API before falling back to local files.
-2. **Synchronization to `/tmp`:** Synchronized critical files (`history.yml`, `inventory.yml`, `inputs/`) to the writable `/tmp` directory on Vercel to support existing script logic.
-3. **Workflow Prioritization:** Updated `get_status` to scan for incomplete weeks (`status != 'plan_complete'`) rather than strictly following the calendar date.
-4. **UX Improvements:** Refactored `fetchStatus` to support background syncing, allowing the dashboard to remain visible while data is refreshed.
+1.  **GitHub as Source of Truth:** Implemented `get_yaml_data` which fetches the latest files directly from GitHub using the API before falling back to local files.
+2.  **Synchronization to `/tmp`:** Synchronized critical files (`history.yml`, `inventory.yml`, `inputs/`) to the writable `/tmp` directory on Vercel to support existing script logic.
+3.  **Workflow Prioritization:** Updated `get_status` to scan for incomplete weeks (`status != 'plan_complete'`) rather than strictly following the calendar date.
+4.  **UX Improvements:** Refactored `fetchStatus` to support background syncing, allowing the dashboard to remain visible while data is refreshed.
 
 **Technical Changes:**
-- **`api/index.py`**: Added `get_yaml_data` and implemented it across all GET/POST endpoints.
-- **`api/index.py`**: Added background syncing of key files to `/tmp` during the status check.
-- **`src/app/page.tsx`**: Updated `handleCreateWeek` and `fetchStatus` to provide continuous feedback without full-page reloads.
+-   **`api/index.py`**: Added `get_yaml_data` and implemented it across all GET/POST endpoints.
+-   **`api/index.py`**: Added background syncing of key files to `/tmp` during the status check.
+-   **`src/app/page.tsx`**: Updated `handleCreateWeek` and `fetchStatus` to provide continuous feedback without full-page reloads.
 
 **Status:** Complete state consistency achieved on Vercel. Actions taken in the UI are reflected immediately on the dashboard.
 
 ---
 ### [2026-01-04] Correction / Needs Fix Workflow Implementation
-- **Goal:** Allow users to correct logged meals (e.g., "Skipped dinner" → actually "Ate pizza") and log missed specific feedback.
-- **Implementation:**
-  - **Frontend (page.tsx):**
-    - Enhanced `FeedbackButtons` (Snacks/Lunch): Added "🔧 Fix / Edit Details" button for items already marked as "Made".
-    - Enhanced `DinnerLogging` (Dinner): Added "🔧 Fix / Edit Actual Meal" button for confirmed dinners.
-    - Implemented text input overlay for entering correction details.
-    - Updated Feedback Badge display to show `✓ Made (Actual: [Meal Name])` for overrides.
-  - **Backend (api/index.py):**
-    - Leveraged existing `actual_meal` field for dinner corrections.
-    - Leveraged existing `*_feedback` fields for snack/lunch corrections.
-    - Verified logic correctly processes updates while preserving "Made" status.
-- **Outcome:** Users can now maintain an accurate history even if they initially logged something incorrectly, or want to add context later. This improves data quality for future analytics.
-- **Status:** Complete. Feature live on dashboard.
+-   **Goal:** Allow users to correct logged meals (e.g., "Skipped dinner" → actually "Ate pizza") and log missed specific feedback.
+-   **Implementation:**
+    -   **Frontend (page.tsx):**
+        -   Enhanced `FeedbackButtons` (Snacks/Lunch): Added "🔧 Fix / Edit Details" button for items already marked as "Made".
+        -   Enhanced `DinnerLogging` (Dinner): Added "🔧 Fix / Edit Actual Meal" button for confirmed dinners.
+        -   Implemented text input overlay for entering correction details.
+        -   Updated Feedback Badge display to show `✓ Made (Actual: [Meal Name])` for overrides.
+    -   **Backend (api/index.py):**
+        -   Leveraged existing `actual_meal` field for dinner corrections.
+        -   Leveraged existing `*_feedback` fields for snack/lunch corrections.
+        -   Verified logic correctly processes updates while preserving "Made" status.
+-   **Outcome:** Users can now maintain an accurate history even if they initially logged something incorrectly, or want to add context later. This improves data quality for future analytics.
+-   **Status:** Complete. Feature live on dashboard.
 
 ---
 ### [2026-01-04] Reversion to Stable Build (d8519bb)
-- **Reason:** A bug fix session attempting to address UI/UX issues (skip button, week view opacity, inline needs-fix input, recipe links) introduced cascading JSX structure errors that repeatedly broke Vercel builds.
-- **Root Cause:** During refactoring of the `DinnerLogging` component, the IIFE structure (opening fragment `<>`, return statement, and closing `})()}`) became corrupted, causing "Expected '</', got 'div'" parser errors.
-- **Action:** Reverted to commit `d8519bb` ("fix: restore FeedbackButtons component definition to resolve build error") which was the last known stable, deployable state.
-- **Commits Lost:**
-  - `715d62a` - Bug fix attempt (skip logic, week view, recipe links)
-  - `cabe650`, `65bb8ed`, `8a0705e`, `dc15774` - Various syntax fix attempts
-  - `a03a1d3` - Title change to "Sandhya's Meal Planner"
-- **Next Steps:** Carefully re-implement the desired features with proper testing before pushing.
-- **Lesson Learned:** Complex JSX refactoring (especially IIFEs with component definitions) requires incremental changes and verification of each deployment.
+-   **Reason:** A bug fix session attempting to address UI/UX issues (skip button, week view opacity, inline needs-fix input, recipe links) introduced cascading JSX structure errors that repeatedly broke Vercel builds.
+-   **Root Cause:** During refactoring of the `DinnerLogging` component, the IIFE structure (opening fragment `<>`, return statement, and closing `})()}`) became corrupted, causing "Expected '</', got 'div'" parser errors.
+-   **Action:** Reverted to commit `d8519bb` ("fix: restore FeedbackButtons component definition to resolve build error") which was the last known stable, deployable state.
+-   **Commits Lost:**
+    -   `715d62a` - Bug fix attempt (skip logic, week view, recipe links)
+    -   `cabe650`, `65bb8ed`, `8a0705e`, `dc15774` - Various syntax fix attempts
+    -   `a03a1d3` - Title change to "Sandhya's Meal Planner"
+-   **Next Steps:** Carefully re-implement the desired features with proper testing before pushing.
+-   **Lesson Learned:** Complex JSX refactoring (especially IIFEs with component definitions) requires incremental changes and verification of each deployment.
 
 ---
 ### [2026-01-04] Incremental Bug Fixes & Feature Re-implementation
-- **Goal:** Safe re-implementation of UI/UX improvements after build failure recovery.
-- **Batches Implemented:**
-  - **Batch 1:** Removed "Chickpea Salad Wrap" recipe index and HTML; renamed button from "✓ Made as Planned" to "✓ Made".
-  - **Batch 2:** Fixed Week View opacity logic (only grayscale when actually logged AND not marked for fix); created dynamic recipe viewer at `/recipes/[id]`.
-  - **Batch 3: Fix Dashboard "Skip" Workflow:**
-    - **Problem:** Clicking "Did Not Make" (Skip) would trigger a status refresh, causing the `DinnerLogging` component (previously an IIFE) to lose its local state and immediately close the alternatives popup.
-    - **Solution:** Lifted all dinner logging UI states (`showAlternatives`, `selectedAlternative`, `otherMealText`, `selectedFreezerMeal`, `isDinnerEditing`, `dinnerEditInput`) to the parent `Dashboard` component.
-    - **Result:** The skipping workflow (Freezer backup, outside meal, other) is now robust across re-renders.
-  - **Batch 4: Week View Correction Workflow & Recipe Requests:**
-    - **Inline Corrections:** Implemented `CorrectionInput` in `WeekView` for both mobile (card view) and desktop (table view), allowing quick fixes for any meal marked "Needs Fix".
-    - **Meal Display Priority:** Updated `WeekView` to prioritize displaying the `actual_meal` or feedback text over the planned recipe name when a correction exists, providing a more accurate historical record.
-    - **Recipe Index Integration:** Added a confirmation flow when saving corrections that prompts to add the new meal as an official recipe.
-    - **Backend Automation:** The `/api/log-meal` endpoint now appends recipe requests to a new "Recipe Index changes" section in `docs/IMPLEMENTATION.md`.
-- **Technical Improvements:**
-  - State lifting in `Dashboard` to manage complex multi-step logging flows.
-  - Refactored `handleLogDay` and `handleLogFeedback` in `src/app/page.tsx` to handle `needs_fix` flags and `request_recipe` triggers.
-  - Updated `src/lib/api.ts` with explicit `needs_fix` properties to maintain type safety across the full stack.
-- **Status:** Complete. The system is now significantly more resilient and provides better data quality for both week-view tracking and future recipe planning.
+-   **Goal:** Safe re-implementation of UI/UX improvements after build failure recovery.
+-   **Batches Implemented:**
+    -   **Batch 1:** Removed "Chickpea Salad Wrap" recipe index and HTML; renamed button from "✓ Made as Planned" to "✓ Made".
+    -   **Batch 2:** Fixed Week View opacity logic (only grayscale when actually logged AND not marked for fix); created dynamic recipe viewer at `/recipes/[id]`.
+    -   **Batch 3: Fix Dashboard "Skip" Workflow:**
+        -   **Problem:** Clicking "Did Not Make" (Skip) would trigger a status refresh, causing the `DinnerLogging` component (previously an IIFE) to lose its local state and immediately close the alternatives popup.
+        -   **Solution:** Lifted all dinner logging UI states (`showAlternatives`, `selectedAlternative`, `otherMealText`, `selectedFreezerMeal`, `isDinnerEditing`, `dinnerEditInput`) to the parent `Dashboard` component.
+        -   **Result:** The skipping workflow (Freezer backup, outside meal, other) is now robust across re-renders.
+    -   **Batch 4: Week View Correction Workflow & Recipe Requests:**
+        -   **Inline Corrections:** Implemented `CorrectionInput` in `WeekView` for both mobile (card view) and desktop (table view), allowing quick fixes for any meal marked "Needs Fix".
+        -   **Meal Display Priority:** Updated `WeekView` to prioritize displaying the `actual_meal` or feedback text over the planned recipe name when a correction exists, providing a more accurate historical record.
+        -   **Recipe Index Integration:** Added a confirmation flow when saving corrections that prompts to add the new meal as an official recipe.
+        -   **Backend Automation:** The `/api/log-meal` endpoint now appends recipe requests to a new "Recipe Index changes" section in `docs/IMPLEMENTATION.md`.
+-   **Technical Improvements:**
+    -   State lifting in `Dashboard` to manage complex multi-step logging flows.
+    -   Refactored `handleLogDay` and `handleLogFeedback` in `src/app/page.tsx` to handle `needs_fix` flags and `request_recipe` triggers.
+    -   Updated `src/lib/api.ts` with explicit `needs_fix` properties to maintain type safety across the full stack.
+-   **Status:** Complete. The system is now significantly more resilient and provides better data quality for both week-view tracking and future recipe planning.
 
 ---
 
@@ -1019,28 +1020,28 @@ freezer_inventory:
 **Issue:** Week View "Mark for Fix" workflow successfully updated Tuesday kids lunch but failed to save Monday dinner corrections.
 
 **Root Cause:**
-- Line 295-298 in `api/index.py` incorrectly included `dinner_needs_fix is not None` in the `is_feedback_only` calculation
-- When correcting a dinner, frontend sends `{actual_meal: "...", dinner_needs_fix: false}`
-- This triggered `is_feedback_only=True`, which blocked line 378 (`if actual_meal: target_dinner['actual_meal'] = actual_meal`) from executing
-- The `needs_fix` flag was cleared, but the actual meal correction was never saved
+-   Line 295-298 in `api/index.py` incorrectly included `dinner_needs_fix is not None` in the `is_feedback_only` calculation
+-   When correcting a dinner, frontend sends `{actual_meal: "...", dinner_needs_fix: false}`
+-   This triggered `is_feedback_only=True`, which blocked line 378 (`if actual_meal: target_dinner['actual_meal'] = actual_meal`) from executing
+-   The `needs_fix` flag was cleared, but the actual meal correction was never saved
 
 **Fix Applied:**
-1. **Line 295-297**: Removed `dinner_needs_fix is not None or` from `is_feedback_only` calculation
-   - Ensures dinner corrections don't incorrectly trigger feedback-only mode
-2. **Line 323**: Updated condition to `if not is_feedback_only or dinner_needs_fix is not None or actual_meal:`
-   - Properly finds dinner when `actual_meal` is sent
-3. **Lines 379-384**: Moved dinner correction logic outside `if not is_feedback_only:` block
-   - Critical fix: `actual_meal` and `dinner_needs_fix` updates now happen regardless of feedback mode
+1.  **Line 295-297**: Removed `dinner_needs_fix is not None or` from `is_feedback_only` calculation
+    -   Ensures dinner corrections don't incorrectly trigger feedback-only mode
+2.  **Line 323**: Updated condition to `if not is_feedback_only or dinner_needs_fix is not None or actual_meal:`
+    -   Properly finds dinner when `actual_meal` is sent
+3.  **Lines 379-384**: Moved dinner correction logic outside `if not is_feedback_only:` block
+    -   Critical fix: `actual_meal` and `dinner_needs_fix` updates now happen regardless of feedback mode
 
 **Impact:**
-- Dinner corrections (all days, not just Monday) now save correctly
-- Snack/lunch corrections continue to work as before (no regression)
-- User can now properly track when planned meals were substituted
+-   Dinner corrections (all days, not just Monday) now save correctly
+-   Snack/lunch corrections continue to work as before (no regression)
+-   User can now properly track when planned meals were substituted
 
 **Technical Learning:**
-- Conditional logic bugs can appear as silent failures (API returns success, but data doesn't update)
-- `is_feedback_only` flag should only apply to meal types that allow feedback without "made" status
-- Moving field updates outside conditional blocks ensures they execute when the data is present
+-   Conditional logic bugs can appear as silent failures (API returns success, but data doesn't update)
+-   `is_feedback_only` flag should only apply to meal types that allow feedback without "made" status
+-   Moving field updates outside conditional blocks ensures they execute when the data is present
 
 **Status:** Fix deployed and verified. Dinner corrections now persist correctly in `history.yml`.
 
@@ -1051,72 +1052,72 @@ freezer_inventory:
 **Work Completed:**
 
 ### Part 1: Core Inventory Scoring System
-- **Problem:** Replanning redistributes meals chronologically without considering what ingredients are actually available, potentially scheduling recipes requiring ingredients you don't have.
-- **Solution:** Enhanced `replan_meal_plan()` in [scripts/workflow.py](../scripts/workflow.py) with inventory-aware scoring.
+-   **Problem:** Replanning redistributes meals chronologically without considering what ingredients are actually available, potentially scheduling recipes requiring ingredients you don't have.
+-   **Solution:** Enhanced `replan_meal_plan()` in [scripts/workflow.py](../scripts/workflow.py) with inventory-aware scoring.
 
 **Implementation Details:**
 
-1. **Helper Functions Added (Lines 519-728):**
-   - `_normalize_ingredient_name()` - Normalizes ingredient names for consistent matching
-     - Handles plurals (tomatoes → tomato), aliases (black_bean → bean), noise removal
-     - Example: "sweet potatoes" → "sweet_potato", "Green beans" → "bean"
-   - `_calculate_ingredient_freshness()` - Tracks ingredient age from `added` dates
-     - Returns `{item_name: days_old}` for priority scoring
-   - `_load_inventory_data()` - Loads and structures [data/inventory.yml](../data/inventory.yml)
-     - Returns: `{fridge_items: set, pantry_items: set, freezer_backups: list, freshness: dict}`
-   - `score_recipe_by_inventory()` - Main scoring algorithm (0-100 points)
-     - **Weighted scoring:**
-       - Fridge items: +20 points each (perishable priority)
-       - Pantry items: +5 points each (stable items)
-       - Freshness bonus: +10 for items 5+ days old
-     - Returns: `(score, details)` with match breakdown
+1.  **Helper Functions Added (Lines 519-728):**
+    -   `_normalize_ingredient_name()` - Normalizes ingredient names for consistent matching
+        -   Handles plurals (tomatoes → tomato), aliases (black_bean → bean), noise removal
+        -   Example: "sweet potatoes" → "sweet_potato", "Green beans" → "bean"
+    -   `_calculate_ingredient_freshness()` - Tracks ingredient age from `added` dates
+        -   Returns `{item_name: days_old}` for priority scoring
+    -   `_load_inventory_data()` - Loads and structures [data/inventory.yml](../data/inventory.yml)
+        -   Returns: `{fridge_items: set, pantry_items: set, freezer_backups: list, freshness: dict}`
+    -   `score_recipe_by_inventory()` - Main scoring algorithm (0-100 points)
+        -   **Weighted scoring:**
+            -   Fridge items: +20 points each (perishable priority)
+            -   Pantry items: +5 points each (stable items)
+            -   Freshness bonus: +10 for items 5+ days old
+        -   Returns: `(score, details)` with match breakdown
 
-2. **Enhanced Replan Flow (Lines 809-850):**
-   - Automatically loads inventory on every replan
-   - Scores all `to_be_planned` recipes by inventory match
-   - Sorts recipes by score (highest inventory match first)
-   - **Freezer backup suggestion:** If best score < 30/100, suggests using freezer meals instead
-   - Console output shows detailed scores: `recipe_name: 45/100 (fridge: tomato, pantry: bean)`
-   - Graceful fallback: Uses original order if inventory empty/unavailable
+2.  **Enhanced Replan Flow (Lines 809-850):**
+    -   Automatically loads inventory on every replan
+    -   Scores all `to_be_planned` recipes by inventory match
+    -   Sorts recipes by score (highest inventory match first)
+    -   **Freezer backup suggestion:** If best score < 30/100, suggests using freezer meals instead
+    -   Console output shows detailed scores: `recipe_name: 45/100 (fridge: tomato, pantry: bean)`
+    -   Graceful fallback: Uses original order if inventory empty/unavailable
 
 **Technical Decisions:**
-1. **Soft constraint approach:** Scoring reorders meals but doesn't exclude valid recipes
-2. **Perishable priority:** Fridge items weighted 4x higher than pantry (20 vs 5 points)
-3. **Freshness awareness:** Older items get bonus points to reduce waste
-4. **Zero configuration:** Runs automatically every replan, no flags needed
-5. **Preserves all constraints:** History anti-repetition, busy days, rollover priority, lunch re-sync all maintained
+1.  **Soft constraint approach:** Scoring reorders meals but doesn't exclude valid recipes
+2.  **Perishable priority:** Fridge items weighted 4x higher than pantry (20 vs 5 points)
+3.  **Freshness awareness:** Older items get bonus points to reduce waste
+4.  **Zero configuration:** Runs automatically every replan, no flags needed
+5.  **Preserves all constraints:** History anti-repetition, busy days, rollover priority, lunch re-sync all maintained
 
 ### Part 2: Web UI Integration
-- **Problem:** Inventory-aware replanning only accessible via CLI (`python3 scripts/workflow.py replan`), requiring terminal access.
-- **Solution:** Added "Replan with Inventory" button to Week at a Glance page for one-click access.
+-   **Problem:** Inventory-aware replanning only accessible via CLI (`python3 scripts/workflow.py replan`), requiring terminal access.
+-   **Solution:** Added "Replan with Inventory" button to Week at a Glance page for one-click access.
 
 **Implementation Details:**
 
-1. **Backend API Endpoint ([api/index.py:821-874](../api/index.py#L821-L874)):**
-   - New `/api/replan` POST endpoint
-   - Calls `scripts/workflow.py replan` as subprocess with 60s timeout
-   - Returns inventory scoring output and success status
-   - Auto-syncs to GitHub on Vercel deployments
+1.  **Backend API Endpoint ([api/index.py:821-874](../api/index.py#L821-L874)):**
+    -   New `/api/replan` POST endpoint
+    -   Calls `scripts/workflow.py replan` as subprocess with 60s timeout
+    -   Returns inventory scoring output and success status
+    -   Auto-syncs to GitHub on Vercel deployments
 
-2. **Frontend API Function ([src/lib/api.ts:194-206](../src/lib/api.ts#L194-L206)):**
-   - `replan()` async function for calling backend
-   - Handles errors and returns structured response
+2.  **Frontend API Function ([src/lib/api.ts:194-206](../src/lib/api.ts#L194-L206)):**
+    -   `replan()` async function for calling backend
+    -   Handles errors and returns structured response
 
-3. **UI Button ([src/app/week-view/page.tsx](../src/app/week-view/page.tsx)):**
-   - "📦 Replan with Inventory" button in page header
-   - Confirmation dialog before execution
-   - Loading spinner during processing (`⟳ Replanning...`)
-   - Success alert with output message
-   - Auto-refreshes week view after completion
-   - Responsive design (icon-only on mobile)
+3.  **UI Button ([src/app/week-view/page.tsx](../src/app/week-view/page.tsx)):**
+    -   "📦 Replan with Inventory" button in page header
+    -   Confirmation dialog before execution
+    -   Loading spinner during processing (`⟳ Replanning...`)
+    -   Success alert with output message
+    -   Auto-refreshes week view after completion
+    -   Responsive design (icon-only on mobile)
 
 **User Flow:**
-1. Navigate to Week at a Glance page
-2. Click "📦 Replan with Inventory"
-3. Confirm action in dialog
-4. Backend scores recipes by inventory (2-5 seconds)
-5. Success message shows results
-6. Page refreshes with updated meal plan
+1.  Navigate to Week at a Glance page
+2.  Click "📦 Replan with Inventory"
+3.  Confirm action in dialog
+4.  Backend scores recipes by inventory (2-5 seconds)
+5.  Success message shows results
+6.  Page refreshes with updated meal plan
 
 **Example Output:**
 ```
@@ -1131,38 +1132,38 @@ Continuing with current recipes. Use freezer backups manually if preferred.
 ```
 
 **Testing & Validation:**
-- ✅ API endpoint tested via curl - successful execution
-- ✅ Inventory scoring correctly detects fridge/pantry items
-- ✅ Low-match detection triggers freezer backup suggestions
-- ✅ Bean aliasing works (`black_bean` → `bean` for matching)
-- ✅ Week plan regenerated with sorted meals
-- ✅ Lunches auto-refreshed to maintain pipelines
+-   ✅ API endpoint tested via curl - successful execution
+-   ✅ Inventory scoring correctly detects fridge/pantry items
+-   ✅ Low-match detection triggers freezer backup suggestions
+-   ✅ Bean aliasing works (`black_bean` → `bean` for matching)
+-   ✅ Week plan regenerated with sorted meals
+-   ✅ Lunches auto-refreshed to maintain pipelines
 
 **Technical Learning:**
-- **Token efficiency:** Pure Python logic (no LLM calls) makes feature cost-free to run repeatedly
-- **Soft constraints create flexibility:** Scoring reorders but doesn't break plans when inventory is sparse
-- **Progressive enhancement:** CLI still works, web UI adds convenience layer
-- **Ingredient normalization is critical:** "black beans" vs "beans" vs "black bean" must all match
-- **Freshness tracking adds intelligence:** System naturally prioritizes using older items first
+-   **Token efficiency:** Pure Python logic (no LLM calls) makes feature cost-free to run repeatedly
+-   **Soft constraints create flexibility:** Scoring reorders but doesn't break plans when inventory is sparse
+-   **Progressive enhancement:** CLI still works, web UI adds convenience layer
+-   **Ingredient normalization is critical:** "black beans" vs "beans" vs "black bean" must all match
+-   **Freshness tracking adds intelligence:** System naturally prioritizes using older items first
 
 **Files Modified:**
-- [scripts/workflow.py](../scripts/workflow.py) - Added 4 helpers + modified replan logic (~215 new lines)
-- [api/index.py](../api/index.py) - Added `/api/replan` endpoint (~54 lines)
-- [src/lib/api.ts](../src/lib/api.ts) - Added `replan()` function (~13 lines)
-- [src/app/week-view/page.tsx](../src/app/week-view/page.tsx) - Added button + handler (~40 lines)
+-   [scripts/workflow.py](../scripts/workflow.py) - Added 4 helpers + modified replan logic (~215 new lines)
+-   [api/index.py](../api/index.py) - Added `/api/replan` endpoint (~54 lines)
+-   [src/lib/api.ts](../src/lib/api.ts) - Added `replan()` function (~13 lines)
+-   [src/app/week-view/page.tsx](../src/app/week-view/page.tsx) - Added button + handler (~40 lines)
 
 **Architectural Insights:**
-- **Inventory as context, not constraint:** Low inventory scores don't block meals, just reorder them
-- **Automation without magic:** Clear console output shows exactly how decisions were made
-- **Mobile-first UX:** Button prioritizes icon on small screens, full text on desktop
-- **Vercel subprocess pattern:** Python scripts callable via API while maintaining GitHub as database
+-   **Inventory as context, not constraint:** Low inventory scores don't block meals, just reorder them
+-   **Automation without magic:** Clear console output shows exactly how decisions were made
+-   **Mobile-first UX:** Button prioritizes icon on small screens, full text on desktop
+-   **Vercel subprocess pattern:** Python scripts callable via API while maintaining GitHub as database
 
 **Status:** Inventory-aware replanning complete and deployed. System now optimizes remaining week's meals based on actual available ingredients with zero manual intervention.
 
 **Next Steps (Future Enhancements):**
-- Consider extending inventory scoring to initial weekly plan generation (not just replanning)
-- Add configuration for scoring weights in `config.yml` (fridge vs pantry priority)
-- Track "saved from waste" metrics (how often high-freshness items got used)
+-   Consider extending inventory scoring to initial weekly plan generation (not just replanning)
+-   Add configuration for scoring weights in `config.yml` (fridge vs pantry priority)
+-   Track "saved from waste" metrics (how often high-freshness items got used)
 
 ---
 
@@ -1172,9 +1173,9 @@ Continuing with current recipes. Use freezer backups manually if preferred.
 **Objective:** Reduce backend overhead, improve response times, and reduce token usage for meal generation.
 
 **Problem:**
-- Monolithic `recipes.json` was being fully parsed on every request and every script execution.
-- Redundant loading in `workflow.py` and `lunch_selector.py`.
-- No API caching meant every dashboard refresh hit the filesystem.
+-   Monolithic `recipes.json` was being fully parsed on every request and every script execution.
+-   Redundant loading in `workflow.py` and `lunch_selector.py`.
+-   No API caching meant every dashboard refresh hit the filesystem.
 
 **Solution:**
 1.  **Data Structure:** Split the >2MB `recipes.json` into ~227 individual YAML files in `recipes/details/`.
@@ -1183,10 +1184,6 @@ Continuing with current recipes. Use freezer backups manually if preferred.
 4.  **On-Demand Loading:** Added `GET /api/recipes/<id>` to fetch detailed instructions only when needed.
 
 **Changes:**
-- [recipes/details/*.yaml](../recipes/details/) - Created individual recipe files (Splitting monolithic JSON)
-- [scripts/split_recipes.py](../scripts/split_recipes.py) - Migration script
-- [scripts/workflow.py](../scripts/workflow.py) - Optimization to avoid double-loading
-- [scripts/lunch_selector.py](../scripts/lunch_selector.py) - Updated to accept pre-loaded data
 - [api/index.py](../api/index.py) - Added `CACHE` global, `get_cached_data`, and new endpoints (~60 lines)
 - [tests/test_api_perf.py](../tests/test_api_perf.py) - Verification suite
 
@@ -1299,3 +1296,18 @@ Continuing with current recipes. Use freezer backups manually if preferred.
 3. **Granular Skeletons:** Loading individual sections (System Status, Schedule) separately makes the app feel faster and more reliable.
 
 **Status:** Blocks 6 and 7 complete.
+---
+
+## Session: 2026-01-06 - Dashboard & Swap UX Polish
+
+**Work Completed:**
+- **Prioritize Actual Meals**: Updated the main dashboard's "Today's Schedule" to prioritize logged corrections and feedback over planned meals. This ensures that when a user logs what they actually ate, the dashboard reflects that reality immediately.
+- **Swap UX Enhancements**:
+    - Added a loading state to the `SwapConfirmationModal`.
+    - Implemented a "Swapping..." button state and a pulse-animated status message during the multi-second backend swap/sync operation.
+    - Integrated the `isLoading` state into the `WeekView` component to manage the user experience during API calls.
+- **Helper Logic**: Created `getDisplayName` helper in the dashboard to filter out feedback emojis and system keywords (like "Skipped") to show only meaningful meal names.
+
+**Learning:**
+- **Feedback is as important as speed**: Even when a backend operation is slow (like the GitHub-syncing swap), providing a clear loading state prevents user frustration and the "is it frozen?" feeling.
+- **Dashboard as Source of Truth**: Prioritizing actual meals makes the dashboard feel more responsive to user input and serves as a better record of the day.

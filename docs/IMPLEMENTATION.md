@@ -1,6 +1,6 @@
 # Meal Planner Implementation Guide
 
-**Last Updated:** 2026-01-05
+**Last Updated:** 2026-01-07
 **Live Site:** [ssimhan.github.io/meal-planner/](https://ssimhan.github.io/meal-planner/)
 
 ---
@@ -137,150 +137,130 @@ This starts a watcher that regenerates plans and refreshes your browser on any f
 
 ---
 
-## Future Roadmap
+## Completed Phases Summary
 
-### Phase 10: Immediate Priorities (High ROI) - COMPLETED 2026-01-04
-**1. Logging Completeness** ✅
-- [x] **Enhanced Feedback System**: Redesigned all meal logging with multi-step flow
-    - **Made/Not Made First**: Binary choice (✓ Made or ✗ Skip) for all meal slots
-    - **Preference Emojis**: After "Made" → show ❤️ 👍 😐 👎 ❌ for feedback
-    - **Override Logging**: After "Skip" → text input for "What did you eat instead?"
-    - **Applied to**: School Snack, Kids Lunch, Adult Lunch, Home Snack, Dinner
-- [x] **Sophisticated Dinner Flow**: Multi-step alternatives when plan not followed
-    - Step 1: Made as Planned or Did Not Make
-    - Step 2: If not made → Choose: Freezer Meal / Ate Out / Something Else
-    - Step 3a: Freezer → Radio button selection from inventory (auto-removes used meal)
-    - Step 3b: Ate Out → Simple confirmation
-    - Step 3c: Something Else → Text input for custom entry
-- [x] **Data Structure**: New `daily_feedback` structure in `history.yml` stores all feedback + made status
-- [x] **State Stability (Batch 3)**: Fixed dashboard re-render issues by lifting `DinnerLogging` state to the parent component, ensuring "Skip" alternatives remain open during data refreshes.
+All phases through 11 are complete. See [PROJECT_HISTORY.md](PROJECT_HISTORY.md) for detailed development timeline.
 
-**1.5 Mobile & UX Polish** ✅ - COMPLETED 2026-01-04
-- [x] **Mobile Responsive Dashboard**: Grid uses `grid-cols-1 md:grid-cols-2 lg:grid-cols-5` (cards stack vertically on mobile)
-- [x] **Full Week View**: Dedicated `/week-view` page with enhanced features:
-    - **Desktop**: Table layout with alternating row colors, "Today" column highlighting, feedback badges
-    - **Mobile**: Card layout with collapsible sections and feedback indicators
-    - **Features**: Vegetable tracking display, energy-based prep schedule, freezer inventory status
-    - **Navigation**: Direct link from dashboard when plan is active
-    - **Correction Workflow (2026-01-04)**: Inline `CorrectionInput` for all meal types; "Actual Meal" priority display logic ensures history reflects what was actually eaten.
-    - **Recipe Harvest**: Integrated prompt to add corrections as official recipes to the index.
+| Phase | Focus | Completed |
+|-------|-------|-----------|
+| **1-6** | Foundation: Recipe parsing, CLI workflow, state tracking | 2025-12 |
+| **7-9** | UX: Energy-based prep, HTML plans, Solarpunk design | 2025-12 |
+| **10** | Logging: Multi-step feedback, mobile responsive, kid profiles | 2026-01-04 |
+| **11.1** | Performance: Lazy loading, recipe caching | 2026-01-06 |
+| **11.2** | UI: Meal swap feature in Week View | 2026-01-06 |
+| **11.3** | Logic: Inventory intelligence, freezer structure | 2026-01-06 |
+| **11.4** | Data: Analytics page, family preferences | 2026-01-06 |
+| **11.5** | Efficiency: Recipe format migration (HTML → MD) | 2026-01-06 |
+| **11.6** | Bug fix: Homepage data consistency, loading states | 2026-01-07 |
+| **11.7** | UI: Inventory CRUD with undo | 2026-01-07 |
 
-**2. Smart Personalization (Effort: Medium) - COMPLETED 2026-01-04**
-- [x] **Kid Profiles**: Update `lunch_selector.py` to handle multiple kid profiles (e.g., specific preferences/allergies like "Akira: nuts ok" vs "Anya: no nuts").
-- [x] **Synced Lunches**: Logic to sync varying kid requirements (e.g., same base meal, different sides) and prioritize "loved" dinner leftovers for lunch.
-- [x] **Snack Intelligence**: Update recipe metadata to distinguish between "School Safe" (room temp stable) and "Home Only" (warm/cold) snacks.
+---
 
-**3. Core Flow Optimization (Effort: High) - IN PROGRESS**
-- [x] **Leftover Optimizer**: Explicitly plan Dinner -> Lunch pipelines in the weekly generation logic. (COMPLETED 2026-01-04)
-- [x] **Smart Re-plan Refinement**: Improve the "one-click re-plan" to handle complex mid-week shifts and auto-refresh the rest of the week to use up leftovers. (COMPLETED 2026-01-04)
+## Phase 12: Architecture & Maintainability
 
-### Phase 11: Future Enhancements (Backlog)
+**Goal:** Improve long-term maintainability, reliability, and developer experience.
 
-#### Block 1: Performance Optimization (Backend) - COMPLETED 2026-01-06
-**Focus:** Lazy Loading Recipe Details
-- **Goal:** Reduce token usage and improve plan generation speed by 80-90%.
-- **Tasks:**
-  - [x] Refactor `workflow.py` to load lightweight `recipes/index.yml` first.
-  - [x] Implement on-demand fetching of full recipe YAMLs only for selected meals.
-  - [x] Add simple in-memory caching for recipe details in the API.
+### 12.1: Component Extraction (Frontend)
+**Priority:** 🔴 High  
+**Effort:** 2-3 days
 
-#### Block 2: Drag-and-Drop Schedule Management (Frontend/UI) - COMPLETED 2026-01-06
-**Focus:** Meal Swap Feature
-- **Goal:** Allow users to easily rearrange their week when plans change.
-- **Tasks:**
-  - [x] Create a "Swap" UI in the Week View (or Dashboard).
-  - [x] Implement logic to switch dinner slots (e.g., move Tuesday's Tacos to Thursday).
-  - [x] Update prep instructions to reflect the new order.
+**Problem:** Main [page.tsx](file:///Users/sandhyasimhan/Documents/3_Career/Coding%20Projects/meal-planner/src/app/page.tsx) is 950 lines with 22 nested functions inside `Dashboard()`.
 
-#### Block 3: Inventory Intelligence (Logic) - COMPLETED 2026-01-06
-**Focus:** Smart Substitutions & Freezer Management
-- **Goal:** Help users use up what they have.
-- **Tasks:**
-  - [x] Implement logic to scan `inventory.yml` against the recipe index.
-  - [x] Create a "What can I replace this with?" suggestion modal on the Dashboard.
-  - [x] **BUG FIX:** Separate freezer backups (complete meals) from freezer ingredients (components)
-    - [x] Currently all items mixed in `freezer.backups` array
-    - [x] Need distinct `freezer.backups` vs `freezer.ingredients` structures
-    - [x] Only backups should appear in "Skip Dinner → Freezer Meal" flow
-    - [x] Only backups count toward ">= 3 backup meals" success metric
+**Tasks:**
+- [ ] Extract `Card` component to `src/components/Card.tsx`
+- [ ] Extract `FeedbackButtons` to `src/components/FeedbackButtons.tsx`
+- [ ] Extract `DinnerLogging` to `src/components/DinnerLogging.tsx`
+- [ ] Extract `Skeleton` to `src/components/Skeleton.tsx`
+- [ ] Define explicit TypeScript prop interfaces for each component
+- [ ] Update imports in page.tsx
 
-#### Block 4: Recipe & Family Analytics (Data) - COMPLETED 2026-01-06
-**Focus:** Recipe Performance & Family Preferences
-- **Goal:** Surface insights on what's working and what kids actually enjoy.
-- **Implementation:**
-  - **UI Location:** Dedicated `/analytics` page (linked from dashboard)
-  - **Time Range:** Default to last 12 weeks (3 months), with option to view all-time
-  - **Data Refresh:** Daily batch job (pre-computed analytics cached for performance)
-  - **Retirement Thresholds:** Flag recipes with avg feedback < 😐, skip rate >50%, unused 6+ months, or consistent kid dislike
-- **Tasks:**
-  - [x] Create `/analytics` page with navigation from dashboard
-  - [x] Implement daily batch job to compute analytics from `history.yml`
-  - [x] **Recipe Popularity Table**: Rank by frequency + avg feedback score (last 12 weeks)
-  - [x] **Kid Preference Cards**: Per-child favorite recipes, cuisines, and emoji distribution charts
-  - [x] **Dinner Adherence Chart**: Made vs. skipped percentage over time
-  - [x] **Leftover Pipeline Success**: Track dinner→lunch conversions vs. waste
-  - [x] **Cuisine Diversity Pie Chart**: Weekly/monthly rotation balance (Indian/Mexican/Italian/etc.)
-  - [x] **Snack Success Rate**: School vs. home snack performance with kid feedback
-  - [x] **Recipe Retirement List**: Flagged recipes with reasons (low score/high skip/unused/kid dislike)
-  - [x] **Family Favorites Widget**: Small dashboard card showing top 5 this month (links to full analytics)
+---
 
-#### Block 5: Recipe Format Migration (Efficiency) - COMPLETED 2026-01-06
-**Focus:** Token Efficiency & Context Window
-- **Goal:** Reduce recipe token count by >70% by migrating from HTML to Markdown.
-- **Implementation:**
-  - **Strategy:** Big bang migration - convert all 227 recipes at once
-  - **Format:** YAML frontmatter + Markdown body (replace current HTML `content` field)
-  - **Testing:** Validate migration on dev branch before production deployment
-- **Tasks:**
-  - [x] Design new recipe format schema (frontmatter fields + markdown structure)
-  - [x] Create migration script (`scripts/migrate_to_md.py`) to convert all recipes
-  - [x] Update `scripts/parse_recipes.py` to read/write new format
-  - [x] Create React component (`RecipeViewer`) for rendering markdown recipes using `react-markdown`.
-  - [x] Test migration on sample recipes (full migration successful)
-  - [x] Run full migration on all 227 recipes
-  - [x] Verify generated plans still render correctly
-  - [x] Update recipe importer to use new format for future imports
+### 12.2: TypeScript Interfaces (Frontend)
+**Priority:** 🔴 High  
+**Effort:** 1-2 days
 
-#### Block 6: Homepage Data Consistency (Bug Fix) - COMPLETED 2026-01-07
-**Focus:** UI State Sync
-- **Goal:** Ensure homepage accurately reflects current meal plan and confirmation status.
-- **Known Issues:**
-  - **Stale Meal Data:** Today's Schedule shows outdated meals/prep after logging
-  - **Farmers Market Status:** Vegetable confirmation doesn't reflect actual state in input file
-  - **General Investigation:** Need to audit all data refresh triggers
-- **Tasks:**
-  - [x] Audit dashboard data fetching (identify all API calls and refresh triggers)
-  - [x] Fix stale "Today's Schedule" after meal logging (ensure immediate refresh)
-  - [x] Fix farmers market confirmation status sync with input file
-  - [x] Add client-side cache invalidation strategy (when to force refetch)
-  - [x] Test rapid logging scenarios (multiple meals in quick succession)
-  - [x] Add loading states to prevent showing stale data during refresh
+**Problem:** No type definitions for API responses. Frontend uses `any` types extensively.
 
-#### Block 7: Inventory Management Enhancements (UI) - COMPLETED 2026-01-07
-**Focus:** CRUD Operations
-- **Goal:** Allow full control over inventory items from the UI.
-- **Implementation:**
-  - **UI Location:** Inline controls on existing dashboard inventory display
-  - **Edit UX:** Click item to open inline edit mode (quantity/servings field)
-  - **Delete UX:** Trash icon per item, no confirmation dialog, 5-second undo toast
-  - **Undo Buffer:** Track last deletion for quick restore
-- **Tasks:**
-  - [x] Add edit/delete icons to each inventory item (freezer, fridge, pantry)
-  - [x] Implement inline edit mode for quantities (enter to save, esc to cancel)
-  - [x] Create delete API endpoint (`/api/inventory/delete`)
-  - [x] Implement undo toast notification with restore action
-  - [x] Add optimistic UI updates (instant feedback before API response)
-  - [x] Handle edge cases (delete while undo pending, rapid edits)
-  - [x] Add keyboard shortcuts (e for edit, delete key to remove selected item)
+**Tasks:**
+- [ ] Create `src/types/index.ts` with interfaces:
+  - `MealPlan`, `Dinner`, `Lunch`, `Snack`
+  - `Inventory` (fridge, pantry, freezer structure)
+  - `History`, `WeeklyPlan`, `DailyFeedback`
+  - `WorkflowStatus` response shape
+- [ ] Update `lib/api.ts` to use typed responses
+- [ ] Add compile-time type checking to API calls
 
-### Recently Completed (Phase 7-10)
-- [x] **Web Workflow**: Full workflow managed via webpage.
-- [x] **Inventory Management**: "Brain Dump" and quick add features implemented in Web UX.
-- [x] **Today's View**: Dashboard updated with distinct cards for AM prep, kid/adult lunches, dinner, PM prep, and snacks.
-- [x] **Inventory Ingest**: Text-to-inventory parsing.
-- [x] **Recipe Success Scoring**: Emoji-based feedback tracking.
-- [x] **Phase 10 Logging System**: Complete redesign of feedback flow with Made/Not Made checkboxes, preference emojis, override logging, and sophisticated dinner alternatives.
-- [x] **Meal Correction Workflow**: Inline editing in Week View with "Actual over Planned" display priority and automated recipe index request flow.
+---
+
+### 12.3: Error Handling & Boundaries (Frontend)
+**Priority:** 🔴 High  
+**Effort:** 1 day
+
+**Problem:** No React Error Boundary. API failures show raw errors or fail silently.
+
+**Tasks:**
+- [ ] Add React Error Boundary wrapper in `layout.tsx`
+- [ ] Create centralized error handling in `lib/api.ts`
+- [ ] Add user-friendly error messages for common failures
+- [ ] Implement optional toast notifications for errors
+
+---
+
+### 12.4: Test Coverage Expansion
+**Priority:** 🔴 High  
+**Effort:** 2-3 days
+
+**Problem:** Only 1 test file with 5 tests (caching only).
+
+**Backend (pytest):**
+- [ ] `log_meal()` - all paths (made/skip/freezer/outside)
+- [ ] `swap_meals()` - dinner and prep swapping
+- [ ] `create_week()` - week initialization
+- [ ] `_get_current_status()` - status calculation
+
+**Frontend (Jest/Vitest):**
+- [ ] `FeedbackButtons` component state transitions
+- [ ] `DinnerLogging` multi-step flow
+- [ ] API hook error handling
+
+**Target:** 50%+ coverage on critical paths
+
+---
+
+### 12.5: Backend Refactoring
+**Priority:** 🟡 Medium  
+**Effort:** 3-5 days
+
+**Problem:** Monolithic files: `workflow.py` (2652 lines), `api/index.py` (1394 lines).
+
+**Tasks (workflow.py):**
+- [ ] Split into modules:
+  - `workflow/state.py` - State management, archiving
+  - `workflow/selection.py` - Dinner/lunch selection
+  - `workflow/html_generator.py` - Plan HTML generation
+  - `workflow/replan.py` - Replanning logic
+- [ ] Keep `workflow.py` as thin orchestrator
+
+**Tasks (API):**
+- [ ] Organize routes with Flask Blueprints:
+  - `api/routes/status.py`
+  - `api/routes/meals.py`
+  - `api/routes/inventory.py`
+  - `api/routes/recipes.py`
+- [ ] Keep `index.py` for app initialization only
+
+---
+
+### 12.6: Documentation & DX
+**Priority:** 🟢 Lower  
+**Effort:** 1 day
+
+**Tasks:**
+- [ ] Create `CONTRIBUTING.md` with setup, testing, PR guidelines
+- [ ] Add architecture diagram (Mermaid)
+- [ ] Complete `.env.example` with all required variables
+- [ ] Document API endpoints and response formats
 
 
 ### Recipe Index changes

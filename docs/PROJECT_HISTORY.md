@@ -1311,3 +1311,38 @@ Continuing with current recipes. Use freezer backups manually if preferred.
 **Learning:**
 - **Feedback is as important as speed**: Even when a backend operation is slow (like the GitHub-syncing swap), providing a clear loading state prevents user frustration and the "is it frozen?" feeling.
 - **Dashboard as Source of Truth**: Prioritizing actual meals makes the dashboard feel more responsive to user input and serves as a better record of the day.
+
+---
+
+## Session: 2026-01-07 (Late) - Architecture Review & Phase 12 Planning
+
+**Milestone:** Completed a comprehensive codebase review and established Phase 12 roadmap.
+
+**Context:**
+After completing all Phase 11 blocks, conducted a full architecture review to identify improvement opportunities for long-term maintainability.
+
+**Key Findings:**
+- **Monolithic Files:** Dashboard (`page.tsx` 950 lines, 22 nested functions), API (`index.py` 1394 lines), Workflow (`workflow.py` 2652 lines)
+- **Limited Test Coverage:** Only 1 test file with 5 tests
+- **No TypeScript Types:** API responses use `any` types throughout
+- **No Error Boundary:** Frontend fails silently or shows raw errors
+
+**Phase 12 Roadmap Established:**
+| Block | Focus | Priority |
+|-------|-------|----------|
+| **12.1** | Component Extraction (split `page.tsx`) | 🔴 High |
+| **12.2** | TypeScript Interfaces for API | 🔴 High |
+| **12.3** | Error Boundaries & Handling | 🔴 High |
+| **12.4** | Test Coverage Expansion | 🔴 High |
+| **12.5** | Backend Refactoring (split `workflow.py`, Flask Blueprints) | 🟡 Medium |
+| **12.6** | Documentation & DX | 🟢 Lower |
+
+**Decisions:**
+1. **Streamlined IMPLEMENTATION.md:** Consolidated Phases 1-11 into a summary table to prioritize future work over historical detail.
+2. **Numbered Blocks:** Phase 12 uses `12.X` numbering for easy reference in future sessions.
+3. **Living Document:** Detailed historical phase content remains in PROJECT_HISTORY.md.
+
+**Learning:**
+- **Technical Debt Compounds:** Organic growth through 11 phases created architectural debt that needed explicit acknowledgment.
+- **Prioritize Before Acting:** Having a documented, numbered roadmap (12.1-12.6) enables better session planning.
+- **Separate History from Roadmap:** IMPLEMENTATION.md should focus on "what's next," PROJECT_HISTORY.md on "how we got here."

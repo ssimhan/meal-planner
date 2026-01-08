@@ -8,6 +8,7 @@ import Skeleton from '@/components/Skeleton';
 import Card from '@/components/Card';
 import FeedbackButtons from '@/components/FeedbackButtons';
 import DinnerLogging from '@/components/DinnerLogging';
+import PrepTaskList from '@/components/PrepTaskList';
 import { useToast } from '@/context/ToastContext';
 
 export default function Dashboard() {

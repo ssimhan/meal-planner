@@ -405,8 +405,8 @@ def extract_prep_tasks_for_db(selected_dinners, selected_lunches):
             prep_components = getattr(lunch, 'prep_components', [])
             recipe_name = getattr(lunch, 'recipe_name', 'Lunch')
             recipe_id = getattr(lunch, 'recipe_id', f'lunch_{day}')
-            
-                for component in prep_components:
+
+            for component in prep_components:
                 component_clean = component.replace('_', ' ')
                 task_id = f"lunch_{day}_{component_clean.replace(' ', '_').lower()}"
                 structured_tasks.append({

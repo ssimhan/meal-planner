@@ -143,7 +143,10 @@ def confirm_veg():
         repo = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
         commit_multiple_files_to_github(repo, files, f"Confirm veggies for {week_str}")
         invalidate_cache()
-        return jsonify({"status": "success"})
+
+        # Return updated status to refresh frontend
+        from api.routes.status import _get_current_status
+        return _get_current_status(skip_sync=True)
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
@@ -321,9 +324,12 @@ def log_meal():
              # Actually, 'find_week' returns a reference to the dict inside history.
              # So 'week' modifications modify 'history'.
              save_history(history)
-             
+
         invalidate_cache()
-        return jsonify({"status": "success", "message": "Logged meal"})
+
+        # Return updated status to refresh frontend
+        from api.routes.status import _get_current_status
+        return _get_current_status(skip_sync=True)
 
     except Exception as e:
         import traceback; traceback.print_exc()

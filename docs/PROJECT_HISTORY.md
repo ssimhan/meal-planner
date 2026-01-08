@@ -1449,4 +1449,34 @@ After completing all Phase 11 blocks, conducted a full architecture review to id
 - **Optional Fields Matter:** Proper use of `?` prevents false positives and matches runtime behavior
 - **Centralization Enables Reuse:** Single types file makes it easy to find and reuse types
 
-**Status:** Phase 12.2 complete. Ready for Phase 12.3 (Error Handling & Boundaries).
+**Status:** Phase 12.2 complete. Ready for Phase 12.3 (Hook Stabilization).
+
+---
+
+## Session: 2026-01-08 (Afternoon) - Hook Stabilization & State Consolidation
+
+**Commits:** `2ca6d33`, `034ec1d`, `16c4d99`, `aa67278`, `fd78968`, `ab29344`
+
+**Work Completed:**
+- **Solved "Minified React Error #310"**: Fixed the violation of "Rules of Hooks" by consolidating 25+ individual `useState` hooks into structured state objects.
+- **Hook Lifecycle Stabilization**: Ensured all hooks are called unconditionally at the top level of the component function, preceding all logic and early returns.
+- **Infrastructure Fixes**:
+  - Aligned local backend port (`5328`) with the Next.js proxy settings.
+  - Fixed `NameError` in `workflow.py` by adding missing `get_actual_path` imports.
+  - Fixed TypeScript build errors related to missing variables after state refactoring.
+- **Enhanced UX**:
+  - Implemented `ToastContext` for real-time operation feedback (Success/Error/Info).
+  - Added a global `ErrorBoundary` to catch and report runtime crashes gracefully.
+  - Standardized "Freezer" and "Outside" badges in the Week View.
+
+**Technical Decisions:**
+1. **State Objects vs. Individual Hooks**: In complex components with 10+ states, using an object (e.g., `setViewState(prev => ({...prev, key: val}))`) is far more stable and prevents hook-order corruption during rapid re-renders.
+2. **Externalizing Sub-components**: Defined helper components (like `SelectionCheckbox`) outside the main render loop. This stops React from thinking the whole sub-tree is a "new" type on every render.
+3. **Local Dev Alignment**: Corrected the disparity between production environment variables and local defaults to prevent "Internal Server Error" when testing.
+
+**Learning:**
+- **React Stability**: Large monolithic state hooks are sometimes better than many small ones when hook stability is the bottleneck.
+- **Build vs. Runtime**: Always run `npm run build` locally to catch type errors before pushing to production.
+- **Proxy Consistency**: Even small port mismatches (5328 vs 5332) can look like complex backend failures.
+
+**Status:** Phase 12 Architecture hardening is now fully complete. All critical stability and type errors are resolved.

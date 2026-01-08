@@ -1,6 +1,6 @@
 # Meal Planner Implementation Guide
 
-**Last Updated:** 2026-01-07
+**Last Updated:** 2026-01-08
 **Live Site:** [ssimhan.github.io/meal-planner/](https://ssimhan.github.io/meal-planner/)
 
 ---
@@ -201,17 +201,43 @@ All phases through 11 are complete. See [PROJECT_HISTORY.md](PROJECT_HISTORY.md)
 
 ---
 
-### 12.3: Error Handling & Boundaries (Frontend)
+### 12.3: Hook Stabilization & State Consolidation ✅ Complete
 **Priority:** 🔴 High  
 **Effort:** 1 day
+**Completed:** 2026-01-08
 
-**Problem:** No React Error Boundary. API failures show raw errors or fail silently.
+**Problem:** Violation of React's "Rules of Hooks" (Error #310) due to unstable hook order and excessive individual state calls (14+ hooks in a single component).
 
 **Tasks:**
-- [ ] Add React Error Boundary wrapper in `layout.tsx`
-- [ ] Create centralized error handling in `lib/api.ts`
-- [ ] Add user-friendly error messages for common failures
-- [ ] Implement optional toast notifications for errors
+- [x] Consolidate 14 individual hooks into `uiState` and `dinnerState` in `Dashboard`
+- [x] Consolidate 11 individual hooks into `viewState` in `WeekView`
+- [x] Ensure all hooks are called unconditionally at the absolute top of the component
+- [x] Move sub-component definitions (e.g., `SelectionCheckbox`) outside of render functions
+- [x] Implementation of `ErrorBoundary.tsx` to prevent cascading UI failure
+- [x] Standardize Type parameter handling in `getFeedbackBadge` for week view
+
+**Result:** Eliminated "Minified React error #310". Application state is now predictable, and the component rendering cycle is stable.
+
+---
+
+### 12.4: Centralized Notification & Error Handling ✅ Complete
+**Priority:** 🔴 High  
+**Effort:** 1 day
+**Completed:** 2026-01-08
+
+**Problem:** API failures or background operations didn't provide enough feedback to the user.
+
+**Tasks:**
+- [x] Created `ToastContext.tsx` and `Toast.tsx` component
+- [x] Integrated `showToast()` hook into all API-interacting components
+- [x] Added success/error/info notifications for:
+  - Create Week
+  - Generate Plan
+  - Log Meal (Dashboard and Week View)
+  - Swap Meals
+- [x] Implemented `ErrorBoundary` wrapper in `layout.tsx`
+
+**Result:** Users now receive clear, visual confirmation of all background actions. Runtime errors are caught safely without crashing the entire app.
 
 ---
 

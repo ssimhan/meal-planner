@@ -220,7 +220,7 @@ export default function Dashboard() {
     if (!status?.week_of || !status?.current_day) return;
 
     try {
-      setLogLoading(true);
+      setUi(prev => ({ ...prev, logLoading: true }));
       const feedbackValue = overrideText || (made ? emoji : 'Skipped');
 
       const updatedStatus = await logMeal({

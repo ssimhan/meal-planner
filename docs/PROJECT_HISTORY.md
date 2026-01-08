@@ -1573,3 +1573,93 @@ After completing all Phase 11 blocks, conducted a full architecture review to id
 3.  **History as Source of Truth**: Leveraging `history.yml` data structure to store task state means it survives server restarts and deployments.
 
 **Status:** Phase 13.2 and 13.3 Complete. The inventory system is now fluid and powerful, and the prep workflow is a true persistent tool rather than just a static suggestion.
+
+---
+
+## Session: 2026-01-08 - Dashboard Data Flow & Field Naming Standardization
+
+**Issue:** Active week plan not displaying on dashboard after multiple backend fixes. Users reported missing snacks and seeing "Unknown" for current week.
+
+**Root Causes Identified:**
+
+1. **Workflow Status Filter (status.py:62)**
+   - API was excluding weeks with `status: plan_complete` from display
+   - Logic only showed incomplete planning weeks, not active execution weeks
+   - Fix: Changed filter to include all non-archived weeks
+
+2. **API Response Structure Mismatch**
+   - API returned nested structure (`today.dinner`) but frontend expected flat fields (`today_dinner`)
+   - TypeScript interface defined both formats but API only returned nested version
+   - Fix: Added flat structure fields to API response for backward compatibility
+
+3. **Endpoint Return Values**
+   - `log-meal` and `confirm-veg` endpoints returned simple success messages
+   - Frontend expected full WorkflowStatus object to update UI immediately
+   - Fix: Both endpoints now return `_get_current_status()` after mutations
+
+4. **Python Indentation Error (html_generator.py:409)**
+   - Critical syntax error prevented module imports
+   - Caused all API endpoints to fail with 500 errors
+   - Fix: Corrected indentation in prep task generation loop
+
+5. **Snack Data Mapping (status.py:109-111)**
+   - API incorrectly added `_feedback` suffix to base snack values
+   - `daily_feedback.school_snack: "Dried mangoes"` → `today_snacks.school_snack_feedback`
+   - Should have mapped to `today_snacks.school` for display
+   - Fix: Direct field mapping without suffix transformation
+
+6. **UI Distraction (page.tsx:355)**
+   - Pulsing red animation on waiting_for_checkin state made section unreadable
+   - Removed animation and "Action Required" badge for cleaner display
+
+**Field Naming Standardization:**
+
+Created comprehensive naming convention documentation ([FIELD_NAMING_CONVENTION.md](FIELD_NAMING_CONVENTION.md)):
+
+- **Storage (history.yml)**: Clean names without suffix (`school_snack`, `home_snack`)
+- **API Requests**: Use `*_feedback` suffix for clarity (`school_snack_feedback`)
+- **API Responses**: Map to simple display names (`today_snacks.school`)
+- **Status Flags**: Consistently use `*_made` and `*_needs_fix`
+
+**Technical Changes:**
+
+```python
+# status.py - Correct field mapping
+if 'school_snack' in day_feedback:
+    today_snacks['school'] = day_feedback['school_snack']  # Not school_snack_feedback
+
+# status.py - Include active weeks
+if data.get('workflow', {}).get('status') != 'archived':  # Not 'not in (plan_complete, archived)'
+
+# status.py - Flat structure for frontend
+return jsonify({
+    "current_day": current_day,          # Added
+    "today_dinner": today_dinner,         # Added
+    "today_lunch": today_lunch,           # Added
+    "today_snacks": today_snacks,         # Added
+    "today": { ... }                      # Kept for compatibility
+})
+
+# meals.py - Return full status after mutations
+invalidate_cache()
+from api.routes.status import _get_current_status
+return _get_current_status(skip_sync=True)
+```
+
+**Files Updated:**
+- `inputs/2026-01-05.yml`: Updated workflow status to `plan_complete`
+- `api/routes/status.py`: Fixed week filtering, response structure, snack mapping
+- `api/routes/meals.py`: Return WorkflowStatus from mutation endpoints
+- `scripts/workflow/html_generator.py`: Fixed indentation error
+- `src/app/page.tsx`: Removed distracting pulse animation
+- `docs/FIELD_NAMING_CONVENTION.md`: Created comprehensive field naming guide
+
+**Learning:**
+- **Data flow debugging requires end-to-end tracing**: Issue appeared in frontend but root causes were in API filtering logic, response structure, and data mapping
+- **Semantic consistency matters**: Field naming confusion (`school_snack` vs `school_snack_feedback`) caused mapping errors
+- **Module-level errors cascade**: Single indentation error blocked all API endpoints
+- **UX subtlety**: Pulsing animations that seem helpful can actually harm readability
+- **Documentation prevents regression**: Standardizing conventions in writing prevents future inconsistencies
+
+**Status:** Dashboard now correctly displays active week with all meal data (dinners, lunches, snacks). Field naming standardized across codebase. All endpoints return proper data structures.
+

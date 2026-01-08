@@ -201,3 +201,36 @@ Currently, the system is stable and feature-complete for the core workflow. Futu
 -   **Runtime:** Python 3.10+
 -   **Actions Usage:** ~60 mins/month (Free tier)
 -   **Success Goal:** Plan adherence >80%, Freezer backups >= 3
+
+## Phase 13: Refinement & Productization
+
+**Goal:** Polish the UX, fix critical state bugs, enhance the prep workflow, and prepare the architecture for commercialization.
+
+### 13.1: Critical State Fixes (Immediate) ✅ Complete
+**Priority:** 🔴 High
+**Effort:** 1 day
+- [x] **Fix Active Week**: Resolved "No active week plan found" by adding `week_data` to status API.
+- [x] **Fix Analytics Page**: Fixed argument mismatch in `compute_analytics`.
+- [x] **Homepage Cleanup**: Removed analytics widgets from the main dashboard.
+
+### 13.2: Advanced Inventory UX ✅ Complete
+**Priority:** 🟡 Medium
+**Effort:** 2 days
+- [x] **Unified Search**: Search across Fridge, Freezer, Pantry from one input.
+- [x] **Quick Actions**: One-tap quantity `(+)`/`(-)` and `Delete`.
+- [x] **Location Toggle**: Move items between locations (e.g. Pantry -> Fridge).
+- [x] **Brain Dump Mode**: Move text input to a dedicated modal/view to declutter.
+
+### 13.3: Persistent Prep Workflow ✅ Complete
+**Priority:** 🟡 Medium
+**Effort:** 3 days
+- [x] **Week Initialization**: Extract *all* prep tasks and store in `history.yml` with `status: pending`.
+- [x] **Dashboard Integration**: Display a checklist of open prep tasks grouped by Meal.
+- [x] **Feedback Loop**: Checking a task updates the backend state.
+
+### 13.4: Productization Architecture
+**Priority:** 🟢 Lower
+**Effort:** 3-5 days
+- [ ] **Config Separation**: comprehensive audit to move all hardcoded strings (names, allergies, dietary rules, "office days") into `config.yml`.
+- [ ] **White-labeling**: Ensure the codebase references `config.yml` for all personalization logic.
+- [ ] **Setup Script**: Create a `setup.py` or script that helps a new user generate their own `config.yml` and `recipes/` folder structure.

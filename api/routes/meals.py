@@ -410,3 +410,52 @@ def swap_meals():
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+@meals_bp.route("/api/check-prep", methods=["POST"])
+def check_prep_task():
+    try:
+        data = request.json or {}
+        week_str = data.get('week')
+        task = data.get('task') # Optional if ID present
+        task_id = data.get('task_id')
+        status = data.get('status', 'complete') # 'complete' or 'pending'
+        
+        if not week_str:
+            return jsonify({"status": "error", "message": "Week required"}), 400
+            
+        history = get_yaml_data('data/history.yml') or {'weeks': []}
+        history_week = find_week(history, week_str)
+        
+        if not history_week:
+            return jsonify({"status": "error", "message": "Week not found in history"}), 404
+            
+        # Update logic
+        updated = False
+        if 'prep_tasks' in history_week:
+            for t in history_week['prep_tasks']:
+                # Match by ID if available, else by exact task text
+                match = False
+                if task_id and t.get('id') == task_id:
+                     match = True
+                elif not task_id and task and t.get('task') == task:
+                     match = True
+                
+                if match:
+                    t['status'] = status
+                    updated = True
+                    # Don't break if multiple matches by text? Ideally break.
+                    break 
+        
+        if not updated:
+             # If strictly no match found, maybe it's an older plan without prep_tasks?
+             # Or loose string match?
+             return jsonify({"status": "error", "message": "Task not found to update"}), 404
+             
+        # Save
+        save_history(history)
+        invalidate_cache('history')
+        sync_changes_to_github(['data/history.yml'])
+        
+        return jsonify({"status": "success", "updated_task_id": task_id})
+        
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500

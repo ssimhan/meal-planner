@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:api": "python3 api/index.py",
+    "dev:api": "PYTHONPATH=. python3 api/index.py",
     "dev:full": "concurrently \"npm run dev\" \"npm run dev:api\"",
     "build": "next build",
     "start": "next start",

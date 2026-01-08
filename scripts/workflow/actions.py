@@ -72,7 +72,14 @@ def generate_meal_plan(input_file, data):
     from_scratch_recipe = selected_dinners.get(from_scratch_day) if from_scratch_day else None
     plan_content = generate_html_plan(data, history, selected_dinners, from_scratch_recipe, selected_lunches)
     with open(plan_file, 'w') as f: f.write(plan_content)
+
+    # NEW: Extract structured prep tasks and save to persistence
+    from .html_generator import extract_prep_tasks_for_db
+    prep_tasks = extract_prep_tasks_for_db(selected_dinners, selected_lunches)
+    data['prep_tasks'] = prep_tasks # This will be passed to update_history via data
+
     update_history(history_path, data, selected_dinners, selected_lunches)
+
     if 'workflow' not in data: data['workflow'] = {'status': 'plan_complete', 'created_at': datetime.now().isoformat(), 'updated_at': datetime.now().isoformat()}
     else: data['workflow']['status'] = 'plan_complete'; data['workflow']['updated_at'] = datetime.now().isoformat()
     with open(input_file, 'w') as f: yaml.dump(data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)

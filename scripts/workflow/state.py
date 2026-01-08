@@ -195,6 +195,7 @@ def update_history(history_path, inputs, selected_dinners, selected_lunches=None
     week_of = inputs['week_of']
     new_week = {
         'week_of': week_of,
+        'prep_tasks': inputs.get('prep_tasks', []),
         'dinners': [],
         'lunches': {}
     }
@@ -225,6 +226,7 @@ def update_history(history_path, inputs, selected_dinners, selected_lunches=None
     if week_entry:
         week_entry['dinners'] = new_week['dinners']
         week_entry['lunches'] = new_week['lunches']
+        week_entry['prep_tasks'] = new_week['prep_tasks']
     else:
         history.setdefault('weeks', []).append(new_week)
     with open(history_path, 'w') as f:

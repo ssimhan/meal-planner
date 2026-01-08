@@ -24,8 +24,7 @@ app.register_blueprint(recipes_bp)
 def health_check():
     return jsonify({"status": "healthy", "version": "2.0.0"})
 
-if __name__ == "__main__":
-    app.run(port=5328, debug=True)
+
 
 
 

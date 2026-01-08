@@ -24,8 +24,8 @@ def load_yaml(path):
     with open(path, 'r') as f:
         return yaml.safe_load(f)
 
-def compute_analytics():
-    history = load_yaml(HISTORY_FILE)
+def compute_analytics(history_data=None, start_date=None, end_date=None):
+    history = history_data if history_data else load_yaml(HISTORY_FILE)
     recipes = load_yaml(RECIPE_INDEX) or []
     
     if not history or 'weeks' not in history:

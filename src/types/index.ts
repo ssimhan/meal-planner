@@ -10,9 +10,30 @@ export interface WorkflowStatus {
   today_dinner?: DinnerData;
   today_lunch?: LunchData;
   today_snacks?: SnackData;
-  prep_tasks?: PrepTask[];
-  completed_prep?: string[];
+  today?: { // Mapping API's 'today' object structure
+    day: string;
+    date: string;
+    dinner: DinnerData | null;
+    lunch: LunchData | null;
+    snacks: SnackData;
+    prep_tasks: PrepTask[];
+    prep_completed: string[];
+  };
+  prep_tasks?: PrepTask[]; // Historical/Week-level if flattened, but API sends it inside 'today' AND we might want it at root too? No, API sends it inside 'today' AND week-level logic might exist. 
+  // API returns "prep_tasks": [] inside "today" object.
+  // Wait, looking at status.py, it returns "today": { ..., "prep_tasks": [...] }. It does NOT return "prep_tasks" at top level.
+
   week_data?: WeekData;
+}
+
+export interface PrepTask {
+  id?: string;
+  task: string;
+  meal_id?: string;
+  meal_name?: string;
+  day?: string;
+  type?: 'dinner' | 'lunch';
+  status: 'pending' | 'complete';
 }
 
 export interface DinnerData {

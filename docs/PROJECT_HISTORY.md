@@ -1542,3 +1542,34 @@ After completing all Phase 11 blocks, conducted a full architecture review to id
     -   Cleared the Recipe Index Backlog.
 
 **Status:** The system is now architecturally mature. The transition from a set of scripts to a robust web application is complete. The codebase is modular, typed, tested, and documented.
+
+## Session: 2026-01-08 - Advanced Inventory UX (Phase 13.2) & Persistent Prep (Phase 13.3)
+
+**Work Completed:**
+
+**Phase 13.2: Advanced Inventory UX**
+-   **Unified Search**: Implemented a global search bar in the Inventory page that filters across Fridge, Pantry, and Freezer instantly.
+-   **Quick Actions**: Added `(+)` and `(-)` buttons for one-tap quantity adjustments, plus a direct Delete button with "Undo" functionality.
+-   **Move Functionality**: Added a "Move" action to transfer items between locations (e.g., Pantry -> Fridge).
+-   **Brain Dump Refactor**: Moved the "Brain Dump" input into a dedicated modal to declutter the main interface.
+-   **Backend**: Added `POST /api/inventory/move` endpoint for atomic transfers.
+
+**Phase 13.3: Persistent Prep Workflow**
+-   **Goal**: Transform prep tasks from ephemeral suggestions into a persistent, checkable to-do list for the week.
+-   **Backend (Extraction & Persistence)**:
+    -   Modified `actions.py` and `html_generator.py` to extract granular prep tasks (e.g., "Chop carrots", "Step 1: Marinate chicken") during plan generation.
+    -   Tasks are now assigned a deterministic ID and stored in `history.yml` with `status: pending`.
+    -   Updated `state.py` to ensure tasks are preserved during workflow state updates.
+    -   Added `POST /api/check-prep` to toggle completion status.
+-   **Frontend (Dashboard Integration)**:
+    -   Created `PrepTaskList.tsx` component.
+    -   The dashboard now displays a persistent checklist of prep tasks grouped by Meal.
+    -   Replaced the static "Prep Timeline" with this interactive workflow.
+    -   Real-time feedback: Checking a box immediately updates the backend.
+
+**Technical Decisions:**
+1.  **Granular Task IDs**: Generated deterministic IDs (e.g. `dinner_mon_recipe_id_step_0`) to allow robust status tracking even if text changes slightly.
+2.  **Grouped by Meal**: Tasks are grouping by their parent meal (e.g. "Pipeline: Roast Chicken") to give context to "Chop onions".
+3.  **History as Source of Truth**: Leveraging `history.yml` data structure to store task state means it survives server restarts and deployments.
+
+**Status:** Phase 13.2 and 13.3 Complete. The inventory system is now fluid and powerful, and the prep workflow is a true persistent tool rather than just a static suggestion.

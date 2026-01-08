@@ -51,6 +51,9 @@ dinners:
   recipe_id: rasam_rice_with_beetroot_kai
 - day: tue
   recipe_id: freezer_meal
+  made: true
+  actual_meal: Chow chow puli kootu leftover
+  needs_fix: false
 - day: wed
   recipe_id: masala_puri
   made: true
@@ -64,4 +67,4 @@ prep_tasks:
 - 'Monday Prep (for Mon/Tue meals):'
 - '- [ ] Chop garlic for Mon Rasam Rice with Beetroot Kai'
 - '- [ ] Chop tomato for Mon Rasam Rice with Beetroot Kai'
-plan_adherence_pct: 16
+plan_adherence_pct: 33

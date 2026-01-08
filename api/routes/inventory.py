@@ -286,3 +286,107 @@ def update_inventory():
         return jsonify({"status": "success", "inventory": inventory})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+@inventory_bp.route("/api/inventory/move", methods=["POST"])
+def move_inventory_item():
+    try:
+        data = request.json or {}
+        item_name = data.get('item')
+        from_category = data.get('from_category')
+        to_category = data.get('to_category')
+        
+        if not item_name or not from_category or not to_category:
+            return jsonify({"status": "error", "message": "Item, from_category, and to_category required"}), 400
+            
+        inventory = get_yaml_data('data/inventory.yml') or {}
+        inventory_path = Path('data/inventory.yml')
+        
+        # 1. Find and remove from old category
+        moved_item = None
+        
+        if from_category == 'meals':
+            if 'freezer' in inventory and 'backups' in inventory['freezer']:
+                for i, itm in enumerate(inventory['freezer']['backups']):
+                    if itm.get('meal') == item_name:
+                        moved_item = inventory['freezer']['backups'].pop(i)
+                        break
+        elif from_category == 'frozen_ingredient':
+            if 'freezer' in inventory and 'ingredients' in inventory['freezer']:
+                for i, itm in enumerate(inventory['freezer']['ingredients']):
+                    if itm.get('item') == item_name:
+                        moved_item = inventory['freezer']['ingredients'].pop(i)
+                        break
+        elif from_category in ['pantry', 'fridge']:
+            if from_category in inventory:
+                for i, itm in enumerate(inventory[from_category]):
+                    if itm.get('item') == item_name:
+                        moved_item = inventory[from_category].pop(i)
+                        break
+        
+        if not moved_item:
+             return jsonify({"status": "error", "message": f"Item '{item_name}' not found in '{from_category}'"}), 404
+
+        # 2. Transform item structure if needed (meals vs ingredients)
+        # Standardize to {item, quantity, unit} or {meal, servings}
+        
+        new_item = {}
+        if to_category == 'meals':
+            # Target is freezer backup meal
+            # Source was likely an ingredient? or another meal?
+            new_item = {
+                'meal': moved_item.get('meal') or moved_item.get('item'),
+                'servings': moved_item.get('servings') or 4,
+                'frozen_date': datetime.now().strftime('%Y-%m-%d')
+            }
+            if 'freezer' not in inventory: inventory['freezer'] = {}
+            if 'backups' not in inventory['freezer']: inventory['freezer']['backups'] = []
+            inventory['freezer']['backups'].append(new_item)
+            
+        elif to_category == 'frozen_ingredient':
+            new_item = {
+                'item': moved_item.get('item') or moved_item.get('meal'),
+                'quantity': moved_item.get('quantity') or 1,
+                'unit': moved_item.get('unit') or 'count',
+                'frozen_date': datetime.now().strftime('%Y-%m-%d')
+            }
+            if 'freezer' not in inventory: inventory['freezer'] = {}
+            if 'ingredients' not in inventory['freezer']: inventory['freezer']['ingredients'] = []
+            inventory['freezer']['ingredients'].append(new_item)
+
+        elif to_category == 'pantry':
+            new_item = {
+                'item': moved_item.get('item') or moved_item.get('meal'),
+                'quantity': moved_item.get('quantity') or 1,
+                'unit': moved_item.get('unit') or 'count'
+            }
+            if 'pantry' not in inventory: inventory['pantry'] = []
+            inventory['pantry'].append(new_item)
+            
+        elif to_category == 'fridge':
+            new_item = {
+                'item': moved_item.get('item') or moved_item.get('meal'),
+                'quantity': moved_item.get('quantity') or 1,
+                'unit': moved_item.get('unit') or 'count',
+                'added': datetime.now().strftime('%Y-%m-%d')
+            }
+            if 'fridge' not in inventory: inventory['fridge'] = []
+            inventory['fridge'].append(new_item)
+
+        inventory['last_updated'] = datetime.now().strftime('%Y-%m-%d')
+        new_content = yaml.dump(inventory, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        
+        try:
+            with open(inventory_path, 'w') as f:
+                f.write(new_content)
+        except OSError:
+            pass
+            
+        repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
+        success = commit_file_to_github(repo_name, str(inventory_path), f"Move {item_name} from {from_category} to {to_category}", content=new_content)
+        
+        if not success:
+             return jsonify({"status": "error", "message": "Failed to sync inventory to GitHub"}), 500
+             
+        invalidate_cache('inventory')
+        return jsonify({"status": "success", "inventory": inventory})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500

@@ -354,6 +354,73 @@ def generate_granular_prep_tasks(selected_dinners, selected_lunches, day_keys, t
                 if not fuzzy_match_prep_task(task, completed_tasks): tasks.append(task)
     return tasks
 
+def extract_prep_tasks_for_db(selected_dinners, selected_lunches):
+    """
+    Extract all prep tasks for the week as structured objects for database persistence.
+    """
+    structured_tasks = []
+    days = ['mon', 'tue', 'wed', 'thu', 'fri']
+    
+    # Dinner Tasks
+    for day in days:
+        if day in selected_dinners:
+            recipe = selected_dinners[day]
+            recipe_name = recipe.get('name', 'dinner')
+            recipe_id = recipe.get('id', 'unknown_recipe')
+            
+            # Manual prep steps
+            if recipe.get('prep_steps'):
+                for idx, step in enumerate(recipe['prep_steps']):
+                    task_id = f"dinner_{day}_{recipe_id}_step_{idx}"
+                    structured_tasks.append({
+                        "id": task_id,
+                        "task": step,
+                        "meal_id": recipe_id,
+                        "meal_name": recipe_name,
+                        "day": day,
+                        "type": "dinner",
+                        "status": "pending"
+                    })
+            else:
+                # Fallback: Main Veg
+                main_vegs = recipe.get('main_veg', [])
+                for idx, veg in enumerate(main_vegs):
+                    veg_clean = veg.replace('_', ' ')
+                    task_id = f"dinner_{day}_{recipe_id}_veg_{idx}"
+                    structured_tasks.append({
+                        "id": task_id,
+                        "task": f"Chop {veg_clean}",
+                        "meal_id": recipe_id,
+                        "meal_name": recipe_name,
+                        "day": day,
+                        "type": "dinner",
+                        "status": "pending"
+                    })
+
+    # Lunch Tasks
+    for day in days:
+        if day in selected_lunches:
+            lunch = selected_lunches[day]
+            # Handle lunch object or dict
+            prep_components = getattr(lunch, 'prep_components', [])
+            recipe_name = getattr(lunch, 'recipe_name', 'Lunch')
+            recipe_id = getattr(lunch, 'recipe_id', f'lunch_{day}')
+            
+                for component in prep_components:
+                component_clean = component.replace('_', ' ')
+                task_id = f"lunch_{day}_{component_clean.replace(' ', '_').lower()}"
+                structured_tasks.append({
+                    "id": task_id,
+                    "task": f"Prep {component_clean}",
+                    "meal_id": recipe_id,
+                    "meal_name": recipe_name,
+                    "day": day,
+                    "type": "lunch",
+                    "status": "pending"
+                })
+                
+    return structured_tasks
+
 def generate_prep_section(day_key, day_name, selected_dinners, selected_lunches, week_history=None):
     """Generate prep tasks section for a day."""
     html = []

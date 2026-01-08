@@ -178,10 +178,11 @@ def _get_current_status(skip_sync=False):
             "dinner": today_dinner,
             "lunch": today_lunch,
             "snacks": today_snacks,
-            "prep_tasks": [], # Frontend should fetch detailed tasks? Or we populate if possible
+            "prep_tasks": history_week.get('prep_tasks', []) if history_week else [],
             "prep_completed": completed_prep_today
         },
-        "next_week_planned": False # Todo: check if next week exists
+        "next_week_planned": False, # Todo: check if next week exists
+        "week_data": data
     })
 
 @status_bp.route("/api/status")

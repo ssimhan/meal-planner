@@ -106,6 +106,15 @@ export async function updateInventoryItem(category: string, item: string, update
     return handleResponse<InventoryOperationResponse>(res, 'Failed to update inventory item');
 }
 
+export async function moveInventoryItem(item: string, fromCategory: string, toCategory: string): Promise<InventoryOperationResponse> {
+    const res = await fetch('/api/inventory/move', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ item, from_category: fromCategory, to_category: toCategory }),
+    });
+    return handleResponse<InventoryOperationResponse>(res, 'Failed to move inventory item');
+}
+
 export async function logMeal(data: LogMealData): Promise<LogMealResponse> {
     const res = await fetch('/api/log-meal', {
         method: 'POST',
@@ -159,6 +168,15 @@ export async function swapMeals(week: string, day1: string, day2: string): Promi
 export async function getAnalytics(): Promise<Analytics> {
     const res = await fetch('/api/analytics');
     return handleResponse<Analytics>(res, 'Failed to fetch analytics');
+}
+
+export async function checkPrepTask(week: string, taskId: string, status: 'complete' | 'pending'): Promise<{ status: string }> {
+    const res = await fetch('/api/check-prep', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ week, task_id: taskId, status }),
+    });
+    return handleResponse<{ status: string }>(res, 'Failed to update prep task');
 }
 
 // Re-export types for convenience

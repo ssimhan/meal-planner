@@ -26,6 +26,37 @@ weeks:
     - pepper
     - potato
     - sweet potato
+  prep_tasks:
+  - id: test_task_1
+    task: Chop beetroot for Rasam
+    meal_name: Rasam Rice
+    day: mon
+    type: dinner
+    status: complete
+  - id: test_task_2
+    task: Boil potatoes for Masala Puri
+    meal_name: Masala Puri
+    day: wed
+    type: dinner
+    status: pending
+  - id: test_task_3
+    task: Chop onion for Masala Puri
+    meal_name: Masala Puri
+    day: wed
+    type: dinner
+    status: pending
+  - id: test_task_4
+    task: Shred cheese for Quesadilla
+    meal_name: Sweet Potato Quesadilla
+    day: thu
+    type: dinner
+    status: pending
+  - id: test_task_5
+    task: Dice carrots for Fried Rice
+    meal_name: Veggie Fried Rice
+    day: fri
+    type: dinner
+    status: pending
   - recipe_id: black_bean_quinoa_salad
     cuisine: unknown
     meal_type: salad

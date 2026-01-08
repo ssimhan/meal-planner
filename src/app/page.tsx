@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
-import { getStatus, generatePlan, createWeek, confirmVeg, logMeal, getRecipes, getAnalytics, WorkflowStatus } from '@/lib/api';
-import type { RecipeListItem, RecipePopularity, Analytics } from '@/types';
+import { getStatus, generatePlan, createWeek, confirmVeg, logMeal, getRecipes, WorkflowStatus } from '@/lib/api';
+import type { RecipeListItem } from '@/types';
 import Skeleton from '@/components/Skeleton';
 import Card from '@/components/Card';
 import FeedbackButtons from '@/components/FeedbackButtons';
@@ -21,7 +21,6 @@ export default function Dashboard() {
   const [vegInput, setVegInput] = useState('');
   const [completedPrep, setCompletedPrep] = useState<string[]>([]);
   const [recipes, setRecipes] = useState<RecipeListItem[]>([]);
-  const [analytics, setAnalytics] = useState<Analytics | null>(null);
 
   // Dinner Logging State consolidated
   const [dinnerState, setDinnerState] = useState({
@@ -51,17 +50,7 @@ export default function Dashboard() {
         console.error('Failed to load recipes:', err);
       }
     }
-    async function loadStats() {
-      try {
-        const stats = await getAnalytics();
-        setAnalytics(stats);
-      } catch (err) {
-        showToast('Failed to load analytics.', 'error');
-        console.error('Failed to load analytics:', err);
-      }
-    }
     loadRecipes();
-    loadStats();
   }, []);
 
   async function fetchStatus(isInitial = false) {
@@ -358,29 +347,7 @@ export default function Dashboard() {
           </div>
         </section>
 
-        {/* Family Favorites Widget */}
-        {analytics?.popularity && (
-          <section className="card md:col-span-2">
-            <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
-              Top Family Favorites
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              {analytics.popularity.slice(0, 5).map((recipe: RecipePopularity) => (
-                <Link
-                  key={recipe.id}
-                  href="/analytics"
-                  className="p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded hover:border-[var(--accent-sage)] transition-colors group"
-                >
-                  <p className="text-xs font-bold truncate group-hover:text-[var(--accent-sage)]">{recipe.name}</p>
-                  <div className="flex justify-between items-center mt-1">
-                    <span className="text-[10px] font-mono text-[var(--text-muted)]">{recipe.count}x</span>
-                    <span className="text-xs">{recipe.last_feedback || '👍'}</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
+
 
         {/* Today's Schedule (Show when plan is active or waiting for check-in) */}
         {(status?.state === 'active' || status?.state === 'waiting_for_checkin') && (
@@ -507,41 +474,21 @@ export default function Dashboard() {
               />
             </div>
 
-            {/* Prep Timeline */}
+            {/* Persistent Prep Tasks */}
             <div className="card bg-[var(--bg-secondary)] border-none shadow-none">
               <header className="flex items-center gap-2 mb-4 border-b border-[var(--border-subtle)] pb-2">
                 <span className="text-xl">⏱️</span>
-                <h3 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)]">Prep Interface</h3>
+                <h3 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)]">Prep Workflow</h3>
               </header>
-              <div className="space-y-3">
-                {status?.prep_tasks && status.prep_tasks.length > 0 ? (
-                  status.prep_tasks.map((task, idx) => {
-                    const taskStr = typeof task === 'string' ? task : (task.task || '');
-                    const taskTime = typeof task === 'object' && task.time ? task.time : null;
-                    const isCompleted = completedPrep.includes(taskStr);
-
-                    return (
-                      <div key={idx} className="flex gap-3 items-start">
-                        <input
-                          type="checkbox"
-                          checked={isCompleted}
-                          onChange={() => togglePrepTask(taskStr)}
-                          className="w-4 h-4 rounded border-2 border-[var(--accent-sage)] text-[var(--accent-sage)] focus:ring-[var(--accent-sage)] cursor-pointer mt-0.5 flex-shrink-0"
-                        />
-                        <label
-                          className={`text-sm cursor-pointer flex-1 ${isCompleted ? 'line-through text-[var(--text-muted)]' : ''}`}
-                          onClick={() => togglePrepTask(taskStr)}
-                        >
-                          {taskTime && <span className="font-mono text-xs mr-2 text-[var(--accent-gold)]">{taskTime.toUpperCase()}</span>}
-                          {taskStr}
-                        </label>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <p className="text-sm text-[var(--text-muted)] italic">No specific prep tasks for today.</p>
-                )}
-              </div>
+              {status?.today?.prep_tasks ? (
+                <PrepTaskList
+                  tasks={status.today.prep_tasks}
+                  weekOf={status.week_of}
+                  onUpdate={fetchStatus}
+                />
+              ) : (
+                <p className="text-sm text-[var(--text-muted)] italic">No prep tasks found for this week.</p>
+              )}
             </div>
           </section>
         )}

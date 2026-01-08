@@ -1,7 +1,7 @@
 week_of: '2026-01-05'
 timezone: America/Los_Angeles
 workflow:
-  status: intake_complete
+  status: plan_complete
   created_at: '2026-01-05T05:41:17.346399'
   updated_at: '2026-01-05T22:25:25.387557'
 schedule:

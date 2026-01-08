@@ -60,8 +60,8 @@ export default function Dashboard() {
       const data = await getStatus();
       setStatus(data);
       // Initialize completed prep from backend
-      if (data.completed_prep) {
-        setCompletedPrep(data.completed_prep);
+      if (data.today?.prep_completed) {
+        setCompletedPrep(data.today.prep_completed);
       }
     } catch (err) {
       showToast('Failed to connect to the meal planner brain.', 'error');

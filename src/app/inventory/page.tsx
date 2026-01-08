@@ -22,6 +22,15 @@ export default function InventoryPage() {
     // Modal state
     const [showBrainDump, setShowBrainDump] = useState(false);
 
+    // Brain dump parser states
+    const [brainDump, setBrainDump] = useState('');
+    const [parsedItems, setParsedItems] = useState<any[]>([]);
+    const [showParser, setShowParser] = useState(false);
+
+    // Edit states
+    const [editingItem, setEditingItem] = useState<{ category: string, name: string } | null>(null);
+    const [editValue, setEditValue] = useState<any>({});
+
     useEffect(() => {
         fetchInventory();
     }, []);
@@ -486,7 +495,7 @@ async function handleUndoDelete() {
     }
 }
 
-async function handleUpdateItem() {
+    async function handleUpdateItem() {
     if (!editingItem) return;
     try {
         setUpdating(true);
@@ -502,7 +511,7 @@ async function handleUpdateItem() {
     }
 }
 
-function handleParseBrainDump() {
+    function handleParseBrainDump() {
     if (!brainDump.trim()) return;
 
     // Split by lines or commas
@@ -530,7 +539,7 @@ function handleParseBrainDump() {
     setShowParser(true);
 }
 
-async function handleBulkAdd() {
+    async function handleBulkAdd() {
     try {
         setUpdating(true);
         const result = await bulkAddItemsToInventory(parsedItems.map(p => ({
@@ -551,9 +560,9 @@ async function handleBulkAdd() {
     }
 }
 
-if (loading) return <div className="p-8 font-mono animate-pulse">LOADING INVENTORY...</div>;
+    if (loading) return <div className="p-8 font-mono animate-pulse">LOADING INVENTORY...</div>;
 
-return (
+    return (
     <main className="container mx-auto max-w-4xl px-4 py-12">
         <header className="mb-12">
             <Link href="/" className="text-[var(--accent-green)] hover:underline mb-4 inline-block font-mono">← Dashboard</Link>

@@ -19,6 +19,10 @@ source_file: Crackers and Cheese Cubes.html
 
 # Crackers and Cheese Cubes
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - Crackers
 - Cheese cubes

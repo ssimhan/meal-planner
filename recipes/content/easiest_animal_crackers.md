@@ -20,6 +20,10 @@ source_file: Easiest Animal Crackers.html
 
 # Easiest Animal Crackers
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - AD
 - Whole-wheat flour

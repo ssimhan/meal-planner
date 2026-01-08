@@ -28,6 +28,10 @@ source_file: Vegetable Lasagna.html
 
 # Vegetable Lasagna
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 2 teaspoons olive oil
 - 1 medium zucchini

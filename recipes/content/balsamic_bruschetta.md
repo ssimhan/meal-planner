@@ -23,6 +23,10 @@ source_file: Balsamic Bruschetta.html
 
 # Balsamic Bruschetta
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 loaf French bread, cut into ¼-inch slices
 - 1 tablespoon extra-virgin olive oil

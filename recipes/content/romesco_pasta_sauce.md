@@ -25,6 +25,10 @@ source_file: Romesco Pasta Sauce.html
 
 # Romesco Pasta Sauce
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 3 red peppers
 - 2 medium tomatoes

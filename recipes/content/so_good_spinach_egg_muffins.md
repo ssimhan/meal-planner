@@ -21,6 +21,10 @@ source_file: So Good Spinach Egg Muffins.html
 
 # So Good Spinach Egg Muffins
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - US Customary Metric
 - 2cupsbaby spinach

@@ -28,6 +28,10 @@ source_file: Oven-Baked Crispy Black Bean Tacos.html
 
 # Oven-Baked Crispy Black Bean Tacos
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - Olive oil
 - 1/2 medium onion

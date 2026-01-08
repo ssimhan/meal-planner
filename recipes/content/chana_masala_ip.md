@@ -29,6 +29,10 @@ source_file: Chana Masala (IP).html
 
 # Chana Masala (IP)
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1can chickpeas
 - Ghee

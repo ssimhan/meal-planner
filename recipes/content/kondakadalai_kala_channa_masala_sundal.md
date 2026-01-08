@@ -21,6 +21,10 @@ source_file: Kondakadalai Kala Channa Masala Sundal.html
 
 # Kondakadalai Kala Channa Masala Sundal
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cupkala chana
 - Salt

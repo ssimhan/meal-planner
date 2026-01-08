@@ -32,6 +32,10 @@ source_file: Vegetarian Tortilla Soup.html
 
 # Vegetarian Tortilla Soup
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 medium onion
 - 1 bell pepper, green

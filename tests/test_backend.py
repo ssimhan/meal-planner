@@ -3,17 +3,17 @@ from unittest.mock import patch, MagicMock
 from datetime import datetime
 
 class TestApiStatus:
-    @patch('api.index.get_yaml_data')
+    @patch('api.routes.status.get_yaml_data')
     def test_get_status_success(self, mock_get_yaml, client, mock_yaml_data):
         # Setup mocks
         mock_get_yaml.return_value = mock_yaml_data
         
-        # Mock other dependencies if needed - api/index.py calls _get_current_status which calls get_yaml_data
-        # It also calls datetime.now() likely.
-        
-        with patch('api.index.datetime') as mock_date:
+        # Mock datetime in status route
+        with patch('api.routes.status.datetime') as mock_date:
             mock_date.now.return_value.strftime.return_value = "2026-01-05"
-            mock_date.strptime =  lambda d, f: datetime.strptime(d, f)
+            # Fix: weekday() must return an int for timedelta
+            mock_date.now.return_value.weekday.return_value = 0 # Monday
+            mock_date.strptime = lambda d, f: datetime.strptime(d, f)
              
             response = client.get('/api/status')
             
@@ -22,8 +22,8 @@ class TestApiStatus:
             assert 'status' in data
 
 class TestLogMeal:
-    @patch('api.index.get_yaml_data')
-    @patch('scripts.github_helper.sync_changes_to_github') 
+    @patch('api.routes.meals.get_yaml_data')
+    @patch('api.routes.meals.sync_changes_to_github') 
     @patch('scripts.log_execution.save_history') 
     def test_log_meal_success(self, mock_save_local, mock_sync_github, mock_get_yaml, client):
         mock_get_yaml.return_value = {
@@ -44,14 +44,14 @@ class TestLogMeal:
         }
         
         # Mock get_actual_path to return a path that exists for 'active' week check
-        with patch('api.index.get_actual_path') as mock_path:
+        with patch('api.routes.meals.get_actual_path') as mock_path:
             # Simulate active week -> exists() = True
             mock_path.return_value.exists.return_value = True
             
             # Mock open() to avoid file read errors
             with patch('builtins.open', new_callable=MagicMock) as mock_open:
                 # Mock yaml.safe_load for the file read
-                with patch('api.index.yaml.safe_load') as mock_yaml_load:
+                with patch('api.routes.meals.yaml.safe_load') as mock_yaml_load:
                     mock_yaml_load.return_value = {
                         'week_of': '2026-01-05',
                         'dinners': [{'day': 'mon', 'recipe_id': 'test', 'made': False}]

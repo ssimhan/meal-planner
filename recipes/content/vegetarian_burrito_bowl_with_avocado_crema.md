@@ -29,6 +29,10 @@ source_file: Vegetarian Burrito Bowl with Avocado Crema.html
 
 # Vegetarian Burrito Bowl with Avocado Crema
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 head of cauliflower
 - 1 green bell pepper

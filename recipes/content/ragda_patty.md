@@ -28,6 +28,10 @@ source_file: Ragda Patty.html
 
 # Ragda Patty
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cupvatana
 - 1 medium potato

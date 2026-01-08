@@ -19,6 +19,10 @@ source_file: Apple sauce.html
 
 # Apple sauce
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - applesauce
 

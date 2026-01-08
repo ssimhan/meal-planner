@@ -26,6 +26,10 @@ source_file: Cucumber Sandwiches.html
 
 # Cucumber Sandwiches
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 16 slices bread
 - 1 English cucumber

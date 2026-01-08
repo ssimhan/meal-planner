@@ -27,6 +27,10 @@ source_file: Palak Paneer Spinach.html
 
 # Palak Paneer Spinach
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1bunchspinach
 - 2clovesgarlic

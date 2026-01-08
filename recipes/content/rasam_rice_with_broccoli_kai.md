@@ -24,6 +24,10 @@ source_file: Rasam Rice with Broccoli Kai.html
 
 # Rasam Rice with Broccoli Kai
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 tsp tamarind concentrate
 - 1 medium tomato, chopped

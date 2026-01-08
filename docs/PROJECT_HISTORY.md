@@ -1480,3 +1480,53 @@ After completing all Phase 11 blocks, conducted a full architecture review to id
 - **Proxy Consistency**: Even small port mismatches (5328 vs 5332) can look like complex backend failures.
 
 **Status:** Phase 12 Architecture hardening is now fully complete. All critical stability and type errors are resolved.
+
+## Session: 2026-01-08 - Backend Refactoring & Modularization
+
+**Work Completed:**
+-   **API Modularization:** Split the monolithic `api/index.py` (1400+ lines) into modular Flask Blueprints:
+    -   `api/routes/status.py`: Status, history, analytics endpoints.
+    -   `api/routes/meals.py`: Plan generation, logging, swapping, veg confirmation.
+    -   `api/routes/inventory.py`: Inventory CRUD operations.
+    -   `api/routes/recipes.py`: Recipe fetch and import logic.
+    -   `api/index.py` is now a minimal application factory (~40 lines).
+-   **Workflow Modularization:** Refactored `scripts/workflow.py` into a package structure:
+    -   `scripts/workflow/state.py`, `selection.py`, `html_generator.py`, `replan.py`, `actions.py`.
+-   **Test Updates:** Updated `tests/test_backend.py` to support the new modular structure and fixed import path mocking.
+-   **Testing:** Verified all tests pass (`python3 -m pytest tests/test_backend.py`) and basic CLI functionality works.
+
+**Technical Decisions:**
+-   **Blueprint Pattern:** Adopted standard Flask Blueprints to separate concerns. This makes the codebase maintainable and easier to test.
+-   **Shared Utils:** extracting common logic (caching, file I/O) to `api/utils.py` to prevent cyclic dependencies.
+-   **Incremental Migration:** Migrated endpoints in groups (status first, then meals, then inventory) to maintain stability.
+
+**Status:** Backend refactoring complete. Codebase is now significantly cleaner and ready for future features.
+
+## Session: 2026-01-08 - Documentation & Developer Experience
+
+**Work Completed:**
+-   **Documentation Overhaul:** completed Phase 12.6.
+    -   Created `CONTRIBUTING.md` with setup, testing, and contribution limits.
+    -   Created `.env.example` to document required environment variables.
+    -   Created `docs/ARCHITECTURE.md` with a Meridian system diagram and component descriptions.
+    -   Created `docs/API_REFERENCE.md` documenting key Backend endpoints.
+    -   Created `recipes/TEMPLATE.md` to standardize manual recipe creation, including a new "Prep Steps" section.
+-   **Cleanup:** Removed fulfilled tasks (e.g., Week at a Glance fix) from the implementation plan.
+
+**Status:** The project is now better documented and approachable for new contributors (or yourself in 6 months).
+
+## Session: 2026-01-08 - Revision of Prep Step Process
+
+**Work Completed:**
+-   **Recipe Data Enrichment:** Implemented a new "Prep Steps" workflow.
+    -   Created `scripts/add_prep_section.py`: A utility to batch-add `### Prep Steps` sections to all Markdown recipes.
+    -   Created `scripts/parse_md.py`: A new parser that extracts `prep_steps` from Markdown files and updates `recipes/index.yml`, moving the "Source of Truth" firmly to Markdown.
+    -   Ran the migration on all 200+ recipes.
+-   **Logic Update:** Updated `scripts/workflow/html_generator.py` to prioritize manual `prep_steps` over auto-generated tasks in the weekly plan.
+    -   If a recipe has explicit prep steps, they will now appear in the "AM/PM Prep" blocks on earlier days (Monday/Tuesday) automatically.
+
+**How to use the new Prep Step system:**
+1.  **Edit Recipes:** Open any `recipes/content/*.md` file.
+2.  **Add Steps:** Under `### Prep Steps`, adds bullet points for tasks (e.g., "- Dice onions", "- Marinate chicken").
+3.  **Update Index:** Run `python3 scripts/parse_md.py` to update the index.
+4.  **Generate Plan:** The next generated plan will include these specific steps in the daily prep schedule.

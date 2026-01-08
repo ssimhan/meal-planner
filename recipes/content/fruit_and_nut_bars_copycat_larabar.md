@@ -18,6 +18,10 @@ source_file: Fruit and Nut Bars (Copycat Larabar).html
 
 # Fruit and Nut Bars (Copycat Larabar)
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - US Customary Metric
 - 1½cup cashews or almonds (raw or roasted and unsalted)

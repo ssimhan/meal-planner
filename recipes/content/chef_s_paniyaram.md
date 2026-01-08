@@ -21,6 +21,10 @@ source_file: Chef’s Paniyaram.html
 
 # Chef’s Paniyaram
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - Idli or dosa batter
 - 1 onion

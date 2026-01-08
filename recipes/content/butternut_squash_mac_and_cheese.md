@@ -21,6 +21,10 @@ source_file: Butternut Squash Mac and Cheese.html
 
 # Butternut Squash Mac and Cheese
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cuppeeled and cubed butternut squash
 - 1/3cupmilk

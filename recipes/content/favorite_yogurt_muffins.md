@@ -23,6 +23,10 @@ source_file: Favorite Yogurt Muffins.html
 
 # Favorite Yogurt Muffins
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - US Customary Metric
 - ¾cup all-purpose flour

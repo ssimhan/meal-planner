@@ -29,6 +29,10 @@ source_file: Favorite Toddler Smoothie (with Veggies!).html
 
 # Favorite Toddler Smoothie (with Veggies!)
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - Milk (I prefer non-dairy)
 - Fruit

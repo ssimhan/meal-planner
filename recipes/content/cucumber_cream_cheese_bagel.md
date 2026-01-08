@@ -21,6 +21,10 @@ source_file: Cucumber Cream Cheese Bagel.html
 
 # Cucumber Cream Cheese Bagel
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 bagel
 - 2 tablespoons cream cheese

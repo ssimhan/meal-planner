@@ -26,6 +26,10 @@ source_file: Bhel Puri Chaat.html
 
 # Bhel Puri Chaat
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 medium potato
 - 1 medium Cucumber

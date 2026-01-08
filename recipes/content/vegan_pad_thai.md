@@ -24,6 +24,10 @@ source_file: Vegan Pad Thai.html
 
 # Vegan Pad Thai
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 3 tablespoon sugar
 - 2 tablespoon water

@@ -30,6 +30,10 @@ source_file: Stir Fry.html
 
 # Stir Fry
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 16oztofu
 - Garlic

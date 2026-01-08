@@ -19,6 +19,10 @@ source_file: Healthy Breakfast Bars with Jam.html
 
 # Healthy Breakfast Bars with Jam
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 2cupsrolled oats
 - 1/4cuphoney

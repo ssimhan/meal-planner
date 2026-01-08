@@ -27,6 +27,10 @@ source_file: Six-Bean Chili.html
 
 # Six-Bean Chili
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1largewhite onion, chopped
 - 2largecarrots, coarsely chopped

@@ -22,6 +22,10 @@ source_file: Ginger Chutney Allam Chutney.html
 
 # Ginger Chutney Allam Chutney
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1& ½ tbsp Ginger chopped
 - 6 Red chilli

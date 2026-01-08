@@ -25,6 +25,10 @@ source_file: Spinach White Bean Enchiladas.html
 
 # Spinach White Bean Enchiladas
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 126-inch corn tortillas ($1.10)
 - 4ozpepper jack cheese ($1.00)

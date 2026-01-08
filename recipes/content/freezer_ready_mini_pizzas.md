@@ -21,6 +21,10 @@ source_file: Freezer Ready Mini Pizzas.html
 
 # Freezer Ready Mini Pizzas
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - Bagels
 - Pizza sauce

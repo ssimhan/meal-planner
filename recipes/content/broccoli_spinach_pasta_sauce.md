@@ -23,6 +23,10 @@ source_file: Broccoli Spinach Pasta Sauce.html
 
 # Broccoli Spinach Pasta Sauce
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 4cupsbroccoli florets
 - 2cupsbaby spinach

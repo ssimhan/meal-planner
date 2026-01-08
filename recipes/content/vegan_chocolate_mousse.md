@@ -19,6 +19,10 @@ source_file: Vegan Chocolate Mousse.html
 
 # Vegan Chocolate Mousse
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - AD
 - 14.5- ounce can full-fat coconut milk (or coconut cream)

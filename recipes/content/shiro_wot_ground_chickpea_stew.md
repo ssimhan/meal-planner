@@ -23,6 +23,10 @@ source_file: Shiro Wot (Ground-Chickpea Stew).html
 
 # Shiro Wot (Ground-Chickpea Stew)
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1largered onion, coarsely chopped
 - 10 garlic cloves, peeled

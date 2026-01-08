@@ -32,6 +32,10 @@ source_file: Vegetarian Chili.html
 
 # Vegetarian Chili
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 tablespoon olive oil
 - 1 medium onion

@@ -20,6 +20,10 @@ source_file: Pesto Gnocchi.html
 
 # Pesto Gnocchi
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - Gnocchi (Costco)
 - Pesto sauce

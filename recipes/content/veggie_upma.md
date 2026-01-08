@@ -26,6 +26,10 @@ source_file: Veggie Upma.html
 
 # Veggie Upma
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cuprava (semolina/sooji)
 - 1 tablespoon oil or ghee

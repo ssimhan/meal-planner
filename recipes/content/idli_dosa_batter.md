@@ -19,6 +19,10 @@ source_file: Idli Dosa Batter.html
 
 # Idli Dosa Batter
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1CupUrad Dal
 - 3CupsIdli Rice

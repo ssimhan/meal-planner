@@ -34,6 +34,10 @@ source_file: Southwest Pasta Salad.html
 
 # Southwest Pasta Salad
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - ½cup mayonnaise
 - ¼cup sour cream

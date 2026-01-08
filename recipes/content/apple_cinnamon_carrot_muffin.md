@@ -23,6 +23,10 @@ source_file: Apple Cinnamon Carrot Muffin.html
 
 # Apple Cinnamon Carrot Muffin
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 13/4 cup flour, wheat
 - 11/2 tsp baking powder

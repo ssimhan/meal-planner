@@ -21,6 +21,10 @@ source_file: Zucchini and Paneer Waffles.html
 
 # Zucchini and Paneer Waffles
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 zucchini
 - Salt

@@ -28,6 +28,10 @@ source_file: Baked Black Bean and Sweet Potato Flautas.html
 
 # Baked Black Bean and Sweet Potato Flautas
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 9 corn tortillas
 - 1canblack beans

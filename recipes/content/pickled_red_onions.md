@@ -22,6 +22,10 @@ source_file: Pickled Red Onions.html
 
 # Pickled Red Onions
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 2smallred onions
 - 2cupswhite vinegar

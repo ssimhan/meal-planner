@@ -23,6 +23,10 @@ source_file: Spinach Puffs.html
 
 # Spinach Puffs
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 3-4cupsspinach
 - 1/2cupcrumbled feta

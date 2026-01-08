@@ -25,6 +25,10 @@ source_file: Romesco Gnocchi.html
 
 # Romesco Gnocchi
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cuproasted almonds
 - 2 garlic cloves

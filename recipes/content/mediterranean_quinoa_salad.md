@@ -27,6 +27,10 @@ source_file: Mediterranean Quinoa Salad.html
 
 # Mediterranean Quinoa Salad
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 11⁄2 cups cooked quinoa
 - 1canwhite beans

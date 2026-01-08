@@ -26,6 +26,10 @@ source_file: Easy Zucchini Pasta Sauce.html
 
 # Easy Zucchini Pasta Sauce
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - Parmesan cheese, lemon zest, and/or fresh black pepper (optional but recommended)
 - AD

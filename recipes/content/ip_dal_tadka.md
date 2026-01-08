@@ -26,6 +26,10 @@ source_file: IP Dal Tadka.html
 
 # IP Dal Tadka
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - Ghee or Oil
 - 1 teaspoon Cumin seeds (Jeera)

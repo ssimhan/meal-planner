@@ -24,6 +24,10 @@ source_file: Healthy Vegetable Sheet Pan Frittata.html
 
 # Healthy Vegetable Sheet Pan Frittata
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 teaspoon olive oil
 - ½cup onion, chopped

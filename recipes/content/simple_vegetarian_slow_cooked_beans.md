@@ -27,6 +27,10 @@ source_file: Simple Vegetarian Slow-Cooked Beans.html
 
 # Simple Vegetarian Slow-Cooked Beans
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 4cans(15-1/2 ounces each) great northern beans, rinsed and drained
 - 4mediumcarrots, finely chopped (about 2 cups)

@@ -24,6 +24,10 @@ source_file: Cherry Tomato Salad.html
 
 # Cherry Tomato Salad
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - ¼cup olive oil
 - 3 tablespoons balsamic vinegar

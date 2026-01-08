@@ -27,6 +27,10 @@ source_file: Cheese and Tomato Quinoa Balls.html
 
 # Cheese and Tomato Quinoa Balls
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1/2cupquinoa
 - 1tbspoil

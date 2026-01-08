@@ -25,6 +25,10 @@ source_file: Garlic Parmesan White Beans.html
 
 # Garlic Parmesan White Beans
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 X 2 X 3 X
 - 3to 4 garlic cloves, minced

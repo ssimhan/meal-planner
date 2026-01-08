@@ -23,6 +23,10 @@ source_file: Esquites (Mexican Street Corn Salad).html
 
 # Esquites (Mexican Street Corn Salad)
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 2 tablespoons unsalted butter or extra-virgin olive oil
 - 3½cups corn kernels (16 ounces frozen)

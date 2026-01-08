@@ -28,6 +28,10 @@ source_file: Mexican Sabudana Khichdi.html
 
 # Mexican Sabudana Khichdi
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1.5 cups sabudana
 - 2tbspoil

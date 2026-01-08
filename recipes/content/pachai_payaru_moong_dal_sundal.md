@@ -22,6 +22,10 @@ source_file: Pachai Payaru, Moong Dal Sundal.html
 
 # Pachai Payaru, Moong Dal Sundal
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - ½cup Green gram pachai payaru
 - ¼cup Grated coconut

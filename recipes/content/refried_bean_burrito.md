@@ -25,6 +25,10 @@ source_file: Refried Bean Burrito.html
 
 # Refried Bean Burrito
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 2 teaspoons olive oil
 - 1 medium onion

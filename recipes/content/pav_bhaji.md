@@ -34,6 +34,10 @@ source_file: Pav Bhaji.html
 
 # Pav Bhaji
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 2 medium Potatoes
 - 1.5 cups mixed vegetables: carrot, peas, beets, cauliflower

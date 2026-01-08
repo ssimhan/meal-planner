@@ -28,6 +28,10 @@ source_file: Sheet Pan Coconut Vegetable Curry.html
 
 # Sheet Pan Coconut Vegetable Curry
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cupfull-fat coconut milk
 - 2 tablespoons green curry paste

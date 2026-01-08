@@ -26,6 +26,10 @@ source_file: Guacamole.html
 
 # Guacamole
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 2 ripe avocados
 - 1/4 teaspoon kosher salt

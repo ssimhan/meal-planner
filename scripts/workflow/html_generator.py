@@ -326,12 +326,24 @@ def generate_granular_prep_tasks(selected_dinners, selected_lunches, day_keys, t
         if day_key in selected_dinners:
             recipe = selected_dinners[day_key]
             recipe_name = recipe.get('name', 'dinner')
-            main_vegs = recipe.get('main_veg', [])
-            for veg in main_vegs:
-                veg_clean = veg.replace('_', ' ')
-                day_name = day_key.capitalize()
-                task = f"Chop {veg_clean} for {day_name} {recipe_name}"
-                if not fuzzy_match_prep_task(task, completed_tasks): tasks.append(task)
+            day_name = day_key.capitalize()
+            
+            # Check for manual prep steps first
+            if recipe.get('prep_steps'):
+                for step in recipe['prep_steps']:
+                    # Add context to the step so it's clear which meal it's for
+                    task = f"{step} (for {day_name})"
+                    if not fuzzy_match_prep_task(task, completed_tasks): 
+                        tasks.append(task)
+            else:
+                # Fallback to auto-generation based on main_veg
+                main_vegs = recipe.get('main_veg', [])
+                for veg in main_vegs:
+                    veg_clean = veg.replace('_', ' ')
+                    task = f"Chop {veg_clean} for {day_name} {recipe_name}"
+                    if not fuzzy_match_prep_task(task, completed_tasks): 
+                        tasks.append(task)
+                        
     for day_key in day_keys:
         if day_key in selected_lunches:
             lunch = selected_lunches[day_key]

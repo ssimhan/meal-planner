@@ -24,6 +24,10 @@ source_file: Grilled Cheese and Tomato Soup.html
 
 # Grilled Cheese and Tomato Soup
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - Wheat bread
 - Cheese, sliced or shredded

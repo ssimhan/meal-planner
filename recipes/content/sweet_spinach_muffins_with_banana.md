@@ -21,6 +21,10 @@ source_file: Sweet Spinach Muffins with Banana.html
 
 # Sweet Spinach Muffins with Banana
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cupsliced ripe banana
 - 2cupslightly packed spinach

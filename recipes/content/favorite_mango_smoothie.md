@@ -21,6 +21,10 @@ source_file: Favorite Mango Smoothie.html
 
 # Favorite Mango Smoothie
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - AD
 - 1cupfrozen mango

@@ -23,6 +23,10 @@ source_file: Southwest Corn Chowder (Freezer Meal Prep).html
 
 # Southwest Corn Chowder (Freezer Meal Prep)
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 bell pepper, red
 - 1 bag corn

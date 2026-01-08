@@ -24,6 +24,10 @@ source_file: Tofu Scramble (Freezer Meal Prep).html
 
 # Tofu Scramble (Freezer Meal Prep)
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 package tofu
 - 1candiced tomatoes

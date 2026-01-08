@@ -24,6 +24,10 @@ source_file: Rasam Rice with Carrot Kai.html
 
 # Rasam Rice with Carrot Kai
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 tsp tamarind concentrate
 - 1 medium tomato, chopped

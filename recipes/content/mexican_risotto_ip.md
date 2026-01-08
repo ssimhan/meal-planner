@@ -27,6 +27,10 @@ source_file: Mexican Risotto (IP).html
 
 # Mexican Risotto (IP)
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 2cupsarborio rice
 - Garlic

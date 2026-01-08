@@ -33,6 +33,10 @@ source_file: Pinto Bean Casserole.html
 
 # Pinto Bean Casserole
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 red onion
 - 2 bell peppers

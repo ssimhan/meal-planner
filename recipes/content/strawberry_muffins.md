@@ -19,6 +19,10 @@ source_file: Strawberry Muffins.html
 
 # Strawberry Muffins
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - ½cup milk
 - ¼cup canola oil

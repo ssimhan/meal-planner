@@ -265,9 +265,10 @@ All phases through 11 are complete. See [PROJECT_HISTORY.md](PROJECT_HISTORY.md)
 
 ---
 
-### 12.5: Backend Refactoring
+### 12.5: Backend Refactoring ✅ Complete
 **Priority:** 🟡 Medium  
 **Effort:** 3-5 days
+**Completed:** 2026-01-08
 
 **Problem:** Monolithic files: `workflow.py` (2652 lines), `api/index.py` (1394 lines).
 
@@ -285,42 +286,42 @@ All phases through 11 are complete. See [PROJECT_HISTORY.md](PROJECT_HISTORY.md)
 - [x] Use Flask Blueprints via `api/routes/`
 - [x] Migrate `status`, `history`, `analytics`
 - [x] Migrate `create-week`, `confirm-veg`, `replan`
-- [ ] Migrate `log-meal` and `swap-meals` (Logic complex)
-- [ ] Move recipes/inventory endpoints
+- [x] Migrate `log-meal` and `swap-meals` (Logic complex)
+- [x] Move recipes/inventory endpoints
+- [x] Organize routes with Flask Blueprints:
+  - [x] `api/routes/status.py`
+  - [x] `api/routes/meals.py`
+  - [x] `api/routes/inventory.py`
+  - [x] `api/routes/recipes.py`
+- [x] Keep `index.py` for app initialization only
 
-**Tasks (API):**
-- [ ] Organize routes with Flask Blueprints:
-  - `api/routes/status.py`
-  - `api/routes/meals.py`
-  - `api/routes/inventory.py`
-  - `api/routes/recipes.py`
-- [ ] Keep `index.py` for app initialization only
+**Result:** `api/index.py` reduced to ~40 lines of blueprint registration. `workflow.py` is now a modular package. All tests passed.
 
 ---
 
-### 12.6: Documentation & DX
+### 12.6: Documentation & DX ✅ Complete
 **Priority:** 🟢 Lower  
 **Effort:** 1 day
+**Completed:** 2026-01-08
 
 **Tasks:**
-- [ ] Create `CONTRIBUTING.md` with setup, testing, PR guidelines
-- [ ] Add architecture diagram (Mermaid)
-- [ ] Complete `.env.example` with all required variables
-- [ ] Document API endpoints and response formats
-- update recipe template to have clear instructions on prep section.
+- [x] Create `CONTRIBUTING.md` with setup, testing, PR guidelines
+- [x] Add architecture diagram (Mermaid) - See `docs/ARCHITECTURE.md`
+- [x] Complete `.env.example` with all required variables
+- [x] Document API endpoints - See `docs/API_REFERENCE.md`
+- [x] Create recipe template with prep section - See `recipes/TEMPLATE.md`
 
-### 12.7: Fix the week at a glance page
+
+### 12.8: Revision of Prep step process ✅ Complete
 **Priority:** 🟢 Lower  
 **Effort:** 1 day
-- prompt user for screenshot as the vercel app isn't loading correctly
+**Completed:** 2026-01-08
 
-### 12.8: Revision of Prep step process
-**Priority:** 🟢 Lower  
-**Effort:** 1 day
-- create python script that adds a section for prep steps to every recipe in the index (without using tokens). tell user how to run that script on the index without using LLM tokens. 
-- set up a new part of the meal selection process. when a recipe is selected, review it for prep steps. 
-if it has, present those as part of the prep schedule on earlier days. 
-if it doesn't have any, prompt user to push the recipe into customgpt and respond. if user declines this option, generate your own and assign accordingly. also add the list of prep steps to the template. 
+**Tasks:**
+- [x] Create python script `scripts/add_prep_section.py` to add prep section to all MD files.
+- [x] Create `scripts/parse_md.py` to parse Markdown recipes into the index.
+- [x] Update `scripts/workflow/html_generator.py` to prioritize `prep_steps` in the prep schedule.
+- [x] Run migration to populate existing recipes with empty prep sections. 
 
 
 

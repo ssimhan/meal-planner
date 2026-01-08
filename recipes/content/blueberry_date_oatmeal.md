@@ -21,6 +21,10 @@ source_file: Blueberry Date Oatmeal.html
 
 # Blueberry Date Oatmeal
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cuprolled oats
 - 2 Tbs frozen riced cauliflower

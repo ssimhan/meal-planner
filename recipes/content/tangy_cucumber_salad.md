@@ -22,6 +22,10 @@ source_file: Tangy Cucumber Salad.html
 
 # Tangy Cucumber Salad
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1/4cupapple cider vinegar
 - 2 tablespoons olive oil

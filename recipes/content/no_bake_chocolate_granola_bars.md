@@ -19,6 +19,10 @@ source_file: No-Bake Chocolate Granola Bars.html
 
 # No-Bake Chocolate Granola Bars
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - US Customary Metric
 - 1cupunsweetened natural peanut butter

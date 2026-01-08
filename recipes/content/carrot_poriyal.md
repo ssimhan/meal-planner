@@ -22,6 +22,10 @@ source_file: Carrot Poriyal.html
 
 # Carrot Poriyal
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 3 medium carrots
 - 1 medium onion

@@ -20,6 +20,10 @@ source_file: Snake Gourd Kootu.html
 
 # Snake Gourd Kootu
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 2cupsSnake gourd
 - ¼cup Chana dal

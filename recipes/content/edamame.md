@@ -19,6 +19,10 @@ source_file: Edamame.html
 
 # Edamame
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - edamame
 

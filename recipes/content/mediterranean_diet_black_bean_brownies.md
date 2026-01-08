@@ -20,6 +20,10 @@ source_file: Mediterranean Diet Black Bean Brownies.html
 
 # Mediterranean Diet Black Bean Brownies
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - Black Beans– 1 15 ounce can.
 - Unsweetened Cocoa Powder– ¼ cup.

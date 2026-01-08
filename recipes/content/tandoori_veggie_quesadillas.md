@@ -25,6 +25,10 @@ source_file: Tandoori Veggie Quesadillas.html
 
 # Tandoori Veggie Quesadillas
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 bell pepper, red
 - 1 bell pepper, green

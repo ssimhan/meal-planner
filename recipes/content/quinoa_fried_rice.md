@@ -27,6 +27,10 @@ source_file: Quinoa Fried Rice.html
 
 # Quinoa Fried Rice
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1½cups uncooked SimplyNature Organic Quinoa, or 5 cups cooked day old quinoa
 - 4 green onions

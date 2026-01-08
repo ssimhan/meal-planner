@@ -21,6 +21,10 @@ source_file: Peanut Chutney.html
 
 # Peanut Chutney
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - ½cup Peanuts
 - 1 tablespoon Chana dal

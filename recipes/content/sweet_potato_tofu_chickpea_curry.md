@@ -34,6 +34,10 @@ source_file: Sweet Potato, Tofu & Chickpea Curry.html
 
 # Sweet Potato, Tofu & Chickpea Curry
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 10oztofu
 - Olive oil

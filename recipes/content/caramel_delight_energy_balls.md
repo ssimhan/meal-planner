@@ -19,6 +19,10 @@ source_file: Caramel Delight Energy Balls.html
 
 # Caramel Delight Energy Balls
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cuprolled oats
 - ½cup unsweetened, no-salt-added almond butter

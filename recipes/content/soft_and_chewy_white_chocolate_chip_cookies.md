@@ -20,6 +20,10 @@ source_file: Soft and Chewy White Chocolate Chip Cookies.html
 
 # Soft and Chewy White Chocolate Chip Cookies
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cupbutter (softened)
 - ¾cup sugar

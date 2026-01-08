@@ -25,6 +25,10 @@ source_file: Dry Paneer Masala.html
 
 # Dry Paneer Masala
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - For the Paneer:
 - 3tbspoil

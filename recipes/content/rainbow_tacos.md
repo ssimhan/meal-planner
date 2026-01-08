@@ -30,6 +30,10 @@ source_file: Rainbow Tacos.html
 
 # Rainbow Tacos
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 2cansbeans (kidney, pinto, black, etc.)
 - 2 Tbs chili powder

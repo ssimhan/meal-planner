@@ -28,6 +28,10 @@ source_file: Panchmel Dal.html
 
 # Panchmel Dal
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1.25 cups mixed dal
 - 2 tablespoon ghee

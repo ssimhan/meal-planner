@@ -18,6 +18,10 @@ source_file: Favorite Bliss Balls.html
 
 # Favorite Bliss Balls
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - US Customary Metric
 - 1½cups cashews

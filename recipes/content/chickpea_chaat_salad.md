@@ -30,6 +30,10 @@ source_file: Chickpea Chaat Salad.html
 
 # Chickpea Chaat Salad
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1canchickpeas
 - 1 onion, red

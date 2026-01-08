@@ -27,6 +27,10 @@ source_file: Hotel Sambar.html
 
 # Hotel Sambar
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1½cups toor dal, cooked
 - 1cuptamarind extract

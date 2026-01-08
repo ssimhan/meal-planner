@@ -23,6 +23,10 @@ source_file: IP Ven Pongal.html
 
 # IP Ven Pongal
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cupsona masoori rice
 - ½cup moong dal

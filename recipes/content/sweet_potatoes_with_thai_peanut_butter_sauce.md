@@ -28,6 +28,10 @@ source_file: Sweet Potatoes with Thai Peanut Butter Sauce.html
 
 # Sweet Potatoes with Thai Peanut Butter Sauce
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 4 medium sweet potatoes
 - 1/4 red cabbage

@@ -28,6 +28,10 @@ source_file: Instant Pot Mexican Rice & Beans.html
 
 # Instant Pot Mexican Rice & Beans
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cupBasmati Rice, uncooked, rinsed and drained
 - 115oz. can of pinto beans

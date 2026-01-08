@@ -26,6 +26,10 @@ source_file: Masoor Dal.html
 
 # Masoor Dal
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - ½cup masoor dal
 - 2 tablespoons moong dal

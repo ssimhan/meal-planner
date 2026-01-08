@@ -19,6 +19,10 @@ source_file: Protein Banana Muffins.html
 
 # Protein Banana Muffins
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cupGreek yogurt
 - 1cupmashed banana (2 large)

@@ -21,6 +21,10 @@ source_file: Cheddar and Spinach Muffins.html
 
 # Cheddar and Spinach Muffins
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 2 Eggs
 - 1/3cupSour Cream

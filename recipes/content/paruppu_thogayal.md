@@ -21,6 +21,10 @@ source_file: Paruppu Thogayal.html
 
 # Paruppu Thogayal
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - ½cup Toor dal
 - 3 red chillies

@@ -27,6 +27,10 @@ source_file: Aloo Corn Tikki Roll.html
 
 # Aloo Corn Tikki Roll
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 2tbspavocado oil
 - 1tbspginger garlic paste

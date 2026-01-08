@@ -23,6 +23,10 @@ source_file: Favorite Yogurt Drinks.html
 
 # Favorite Yogurt Drinks
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - AD
 - 1cupwhole-milk plain Greek yogurt

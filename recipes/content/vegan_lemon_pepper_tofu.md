@@ -25,6 +25,10 @@ source_file: Vegan Lemon Pepper Tofu.html
 
 # Vegan Lemon Pepper Tofu
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 block extra firm tofu, frozen
 - 1/4CupCornstarch

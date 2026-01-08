@@ -29,6 +29,10 @@ source_file: IP Masoor Dal  Red Lentils.html
 
 # IP Masoor Dal / Red Lentils
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 tablespoon Ghee or Oil
 - 1 teaspoon Cumin

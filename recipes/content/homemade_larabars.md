@@ -19,6 +19,10 @@ source_file: Homemade Larabars.html
 
 # Homemade Larabars
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cupnuts any combination
 - 1-½cups dates or a combination of dates and another variety of dried fruit

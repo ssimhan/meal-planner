@@ -29,6 +29,10 @@ source_file: Rajma Nachos.html
 
 # Rajma Nachos
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cupRed Kidney Beans
 - 1 tablespoon Ghee

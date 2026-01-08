@@ -24,6 +24,10 @@ source_file: Pasta with Veggie Sauce.html
 
 # Pasta with Veggie Sauce
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 beetroot
 - 1 medium potato

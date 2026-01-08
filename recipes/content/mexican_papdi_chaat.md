@@ -29,6 +29,10 @@ source_file: Mexican Papdi Chaat.html
 
 # Mexican Papdi Chaat
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 15ozcan black beans
 - 15ozcan pinto beans

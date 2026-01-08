@@ -22,6 +22,10 @@ source_file: Easy Chickpea Fritters.html
 
 # Easy Chickpea Fritters
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - US Customary Metric
 - 14.5- ounce can chickpeas (rinsed and drained; sometimes called garbanzo beans)

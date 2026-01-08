@@ -28,6 +28,10 @@ source_file: Vegetarian Enchiladas.html
 
 # Vegetarian Enchiladas
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 2 Tablespoons olive oil
 - 1 red bell pepper, chopped

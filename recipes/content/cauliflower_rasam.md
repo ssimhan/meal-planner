@@ -25,6 +25,10 @@ source_file: Cauliflower Rasam.html
 
 # Cauliflower Rasam
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - Cauliflower florets (package)
 - 2 medium tomatoes

@@ -20,6 +20,10 @@ source_file: Date Cookies.html
 
 # Date Cookies
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cupmedjool dates
 - 1/2cupbutter, melted

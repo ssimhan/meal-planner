@@ -23,6 +23,10 @@ source_file: Curried Egg Salad Sandwich.html
 
 # Curried Egg Salad Sandwich
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cupmayo
 - 3clovesgarlic, minced

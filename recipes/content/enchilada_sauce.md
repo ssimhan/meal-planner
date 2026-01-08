@@ -22,6 +22,10 @@ source_file: Enchilada Sauce.html
 
 # Enchilada Sauce
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 3 tablespoons olive oil
 - 3 tablespoons flour (whole wheat or  all-purpose)

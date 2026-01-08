@@ -24,6 +24,10 @@ source_file: Spinach-Cilantro Pesto.html
 
 # Spinach-Cilantro Pesto
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1clovegarlic
 - 1/3cupalmonds

@@ -25,6 +25,10 @@ source_file: Mini Egg Muffins with Cheese and Veggies.html
 
 # Mini Egg Muffins with Cheese and Veggies
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - US Customary Metric
 - 1 tablespoon onion, peeled and grated (or ¼ teaspoon onion powder)

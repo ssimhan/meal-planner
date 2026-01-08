@@ -23,6 +23,10 @@ source_file: Sweet and Sour Quinoa.html
 
 # Sweet and Sour Quinoa
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 tablespoon Oil
 - 1 Red Onion ,finely chopped

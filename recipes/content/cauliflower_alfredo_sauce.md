@@ -22,6 +22,10 @@ source_file: Cauliflower Alfredo Sauce.html
 
 # Cauliflower Alfredo Sauce
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 2cupraw cauliflower florets
 - 2tspgarlic powder

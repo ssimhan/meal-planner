@@ -28,6 +28,10 @@ source_file: Black Bean Quinoa Salad.html
 
 # Black Bean Quinoa Salad
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1/2cupquinoa
 - 2 Tablespoons olive oil

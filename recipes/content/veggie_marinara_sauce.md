@@ -32,6 +32,10 @@ source_file: Veggie Marinara Sauce.html
 
 # Veggie Marinara Sauce
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 2 tablespoons olive oil
 - 3cupsonion, carrot, butternut squash, sweet potato, bell pepper (any color but green) celery, and/or cauliflower (roughly chopped)

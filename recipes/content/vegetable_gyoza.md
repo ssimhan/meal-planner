@@ -30,6 +30,10 @@ source_file: Vegetable Gyoza.html
 
 # Vegetable Gyoza
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - AD
 - 1 package extra firm tofu (12 oz, 340 g)

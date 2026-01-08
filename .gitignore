@@ -51,6 +51,7 @@ _legacy_backup/
 
 # Sensitive data
 .env*
+!.env.example
 *.secret
 *.pem
 

@@ -22,6 +22,10 @@ source_file: Chocolate Protein Muffins (with Veggies!).html
 
 # Chocolate Protein Muffins (with Veggies!)
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - US Customary Metric
 - 1cuppeanut butter

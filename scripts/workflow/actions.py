@@ -4,7 +4,7 @@ from datetime import datetime
 from .state import archive_all_input_files, update_history, load_history, get_actual_path
 from .selection import generate_farmers_market_proposal, get_recent_recipes, filter_recipes, select_dinners
 from .html_generator import generate_html_plan
-from lunch_selector import LunchSelector, LunchSuggestion
+from scripts.lunch_selector import LunchSelector, LunchSuggestion
 
 def create_new_week(week_str):
     """Create a new weekly input file with default values."""

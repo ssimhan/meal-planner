@@ -21,6 +21,10 @@ source_file: How to Make Coconut Rice.html
 
 # How to Make Coconut Rice
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - AD
 - 2cupsjasmine rice

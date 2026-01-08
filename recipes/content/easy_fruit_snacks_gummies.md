@@ -20,6 +20,10 @@ source_file: Easy Fruit Snacks (Gummies).html
 
 # Easy Fruit Snacks (Gummies)
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - AD
 - 1cupstrawberries

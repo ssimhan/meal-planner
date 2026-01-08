@@ -19,6 +19,10 @@ source_file: Soft Roasted Chickpeas.html
 
 # Soft Roasted Chickpeas
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - US Customary Metric
 - 114.5- ounce can chickpeas rinsed, drained, and patted dry (or about 2 cups cooked dried)

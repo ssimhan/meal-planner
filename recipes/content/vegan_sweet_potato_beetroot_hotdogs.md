@@ -33,6 +33,10 @@ source_file: Vegan Sweet Potato Beetroot Hotdogs.html
 
 # Vegan Sweet Potato Beetroot Hotdogs
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - Avocado oil
 - 1/2 medium onion

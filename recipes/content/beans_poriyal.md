@@ -22,6 +22,10 @@ source_file: Beans Poriyal.html
 
 # Beans Poriyal
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 20 Beans
 - 1 medium Onion

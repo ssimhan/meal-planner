@@ -22,6 +22,10 @@ source_file: Carrot Cake Bars.html
 
 # Carrot Cake Bars
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 banana
 - 1 egg

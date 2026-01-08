@@ -22,6 +22,10 @@ source_file: Khaman Dhokla IP.html
 
 # Khaman Dhokla IP
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1¼cup besan chickpea flour
 - 2 tablespoon Semolina (Sooji/Rava) fine

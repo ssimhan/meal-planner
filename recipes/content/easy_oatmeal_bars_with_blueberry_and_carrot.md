@@ -21,6 +21,10 @@ source_file: Easy Oatmeal Bars (with Blueberry and Carrot).html
 
 # Easy Oatmeal Bars (with Blueberry and Carrot)
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 Oatmeal Bars
 - SNACKS

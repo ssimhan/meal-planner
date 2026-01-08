@@ -27,6 +27,10 @@ source_file: One Pan Enchilada Quinoa.html
 
 # One Pan Enchilada Quinoa
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 20ozenchilada sauce
 - 1cupquinoa

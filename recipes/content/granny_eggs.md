@@ -20,6 +20,10 @@ source_file: Granny Eggs.html
 
 # Granny Eggs
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - French, country or whole wheat bread
 - 1 egg for each slice of bread

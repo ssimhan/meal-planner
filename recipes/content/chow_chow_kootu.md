@@ -19,6 +19,10 @@ source_file: Chow Chow Kootu.html
 
 # Chow Chow Kootu
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 chow chow
 - ¼cup Moong dal

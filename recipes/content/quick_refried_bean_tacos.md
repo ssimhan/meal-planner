@@ -26,6 +26,10 @@ source_file: Quick Refried Bean Tacos.html
 
 # Quick Refried Bean Tacos
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - ½tablespoon olive oil
 - 215-ounce cans refried beans

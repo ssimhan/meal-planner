@@ -33,6 +33,10 @@ source_file: Moroccan Chickpea Stew.html
 
 # Moroccan Chickpea Stew
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 2cupsdry quinoa
 - 1largeonion

@@ -21,6 +21,10 @@ source_file: IP No Soak Kidney Beans  Rajma.html
 
 # IP No Soak Kidney Beans / Rajma
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1cupkidney beans
 - 3½cups water

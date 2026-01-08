@@ -25,6 +25,10 @@ source_file: Easy Homemade Granola Bars.html
 
 # Easy Homemade Granola Bars
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - Rolled oats
 - Shredded unsweetened coconut

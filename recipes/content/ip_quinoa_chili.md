@@ -32,6 +32,10 @@ source_file: IP Quinoa Chili.html
 
 # IP Quinoa Chili
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 medium onion
 - 1 bell pepper, green

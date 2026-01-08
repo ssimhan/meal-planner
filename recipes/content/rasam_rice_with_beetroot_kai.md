@@ -24,6 +24,10 @@ source_file: Rasam Rice with Beetroot Kai.html
 
 # Rasam Rice with Beetroot Kai
 
+### Prep Steps
+
+<!-- List prep tasks here -->
+
 ### Ingredients
 - 1 tsp tamarind concentrate
 - 1 medium tomato, chopped

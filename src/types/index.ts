@@ -71,11 +71,6 @@ export interface SnackData {
   home_snack_needs_fix?: boolean;
 }
 
-export interface PrepTask {
-  task?: string;
-  time?: string;
-}
-
 export interface WeekData {
   week_of?: string;
   plan_url?: string;

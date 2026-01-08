@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react';
 import { getInventory, addItemToInventory, bulkAddItemsToInventory, deleteItemFromInventory, updateInventoryItem } from '@/lib/api';
 import Link from 'next/link';
+import { useToast } from '@/context/ToastContext';
 
 export default function InventoryPage() {
     const [inventory, setInventory] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const { showToast } = useToast();
     const [newItem, setNewItem] = useState({ category: 'meals', name: '' });
     const [updating, setUpdating] = useState(false);
 
@@ -33,8 +34,8 @@ export default function InventoryPage() {
             setLoading(true);
             const data = await getInventory();
             setInventory(data.inventory);
-        } catch (err) {
-            setError('Failed to load inventory.');
+        } catch (err: any) {
+            showToast(err.message || 'Failed to load inventory.', 'error');
         } finally {
             setLoading(false);
         }
@@ -47,8 +48,9 @@ export default function InventoryPage() {
             const result = await addItemToInventory(category, item.trim());
             setInventory(result.inventory);
             setNewItem({ ...newItem, name: '' });
-        } catch (err) {
-            setError('Failed to add item.');
+            showToast('Item added successfully!', 'success');
+        } catch (err: any) {
+            showToast(err.message || 'Failed to add item.', 'error');
         } finally {
             setUpdating(false);
         }
@@ -66,8 +68,8 @@ export default function InventoryPage() {
             setTimeout(() => setShowUndo(false), 5000); // Hide after 5 seconds
 
             setInventory(result.inventory);
-        } catch (err) {
-            setError('Failed to delete item.');
+        } catch (err: any) {
+            showToast(err.message || 'Failed to delete item.', 'error');
         } finally {
             setUpdating(false);
         }
@@ -77,13 +79,9 @@ export default function InventoryPage() {
         if (!lastDeleted) return;
         try {
             setUpdating(true);
-            // Re-add the item (we might need a more specific re-add if it has multiple fields)
-            // For now, let's use bulkAdd for simplicity if it supports all fields, 
-            // or just add it back.
             const itemName = lastDeleted.category === 'meals' ? lastDeleted.item.meal : lastDeleted.item.item;
             const result = await addItemToInventory(lastDeleted.category, itemName);
 
-            // If it had extra fields like quantity or servings, update it immediately
             if (lastDeleted.category !== 'meals' && (lastDeleted.item.quantity > 1 || lastDeleted.item.unit)) {
                 await updateInventoryItem(lastDeleted.category, itemName, {
                     quantity: lastDeleted.item.quantity,
@@ -103,8 +101,9 @@ export default function InventoryPage() {
 
             setLastDeleted(null);
             setShowUndo(false);
-        } catch (err) {
-            setError('Failed to undo deletion.');
+            showToast('Restored deleted item', 'info');
+        } catch (err: any) {
+            showToast(err.message || 'Failed to undo deletion.', 'error');
         } finally {
             setUpdating(false);
         }
@@ -118,8 +117,9 @@ export default function InventoryPage() {
             setInventory(result.inventory);
             setEditingItem(null);
             setEditValue({});
-        } catch (err) {
-            setError('Failed to update item.');
+            showToast('Updated successfully!', 'success');
+        } catch (err: any) {
+            showToast(err.message || 'Failed to update item.', 'error');
         } finally {
             setUpdating(false);
         }
@@ -166,8 +166,9 @@ export default function InventoryPage() {
             setParsedItems([]);
             setBrainDump('');
             setShowParser(false);
-        } catch (err) {
-            setError('Failed to bulk add items.');
+            showToast(`Added ${parsedItems.length} items!`, 'success');
+        } catch (err: any) {
+            showToast(err.message || 'Failed to bulk add items.', 'error');
         } finally {
             setUpdating(false);
         }
@@ -184,10 +185,6 @@ export default function InventoryPage() {
                     <p className="text-sm font-mono text-[var(--text-muted)]">Last updated: {inventory?.last_updated || 'Never'}</p>
                 </div>
             </header>
-
-            {error && (
-                <div className="card text-red-700 mb-8 border-red-200 bg-red-50">{error}</div>
-            )}
 
             {/* Undo Toast */}
             {showUndo && lastDeleted && (

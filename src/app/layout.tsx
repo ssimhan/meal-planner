@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Crimson_Pro, Outfit, Space_Mono } from "next/font/google";
 import "./globals.css";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import { ToastProvider } from "@/context/ToastContext";
+import { ToastContainer } from "@/components/Toast";
 
 const crimsonPro = Crimson_Pro({
   variable: "--font-serif",
@@ -33,7 +36,12 @@ export default function RootLayout({
       <body
         className={`${crimsonPro.variable} ${outfit.variable} ${spaceMono.variable} font-sans antialiased`}
       >
-        {children}
+        <ErrorBoundary>
+          <ToastProvider>
+            {children}
+            <ToastContainer />
+          </ToastProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

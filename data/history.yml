@@ -88,6 +88,8 @@ weeks:
     - tomato
     - onion
     - cilantro
+    made: true
+    actual_meal: Masala Puri
     notes: New recipe to be added to index
   - recipe_id: cauliflower_black_bean_tacos
     cuisine: mexican
@@ -128,6 +130,7 @@ weeks:
   - kiwi
   - grapes
   - blueberries
+  - dried mangoes
   plan_adherence_pct: 0
   freezer_inventory:
   - meal: Chow chow puli kootu leftover
@@ -164,12 +167,19 @@ weeks:
       home_snack: Cheese cubes
       home_snack_needs_fix: false
     wed:
-      kids_lunch: PBJ sandwich
+      kids_lunch: Peanut butter jelly sandwiches
       kids_lunch_needs_fix: false
       adult_lunch: Chow chow puli kootu leftover
       adult_lunch_needs_fix: false
       home_snack: Pomegranates
       home_snack_needs_fix: false
+    thu:
+      kids_lunch: Leftovers
+      kids_lunch_needs_fix: false
+      adult_lunch: Leftovers
+      adult_lunch_needs_fix: false
+      school_snack: Dried mangoes
+      school_snack_needs_fix: false
 - week_of: '2026-01-12'
   dinners:
   - recipe_id: cauliflower_rasam

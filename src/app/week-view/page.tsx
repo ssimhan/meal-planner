@@ -3,27 +3,55 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { getStatus, getRecipes, WorkflowStatus, replan, swapMeals } from '@/lib/api';
+import { useToast } from '@/context/ToastContext';
 import MealCorrectionInput from '@/components/MealCorrectionInput';
 import SwapConfirmationModal from '@/components/SwapConfirmationModal';
 import ReplacementModal from '@/components/ReplacementModal';
 import ReplanWorkflowModal from '@/components/ReplanWorkflowModal';
 
+interface SelectionCheckboxProps {
+  day: string;
+  type: string;
+  label: string;
+  value: string;
+  editMode: boolean;
+  selectedItems: { day: string; type: string; label: string; value: string }[];
+  toggleSelection: (day: string, type: string, label: string, value: string) => void;
+}
+
+const SelectionCheckbox = ({ day, type, label, value, editMode, selectedItems, toggleSelection }: SelectionCheckboxProps) => {
+  if (!editMode) return null;
+  const isSelected = !!selectedItems.find(i => i.day === day && i.type === type);
+  return (
+    <input
+      type="checkbox"
+      checked={isSelected}
+      onChange={() => toggleSelection(day, type, label, value)}
+      className="mr-3 h-5 w-5 text-[var(--accent-sage)] rounded border-gray-300 focus:ring-[var(--accent-sage)] cursor-pointer"
+    />
+  );
+};
+
 export default function WeekView() {
   const [status, setStatus] = useState<WorkflowStatus | null>(null);
   const [loading, setLoading] = useState(true);
-  const [editMode, setEditMode] = useState(false);
   const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
   const [selectedItems, setSelectedItems] = useState<{ day: string; type: string; label: string; value: string }[]>([]);
-  const [isFixing, setIsFixing] = useState(false);
-  const [showReplanModal, setShowReplanModal] = useState(false);
-  const [isSwapMode, setIsSwapMode] = useState(false);
-  const [swapSelection, setSwapSelection] = useState<string[]>([]);
-  const [replacementModal, setReplacementModal] = useState<{ isOpen: boolean; day: string; currentMeal: string; type: string }>({
-    isOpen: false,
-    day: '',
-    currentMeal: '',
-    type: 'dinner'
+  const [viewState, setViewState] = useState({
+    editMode: false,
+    isFixing: false,
+    showReplanModal: false,
+    isSwapMode: false,
+    swapSelection: [] as string[],
+    isSwapping: false,
+    replacementModal: {
+      isOpen: false,
+      day: '',
+      currentMeal: '',
+      type: 'dinner'
+    }
   });
+  const { showToast } = useToast();
 
   useEffect(() => {
     async function fetchWeekData() {
@@ -31,7 +59,7 @@ export default function WeekView() {
         const data = await getStatus();
         setStatus(data);
       } catch (err) {
-        console.error('Failed to fetch week data:', err);
+        showToast(err instanceof Error ? err.message : 'Failed to fetch week data', 'error');
       } finally {
         setLoading(false);
       }
@@ -49,7 +77,7 @@ export default function WeekView() {
         }));
         setRecipes(recipeList);
       } catch (err) {
-        console.error('Failed to load recipes:', err);
+        showToast(err instanceof Error ? err.message : 'Failed to load recipes', 'error');
       }
     }
     loadRecipes();
@@ -138,64 +166,54 @@ export default function WeekView() {
 
       // Remove from selection if it was there
       setSelectedItems(prev => prev.filter(i => !(i.day === day && i.type === type)));
+      showToast("Correction saved successfully", "success");
     } catch (e) {
-      console.error("Failed to save correction", e);
-      alert("Failed to save correction");
+      showToast(e instanceof Error ? e.message : "Failed to save correction", "error");
     }
   };
 
   const handleReplan = async () => {
-    setShowReplanModal(true);
+    setViewState(prev => ({ ...prev, showReplanModal: true }));
   };
 
-  const [isSwapping, setIsSwapping] = useState(false);
-
   const handleDayClick = (day: string) => {
-    if (!isSwapMode) return;
+    if (!viewState.isSwapMode) return;
 
-    if (swapSelection.includes(day)) {
-      setSwapSelection(prev => prev.filter(d => d !== day));
+    if (viewState.swapSelection.includes(day)) {
+      setViewState(prev => ({
+        ...prev,
+        swapSelection: prev.swapSelection.filter(d => d !== day)
+      }));
     } else {
-      if (swapSelection.length < 2) {
-        setSwapSelection(prev => [...prev, day]);
+      if (viewState.swapSelection.length < 2) {
+        setViewState(prev => ({
+          ...prev,
+          swapSelection: [...prev.swapSelection, day]
+        }));
       }
     }
   };
 
   const handleSwapConfirm = async () => {
-    if (swapSelection.length !== 2 || !status?.week_data?.week_of) return;
+    if (viewState.swapSelection.length !== 2 || !status?.week_data?.week_of) return;
 
     try {
-      setIsSwapping(true);
-      await swapMeals(status.week_data.week_of, swapSelection[0], swapSelection[1]);
+      setViewState(prev => ({ ...prev, isSwapping: true }));
+      await swapMeals(status.week_data.week_of, viewState.swapSelection[0], viewState.swapSelection[1]);
       const data = await getStatus();
       setStatus(data);
-      setSwapSelection([]);
-      setIsSwapMode(false);
+      setViewState(prev => ({ ...prev, swapSelection: [], isSwapMode: false }));
+      showToast("Meals swapped successfully", "success");
     } catch (e) {
-      console.error("Swap failed", e);
-      alert("Failed to swap meals");
-      setSwapSelection([]);
+      showToast(e instanceof Error ? e.message : "Swap failed", "error");
+      setViewState(prev => ({ ...prev, swapSelection: [] }));
     } finally {
-      setIsSwapping(false);
+      setViewState(prev => ({ ...prev, isSwapping: false }));
     }
   };
 
-  const SelectionCheckbox = ({ day, type, label, value }: { day: string, type: string, label: string, value: string }) => {
-    if (!editMode) return null;
-    const isSelected = !!selectedItems.find(i => i.day === day && i.type === type);
-    return (
-      <input
-        type="checkbox"
-        checked={isSelected}
-        onChange={() => toggleSelection(day, type, label, value)}
-        className="mr-3 h-5 w-5 text-[var(--accent-sage)] rounded border-gray-300 focus:ring-[var(--accent-sage)] cursor-pointer"
-      />
-    );
-  };
-
   const handleReplacementConfirm = async (newMeal: string, requestRecipe: boolean = false) => {
-    const { day, type } = replacementModal;
+    const { day, type } = viewState.replacementModal;
     if (!day || !status?.week_data?.week_of) return;
 
     const payload: any = {
@@ -230,20 +248,20 @@ export default function WeekView() {
         setStatus(newData);
       }
 
-      setReplacementModal({ isOpen: false, day: '', currentMeal: '', type: 'dinner' });
+      setViewState(prev => ({ ...prev, replacementModal: { isOpen: false, day: '', currentMeal: '', type: 'dinner' } }));
+      showToast("Meal replaced successfully", "success");
     } catch (e) {
-      console.error("Replacement failed", e);
-      alert("Failed to replace meal");
+      showToast(e instanceof Error ? e.message : "Replacement failed", "error");
     }
   };
 
-  if (isFixing) {
+  if (viewState.isFixing) {
     return (
       <div className="min-h-screen bg-[var(--bg-primary)] p-4 md:p-8">
         <div className="max-w-3xl mx-auto">
           <header className="mb-8">
             <button
-              onClick={() => setIsFixing(false)}
+              onClick={() => setViewState(prev => ({ ...prev, isFixing: false }))}
               className="text-sm text-[var(--accent-sage)] hover:underline mb-4 flex items-center gap-1"
             >
               ← Back to Week View
@@ -289,7 +307,7 @@ export default function WeekView() {
                   onClick={async () => {
                     const data = await getStatus();
                     setStatus(data);
-                    setIsFixing(false);
+                    setViewState(prev => ({ ...prev, isFixing: false }));
                   }}
                   className="mt-4 btn-secondary"
                 >
@@ -316,9 +334,11 @@ export default function WeekView() {
               <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-2">
                 Week at a Glance
               </h1>
-              <p className="text-[var(--text-muted)] font-mono text-sm">
-                WEEK OF {weekData.week_of.toUpperCase()}
-              </p>
+              {weekData.week_of && (
+                <p className="text-[var(--text-muted)] font-mono text-sm uppercase">
+                  WEEK OF {weekData.week_of.toUpperCase()}
+                </p>
+              )}
             </div>
             <div className="flex items-center gap-3">
               <button
@@ -333,13 +353,16 @@ export default function WeekView() {
               </button>
               <button
                 onClick={() => {
-                  setIsSwapMode(!isSwapMode);
-                  if (isSwapMode) setSwapSelection([]);
-                  setEditMode(false); // Exclusive modes
+                  setViewState(prev => ({
+                    ...prev,
+                    isSwapMode: !prev.isSwapMode,
+                    swapSelection: prev.isSwapMode ? [] : prev.swapSelection,
+                    editMode: false // Exclusive modes
+                  }));
                 }}
-                className={`btn-secondary flex items-center gap-2 ${isSwapMode ? 'bg-[var(--accent-sage)] text-white border-[var(--accent-sage)]' : ''}`}
+                className={`btn-secondary flex items-center gap-2 ${viewState.isSwapMode ? 'bg-[var(--accent-sage)] text-white border-[var(--accent-sage)]' : ''}`}
               >
-                {isSwapMode ? (
+                {viewState.isSwapMode ? (
                   <>
                     <span>✕</span>
                     <span className="hidden sm:inline">Cancel Swap</span>
@@ -353,13 +376,16 @@ export default function WeekView() {
               </button>
               <button
                 onClick={() => {
-                  setEditMode(!editMode);
-                  if (editMode) setSelectedItems([]);
-                  setIsSwapMode(false); // Exclusive modes
+                  setViewState(prev => ({
+                    ...prev,
+                    editMode: !prev.editMode,
+                    isSwapMode: false // Exclusive modes
+                  }));
+                  if (viewState.editMode) setSelectedItems([]);
                 }}
-                className={`btn-secondary flex items-center gap-2 ${editMode ? 'bg-amber-50 border-amber-200 text-amber-900' : ''}`}
+                className={`btn-secondary flex items-center gap-2 ${viewState.editMode ? 'bg-amber-50 border-amber-200 text-amber-900' : ''}`}
               >
-                {editMode ? (
+                {viewState.editMode ? (
                   <>
                     <span>✕</span>
                     <span className="hidden sm:inline">Cancel</span>
@@ -395,7 +421,7 @@ export default function WeekView() {
                   {selectedItems.length} meal{selectedItems.length > 1 ? 's' : ''} selected
                 </span>
                 <button
-                  onClick={() => setIsFixing(true)}
+                  onClick={() => setViewState(prev => ({ ...prev, isFixing: true }))}
                   className="bg-[var(--accent-sage)] text-white px-6 py-2 rounded-full text-sm font-bold hover:scale-105 transition-transform"
                 >
                   Fix Now
@@ -407,41 +433,41 @@ export default function WeekView() {
 
         {/* Swap Modal */}
         {
-          swapSelection.length === 2 && (
+          viewState.swapSelection.length === 2 && (
             <SwapConfirmationModal
-              day1={swapSelection[0]}
-              day2={swapSelection[1]}
+              day1={viewState.swapSelection[0]}
+              day2={viewState.swapSelection[1]}
               onConfirm={handleSwapConfirm}
-              onCancel={() => setSwapSelection([])}
-              isLoading={isSwapping}
+              onCancel={() => setViewState(prev => ({ ...prev, swapSelection: [] }))}
+              isLoading={viewState.isSwapping}
             />
           )
         }
 
         {/* Replacement Modal */}
         {
-          replacementModal.isOpen && (
+          viewState.replacementModal.isOpen && (
             <ReplacementModal
-              day={replacementModal.day}
-              currentMeal={replacementModal.currentMeal}
+              day={viewState.replacementModal.day}
+              currentMeal={viewState.replacementModal.currentMeal}
               recipes={recipes}
               onConfirm={handleReplacementConfirm}
-              onCancel={() => setReplacementModal({ isOpen: false, day: '', currentMeal: '', type: 'dinner' })}
+              onCancel={() => setViewState(prev => ({ ...prev, replacementModal: { isOpen: false, day: '', currentMeal: '', type: 'dinner' } }))}
             />
           )
         }
 
         {/* Replan Workflow Modal */}
-        {showReplanModal && status && (
+        {viewState.showReplanModal && status && (
           <ReplanWorkflowModal
             status={status}
             recipes={recipes}
             onComplete={async () => {
-              setShowReplanModal(false);
+              setViewState(prev => ({ ...prev, showReplanModal: false }));
               const data = await getStatus();
               setStatus(data);
             }}
-            onCancel={() => setShowReplanModal(false)}
+            onCancel={() => setViewState(prev => ({ ...prev, showReplanModal: false }))}
           />
         )}
 
@@ -457,7 +483,7 @@ export default function WeekView() {
             return (
               <div
                 key={day}
-                className={`card ${isToday ? 'border-2 border-[var(--accent-sage)]' : ''} ${editMode ? 'ring-2 ring-amber-100' : ''}`}
+                className={`card ${isToday ? 'border-2 border-[var(--accent-sage)]' : ''} ${viewState.editMode ? 'ring-2 ring-amber-100' : ''}`}
               >
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-bold text-[var(--text-primary)]">
@@ -478,11 +504,14 @@ export default function WeekView() {
                       type="dinner"
                       label="Dinner"
                       value={dinner?.actual_meal || ''}
+                      editMode={viewState.editMode}
+                      selectedItems={selectedItems}
+                      toggleSelection={toggleSelection}
                     />
                     <div
-                      className={`flex-1 ${isSwapMode ? 'cursor-pointer p-2 rounded border-2 transition-all user-select-none' : ''} ${swapSelection.includes(day)
+                      className={`flex-1 ${viewState.isSwapMode ? 'cursor-pointer p-2 rounded border-2 transition-all user-select-none' : ''} ${viewState.swapSelection.includes(day)
                         ? 'border-[var(--accent-sage)] bg-green-50 shadow-md transform scale-[1.02]'
-                        : isSwapMode
+                        : viewState.isSwapMode
                           ? 'border-dashed border-gray-300 hover:border-[var(--accent-sage)] hover:bg-gray-50'
                           : 'border-transparent'
                         }`}
@@ -500,7 +529,7 @@ export default function WeekView() {
                           🥬 {dinner.vegetables.join(', ')}
                         </p>
                       )}
-                      {!isSwapMode && editMode && (
+                      {!viewState.isSwapMode && viewState.editMode && (
                         <button
                           className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-2 flex items-center gap-1"
                           onClick={(e) => {
@@ -526,6 +555,9 @@ export default function WeekView() {
                       type="kids_lunch"
                       label="Kids Lunch"
                       value={dailyFeedback?.kids_lunch || ''}
+                      editMode={viewState.editMode}
+                      selectedItems={selectedItems}
+                      toggleSelection={toggleSelection}
                     />
                     <div className="flex-1">
                       <div className="flex justify-between items-start">
@@ -535,12 +567,12 @@ export default function WeekView() {
                       <p className="text-sm font-medium text-[var(--text-primary)] mt-0.5">
                         {getDisplayName(lunch?.recipe_name || 'Leftovers', dailyFeedback?.kids_lunch)}
                       </p>
-                      {!isSwapMode && editMode && (
+                      {!viewState.isSwapMode && viewState.editMode && (
                         <button
                           className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-1 flex items-center gap-1"
                           onClick={(e) => {
                             e.stopPropagation();
-                            if (editMode) {
+                            if (viewState.editMode) {
                               setReplacementModal({
                                 isOpen: true,
                                 day: day,
@@ -563,6 +595,9 @@ export default function WeekView() {
                       type="school_snack"
                       label="School Snack"
                       value={dailyFeedback?.school_snack || ''}
+                      editMode={viewState.editMode}
+                      selectedItems={selectedItems}
+                      toggleSelection={toggleSelection}
                     />
                     <div className="flex-1">
                       <div className="flex justify-between items-start">
@@ -572,7 +607,7 @@ export default function WeekView() {
                       <p className="text-sm font-medium text-[var(--text-primary)] mt-0.5">
                         {getDisplayName(snacks?.school || 'TBD', dailyFeedback?.school_snack)}
                       </p>
-                      {!isSwapMode && editMode && (
+                      {!viewState.isSwapMode && viewState.editMode && (
                         <button
                           className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-1 flex items-center gap-1"
                           onClick={(e) => {
@@ -598,6 +633,9 @@ export default function WeekView() {
                       type="home_snack"
                       label="Home Snack"
                       value={dailyFeedback?.home_snack || ''}
+                      editMode={viewState.editMode}
+                      selectedItems={selectedItems}
+                      toggleSelection={toggleSelection}
                     />
                     <div className="flex-1">
                       <div className="flex justify-between items-start">
@@ -607,7 +645,7 @@ export default function WeekView() {
                       <p className="text-sm font-medium text-[var(--text-primary)] mt-0.5">
                         {getDisplayName(snacks?.home || 'TBD', dailyFeedback?.home_snack)}
                       </p>
-                      {!isSwapMode && editMode && (
+                      {!viewState.isSwapMode && viewState.editMode && (
                         <button
                           className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-1 flex items-center gap-1"
                           onClick={(e) => {
@@ -617,6 +655,44 @@ export default function WeekView() {
                               day: day,
                               currentMeal: dailyFeedback?.home_snack || '',
                               type: 'home_snack'
+                            });
+                          }}
+                        >
+                          <span>🔄</span> Replace
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Adult Lunch */}
+                  <div className="flex items-start">
+                    <SelectionCheckbox
+                      day={day}
+                      type="adult_lunch"
+                      label="Adult Lunch"
+                      value={dailyFeedback?.adult_lunch || ''}
+                      editMode={viewState.editMode}
+                      selectedItems={selectedItems}
+                      toggleSelection={toggleSelection}
+                    />
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start">
+                        <span className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider">Adult Lunch</span>
+                        {getFeedbackBadge(dailyFeedback?.adult_lunch, dailyFeedback?.adult_lunch_made, dailyFeedback?.adult_lunch_needs_fix)}
+                      </div>
+                      <p className="text-sm font-medium text-[var(--text-primary)] mt-0.5">
+                        {getDisplayName(lunch?.recipe_name || 'Leftovers', dailyFeedback?.adult_lunch)}
+                      </p>
+                      {!viewState.isSwapMode && viewState.editMode && (
+                        <button
+                          className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-1 flex items-center gap-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setReplacementModal({
+                              isOpen: true,
+                              day: day,
+                              currentMeal: dailyFeedback?.adult_lunch || '',
+                              type: 'adult_lunch'
                             });
                           }}
                         >
@@ -678,11 +754,14 @@ export default function WeekView() {
                           type="dinner"
                           label="Dinner"
                           value={dinner?.actual_meal || ''}
+                          editMode={viewState.editMode}
+                          selectedItems={selectedItems}
+                          toggleSelection={toggleSelection}
                         />
                         <div
-                          className={`flex-1 ${isSwapMode ? 'cursor-pointer p-2 rounded border-2 transition-all user-select-none' : ''} ${swapSelection.includes(day)
+                          className={`flex-1 ${viewState.isSwapMode ? 'cursor-pointer p-2 rounded border-2 transition-all user-select-none' : ''} ${viewState.swapSelection.includes(day)
                             ? 'border-[var(--accent-sage)] bg-green-50 shadow-md transform scale-[1.02]'
-                            : isSwapMode
+                            : viewState.isSwapMode
                               ? 'border-dashed border-gray-300 hover:border-[var(--accent-sage)] hover:bg-gray-50'
                               : 'border-transparent'
                             }`}
@@ -692,9 +771,9 @@ export default function WeekView() {
                             <span className="font-medium leading-tight">
                               {dinner?.recipe_id ? (
                                 <Link
-                                  href={isSwapMode ? '#' : `/recipes/${dinner.recipe_id}`}
-                                  onClick={(e) => isSwapMode && e.preventDefault()}
-                                  className={isSwapMode ? '' : "hover:text-[var(--accent-sage)] hover:underline"}
+                                  href={viewState.isSwapMode ? '#' : `/recipes/${dinner.recipe_id}`}
+                                  onClick={(e) => viewState.isSwapMode && e.preventDefault()}
+                                  className={viewState.isSwapMode ? '' : "hover:text-[var(--accent-sage)] hover:underline"}
                                 >
                                   {getDisplayName(dinnerName, dinner?.actual_meal)}
                                 </Link>
@@ -703,7 +782,7 @@ export default function WeekView() {
                               )}
                             </span>
                           </div>
-                          {!isSwapMode && editMode && (
+                          {!viewState.isSwapMode && viewState.editMode && (
                             <button
                               title="Find a substitute for this meal"
                               className="ml-auto text-gray-300 hover:text-[var(--accent-sage)] p-1 rounded-full hover:bg-gray-100 transition-colors"
@@ -744,6 +823,9 @@ export default function WeekView() {
                           type="kids_lunch"
                           label="Kids Lunch"
                           value={dailyFeedback?.kids_lunch || ''}
+                          editMode={viewState.editMode}
+                          selectedItems={selectedItems}
+                          toggleSelection={toggleSelection}
                         />
                         <div className="flex-1">
                           <div className="flex justify-between items-start gap-2">
@@ -752,7 +834,7 @@ export default function WeekView() {
                             </span>
                             {getFeedbackBadge(dailyFeedback?.kids_lunch, dailyFeedback?.kids_lunch_made, dailyFeedback?.kids_lunch_needs_fix)}
                           </div>
-                          {!isSwapMode && editMode && (
+                          {!viewState.isSwapMode && viewState.editMode && (
                             <button
                               title="Replace"
                               className="text-[10px] text-gray-300 hover:text-[var(--accent-sage)] flex items-center gap-1 mt-1"
@@ -795,6 +877,9 @@ export default function WeekView() {
                             type="school_snack"
                             label="School Snack"
                             value={dailyFeedback?.school_snack || ''}
+                            editMode={viewState.editMode}
+                            selectedItems={selectedItems}
+                            toggleSelection={toggleSelection}
                           />
                           <div className="flex-1">
                             <div className="flex justify-between items-start gap-2">
@@ -803,7 +888,7 @@ export default function WeekView() {
                               </span>
                               {getFeedbackBadge(dailyFeedback?.school_snack, dailyFeedback?.school_snack_made, dailyFeedback?.school_snack_needs_fix)}
                             </div>
-                            {!isSwapMode && editMode && (
+                            {!viewState.isSwapMode && viewState.editMode && (
                               <button
                                 title="Replace"
                                 className="text-[10px] text-gray-300 hover:text-[var(--accent-sage)] flex items-center gap-1 mt-1"
@@ -849,6 +934,9 @@ export default function WeekView() {
                             type="home_snack"
                             label="Home Snack"
                             value={dailyFeedback?.home_snack || ''}
+                            editMode={viewState.editMode}
+                            selectedItems={selectedItems}
+                            toggleSelection={toggleSelection}
                           />
                           <div className="flex-1">
                             <div className="flex justify-between items-start gap-2">
@@ -857,7 +945,7 @@ export default function WeekView() {
                               </span>
                               {getFeedbackBadge(dailyFeedback?.home_snack, dailyFeedback?.home_snack_made, dailyFeedback?.home_snack_needs_fix)}
                             </div>
-                            {!isSwapMode && editMode && (
+                            {!viewState.isSwapMode && viewState.editMode && (
                               <button
                                 title="Replace"
                                 className="text-[10px] text-gray-300 hover:text-[var(--accent-sage)] flex items-center gap-1 mt-1"
@@ -891,6 +979,7 @@ export default function WeekView() {
                   <span>Adult Lunch</span>
                 </td>
                 {days.map((day) => {
+                  const lunch = weekData.lunches?.[day];
                   const dailyFeedback = weekData.daily_feedback?.[day];
                   return (
                     <td key={day} className="p-4 text-sm border-b border-l border-[var(--border-subtle)]">
@@ -900,15 +989,18 @@ export default function WeekView() {
                           type="adult_lunch"
                           label="Adult Lunch"
                           value={dailyFeedback?.adult_lunch || ''}
+                          editMode={viewState.editMode}
+                          selectedItems={selectedItems}
+                          toggleSelection={toggleSelection}
                         />
                         <div className="flex-1">
                           <div className="flex justify-between items-start gap-2">
                             <span className="text-gray-500 italic text-xs">
-                              {getDisplayName('Leftovers', dailyFeedback?.adult_lunch)}
+                              {getDisplayName(lunch?.recipe_name || 'Leftovers', dailyFeedback?.adult_lunch)}
                             </span>
                             {getFeedbackBadge(dailyFeedback?.adult_lunch, dailyFeedback?.adult_lunch_made, dailyFeedback?.adult_lunch_needs_fix)}
                           </div>
-                          {!isSwapMode && editMode && (
+                          {!viewState.isSwapMode && viewState.editMode && (
                             <button
                               title="Replace"
                               className="text-[10px] text-gray-300 hover:text-[var(--accent-sage)] flex items-center gap-1 mt-1"

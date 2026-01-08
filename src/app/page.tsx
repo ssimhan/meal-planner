@@ -8,27 +8,30 @@ import Skeleton from '@/components/Skeleton';
 import Card from '@/components/Card';
 import FeedbackButtons from '@/components/FeedbackButtons';
 import DinnerLogging from '@/components/DinnerLogging';
+import { useToast } from '@/context/ToastContext';
 
 export default function Dashboard() {
   const [status, setStatus] = useState<WorkflowStatus | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [generating, setGenerating] = useState(false);
-  const [success, setSuccess] = useState<{ message: string; url?: string } | null>(null);
-  const [actionLoading, setActionLoading] = useState(false);
+  const [ui, setUi] = useState({
+    actionLoading: false,
+    logLoading: false,
+  });
+  const { showToast } = useToast();
   const [vegInput, setVegInput] = useState('');
-  const [logLoading, setLogLoading] = useState(false);
   const [completedPrep, setCompletedPrep] = useState<string[]>([]);
   const [recipes, setRecipes] = useState<RecipeListItem[]>([]);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
 
-  // Dinner Logging State (Lifted from inner component to prevent state loss on re-render)
-  const [showAlternatives, setShowAlternatives] = useState(false);
-  const [selectedAlternative, setSelectedAlternative] = useState<'freezer' | 'outside' | 'other' | null>(null);
-  const [otherMealText, setOtherMealText] = useState('');
-  const [selectedFreezerMeal, setSelectedFreezerMeal] = useState('');
-  const [isDinnerEditing, setIsDinnerEditing] = useState(false);
-  const [dinnerEditInput, setDinnerEditInput] = useState('');
+  // Dinner Logging State consolidated
+  const [dinnerState, setDinnerState] = useState({
+    showAlternatives: false,
+    selectedAlternative: null as 'freezer' | 'outside' | 'other' | null,
+    otherMealText: '',
+    selectedFreezerMeal: '',
+    isEditing: false,
+    editInput: ''
+  });
 
   useEffect(() => {
     fetchStatus(true);
@@ -44,6 +47,7 @@ export default function Dashboard() {
         }));
         setRecipes(recipeList);
       } catch (err) {
+        showToast('Failed to load recipes.', 'error');
         console.error('Failed to load recipes:', err);
       }
     }
@@ -52,6 +56,7 @@ export default function Dashboard() {
         const stats = await getAnalytics();
         setAnalytics(stats);
       } catch (err) {
+        showToast('Failed to load analytics.', 'error');
         console.error('Failed to load analytics:', err);
       }
     }
@@ -68,9 +73,8 @@ export default function Dashboard() {
       if (data.completed_prep) {
         setCompletedPrep(data.completed_prep);
       }
-      setError(null);
     } catch (err) {
-      setError('Failed to connect to the meal planner brain.');
+      showToast('Failed to connect to the meal planner brain.', 'error');
       console.error(err);
     } finally {
       if (isInitial) setLoading(false);
@@ -80,27 +84,25 @@ export default function Dashboard() {
   async function handleCreateWeek() {
     try {
       setActionLoading(true);
-      setSuccess(null);
       await createWeek();
-      setSuccess({ message: 'New week initialized on GitHub. Syncing dashboard...' });
+      showToast('New week initialized on GitHub. Syncing dashboard...', 'info');
       await fetchStatus(false);
-      setSuccess({ message: 'New week ready!' });
+      showToast('New week ready!', 'success');
     } catch (err: any) {
-      setError(err.message || 'Failed to create new week');
+      showToast(err.message || 'Failed to create new week', 'error');
     } finally {
-      setActionLoading(false);
+      setUi(prev => ({ ...prev, actionLoading: false }));
     }
   }
 
   async function handleConfirmVeg() {
     if (!vegInput.trim()) return;
     try {
-      setActionLoading(true);
-      setSuccess(null);
+      setUi(prev => ({ ...prev, actionLoading: true }));
       const vegList = vegInput.split(',').map(v => v.trim()).filter(v => v);
       const updatedStatus = await confirmVeg(vegList);
 
-      setSuccess({ message: 'Vegetables confirmed!' });
+      showToast('Vegetables confirmed!', 'success');
       setVegInput('');
 
       // Update status directly from the response
@@ -113,9 +115,9 @@ export default function Dashboard() {
       } as WorkflowStatus));
 
     } catch (err: any) {
-      setError(err.message || 'Failed to confirm vegetables');
+      showToast(err.message || 'Failed to confirm vegetables', 'error');
     } finally {
-      setActionLoading(false);
+      setUi(prev => ({ ...prev, actionLoading: false }));
     }
   }
 
@@ -139,6 +141,7 @@ export default function Dashboard() {
             prep_completed: [task] // Send only the newly completed task
           });
         } catch (err) {
+          showToast('Failed to save prep completion.', 'error');
           console.error('Failed to log prep completion:', err);
           // Revert on error
           setCompletedPrep(completedPrep);
@@ -151,22 +154,16 @@ export default function Dashboard() {
     if (!status?.week_of) return;
 
     try {
-      setGenerating(true);
-      setError(null);
-      setSuccess(null);
-
+      setUi(prev => ({ ...prev, actionLoading: true }));
       const result = await generatePlan(status.week_of);
-      setSuccess({
-        message: `Plan generated successfully for week of ${status.week_of}!`,
-        url: result.plan_url
-      });
+      showToast(`Plan generated successfully for week of ${status.week_of}!`, 'success');
 
       // Refresh status
       await fetchStatus();
     } catch (err: any) {
-      setError(err.message || 'Failed to generate plan');
+      showToast(err.message || 'Failed to generate plan', 'error');
     } finally {
-      setGenerating(false);
+      setUi(prev => ({ ...prev, actionLoading: false }));
     }
   }
 
@@ -181,7 +178,7 @@ export default function Dashboard() {
     if (!status?.week_of || !status?.current_day) return;
 
     try {
-      setLogLoading(true);
+      setUi(prev => ({ ...prev, logLoading: true }));
       const updatedStatus = await logMeal({
         week: status.week_of,
         day: status.current_day,
@@ -192,21 +189,23 @@ export default function Dashboard() {
         dinner_needs_fix: needsFix,
         request_recipe: requestRecipe
       });
-      setSuccess({ message: `Logged status for today (${status.current_day})!` });
+      showToast(`Logged status for today (${status.current_day})!`, 'success');
       // Update status directly with the fresh data from the backend
       setStatus(updatedStatus);
 
       // RESET dinner states upon successful log
-      setShowAlternatives(false);
-      setSelectedAlternative(null);
-      setOtherMealText('');
-      setSelectedFreezerMeal('');
-      setIsDinnerEditing(false);
-      setDinnerEditInput('');
+      setDinnerState({
+        showAlternatives: false,
+        selectedAlternative: null,
+        otherMealText: '',
+        selectedFreezerMeal: '',
+        isEditing: false,
+        editInput: ''
+      });
     } catch (err: any) {
-      setError(err.message || 'Failed to log meal');
+      showToast(err.message || 'Failed to log meal', 'error');
     } finally {
-      setLogLoading(false);
+      setUi(prev => ({ ...prev, logLoading: false }));
     }
   }
 
@@ -233,13 +232,13 @@ export default function Dashboard() {
         request_recipe: requestRecipe
       });
 
-      setSuccess({ message: `Logged ${feedbackType.replace(/_/g, ' ')} feedback!` });
+      showToast(`Logged ${feedbackType.replace(/_/g, ' ')} feedback!`, 'success');
       // Update status directly with the fresh data
       setStatus(updatedStatus);
     } catch (err: any) {
-      setError(err.message || 'Failed to log feedback');
+      showToast(err.message || 'Failed to log feedback', 'error');
     } finally {
-      setLogLoading(false);
+      setUi(prev => ({ ...prev, logLoading: false }));
     }
   }
 
@@ -287,32 +286,6 @@ export default function Dashboard() {
       <header className="mb-12">
         <h1 className="text-5xl mb-4">Sandhya's Meal Planner</h1>
       </header>
-
-      {/* Success Message */}
-      {success && (
-        <div className="card border-green-200 bg-green-50 text-green-700 p-6 mb-8">
-          <p className="font-bold mb-2">✓ Success</p>
-          <p className="mb-4">{success.message}</p>
-          {success.url && (
-            <a
-              href={success.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary inline-block text-center"
-            >
-              View Generated Plan
-            </a>
-          )}
-        </div>
-      )}
-
-      {/* Error Message */}
-      {error && (
-        <div className="card border-red-200 bg-red-50 text-red-700 p-6 mb-8">
-          <p className="font-bold mb-2">Error</p>
-          <p>{error}</p>
-        </div>
-      )}
 
       <div className="grid gap-8 md:grid-cols-2">
         {/* Status Card */}
@@ -365,10 +338,10 @@ export default function Dashboard() {
             {status?.state === 'ready_to_plan' && (
               <button
                 onClick={handleGeneratePlan}
-                disabled={generating}
+                disabled={actionLoading}
                 className="btn-primary w-full text-left flex justify-between items-center group disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <span>{generating ? 'Generating...' : 'Generate Weekly Plan'}</span>
+                <span>{actionLoading ? 'Generating...' : 'Generate Weekly Plan'}</span>
                 <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
               </button>
             )}
@@ -431,73 +404,73 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
               {/* School Snack */}
               <Card
-                      title="School Snack"
-                      icon="🎒"
-                      content={getDisplayName(status?.today_snacks?.school || "Fruit", status?.today_snacks?.school_snack_feedback)}
-                      isConfirmed={status?.today_snacks?.school_snack_made !== undefined}
-                      action={<FeedbackButtons
-                        feedbackType="school_snack"
-                        currentFeedback={status?.today_snacks?.school_snack_feedback}
-                        madeStatus={status?.today_snacks?.school_snack_made}
-                        mealName={status?.today_snacks?.school || "Fruit"}
-                        logLoading={logLoading}
-                        recipes={recipes}
-                        onLogFeedback={handleLogFeedback}
-                      />}
-                    />
+                title="School Snack"
+                icon="🎒"
+                content={getDisplayName(status?.today_snacks?.school || "Fruit", status?.today_snacks?.school_snack_feedback)}
+                isConfirmed={status?.today_snacks?.school_snack_made !== undefined}
+                action={<FeedbackButtons
+                  feedbackType="school_snack"
+                  currentFeedback={status?.today_snacks?.school_snack_feedback}
+                  madeStatus={status?.today_snacks?.school_snack_made}
+                  mealName={status?.today_snacks?.school || "Fruit"}
+                  logLoading={logLoading}
+                  recipes={recipes}
+                  onLogFeedback={handleLogFeedback}
+                />}
+              />
 
-                    {/* Kids Lunch */}
-                    <Card
-                      title="Kids Lunch"
-                      icon="🥪"
-                      content={getDisplayName(status?.today_lunch?.recipe_name || "Leftovers", status?.today_lunch?.kids_lunch_feedback)}
-                      subtitle={status?.today_lunch?.assembly_notes}
-                      isConfirmed={status?.today_lunch?.kids_lunch_made !== undefined}
-                      action={<FeedbackButtons
-                        feedbackType="kids_lunch"
-                        currentFeedback={status?.today_lunch?.kids_lunch_feedback}
-                        madeStatus={status?.today_lunch?.kids_lunch_made}
-                        mealName={status?.today_lunch?.recipe_name || "Leftovers"}
-                        logLoading={logLoading}
-                        recipes={recipes}
-                        onLogFeedback={handleLogFeedback}
-                      />}
-                    />
+              {/* Kids Lunch */}
+              <Card
+                title="Kids Lunch"
+                icon="🥪"
+                content={getDisplayName(status?.today_lunch?.recipe_name || "Leftovers", status?.today_lunch?.kids_lunch_feedback)}
+                subtitle={status?.today_lunch?.assembly_notes}
+                isConfirmed={status?.today_lunch?.kids_lunch_made !== undefined}
+                action={<FeedbackButtons
+                  feedbackType="kids_lunch"
+                  currentFeedback={status?.today_lunch?.kids_lunch_feedback}
+                  madeStatus={status?.today_lunch?.kids_lunch_made}
+                  mealName={status?.today_lunch?.recipe_name || "Leftovers"}
+                  logLoading={logLoading}
+                  recipes={recipes}
+                  onLogFeedback={handleLogFeedback}
+                />}
+              />
 
-                    {/* Adult Lunch */}
-                    <Card
-                      title="Adult Lunch"
-                      icon="☕"
-                      content={getDisplayName("Leftovers", status?.today_lunch?.adult_lunch_feedback)}
-                      subtitle="Grain bowl + dinner components"
-                      isConfirmed={status?.today_lunch?.adult_lunch_made !== undefined}
-                      action={<FeedbackButtons
-                        feedbackType="adult_lunch"
-                        currentFeedback={status?.today_lunch?.adult_lunch_feedback}
-                        madeStatus={status?.today_lunch?.adult_lunch_made}
-                        mealName="Leftovers"
-                        logLoading={logLoading}
-                        recipes={recipes}
-                        onLogFeedback={handleLogFeedback}
-                      />}
-                    />
+              {/* Adult Lunch */}
+              <Card
+                title="Adult Lunch"
+                icon="☕"
+                content={getDisplayName("Leftovers", status?.today_lunch?.adult_lunch_feedback)}
+                subtitle="Grain bowl + dinner components"
+                isConfirmed={status?.today_lunch?.adult_lunch_made !== undefined}
+                action={<FeedbackButtons
+                  feedbackType="adult_lunch"
+                  currentFeedback={status?.today_lunch?.adult_lunch_feedback}
+                  madeStatus={status?.today_lunch?.adult_lunch_made}
+                  mealName="Leftovers"
+                  logLoading={logLoading}
+                  recipes={recipes}
+                  onLogFeedback={handleLogFeedback}
+                />}
+              />
 
-                    {/* Home Snack */}
-                    <Card
-                      title="Home Snack"
-                      icon="🏠"
-                      content={getDisplayName(status?.today_snacks?.home || "Cucumber", status?.today_snacks?.home_snack_feedback)}
-                      isConfirmed={status?.today_snacks?.home_snack_made !== undefined}
-                      action={<FeedbackButtons
-                        feedbackType="home_snack"
-                        currentFeedback={status?.today_snacks?.home_snack_feedback}
-                        madeStatus={status?.today_snacks?.home_snack_made}
-                        mealName={status?.today_snacks?.home || "Cucumber"}
-                        logLoading={logLoading}
-                        recipes={recipes}
-                        onLogFeedback={handleLogFeedback}
-                      />}
-                    />
+              {/* Home Snack */}
+              <Card
+                title="Home Snack"
+                icon="🏠"
+                content={getDisplayName(status?.today_snacks?.home || "Cucumber", status?.today_snacks?.home_snack_feedback)}
+                isConfirmed={status?.today_snacks?.home_snack_made !== undefined}
+                action={<FeedbackButtons
+                  feedbackType="home_snack"
+                  currentFeedback={status?.today_snacks?.home_snack_feedback}
+                  madeStatus={status?.today_snacks?.home_snack_made}
+                  mealName={status?.today_snacks?.home || "Cucumber"}
+                  logLoading={logLoading}
+                  recipes={recipes}
+                  onLogFeedback={handleLogFeedback}
+                />}
+              />
 
               {/* Dinner */}
               <Card
@@ -515,19 +488,19 @@ export default function Dashboard() {
                 ) : undefined}
                 action={<DinnerLogging
                   status={status}
-                  logLoading={logLoading}
-                  showAlternatives={showAlternatives}
-                  setShowAlternatives={setShowAlternatives}
-                  selectedAlternative={selectedAlternative}
-                  setSelectedAlternative={setSelectedAlternative}
-                  otherMealText={otherMealText}
-                  setOtherMealText={setOtherMealText}
-                  selectedFreezerMeal={selectedFreezerMeal}
-                  setSelectedFreezerMeal={setSelectedFreezerMeal}
-                  isDinnerEditing={isDinnerEditing}
-                  setIsDinnerEditing={setIsDinnerEditing}
-                  dinnerEditInput={dinnerEditInput}
-                  setDinnerEditInput={setDinnerEditInput}
+                  logLoading={ui.logLoading}
+                  showAlternatives={dinnerState.showAlternatives}
+                  setShowAlternatives={(val) => setDinnerState(prev => ({ ...prev, showAlternatives: val }))}
+                  selectedAlternative={dinnerState.selectedAlternative}
+                  setSelectedAlternative={(val) => setDinnerState(prev => ({ ...prev, selectedAlternative: val }))}
+                  otherMealText={dinnerState.otherMealText}
+                  setOtherMealText={(val) => setDinnerState(prev => ({ ...prev, otherMealText: val }))}
+                  selectedFreezerMeal={dinnerState.selectedFreezerMeal}
+                  setSelectedFreezerMeal={(val) => setDinnerState(prev => ({ ...prev, selectedFreezerMeal: val }))}
+                  isDinnerEditing={dinnerState.isEditing}
+                  setIsDinnerEditing={(val) => setDinnerState(prev => ({ ...prev, isEditing: val }))}
+                  dinnerEditInput={dinnerState.editInput}
+                  setDinnerEditInput={(val) => setDinnerState(prev => ({ ...prev, editInput: val }))}
                   recipes={recipes}
                   onLogDay={handleLogDay}
                 />}

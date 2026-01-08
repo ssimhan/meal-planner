@@ -60,8 +60,8 @@ export interface WeekData {
   plan_url?: string;
   freezer_inventory?: FreezerMeal[];
   dinners?: Dinner[];
-  lunches?: Lunch[];
-  snacks?: SnackData[];
+  lunches?: { [day: string]: Lunch };
+  snacks?: { [day: string]: SnackData };
   rollover?: string[];
   daily_feedback?: {
     [day: string]: DailyFeedback;

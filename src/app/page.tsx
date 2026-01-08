@@ -83,7 +83,7 @@ export default function Dashboard() {
 
   async function handleCreateWeek() {
     try {
-      setActionLoading(true);
+      setUi(prev => ({ ...prev, actionLoading: true }));
       await createWeek();
       showToast('New week initialized on GitHub. Syncing dashboard...', 'info');
       await fetchStatus(false);
@@ -327,10 +327,10 @@ export default function Dashboard() {
             {(status?.state === 'new_week' || status?.state === 'archived') && (
               <button
                 onClick={handleCreateWeek}
-                disabled={actionLoading}
+                disabled={ui.actionLoading}
                 className="btn-primary w-full text-left flex justify-between items-center group"
               >
-                <span>{actionLoading ? 'Initializing...' : 'Start New Week'}</span>
+                <span>{ui.actionLoading ? 'Initializing...' : 'Start New Week'}</span>
                 <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
               </button>
             )}
@@ -338,10 +338,10 @@ export default function Dashboard() {
             {status?.state === 'ready_to_plan' && (
               <button
                 onClick={handleGeneratePlan}
-                disabled={actionLoading}
+                disabled={ui.actionLoading}
                 className="btn-primary w-full text-left flex justify-between items-center group disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <span>{actionLoading ? 'Generating...' : 'Generate Weekly Plan'}</span>
+                <span>{ui.actionLoading ? 'Generating...' : 'Generate Weekly Plan'}</span>
                 <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
               </button>
             )}
@@ -568,10 +568,10 @@ export default function Dashboard() {
                     />
                     <button
                       onClick={handleConfirmVeg}
-                      disabled={actionLoading}
+                      disabled={ui.actionLoading}
                       className="btn-primary"
                     >
-                      {actionLoading ? 'Confirming...' : 'Confirm'}
+                      {ui.actionLoading ? 'Confirming...' : 'Confirm'}
                     </button>
                   </div>
                 </div>

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { getStatus, generatePlan, createWeek, confirmVeg, logMeal, getRecipes, getAnalytics, WorkflowStatus } from '@/lib/api';
+import type { RecipeListItem, RecipePopularity, Analytics } from '@/types';
 import Skeleton from '@/components/Skeleton';
 import Card from '@/components/Card';
 import FeedbackButtons from '@/components/FeedbackButtons';
@@ -18,8 +19,8 @@ export default function Dashboard() {
   const [vegInput, setVegInput] = useState('');
   const [logLoading, setLogLoading] = useState(false);
   const [completedPrep, setCompletedPrep] = useState<string[]>([]);
-  const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
-  const [analytics, setAnalytics] = useState<any>(null);
+  const [recipes, setRecipes] = useState<RecipeListItem[]>([]);
+  const [analytics, setAnalytics] = useState<Analytics | null>(null);
 
   // Dinner Logging State (Lifted from inner component to prevent state loss on re-render)
   const [showAlternatives, setShowAlternatives] = useState(false);
@@ -37,7 +38,7 @@ export default function Dashboard() {
     async function loadRecipes() {
       try {
         const data = await getRecipes();
-        const recipeList = data.recipes.map((r: any) => ({
+        const recipeList = data.recipes.map((r: RecipeListItem) => ({
           id: r.id,
           name: r.name
         }));
@@ -391,7 +392,7 @@ export default function Dashboard() {
               Top Family Favorites
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              {analytics.popularity.slice(0, 5).map((recipe: any) => (
+              {analytics.popularity.slice(0, 5).map((recipe: RecipePopularity) => (
                 <Link
                   key={recipe.id}
                   href="/analytics"
@@ -542,7 +543,7 @@ export default function Dashboard() {
               <div className="space-y-3">
                 {status?.prep_tasks && status.prep_tasks.length > 0 ? (
                   status.prep_tasks.map((task, idx) => {
-                    const taskStr = typeof task === 'string' ? task : task.task;
+                    const taskStr = typeof task === 'string' ? task : (task.task || '');
                     const taskTime = typeof task === 'object' && task.time ? task.time : null;
                     const isCompleted = completedPrep.includes(taskStr);
 

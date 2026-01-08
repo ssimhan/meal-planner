@@ -3,6 +3,7 @@
 import React from 'react';
 import MealCorrectionInput from './MealCorrectionInput';
 import { WorkflowStatus } from '@/lib/api';
+import type { FreezerMeal } from '@/types';
 
 export interface DinnerLoggingProps {
   status: WorkflowStatus | null;
@@ -187,7 +188,7 @@ export default function DinnerLogging({
         <span className="text-[10px] text-[var(--text-muted)]">Select freezer meal used:</span>
         {freezerInventory.length > 0 ? (
           <div className="max-h-32 overflow-y-auto space-y-1">
-            {freezerInventory.map((item: any, idx: number) => (
+            {freezerInventory.map((item: FreezerMeal, idx: number) => (
               <label key={idx} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded cursor-pointer">
                 <input
                   type="radio"

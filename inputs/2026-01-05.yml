@@ -53,6 +53,7 @@ dinners:
   recipe_id: freezer_meal
 - day: wed
   recipe_id: masala_puri
+  made: true
 - day: thu
   recipe_id: cauliflower_black_bean_tacos
 - day: fri
@@ -63,3 +64,4 @@ prep_tasks:
 - 'Monday Prep (for Mon/Tue meals):'
 - '- [ ] Chop garlic for Mon Rasam Rice with Beetroot Kai'
 - '- [ ] Chop tomato for Mon Rasam Rice with Beetroot Kai'
+plan_adherence_pct: 16

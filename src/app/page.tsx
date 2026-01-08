@@ -3,7 +3,11 @@
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { getStatus, generatePlan, createWeek, confirmVeg, logMeal, getRecipes, getAnalytics, WorkflowStatus } from '@/lib/api';
-import MealCorrectionInput from '@/components/MealCorrectionInput';
+import type { RecipeListItem, RecipePopularity, Analytics } from '@/types';
+import Skeleton from '@/components/Skeleton';
+import Card from '@/components/Card';
+import FeedbackButtons from '@/components/FeedbackButtons';
+import DinnerLogging from '@/components/DinnerLogging';
 
 export default function Dashboard() {
   const [status, setStatus] = useState<WorkflowStatus | null>(null);
@@ -15,8 +19,8 @@ export default function Dashboard() {
   const [vegInput, setVegInput] = useState('');
   const [logLoading, setLogLoading] = useState(false);
   const [completedPrep, setCompletedPrep] = useState<string[]>([]);
-  const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
-  const [analytics, setAnalytics] = useState<any>(null);
+  const [recipes, setRecipes] = useState<RecipeListItem[]>([]);
+  const [analytics, setAnalytics] = useState<Analytics | null>(null);
 
   // Dinner Logging State (Lifted from inner component to prevent state loss on re-render)
   const [showAlternatives, setShowAlternatives] = useState(false);
@@ -34,7 +38,7 @@ export default function Dashboard() {
     async function loadRecipes() {
       try {
         const data = await getRecipes();
-        const recipeList = data.recipes.map((r: any) => ({
+        const recipeList = data.recipes.map((r: RecipeListItem) => ({
           id: r.id,
           name: r.name
         }));
@@ -246,10 +250,6 @@ export default function Dashboard() {
     return actual;
   };
 
-  const Skeleton = ({ className }: { className?: string }) => (
-    <div className={`bg-gray-200 animate-pulse rounded ${className}`} />
-  );
-
   if (loading && !status) {
     return (
       <main className="container mx-auto max-w-4xl px-4 py-12">
@@ -392,7 +392,7 @@ export default function Dashboard() {
               Top Family Favorites
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              {analytics.popularity.slice(0, 5).map((recipe: any) => (
+              {analytics.popularity.slice(0, 5).map((recipe: RecipePopularity) => (
                 <Link
                   key={recipe.id}
                   href="/analytics"
@@ -429,100 +429,8 @@ export default function Dashboard() {
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-              {/* Card Title Helper */}
-              {(() => {
-                const Card = ({ title, icon, subtitle, content, badge, action, isConfirmed }: any) => (
-                  <div className={`card flex flex-col h-full border-t-2 border-t-[var(--accent-sage)] shadow-sm hover:shadow-md transition-all ${isConfirmed ? 'opacity-50 grayscale bg-gray-50' : ''}`}>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs font-mono uppercase text-[var(--text-muted)]">{title}</span>
-                      <span className="text-xl">{icon}</span>
-                    </div>
-                    <div className="mt-2 flex-grow">
-                      <p className={`text-lg font-bold leading-tight ${isConfirmed ? 'text-[var(--text-muted)]' : ''}`}>{content}</p>
-                      {subtitle && <p className="text-xs text-[var(--text-muted)] mt-1">{subtitle}</p>}
-                      {badge && (
-                        <span className="mt-2 inline-block px-2 py-0.5 bg-green-100 text-green-700 text-[10px] rounded-full font-bold uppercase">
-                          {badge}
-                        </span>
-                      )}
-                    </div>
-                    {action && <div className="mt-4 pt-3 border-t border-[var(--border-subtle)]">{action}</div>}
-                  </div>
-                );
-
-                const FeedbackButtons = ({
-                  feedbackType,
-                  currentFeedback,
-                  madeStatus,
-                  mealName
-                }: {
-                  feedbackType: 'school_snack' | 'home_snack' | 'kids_lunch' | 'adult_lunch',
-                  currentFeedback?: string,
-                  madeStatus?: boolean,
-                  mealName: string
-                }) => {
-                  const [isEditing, setIsEditing] = React.useState(false);
-                  const [editInput, setEditInput] = React.useState('');
-
-                  const handleEditSubmit = (mealName: string, requestRecipe: boolean) => {
-                    handleLogFeedback(feedbackType, '', true, mealName, false, requestRecipe);
-                    setIsEditing(false);
-                  };
-
-                  // Step 2b: If Made, show preference emojis + Fix button
-                  if (madeStatus === true && !isEditing) {
-                    return (
-                      <div className="flex flex-col gap-2">
-                        <div className="flex justify-around items-center bg-gray-50 p-1 rounded">
-                          {['❤️', '👍', '😐', '👎', '❌'].map(emoji => (
-                            <button
-                              key={emoji}
-                              onClick={() => handleLogFeedback(feedbackType, emoji, true)}
-                              disabled={logLoading}
-                              className={`p-1 hover:scale-110 transition-transform ${currentFeedback?.includes(emoji) ? 'opacity-100' : 'opacity-40 grayscale'}`}
-                            >
-                              {emoji}
-                            </button>
-                          ))}
-                        </div>
-                        <button
-                          onClick={() => { setIsEditing(true); setEditInput(currentFeedback || ''); }}
-                          className="text-[10px] text-[var(--text-muted)] hover:text-[var(--accent-sage)] underline decoration-dotted text-center"
-                        >
-                          🔧 Fix / Edit Details
-                        </button>
-                      </div>
-                    );
-                  }
-
-                  // Step 2c: Edit Mode
-                  if (madeStatus === true && isEditing) {
-                    return (
-                      <div className="flex flex-col gap-2">
-                        <span className="text-[10px] text-[var(--text-muted)]">Correction / Actual details:</span>
-                        <MealCorrectionInput
-                          recipes={recipes}
-                          onSave={handleEditSubmit}
-                          onCancel={() => setIsEditing(false)}
-                          placeholder="e.g., Had apple instead"
-                          existingValue={currentFeedback || ''}
-                        />
-                      </div>
-                    );
-                  }
-
-                  // Step 3: Show status badge if already logged (skipped)
-                  return (
-                    <div className="text-xs text-[var(--text-muted)] text-center">
-                      {madeStatus === false ? `✗ Skipped: ${currentFeedback || 'No details'}` : `✓ Made ${currentFeedback || ''}`}
-                    </div>
-                  );
-                };
-
-                return (
-                  <>
-                    {/* School Snack */}
-                    <Card
+              {/* School Snack */}
+              <Card
                       title="School Snack"
                       icon="🎒"
                       content={getDisplayName(status?.today_snacks?.school || "Fruit", status?.today_snacks?.school_snack_feedback)}
@@ -532,6 +440,9 @@ export default function Dashboard() {
                         currentFeedback={status?.today_snacks?.school_snack_feedback}
                         madeStatus={status?.today_snacks?.school_snack_made}
                         mealName={status?.today_snacks?.school || "Fruit"}
+                        logLoading={logLoading}
+                        recipes={recipes}
+                        onLogFeedback={handleLogFeedback}
                       />}
                     />
 
@@ -547,6 +458,9 @@ export default function Dashboard() {
                         currentFeedback={status?.today_lunch?.kids_lunch_feedback}
                         madeStatus={status?.today_lunch?.kids_lunch_made}
                         mealName={status?.today_lunch?.recipe_name || "Leftovers"}
+                        logLoading={logLoading}
+                        recipes={recipes}
+                        onLogFeedback={handleLogFeedback}
                       />}
                     />
 
@@ -562,6 +476,9 @@ export default function Dashboard() {
                         currentFeedback={status?.today_lunch?.adult_lunch_feedback}
                         madeStatus={status?.today_lunch?.adult_lunch_made}
                         mealName="Leftovers"
+                        logLoading={logLoading}
+                        recipes={recipes}
+                        onLogFeedback={handleLogFeedback}
                       />}
                     />
 
@@ -576,276 +493,45 @@ export default function Dashboard() {
                         currentFeedback={status?.today_snacks?.home_snack_feedback}
                         madeStatus={status?.today_snacks?.home_snack_made}
                         mealName={status?.today_snacks?.home || "Cucumber"}
+                        logLoading={logLoading}
+                        recipes={recipes}
+                        onLogFeedback={handleLogFeedback}
                       />}
                     />
 
-                    {/* Dinner */}
-                    {(() => {
-                      const DinnerLogging = () => {
-                        // These state variables are now managed by the parent Dashboard component
-                        // and passed down as props, or derived from the global status object.
-                        // For this snippet, we assume they are available in the scope of DinnerLogging.
-                        // For example, `showAlternatives`, `selectedAlternative`, `otherMealText`,
-                        // `selectedFreezerMeal`, `isDinnerEditing`, `dinnerEditInput` would be props
-                        // or derived from `status` and `dashboardState` variables.
-
-                        const freezerInventory = status?.week_data?.freezer_inventory || [];
-
-                        const handleMadeAsPlanned = () => {
-                          handleLogDay(true);
-                        };
-
-                        const handleNotMade = () => {
-                          // This action would trigger a state change in the parent Dashboard component
-                          // to show alternatives.
-                          // For example: setDashboardState(prev => ({ ...prev, showDinnerAlternatives: true }));
-                          // For this snippet, we assume `setShowAlternatives` is a prop.
-                          setShowAlternatives(true);
-                        };
-
-                        const handleAlternativeSelect = (alt: 'freezer' | 'outside' | 'other') => {
-                          // This action would trigger a state change in the parent Dashboard component
-                          // to set the selected alternative.
-                          // For example: setDashboardState(prev => ({ ...prev, selectedDinnerAlternative: alt }));
-                          // For this snippet, we assume `setSelectedAlternative` is a prop.
-                          setSelectedAlternative(alt);
-                        };
-
-                        const handleSubmitAlternative = async () => {
-                          if (selectedAlternative === 'freezer' && selectedFreezerMeal) {
-                            await handleLogDay('freezer_backup', '', selectedFreezerMeal);
-                          } else if (selectedAlternative === 'outside') {
-                            await handleLogDay('outside_meal');
-                          } else if (selectedAlternative === 'other' && otherMealText.trim()) {
-                            await handleLogDay(false, '', '', otherMealText);
-                          }
-                        };
-
-                        const handleDinnerEditSubmitLocal = async (mealName: string, requestRecipe: boolean) => {
-                          const currentMade = status?.today_dinner?.made;
-                          let freezerMealArg = '';
-                          if (currentMade === 'freezer_backup' && status?.today_dinner?.freezer_used?.meal) {
-                            freezerMealArg = status.today_dinner.freezer_used.meal;
-                          }
-
-                          await handleLogDay(
-                            currentMade!,
-                            status?.today_dinner?.kids_feedback || '',
-                            freezerMealArg,
-                            mealName,
-                            false,
-                            requestRecipe
-                          );
-                          setIsDinnerEditing(false);
-                        };
-
-                        // Already logged - show feedback emojis
-                        if (status?.today_dinner?.made && !isDinnerEditing) {
-                          return (
-                            <div className="flex flex-col gap-2">
-                              <div className="flex justify-between items-center bg-gray-50 p-1 rounded">
-                                {['❤️', '👍', '😐', '👎', '❌'].map(emoji => (
-                                  <button
-                                    key={emoji}
-                                    onClick={() => handleLogDay(true, emoji)}
-                                    disabled={logLoading}
-                                    className={`p-1 hover:scale-110 transition-transform ${status?.today_dinner?.kids_feedback?.includes(emoji) ? 'opacity-100' : 'opacity-40 grayscale'}`}
-                                  >
-                                    {emoji}
-                                  </button>
-                                ))}
-                              </div>
-                              <button
-                                onClick={() => { setIsDinnerEditing(true); setDinnerEditInput(status?.today_dinner?.actual_meal || ''); }}
-                                className="text-[10px] text-[var(--text-muted)] hover:text-[var(--accent-sage)] underline decoration-dotted text-center"
-                              >
-                                🔧 Fix / Edit Actual Meal
-                              </button>
-                            </div>
-                          );
-                        }
-
-                        if (status?.today_dinner?.made && isDinnerEditing) {
-                          return (
-                            <div className="flex flex-col gap-2">
-                              <span className="text-[10px] text-[var(--text-muted)]">Correction / Actual meal:</span>
-                              <MealCorrectionInput
-                                recipes={recipes}
-                                onSave={handleDinnerEditSubmitLocal}
-                                onCancel={() => setIsDinnerEditing(false)}
-                                placeholder="e.g., Actually had Pizza"
-                                existingValue={status?.today_dinner?.actual_meal || ''}
-                              />
-                            </div>
-                          );
-                        }
-
-                        // Step 1: Made as planned or not?
-                        if (!showAlternatives) {
-                          return (
-                            <div className="flex flex-col gap-2">
-                              <button
-                                onClick={handleMadeAsPlanned}
-                                disabled={logLoading}
-                                className="w-full py-2 bg-[var(--accent-green)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
-                              >
-                                ✓ Made
-                              </button>
-                              <button
-                                onClick={handleNotMade}
-                                disabled={logLoading}
-                                className="w-full py-1 border border-[var(--border-subtle)] text-xs rounded hover:bg-gray-50 disabled:opacity-50"
-                              >
-                                ✗ Did Not Make
-                              </button>
-                            </div>
-                          );
-                        }
-
-                        // Step 2: What did you eat instead?
-                        if (!selectedAlternative) {
-                          return (
-                            <div className="flex flex-col gap-2">
-                              <span className="text-[10px] text-[var(--text-muted)] mb-1">What did you eat instead?</span>
-                              <button
-                                onClick={() => handleAlternativeSelect('freezer')}
-                                className="w-full py-2 bg-[var(--accent-terracotta)] text-white text-xs rounded hover:opacity-90"
-                              >
-                                🧊 Freezer Meal
-                              </button>
-                              <button
-                                onClick={() => handleAlternativeSelect('outside')}
-                                className="w-full py-2 bg-[var(--accent-gold)] text-white text-xs rounded hover:opacity-90"
-                              >
-                                🍽️ Ate Out / Restaurant
-                              </button>
-                              <button
-                                onClick={() => handleAlternativeSelect('other')}
-                                className="w-full py-2 border border-[var(--border-subtle)] text-xs rounded hover:bg-gray-50"
-                              >
-                                📝 Something Else
-                              </button>
-                            </div>
-                          );
-                        }
-
-                        // Step 3a: Select freezer meal
-                        if (selectedAlternative === 'freezer') {
-                          return (
-                            <div className="flex flex-col gap-2">
-                              <span className="text-[10px] text-[var(--text-muted)]">Select freezer meal used:</span>
-                              {freezerInventory.length > 0 ? (
-                                <div className="max-h-32 overflow-y-auto space-y-1">
-                                  {freezerInventory.map((item: any, idx: number) => (
-                                    <label key={idx} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded cursor-pointer">
-                                      <input
-                                        type="radio"
-                                        name="freezer-meal"
-                                        value={item.meal}
-                                        checked={selectedFreezerMeal === item.meal}
-                                        onChange={(e) => setSelectedFreezerMeal(e.target.value)}
-                                        className="w-4 h-4"
-                                      />
-                                      <span className="text-xs">{item.meal}</span>
-                                    </label>
-                                  ))}
-                                </div>
-                              ) : (
-                                <p className="text-xs text-[var(--text-muted)] italic">No freezer inventory available</p>
-                              )}
-                              <button
-                                onClick={handleSubmitAlternative}
-                                disabled={logLoading || !selectedFreezerMeal}
-                                className="w-full py-2 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
-                              >
-                                Save
-                              </button>
-                              <button
-                                onClick={() => { setSelectedAlternative(null); setSelectedFreezerMeal(''); }}
-                                className="w-full py-1 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-                              >
-                                ← Back
-                              </button>
-                            </div>
-                          );
-                        }
-
-                        // Step 3b: Ate out confirmation
-                        if (selectedAlternative === 'outside') {
-                          return (
-                            <div className="flex flex-col gap-2">
-                              <span className="text-xs text-[var(--text-muted)]">Confirm: Ate at restaurant or ordered out</span>
-                              <button
-                                onClick={handleSubmitAlternative}
-                                disabled={logLoading}
-                                className="w-full py-2 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
-                              >
-                                Confirm
-                              </button>
-                              <button
-                                onClick={() => setSelectedAlternative(null)}
-                                className="w-full py-1 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-                              >
-                                ← Back
-                              </button>
-                            </div>
-                          );
-                        }
-
-                        // Step 3c: Something else - text input
-                        if (selectedAlternative === 'other') {
-                          return (
-                            <div className="flex flex-col gap-2">
-                              <span className="text-[10px] text-[var(--text-muted)]">What did you eat?</span>
-                              <input
-                                type="text"
-                                value={otherMealText}
-                                onChange={(e) => setOtherMealText(e.target.value)}
-                                placeholder="e.g., Leftovers, Sandwiches, Cereal"
-                                className="w-full px-2 py-1 text-xs border border-[var(--border-subtle)] rounded focus:outline-none focus:ring-1 focus:ring-[var(--accent-sage)]"
-                                disabled={logLoading}
-                              />
-                              <button
-                                onClick={handleSubmitAlternative}
-                                disabled={logLoading || !otherMealText.trim()}
-                                className="w-full py-2 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
-                              >
-                                Save
-                              </button>
-                              <button
-                                onClick={() => { setSelectedAlternative(null); setOtherMealText(''); }}
-                                className="w-full py-1 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-                              >
-                                ← Back
-                              </button>
-                            </div>
-                          );
-                        }
-
-                        return null;
-                      };
-
-                      return (
-                        <Card
-                          title="Dinner"
-                          icon="🍽️"
-                          content={getDisplayName(status?.today_dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Nothing planned', status?.today_dinner?.actual_meal)}
-                          subtitle={status?.today_dinner?.vegetables ? `Veggies: ${status.today_dinner.vegetables.join(', ')}` : null}
-                          isConfirmed={status?.today_dinner?.made !== undefined}
-                          badge={status?.today_dinner?.made !== undefined ? (
-                            status.today_dinner.made === true ? (status.today_dinner.actual_meal ? `✓ Made (${status.today_dinner.actual_meal})` : '✓ Made') :
-                              status.today_dinner.made === 'freezer_backup' ? '🧊 Freezer' :
-                                status.today_dinner.made === 'outside_meal' ? '🍽️ Restaurant' :
-                                  status.today_dinner.actual_meal ? `✗ ${status.today_dinner.actual_meal}` :
-                                    '✗ Skipped'
-                          ) : null}
-                          action={<DinnerLogging />}
-                        />
-                      );
-                    })()}
-                  </>
-                );
-              })()}
+              {/* Dinner */}
+              <Card
+                title="Dinner"
+                icon="🍽️"
+                content={getDisplayName(status?.today_dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Nothing planned', status?.today_dinner?.actual_meal)}
+                subtitle={status?.today_dinner?.vegetables ? `Veggies: ${status.today_dinner.vegetables.join(', ')}` : undefined}
+                isConfirmed={status?.today_dinner?.made !== undefined}
+                badge={status?.today_dinner?.made !== undefined ? (
+                  status.today_dinner.made === true ? (status.today_dinner.actual_meal ? `✓ Made (${status.today_dinner.actual_meal})` : '✓ Made') :
+                    status.today_dinner.made === 'freezer_backup' ? '🧊 Freezer' :
+                      status.today_dinner.made === 'outside_meal' ? '🍽️ Restaurant' :
+                        status.today_dinner.actual_meal ? `✗ ${status.today_dinner.actual_meal}` :
+                          '✗ Skipped'
+                ) : undefined}
+                action={<DinnerLogging
+                  status={status}
+                  logLoading={logLoading}
+                  showAlternatives={showAlternatives}
+                  setShowAlternatives={setShowAlternatives}
+                  selectedAlternative={selectedAlternative}
+                  setSelectedAlternative={setSelectedAlternative}
+                  otherMealText={otherMealText}
+                  setOtherMealText={setOtherMealText}
+                  selectedFreezerMeal={selectedFreezerMeal}
+                  setSelectedFreezerMeal={setSelectedFreezerMeal}
+                  isDinnerEditing={isDinnerEditing}
+                  setIsDinnerEditing={setIsDinnerEditing}
+                  dinnerEditInput={dinnerEditInput}
+                  setDinnerEditInput={setDinnerEditInput}
+                  recipes={recipes}
+                  onLogDay={handleLogDay}
+                />}
+              />
             </div>
 
             {/* Prep Timeline */}
@@ -857,7 +543,7 @@ export default function Dashboard() {
               <div className="space-y-3">
                 {status?.prep_tasks && status.prep_tasks.length > 0 ? (
                   status.prep_tasks.map((task, idx) => {
-                    const taskStr = typeof task === 'string' ? task : task.task;
+                    const taskStr = typeof task === 'string' ? task : (task.task || '');
                     const taskTime = typeof task === 'object' && task.time ? task.time : null;
                     const isCompleted = completedPrep.includes(taskStr);
 

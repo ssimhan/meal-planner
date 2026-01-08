@@ -269,18 +269,26 @@ All phases through 11 are complete. See [PROJECT_HISTORY.md](PROJECT_HISTORY.md)
 - [ ] Add architecture diagram (Mermaid)
 - [ ] Complete `.env.example` with all required variables
 - [ ] Document API endpoints and response formats
+- update recipe template to have clear instructions on prep section.
+
+### 12.7: Fix the week at a glance page
+**Priority:** 🟢 Lower  
+**Effort:** 1 day
+- prompt user for screenshot as the vercel app isn't loading correctly
+
+### 12.8: Revision of Prep step process
+**Priority:** 🟢 Lower  
+**Effort:** 1 day
+- create python script that adds a section for prep steps to every recipe in the index (without using tokens). tell user how to run that script on the index without using LLM tokens. 
+- set up a new part of the meal selection process. when a recipe is selected, review it for prep steps. 
+if it has, present those as part of the prep schedule on earlier days. 
+if it doesn't have any, prompt user to push the recipe into customgpt and respond. if user declines this option, generate your own and assign accordingly. also add the list of prep steps to the template. 
+
 
 
 ### Recipe Index changes
 *Pending recipe additions from corrections:*
 - [x] Add recipe for: Cheese cubes (added on 2026-01-07)
-- [x] Add recipe for: Avocado packs (added on 2026-01-07)
-- [x] Add recipe for: Crackers and cheese cubes (requested on 2026-01-06, added on 2026-01-06)
-- [x] Add recipe for: Blackberries (requested on 2026-01-06, added on 2026-01-06)
-- [x] Add recipe for: Rasam rice and beetroot (requested on 2026-01-06, added on 2026-01-06)
-- [x] Add recipe for: Rasam rice and carrot (added on 2026-01-06)
-- [x] Add recipe for: Pesto gnocchi (requested on 2026-01-06, added on 2026-01-06)
-- [x] Add recipe for: Rasam rice and broccoli (requested on 2026-01-05, added on 2026-01-05)
 
 ---
 

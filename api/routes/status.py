@@ -51,7 +51,7 @@ def _get_current_status(skip_sync=False):
 
     input_file = None
     
-    # 1. Look for incomplete weeks (planning in progress)
+    # 1. Look for active or incomplete weeks (planning in progress OR active this week)
     if is_vercel:
         inputs_dir = Path("/tmp/inputs")
         if inputs_dir.exists():
@@ -59,7 +59,8 @@ def _get_current_status(skip_sync=False):
                 with open(f, 'r') as yf:
                     try:
                         data = yaml.safe_load(yf)
-                        if data and data.get('workflow', {}).get('status') not in ('plan_complete', 'archived'):
+                        if data and data.get('workflow', {}).get('status') != 'archived':
+                            # Include weeks that are not archived (either incomplete OR plan_complete)
                             input_file = f
                             week_str = data.get('week_of')
                             break

@@ -18,9 +18,10 @@ from collections import Counter
 from lunch_selector import LunchSelector
 
 
-# ============================================================================
-# State Management
-# ============================================================================
+try:
+    from scripts.log_execution import get_actual_path
+except ImportError:
+    from log_execution import get_actual_path
 
 def get_next_monday():
     """Calculate the date of the upcoming Monday (next week if we're past Saturday)."""
@@ -140,7 +141,7 @@ def get_workflow_state(input_file):
 
 def archive_expired_weeks():
     """Find weeks that have passed their end date and handle rollover."""
-    from scripts.log_execution import load_history, save_history, get_actual_path
+    from scripts.log_execution import load_history, save_history
     history = load_history()
     dirty = False
     

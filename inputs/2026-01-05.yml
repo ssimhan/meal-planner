@@ -55,11 +55,11 @@ dinners:
   recipe_id: masala_puri
   made: true
 - day: thu
-  recipe_id: cauliflower_black_bean_tacos
+  recipe_id: sweet_potato_black_bean_quesadilla
 - day: fri
   recipe_id: veggie_fried_rice
 - day: sat
-  recipe_id: sweet_potato_black_bean_quesadilla
+  recipe_id: cauliflower_black_bean_tacos
 prep_tasks:
 - 'Monday Prep (for Mon/Tue meals):'
 - '- [ ] Chop garlic for Mon Rasam Rice with Beetroot Kai'

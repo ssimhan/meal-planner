@@ -91,16 +91,14 @@ weeks:
     made: true
     actual_meal: Masala Puri
     notes: New recipe to be added to index
-  - recipe_id: cauliflower_black_bean_tacos
+  - recipe_id: sweet_potato_black_bean_quesadilla
     cuisine: mexican
     meal_type: tacos_wraps
     day: thu
     vegetables:
-    - cauliflower
-    - corn
+    - sweet potato
     - onion
-    - tomato
-    notes: New recipe to be added to index
+    notes: New recipe to be added to index. Prep sweet potatoes on Wednesday
   - recipe_id: veggie_fried_rice
     cuisine: asian
     meal_type: rice_grain
@@ -111,14 +109,16 @@ weeks:
     - peas
     - edamame
     notes: New recipe to be added to index
-  - recipe_id: sweet_potato_black_bean_quesadilla
+  - recipe_id: cauliflower_black_bean_tacos
     cuisine: mexican
     meal_type: tacos_wraps
     day: sat
     vegetables:
-    - sweet potato
+    - cauliflower
+    - corn
     - onion
-    notes: New recipe to be added to index. Prep sweet potatoes on Wednesday
+    - tomato
+    notes: New recipe to be added to index
   fridge_vegetables:
   - white rice
   - okra

@@ -352,17 +352,12 @@ export default function Dashboard() {
 
         {/* Today's Schedule (Show when plan is active or waiting for check-in) */}
         {(status?.state === 'active' || status?.state === 'waiting_for_checkin') && (
-          <section className={`md:col-span-2 mt-8 p-6 rounded-lg ${status?.state === 'waiting_for_checkin' ? 'bg-red-50 border-2 border-[var(--accent-terracotta)] animate-pulse' : ''}`}>
+          <section className="md:col-span-2 mt-8 p-6 rounded-lg">
             <header className="flex justify-between items-center mb-6">
               <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)]">
                 Today's Schedule: {status?.current_day?.toUpperCase()}
               </h2>
               <div className="flex gap-2">
-                {status?.state === 'waiting_for_checkin' && (
-                  <span className="text-xs font-bold text-[var(--accent-terracotta)] uppercase tracking-widest px-2 py-1 bg-white rounded border border-[var(--accent-terracotta)]">
-                    ⚠️ Action Required: Logging Pending
-                  </span>
-                )}
                 <span className="text-xs font-mono px-2 py-1 bg-[var(--bg-secondary)] rounded border border-[var(--border-subtle)] text-[var(--accent-sage)] uppercase">
                   ACTIVE PLAN
                 </span>

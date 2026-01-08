@@ -173,6 +173,10 @@ def _get_current_status(skip_sync=False):
         "status": "success",
         "week_of": week_str,
         "state": state,
+        "current_day": current_day,
+        "today_dinner": today_dinner,
+        "today_lunch": today_lunch,
+        "today_snacks": today_snacks,
         "today": {
             "day": current_day,
             "date": today.strftime('%Y-%m-%d'),

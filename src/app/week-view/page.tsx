@@ -113,9 +113,11 @@ export default function WeekView() {
     return actual;
   };
 
-  const getFeedbackBadge = (feedback?: string, made?: boolean, needsFix?: boolean) => {
+  const getFeedbackBadge = (feedback?: string, made?: boolean | string, needsFix?: boolean) => {
     if (needsFix) return <span className="text-xs text-red-600 font-bold px-2 py-0.5 bg-red-50 rounded border border-red-200">Needs Fix</span>;
     if (made === false) return <span className="text-xs text-red-600 font-medium px-2 py-0.5 bg-red-50 rounded">✗ Skipped</span>;
+    if (made === 'freezer_backup') return <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200 uppercase tracking-wide">🧊 FREEZER</span>;
+    if (made === 'outside_meal') return <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 uppercase tracking-wide">🍽️ OUTSIDE</span>;
 
     const emojis = ['❤️', '👍', '😐', '👎', '❌'];
     const emojiMatch = feedback && emojis.find(e => feedback.includes(e));
@@ -534,12 +536,14 @@ export default function WeekView() {
                           className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-2 flex items-center gap-1"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setReplacementModal({
-                              isOpen: true,
-                              day: day,
-                              currentMeal: dinner?.actual_meal || dinner?.recipe_id || '',
-                              type: 'dinner'
-                            });
+                            setViewState(prev => ({
+                              ...prev, replacementModal: {
+                                isOpen: true,
+                                day: day,
+                                currentMeal: dinner?.actual_meal || dinner?.recipe_id || '',
+                                type: 'dinner'
+                              }
+                            }));
                           }}
                         >
                           <span>🔄</span> Replace
@@ -573,12 +577,14 @@ export default function WeekView() {
                           onClick={(e) => {
                             e.stopPropagation();
                             if (viewState.editMode) {
-                              setReplacementModal({
-                                isOpen: true,
-                                day: day,
-                                currentMeal: dailyFeedback?.kids_lunch || '',
-                                type: 'kids_lunch'
-                              });
+                              setViewState(prev => ({
+                                ...prev, replacementModal: {
+                                  isOpen: true,
+                                  day: day,
+                                  currentMeal: dailyFeedback?.kids_lunch || '',
+                                  type: 'kids_lunch'
+                                }
+                              }));
                             }
                           }}
                         >
@@ -612,12 +618,14 @@ export default function WeekView() {
                           className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-1 flex items-center gap-1"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setReplacementModal({
-                              isOpen: true,
-                              day: day,
-                              currentMeal: dailyFeedback?.school_snack || '',
-                              type: 'school_snack'
-                            });
+                            setViewState(prev => ({
+                              ...prev, replacementModal: {
+                                isOpen: true,
+                                day: day,
+                                currentMeal: dailyFeedback?.school_snack || '',
+                                type: 'school_snack'
+                              }
+                            }));
                           }}
                         >
                           <span>🔄</span> Replace
@@ -650,12 +658,14 @@ export default function WeekView() {
                           className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-1 flex items-center gap-1"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setReplacementModal({
-                              isOpen: true,
-                              day: day,
-                              currentMeal: dailyFeedback?.home_snack || '',
-                              type: 'home_snack'
-                            });
+                            setViewState(prev => ({
+                              ...prev, replacementModal: {
+                                isOpen: true,
+                                day: day,
+                                currentMeal: dailyFeedback?.home_snack || '',
+                                type: 'home_snack'
+                              }
+                            }));
                           }}
                         >
                           <span>🔄</span> Replace
@@ -688,12 +698,14 @@ export default function WeekView() {
                           className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-1 flex items-center gap-1"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setReplacementModal({
-                              isOpen: true,
-                              day: day,
-                              currentMeal: dailyFeedback?.adult_lunch || '',
-                              type: 'adult_lunch'
-                            });
+                            setViewState(prev => ({
+                              ...prev, replacementModal: {
+                                isOpen: true,
+                                day: day,
+                                currentMeal: dailyFeedback?.adult_lunch || '',
+                                type: 'adult_lunch'
+                              }
+                            }));
                           }}
                         >
                           <span>🔄</span> Replace
@@ -788,12 +800,14 @@ export default function WeekView() {
                               className="ml-auto text-gray-300 hover:text-[var(--accent-sage)] p-1 rounded-full hover:bg-gray-100 transition-colors"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                setReplacementModal({
-                                  isOpen: true,
-                                  day: day,
-                                  currentMeal: dinner?.actual_meal || dinner?.recipe_id || '',
-                                  type: 'dinner'
-                                });
+                                setViewState(prev => ({
+                                  ...prev, replacementModal: {
+                                    isOpen: true,
+                                    day: day,
+                                    currentMeal: dinner?.actual_meal || dinner?.recipe_id || '',
+                                    type: 'dinner'
+                                  }
+                                }));
                               }}
                             >
                               🔄
@@ -840,12 +854,14 @@ export default function WeekView() {
                               className="text-[10px] text-gray-300 hover:text-[var(--accent-sage)] flex items-center gap-1 mt-1"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                setReplacementModal({
-                                  isOpen: true,
-                                  day: day,
-                                  currentMeal: dailyFeedback?.kids_lunch || '',
-                                  type: 'kids_lunch'
-                                });
+                                setViewState(prev => ({
+                                  ...prev, replacementModal: {
+                                    isOpen: true,
+                                    day: day,
+                                    currentMeal: dailyFeedback?.kids_lunch || '',
+                                    type: 'kids_lunch'
+                                  }
+                                }));
                               }}
                             >
                               🔄 Replace
@@ -894,12 +910,14 @@ export default function WeekView() {
                                 className="text-[10px] text-gray-300 hover:text-[var(--accent-sage)] flex items-center gap-1 mt-1"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  setReplacementModal({
-                                    isOpen: true,
-                                    day: day,
-                                    currentMeal: dailyFeedback?.school_snack || '',
-                                    type: 'school_snack'
-                                  });
+                                  setViewState(prev => ({
+                                    ...prev, replacementModal: {
+                                      isOpen: true,
+                                      day: day,
+                                      currentMeal: dailyFeedback?.school_snack || '',
+                                      type: 'school_snack'
+                                    }
+                                  }));
                                 }}
                               >
                                 🔄 Replace
@@ -951,12 +969,14 @@ export default function WeekView() {
                                 className="text-[10px] text-gray-300 hover:text-[var(--accent-sage)] flex items-center gap-1 mt-1"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  setReplacementModal({
-                                    isOpen: true,
-                                    day: day,
-                                    currentMeal: dailyFeedback?.home_snack || '',
-                                    type: 'home_snack'
-                                  });
+                                  setViewState(prev => ({
+                                    ...prev, replacementModal: {
+                                      isOpen: true,
+                                      day: day,
+                                      currentMeal: dailyFeedback?.home_snack || '',
+                                      type: 'home_snack'
+                                    }
+                                  }));
                                 }}
                               >
                                 🔄 Replace
@@ -1006,12 +1026,14 @@ export default function WeekView() {
                               className="text-[10px] text-gray-300 hover:text-[var(--accent-sage)] flex items-center gap-1 mt-1"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                setReplacementModal({
-                                  isOpen: true,
-                                  day: day,
-                                  currentMeal: dailyFeedback?.adult_lunch || '',
-                                  type: 'adult_lunch'
-                                });
+                                setViewState(prev => ({
+                                  ...prev, replacementModal: {
+                                    isOpen: true,
+                                    day: day,
+                                    currentMeal: dailyFeedback?.adult_lunch || '',
+                                    type: 'adult_lunch'
+                                  }
+                                }));
                               }}
                             >
                               🔄 Replace

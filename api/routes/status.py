@@ -106,9 +106,19 @@ def _get_current_status(skip_sync=False):
 
         if history_week and 'daily_feedback' in history_week:
             day_feedback = history_week['daily_feedback'].get(current_day, {})
-            for key in ['school_snack', 'school_snack_made', 'home_snack', 'home_snack_made']:
-                if key in day_feedback:
-                    today_snacks[key + ('_feedback' if 'feedback' not in key and 'made' not in key else '')] = day_feedback[key]
+            # Map daily_feedback fields to today_snacks structure
+            if 'school_snack' in day_feedback:
+                today_snacks['school'] = day_feedback['school_snack']
+            if 'home_snack' in day_feedback:
+                today_snacks['home'] = day_feedback['home_snack']
+            if 'school_snack_made' in day_feedback:
+                today_snacks['school_snack_made'] = day_feedback['school_snack_made']
+            if 'home_snack_made' in day_feedback:
+                today_snacks['home_snack_made'] = day_feedback['home_snack_made']
+            if 'school_snack_needs_fix' in day_feedback:
+                today_snacks['school_snack_needs_fix'] = day_feedback['school_snack_needs_fix']
+            if 'home_snack_needs_fix' in day_feedback:
+                today_snacks['home_snack_needs_fix'] = day_feedback['home_snack_needs_fix']
         
         dinners = history_week.get('dinners', []) if history_week else (data.get('dinners', []) if data else [])
         for dinner in dinners:

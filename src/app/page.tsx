@@ -413,7 +413,7 @@ export default function Dashboard() {
                   currentFeedback={status?.today_snacks?.school_snack_feedback}
                   madeStatus={status?.today_snacks?.school_snack_made}
                   mealName={status?.today_snacks?.school || "Fruit"}
-                  logLoading={logLoading}
+                  logLoading={ui.logLoading}
                   recipes={recipes}
                   onLogFeedback={handleLogFeedback}
                 />}
@@ -431,7 +431,7 @@ export default function Dashboard() {
                   currentFeedback={status?.today_lunch?.kids_lunch_feedback}
                   madeStatus={status?.today_lunch?.kids_lunch_made}
                   mealName={status?.today_lunch?.recipe_name || "Leftovers"}
-                  logLoading={logLoading}
+                  logLoading={ui.logLoading}
                   recipes={recipes}
                   onLogFeedback={handleLogFeedback}
                 />}
@@ -449,7 +449,7 @@ export default function Dashboard() {
                   currentFeedback={status?.today_lunch?.adult_lunch_feedback}
                   madeStatus={status?.today_lunch?.adult_lunch_made}
                   mealName="Leftovers"
-                  logLoading={logLoading}
+                  logLoading={ui.logLoading}
                   recipes={recipes}
                   onLogFeedback={handleLogFeedback}
                 />}
@@ -466,7 +466,7 @@ export default function Dashboard() {
                   currentFeedback={status?.today_snacks?.home_snack_feedback}
                   madeStatus={status?.today_snacks?.home_snack_made}
                   mealName={status?.today_snacks?.home || "Cucumber"}
-                  logLoading={logLoading}
+                  logLoading={ui.logLoading}
                   recipes={recipes}
                   onLogFeedback={handleLogFeedback}
                 />}

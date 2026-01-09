@@ -1663,3 +1663,180 @@ return _get_current_status(skip_sync=True)
 
 **Status:** Dashboard now correctly displays active week with all meal data (dinners, lunches, snacks). Field naming standardized across codebase. All endpoints return proper data structures.
 
+---
+
+# Consolidated Insights for Project Teardown
+
+## Critical Decisions That Shaped The System
+
+### 1. **Energy-Based Prep Model (Phase 7) - The Turning Point**
+**Decision:** Shift from "cook every night" to "front-load prep Mon-Wed, coast Thu-Fri"
+- **Why It Mattered:** System went from "ambitious but unsustainable" to "actually works"
+- **Key Insight:** Design for worst-case energy, not best-case motivation
+- **Implementation:** Strict no-chop rules for Thu/Fri, evening protection (5-9pm device-free)
+
+### 2. **GitHub Actions → Vercel Migration (2026-01-04)**
+**Decision:** Move from static GitHub Pages to Vercel serverless app
+- **Trigger:** Need for real-time inventory updates, meal logging without CLI
+- **Trade-off:** Added deployment complexity but gained mobile accessibility
+- **Architecture:** Python serverless functions + Next.js frontend + GitHub-as-database
+- **Constraint:** Read-only filesystem on Vercel required rethinking all I/O operations
+
+### 3. **Single Source of Truth for Execution Data (Phase 6)**
+**Decision:** Store all meal logging in `history.yml` (not separate files)
+- **Rationale:** Minimize LLM context usage, simplify data management
+- **Learning:** More files ≠ better organization - single file with clear structure wins
+
+### 4. **Markdown Migration (Phase 11 Block 5)**
+**Decision:** Convert 227 recipes from HTML to Markdown with YAML frontmatter
+- **Impact:** 70% reduction in token usage for meal planning
+- **Side Benefit:** Revealed data quality issues (measurement inconsistencies)
+- **Pattern:** Simpler formats expose hidden problems and improve DX
+
+### 5. **Structured Inputs Over AI Parsing (Phase 6.3)**
+**Decision:** GitHub Issue checkboxes instead of free-text parsing
+- **Why:** Higher reliability, better mobile UX, less parsing complexity
+- **Trade-off:** Less flexible but 10x more accurate
+- **Principle:** Let users pick from lists when possible
+
+## Recurring Error Patterns
+
+### Pattern 1: **State Synchronization in Serverless**
+**Symptoms:** Stale data after mutations, missing updates in UI
+**Root Causes:**
+- Vercel's read-only filesystem + in-memory caching
+- Endpoints returning success messages instead of updated state
+- Frontend expecting data shapes API didn't provide
+**Solution Evolution:**
+- Session 2026-01-04: Added GitHub API writes bypassing filesystem
+- Session 2026-01-07: Cache invalidation on writes
+- Session 2026-01-08: All mutation endpoints return full `WorkflowStatus`
+
+### Pattern 2: **Field Naming Inconsistencies**
+**Symptoms:** Data written correctly but not displayed in UI
+**Root Causes:**
+- `school_snack` (storage) vs `school_snack_feedback` (API) vs `today_snacks.school` (display)
+- Suffix transformations applied inconsistently across layers
+**Solution:** Created [FIELD_NAMING_CONVENTION.md](FIELD_NAMING_CONVENTION.md) documenting 3-layer naming system
+
+### Pattern 3: **React Hook Ordering Violations**
+**Symptoms:** "Minified React error #310" crashes
+**Root Causes:**
+- 25+ individual `useState` hooks in monolithic components
+- Conditional hook calls inside logic blocks
+- Component definitions inside render loops (IIFEs)
+**Solution (Phase 12.3):**
+- Consolidated to structured state objects
+- Lifted all hooks to top of component (before any logic)
+- Extracted sub-components outside render function
+
+### Pattern 4: **Indentation/Syntax Errors Cascade**
+**Symptoms:** 500 errors across all endpoints, obscure error messages
+**Example:** Session 2026-01-08 - Single indentation error in `html_generator.py:409` blocked entire API
+**Learning:** Module-level errors propagate silently - test imports in isolation
+
+## Thought Patterns & Decision Frameworks
+
+### Framework 1: **Progressive Enhancement Over Big Rewrites**
+**Examples:**
+- CLI → GitHub Actions → Vercel (not CLI → full web app immediately)
+- Static HTML → Dynamic dashboard → Interactive editing
+- Generic feedback → Emoji feedback → Multi-step workflows
+**Principle:** Each phase must be production-ready; no "throw it all away" moments
+
+### Framework 2: **Constraints Create Freedom**
+**Examples:**
+- Limiting Thu/Fri to no-prep increased usability (not decreased it)
+- ONE snack/day reduced decision fatigue vs 3-4 options
+- Freezer backup quota (maintain 3 meals) made system resilient
+**Principle:** Well-designed limits paradoxically expand capability
+
+### Framework 3: **Data Quality Compounds**
+**Examples:**
+- Recipe metadata → constraint satisfaction → accurate plans → less food waste
+- Measurement standardization → better grocery lists → less shopping stress
+- Structured feedback → analytics → smarter future plans
+**Principle:** Invest in tagging/structure early - multiplies value over time
+
+### Framework 4: **Optimize for Debugging**
+**Examples:**
+- Verbose console output for inventory scoring ("45/100: fridge=tomato, pantry=bean")
+- Field naming documentation after mapping bugs
+- Type interfaces as executable documentation
+**Principle:** Make the system's reasoning transparent to humans
+
+## Architectural Inflection Points
+
+### Point 1: **Workflow.py Explosion (2652 lines → Modular Package)**
+**Trigger:** Adding new features required reading entire file
+**Refactor (Phase 12.5):**
+- Split into `state.py`, `selection.py`, `html_generator.py`, `replan.py`, `actions.py`
+- Benefits: Isolated testing, clearer responsibilities
+- Cost: More imports to manage
+
+### Point 2: **API Monolith → Flask Blueprints**
+**Trigger:** 1400-line `index.py` became unmaintainable
+**Refactor (Phase 12.5):**
+- Separated into `routes/status.py`, `routes/meals.py`, `routes/inventory.py`, `routes/recipes.py`
+- Challenge: Shared state (caching) required careful `utils.py` design
+
+### Point 3: **Dashboard Component Extraction**
+**Trigger:** 950-line `page.tsx` with 22 nested functions
+**Refactor (Phase 12.1-12.2):**
+- Extracted `Skeleton`, `Card`, `FeedbackButtons`, `DinnerLogging` components
+- Added comprehensive TypeScript interfaces (`src/types/index.ts`)
+- Result: 33% line reduction, 79% fewer TypeScript errors
+
+## What Would Be Different in a Rewrite?
+
+### Start With:
+1. **Type-first design:** Define TypeScript interfaces before writing any API code
+2. **Component library:** Build reusable components (Card, Modal, Buttons) in Phase 1
+3. **API contract:** Document endpoint shapes in OpenAPI before implementation
+4. **Test harness:** Write data validation tests alongside feature code
+
+### Avoid:
+1. **Premature optimization:** Don't split files until they're painful to navigate (>800 lines)
+2. **Over-abstraction:** Three similar lines > premature helper function
+3. **Magic parsing:** Structured inputs (checkboxes) > free-text AI parsing
+4. **Global state:** Pass props explicitly until scale demands context/Redux
+
+### Keep:
+1. **Plain text storage:** YAML + Markdown is future-proof and version-control friendly
+2. **Energy-based scheduling:** This is the core innovation - never compromise it
+3. **Freezer backup system:** Escape hatches make rigid systems usable
+4. **Incremental migration:** Each phase delivered working software
+
+## Metrics That Mattered
+
+### Pre-System (Manual Spreadsheets):
+- 30min/week planning time
+- High recipe repetition (same 10 meals)
+- Frequent "what's for dinner?" panic
+- Evening cooking interfered with bedtime routines
+
+### Post-System (Current State):
+- 5min/week planning time (90% reduction)
+- 0 recipe repeats within 3 weeks (enforced by algorithm)
+- Zero planning paralysis (system proposes, user approves)
+- Thu/Fri evenings device-free (5-9pm protected)
+- 3 freezer backups maintained (system tracks automatically)
+
+### Code Quality Evolution:
+- Phase 0-6: 3 Python files, no types, no tests
+- Phase 12 Complete: 40+ modular files, 30+ TypeScript interfaces, 15+ test suites
+- TypeScript errors: 34 → 7 (79% reduction)
+- API response time (cached): <10ms (instant)
+
+## Open Questions for Future Work
+
+1. **Nutrition Tracking:** Should the system calculate nutritional values? (Phase 13 backlog)
+2. **Multi-Family Support:** Can this generalize beyond one household?
+3. **Real Database:** When does GitHub-as-database become a bottleneck?
+4. **Offline Mode:** How to handle no-internet scenarios on mobile?
+5. **Recipe Discovery:** Should the system suggest new recipes based on success patterns?
+
+---
+
+**Meta-Learning:** The best documentation is written during implementation (not after). This history file captured decisions in real-time, making this consolidation possible. Future projects should maintain a running PROJECT_HISTORY.md from Day 1.
+

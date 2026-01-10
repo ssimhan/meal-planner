@@ -57,7 +57,6 @@ def _get_current_status(skip_sync=False):
     
     if requested_week:
         # Fetch specific week
-        from api.utils.storage import get_household_id
         res = supabase.table("meal_plans").select("*").eq("household_id", get_household_id()).eq("week_of", requested_week).execute()
         if res.data:
             active_plan = res.data[0]

@@ -58,8 +58,9 @@ async function getAuthHeaders(includeJson: boolean = true) {
     return headers;
 }
 
-export async function getStatus(): Promise<WorkflowStatus> {
-    const res = await fetch('/api/status', {
+export async function getStatus(week?: string): Promise<WorkflowStatus> {
+    const url = week ? `/api/status?week=${week}` : '/api/status';
+    const res = await fetch(url, {
         headers: await getAuthHeaders(false),
     });
     return handleResponse<WorkflowStatus>(res, 'Failed to fetch status');

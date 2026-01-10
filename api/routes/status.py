@@ -51,18 +51,36 @@ def _get_current_status(skip_sync=False):
 
     monday = today - timedelta(days=today.weekday())
     week_str = monday.strftime('%Y-%m-%d')
-
-    # 1. Look for active or incomplete weeks from DB
-    active_plan = StorageEngine.get_active_week()
-    state, data = StorageEngine.get_workflow_state(active_plan)
     
-    if active_plan:
-        week_str = active_plan['week_of']
+    # Check if a specific week was requested
+    requested_week = request.args.get('week')
+    
+    if requested_week:
+        # Fetch specific week
+        from api.utils.storage import get_household_id
+        res = supabase.table("meal_plans").select("*").eq("household_id", get_household_id()).eq("week_of", requested_week).execute()
+        if res.data:
+            active_plan = res.data[0]
+            state, data = StorageEngine.get_workflow_state(active_plan)
+            week_str = active_plan['week_of']
+        else:
+            # Week doesn't exist in DB yet
+            active_plan = None
+            state = 'new_week'
+            data = {}
+            week_str = requested_week
     else:
-        # Fallback to calendar week
-        monday = today - timedelta(days=today.weekday())
-        week_str = monday.strftime('%Y-%m-%d')
-        data = {}
+        # Default logic: Look for active or incomplete weeks from DB
+        active_plan = StorageEngine.get_active_week()
+        state, data = StorageEngine.get_workflow_state(active_plan)
+        
+        if active_plan:
+            week_str = active_plan['week_of']
+        else:
+            # Fallback to calendar week
+            monday = today - timedelta(days=today.weekday())
+            week_str = monday.strftime('%Y-%m-%d')
+            data = {}
     current_day = today.strftime('%a').lower()[:3]
 
     today_dinner = None
@@ -216,6 +234,14 @@ def _get_current_status(skip_sync=False):
             return jsonify(resp_data)
     except Exception as e:
         print(f"Error checking for next week: {e}")
+
+    # Add available weeks for the selector
+    try:
+        resp_data = response.get_json()
+        resp_data["available_weeks"] = StorageEngine.get_available_weeks()
+        return jsonify(resp_data)
+    except Exception as e:
+        print(f"Error adding available weeks: {e}")
 
     return response
 

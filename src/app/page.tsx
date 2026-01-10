@@ -23,6 +23,7 @@ export default function Dashboard() {
   const [vegInput, setVegInput] = useState('');
   const [completedPrep, setCompletedPrep] = useState<string[]>([]);
   const [recipes, setRecipes] = useState<RecipeListItem[]>([]);
+  const [selectedWeek, setSelectedWeek] = useState<string | null>(null);
 
   // Dinner Logging State consolidated
   const [dinnerState, setDinnerState] = useState({
@@ -35,8 +36,8 @@ export default function Dashboard() {
   });
 
   useEffect(() => {
-    fetchStatus(true);
-  }, []);
+    fetchStatus(true, selectedWeek || undefined);
+  }, [selectedWeek]);
 
   useEffect(() => {
     async function loadRecipes() {
@@ -55,10 +56,10 @@ export default function Dashboard() {
     loadRecipes();
   }, []);
 
-  async function fetchStatus(isInitial = false) {
+  async function fetchStatus(isInitial = false, week?: string) {
     try {
       if (isInitial) setLoading(true);
-      const data = await getStatus();
+      const data = await getStatus(week);
       setStatus(data);
       // Initialize completed prep from backend
       if (data.today?.prep_completed) {
@@ -287,7 +288,23 @@ export default function Dashboard() {
           <div className="space-y-4">
             <div>
               <p className="text-xs uppercase tracking-tighter text-[var(--text-muted)]">Current Week</p>
-              <p className="text-xl font-bold">{status?.week_of || 'Unknown'}</p>
+              <select
+                value={status?.week_of}
+                onChange={(e) => setSelectedWeek(e.target.value)}
+                className="bg-transparent text-xl font-bold border-none p-0 cursor-pointer focus:ring-1 focus:ring-[var(--accent-sage)] rounded hover:bg-[var(--bg-secondary)] pr-8"
+              >
+                {status?.available_weeks?.map(w => (
+                  <option
+                    key={w.week_of}
+                    value={w.week_of}
+                    disabled={!w.is_selectable}
+                    className="bg-white text-black"
+                  >
+                    {w.week_of} {w.status === 'archived' ? ' (Archived)' : w.status === 'planning' ? ' (Planning)' : w.status === 'not_created' ? ' (Not Started)' : ''}
+                    {!w.is_selectable && ' (Locked)'}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <p className="text-xs uppercase tracking-tighter text-[var(--text-muted)]">Workflow State</p>

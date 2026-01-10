@@ -240,6 +240,52 @@ class StorageEngine:
         
         return 'new_week', None
     @staticmethod
+    def get_available_weeks():
+        """Generate list of available weeks with selectability constraints."""
+        h_id = get_household_id()
+        
+        from datetime import datetime, timedelta
+        # Lower bound: Dec 29, 2025 (a Monday)
+        start_date = datetime(2025, 12, 29).date()
+        
+        today = datetime.now().date()
+        
+        # Upper bound for generation: 4 weeks out
+        end_generation = today + timedelta(weeks=4)
+        
+        # Get existing weeks from DB
+        existing_weeks = {}
+        if supabase:
+            try:
+                res = supabase.table("meal_plans").select("week_of, status").eq("household_id", h_id).execute()
+                existing_weeks = {str(r['week_of']): r['status'] for r in res.data}
+            except Exception as e:
+                print(f"Error fetching existing weeks for selector: {e}")
+
+        available_weeks = []
+        current_monday = start_date
+        
+        while current_monday <= end_generation:
+            week_str = current_monday.strftime('%Y-%m-%d')
+            sunday_before = current_monday - timedelta(days=1)
+            
+            # Constraints:
+            # 1. Lower bound is already handled by start_date = 2025-12-29
+            # 2. Selectability: Sunday start date is within 48h of today
+            # Sunday 00:00 is ~ today + 2 days
+            is_selectable = sunday_before <= today + timedelta(days=2)
+            
+            available_weeks.append({
+                "week_of": week_str,
+                "exists": week_str in existing_weeks,
+                "status": existing_weeks.get(week_str, "not_created"),
+                "is_selectable": is_selectable
+            })
+            current_monday += timedelta(weeks=1)
+            
+        return available_weeks
+
+    @staticmethod
     def archive_expired_weeks():
         """Find weeks in DB that have passed their end date and mark them as archived."""
         if not supabase: return

@@ -47,11 +47,14 @@ pip install -r requirements.txt
 # Install Node dependencies
 npm install
 
-# Configure for your household
-cp config.example.yml config.yml
-# Edit config.yml with your timezone, family members, and preferences
+# Configure for your household (choose one):
 
-# Validate your configuration
+# Option 1: Interactive setup wizard (recommended)
+python3 scripts/setup.py
+
+# Option 2: Manual configuration
+cp config.example.yml config.yml
+# Edit config.yml manually, then validate:
 python3 scripts/validate_yaml.py --config
 
 # Run the development server

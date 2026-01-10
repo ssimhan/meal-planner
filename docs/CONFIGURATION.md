@@ -6,6 +6,25 @@ This guide explains how to customize the meal planner for your household using `
 
 ## Quick Start
 
+### Option 1: Interactive Setup (Recommended)
+
+Run the setup wizard to generate your config through guided prompts:
+
+```bash
+python3 scripts/setup.py
+```
+
+The wizard will ask about:
+- Your timezone
+- Weekly schedule (office days, busy days, late activities)
+- Dietary preferences and restrictions
+- Family member profiles with individual allergies
+- Lunch and snack defaults
+
+Your config will be validated automatically and saved to `config.yml`.
+
+### Option 2: Manual Setup
+
 1. **Copy the example config:**
    ```bash
    cp config.example.yml config.yml

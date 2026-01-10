@@ -156,18 +156,37 @@ class StorageEngine:
             print(f"Error updating inventory item {item_name}: {e}")
     @staticmethod
     def get_active_week():
-        """Find the active (not archived) meal plan for the household."""
+        """Find the active (not archived) meal plan for the household, prioritizing the current week."""
         if not supabase: return None
         h_id = get_household_id()
+        
+        from datetime import datetime, timedelta
+        today = datetime.now().date()
+        
         try:
-            # First priority: find what is currently 'active'
-            res = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("status", "active").order("week_of", desc=True).limit(1).execute()
+            # 1. First priority: look for an 'active' plan that covers today
+            # We look for plans where week_of <= today, ordered by week_of DESC
+            res = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("status", "active").lte("week_of", today).order("week_of", desc=True).limit(1).execute()
+            
+            if res.data:
+                plan = res.data[0]
+                week_start = plan['week_of']
+                if isinstance(week_start, str):
+                    week_start = datetime.strptime(week_start, '%Y-%m-%d').date()
+                
+                # Check if today is within the 7-day window
+                if week_start <= today < (week_start + timedelta(days=7)):
+                    return plan
+
+            # 2. Second priority: find any plan currently in 'planning'
+            res = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("status", "planning").order("week_of", desc=True).limit(1).execute()
             if res.data:
                 return res.data[0]
-                
-            # Second priority: find what is in 'planning'
-            res = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("status", "planning").order("week_of", desc=True).limit(1).execute()
+
+            # 3. Last fallback: the most recent non-archived plan of any status
+            res = supabase.table("meal_plans").select("*").eq("household_id", h_id).neq("status", "archived").order("week_of", desc=True).limit(1).execute()
             return res.data[0] if res.data else None
+            
         except Exception as e:
             print(f"Error fetching active week: {e}")
             return None

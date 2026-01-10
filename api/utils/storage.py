@@ -166,7 +166,8 @@ class StorageEngine:
         try:
             # 1. First priority: look for an 'active' plan that covers today
             # We look for plans where week_of <= today, ordered by week_of DESC
-            res = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("status", "active").lte("week_of", today).order("week_of", desc=True).limit(1).execute()
+            today_str = today.strftime('%Y-%m-%d')
+            res = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("status", "active").lte("week_of", today_str).order("week_of", desc=True).limit(1).execute()
             
             if res.data:
                 plan = res.data[0]
@@ -258,7 +259,10 @@ class StorageEngine:
         if supabase:
             try:
                 res = supabase.table("meal_plans").select("week_of, status").eq("household_id", h_id).execute()
-                existing_weeks = {str(r['week_of']): r['status'] for r in res.data}
+                # Store keys as strings for reliable matching
+                for r in res.data:
+                    w_key = str(r['week_of'])
+                    existing_weeks[w_key] = r['status']
             except Exception as e:
                 print(f"Error fetching existing weeks for selector: {e}")
 

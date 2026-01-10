@@ -38,7 +38,7 @@ def _load_config():
     # Fallback
     return {'timezone': 'America/Los_Angeles'}
 
-def _get_current_status(skip_sync=False):
+def _get_current_status(skip_sync=False, week_override=None):
     try:
         storage.StorageEngine.archive_expired_weeks()
     except Exception as e:
@@ -53,7 +53,7 @@ def _get_current_status(skip_sync=False):
     week_str = monday.strftime('%Y-%m-%d')
     
     # Check if a specific week was requested
-    requested_week = request.args.get('week')
+    requested_week = week_override or request.args.get('week')
     
     if requested_week:
         # Fetch specific week
@@ -105,20 +105,9 @@ def _get_current_status(skip_sync=False):
         "home": snack_fallbacks.get("home", "Cucumber or Crackers")
     }
 
-    history_week = None
-    if state in ['active', 'waiting_for_checkin', 'archived']:
-        # Use DB History
-        history = storage.StorageEngine.get_history()
-        
-        # Ensure week_str matches the type in history (DB returns dates sometimes)
-        history_week = find_week(history, week_str)
-        if not history_week:
-            # Try matching as date object if string fails
-            for w in history.get('weeks', []):
-                w_date = w.get('week_of')
-                if str(w_date) == week_str:
-                    history_week = w
-                    break
+    history_week = active_plan.get('history_data') if active_plan else None
+    
+    if history_week:
 
         if history_week and 'daily_feedback' in history_week:
             day_feedback = history_week['daily_feedback'].get(current_day, {})
@@ -136,7 +125,7 @@ def _get_current_status(skip_sync=False):
             if 'home_snack_needs_fix' in day_feedback:
                 today_snacks['home_snack_needs_fix'] = day_feedback['home_snack_needs_fix']
         
-        dinners = history_week.get('dinners', []) if history_week else (data.get('dinners', []) if data else [])
+        dinners = (history_week.get('dinners') if history_week else None) or (data.get('dinners') if data else [])
         for dinner in dinners:
             if dinner.get('day') == current_day:
                 today_dinner = dinner
@@ -160,8 +149,24 @@ def _get_current_status(skip_sync=False):
         # Merge history into week_data for full-week visibility on frontend
         if history_week:
             # We want the frontend to prioritize historical logs for the whole week
-            if 'dinners' in history_week:
-                data['dinners'] = history_week['dinners']
+            if history_week.get('dinners'):
+                # Deep merge dinners by day
+                h_dinners = {d['day']: d for d in history_week['dinners']}
+                merged_dinners = []
+                # Use data['dinners'] (planned) as the base
+                for p_dinner in data.get('dinners', []):
+                    day = p_dinner.get('day')
+                    if day in h_dinners:
+                        merged_dinners.append(h_dinners[day])
+                    else:
+                        merged_dinners.append(p_dinner)
+                # Add any history dinners that weren't in the plan (e.g. unplanned meals)
+                planned_days = {d.get('day') for d in data.get('dinners', [])}
+                for day, h_dinner in h_dinners.items():
+                    if day not in planned_days:
+                        merged_dinners.append(h_dinner)
+                
+                data['dinners'] = merged_dinners
             if 'daily_feedback' in history_week:
                 data['daily_feedback'] = history_week['daily_feedback']
             if 'prep_tasks' in history_week:

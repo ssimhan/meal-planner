@@ -141,7 +141,7 @@ def confirm_veg():
 
         # Return updated status
         from api.routes.status import _get_current_status
-        return _get_current_status(skip_sync=True)
+        return _get_current_status(skip_sync=True, week_override=week_str)
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
@@ -312,7 +312,7 @@ def log_meal():
 
         # Return updated status
         from api.routes.status import _get_current_status
-        return _get_current_status(skip_sync=True)
+        return _get_current_status(skip_sync=True, week_override=week_str)
 
     except Exception as e:
         import traceback; traceback.print_exc()

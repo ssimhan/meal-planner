@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { getStatus, generatePlan, createWeek, confirmVeg, logMeal, getRecipes, WorkflowStatus } from '@/lib/api';
 import type { RecipeListItem } from '@/types';
 import Skeleton from '@/components/Skeleton';
@@ -12,7 +13,10 @@ import PrepTaskList from '@/components/PrepTaskList';
 import { useToast } from '@/context/ToastContext';
 import { logout } from './login/actions';
 
-export default function Dashboard() {
+function DashboardContent() {
+  const searchParams = useSearchParams();
+  const weekParam = searchParams.get('week');
+
   const [status, setStatus] = useState<WorkflowStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [ui, setUi] = useState({
@@ -23,7 +27,14 @@ export default function Dashboard() {
   const [vegInput, setVegInput] = useState('');
   const [completedPrep, setCompletedPrep] = useState<string[]>([]);
   const [recipes, setRecipes] = useState<RecipeListItem[]>([]);
-  const [selectedWeek, setSelectedWeek] = useState<string | null>(null);
+  const [selectedWeek, setSelectedWeek] = useState<string | null>(weekParam);
+
+  // Synchronize state with URL param
+  useEffect(() => {
+    if (weekParam && weekParam !== selectedWeek) {
+      setSelectedWeek(weekParam);
+    }
+  }, [weekParam]);
 
   // Dinner Logging State consolidated
   const [dinnerState, setDinnerState] = useState({
@@ -324,7 +335,7 @@ export default function Dashboard() {
             {/* Show "View Full Week" if plan is complete or active */}
             {(status?.state === 'active' || status?.state === 'plan_complete' || status?.state === 'waiting_for_checkin') && (
               <Link
-                href="/week-view"
+                href={selectedWeek ? `/week-view?week=${selectedWeek}` : "/week-view"}
                 className="btn-primary w-full text-left flex justify-between items-center group"
               >
                 <span>View Full Week Plan</span>
@@ -570,5 +581,17 @@ export default function Dashboard() {
         </div>
       </footer>
     </main>
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen bg-[var(--bg-primary)]">
+        <div className="animate-pulse font-mono text-[var(--text-muted)]">LOADING DASHBOARD...</div>
+      </div>
+    }>
+      <DashboardContent />
+    </Suspense>
   );
 }

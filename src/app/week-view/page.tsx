@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { getStatus, getRecipes, WorkflowStatus, replan, swapMeals } from '@/lib/api';
 import { useToast } from '@/context/ToastContext';
 import MealCorrectionInput from '@/components/MealCorrectionInput';
@@ -32,7 +33,10 @@ const SelectionCheckbox = ({ day, type, label, value, editMode, selectedItems, t
   );
 };
 
-export default function WeekView() {
+function WeekViewContent() {
+  const searchParams = useSearchParams();
+  const weekParam = searchParams.get('week');
+
   const [status, setStatus] = useState<WorkflowStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
@@ -56,7 +60,8 @@ export default function WeekView() {
   useEffect(() => {
     async function fetchWeekData() {
       try {
-        const data = await getStatus();
+        setLoading(true);
+        const data = await getStatus(weekParam || undefined);
         setStatus(data);
       } catch (err) {
         showToast(err instanceof Error ? err.message : 'Failed to fetch week data', 'error');
@@ -65,7 +70,7 @@ export default function WeekView() {
       }
     }
     fetchWeekData();
-  }, []);
+  }, [weekParam]);
 
   useEffect(() => {
     async function loadRecipes() {
@@ -1050,5 +1055,17 @@ export default function WeekView() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function WeekView() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen text-[var(--bg-primary)]">
+        <p className="text-[var(--text-muted)] font-mono animate-pulse">LOADING WEEK VIEW...</p>
+      </div>
+    }>
+      <WeekViewContent />
+    </Suspense>
   );
 }

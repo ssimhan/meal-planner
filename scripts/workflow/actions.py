@@ -1,3 +1,4 @@
+import sys
 import yaml
 from pathlib import Path
 from datetime import datetime
@@ -21,10 +22,13 @@ def create_new_week(week_str):
     proposed_veg, staples = generate_farmers_market_proposal(history_path, index_path)
 
     config_path = Path('config.yml')
-    if config_path.exists():
-        with open(config_path, 'r') as f: config = yaml.safe_load(f)
-    else:
-        config = {'timezone': 'America/Los_Angeles', 'schedule': {'office_days': ['mon', 'wed', 'fri'], 'busy_days': ['thu', 'fri']}, 'preferences': {'vegetarian': True, 'avoid_ingredients': ['eggplant', 'mushrooms', 'green_cabbage'], 'novelty_recipe_limit': 1}}
+    if not config_path.exists():
+        print(f"❌ Error: config.yml not found at {config_path.absolute()}")
+        print("Please create config.yml based on config.example.yml")
+        sys.exit(1)
+
+    with open(config_path, 'r') as f:
+        config = yaml.safe_load(f)
 
     input_data = {
         'week_of': week_str,

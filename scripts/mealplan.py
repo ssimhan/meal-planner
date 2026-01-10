@@ -242,20 +242,26 @@ def run_intake():
     for veg in staples:
         print(f"  • {veg}")
 
-    # 5. Create input file data structure
+    # 5. Load config.yml for preferences and timezone
+    config_path = Path('config.yml')
+    if not config_path.exists():
+        print(f"\n❌ Error: config.yml not found at {config_path.absolute()}")
+        print("Please create config.yml based on config.example.yml")
+        sys.exit(1)
+
+    with open(config_path, 'r') as f:
+        config = yaml.safe_load(f)
+
+    # 6. Create input file data structure
     input_data = {
         'week_of': week_str,
-        'timezone': 'America/Los_Angeles',
+        'timezone': config.get('timezone', 'America/Los_Angeles'),
         'schedule': {
             'office_days': office_days,
             'busy_days': busy_days,
             'late_class_days': late_class_days,
         },
-        'preferences': {
-            'vegetarian': True,
-            'avoid_ingredients': ['eggplant', 'mushrooms', 'green_cabbage'],
-            'novelty_recipe_limit': 1,
-        },
+        'preferences': config.get('preferences', {}),
         'farmers_market': {
             'status': 'proposed',
             'proposed_veg': proposed_veg + staples,

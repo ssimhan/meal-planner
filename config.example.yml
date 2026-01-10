@@ -1,0 +1,97 @@
+# Meal Planner Configuration Example
+# Copy this file to config.yml and customize for your household
+
+# Timezone for daily check-ins and plan generation
+# Use IANA timezone format (e.g., America/New_York, Europe/London, Asia/Tokyo)
+timezone: America/Los_Angeles
+
+# Weekly schedule settings
+schedule:
+  # Days when someone works from an office (impacts lunch planning)
+  # Valid values: mon, tue, wed, thu, fri, sat, sun
+  office_days: [mon, wed, fri]
+
+  # Days with limited time/energy for meal prep
+  # These days will get no-chop compatible dinner recipes
+  busy_days: [thu, fri]
+
+  # Days with late activities (soccer practice, music lessons, etc.)
+  # These days will include a heavy snack (fruit + protein/fat)
+  late_class_days: []
+
+# Dietary preferences and restrictions
+preferences:
+  # Set to true for vegetarian meal planning
+  vegetarian: true
+
+  # Ingredients to avoid across all meals
+  # These will be excluded from recipe selection
+  avoid_ingredients:
+    - eggplant
+    - mushrooms
+    - green_cabbage
+
+  # Number of "from scratch" novelty recipes per week
+  # Recommended: 1 (one new recipe, rest are familiar)
+  novelty_recipe_limit: 1
+
+# Individual profiles for each family member
+# Add one entry per person who needs customized meal planning
+kid_profiles:
+  # Example child 1
+  ChildName1:
+    # Foods they particularly enjoy (future feature)
+    preferences: []
+
+    # Ingredients they must avoid (allergies or strong dislikes)
+    # These are checked in addition to household avoid_ingredients
+    avoid_ingredients: []
+
+  # Example child 2 with nut allergy
+  ChildName2:
+    preferences: []
+    avoid_ingredients:
+      - nuts
+      - peanuts
+      - tree nuts
+
+# Default lunch options for easy rotation
+# These are used when no specific lunch is planned
+lunch_defaults:
+  # Kid-friendly lunch options (simple, familiar, repeatable)
+  kids:
+    - PBJ on whole wheat
+    - Egg sandwich or scrambled egg sandwich
+    - Toad-in-a-hole (egg cooked in bread)
+    - Ravioli with brown butter or simple tomato sauce
+    - Chapati or dosa rolls with fruit
+    - Veggie burrito or pizza roll
+    - Quesadilla with cheese and beans
+
+  # Adult lunch options (leftovers preferred to minimize prep)
+  adult:
+    - Leftovers from previous night's dinner (preferred)
+    - Grain bowl: prepped grain + roasted vegetables + protein
+    - Salad with dinner components
+
+# Default snack options
+snack_defaults:
+  # Snacks by day of week (system rotates through these)
+  by_day:
+    mon: Apple slices with peanut butter
+    tue: Cheese and crackers
+    wed: Cucumber rounds with cream cheese
+    thu: Grapes
+    fri: Crackers with hummus
+
+  # Fallback snacks when day-specific snack isn't available
+  fallback:
+    school: Fruit or Cheese sticks  # Nut-free for school environments
+    home: Cucumber or Crackers
+
+# Workflow automation settings
+workflows:
+  # Cron schedule for daily check-in reminder (optional)
+  # Format: "minute hour day month weekday" (standard cron syntax)
+  # Example: "0 20 * * *" = 8:00 PM every day
+  daily_check_in_time: "0 4 * * *"  # 4am UTC = 8pm PST

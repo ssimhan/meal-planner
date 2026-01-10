@@ -238,11 +238,11 @@ Currently, the system is stable and feature-complete for the core workflow. Futu
 #### Breakdown (1-2 hour chunks):
 
 **Planning Phase (3 hours)**
-- [ ] **Chunk 1:** Config Schema Definition - Define complete config.yml structure, create config.example.yml
-- [ ] **Chunk 2:** Hardcoded Strings Audit - Document all 7 locations with hardcoded values
+- [x] **Chunk 1:** Config Schema Definition - Define complete config.yml structure, create config.example.yml
+- [x] **Chunk 2:** Hardcoded Strings Audit - Document all 7 locations with hardcoded values
 
 **Migration Phase (7.5 hours)**
-- [ ] **Chunk 3:** Centralize Default Preferences - Remove hardcoded dietary/schedule defaults from workflow/actions.py and mealplan.py
+- [x] **Chunk 3:** Centralize Default Preferences - Remove hardcoded dietary/schedule defaults from workflow/actions.py and mealplan.py
 - [ ] **Chunk 4:** Centralize Timezone - Move timezone from api/routes/status.py to config-driven
 - [ ] **Chunk 5:** Centralize Lunch Defaults - Move lunch defaults from lunch_selector.py and update_lunch_fields.py to config.yml
 - [ ] **Chunk 6:** Centralize Snack Defaults - Move snack defaults from api/routes/status.py to config.yml

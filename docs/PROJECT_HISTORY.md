@@ -266,9 +266,25 @@ Identified 7 locations with hardcoded personal data:
 6. `api/routes/status.py:86-89, 92-98` - Snack defaults (2 locations)
 7. `scripts/workflow/html_generator.py:210-211` - Schedule fallbacks
 
+**Progress:**
+- **Chunk 1 (2026-01-09, 1.5h):** Config Schema Definition
+  - Enhanced `config.yml` with `lunch_defaults` and `snack_defaults` sections
+  - Created `config.example.yml` with comprehensive inline documentation
+  - Added `validate_config_schema()` to `scripts/validate_yaml.py` (type checking, field validation)
+- **Chunk 2 (2026-01-09, 1h):** Hardcoded Strings Audit
+  - Created `docs/HARDCODED_AUDIT.md` with 7 findings across 5 files
+  - Prioritized by impact: 2 critical, 3 high, 2 medium
+  - Documented code snippets, problems, and solutions for each location
+  - Estimated migration effort: ~4 hours total
+- **Chunk 3 (2026-01-09, 0.5h):** Centralize Default Preferences
+  - Removed hardcoded config fallback in `scripts/workflow/actions.py:27`
+  - Removed hardcoded preferences in `scripts/mealplan.py:255-257`
+  - Both scripts now fail gracefully with helpful error if config.yml missing
+  - Validated Python syntax and config schema still pass
+
 **Approach:**
 - 12 work chunks (~20 hours total)
-- Create `config.example.yml` for new users
+- Create `config.example.yml` for new users ✅
 - Build `scripts/config_loader.py` helper module
 - Add `scripts/setup.py` for guided onboarding
 - Comprehensive white-label testing with alternate config

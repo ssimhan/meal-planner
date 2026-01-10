@@ -8,13 +8,13 @@ from scripts.log_execution import find_week
 from scripts.compute_analytics import compute_analytics
 from api.utils import CACHE, CACHE_TTL
 from api.utils.auth import require_auth
-from api.utils.storage import StorageEngine, supabase, get_household_id
+from api.utils import storage
 
 status_bp = Blueprint('status', __name__)
 
 def _load_config():
     """Load config from DB households table with caching."""
-    h_id = get_household_id()
+    h_id = storage.get_household_id()
     now = datetime.now().timestamp()
     
     # Check cache
@@ -22,12 +22,12 @@ def _load_config():
     if cache_entry and (now - cache_entry['timestamp'] < CACHE_TTL):
         return cache_entry['data']
 
-    if not supabase:
+    if not storage.supabase:
         print("Supabase client not initialized. Using fallback config.")
         return {'timezone': 'America/Los_Angeles'}
 
     try:
-        res = supabase.table("households").select("config").eq("id", h_id).execute()
+        res = storage.supabase.table("households").select("config").eq("id", h_id).execute()
         if res.data and len(res.data) > 0:
             config = res.data[0]['config']
             CACHE['config'] = {'data': config, 'timestamp': now}
@@ -40,7 +40,7 @@ def _load_config():
 
 def _get_current_status(skip_sync=False):
     try:
-        StorageEngine.archive_expired_weeks()
+        storage.StorageEngine.archive_expired_weeks()
     except Exception as e:
         print(f"Warning: Failed to archive: {e}")
 
@@ -57,10 +57,10 @@ def _get_current_status(skip_sync=False):
     
     if requested_week:
         # Fetch specific week
-        res = supabase.table("meal_plans").select("*").eq("household_id", get_household_id()).eq("week_of", requested_week).execute()
+        res = storage.supabase.table("meal_plans").select("*").eq("household_id", storage.get_household_id()).eq("week_of", requested_week).execute()
         if res.data:
             active_plan = res.data[0]
-            state, data = StorageEngine.get_workflow_state(active_plan)
+            state, data = storage.StorageEngine.get_workflow_state(active_plan)
             week_str = active_plan['week_of']
         else:
             # Week doesn't exist in DB yet
@@ -70,8 +70,8 @@ def _get_current_status(skip_sync=False):
             week_str = requested_week
     else:
         # Default logic: Look for active or incomplete weeks from DB
-        active_plan = StorageEngine.get_active_week()
-        state, data = StorageEngine.get_workflow_state(active_plan)
+        active_plan = storage.StorageEngine.get_active_week()
+        state, data = storage.StorageEngine.get_workflow_state(active_plan)
         
         if active_plan:
             week_str = active_plan['week_of']
@@ -108,7 +108,7 @@ def _get_current_status(skip_sync=False):
     history_week = None
     if state in ['active', 'waiting_for_checkin', 'archived']:
         # Use DB History
-        history = StorageEngine.get_history()
+        history = storage.StorageEngine.get_history()
         
         # Ensure week_str matches the type in history (DB returns dates sometimes)
         history_week = find_week(history, week_str)
@@ -200,7 +200,7 @@ def _get_current_status(skip_sync=False):
             "week_of": str(week_str),
             "state": state,
             "current_day": current_day,
-            "household_id": get_household_id(),
+            "household_id": storage.get_household_id(),
             "today_dinner": today_dinner,
             "today_lunch": today_lunch,
             "today_snacks": today_snacks,
@@ -220,10 +220,10 @@ def _get_current_status(skip_sync=False):
         }
 
         # Check for next week
-        if supabase:
+        if storage.supabase:
             try:
                 # Simple check for any plan in the future
-                future_res = supabase.table("meal_plans").select("week_of, status").eq("household_id", get_household_id()).gt("week_of", week_str).order("week_of", desc=False).limit(1).execute()
+                future_res = storage.supabase.table("meal_plans").select("week_of, status").eq("household_id", storage.get_household_id()).gt("week_of", week_str).order("week_of", desc=False).limit(1).execute()
                 if future_res.data:
                     res_dict["next_week_planned"] = True
                     res_dict["next_week"] = {
@@ -235,7 +235,7 @@ def _get_current_status(skip_sync=False):
 
         # Add available weeks for the selector
         try:
-            res_dict["available_weeks"] = StorageEngine.get_available_weeks()
+            res_dict["available_weeks"] = storage.StorageEngine.get_available_weeks()
         except Exception as e:
             print(f"Error adding available weeks: {e}")
 
@@ -258,13 +258,13 @@ def get_status():
 @status_bp.route("/api/history")
 @require_auth
 def get_history():
-    history = StorageEngine.get_history()
+    history = storage.StorageEngine.get_history()
     return jsonify(history or {})
 
 @status_bp.route("/api/analytics")
 @require_auth
 def get_analytics():
-    history = StorageEngine.get_history()
+    history = storage.StorageEngine.get_history()
     start_date = request.args.get('start_date')
     end_date = request.args.get('end_date')
     analytics = compute_analytics(history, start_date, end_date)

@@ -2,6 +2,18 @@ from flask import Flask, jsonify, request
 import sys
 import os
 from flask_cors import CORS
+
+# Load local environment variables if they exist
+try:
+    from dotenv import load_dotenv
+    # Prioritize .env.local for Next.js compatibility
+    for env_file in ['.env.local', '.env']:
+        if os.path.exists(env_file):
+            load_dotenv(env_file)
+            break
+except ImportError:
+    pass
+
 from api.utils import get_yaml_data, invalidate_cache, CACHE, get_cached_data
 from api.utils.auth import require_auth
 
@@ -24,6 +36,15 @@ app.register_blueprint(recipes_bp)
 @app.route("/api/health")
 def health_check():
     return jsonify({"status": "healthy", "version": "2.0.1"})
+
+@app.route("/api/whoami")
+@require_auth
+def whoami():
+    from api.utils.storage import get_household_id
+    return jsonify({
+        "user_id": getattr(request.user, 'id', 'unknown'),
+        "household_id": get_household_id()
+    })
 
 @app.route("/api/debug")
 def debug_info():

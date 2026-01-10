@@ -2,6 +2,17 @@ import os
 from flask import request
 from supabase import create_client
 
+# Load local environment variables if they exist
+try:
+    from dotenv import load_dotenv
+    for env_file in ['.env.local', '.env']:
+        path = os.path.join(os.getcwd(), env_file)
+        if os.path.exists(path):
+            load_dotenv(path)
+            break
+except ImportError:
+    pass
+
 # Initialize Supabase client with Service Role Key to bypass RLS in the backend
 SUPABASE_URL = os.environ.get('NEXT_PUBLIC_SUPABASE_URL') or os.environ.get('SUPABASE_URL')
 SUPABASE_SERVICE_KEY = os.environ.get('SUPABASE_SERVICE_ROLE_KEY') or os.environ.get('NEXT_PUBLIC_SUPABASE_ANON_KEY') or os.environ.get('SUPABASE_ANON_KEY')

@@ -195,13 +195,13 @@ def _get_current_status(skip_sync=False):
              pass
         except Exception as e:
             print(f"Warning: Failed to regenerate prep tasks: {e}")
-
     try:
         res_dict = {
             "status": "success",
             "week_of": str(week_str),
             "state": state,
             "current_day": current_day,
+            "household_id": get_household_id(),
             "today_dinner": today_dinner,
             "today_lunch": today_lunch,
             "today_snacks": today_snacks,

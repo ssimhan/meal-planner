@@ -37,15 +37,6 @@ app.register_blueprint(recipes_bp)
 def health_check():
     return jsonify({"status": "healthy", "version": "2.0.1"})
 
-@app.route("/api/whoami")
-@require_auth
-def whoami():
-    from api.utils.storage import get_household_id
-    return jsonify({
-        "user_id": getattr(request.user, 'id', 'unknown'),
-        "household_id": get_household_id()
-    })
-
 @app.route("/api/debug")
 def debug_info():
     from api.utils.storage import SUPABASE_URL, SUPABASE_SERVICE_KEY, supabase

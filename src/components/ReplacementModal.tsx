@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { getSuggestions } from '@/lib/api';
 import MealCorrectionInput from './MealCorrectionInput';
 
 interface RecipeSuggestion {
@@ -35,8 +36,7 @@ export default function ReplacementModal({ currentMeal, day, recipes, onConfirm,
     useEffect(() => {
         async function fetchSuggestions() {
             try {
-                const res = await fetch('/api/suggestions');
-                const data = await res.json();
+                const data = await getSuggestions();
                 if (data.status === 'success') {
                     setSuggestions(data.suggestions);
                     // Set initial tab based on availability

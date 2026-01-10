@@ -203,5 +203,12 @@ export async function checkPrepTask(week: string, taskId: string, status: 'compl
     return handleResponse<{ status: string }>(res, 'Failed to update prep task');
 }
 
+export async function getSuggestions(): Promise<any> {
+    const res = await fetch('/api/suggestions', {
+        headers: await getAuthHeaders(false),
+    });
+    return handleResponse<any>(res, 'Failed to fetch suggestions');
+}
+
 // Re-export types for convenience
 export type { WorkflowStatus, LogMealData } from '@/types';

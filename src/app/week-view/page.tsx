@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { getStatus, getRecipes, WorkflowStatus, replan, swapMeals } from '@/lib/api';
+import { getStatus, getRecipes, WorkflowStatus, replan, swapMeals, logMeal } from '@/lib/api';
 import { useToast } from '@/context/ToastContext';
 import MealCorrectionInput from '@/components/MealCorrectionInput';
 import SwapConfirmationModal from '@/components/SwapConfirmationModal';
@@ -148,26 +148,19 @@ function WeekViewContent() {
     if (!status?.week_data?.week_of) return;
 
     try {
-      const res = await fetch('/api/log-meal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          week: status.week_data.week_of,
-          day,
-          request_recipe: requestRecipe,
-          ...(type === 'dinner'
-            ? { actual_meal: value, dinner_needs_fix: false }
-            : { [`${type}_feedback`]: value, [`${type}_needs_fix`]: false })
-        })
+      const data = await logMeal({
+        week: status.week_data.week_of,
+        day,
+        request_recipe: requestRecipe,
+        ...(type === 'dinner'
+          ? { actual_meal: value, dinner_needs_fix: false }
+          : { [`${type}_feedback`]: value, [`${type}_needs_fix`]: false })
       });
 
-      if (!res.ok) throw new Error("Failed to save correction");
-      const data = await res.json();
-
       if (data.week_of) {
-        setStatus(data);
+        setStatus(data as WorkflowStatus);
       } else {
-        const newData = await getStatus();
+        const newData = await getStatus(status.week_data.week_of);
         setStatus(newData);
       }
 
@@ -240,18 +233,12 @@ function WeekViewContent() {
     }
 
     try {
-      const res = await fetch('/api/log-meal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      const data = await logMeal(payload);
 
-      if (!res.ok) throw new Error("Correction failed");
-      const data = await res.json();
       if (data.week_of) {
-        setStatus(data);
+        setStatus(data as WorkflowStatus);
       } else {
-        const newData = await getStatus();
+        const newData = await getStatus(status.week_data.week_of);
         setStatus(newData);
       }
 

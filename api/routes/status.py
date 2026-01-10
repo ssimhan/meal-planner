@@ -196,50 +196,60 @@ def _get_current_status(skip_sync=False):
         except Exception as e:
             print(f"Warning: Failed to regenerate prep tasks: {e}")
 
-    res_dict = {
-        "status": "success",
-        "week_of": week_str,
-        "state": state,
-        "current_day": current_day,
-        "today_dinner": today_dinner,
-        "today_lunch": today_lunch,
-        "today_snacks": today_snacks,
-        "today": {
-            "day": current_day,
-            "date": today.strftime('%Y-%m-%d'),
-            "dinner": today_dinner,
-            "lunch": today_lunch,
-            "snacks": today_snacks,
-            "prep_tasks": history_week.get('prep_tasks', []) if history_week else [],
-            "prep_completed": completed_prep_today
-        },
-        "next_week_planned": False,
-        "next_week": None,
-        "week_data": data,
-        "available_weeks": []
-    }
-
-    # Check for next week
     try:
-        from datetime import timedelta
-        # Simple check for any plan in the future
-        future_res = supabase.table("meal_plans").select("week_of, status").eq("household_id", get_household_id()).gt("week_of", week_str).order("week_of", desc=False).limit(1).execute()
-        if future_res.data:
-            res_dict["next_week_planned"] = True
-            res_dict["next_week"] = {
-                "week_of": str(future_res.data[0]['week_of']),
-                "status": future_res.data[0]['status']
-            }
-    except Exception as e:
-        print(f"Error checking for next week: {e}")
+        res_dict = {
+            "status": "success",
+            "week_of": str(week_str),
+            "state": state,
+            "current_day": current_day,
+            "today_dinner": today_dinner,
+            "today_lunch": today_lunch,
+            "today_snacks": today_snacks,
+            "today": {
+                "day": current_day,
+                "date": today.strftime('%Y-%m-%d'),
+                "dinner": today_dinner,
+                "lunch": today_lunch,
+                "snacks": today_snacks,
+                "prep_tasks": history_week.get('prep_tasks', []) if history_week else [],
+                "prep_completed": completed_prep_today
+            },
+            "next_week_planned": False,
+            "next_week": None,
+            "week_data": data,
+            "available_weeks": []
+        }
 
-    # Add available weeks for the selector
-    try:
-        res_dict["available_weeks"] = StorageEngine.get_available_weeks()
-    except Exception as e:
-        print(f"Error adding available weeks: {e}")
+        # Check for next week
+        if supabase:
+            try:
+                # Simple check for any plan in the future
+                future_res = supabase.table("meal_plans").select("week_of, status").eq("household_id", get_household_id()).gt("week_of", week_str).order("week_of", desc=False).limit(1).execute()
+                if future_res.data:
+                    res_dict["next_week_planned"] = True
+                    res_dict["next_week"] = {
+                        "week_of": str(future_res.data[0]['week_of']),
+                        "status": future_res.data[0]['status']
+                    }
+            except Exception as e:
+                print(f"Error checking for next week: {e}")
 
-    return jsonify(res_dict)
+        # Add available weeks for the selector
+        try:
+            res_dict["available_weeks"] = StorageEngine.get_available_weeks()
+        except Exception as e:
+            print(f"Error adding available weeks: {e}")
+
+        return jsonify(res_dict)
+    except Exception as e:
+        import traceback
+        print(f"CRITICAL ERROR in _get_current_status: {e}")
+        traceback.print_exc()
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
 
 @status_bp.route("/api/status")
 @require_auth

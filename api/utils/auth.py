@@ -1,19 +1,7 @@
 import os
 from functools import wraps
 from flask import request, jsonify
-from supabase import create_client, Client
-from dotenv import load_dotenv
-
-# Load .env.local if it exists
-dotenv_path = os.path.join(os.path.dirname(__file__), '../../.env.local')
-if os.path.exists(dotenv_path):
-    load_dotenv(dotenv_path)
-
-SUPABASE_URL = os.environ.get('NEXT_PUBLIC_SUPABASE_URL') or os.environ.get('SUPABASE_URL')
-# Use Service Role Key for backend operations to bypass RLS during auth/onboarding
-SUPABASE_SERVICE_KEY = os.environ.get('SUPABASE_SERVICE_ROLE_KEY') or os.environ.get('NEXT_PUBLIC_SUPABASE_ANON_KEY') or os.environ.get('SUPABASE_ANON_KEY')
-
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY) if SUPABASE_URL and SUPABASE_SERVICE_KEY else None
+from api.utils.storage import supabase
 
 def require_auth(f):
     @wraps(f)

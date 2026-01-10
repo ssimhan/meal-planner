@@ -6,10 +6,9 @@ from flask import Blueprint, jsonify, request
 from scripts.workflow import (
     generate_meal_plan, replan_meal_plan
 )
-from scripts.log_execution import find_week
-from api.utils import invalidate_cache
+from api.utils import storage, invalidate_cache
 from api.utils.auth import require_auth
-from api.utils.storage import StorageEngine, supabase, get_household_id
+from scripts.log_execution import find_week, calculate_adherence
 
 meals_bp = Blueprint('meals', __name__)
 
@@ -17,8 +16,8 @@ meals_bp = Blueprint('meals', __name__)
 @require_auth
 def generate_plan_route():
     try:
-        h_id = get_household_id()
-        res = supabase.table("meal_plans").select("*").eq("household_id", h_id).neq("status", "archived").order("week_of", desc=True).limit(1).execute()
+        h_id = storage.get_household_id()
+        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).neq("status", "archived").order("week_of", desc=True).limit(1).execute()
         
         if not res.data:
             return jsonify({"status": "error", "message": "No active week found to generate plan"}), 404
@@ -42,7 +41,7 @@ def generate_plan_route():
         with open(input_file, 'r') as f:
             new_data = yaml.safe_load(f)
         
-        StorageEngine.update_meal_plan(week_str, plan_data=new_data)
+        storage.StorageEngine.update_meal_plan(week_str, plan_data=new_data)
         
         invalidate_cache()
             
@@ -65,7 +64,7 @@ def create_week():
              return jsonify({"status": "error", "message": "Week start date required"}), 400
             
         # Initialize in DB
-        StorageEngine.update_meal_plan(week_str, plan_data={'week_of': week_str}, history_data={'week_of': week_str, 'dinners': []}, status='planning')
+        storage.StorageEngine.update_meal_plan(week_str, plan_data={'week_of': week_str}, history_data={'week_of': week_str, 'dinners': []}, status='planning')
         
         return jsonify({
             "status": "success", 
@@ -78,7 +77,7 @@ def create_week():
 @require_auth
 def replan_route():
     try:
-        active_plan = StorageEngine.get_active_week()
+        active_plan = storage.StorageEngine.get_active_week()
         if not active_plan:
             return jsonify({"status": "error", "message": "No active week found"}), 404
             
@@ -97,7 +96,7 @@ def replan_route():
         with open(input_file, 'r') as f:
             new_data = yaml.safe_load(f)
             
-        StorageEngine.update_meal_plan(week_str, plan_data=new_data)
+        storage.StorageEngine.update_meal_plan(week_str, plan_data=new_data)
         invalidate_cache()
         
         return jsonify({"status": "success", "message": "Plan updated based on execution"})
@@ -113,8 +112,8 @@ def confirm_veg():
         if not confirmed_veg:
             return jsonify({"status": "error", "message": "No vegetables provided"}), 400
             
-        h_id = get_household_id()
-        res = supabase.table("meal_plans").select("*").eq("household_id", h_id).neq("status", "archived").order("week_of", desc=True).limit(1).execute()
+        h_id = storage.get_household_id()
+        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).neq("status", "archived").order("week_of", desc=True).limit(1).execute()
         
         if not res.data:
             return jsonify({"status": "error", "message": "No active week found"}), 404
@@ -134,10 +133,10 @@ def confirm_veg():
 
         # 3. Update Inventory (Direct to DB)
         for veg in confirmed_veg:
-            StorageEngine.update_inventory_item('fridge', veg, updates={'added': datetime.now().strftime('%Y-%m-%d')})
+            storage.StorageEngine.update_inventory_item('fridge', veg, updates={'added': datetime.now().strftime('%Y-%m-%d')})
 
         # Save back to DB
-        StorageEngine.update_meal_plan(week_str, plan_data=week_data, history_data=history_week)
+        storage.StorageEngine.update_meal_plan(week_str, plan_data=week_data, history_data=history_week)
         invalidate_cache()
 
         # Return updated status
@@ -178,13 +177,14 @@ def log_meal():
         kids_lunch_needs_fix = data.get('kids_lunch_needs_fix')
         adult_lunch_needs_fix = data.get('adult_lunch_needs_fix')
         dinner_needs_fix = data.get('dinner_needs_fix')
+        request_recipe = data.get('request_recipe', False)
 
         if not week_str or not day:
              return jsonify({"status": "error", "message": "Week and day required"}), 400
              
         # Fetch plan from DB
-        h_id = get_household_id()
-        res = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).single().execute()
+        h_id = storage.get_household_id()
+        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).single().execute()
         if not res.data:
             return jsonify({"status": "error", "message": "Meal plan not found"}), 404
             
@@ -224,7 +224,7 @@ def log_meal():
                  
                  # Inventory updates (Subtract from fridge in DB)
                  for veg in v_list:
-                     StorageEngine.update_inventory_item('fridge', veg, delete=True)
+                     storage.StorageEngine.update_inventory_item('fridge', veg, delete=True)
 
              if kids_feedback: target_dinner['kids_feedback'] = kids_feedback
              if kids_complaints:
@@ -277,16 +277,37 @@ def log_meal():
              if made_2x:
                  target_dinner['made_2x_for_freezer'] = True
                  meal_name = target_dinner.get('recipe_id', 'Unknown').replace('_', ' ').title()
-                 StorageEngine.update_inventory_item('freezer_backup', meal_name, updates={'servings': 4, 'frozen_date': datetime.now().strftime('%Y-%m-%d')})
+                 storage.StorageEngine.update_inventory_item('freezer_backup', meal_name, updates={'servings': 4, 'frozen_date': datetime.now().strftime('%Y-%m-%d')})
              
              if freezer_meal and target_dinner.get('made') == 'freezer_backup':
                  target_dinner['freezer_used'] = {'meal': freezer_meal, 'frozen_date': 'Unknown'}
-                 StorageEngine.update_inventory_item('freezer_backup', freezer_meal, delete=True)
+                 storage.StorageEngine.update_inventory_item('freezer_backup', freezer_meal, delete=True)
 
              calculate_adherence(history_week)
+             
+             # Handle "Add as Recipe" request
+             if request_recipe and actual_meal:
+                 try:
+                     recipe_id = actual_meal.lower().replace(' ', '_')
+                     # Check if it exists first
+                     existing = storage.supabase.table("recipes").select("id").eq("household_id", h_id).eq("id", recipe_id).execute()
+                     if not existing.data:
+                         storage.supabase.table("recipes").insert({
+                             "id": recipe_id,
+                             "household_id": h_id,
+                             "name": actual_meal,
+                             "metadata": {
+                                 "cuisine": "Indian" if "rice" in actual_meal.lower() or "sambar" in actual_meal.lower() else "unknown",
+                                 "meal_type": "dinner",
+                                 "effort_level": "normal"
+                             },
+                             "content": f"# {actual_meal}\n\nAdded automatically from meal correction."
+                         }).execute()
+                 except Exception as re:
+                     print(f"Error auto-adding recipe: {re}")
 
         # Save to DB
-        StorageEngine.update_meal_plan(week_str, history_data=history_week)
+        storage.StorageEngine.update_meal_plan(week_str, history_data=history_week)
         invalidate_cache()
 
         # Return updated status
@@ -310,8 +331,8 @@ def swap_meals():
              return jsonify({"status": "error", "message": "Week, day1, and day2 are required"}), 400
 
         # Load from DB
-        h_id = get_household_id()
-        res = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).single().execute()
+        h_id = storage.get_household_id()
+        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).single().execute()
         if not res.data:
             return jsonify({"status": "error", "message": f"Meal plan for week {week_str} not found"}), 404
         
@@ -337,7 +358,7 @@ def swap_meals():
             elif dinner2: dinner2['day'] = day1
 
         # Save to DB
-        StorageEngine.update_meal_plan(week_str, plan_data=week_data)
+        storage.StorageEngine.update_meal_plan(week_str, plan_data=week_data)
         invalidate_cache()
         
         return jsonify({"status": "success", "message": "Meals swapped", "week_data": week_data})
@@ -356,8 +377,8 @@ def check_prep_task():
             return jsonify({"status": "error", "message": "Week required"}), 400
             
         # Load from DB
-        h_id = get_household_id()
-        res = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).single().execute()
+        h_id = storage.get_household_id()
+        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).single().execute()
         if not res.data:
             return jsonify({"status": "error", "message": "Meal plan not found"}), 404
             
@@ -376,7 +397,7 @@ def check_prep_task():
              return jsonify({"status": "error", "message": "Task not found to update"}), 404
              
         # Save to DB
-        StorageEngine.update_meal_plan(week_str, history_data=history_week)
+        storage.StorageEngine.update_meal_plan(week_str, history_data=history_week)
         invalidate_cache('history')
         
         return jsonify({"status": "success", "updated_task_id": task_id})
@@ -394,14 +415,14 @@ def update_plan_with_actuals():
 
         if not week_str:
             # Try to get current week from DB
-            active_plan = StorageEngine.get_active_week()
+            active_plan = storage.StorageEngine.get_active_week()
             if active_plan:
                 week_str = active_plan['week_of']
             else:
                 return jsonify({"status": "error", "message": "Week required and no active week found"}), 400
 
         # Check if week exists in DB history
-        history = StorageEngine.get_history()
+        history = storage.StorageEngine.get_history()
         week_history = find_week(history, week_str)
         if not week_history:
             return jsonify({"status": "error", "message": f"Week {week_str} not found in database"}), 404

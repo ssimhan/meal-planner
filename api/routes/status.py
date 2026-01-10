@@ -157,6 +157,16 @@ def _get_current_status(skip_sync=False):
                 if key in day_feedback:
                     today_lunch[key + ('_feedback' if 'feedback' not in key and 'made' not in key else '')] = day_feedback[key]
 
+        # Merge history into week_data for full-week visibility on frontend
+        if history_week:
+            # We want the frontend to prioritize historical logs for the whole week
+            if 'dinners' in history_week:
+                data['dinners'] = history_week['dinners']
+            if 'daily_feedback' in history_week:
+                data['daily_feedback'] = history_week['daily_feedback']
+            if 'prep_tasks' in history_week:
+                data['prep_tasks'] = history_week['prep_tasks']
+
     # Extract completed prep tasks from history
     completed_prep = []
     if history_week and 'daily_feedback' in history_week:

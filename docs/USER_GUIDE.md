@@ -6,22 +6,20 @@ Here is your weekly routine.
 
 ---
 
-## 📅 The Saturday Routine (5 Minutes)
+## 📅 The Weekly Routine (5 Minutes)
 
-### 1. Wait for the Notification (5 AM)
-Every Saturday morning, the system wakes up and looks for seasonal produce. You will get a notification (via email or GitHub app) that **"Weekly Plan Start"** is ready for review.
+### 1. Start New Week
+Open the [dashboard](https://meal-planner-eta-seven.vercel.app/) and click **"Start New Week"**. The system will suggest seasonal vegetables based on the current week.
 
 ### 2. Confirm Vegetables
-1.  Click the notification to view the **Pull Request**.
-2.  You will see a file listing proposed vegetables (e.g., `spinach`, `carrots`).
-3.  **Action:** If you bought something different at the market, edit the file to match reality.
-4.  **Action:** Click **"Merge Pull Request"**.
+After your farmers market trip, enter the vegetables you actually purchased in the dashboard.
 
-### 3. Done!
-The system now takes over:
-*   Generates the full weekly menu.
-*   Creates your grocery list.
-*   Updates the website.
+### 3. Generate Plan
+Click **"Generate Weekly Plan"**. The system will:
+*   Select 5 dinners based on your schedule and recent history
+*   Plan lunches with leftover pipelines
+*   Create your grocery list
+*   Generate prep schedules
 
 ---
 
@@ -29,28 +27,30 @@ The system now takes over:
 
 ### Viewing Your Plan
 Bookmark this link on your phone:
-👉 **[Open Meal Planner](https://ssimhan.github.io/meal-planner/)**
+👉 **[Open Meal Planner](https://meal-planner-eta-seven.vercel.app/)**
 
 *   **Groceries Tab:** Use this while shopping on Sunday.
 *   **Daily Tabs:** Check "Dinner" for tonight's plan. It tells you exactly what to prep.
 
 ---
 
-## ✅ The Evening Check-in (8 PM)
+## ✅ Daily Logging
 
-Every night at 8 PM, the system asks: *"Did you stick to the plan?"*
+After dinner, log your execution in the dashboard:
 
-1.  Open the notification on your phone (**GitHub App** or **Email**).
-2.  You will see a simple checklist:
-    - [ ] **Made as planned?** (Yes/No)
-    - [ ] **Vegetables used?** (Select from list)
-    - [ ] **Kids liked it?** (Love/Like/Meh)
-3.  **Click "Comment"** to save.
+1.  Open the [dashboard](https://meal-planner-eta-seven.vercel.app/)
+2.  Find "Today's Schedule" section
+3.  Click the feedback buttons:
+    - **Made as planned** / **Freezer backup** / **Skipped** / **Ate out**
+    - Select vegetables used
+    - Add kids' feedback (❤️ Love / 👍 Like / 😐 Meh)
+4.  Check off prep tasks as you complete them
 
-**Why do this?**
-*   If you skip a meal, it remembers to suggest it again soon.
-*   It tracks what ingredients you have left in the fridge.
-*   It learns which recipes the kids actually eat.
+**Why log?**
+*   If you skip a meal, it remembers to suggest it again soon
+*   Tracks what ingredients you have left in the fridge
+*   Learns which recipes the kids actually eat
+*   Updates freezer backup inventory automatically
 
 ---
 

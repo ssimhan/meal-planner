@@ -22,27 +22,21 @@ meal-planner/
 ├── requirements.txt             # Python dependencies
 │
 ├── .github/workflows/           # GitHub Actions automation
-│   ├── deploy-pages.yml
-│   ├── weekly-plan-start.yml
-│   ├── weekly-plan-generate.yml
-│   ├── daily-checkin-create.yml
-│   └── daily-checkin-parse.yml
+│   └── data-integrity.yml      # Data validation checks
 │
 ├── docs/                        # Documentation
 │   ├── DESIGN_REFERENCE.md      # Original UX vision
-│   ├── UPDATE_RECIPE_TEMPLATES.md
-│   └── REPO_STRUCTURE.md (this file)
+│   ├── IMPLEMENTATION.md        # Implementation details
+│   ├── PROJECT_HISTORY.md       # Project history
 │   ├── REPO_STRUCTURE.md (this file)
-│   ├── IMPLEMENTATION.md          # Implementation details
-│   ├── PROJECT_HISTORY.md         # Project history
-│   └── GITHUB_ACTIONS_SETUP.md    # Actions setup guide
+│   └── UPDATE_RECIPE_TEMPLATES.md
 │
 ├── scripts/                     # Python automation
 │   ├── workflow.py              # State-based workflow
 │   ├── mealplan.py              # CLI commands
 │   ├── lunch_selector.py        # Lunch recipe selection
-│   ├── generate_landing_page.py # Landing page generator
 │   ├── parse_recipes.py         # Recipe HTML parser
+│   ├── import_recipe.py         # Recipe importer
 │   └── validate_plan.py         # Plan validator
 │
 ├── recipes/                     # Recipe database
@@ -65,9 +59,12 @@ meal-planner/
 ├── plans/                       # Generated meal plans
 │   └── YYYY-MM-DD-weekly-plan.html
 │
-└── _site/                       # GitHub Pages deployment
-    ├── index.html               # Landing page
-    └── plans/                   # Deployed meal plans
+├── public/                      # Static assets for Vercel
+│   └── plans/                   # Public meal plans
+│
+└── src/                         # Next.js frontend
+    ├── app/                     # App router pages
+    └── lib/                     # API client
 ```
 
 ---
@@ -85,7 +82,9 @@ meal-planner/
 | `templates/` | HTML templates | Permanent |
 | `inputs/` | Weekly constraints | **Temporary** - delete after plan generated |
 | `plans/` | Generated meal plans | Permanent (archive) |
-| `_site/` | GitHub Pages build | Auto-generated |
+| `public/` | Static assets for Vercel | Auto-generated |
+| `src/` | Next.js frontend code | Permanent |
+| `api/` | Vercel serverless functions | Permanent |
 
 ---
 

@@ -1,291 +1,90 @@
 # Meal Planner Implementation Guide
 
-**Last Updated:** 2026-01-08
-**Live Site:** [ssimhan.github.io/meal-planner/](https://ssimhan.github.io/meal-planner/)
+**Last Updated:** 2026-01-09
+**Live Site:** [meal-planner-eta-seven.vercel.app](https://meal-planner-eta-seven.vercel.app/)
 
 ---
 
 ## System Overview
 
-The Meal Planner is a detailed Hybrid Serverless application that manages weekly meal planning, daily execution tracking, and inventory management. It combines a robust Python logic engine with a modern Next.js frontend.
+Hybrid Serverless application for weekly meal planning, daily execution tracking, and inventory management. Python logic engine + Next.js frontend.
 
 ### Core Workflow
 
-1.  **Weekly Planning:** User clicks "Start New Week" on the dashboard to initialize the new cycle.
-2.  **Farmers Market:** User enters confirmed purchases in the dashboard; backend updates the input file.
-3.  **Generation:** User clicks "Generate Weekly Plan"; Python engine runs on Vercel, generates the HTML plan, and commits it to GitHub.
-4.  **Daily Execution:** User views "Today's Schedule" on the dashboard for meals, snacks, and prep tasks. Logging and feedback are done via one-tap buttons.
-5.  **Inventory:** User updates inventory via the "Quick Add" or "Brain Dump" feature on the web dashboard.
+1. **Weekly Planning:** "Start New Week" → enter farmers market purchases → "Generate Weekly Plan"
+2. **Daily Execution:** View "Today's Schedule" → one-tap logging for meals/prep tasks
+3. **Inventory:** Update via "Quick Add" or "Brain Dump"
+
+### Data Files
+
+- **history.yml:** Source of truth for all past plans and execution data
+- **inventory.yml:** Freezer/Fridge/Pantry stock (maintains ≥3 freezer backup meals)
+- **recipes/:** YAML recipe files with metadata
+- **config.yml:** All user settings (dietary preferences, schedules, kid profiles)
 
 ---
 
-## Data Architecture
+## Key Features
 
--   **[history.yml](file:///Users/sandhyasimhan/Documents/3_Career/Coding%20Projects/meal-planner/data/history.yml):** The source of truth for all past plans and execution data.
--   **[inventory.yml](file:///Users/sandhyasimhan/Documents/3_Career/Coding%20Projects/meal-planner/data/inventory.yml):** Central tracking for Freezer, Fridge, and Pantry stock.
--   **[recipes/](file:///Users/sandhyasimhan/Documents/3_Career/Coding%20Projects/meal-planner/recipes/):** Directory of YAML recipe files with meal types and ingredients.
--   **[config.yml](file:///Users/sandhyasimhan/Documents/3_Career/Coding%20Projects/meal-planner/config.yml):** Global settings (timezones, schedules, default counts).
+### Energy-Based Prep Schedule
+Declining energy model: Monday (high) → Friday (zero prep)
 
-### Freezer Inventory Structure
+- **Monday PM:** Chop Mon/Tue/Wed veg, batch cook components, prep freezer meals (2x, freeze half)
+- **Tuesday AM/PM:** Lunch prep for Wed/Thu/Fri, chop Thu/Fri dinner veg
+- **Wednesday PM:** Finish ALL remaining prep (no chopping after this)
+- **Thursday AM:** Light assembly only (8-9am), NO chopping after noon, NO evening prep
+- **Friday:** Zero prep - reheating/assembly only, dinner must be `no_chop_compatible: true`
 
-The `inventory.yml` distinguishes between two types of freezer items:
+### Smart Personalization
+- Kid profiles in `config.yml` with individual allergies
+- School snacks automatically nut-free
+- Leftover pipelines: dinner → next day lunch for family
 
-**1. Freezer Backups (`freezer.backups`)**
-Complete, ready-to-eat meals for emergency dinner use (<15 min reheat):
-- Full dinner entries with meal name, servings, frozen date
-- Selected from dashboard "Skip Dinner → Freezer Meal" flow
-- Auto-removed from inventory when logged as consumed
-- **Success Goal:** Maintain >= 3 complete backup meals
-- Examples: "Black Bean Soup (6 servings)", "Vegetable Curry (2 servings)"
-
-**2. Freezer Ingredients** *(future implementation)*
-Raw/partial components for future meal planning:
-- Individual ingredients or meal components (e.g., frozen peas, pre-chopped onions)
-- Used during weekly plan generation for recipe selection
-- Not directly logged as "eaten" but consumed during cooking
-- Examples: "Butternut squash sauce (2 cups)", "Tomato onion gravy (3 cups)"
+### Architecture
+- **Frontend:** Next.js dashboard (`src/app`)
+- **Backend:** Python Serverless Functions (`api/`)
+- **Persistence:** GitOps model (all changes committed to GitHub)
+- **Plans:** Static HTML (`public/plans/`) with 9 tabs
 
 ---
 
-## Key Components & Features
+## Local Development
 
-### 1. Hybrid Architecture
--   **Frontend:** Next.js (React) dashboard for status viewing, inventory management, and triggering workflows.
--   **Backend:** Python Serverless Functions (`api/`) handling core logic (`workflow.py`) and GitHub persistence.
--   **Persistence:** "GitOps" model where all state changes are committed back to the GitHub repository via API.
-
-### 2. Planning Logic
--   **[workflow.py](file:///Users/sandhyasimhan/Documents/3_Career/Coding%20Projects/meal-planner/scripts/workflow.py):** Main entry point for generating plans.
--   **[lunch_selector.py](file:///Users/sandhyasimhan/Documents/3_Career/Coding%20Projects/meal-planner/scripts/lunch_selector.py):** Intelligent lunch selection with kid/adult differentiation.
--   **Smart Re-plan:** Logic to shift skipped meals and handle rollover to the next week.
--   **Fuzzy Matching:** Ingredients and meals are matched using fuzzy logic.
-
-#### Energy-Based Prep Schedule
-The system follows a declining energy model from Monday (high) to Friday (zero prep):
-
-**Monday PM Prep (High Energy)**
--   Chop vegetables for Monday, Tuesday, Wednesday dinners
--   Batch cook components (dal, rice, grains, sauces)
--   Pre-measure dry ingredients for upcoming meals
--   Prep freezer batch meals (make 2x, freeze half)
-
-**Tuesday AM Prep (8-9am)**
--   Assemble lunch components for Wednesday, Thursday, Friday
--   Boil eggs if needed for lunches
--   Pre-portion snack ingredients
-
-**Tuesday PM Prep**
--   Chop vegetables for Thursday and Friday dinners
--   Complete any remaining lunch prep
--   Marinate proteins if needed
-
-**Wednesday PM Prep (Final Push)**
--   Finish ALL remaining prep for Thursday and Friday
--   No chopping allowed after this point
--   Ensure Thursday and Friday meals are fully prepped
-
-**Thursday AM Prep (8-9am, Light Only)**
--   Minimal assembly tasks only
--   NO chopping after noon on Thursday
--   NO evening prep
-
-**Friday (Zero Prep)**
--   Reheating and simple assembly only
--   All components must be pre-chopped and ready
--   Dinner must be `no_chop_compatible: true`
-
-### 3. Smart Personalization
--   **Kid Profiles:** Individual profiles in `config.yml` with allergy tracking (e.g., Anya avoids nuts).
--   **Lunch Syncing:** Base meals synchronized across kids with personalized restrictions applied.
--   **Snack Intelligence:** School vs. home logic with automatic nut-free substitutions for school snacks.
-
-### 4. Leftover Optimizer
--   **Planned Pipelines:** Recipes with `leftover_potential: high` trigger dinner → lunch pipelines for the entire family.
--   **Batch Coordination:** Overview tab suggests batch cooking based on actual lunch plans.
--   **Dynamic Prep:** Prep lists automatically include "Pack leftovers" tasks when pipelines are active.
--   **Metadata:** Recipes tagged with `leftover_potential` and `kid_favorite` flags.
-
-### 5. Recipe Management
--   **Recipe Importer:** `scripts/import_recipe.py` fetches and parses recipes from URLs.
--   **Metadata Preservation:** Parser preserves manual fields (`leftover_potential`, `kid_favorite`) across re-parses.
--   **Enhanced Parsing:** Fallback HTML parsing for non-schema.org recipes.
-
-### 6. Execution Tracking
--   **[log_execution.py](file:///Users/sandhyasimhan/Documents/3_Career/Coding%20Projects/meal-planner/scripts/log_execution.py):** Updates history and inventory based on daily logs.
--   **Vegetable Tracking:** Auto-populates fridge stock from plans and tracks consumption.
-
-### 7. UI Framework
--   **Dashboard:** Interactive web UI (`src/app`) for managing the entire lifecycle.
--   **Generated Plans:** Static HTML plans (`public/plans/`) with 9 tabs, responsive design, and dynamic grocery lists.
--   **Design:** Solarpunk aesthetic with earth tones and Space Mono typography.
-
----
-
-## Operational Guide
-
-### Local Development
-To work on the project locally with real-time feedback:
 ```bash
-./scripts/dev.sh
+./scripts/dev.sh  # Auto-regenerates plans on file changes
 ```
-This starts a watcher that regenerates plans and refreshes your browser on any file change.
-
-### Maintenance
--   **Backups:** `history.yml` is backed up automatically before daily updates.
--   **Archiving:** `archive_history.py` moves old data to `data/archive/` to maintain performance.
--   **CLI Logging:** For manual overrides, use `python3 scripts/log_execution.py` (see script help for args).
 
 ---
 
-## Completed Phases Summary
+## Development Status
 
-All phases through 11 are complete. See [PROJECT_HISTORY.md](PROJECT_HISTORY.md) for detailed development timeline.
+**Current State:** Fully functional. All core features complete (Phases 1-13.4).
 
-| Phase | Focus | Completed |
-|-------|-------|-----------|
-| **1-6** | Foundation: Recipe parsing, CLI workflow, state tracking | 2025-12 |
-| **7-9** | UX: Energy-based prep, HTML plans, Solarpunk design | 2025-12 |
-| **10** | Logging: Multi-step feedback, mobile responsive, kid profiles | 2026-01-04 |
-| **11.1** | Performance: Lazy loading, recipe caching | 2026-01-06 |
-| **11.2** | UI: Meal swap feature in Week View | 2026-01-06 |
-| **11.3** | Logic: Inventory intelligence, freezer structure | 2026-01-06 |
-| **11.4** | Data: Analytics page, family preferences | 2026-01-06 |
-| **11.5** | Efficiency: Recipe format migration (HTML → MD) | 2026-01-06 |
-| **11.6** | Bug fix: Homepage data consistency, loading states | 2026-01-07 |
-| **11.7** | UI: Inventory CRUD with undo | 2026-01-07 |
+**Completed Phases:**
+- **1-9:** Foundation (recipe parsing, CLI, energy-based prep, HTML plans)
+- **10-11:** Logging, performance, inventory intelligence, analytics
+- **12:** Architecture refactoring, TypeScript migration, testing
+- **13.1-13.4:** State fixes, inventory UX, prep workflow, white-labeling
 
----
-
-## Phase 12: Architecture & Maintainability (Completed)
-
-**Goal:** Improve long-term maintainability, reliability, and developer experience.
-**Status:** ✅ All tasks complete as of 2026-01-08.
-
-| Sub-Phase | Focus | Outcome |
-|-----------|-------|---------|
-| **12.1** | Component Extraction | Cleaned up `page.tsx`, extracted `Card`, `FeedbackButtons`, `DinnerLogging`. |
-| **12.2** | TypeScript Interfaces | Replaced `any` with strict types across frontend/API. |
-| **12.3** | Hook Stabilization | Consolidated 25+ hooks into stable state objects; fixed rules of hooks violations. |
-| **12.4** | Notification & Tests | Added toast notifications, ErrorBoundary, and comprehensive backend/frontend tests. |
-| **12.5** | Backend Refactoring | Modularized `api/index.py` into Flask Blueprints and `workflow.py` into a package. |
-| **12.6** | Documentation | Added `CONTRIBUTING.md`, `ARCHITECTURE.md`, `API_REFERENCE.md`, `.env.example`. |
-| **12.8** | Prep Step Revision | Implemented `prep_steps` in Markdown recipes and updated planning logic to prioritize them. |
+**Phase 13.4 (White-labeling):** ✅ Complete
+System now fully configurable via `config.yml` with:
+- Interactive setup wizard (`scripts/setup.py`)
+- Comprehensive docs (`docs/CONFIGURATION.md`)
+- Schema validation (`validate_yaml.py --config`)
+- Example template (`config.example.yml`)
 
 ---
 
-## Future Roadmap (Phase 13+)
+## Future Roadmap
 
-Currently, the system is stable and feature-complete for the core workflow. Future ideas include:
+**Phase 13.5: User Authentication** (Optional)
+- Multi-user support with email/password or OAuth
+- Profile setup wizard
+- Per-user config.yml generation
 
-### 13.1: Freezer Ingredients
-**Idea:** Track raw frozen ingredients (e.g., "Frozen Peas", "Chopped Onions") separate from confirmed backup meals.
-**Value:** Allows the meal generator to suggest recipes that use up frozen ingredients.
+**Other Ideas:**
+- Freezer ingredients tracking (raw components vs backup meals)
+- Advanced analytics (monthly trends, preferences)
+- Nutrition estimation
 
-### 13.2: Advanced Analytics
-**Idea:** Visualizing trends over months (e.g., "You eat pasta 2x/week", "Anya hates mushrooms").
-**Dependency:** Requires 4-8 weeks of data from Phase 6/10 execution tracking.
-
-### 13.3: Nutrition Estimation
-**Idea:** Approximate protein/veggie content based on recipe metadata.
-
----
-
-### Recipe Index Backlog
-*Pending recipe additions from adjustments:*
-- [ ] (None currently pending)
-
----
-
-## System Requirements
-
--   **Runtime:** Python 3.10+
--   **Actions Usage:** ~60 mins/month (Free tier)
--   **Success Goal:** Plan adherence >80%, Freezer backups >= 3
-
-## Phase 13: Refinement & Productization
-
-**Goal:** Polish the UX, fix critical state bugs, enhance the prep workflow, and prepare the architecture for commercialization.
-
-### 13.1: Critical State Fixes (Immediate) ✅ Complete
-**Priority:** 🔴 High
-**Effort:** 1 day
-- [x] **Fix Active Week**: Resolved "No active week plan found" by adding `week_data` to status API.
-- [x] **Fix Analytics Page**: Fixed argument mismatch in `compute_analytics`.
-- [x] **Homepage Cleanup**: Removed analytics widgets from the main dashboard.
-
-### 13.2: Advanced Inventory UX ✅ Complete
-**Priority:** 🟡 Medium
-**Effort:** 2 days
-- [x] **Unified Search**: Search across Fridge, Freezer, Pantry from one input.
-- [x] **Quick Actions**: One-tap quantity `(+)`/`(-)` and `Delete`.
-- [x] **Location Toggle**: Move items between locations (e.g. Pantry -> Fridge).
-- [x] **Brain Dump Mode**: Move text input to a dedicated modal/view to declutter.
-
-### 13.3: Persistent Prep Workflow ✅ Complete
-**Priority:** 🟡 Medium
-**Effort:** 3 days
-- [x] **Week Initialization**: Extract *all* prep tasks and store in `history.yml` with `status: pending`.
-- [x] **Dashboard Integration**: Display a checklist of open prep tasks grouped by Meal.
-- [x] **Feedback Loop**: Checking a task updates the backend state.
-
-### 13.4: Productization Architecture
-**Priority:** 🟢 Lower
-**Effort:** ~20 hours (12 chunks)
-**Goal:** Enable white-labeling by moving all hardcoded personal data to config.yml
-
-**Status:** 🔄 In Progress
-
-#### Breakdown (1-2 hour chunks):
-
-**Planning Phase (3 hours)**
-- [x] **Chunk 1:** Config Schema Definition - Define complete config.yml structure, create config.example.yml
-- [x] **Chunk 2:** Hardcoded Strings Audit - Document all 7 locations with hardcoded values
-
-**Migration Phase (Complete)** ✅
-- [x] **Chunk 3:** Centralize Default Preferences - Remove hardcoded dietary/schedule defaults from workflow/actions.py and mealplan.py
-- [x] **Chunk 4:** Centralize Timezone - Move timezone from api/routes/status.py to config-driven
-- [x] **Chunk 5:** Centralize Lunch Defaults - Move lunch defaults from lunch_selector.py and update_lunch_fields.py to config.yml
-- [x] **Chunk 6:** Centralize Snack Defaults - Move snack defaults from api/routes/status.py to config.yml
-- [x] **Chunk 7:** Fix Schedule Fallbacks - Update html_generator.py schedule defaults to use config.yml
-
-**Summary:** All 7 hardcoded locations migrated to config.yml. Each module has working config loading; skipped dedicated config_loader.py as redundant.
-
-**Documentation Phase (Complete)** ✅
-- [x] **Chunk 8:** Documentation - Write docs/CONFIGURATION.md and update CONTRIBUTING.md, README.md
-- [x] **Chunk 9:** Interactive Setup Script - Create scripts/setup.py for guided onboarding
-
-**Phase 13.4 Complete!** System is now fully white-labelable with:
-- Comprehensive documentation (CONFIGURATION.md)
-- Interactive setup wizard (scripts/setup.py)
-- Schema validation (validate_yaml.py --config)
-- Example template (config.example.yml)
-
-**Future Enhancements (Optional):**
-- Frontend Config Display - Settings page in dashboard showing current configuration
-- White-Label Testing - End-to-end test with alternate configs
-
----
-
-### 13.5: User Onboarding & Authentication
-**Priority:** 🟢 Lower
-**Effort:** 2-3 days
-**Goal:** Enable new users to set up their own profiles and preferences
-
-**Phase 1 - Email/Password (Initial MVP):**
-- [ ] User registration flow with email/password
-- [ ] Profile setup wizard for preferences (dietary restrictions, schedule, kid profiles)
-- [ ] Initial config.yml generation from onboarding responses
-- [ ] Basic session management
-
-**Phase 2 - OAuth (Enhanced):**
-- [ ] Google OAuth integration
-- [ ] Social profile import (name, email)
-- [ ] Multi-provider support architecture
-- [ ] Account linking for existing users
-
-**Key Files to Modify:**
-- `scripts/workflow/actions.py:27` - Remove hardcoded config fallback
-- `scripts/mealplan.py:255-257` - Remove hardcoded preferences
-- `scripts/lunch_selector.py:39-54` - Move DEFAULTS to config
-- `api/routes/status.py:46, 86-89, 92-98` - Move timezone and snacks to config
-- `scripts/workflow/html_generator.py:210-211` - Use config for schedules
+See [PROJECT_HISTORY.md](PROJECT_HISTORY.md) for detailed development timeline.

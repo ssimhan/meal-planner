@@ -1,13 +1,19 @@
-import os
-from supabase import create_client, Client
-from flask import request
-
-# Initialize Supabase client
 # Initialize Supabase client with Service Role Key to bypass RLS in the backend
 SUPABASE_URL = os.environ.get('NEXT_PUBLIC_SUPABASE_URL') or os.environ.get('SUPABASE_URL')
-# Use Service Role Key for backend operations to bypass RLS during auth/onboarding
 SUPABASE_SERVICE_KEY = os.environ.get('SUPABASE_SERVICE_ROLE_KEY') or os.environ.get('NEXT_PUBLIC_SUPABASE_ANON_KEY') or os.environ.get('SUPABASE_ANON_KEY')
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY) if SUPABASE_URL and SUPABASE_SERVICE_KEY else None
+
+if not SUPABASE_URL:
+    print("WARNING: SUPABASE_URL is missing from environment!")
+if not SUPABASE_SERVICE_KEY:
+    print("WARNING: SUPABASE_SERVICE_KEY is missing from environment!")
+
+supabase: Client = None
+if SUPABASE_URL and SUPABASE_SERVICE_KEY:
+    try:
+        supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+        print("Supabase client initialized successfully.")
+    except Exception as e:
+        print(f"ERROR: Failed to initialize Supabase client: {e}")
 
 def get_household_id():
     """Helper to get household_id from request context."""
@@ -49,20 +55,46 @@ class StorageEngine:
 
     @staticmethod
     def get_recipes():
+        if not supabase: return []
         h_id = get_household_id()
-        res = supabase.table("recipes").select("metadata").eq("household_id", h_id).execute()
-        return [r['metadata'] for r in res.data]
+        try:
+            res = supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id).execute()
+            # Transformation to include id and name from the columns, plus categories/cuisine from metadata
+            return [
+                {
+                    "id": r['id'],
+                    "name": r['name'],
+                    "cuisine": r['metadata'].get('cuisine', 'unknown'),
+                    "meal_type": r['metadata'].get('meal_type', 'unknown'),
+                    "effort_level": r['metadata'].get('effort_level', 'normal'),
+                    "no_chop_compatible": r['metadata'].get('no_chop_compatible', False)
+                } for r in res.data
+            ]
+        except Exception as e:
+            print(f"Error fetching recipes: {e}")
+            return []
 
     @staticmethod
     def get_recipe_details(recipe_id):
+        if not supabase: return None
         h_id = get_household_id()
-        res = supabase.table("recipes").select("metadata, content").eq("household_id", h_id).eq("id", recipe_id).single().execute()
-        if not res.data:
+        try:
+            res = supabase.table("recipes").select("id, name, metadata, content").eq("household_id", h_id).eq("id", recipe_id).execute()
+            if not res.data:
+                return None
+            row = res.data[0]
+            # Merge name into recipe metadata for UI
+            recipe_data = row['metadata']
+            recipe_data['name'] = row['name']
+            recipe_data['id'] = row['id']
+            
+            return {
+                "recipe": recipe_data,
+                "markdown": row['content']
+            }
+        except Exception as e:
+            print(f"Error fetching recipe details for {recipe_id}: {e}")
             return None
-        return {
-            "recipe": res.data['metadata'],
-            "markdown": res.data['content']
-        }
 
     @staticmethod
     def get_history():

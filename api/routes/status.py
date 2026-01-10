@@ -22,14 +22,18 @@ def _load_config():
     if cache_entry and (now - cache_entry['timestamp'] < CACHE_TTL):
         return cache_entry['data']
 
+    if not supabase:
+        print("Supabase client not initialized. Using fallback config.")
+        return {'timezone': 'America/Los_Angeles'}
+
     try:
-        res = supabase.table("households").select("config").eq("id", h_id).single().execute()
-        if res.data:
-            config = res.data['config']
+        res = supabase.table("households").select("config").eq("id", h_id).execute()
+        if res.data and len(res.data) > 0:
+            config = res.data[0]['config']
             CACHE['config'] = {'data': config, 'timestamp': now}
             return config
     except Exception as e:
-        print(f"Error loading config from DB: {e}")
+        print(f"Error loading config from DB for {h_id}: {e}")
 
     # Fallback
     return {'timezone': 'America/Los_Angeles'}

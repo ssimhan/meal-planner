@@ -77,10 +77,42 @@ System now fully configurable via `config.yml` with:
 
 ## Future Roadmap
 
-**Phase 13.5: User Authentication** (Optional)
-- Multi-user support with email/password or OAuth
-- Profile setup wizard
-- Per-user config.yml generation
+**Phase 13.5: User Authentication** (In Progress)
+
+**Two-Phase Approach:**
+
+### Phase 1: Simple Multi-User (3 weeks) - In Planning
+**Goal:** Multiple family members share household data with role-based access
+
+**Tech Stack:**
+- Supabase (PostgreSQL + Auth + Row Level Security)
+- Magic links via Resend (passwordless email auth)
+- JWT tokens (HTTP-only cookies, 7-day expiry)
+- Roles: admin, editor, viewer
+
+**Implementation:**
+- Week 1: Backend auth infrastructure (magic link API, JWT middleware, household models)
+- Week 2: Frontend auth UI (login page, AuthContext, route protection)
+- Week 3: Migration script, testing, documentation
+
+**Key Files:**
+- New: `api/auth/magic_link.py`, `src/app/login/page.tsx`, `src/context/AuthContext.tsx`
+- Modified: `api/index.py`, `api/routes/status.py`, `src/app/layout.tsx`
+
+### Phase 2: Multi-Tenant Productization (5 weeks) - Future
+**Goal:** Isolated data per household + subscription model
+
+**Features:**
+- Database-first storage (migrate history/inventory from YAML to Supabase)
+- Household invitation system
+- Stripe subscriptions (Free/$9/$19 tiers)
+- Multi-household support per user
+
+**Timeline:** 8 weeks total to full productization
+
+**Detailed Plan:** See `/Users/sandhyasimhan/.claude/plans/snappy-beaming-lagoon.md`
+
+---
 
 **Other Ideas:**
 - Freezer ingredients tracking (raw components vs backup meals)

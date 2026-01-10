@@ -10,6 +10,7 @@ import FeedbackButtons from '@/components/FeedbackButtons';
 import DinnerLogging from '@/components/DinnerLogging';
 import PrepTaskList from '@/components/PrepTaskList';
 import { useToast } from '@/context/ToastContext';
+import { logout } from './login/actions';
 
 export default function Dashboard() {
   const [status, setStatus] = useState<WorkflowStatus | null>(null);
@@ -541,9 +542,14 @@ export default function Dashboard() {
       {/* Footer */}
       <footer className="mt-16 pt-8 border-t border-[var(--border-subtle)] flex justify-between items-center text-sm text-[var(--text-muted)]">
         <p>© 2026 Meal Planner System</p>
-        <div className="flex gap-4">
+        <div className="flex gap-4 items-center">
           <Link href="#" className="hover:text-[var(--accent-green)] underline underline-offset-4">History</Link>
           <Link href="/recipes" className="hover:text-[var(--accent-green)] underline underline-offset-4">Recipes</Link>
+          <form action={logout}>
+            <button type="submit" className="hover:text-[var(--accent-terracotta)] underline underline-offset-4">
+              Sign Out
+            </button>
+          </form>
         </div>
       </footer>
     </main>

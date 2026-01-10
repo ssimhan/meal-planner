@@ -11,10 +11,12 @@ from scripts.workflow import (
 from scripts.github_helper import sync_changes_to_github, commit_multiple_files_to_github
 from scripts.log_execution import find_week, calculate_adherence, update_inventory_file, save_history
 from api.utils import get_actual_path, get_yaml_data, invalidate_cache, get_cached_data
+from api.utils.auth import require_auth
 
 meals_bp = Blueprint('meals', __name__)
 
 @meals_bp.route("/api/generate-plan", methods=["POST"])
+@require_auth
 def generate_plan_route():
     try:
         input_file, week_str = find_current_week_file()
@@ -47,6 +49,7 @@ def generate_plan_route():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @meals_bp.route("/api/create-week", methods=["POST"])
+@require_auth
 def create_week():
     try:
         data = request.json or {}
@@ -74,6 +77,7 @@ def create_week():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @meals_bp.route("/api/replan", methods=["POST"])
+@require_auth
 def replan_route():
     try:
         input_file, week_str = find_current_week_file()
@@ -98,6 +102,7 @@ def replan_route():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @meals_bp.route("/api/confirm-veg", methods=["POST"])
+@require_auth
 def confirm_veg():
     try:
         data = request.json or {}
@@ -151,6 +156,7 @@ def confirm_veg():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @meals_bp.route("/api/log-meal", methods=["POST"])
+@require_auth
 def log_meal():
     try:
         data = request.json or {}
@@ -353,6 +359,7 @@ def log_meal():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @meals_bp.route("/api/swap-meals", methods=["POST"])
+@require_auth
 def swap_meals():
     try:
         data = request.json or {}
@@ -434,6 +441,7 @@ def swap_meals():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 @meals_bp.route("/api/check-prep", methods=["POST"])
+@require_auth
 def check_prep_task():
     try:
         data = request.json or {}
@@ -484,6 +492,7 @@ def check_prep_task():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @meals_bp.route("/api/update-plan-with-actuals", methods=["POST"])
+@require_auth
 def update_plan_with_actuals():
     """Update weekly plan HTML with actual data from history.yml."""
     try:

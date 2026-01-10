@@ -4,10 +4,12 @@ import yaml
 from pathlib import Path
 from flask import Blueprint, jsonify, request
 from api.utils import get_cached_data, get_yaml_data
+from api.utils.auth import require_auth
 
 recipes_bp = Blueprint('recipes', __name__)
 
 @recipes_bp.route("/api/recipes")
+@require_auth
 def get_recipes():
     try:
         # Use Cached Recipes
@@ -19,6 +21,7 @@ def get_recipes():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @recipes_bp.route("/api/recipes/<recipe_id>")
+@require_auth
 def get_recipe_details(recipe_id):
     """Fetch full recipe details on demand from Markdown."""
     try:
@@ -48,6 +51,7 @@ def get_recipe_details(recipe_id):
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @recipes_bp.route("/api/recipes/import", methods=["POST"])
+@require_auth
 def import_recipe():
     try:
         data = request.json or {}

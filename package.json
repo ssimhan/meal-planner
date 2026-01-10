@@ -4,16 +4,17 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:api": "PYTHONPATH=. python3 api/index.py",
+    "dev:api": "PYTHONPATH=. ./.venv/bin/python3 api/index.py",
     "dev:full": "concurrently \"npm run dev\" \"npm run dev:api\"",
     "build": "next build",
-    "start": "next start",
     "start": "next start",
     "lint": "eslint",
     "test": "jest",
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.90.1",
     "@tailwindcss/typography": "^0.5.19",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.562.0",

@@ -1,4 +1,5 @@
 // Import all types from centralized types file
+import { createClient } from '@/utils/supabase/client';
 import type {
     WorkflowStatus,
     LogMealData,
@@ -21,6 +22,13 @@ import type {
  * Centered response handler to standardize error extraction
  */
 async function handleResponse<T>(res: Response, fallbackMessage: string): Promise<T> {
+    if (res.status === 401) {
+        // Redirect to login if unauthorized
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login?error=Session expired. Please login again.';
+        }
+        throw new Error('Unauthorized');
+    }
     if (!res.ok) {
         let errorMessage = fallbackMessage;
         try {
@@ -35,36 +43,55 @@ async function handleResponse<T>(res: Response, fallbackMessage: string): Promis
     return res.json();
 }
 
+/**
+ * Standard headers with Auth
+ */
+async function getAuthHeaders(includeJson: boolean = true) {
+    const supabase = createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    const headers: Record<string, string> = {
+        'Authorization': `Bearer ${session?.access_token || ''}`,
+    };
+    if (includeJson) {
+        headers['Content-Type'] = 'application/json';
+    }
+    return headers;
+}
+
 export async function getStatus(): Promise<WorkflowStatus> {
-    const res = await fetch('/api/status');
+    const res = await fetch('/api/status', {
+        headers: await getAuthHeaders(false),
+    });
     return handleResponse<WorkflowStatus>(res, 'Failed to fetch status');
 }
 
 export async function generatePlan(week_of: string): Promise<GeneratePlanResponse> {
     const res = await fetch('/api/generate-plan', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: await getAuthHeaders(),
         body: JSON.stringify({ week_of }),
     });
     return handleResponse<GeneratePlanResponse>(res, 'Failed to generate plan');
 }
 
 export async function getRecipes(): Promise<RecipesResponse> {
-    const res = await fetch('/api/recipes');
+    const res = await fetch('/api/recipes', {
+        headers: await getAuthHeaders(false),
+    });
     return handleResponse<RecipesResponse>(res, 'Failed to fetch recipes');
 }
 
 export async function getInventory(): Promise<InventoryResponse> {
-    const res = await fetch('/api/inventory');
+    const res = await fetch('/api/inventory', {
+        headers: await getAuthHeaders(false),
+    });
     return handleResponse<InventoryResponse>(res, 'Failed to fetch inventory');
 }
 
 export async function createWeek(week_of?: string): Promise<CreateWeekResponse> {
     const res = await fetch('/api/create-week', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await getAuthHeaders(),
         body: JSON.stringify({ week_of }),
     });
     return handleResponse<CreateWeekResponse>(res, 'Failed to create week');
@@ -73,7 +100,7 @@ export async function createWeek(week_of?: string): Promise<CreateWeekResponse> 
 export async function confirmVeg(confirmed_veg: string[]): Promise<ConfirmVegResponse> {
     const res = await fetch('/api/confirm-veg', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await getAuthHeaders(),
         body: JSON.stringify({ confirmed_veg }),
     });
     return handleResponse<ConfirmVegResponse>(res, 'Failed to confirm vegetables');
@@ -82,7 +109,7 @@ export async function confirmVeg(confirmed_veg: string[]): Promise<ConfirmVegRes
 export async function addItemToInventory(category: string, item: string): Promise<InventoryOperationResponse> {
     const res = await fetch('/api/inventory/add', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await getAuthHeaders(),
         body: JSON.stringify({ category, item }),
     });
     return handleResponse<InventoryOperationResponse>(res, 'Failed to add item to inventory');
@@ -91,7 +118,7 @@ export async function addItemToInventory(category: string, item: string): Promis
 export async function deleteItemFromInventory(category: string, item: string): Promise<InventoryOperationResponse> {
     const res = await fetch('/api/inventory/delete', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await getAuthHeaders(),
         body: JSON.stringify({ category, item }),
     });
     return handleResponse<InventoryOperationResponse>(res, 'Failed to delete item from inventory');
@@ -100,7 +127,7 @@ export async function deleteItemFromInventory(category: string, item: string): P
 export async function updateInventoryItem(category: string, item: string, updates: InventoryUpdateData): Promise<InventoryOperationResponse> {
     const res = await fetch('/api/inventory/update', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await getAuthHeaders(),
         body: JSON.stringify({ category, item, updates }),
     });
     return handleResponse<InventoryOperationResponse>(res, 'Failed to update inventory item');
@@ -109,7 +136,7 @@ export async function updateInventoryItem(category: string, item: string, update
 export async function moveInventoryItem(item: string, fromCategory: string, toCategory: string): Promise<InventoryOperationResponse> {
     const res = await fetch('/api/inventory/move', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await getAuthHeaders(),
         body: JSON.stringify({ item, from_category: fromCategory, to_category: toCategory }),
     });
     return handleResponse<InventoryOperationResponse>(res, 'Failed to move inventory item');
@@ -118,7 +145,7 @@ export async function moveInventoryItem(item: string, fromCategory: string, toCa
 export async function logMeal(data: LogMealData): Promise<LogMealResponse> {
     const res = await fetch('/api/log-meal', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await getAuthHeaders(),
         body: JSON.stringify(data),
     });
     return handleResponse<LogMealResponse>(res, 'Failed to log meal');
@@ -127,7 +154,7 @@ export async function logMeal(data: LogMealData): Promise<LogMealResponse> {
 export async function bulkAddItemsToInventory(items: BulkAddInventoryItem[]): Promise<InventoryOperationResponse> {
     const res = await fetch('/api/inventory/bulk-add', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await getAuthHeaders(),
         body: JSON.stringify({ items }),
     });
     return handleResponse<InventoryOperationResponse>(res, 'Failed to bulk add items to inventory');
@@ -136,9 +163,7 @@ export async function bulkAddItemsToInventory(items: BulkAddInventoryItem[]): Pr
 export async function importRecipe(url: string): Promise<ImportRecipeResponse> {
     const res = await fetch('/api/recipes/import', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: await getAuthHeaders(),
         body: JSON.stringify({ url }),
     });
     return handleResponse<ImportRecipeResponse>(res, 'Failed to import recipe');
@@ -147,9 +172,7 @@ export async function importRecipe(url: string): Promise<ImportRecipeResponse> {
 export async function replan(): Promise<ReplanResponse> {
     const res = await fetch('/api/replan', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: await getAuthHeaders(),
     });
     return handleResponse<ReplanResponse>(res, 'Failed to replan week');
 }
@@ -157,23 +180,23 @@ export async function replan(): Promise<ReplanResponse> {
 export async function swapMeals(week: string, day1: string, day2: string): Promise<SwapMealsResponse> {
     const res = await fetch('/api/swap-meals', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: await getAuthHeaders(),
         body: JSON.stringify({ week, day1, day2 }),
     });
     return handleResponse<SwapMealsResponse>(res, 'Failed to swap meals');
 }
 
 export async function getAnalytics(): Promise<Analytics> {
-    const res = await fetch('/api/analytics');
+    const res = await fetch('/api/analytics', {
+        headers: await getAuthHeaders(false),
+    });
     return handleResponse<Analytics>(res, 'Failed to fetch analytics');
 }
 
 export async function checkPrepTask(week: string, taskId: string, status: 'complete' | 'pending'): Promise<{ status: string }> {
     const res = await fetch('/api/check-prep', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await getAuthHeaders(),
         body: JSON.stringify({ week, task_id: taskId, status }),
     });
     return handleResponse<{ status: string }>(res, 'Failed to update prep task');

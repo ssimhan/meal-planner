@@ -92,7 +92,16 @@ def _get_current_status(skip_sync=False):
     if state in ['active', 'waiting_for_checkin', 'archived']:
         # Use DB History
         history = StorageEngine.get_history()
+        
+        # Ensure week_str matches the type in history (DB returns dates sometimes)
         history_week = find_week(history, week_str)
+        if not history_week:
+            # Try matching as date object if string fails
+            for w in history.get('weeks', []):
+                w_date = w.get('week_of')
+                if str(w_date) == week_str:
+                    history_week = w
+                    break
 
         if history_week and 'daily_feedback' in history_week:
             day_feedback = history_week['daily_feedback'].get(current_day, {})

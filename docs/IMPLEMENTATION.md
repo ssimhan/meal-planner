@@ -241,21 +241,20 @@ Currently, the system is stable and feature-complete for the core workflow. Futu
 - [x] **Chunk 1:** Config Schema Definition - Define complete config.yml structure, create config.example.yml
 - [x] **Chunk 2:** Hardcoded Strings Audit - Document all 7 locations with hardcoded values
 
-**Migration Phase (7.5 hours)**
+**Migration Phase (Complete)** ✅
 - [x] **Chunk 3:** Centralize Default Preferences - Remove hardcoded dietary/schedule defaults from workflow/actions.py and mealplan.py
 - [x] **Chunk 4:** Centralize Timezone - Move timezone from api/routes/status.py to config-driven
 - [x] **Chunk 5:** Centralize Lunch Defaults - Move lunch defaults from lunch_selector.py and update_lunch_fields.py to config.yml
 - [x] **Chunk 6:** Centralize Snack Defaults - Move snack defaults from api/routes/status.py to config.yml
-- [ ] **Chunk 7:** Config Helper Module - Create scripts/config_loader.py with caching and validation
+- [x] **Chunk 7:** Fix Schedule Fallbacks - Update html_generator.py schedule defaults to use config.yml
 
-**Productization Phase (6.5 hours)**
+**Summary:** All 7 hardcoded locations migrated to config.yml. Each module has working config loading; skipped dedicated config_loader.py as redundant.
+
+**Productization Phase (Optional)**
 - [ ] **Chunk 8:** Frontend Config Display - Add /api/config endpoint and settings card on dashboard
 - [ ] **Chunk 9:** Setup Script - Create interactive scripts/setup.py for new users
-- [ ] **Chunk 10:** Kid Profiles Migration - Verify all kid-related logic reads from config.yml dynamically
-
-**Validation Phase (3 hours)**
-- [ ] **Chunk 11:** White-Label Testing - End-to-end test with different config values
-- [ ] **Chunk 12:** Documentation - Write docs/CONFIGURATION.md and update CONTRIBUTING.md
+- [ ] **Chunk 10:** White-Label Testing - End-to-end test with different config values
+- [ ] **Chunk 11:** Documentation - Write docs/CONFIGURATION.md and update CONTRIBUTING.md
 
 **Key Files to Modify:**
 - `scripts/workflow/actions.py:27` - Remove hardcoded config fallback

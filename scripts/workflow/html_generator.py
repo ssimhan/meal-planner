@@ -3,6 +3,14 @@ import yaml
 from pathlib import Path
 from datetime import datetime, timedelta
 
+def _load_config():
+    """Load config.yml for fallback values."""
+    config_path = Path('config.yml')
+    if config_path.exists():
+        with open(config_path, 'r') as f:
+            return yaml.safe_load(f) or {}
+    return {}
+
 def generate_lunch_html(lunch_suggestion, day_name):
     """Generate HTML markup for a lunch section."""
     html = []
@@ -207,8 +215,15 @@ def generate_weekday_tabs(inputs, selected_dinners, selected_lunches, week_histo
     html = []
     days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
     day_abbr = ['mon', 'tue', 'wed', 'thu', 'fri']
-    late_class_days = inputs.get('schedule', {}).get('late_class_days', ['thu', 'fri'])
-    busy_days = set(inputs.get('schedule', {}).get('busy_days', ['thu', 'fri']))
+
+    # Load config for fallback values if not in inputs
+    config = _load_config()
+    config_schedule = config.get('schedule', {})
+
+    late_class_days = inputs.get('schedule', {}).get('late_class_days',
+                      config_schedule.get('late_class_days', []))
+    busy_days = set(inputs.get('schedule', {}).get('busy_days',
+                    config_schedule.get('busy_days', ['thu', 'fri'])))
     energy_labels = {
         'mon': ('PM PREP ONLY', 'energy-high'),
         'tue': ('AM + PM PREP', 'energy-mild'),

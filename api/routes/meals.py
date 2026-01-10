@@ -318,12 +318,29 @@ def log_meal():
              sync_changes_to_github([str(input_file)])
         else:
              # Save history
-             history = get_yaml_data('data/history.yml') 
+             history = get_yaml_data('data/history.yml')
              # Refetch week from fresh history to save correctly
              # (This is a bit redundant but safe)
              # Actually, 'find_week' returns a reference to the dict inside history.
              # So 'week' modifications modify 'history'.
              save_history(history)
+
+        # Auto-update weekly plan HTML with actual data
+        try:
+            html_path = Path(f'public/plans/{week_str}-weekly-plan.html')
+            if html_path.exists():
+                import subprocess
+                result = subprocess.run(
+                    ['python3', 'scripts/update_plan_with_actuals.py', week_str],
+                    capture_output=True,
+                    text=True,
+                    timeout=10
+                )
+                if result.returncode == 0:
+                    sync_changes_to_github([str(html_path)])
+        except Exception:
+            # Don't fail the entire request if HTML update fails
+            pass
 
         invalidate_cache()
 
@@ -462,6 +479,65 @@ def check_prep_task():
         sync_changes_to_github(['data/history.yml'])
         
         return jsonify({"status": "success", "updated_task_id": task_id})
-        
+
     except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@meals_bp.route("/api/update-plan-with-actuals", methods=["POST"])
+def update_plan_with_actuals():
+    """Update weekly plan HTML with actual data from history.yml."""
+    try:
+        data = request.json or {}
+        week_str = data.get('week')
+
+        if not week_str:
+            # Try to get current week
+            _, week_str = find_current_week_file()
+            if not week_str:
+                return jsonify({"status": "error", "message": "Week required"}), 400
+
+        # Check if HTML file exists
+        html_path = Path(f'public/plans/{week_str}-weekly-plan.html')
+        if not html_path.exists():
+            return jsonify({"status": "error", "message": f"Weekly plan HTML for {week_str} not found"}), 404
+
+        # Check if week exists in history
+        history = get_yaml_data('data/history.yml') or {'weeks': []}
+        week_history = find_week(history, week_str)
+        if not week_history:
+            return jsonify({"status": "error", "message": f"Week {week_str} not found in history.yml"}), 404
+
+        # Run the update script
+        import subprocess
+        result = subprocess.run(
+            ['python3', 'scripts/update_plan_with_actuals.py', week_str],
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+
+        if result.returncode != 0:
+            return jsonify({
+                "status": "error",
+                "message": f"Failed to update plan: {result.stderr}"
+            }), 500
+
+        # Sync to GitHub
+        sync_changes_to_github([str(html_path)])
+        invalidate_cache()
+
+        plan_url = f"/plans/{week_str}-weekly-plan.html"
+
+        return jsonify({
+            "status": "success",
+            "message": f"Successfully updated plan for week {week_str} with actual data",
+            "week_of": week_str,
+            "plan_url": plan_url
+        })
+
+    except subprocess.TimeoutExpired:
+        return jsonify({"status": "error", "message": "Update script timed out"}), 500
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
         return jsonify({"status": "error", "message": str(e)}), 500

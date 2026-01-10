@@ -1,8 +1,6 @@
-
-import yaml
-from pathlib import Path
-from collections import Counter
 import re
+import os
+from api.utils.storage import StorageEngine
 
 def normalize_ingredient(name):
     """Normalize ingredient name for matching."""
@@ -19,12 +17,10 @@ def normalize_ingredient(name):
     
     return name.replace(' ', '_')
 
-def get_inventory_items(inventory_path='data/inventory.yml'):
-    """Load all items from inventory as a set of normalized strings."""
+def get_inventory_items():
+    """Load all items from inventory via StorageEngine."""
     try:
-        with open(inventory_path, 'r') as f:
-            data = yaml.safe_load(f) or {}
-            
+        data = StorageEngine.get_inventory()
         items = set()
         
         # Add fridge items
@@ -45,7 +41,7 @@ def get_inventory_items(inventory_path='data/inventory.yml'):
                     
         return items, data
     except Exception as e:
-        print(f"Error loading inventory: {e}")
+        print(f"Error loading inventory from DB: {e}")
         return set(), {}
 
 def get_substitutions(limit=3):
@@ -59,10 +55,9 @@ def get_substitutions(limit=3):
     """
     inventory_set, inventory_data = get_inventory_items()
     
-    # Load recipes
+    # Load recipes via StorageEngine
     try:
-        with open('recipes/index.yml', 'r') as f:
-            recipes = yaml.safe_load(f) or []
+        recipes = StorageEngine.get_recipes()
     except Exception:
         recipes = []
         

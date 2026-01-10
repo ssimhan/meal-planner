@@ -4,70 +4,39 @@ from pathlib import Path
 from datetime import datetime, timedelta
 import pytz
 from flask import Blueprint, jsonify, request
-from scripts.workflow import get_workflow_state, find_current_week_file, archive_expired_weeks, generate_granular_prep_tasks
-from scripts.github_helper import get_file_from_github, list_files_in_dir_from_github
 from scripts.log_execution import find_week
 from scripts.compute_analytics import compute_analytics
-from api.utils import get_cached_data, get_actual_path, get_yaml_data
+from api.utils import CACHE, CACHE_TTL
 from api.utils.auth import require_auth
+from api.utils.storage import StorageEngine, supabase, get_household_id
 
 status_bp = Blueprint('status', __name__)
 
 def _load_config():
-    """Load config.yml with caching for Vercel environment."""
-    is_vercel = os.environ.get('VERCEL') == '1'
+    """Load config from DB households table with caching."""
+    h_id = get_household_id()
+    now = datetime.now().timestamp()
+    
+    # Check cache
+    cache_entry = CACHE.get('config')
+    if cache_entry and (now - cache_entry['timestamp'] < CACHE_TTL):
+        return cache_entry['data']
 
-    if is_vercel:
-        # Try cached config first
-        cached_config = get_cached_data('config', 'config.yml')
-        if cached_config:
-            return cached_config
-
-        # Fetch from GitHub
-        repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
-        from scripts.github_helper import get_file_from_github
-        content = get_file_from_github(repo_name, 'config.yml')
-        if content:
-            config = yaml.safe_load(content)
+    try:
+        res = supabase.table("households").select("config").eq("id", h_id).single().execute()
+        if res.data:
+            config = res.data['config']
+            CACHE['config'] = {'data': config, 'timestamp': now}
             return config
-    else:
-        # Local development - read directly
-        config_path = Path('config.yml')
-        if config_path.exists():
-            with open(config_path, 'r') as f:
-                return yaml.safe_load(f)
+    except Exception as e:
+        print(f"Error loading config from DB: {e}")
 
-    # Fallback to default timezone only
+    # Fallback
     return {'timezone': 'America/Los_Angeles'}
 
 def _get_current_status(skip_sync=False):
-    repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
-    is_vercel = os.environ.get('VERCEL') == '1'
-
-    # Helper to sync a file from GitHub to /tmp
-    def sync_file(rel_path):
-        if not is_vercel: return Path(rel_path)
-        content = get_file_from_github(repo_name, rel_path)
-        if content:
-            tmp_path = Path("/tmp") / rel_path
-            os.makedirs(tmp_path.parent, exist_ok=True)
-            with open(tmp_path, 'w') as f:
-                f.write(content)
-            return tmp_path
-        return Path(rel_path)
-
-    # 0. Background sync key files
-    if is_vercel and not skip_sync:
-        sync_file('data/history.yml')
-        sync_file('data/inventory.yml')
-        sync_file('config.yml')
-        # Also sync any new files in inputs/
-        input_files = list_files_in_dir_from_github(repo_name, "inputs")
-        for f in input_files:
-            sync_file(f)
-
     try:
-        archive_expired_weeks()
+        StorageEngine.archive_expired_weeks()
     except Exception as e:
         print(f"Warning: Failed to archive: {e}")
 
@@ -79,36 +48,17 @@ def _get_current_status(skip_sync=False):
     monday = today - timedelta(days=today.weekday())
     week_str = monday.strftime('%Y-%m-%d')
 
-    input_file = None
+    # 1. Look for active or incomplete weeks from DB
+    active_plan = StorageEngine.get_active_week()
+    state, data = StorageEngine.get_workflow_state(active_plan)
     
-    # 1. Look for active or incomplete weeks (planning in progress OR active this week)
-    if is_vercel:
-        inputs_dir = Path("/tmp/inputs")
-        if inputs_dir.exists():
-            for f in sorted(inputs_dir.glob('*.yml'), reverse=True):
-                with open(f, 'r') as yf:
-                    try:
-                        data = yaml.safe_load(yf)
-                        if data and data.get('workflow', {}).get('status') != 'archived':
-                            # Include weeks that are not archived (either incomplete OR plan_complete)
-                            input_file = f
-                            week_str = data.get('week_of')
-                            break
-                    except: continue
+    if active_plan:
+        week_str = active_plan['week_of']
     else:
-        input_file, week_str = find_current_week_file()
-
-    # 2. Fallback to current calendar week if no incomplete week found
-    if not input_file:
+        # Fallback to calendar week
         monday = today - timedelta(days=today.weekday())
         week_str = monday.strftime('%Y-%m-%d')
-        input_file = get_actual_path(f'inputs/{week_str}.yml')
-        if not input_file.exists() and today.weekday() >= 4:
-            next_monday = monday + timedelta(days=7)
-            week_str = next_monday.strftime('%Y-%m-%d')
-            input_file = get_actual_path(f'inputs/{week_str}.yml')
-
-    state, data = get_workflow_state(input_file)
+        data = {}
     current_day = today.strftime('%a').lower()[:3]
 
     today_dinner = None
@@ -135,9 +85,9 @@ def _get_current_status(skip_sync=False):
     }
 
     history_week = None
-    if state in ['active', 'waiting_for_checkin']:
-        # Use Cached History
-        history = get_cached_data('history', 'data/history.yml') or {}
+    if state in ['active', 'waiting_for_checkin', 'archived']:
+        # Use DB History
+        history = StorageEngine.get_history()
         history_week = find_week(history, week_str)
 
         if history_week and 'daily_feedback' in history_week:
@@ -244,13 +194,13 @@ def get_status():
 @status_bp.route("/api/history")
 @require_auth
 def get_history():
-    history = get_cached_data('history', 'data/history.yml')
+    history = StorageEngine.get_history()
     return jsonify(history or {})
 
 @status_bp.route("/api/analytics")
 @require_auth
 def get_analytics():
-    history = get_cached_data('history', 'data/history.yml')
+    history = StorageEngine.get_history()
     start_date = request.args.get('start_date')
     end_date = request.args.get('end_date')
     analytics = compute_analytics(history, start_date, end_date)

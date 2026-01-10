@@ -5,9 +5,9 @@ Jan 10, 2026
 
 Two weeks ago, I wrote about [building a meal planning system](meal-planner-teardown.md) that actually works for busy parents. The system used GitHub Actions to generate static HTML plans on a schedule, hosted on GitHub Pages.
 
-It worked. But every time I wanted to log what we actually ate, I had to open my laptop, navigate to a GitHub Issue, fill out checkboxes, and wait for automation to run. I was excited to use it on Monday but by Wednesday, it was super annoying. 
+It worked. But every time I wanted to log what we actually ate, I had to open my laptop, navigate to a GitHub Issue, fill out checkboxes, and wait for automation to run. I was excited to use it on Monday but by Wednesday, it was super annoying.
 
-So I rebuilt it. Same system, different architecture. GitHub Actions → Vercel serverless. Static HTML → interactive dashboard. Manual logging → one-tap feedback.
+So I rebuilt it. Same system, different architecture. GitHub Actions to Vercel serverless. Static HTML to interactive dashboard. Manual logging to one-tap feedback.
 
 This is the story of that migration.
 
@@ -15,7 +15,7 @@ This is the story of that migration.
 
 The original system generated beautiful HTML plans every Saturday morning. I could view them on my phone. They included groceries, prep schedules, and meal details.
 
-But they were **read-only**. To track what we actually made:
+But they were read-only. To track what we actually made:
 
 1. Open GitHub on my phone
 2. Find the Daily Check-in Issue template
@@ -24,101 +24,71 @@ But they were **read-only**. To track what we actually made:
 5. Wait for GitHub Actions to parse it and update `history.yml`
 6. Hope I remembered to do this before planning next week
 
-**The friction was real.** I procrastinated on logging which made it that much harder to keep track of things. The system would recommend recipes we'd already made because it thought we hadn't. The anti-repetition logic broke down.
+The friction was real. I procrastinated on logging which made it that much harder to keep track of things. The system would recommend recipes we'd already made because it thought we hadn't. The anti-repetition logic broke down.
 
-The insight: **Static generation is great for content that doesn't change. Meal plans need to respond to execution reality.**
+The insight: Static generation is great for content that doesn't change. Meal plans need to respond to execution reality.
 
 ## Why Vercel (Not Just "A Web App")
 
-I didn't need a full web app with a database (yet). I needed:
+I didn't need a full web app with a database (yet). I needed real-time state updates where marking dinner as made immediately affects replanning. I needed GitHub as my database to keep YAML files, version control, and avoid migrations. I needed a mobile-first UI because I'm not opening my laptop at 7pm on Thursday just to see what I'm supposed to make. And I needed zero server maintenance since I'm a marketer, not a DevOps engineer.
 
-- **Real-time state updates** (mark dinner as made → immediately affects replanning)
-- **GitHub as database** (keep YAML files, version control, no migrations)
-- **Mobile-first UI** (because I'm not opening my laptop at 7pm on Thursday just to see what I'm supposed to make)
-- **Zero server maintenance** (I'm a marketer, not a DevOps engineer)
+Vercel serverless gave me all of this. Python API functions like `/api/generate-plan` and `/api/log-meal` read and write to GitHub directly via API. Next.js frontend with React and Tailwind for interactive UI. GitOps persistence where every state change is a git commit. Free hosting on the Hobby tier.
 
-Vercel serverless gave me all of this:
-
-**Python API functions** (`/api/generate-plan`, `/api/log-meal`) that read/write GitHub directly via API
-**Next.js frontend** with React + Tailwind for interactive UI
-**GitOps persistence** – every state change is a git commit
-**Free hosting** ($0/month on Hobby tier)
-
-The tradeoff: Read-only filesystem. All writes go through GitHub API. But that's actually a feature – every change is version-controlled.
+The tradeoff: Read-only filesystem. All writes go through GitHub API. But that's actually a feature since every change is version-controlled.
 
 ## The Build Process
 
 ### Day 1: Initial Migration (Jan 4, 2026)
 
-**Goal:** Get something deployed, prove Vercel works.
+Goal was to get something deployed and prove Vercel works. Built a basic Next.js app with my Solarpunk theme (earth tones, device-friendly), a Python API bridge in `/api` directory, a single button for "Generate Plan", and refactored `workflow.py` for serverless with no local file writes.
 
-**Built:**
-- Basic Next.js app with my lovely Solarpunk theme (earth tones, device-friendly)
-- Python API bridge in `/api` directory
-- Single button: "Generate Plan"
-- Refactored `workflow.py` for serverless (no local file writes)
+Stumbling block was Vercel's read-only filesystem. My scripts assumed they could write to `data/history.yml` locally, then commit later.
 
-**Stumbling block:** Vercel's read-only filesystem. My scripts assumed they could write to `data/history.yml` locally, then commit later.
-
-**Solution:** Every data mutation goes directly to GitHub API. Instead of writing files locally, every change commits directly through GitHub's API with a message like "Log meal: Tuesday dinner."
+Solution was to make every data mutation go directly to GitHub API. Instead of writing files locally, every change commits directly through GitHub's API with a message like "Log meal: Tuesday dinner."
 
 Result: Working dashboard deployed to Vercel, generating plans on-demand.
 
 ### Days 2-3: Interactive Workflows (Jan 4-5)
 
-**Built:**
-- "Start New Week" button (proposes vegetables based on seasonality)
-- "Confirm Vegetables" (after farmers market shopping)
-- "Generate Plan" (creates full weekly HTML plan)
-- Daily check-in cards (log what we made, kids' feedback)
+Built "Start New Week" button (proposes vegetables based on seasonality), "Confirm Vegetables" (after farmers market shopping), "Generate Plan" (creates full weekly HTML plan), and daily check-in cards (log what we made, kids' feedback).
 
-**Decision:** State machine in `inputs/workflow-state.yml`
+Decision was to use a state machine in `inputs/workflow-state.yml` with states: `idle` to `proposed` to `confirmed` to `plan_ready` to `active` to `archived`. The dashboard reads this file to show the right buttons. Clicking "Start New Week" transitions `idle` to `proposed`. The system always knows what action comes next.
 
-States: `idle` → `proposed` → `confirmed` → `plan_ready` → `active` → `archived`
-
-The dashboard reads this file to show the right buttons. Clicking "Start New Week" transitions `idle` → `proposed`. The system always knows what action comes next.
-
-**Learning:** Explicit state machines beat implicit assumptions. When state lived only in my head, I'd forget what step I was on. If I'm trying to get the app to truly help, I need to outsource ALL the thinking not just bits. 
+Learning: Explicit state machines beat implicit assumptions. When state lived only in my head, I'd forget what step I was on. If I'm trying to get the app to truly help, I need to outsource all the thinking not just bits. 
 
 ### Days 4-5: Real-Time Feedback (Jan 5-6)
 
 This is where it got interesting.
 
-**The problem:** I'd log "Made: Yes" for Tuesday dinner, but Wednesday's dashboard still showed Tuesday as incomplete. Stale data.
+The problem: I'd log "Made: Yes" for Tuesday dinner, but Wednesday's dashboard still showed Tuesday as incomplete. Stale data.
 
-**Root cause:** API endpoints returned success messages but not updated state. Frontend displayed cached data.
+Root cause was that API endpoints returned success messages but not updated state. Frontend displayed cached data.
 
-**Solution:** Every mutation endpoint returns the complete updated state. When you log a meal, the API response includes the entire current status (workflow state, completed meals, inventory, everything). Frontend immediately updates from response data. No refetch needed.
+Solution: Every mutation endpoint returns the complete updated state. When you log a meal, the API response includes the entire current status (workflow state, completed meals, inventory, everything). Frontend immediately updates from response data. No refetch needed.
 
-**Impact:** Logging dinner Tuesday night → Wednesday morning dashboard shows it as complete. Zero lag.
+Impact: Logging dinner Tuesday night means Wednesday morning dashboard shows it as complete. Zero lag.
 
 ### Days 6-7: Advanced Features (Jan 6-7)
 
-**Built:**
+Built prep task tracking where recipes now include a Prep Steps section. System extracts tasks ("Chop vegetables for Monday-Wednesday dinners"), generates checkboxes, and persists completion in `history.yml`.
 
-**Prep task tracking:** Recipes now include `## Prep Steps` section. System extracts tasks ("Chop vegetables for Monday-Wednesday dinners"), generates checkboxes, persists completion in `history.yml`.
+Built meal swapping where if you made Thursday's dinner on Tuesday instead, you do a two-click swap (select Thursday, select Tuesday, auto-regenerates prep schedule).
 
-**Meal swapping:** Made Thursday's dinner on Tuesday instead? Two-click swap (select Thursday, select Tuesday, auto-regenerates prep schedule).
+Built inventory intelligence where if you forgot to buy spinach, the system suggests replacements scored by what's already in your fridge.
 
-**Inventory intelligence:** Forgot to buy spinach? System suggests replacements scored by what's already in your fridge.
+Built leftover pipeline where recipes tagged `leftover_potential: high` automatically schedule "Pack leftovers for lunch" in next day's prep.
 
-**Leftover pipeline:** Recipes tagged `leftover_potential: high` automatically schedule "Pack leftovers for lunch" in next day's prep.
-
-**Learning:** Learning this lesson (again). Rich metadata enables automation. Tag recipes once (`leftover_potential`, `kid_favorite`, `no_chop_compatible`), query forever.
+Learning this lesson again: Rich metadata enables automation. Tag recipes once (`leftover_potential`, `kid_favorite`, `no_chop_compatible`), query forever.
 
 ### Day 8: Architecture Cleanup (Jan 8)
 
-**Problem:** Monolithic files, no types, React hook violations causing crashes.
+Problem was monolithic files, no types, and React hook violations causing crashes.
 
-**Fixed:**
-- Extracted 15+ components from 950-line `page.tsx`
-- Added 30+ TypeScript interfaces (`Recipe`, `MealPlan`, `WorkflowStatus`)
-- Consolidated 25 `useState` hooks into structured state objects
-- Split 1400-line `api/index.py` into Flask Blueprints
+Fixed by extracting 15+ components from 950-line `page.tsx`, adding 30+ TypeScript interfaces (`Recipe`, `MealPlan`, `WorkflowStatus`), consolidating 25 `useState` hooks into structured state objects, and splitting 1400-line `api/index.py` into Flask Blueprints.
 
-TypeScript errors: 34 → 7 (79% reduction)
+TypeScript errors went from 34 to 7 (79% reduction).
 
-**Learning:** Organic growth creates technical debt. After 11 rapid-iteration vibe coding phases, explicit cleanup time is necessary.
+Learning: Organic growth creates technical debt. After 11 rapid-iteration vibe coding phases, explicit cleanup time is necessary.
 
 ## What I Learned
 
@@ -156,125 +126,92 @@ The early dashboard showed 12 buttons simultaneously. I'd stare at the screen tr
 
 ## What This Cost
 
-**Development time:** 8 days (Jan 4-11), ~4 hours/day = 32 hours total
+Development time: 8 days (Jan 4-11), roughly 4 hours per day for 32 hours total. Yes I spent a lot of time after the kids went to bed this week.
 
-Yes I spent a lot of time after the kids went to bed this week. 
+Ongoing maintenance: roughly 2 minutes per day for one-tap logging, 5 minutes per week confirming vegetables.
 
-**Ongoing maintenance:** ~2 minutes/day (one-tap logging), 5 minutes/week (confirming vegetables)
+Money: Still $20/month (just Claude subscription). Vercel Hobby tier is free.
 
-**Money:** Still $20/month (just Claude subscription). Vercel Hobby tier is free.
-
-**Value created:**
-- 90% reduction in logging friction (GitHub Issues → one-tap)
-- Real-time state updates (no stale data)
-- Meal swapping on the fly (Tuesday → Thursday dinner swap in 10 seconds)
-- Inventory intelligence (smart replacements when ingredients missing)
+Value created: 90% reduction in logging friction (GitHub Issues to one-tap), real-time state updates (no stale data), meal swapping on the fly (Tuesday to Thursday dinner swap in 10 seconds), and inventory intelligence (smart replacements when ingredients missing).
 
 ## Migration Decision Framework
 
-### When to Stay Static (GitHub Pages)
+When to stay static (GitHub Pages): Content rarely changes (blog posts, documentation), no user input needed (portfolios, landing pages), read-only is acceptable, want maximum simplicity.
 
-- Content rarely changes (blog posts, documentation)
-- No user input needed (portfolios, landing pages)
-- Read-only is acceptable
-- Want maximum simplicity
+When to go serverless (Vercel): State changes frequently (meal logging, inventory updates), need real-time feedback (did this action work?), mobile interactions critical, want zero server maintenance.
 
-### When to Go Serverless (Vercel)
+When to go full app (traditional hosting): Complex database queries (joins, aggregations), heavy computation (video processing, ML inference), thousands of users, need WebSockets or real-time collaboration.
 
-- State changes frequently (meal logging, inventory updates)
-- Need real-time feedback (did this action work?)
-- Mobile interactions critical
-- Want zero server maintenance
-
-### When to Go Full App (Traditional hosting)
-
-- Complex database queries (joins, aggregations)
-- Heavy computation (video processing, ML inference)
-- Thousands of users
-- Need WebSockets/real-time collaboration
-
-For personal tools with <10 users and simple state, serverless is the sweet spot.
+For personal tools with under 10 users and simple state, serverless is the sweet spot.
 
 ## The Technical Architecture
 
-**Frontend:** Next.js + React for the dashboard, inventory tracking, and recipe browser.
+Frontend: Next.js with React for the dashboard, inventory tracking, and recipe browser.
 
-**Backend:** Python serverless functions handling workflow state, meal logging, inventory updates, and recipe queries.
+Backend: Python serverless functions handling workflow state, meal logging, inventory updates, and recipe queries.
 
-**Data Layer:** YAML files in GitHub acting as the database. Meal history, inventory, weekly constraints, and 227 recipes all stored as plain text files.
+Data Layer: YAML files in GitHub acting as the database. Meal history, inventory, weekly constraints, and 227 recipes all stored as plain text files.
 
-**Flow:** All state changes commit directly to GitHub via API → Vercel sees updated data on next request.
+Flow: All state changes commit directly to GitHub via API, so Vercel sees updated data on next request.
 
 ## Mistakes I Made
 
-**Mistake #1: Assumed Filesystem Persistence**
+Mistake 1: Assumed filesystem persistence. Early code wrote to `/tmp`, assumed it persisted between requests. It doesn't. Every function invocation gets a fresh filesystem. Fix was to use GitHub API for all writes and `/tmp` only for function-scoped temp files.
 
-Early code wrote to `/tmp`, assumed it persisted between requests. It doesn't. Every function invocation gets a fresh filesystem.
+Mistake 2: Returned success messages instead of state. API would return `{"success": true}` and frontend would wonder "Did it work? Better refetch status to be sure." Fix was to make all mutations return full updated state. One API call, atomic update.
 
-Fix: GitHub API for all writes. `/tmp` only for function-scoped temp files.
-
-**Mistake #2: Returned Success Messages Instead of State**
-
-API: `{"success": true}`. Frontend: "Did it work? Better refetch status to be sure."
-
-Fix: All mutations return full updated state. One API call, atomic update.
-
-**Mistake #3: Added Features Before Stabilizing Types**
-
-Built 11 phases of features with loose TypeScript (`any` everywhere). By Phase 12, tracking state flow was impossible.
-
-Fix: Should have added interfaces by Phase 8. Technical debt compounds.
+Mistake 3: Added features before stabilizing types. Built 11 phases of features with loose TypeScript (`any` everywhere). By Phase 12, tracking state flow was impossible. Should have added interfaces by Phase 8. Technical debt compounds.
 
 ## What I'd Do Differently Next Time
 
-**Start with types.** Define `WorkflowStatus`, `Recipe`, `MealPlan` interfaces in Phase 1, enforce them. TypeScript errors caught at compile time beat runtime debugging.
+Start with types. Define `WorkflowStatus`, `Recipe`, `MealPlan` interfaces in Phase 1, enforce them. TypeScript errors caught at compile time beat runtime debugging.
 
-**Design API contract first.** Document endpoint shapes in OpenAPI before writing code. Prevents "what does this endpoint return?" confusion.
+Design API contract first. Document endpoint shapes in OpenAPI before writing code. Prevents "what does this endpoint return?" confusion.
 
-**Test state transitions explicitly.** The state machine (`idle` → `proposed` → `confirmed` → `active`) had implicit assumptions. Should have written state transition tests early.
+Test state transitions explicitly. The state machine (`idle` to `proposed` to `confirmed` to `active`) had implicit assumptions. Should have written state transition tests early.
 
-**Keep component extraction ongoing.** Waiting until 950-line monolith before extracting components was painful. Extract more frequently (maybe every 200-300 lines)
+Keep component extraction ongoing. Waiting until 950-line monolith before extracting components was painful. Extract more frequently (maybe every 200-300 lines).
 
 ## For Non-Coders: What This Means
 
 The original teardown covered three core lessons: understand your problem deeply before automating, write clear instructions for AI, and work iteratively. This migration reinforced those lessons and added new ones.
 
-**Understanding your problem** meant living with the GitHub Issues workflow for two weeks before migrating. I didn't rebuild because static HTML was insufficient. I rebuilt because logging friction was causing me to skip days, which broke the anti-repetition logic. The friction was observable, measurable, and painful.
+Understanding your problem meant living with the GitHub Issues workflow for two weeks before migrating. I didn't rebuild because static HTML was insufficient. I rebuilt because logging friction was causing me to skip days, which broke the anti-repetition logic. The friction was observable, measurable, and painful.
 
-**Clear instructions** evolved from my `CLAUDE.md` file (the operating manual for Claude Code) to include serverless constraints. I added: "Vercel has a read-only filesystem—all writes must go through GitHub API." Claude handled the implementation. My job was understanding and articulating the constraint.
+Clear instructions evolved from my `CLAUDE.md` file (the operating manual for Claude Code) to include serverless constraints. I added: "Vercel has a read-only filesystem—all writes must go through GitHub API." Claude handled the implementation. My job was understanding and articulating the constraint.
 
-**Iterative work** meant deploying Day 1 with a single "Generate Plan" button, not waiting until the full dashboard was ready. Each phase delivered working software. When Day 4's stale data problem surfaced, I could fix it in isolation rather than debugging a monolithic system.
+Iterative work meant deploying Day 1 with a single "Generate Plan" button, not waiting until the full dashboard was ready. Each phase delivered working software. When Day 4's stale data problem surfaced, I could fix it in isolation rather than debugging a monolithic system.
 
-**New lesson: Test on the device you'll actually use.** This time around I built on desktop but tested on my phone constantly. The "Confirm Vegetables" button that looked fine on a 27" monitor was impossible to tap accurately on my Pixel while actually making dinner. Mobile testing revealed the real usability issues.
+New lesson: Test on the device you'll actually use.** This time around I built on desktop but tested on my phone constantly. The "Confirm Vegetables" button that looked fine on a 27" monitor was impossible to tap accurately on my Pixel while actually making dinner. Mobile testing revealed the real usability issues.
 
-**New lesson: Make feedback immediate.** The GitHub Issues workflow had a 2-minute delay between logging a meal and seeing the update. The dashboard updates in under a second. That psychological difference—instant confirmation versus "did it work?"—changed my compliance from 60% to 100%.
+New lesson: Make feedback immediate.** The GitHub Issues workflow had a 2-minute delay between logging a meal and seeing the update. The dashboard updates in under a second. That psychological difference—instant confirmation versus "did it work?"—changed my compliance from 60% to 100%.
 
-**The skill you need isn't coding**—it's understanding systems deeply enough to describe them clearly, testing implementations against real-world use, and iterating when theory meets practice. Claude Code handles the technical complexity. You handle the human complexity.
+The skill you need isn't coding.it's understanding systems deeply enough to describe them clearly, testing implementations against real-world use, and iterating when theory meets practice. Claude Code handles the technical complexity. You handle the human complexity.
 
 ## Success Metrics: How I Know It Works
 
-**Logging compliance:** 100% (up from ~60% with GitHub Issues)
-**Time to log meal:** 5 seconds (down from 2+ minutes)
-**State consistency:** Zero stale data (was frequent with static HTML)
-**Meal swaps:** 3 swaps/week average (was impossible before)
-**Evening stress:** Still minimal (Thu/Fri no-prep days preserved)
-**Freezer backup:** 3 meals maintained (auto-tracked)
+Logging compliance: 100% (up from ~60% with GitHub Issues)
+Time to log meal: 5 seconds (down from 2+ minutes)
+State consistency: Zero stale data (was frequent with static HTML)
+Meal swaps: 3 swaps/week average (was impossible before)
+Evening stress: Still minimal (Thu/Fri no-prep days preserved)
+Freezer backup: 3 meals maintained (auto-tracked)
 
 The system still respects the core design: energy-based prep (Monday → Friday depletion), evening protection (5-9pm device-free), farmers market integration.
 
-But now it **responds to reality**. When plans change (and they always do), the system adapts.
+But now it responds to reality. When plans change (and they always do), the system adapts.
 
 ## What's Next
 
 Current limitations I'm working on:
 
-**Authentication:** Right now, anyone with the URL can use the system. Adding Supabase auth + family profiles (Phase 14.1 in progress).
+Authentication: Right now, anyone with the URL can use the system. Adding Supabase auth + family profiles (Phase 14.1 in progress).
 
-**Multi-user logging:** My husband should be able to log meals too. Need collaborative state management.
+Multi-user logging: My husband should be able to log meals too. Need collaborative state management.
 
-**Analytics dashboard:** Time to surface trends (which recipes are hits? which vegetables do we actually eat?).
+Analytics dashboard: Time to surface trends (which recipes are hits? which vegetables do we actually eat?).
 
-**Recipe recommendations:** ML-powered suggestions based on history, season, and fridge contents.
+Recipe recommendations: ML-powered suggestions based on history, season, and fridge contents.
 
 But the core architecture is solid. Serverless + GitOps + mobile-first will scale to these features.
 
@@ -282,22 +219,22 @@ But the core architecture is solid. Serverless + GitOps + mobile-first will scal
 
 If you've built a prototype with GitHub Actions or a local script and are hitting friction, here's how to think about serverless migration:
 
-**Recognize the signal.** For me, it was logging compliance dropping from 100% to 60%. The system worked technically but failed practically. When manual steps feel painful repeatedly, that's the signal to automate differently.
+Recognize the signal. For me, it was logging compliance dropping from 100% to 60%. The system worked technically but failed practically. When manual steps feel painful repeatedly, that's the signal to automate differently.
 
-**Start with one interaction.** I didn't migrate everything at once. Day 1 was just "Generate Plan" button. Day 2 added "Start New Week." Each piece worked independently. This meant I could test on my phone after each addition, not after rebuilding the entire system.
+Start with one interaction. I didn't migrate everything at once. Day 1 was just "Generate Plan" button. Day 2 added "Start New Week." Each piece worked independently. This meant I could test on my phone after each addition, not after rebuilding the entire system.
 
-**Expect serverless to break local assumptions.** The read-only filesystem surprised me. So did API rate limits. So did function cold starts. None of these mattered locally. Serverless constrains differently than local development—test early, test on the real platform.
+Expect serverless to break local assumptions. The read-only filesystem surprised me. So did API rate limits. So did function cold starts. None of these mattered locally. Serverless constrains differently than local development—test early, test on the real platform.
 
-**Keep data in Git if you can.** Using GitHub as a database meant I could revert mistakes (`git revert`), see exactly when something changed (`git log`), and avoid database migrations entirely. The tradeoff is API rate limits, but for personal tools with <100 requests/day, it's irrelevant.
+Keep data in Git if you can. Using GitHub as a database meant I could revert mistakes (`git revert`), see exactly when something changed (`git log`), and avoid database migrations entirely. The tradeoff is API rate limits, but for personal tools with <100 requests/day, it's irrelevant.
 
-**Mobile test obsessively.** A button that's fine on desktop can be unusable on mobile. Since I use this system on my phone 95% of the time, mobile testing caught 80% of my UX issues. Build on desktop, test on mobile, fix what's actually broken.
+Mobile test obsessively. A button that's fine on desktop can be unusable on mobile. Since I use this system on my phone 95% of the time, mobile testing caught 80% of my UX issues. Build on desktop, test on mobile, fix what's actually broken.
 
-**Make one thing excellent before adding more.** Meal logging works perfectly now—5 seconds, zero friction, instant feedback. I could add analytics dashboards and ML recommendations, but they won't matter if logging is still annoying. Nail the core interaction first.
+Make one thing excellent before adding more. Meal logging works perfectly now—5 seconds, zero friction, instant feedback. I could add analytics dashboards and ML recommendations, but they won't matter if logging is still annoying. Nail the core interaction first.
 
 ---
 
-**Live site:** [meal-planner.vercel.app](https://ssimhan.github.io/meal-planner) (authentication coming soon)
+Live site: [meal-planner.vercel.app](https://ssimhan.github.io/meal-planner) (authentication coming soon)
 
-**Code:** [github.com/ssimhan/meal-planner](https://github.com/ssimhan/meal-planner)
+Code: [github.com/ssimhan/meal-planner](https://github.com/ssimhan/meal-planner)
 
 Subscribe to **The Accidental Engineer** for more project breakdowns and lessons learned from building without a CS degree.

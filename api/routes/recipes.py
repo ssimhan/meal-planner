@@ -3,8 +3,9 @@ import sys
 import yaml
 from pathlib import Path
 from flask import Blueprint, jsonify, request
-from api.utils import get_cached_data, get_yaml_data
+from api.utils import get_cached_data, get_yaml_data, invalidate_cache
 from api.utils.auth import require_auth
+from api.utils.storage import StorageEngine
 
 recipes_bp = Blueprint('recipes', __name__)
 
@@ -12,10 +13,7 @@ recipes_bp = Blueprint('recipes', __name__)
 @require_auth
 def get_recipes():
     try:
-        # Use Cached Recipes
-        recipes = get_cached_data('recipes', 'recipes/index.yml')
-        if recipes is None:
-            return jsonify({"status": "error", "message": "Recipe index not found"}), 404
+        recipes = StorageEngine.get_recipes()
         return jsonify({"status": "success", "recipes": recipes})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
@@ -25,26 +23,13 @@ def get_recipes():
 def get_recipe_details(recipe_id):
     """Fetch full recipe details on demand from Markdown."""
     try:
-        detail_path = Path(f'recipes/content/{recipe_id}.md')
-        if detail_path.exists():
-             with open(detail_path, 'r') as f:
-                content = f.read()
-                
-                # Basic frontmatter parsing (assuming standard --- format)
-                if content.startswith('---'):
-                    try:
-                        _, fm_text, body = content.split('---', 2)
-                        metadata = yaml.safe_load(fm_text)
-                        return jsonify({
-                            "status": "success", 
-                            "recipe": metadata,
-                            "markdown": body.strip()
-                        })
-                    except Exception as e:
-                        print(f"Error parsing frontmatter for {recipe_id}: {e}")
-                        return jsonify({"status": "success", "markdown": content})
-                
-                return jsonify({"status": "success", "markdown": content})
+        details = StorageEngine.get_recipe_details(recipe_id)
+        if details:
+            return jsonify({
+                "status": "success",
+                "recipe": details['recipe'],
+                "markdown": details['markdown']
+            })
         else:
              return jsonify({"status": "error", "message": f"Recipe details not found for {recipe_id}"}), 404
     except Exception as e:
@@ -96,19 +81,13 @@ def import_recipe():
         # scripts/import_recipe.py MIGHT already handle git commit if it uses github_helper?
         # Let's check import_recipe.py content if needed, but for now assuming it does local write.
         
-        # Ideally, we should sync:
-        # recipes/imported/*.html
-        # recipes/content/*.md
-        # recipes/index.yml
-        
-        from scripts.github_helper import sync_changes_to_github
-        
-        # We don't know the exact ID easily without parsing stdout.
-        # Let's simple sync the directories.
-        sync_changes_to_github(['recipes/index.yml', 'recipes/content/*.md', 'recipes/imported/*.html'])
-        
+        # After import, we should migrate the new data to the DB.
+        try:
+            subprocess.run([sys.executable, "scripts/migrate_to_db.py"], capture_output=True)
+        except Exception as e:
+            print(f"Post-import migration failed: {e}")
+            
         # Invalidate cache
-        from api.utils import invalidate_cache
         invalidate_cache('recipes')
         
         return jsonify({

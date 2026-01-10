@@ -76,7 +76,7 @@ export default function Dashboard() {
     try {
       setUi(prev => ({ ...prev, actionLoading: true }));
       await createWeek();
-      showToast('New week initialized on GitHub. Syncing dashboard...', 'info');
+      showToast('New week initialized. Syncing dashboard...', 'info');
       await fetchStatus(false);
       showToast('New week ready!', 'success');
     } catch (err: any) {

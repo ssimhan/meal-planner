@@ -230,7 +230,36 @@ Currently, the system is stable and feature-complete for the core workflow. Futu
 
 ### 13.4: Productization Architecture
 **Priority:** 🟢 Lower
-**Effort:** 3-5 days
-- [ ] **Config Separation**: comprehensive audit to move all hardcoded strings (names, allergies, dietary rules, "office days") into `config.yml`.
-- [ ] **White-labeling**: Ensure the codebase references `config.yml` for all personalization logic.
-- [ ] **Setup Script**: Create a `setup.py` or script that helps a new user generate their own `config.yml` and `recipes/` folder structure.
+**Effort:** ~20 hours (12 chunks)
+**Goal:** Enable white-labeling by moving all hardcoded personal data to config.yml
+
+**Status:** 🔄 In Progress
+
+#### Breakdown (1-2 hour chunks):
+
+**Planning Phase (3 hours)**
+- [ ] **Chunk 1:** Config Schema Definition - Define complete config.yml structure, create config.example.yml
+- [ ] **Chunk 2:** Hardcoded Strings Audit - Document all 7 locations with hardcoded values
+
+**Migration Phase (7.5 hours)**
+- [ ] **Chunk 3:** Centralize Default Preferences - Remove hardcoded dietary/schedule defaults from workflow/actions.py and mealplan.py
+- [ ] **Chunk 4:** Centralize Timezone - Move timezone from api/routes/status.py to config-driven
+- [ ] **Chunk 5:** Centralize Lunch Defaults - Move lunch defaults from lunch_selector.py and update_lunch_fields.py to config.yml
+- [ ] **Chunk 6:** Centralize Snack Defaults - Move snack defaults from api/routes/status.py to config.yml
+- [ ] **Chunk 7:** Config Helper Module - Create scripts/config_loader.py with caching and validation
+
+**Productization Phase (6.5 hours)**
+- [ ] **Chunk 8:** Frontend Config Display - Add /api/config endpoint and settings card on dashboard
+- [ ] **Chunk 9:** Setup Script - Create interactive scripts/setup.py for new users
+- [ ] **Chunk 10:** Kid Profiles Migration - Verify all kid-related logic reads from config.yml dynamically
+
+**Validation Phase (3 hours)**
+- [ ] **Chunk 11:** White-Label Testing - End-to-end test with different config values
+- [ ] **Chunk 12:** Documentation - Write docs/CONFIGURATION.md and update CONTRIBUTING.md
+
+**Key Files to Modify:**
+- `scripts/workflow/actions.py:27` - Remove hardcoded config fallback
+- `scripts/mealplan.py:255-257` - Remove hardcoded preferences
+- `scripts/lunch_selector.py:39-54` - Move DEFAULTS to config
+- `api/routes/status.py:46, 86-89, 92-98` - Move timezone and snacks to config
+- `scripts/workflow/html_generator.py:210-211` - Use config for schedules

@@ -47,11 +47,30 @@ pip install -r requirements.txt
 # Install Node dependencies
 npm install
 
+# Configure for your household
+cp config.example.yml config.yml
+# Edit config.yml with your timezone, family members, and preferences
+
+# Validate your configuration
+python3 scripts/validate_yaml.py --config
+
 # Run the development server
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to access the dashboard.
+
+### First-Time Configuration
+
+Before using the meal planner, customize `config.yml` for your household:
+
+1. **Set your timezone** (e.g., `America/New_York`, `Europe/London`)
+2. **Define your schedule** (office days, busy days, late class days)
+3. **Add dietary preferences** (vegetarian, avoid ingredients)
+4. **Create kid profiles** (names and individual allergies)
+5. **Customize lunch/snack defaults** for your family
+
+See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for complete configuration guide.
 
 ### CLI Usage
 

@@ -250,11 +250,34 @@ Currently, the system is stable and feature-complete for the core workflow. Futu
 
 **Summary:** All 7 hardcoded locations migrated to config.yml. Each module has working config loading; skipped dedicated config_loader.py as redundant.
 
-**Productization Phase (Optional)**
-- [ ] **Chunk 8:** Frontend Config Display - Add /api/config endpoint and settings card on dashboard
-- [ ] **Chunk 9:** Setup Script - Create interactive scripts/setup.py for new users
-- [ ] **Chunk 10:** White-Label Testing - End-to-end test with different config values
-- [ ] **Chunk 11:** Documentation - Write docs/CONFIGURATION.md and update CONTRIBUTING.md
+**Documentation Phase (Complete)** ✅
+- [x] **Chunk 8:** Documentation - Write docs/CONFIGURATION.md and update CONTRIBUTING.md, README.md
+
+**Phase 13.4 Complete!** System is now fully white-labelable. New users can customize via config.yml with comprehensive documentation.
+
+**Future Enhancements (Optional):**
+- Frontend Config Display - Settings page showing current configuration
+- Interactive Setup Script - Guided config.yml generation for new users
+- White-Label Testing - End-to-end test with alternate configs
+
+---
+
+### 13.5: User Onboarding & Authentication
+**Priority:** 🟢 Lower
+**Effort:** 2-3 days
+**Goal:** Enable new users to set up their own profiles and preferences
+
+**Phase 1 - Email/Password (Initial MVP):**
+- [ ] User registration flow with email/password
+- [ ] Profile setup wizard for preferences (dietary restrictions, schedule, kid profiles)
+- [ ] Initial config.yml generation from onboarding responses
+- [ ] Basic session management
+
+**Phase 2 - OAuth (Enhanced):**
+- [ ] Google OAuth integration
+- [ ] Social profile import (name, email)
+- [ ] Multi-provider support architecture
+- [ ] Account linking for existing users
 
 **Key Files to Modify:**
 - `scripts/workflow/actions.py:27` - Remove hardcoded config fallback

@@ -49,6 +49,30 @@ The Meal Planner is a hybrid application comprising:
     ```
     Access the app at `http://localhost:3000`.
 
+5.  **Configure for Your Household:**
+    ```bash
+    cp config.example.yml config.yml
+    ```
+    Edit `config.yml` with your timezone, family members, and preferences. See [CONFIGURATION.md](docs/CONFIGURATION.md) for detailed guidance.
+
+## Customizing for Your Family
+
+The meal planner is designed to be fully customizable via `config.yml`. You can personalize:
+
+- **Timezone:** Set your local timezone for accurate daily check-ins
+- **Schedule:** Define office days, busy days, and late class days
+- **Dietary Preferences:** Vegetarian, avoid ingredients, novelty recipe limit
+- **Kid Profiles:** Individual family members with their own allergies/preferences
+- **Lunch Defaults:** Repeatable lunch options that rotate through the week
+- **Snack Defaults:** Daily snack rotation with school/home fallbacks
+
+**Quick validation:**
+```bash
+python3 scripts/validate_yaml.py --config
+```
+
+For complete documentation, see [docs/CONFIGURATION.md](docs/CONFIGURATION.md).
+
 ## Testing
 
 **Backend Tests:**

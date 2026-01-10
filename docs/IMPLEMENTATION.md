@@ -243,9 +243,9 @@ Currently, the system is stable and feature-complete for the core workflow. Futu
 
 **Migration Phase (7.5 hours)**
 - [x] **Chunk 3:** Centralize Default Preferences - Remove hardcoded dietary/schedule defaults from workflow/actions.py and mealplan.py
-- [ ] **Chunk 4:** Centralize Timezone - Move timezone from api/routes/status.py to config-driven
-- [ ] **Chunk 5:** Centralize Lunch Defaults - Move lunch defaults from lunch_selector.py and update_lunch_fields.py to config.yml
-- [ ] **Chunk 6:** Centralize Snack Defaults - Move snack defaults from api/routes/status.py to config.yml
+- [x] **Chunk 4:** Centralize Timezone - Move timezone from api/routes/status.py to config-driven
+- [x] **Chunk 5:** Centralize Lunch Defaults - Move lunch defaults from lunch_selector.py and update_lunch_fields.py to config.yml
+- [x] **Chunk 6:** Centralize Snack Defaults - Move snack defaults from api/routes/status.py to config.yml
 - [ ] **Chunk 7:** Config Helper Module - Create scripts/config_loader.py with caching and validation
 
 **Productization Phase (6.5 hours)**

@@ -35,24 +35,6 @@ class LunchSuggestion:
 class LunchSelector:
     """Selects lunch recipes based on weekly dinner plan and constraints."""
 
-    # Repeatable lunch defaults (decision fatigue reduction)
-    DEFAULTS = {
-        'kids': [
-            'PBJ on whole wheat',
-            'Egg sandwich or scrambled egg sandwich',
-            'Toad-in-a-hole (egg cooked in bread)',
-            'Ravioli with brown butter or simple tomato sauce',
-            'Chapati or dosa rolls with fruit',
-            'Veggie burrito or pizza roll',
-            'Quesadilla with cheese and beans'
-        ],
-        'adult': [
-            'Leftovers from previous night\'s dinner (preferred)',
-            'Grain bowl: prepped grain + roasted vegetables + protein',
-            'Salad with dinner components'
-        ]
-    }
-
     def __init__(self, recipe_index_path: str = 'recipes/index.yml', config_path: str = 'config.yml', recipes: List[Dict[str, Any]] = None):
         """Initialize selector with recipe index."""
         self.recipe_index_path = recipe_index_path
@@ -63,6 +45,24 @@ class LunchSelector:
             self.recipes = self._load_recipes()
         self.config = self._load_config()
         self.kid_profiles = self.config.get('kid_profiles', {})
+
+        # Load lunch defaults from config.yml (with fallback to hardcoded values)
+        self.defaults = self.config.get('lunch_defaults', {
+            'kids': [
+                'PBJ on whole wheat',
+                'Egg sandwich or scrambled egg sandwich',
+                'Toad-in-a-hole (egg cooked in bread)',
+                'Ravioli with brown butter or simple tomato sauce',
+                'Chapati or dosa rolls with fruit',
+                'Veggie burrito or pizza roll',
+                'Quesadilla with cheese and beans'
+            ],
+            'adult': [
+                'Leftovers from previous night\'s dinner (preferred)',
+                'Grain bowl: prepped grain + roasted vegetables + protein',
+                'Salad with dinner components'
+            ]
+        })
         self.lunch_recipes = self._filter_lunch_suitable()
 
     def _load_config(self) -> Dict[str, Any]:
@@ -421,8 +421,8 @@ class LunchSelector:
         # STANDARD LEFTOVERS: Adult only
         # Get default for kids (rotate through defaults)
         day_idx = day_order.index(day)
-        default_idx = day_idx % len(self.DEFAULTS['kids'])
-        kids_default = self.DEFAULTS['kids'][default_idx]
+        default_idx = day_idx % len(self.defaults['kids'])
+        kids_default = self.defaults['kids'][default_idx]
 
         return LunchSuggestion(
             recipe_id=f'leftovers_{day}',
@@ -443,9 +443,9 @@ class LunchSelector:
         # Rotate through defaults based on day
         day_order = ['mon', 'tue', 'wed', 'thu', 'fri']
         day_idx = day_order.index(day)
-        default_idx = day_idx % len(self.DEFAULTS['kids'])
+        default_idx = day_idx % len(self.defaults['kids'])
 
-        default_option = self.DEFAULTS['kids'][default_idx]
+        default_option = self.defaults['kids'][default_idx]
 
         return LunchSuggestion(
             recipe_id=f'default_{day}',

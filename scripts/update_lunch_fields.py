@@ -3,6 +3,9 @@
 Update recipe index with lunch-specific fields.
 Adds lunch_suitable, kid_friendly, prep_style, prep_components,
 component_storage_days, and reuses_dinner_ingredients fields.
+
+NOTE: This is a one-time migration script. Lunch defaults are now stored in
+config.yml under the lunch_defaults section. See config.example.yml for reference.
 """
 
 import yaml

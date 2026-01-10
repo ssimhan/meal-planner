@@ -12,6 +12,33 @@ from api.utils import get_cached_data, get_actual_path, get_yaml_data
 
 status_bp = Blueprint('status', __name__)
 
+def _load_config():
+    """Load config.yml with caching for Vercel environment."""
+    is_vercel = os.environ.get('VERCEL') == '1'
+
+    if is_vercel:
+        # Try cached config first
+        cached_config = get_cached_data('config', 'config.yml')
+        if cached_config:
+            return cached_config
+
+        # Fetch from GitHub
+        repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
+        from scripts.github_helper import get_file_from_github
+        content = get_file_from_github(repo_name, 'config.yml')
+        if content:
+            config = yaml.safe_load(content)
+            return config
+    else:
+        # Local development - read directly
+        config_path = Path('config.yml')
+        if config_path.exists():
+            with open(config_path, 'r') as f:
+                return yaml.safe_load(f)
+
+    # Fallback to default timezone only
+    return {'timezone': 'America/Los_Angeles'}
+
 def _get_current_status(skip_sync=False):
     repo_name = os.environ.get("GITHUB_REPOSITORY") or "ssimhan/meal-planner"
     is_vercel = os.environ.get('VERCEL') == '1'
@@ -42,9 +69,11 @@ def _get_current_status(skip_sync=False):
         archive_expired_weeks()
     except Exception as e:
         print(f"Warning: Failed to archive: {e}")
-    
-    pacific_tz = pytz.timezone('America/Los_Angeles')
-    today = datetime.now(pacific_tz)
+
+    # Load timezone from config.yml
+    config = _load_config()
+    user_tz = pytz.timezone(config.get('timezone', 'America/Los_Angeles'))
+    today = datetime.now(user_tz)
 
     monday = today - timedelta(days=today.weekday())
     week_str = monday.strftime('%Y-%m-%d')
@@ -83,20 +112,26 @@ def _get_current_status(skip_sync=False):
 
     today_dinner = None
     today_lunch = None
-    today_snacks = {
+    prep_tasks = []
+
+    # Load snack defaults from config.yml
+    snack_config = config.get('snack_defaults', {})
+    snack_fallbacks = snack_config.get('fallback', {
         "school": "Fruit or Cheese sticks",
         "home": "Cucumber or Crackers"
-    }
-    prep_tasks = []
-    
-    DEFAULT_SNACKS = {
+    })
+    snack_by_day = snack_config.get('by_day', {
         'mon': 'Apple slices with peanut butter',
         'tue': 'Cheese and crackers',
         'wed': 'Cucumber rounds with cream cheese',
         'thu': 'Grapes',
         'fri': 'Crackers with hummus'
+    })
+
+    today_snacks = {
+        "school": snack_by_day.get(current_day, snack_fallbacks.get("school", "Fruit")),
+        "home": snack_fallbacks.get("home", "Cucumber or Crackers")
     }
-    today_snacks["school"] = DEFAULT_SNACKS.get(current_day, "Fruit")
 
     history_week = None
     if state in ['active', 'waiting_for_checkin']:

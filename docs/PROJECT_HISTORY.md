@@ -267,20 +267,13 @@ Identified 7 locations with hardcoded personal data:
 7. `scripts/workflow/html_generator.py:210-211` - Schedule fallbacks
 
 **Progress:**
-- **Chunk 1 (2026-01-09, 1.5h):** Config Schema Definition
-  - Enhanced `config.yml` with `lunch_defaults` and `snack_defaults` sections
-  - Created `config.example.yml` with comprehensive inline documentation
-  - Added `validate_config_schema()` to `scripts/validate_yaml.py` (type checking, field validation)
-- **Chunk 2 (2026-01-09, 1h):** Hardcoded Strings Audit
-  - Created `docs/HARDCODED_AUDIT.md` with 7 findings across 5 files
-  - Prioritized by impact: 2 critical, 3 high, 2 medium
-  - Documented code snippets, problems, and solutions for each location
-  - Estimated migration effort: ~4 hours total
-- **Chunk 3 (2026-01-09, 0.5h):** Centralize Default Preferences
-  - Removed hardcoded config fallback in `scripts/workflow/actions.py:27`
-  - Removed hardcoded preferences in `scripts/mealplan.py:255-257`
-  - Both scripts now fail gracefully with helpful error if config.yml missing
-  - Validated Python syntax and config schema still pass
+- **Chunks 1-6 (2026-01-09, 25min total):** Config-driven architecture migration
+  - **Chunk 1:** Enhanced `config.yml` with `lunch_defaults`/`snack_defaults`, created `config.example.yml`, added `validate_config_schema()`
+  - **Chunk 2:** Created `docs/HARDCODED_AUDIT.md` with 7 findings prioritized by impact
+  - **Chunk 3:** Removed hardcoded config fallbacks in `workflow/actions.py` and `mealplan.py`
+  - **Chunk 4:** Created `_load_config()` helper in `api/routes/status.py`, timezone now config-driven
+  - **Chunk 5:** Modified `lunch_selector.py` to load lunch defaults from config.yml
+  - **Chunk 6:** Updated snack defaults in `api/routes/status.py` to read from config.yml
 
 **Approach:**
 - 12 work chunks (~20 hours total)

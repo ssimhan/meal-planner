@@ -5,7 +5,14 @@ from datetime import datetime
 from .state import archive_all_input_files, update_history, load_history, get_actual_path
 from .selection import generate_farmers_market_proposal, get_recent_recipes, filter_recipes, select_dinners
 from .html_generator import generate_html_plan
-from scripts.lunch_selector import LunchSelector, LunchSuggestion
+try:
+    from scripts.lunch_selector import LunchSelector, LunchSuggestion
+except ModuleNotFoundError:
+    # When running from GitHub Actions or other contexts without scripts in path
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+    from scripts.lunch_selector import LunchSelector, LunchSuggestion
 
 def create_new_week(week_str):
     """Create a new weekly input file with default values."""

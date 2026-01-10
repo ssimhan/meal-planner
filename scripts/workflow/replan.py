@@ -1,9 +1,9 @@
 import yaml
 from pathlib import Path
 from datetime import datetime, timedelta
-from scripts.workflow.selection import _load_inventory_data, score_recipe_by_inventory
-from scripts.workflow.state import load_history, get_actual_path
-from scripts.workflow.html_generator import generate_html_plan
+from .selection import _load_inventory_data, score_recipe_by_inventory
+from .state import load_history, get_actual_path
+from .html_generator import generate_html_plan
 
 def replan_meal_plan(input_file, data):
     """Re-distribute remaining and skipped meals across the rest of the week."""
@@ -73,7 +73,12 @@ def replan_meal_plan(input_file, data):
         data['dinners'] = [{'day': d.get('day'), 'recipe_id': d.get('recipe_id')} for d in new_dinners]
         if 'workflow' in data: data['workflow']['updated_at'] = datetime.now().isoformat()
         with open(input_file, 'w') as f: yaml.dump(data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
-    from lunch_selector import LunchSelector
+    try:
+        from scripts.lunch_selector import LunchSelector
+    except ModuleNotFoundError:
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+        from scripts.lunch_selector import LunchSelector
     formatted_dinners = [{'day': d.get('day'), 'recipe_id': d.get('recipe_id'), 'recipe_name': d.get('recipe_id').replace('_', ' ').title()} for d in new_dinners]
     selector = LunchSelector()
     selected_lunches = selector.select_weekly_lunches(formatted_dinners, monday_str)

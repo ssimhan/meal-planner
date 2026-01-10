@@ -196,7 +196,7 @@ def _get_current_status(skip_sync=False):
         except Exception as e:
             print(f"Warning: Failed to regenerate prep tasks: {e}")
 
-    return jsonify({
+    res_dict = {
         "status": "success",
         "week_of": week_str,
         "state": state,
@@ -215,35 +215,31 @@ def _get_current_status(skip_sync=False):
         },
         "next_week_planned": False,
         "next_week": None,
-        "week_data": data
-    })
+        "week_data": data,
+        "available_weeks": []
+    }
 
     # Check for next week
     try:
         from datetime import timedelta
-        next_week_start = (today + timedelta(days=7)).strftime('%Y-%m-%d')
         # Simple check for any plan in the future
         future_res = supabase.table("meal_plans").select("week_of, status").eq("household_id", get_household_id()).gt("week_of", week_str).order("week_of", desc=False).limit(1).execute()
         if future_res.data:
-            resp_data = response.get_json()
-            resp_data["next_week_planned"] = True
-            resp_data["next_week"] = {
-                "week_of": future_res.data[0]['week_of'],
+            res_dict["next_week_planned"] = True
+            res_dict["next_week"] = {
+                "week_of": str(future_res.data[0]['week_of']),
                 "status": future_res.data[0]['status']
             }
-            return jsonify(resp_data)
     except Exception as e:
         print(f"Error checking for next week: {e}")
 
     # Add available weeks for the selector
     try:
-        resp_data = response.get_json()
-        resp_data["available_weeks"] = StorageEngine.get_available_weeks()
-        return jsonify(resp_data)
+        res_dict["available_weeks"] = StorageEngine.get_available_weeks()
     except Exception as e:
         print(f"Error adding available weeks: {e}")
 
-    return response
+    return jsonify(res_dict)
 
 @status_bp.route("/api/status")
 @require_auth

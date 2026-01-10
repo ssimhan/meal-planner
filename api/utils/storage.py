@@ -1,3 +1,7 @@
+import os
+from flask import request
+from supabase import create_client
+
 # Initialize Supabase client with Service Role Key to bypass RLS in the backend
 SUPABASE_URL = os.environ.get('NEXT_PUBLIC_SUPABASE_URL') or os.environ.get('SUPABASE_URL')
 SUPABASE_SERVICE_KEY = os.environ.get('SUPABASE_SERVICE_ROLE_KEY') or os.environ.get('NEXT_PUBLIC_SUPABASE_ANON_KEY') or os.environ.get('SUPABASE_ANON_KEY')
@@ -7,7 +11,7 @@ if not SUPABASE_URL:
 if not SUPABASE_SERVICE_KEY:
     print("WARNING: SUPABASE_SERVICE_KEY is missing from environment!")
 
-supabase: Client = None
+supabase = None
 if SUPABASE_URL and SUPABASE_SERVICE_KEY:
     try:
         supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
@@ -98,58 +102,75 @@ class StorageEngine:
 
     @staticmethod
     def get_history():
+        if not supabase: return {"weeks": []}
         h_id = get_household_id()
-        # Fetch all meal plans for the household
-        res = supabase.table("meal_plans").select("history_data").eq("household_id", h_id).order("week_of", desc=True).execute()
-        return {"weeks": [row['history_data'] for row in res.data]}
+        try:
+            # Fetch all meal plans for the household
+            res = supabase.table("meal_plans").select("history_data").eq("household_id", h_id).order("week_of", desc=True).execute()
+            return {"weeks": [row['history_data'] for row in res.data]}
+        except Exception as e:
+            print(f"Error fetching history: {e}")
+            return {"weeks": []}
 
     @staticmethod
     def update_meal_plan(week_of, plan_data=None, history_data=None, status=None):
+        if not supabase: return
         h_id = get_household_id()
-        update_payload = {}
-        if plan_data is not None: update_payload['plan_data'] = plan_data
-        if history_data is not None: update_payload['history_data'] = history_data
-        if status is not None: update_payload['status'] = status
-        
-        supabase.table("meal_plans").upsert({
-            "household_id": h_id,
-            "week_of": week_of,
-            **update_payload
-        }).execute()
+        try:
+            update_payload = {}
+            if plan_data is not None: update_payload['plan_data'] = plan_data
+            if history_data is not None: update_payload['history_data'] = history_data
+            if status is not None: update_payload['status'] = status
+            
+            supabase.table("meal_plans").upsert({
+                "household_id": h_id,
+                "week_of": week_of,
+                **update_payload
+            }).execute()
+        except Exception as e:
+            print(f"Error updating meal plan for {week_of}: {e}")
 
     @staticmethod
     def update_inventory_item(category, item_name, updates=None, delete=False):
+        if not supabase: return
         h_id = get_household_id()
-        
-        if delete:
-            supabase.table("inventory_items").delete().eq("household_id", h_id).eq("category", category).eq("item", item_name).execute()
-            return
+        try:
+            if delete:
+                supabase.table("inventory_items").delete().eq("household_id", h_id).eq("category", category).eq("item", item_name).execute()
+                return
 
-        # Prepare payload for upsert
-        # Since quantity and unit might be in updates, we need to extract them
-        quantity = updates.pop('quantity', 1) if updates else 1
-        unit = updates.pop('unit', 'count') if updates else 'count'
-        
-        supabase.table("inventory_items").upsert({
-            "household_id": h_id,
-            "category": category,
-            "item": item_name,
-            "quantity": quantity,
-            "unit": unit,
-            "metadata": updates or {}
-        }).execute()
+            # Prepare payload for upsert
+            # Since quantity and unit might be in updates, we need to extract them
+            quantity = updates.pop('quantity', 1) if updates else 1
+            unit = updates.pop('unit', 'count') if updates else 'count'
+            
+            supabase.table("inventory_items").upsert({
+                "household_id": h_id,
+                "category": category,
+                "item": item_name,
+                "quantity": quantity,
+                "unit": unit,
+                "metadata": updates or {}
+            }).execute()
+        except Exception as e:
+            print(f"Error updating inventory item {item_name}: {e}")
     @staticmethod
     def get_active_week():
         """Find the active (not archived) meal plan for the household."""
+        if not supabase: return None
         h_id = get_household_id()
-        # First priority: find what is currently 'active'
-        res = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("status", "active").order("week_of", desc=True).limit(1).execute()
-        if res.data:
-            return res.data[0]
-            
-        # Second priority: find what is in 'planning'
-        res = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("status", "planning").order("week_of", desc=True).limit(1).execute()
-        return res.data[0] if res.data else None
+        try:
+            # First priority: find what is currently 'active'
+            res = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("status", "active").order("week_of", desc=True).limit(1).execute()
+            if res.data:
+                return res.data[0]
+                
+            # Second priority: find what is in 'planning'
+            res = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("status", "planning").order("week_of", desc=True).limit(1).execute()
+            return res.data[0] if res.data else None
+        except Exception as e:
+            print(f"Error fetching active week: {e}")
+            return None
 
     @staticmethod
     def get_workflow_state(plan=None):
@@ -202,18 +223,22 @@ class StorageEngine:
     @staticmethod
     def archive_expired_weeks():
         """Find weeks in DB that have passed their end date and mark them as archived."""
+        if not supabase: return
         h_id = get_household_id()
         # Find active/planning plans
-        res = supabase.table("meal_plans").select("*").eq("household_id", h_id).neq("status", "archived").execute()
-        
-        from datetime import datetime, timedelta
-        now = datetime.now().date()
-        
-        for plan in res.data:
-            week_of = plan['week_of']
-            week_start = datetime.strptime(week_of, '%Y-%m-%d').date() if isinstance(week_of, str) else week_of
-            week_end = week_start + timedelta(days=7)
+        try:
+            res = supabase.table("meal_plans").select("*").eq("household_id", h_id).neq("status", "archived").execute()
             
-            if now >= week_end:
-                supabase.table("meal_plans").update({"status": "archived"}).eq("id", plan['id']).execute()
-                print(f"Archived expired week: {week_of}")
+            from datetime import datetime, timedelta
+            now = datetime.now().date()
+            
+            for plan in res.data:
+                week_of = plan['week_of']
+                week_start = datetime.strptime(week_of, '%Y-%m-%d').date() if isinstance(week_of, str) else week_of
+                week_end = week_start + timedelta(days=7)
+                
+                if now >= week_end:
+                    supabase.table("meal_plans").update({"status": "archived"}).eq("id", plan['id']).execute()
+                    print(f"Archived expired week: {week_of}")
+        except Exception as e:
+            print(f"Error in archive_expired_weeks: {e}")

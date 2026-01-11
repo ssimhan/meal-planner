@@ -68,6 +68,147 @@ def generate_plan_route():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@meals_bp.route("/api/plan/draft", methods=["POST"])
+@require_auth
+def generate_draft_route():
+    try:
+        data = request.json or {}
+        week_of = data.get('week_of')
+        selections = data.get('selections', []) # [{day: 'mon', recipe_id: '...'}]
+        
+        h_id = storage.get_household_id()
+        
+        # 1. Fetch current plan
+        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_of).single().execute()
+        if not res.data:
+             return jsonify({"status": "error", "message": f"Week {week_of} not found"}), 404
+        
+        active_plan = res.data
+        plan_data = active_plan['plan_data']
+        history_week = active_plan['history_data'] or {'week_of': week_of, 'dinners': []}
+        
+        # 2. Apply manual selections to history_week
+        # This ensures the generation logic respects these choices
+        days_covered = set()
+        for selection in selections:
+            day = selection.get('day')
+            recipe_id = selection.get('recipe_id')
+            if not day or not recipe_id: continue
+            
+            day_abbr = day.lower()[:3]
+            days_covered.add(day_abbr)
+            
+            # Find and update or add
+            found = False
+            for dinner in history_week.get('dinners', []):
+                if dinner.get('day') == day_abbr:
+                    dinner['recipe_id'] = recipe_id
+                    found = True
+                    break
+            if not found:
+                history_week.setdefault('dinners', []).append({
+                    'day': day_abbr,
+                    'recipe_id': recipe_id
+                })
+
+        # 3. Fetch all contexts for generation
+        history = storage.StorageEngine.get_history()
+        # Ensure the current history week in the full history object is also updated
+        updated_any = False
+        for w in history.get('weeks', []):
+            if w.get('week_of') == week_of:
+                w['dinners'] = history_week['dinners']
+                updated_any = True
+                break
+        if not updated_any:
+            history.setdefault('weeks', []).append(history_week)
+
+        all_recipes_res = storage.supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id).execute()
+        all_recipes = [{"id": r['id'], "name": r['name'], **r['metadata']} for r in all_recipes_res.data]
+        
+        # 4. Generate the rest of the plan
+        new_plan_data, new_history = generate_meal_plan(
+            input_file=None, 
+            data=plan_data,
+            recipes_list=all_recipes,
+            history_dict=history
+        )
+        
+        # 5. Extract the generated week's history
+        current_history_week = next((w for w in new_history.get('weeks', []) if w.get('week_of') == week_of), None)
+        
+        # 6. Save back to DB as 'planning' (not active yet)
+        storage.StorageEngine.update_meal_plan(
+            week_of, 
+            plan_data=new_plan_data, 
+            history_data=current_history_week,
+            status='planning' 
+        )
+        
+        invalidate_cache()
+            
+        return jsonify({
+            "status": "success",
+            "message": f"Generated draft plan for {week_of}",
+            "plan_data": new_plan_data,
+            "history_data": current_history_week
+        })
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@meals_bp.route("/api/plan/shopping-list", methods=["GET"])
+@require_auth
+def get_shopping_list_route():
+    try:
+        week_of = request.args.get('week_of')
+        if not week_of:
+            return jsonify({"status": "error", "message": "week_of parameter required"}), 400
+            
+        h_id = storage.get_household_id()
+        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).single().execute()
+        
+        if not res.data:
+            return jsonify({"status": "error", "message": f"No plan found for week {week_of}"}), 404
+            
+        plan_data = res.data['plan_data']
+        
+        from scripts.inventory_intelligence import get_shopping_list
+        shopping_list = get_shopping_list(plan_data)
+        
+        return jsonify({
+            "status": "success",
+            "shopping_list": shopping_list
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@meals_bp.route("/api/plan/finalize", methods=["POST"])
+@require_auth
+def finalize_plan_route():
+    try:
+        data = request.json or {}
+        week_of = data.get('week_of')
+        if not week_of:
+            return jsonify({"status": "error", "message": "week_of required"}), 400
+            
+        h_id = storage.get_household_id()
+        
+        # Update status to active
+        storage.StorageEngine.update_meal_plan(
+            week_of,
+            status='active'
+        )
+        
+        invalidate_cache()
+        
+        return jsonify({
+            "status": "success",
+            "message": f"Plan for {week_of} is now active!"
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 @meals_bp.route("/api/create-week", methods=["POST"])
 @require_auth
 def create_week():

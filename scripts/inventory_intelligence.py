@@ -217,6 +217,50 @@ def get_waste_not_suggestions(limit=4):
     
     return scored_recipes[:limit]
 
+def get_shopping_list(plan_data):
+    """
+    Generate shopping list by identifying missing ingredients from plan.
+    Considers dinners, lunches, and default snacks.
+    """
+    inventory_set, _ = get_inventory_items()
+    needed = []
+    
+    # 1. Dinners (Main veggies)
+    for dinner in plan_data.get('dinners', []):
+        for veg in dinner.get('vegetables', []):
+            norm = normalize_ingredient(veg)
+            # Remove underscores for display
+            display_name = veg.replace('_', ' ').title()
+            if norm not in inventory_set:
+                needed.append(display_name)
+    
+    # 2. Lunches (Prep components)
+    lunches = plan_data.get('lunches', {})
+    if isinstance(lunches, dict):
+        for day, lunch in lunches.items():
+            # If lunch is a dict (standard for plan_data)
+            # Handle both LunchSuggestion objects (from logic) and dicts (from DB)
+            components = []
+            if isinstance(lunch, dict):
+                components = lunch.get('prep_components', [])
+            else:
+                components = getattr(lunch, 'prep_components', [])
+                
+            for comp in components:
+                norm = normalize_ingredient(comp)
+                display_name = comp.replace('_', ' ').title()
+                if norm not in inventory_set:
+                    needed.append(display_name)
+                    
+    # 3. Default Snacks (Heuristic from html_generator)
+    default_snacks = ['Apple', 'Peanut Butter', 'Cheese', 'Cracker', 'Cucumber', 'Cream Cheese', 'Grape', 'Hummus']
+    for snack in default_snacks:
+        norm = normalize_ingredient(snack)
+        if norm not in inventory_set:
+            needed.append(snack)
+            
+    return sorted(list(set(needed)))
+
 if __name__ == "__main__":
     subs = get_substitutions()
     print("Fridge Shop:")

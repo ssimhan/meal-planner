@@ -513,7 +513,13 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Step 0 (Prior Week Review):** Interactive UI to confirm made/skipped meals and log leftovers.
 - **Step 1 (Inventory Update):** Bulk update interface integrated into the planning wizard.
 - **Step 2 (Waste Not Engine):** Suggests recipes for Mon/Tue based on leftovers and perishable fridge items.
+- **Block 2: Collaborative Planning (Completed)**
+    - **Step 3 (Tentative Plan):** Logic to fill remaining days while respecting manual selections.
+    - **Step 4 (Smart Grocery List):** Dynamic shopping list generation comparing plan needs vs current inventory.
+    - **Step 5 (Purchase Confirmation):** UI to confirm purchases and auto-update inventory.
+    - **Step 6 (Plan Finalization):** Endpoint to set plan status to "active" and lock it in.
 - **Technical Implementation:**
-    - New `PlanningWizard` component in `src/app/plan/page.tsx` managing wizard steps.
-    - New API endpoints (`/api/reviews`, `/api/suggestions/waste-not`) backing the wizard.
-    - `scripts/reset_week.py` utility for development testing.
+    - New `PlanningWizard` components for all steps.
+    - New Backend routes: `/api/plan/draft`, `/api/plan/shopping-list`, `/api/plan/finalize`.
+    - Integrated `inventory_intelligence.get_shopping_list` for smart subtraction.
+    - Full end-to-end flow from Review -> Active Plan.

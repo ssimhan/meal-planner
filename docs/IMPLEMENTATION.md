@@ -58,7 +58,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ## Development Status
 
-**Current State:** Phase 16 (Block 1 Complete). Database migration complete.
+**Current State:** Phase 16 Complete. End-to-end smart planning workflow implemented.
 
 **Completed Phases:**
 - **1-9:** Foundation (recipe parsing, CLI, energy-based prep, HTML plans)
@@ -105,10 +105,10 @@ System now fully configurable via `config.yml` with:
 1.  **Step 0: Review Prior Week:** Prompt user to confirm which meals were made and log any leftovers (for the Fridge).
 2.  **Step 1: Inventory Update:** Bulk update interface to ensure stock levels are accurate. ✅ Complete
 3.  **Step 2: "Waste Not" Suggestions:** Propose meals for Mon/Tue that use up leftovers and perishables. ✅ Complete
-4.  **Step 3: Tentative Plan:** Generate a draft plan for the rest of the week based on preferences.
-5.  **Step 4: Smart Grocery List:** Auto-generate a shopping list based on (Plan Ingredients - Current Inventory).
-6.  **Step 5: Purchase Confirmation:** Interactive list to "check off" items -> automatically moves them to Inventory.
-7.  **Step 6: Finalize Plan:** Lock in the week to "Active" status.
+4.  **Step 3: Tentative Plan:** Generate a draft plan for the rest of the week based on preferences. ✅ Complete
+5.  **Step 4: Smart Grocery List:** Auto-generate a shopping list based on (Plan Ingredients - Current Inventory). ✅ Complete
+6.  **Step 5: Purchase Confirmation:** Interactive list to "check off" items -> automatically moves them to Inventory. ✅ Complete
+7.  **Step 6: Finalize Plan:** Lock in the week to "Active" status. ✅ Complete
 8.  **Step 7: Mid-Week Adjustments:** Allow dynamic replanning for "life happens" moments.
 
 ### Phase 17: System Cleanup

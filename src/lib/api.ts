@@ -242,5 +242,30 @@ export async function getWasteNotSuggestions(): Promise<any> {
     return handleResponse<any>(res, 'Failed to fetch waste-not suggestions');
 }
 
+export async function generateDraft(week_of: string, selections: { day: string, recipe_id: string }[]): Promise<any> {
+    const res = await fetch('/api/plan/draft', {
+        method: 'POST',
+        headers: await getAuthHeaders(),
+        body: JSON.stringify({ week_of, selections }),
+    });
+    return handleResponse<any>(res, 'Failed to generate draft plan');
+}
+
+export async function getShoppingList(week_of: string): Promise<any> {
+    const res = await fetch(`/api/plan/shopping-list?week_of=${week_of}`, {
+        headers: await getAuthHeaders(false),
+    });
+    return handleResponse<any>(res, 'Failed to fetch shopping list');
+}
+
+export async function finalizePlan(week_of: string): Promise<any> {
+    const res = await fetch('/api/plan/finalize', {
+        method: 'POST',
+        headers: await getAuthHeaders(),
+        body: JSON.stringify({ week_of }),
+    });
+    return handleResponse<any>(res, 'Failed to finalize plan');
+}
+
 // Re-export types for convenience
 export type { WorkflowStatus, LogMealData } from '@/types';

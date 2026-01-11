@@ -75,6 +75,17 @@ System now fully configurable via `config.yml` with:
 
 ---
 
+## Known Issues
+
+### Bug: Week View Not Displaying Actual Meals
+**Status:** 🐛 Open
+**Description:** "Week at a Glance" view is not pulling actual meal data from the current week's plan
+**Impact:** Users cannot see scheduled meals in the week overview
+**Reported:** 2026-01-09
+**Priority:** Medium
+
+---
+
 ## Future Roadmap
 
 **Phase 13.5: User Authentication** (Optional)

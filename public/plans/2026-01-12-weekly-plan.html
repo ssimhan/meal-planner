@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Meal Plan: Jan 12-18, 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;700;900&family=Outfit:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #fef9f3;
+            --bg-secondary: #f0e6d2;
+            --bg-card: #ffffff;
+            --accent-green: #2d6a4f;
+            --accent-gold: #d4a574;
+            --accent-terracotta: #c1666b;
+            --accent-sage: #6a8e7f;
+            --text-primary: #2b2d42;
+            --text-muted: #6c757d;
+            --border-subtle: rgba(109, 122, 95, 0.2);
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.5rem;
+            --text-2xl: 2rem;
+            --text-3xl: 3rem;
+            --text-4xl: 4.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.03"/></svg>');
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            padding: 50px;
+            border-radius: 2px;
+            box-shadow: 0 4px 30px rgba(45, 106, 79, 0.08);
+            border: 1px solid var(--border-subtle);
+        }
+
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 900;
+            font-size: var(--text-4xl);
+            color: var(--accent-green);
+            margin-bottom: 30px;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .tab-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--accent-terracotta);
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: var(--text-sm);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -3px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover {
+            background: rgba(45, 106, 79, 0.05);
+            color: var(--accent-green);
+        }
+
+        .tab-button.active {
+            color: var(--accent-green);
+            background: rgba(45, 106, 79, 0.08);
+            border-bottom-color: var(--accent-green);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 700;
+            font-size: var(--text-2xl);
+            color: var(--accent-green);
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: var(--text-lg);
+            color: var(--accent-green);
+            margin-bottom: 12px;
+        }
+
+        .energy-level {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 2px;
+            font-size: var(--text-xs);
+            font-weight: 700;
+            margin-left: 15px;
+            letter-spacing: 0.08em;
+            border: 2px solid;
+        }
+
+        .energy-high { background: var(--accent-green); color: white; border-color: var(--accent-green); }
+        .energy-mild { background: var(--accent-gold); color: var(--text-primary); border-color: var(--accent-gold); }
+        .energy-morning-ok { background: #f0d49c; color: var(--text-primary); border-color: #d4a574; }
+        .energy-none { background: var(--accent-terracotta); color: white; border-color: var(--accent-terracotta); }
+
+        .day-header {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: var(--text-2xl);
+            color: var(--accent-green);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--accent-terracotta);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .meal-card {
+            background: white;
+            padding: 0;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-left: 4px solid var(--accent-terracotta);
+        }
+
+        .meal-card h3 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin: 0;
+            padding: 12px 16px 8px 16px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .meal-card h3::before { content: "🍽️"; font-size: 1em; }
+
+        .meal-type {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: var(--text-base);
+            color: var(--text-primary);
+            padding: 0 16px;
+            margin-bottom: 8px;
+        }
+
+        .meal-type a {
+            color: var(--text-primary);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .meal-type a:hover {
+            color: var(--accent-terracotta);
+            border-bottom-color: var(--accent-terracotta);
+        }
+
+        .vegetables {
+            color: var(--text-muted);
+            font-weight: 400;
+            padding: 0 16px;
+            margin: 4px 0;
+            font-size: var(--text-xs);
+        }
+
+        .prep-notes {
+            background: rgba(240, 230, 210, 0.3);
+            padding: 10px 16px;
+            margin: 8px 0 0 0;
+            font-size: var(--text-xs);
+            line-height: 1.5;
+        }
+
+        .evening-assembly {
+            background: rgba(193, 102, 107, 0.06);
+            padding: 10px 16px 16px 16px;
+            margin: 8px 0 0 0;
+            font-weight: 400;
+            font-size: var(--text-xs);
+            line-height: 1.5;
+        }
+
+        .lunch-section {
+            background: white;
+            padding: 0;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .lunch-section h4 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin: 0;
+            padding: 12px 16px 8px 16px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lunch-section h4::before { content: "🥪"; font-size: 1em; }
+
+        .lunch-section p {
+            padding: 0 16px 12px 16px;
+            margin: 4px 0;
+            font-size: var(--text-sm);
+            line-height: 1.5;
+        }
+
+        .snacks {
+            background: white;
+            padding: 0;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-left: 4px solid var(--accent-sage);
+        }
+
+        .snacks h4 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin: 0;
+            padding: 12px 16px 8px 16px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .snacks h4::before { content: "🍎"; font-size: 1em; }
+
+        .snacks p {
+            padding: 0 16px 16px 16px;
+            margin: 0;
+            font-size: var(--text-sm);
+            line-height: 1.5;
+        }
+
+        .prep-tasks {
+            background: white;
+            padding: 0;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .prep-tasks h4 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin: 0;
+            padding: 12px 16px 8px 16px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .prep-tasks h4::before { content: "⚙️"; font-size: 1em; }
+
+        .prep-tasks p {
+            padding: 0 16px;
+            margin: 8px 0;
+            font-size: var(--text-sm);
+            line-height: 1.5;
+        }
+
+        .prep-tasks ul {
+            margin: 0;
+            padding: 0 16px 16px 40px;
+        }
+
+        .prep-tasks li {
+            margin: 4px 0;
+            font-size: var(--text-xs);
+            line-height: 1.5;
+        }
+
+        .freezer-backup {
+            background: linear-gradient(135deg, rgba(106, 142, 127, 0.15) 0%, rgba(106, 142, 127, 0.08) 100%);
+            padding: 25px;
+            border-radius: 2px;
+            margin: 25px 0;
+            border: 2px solid var(--accent-sage);
+        }
+
+        .freezer-backup h3 {
+            color: var(--accent-sage);
+            margin-bottom: 15px;
+        }
+
+        .from-scratch {
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.15) 0%, rgba(212, 165, 116, 0.08) 100%);
+            padding: 25px;
+            border-radius: 2px;
+            margin: 25px 0;
+            border: 2px solid var(--accent-gold);
+        }
+
+        .from-scratch h3 {
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+        }
+
+        .week-glance {
+            background: white;
+            padding: 25px;
+            border-radius: 2px;
+            margin: 25px 0;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .grocery-section {
+            margin: 25px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 2px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .grocery-section h4 {
+            color: var(--accent-green);
+            margin-bottom: 12px;
+            font-size: var(--text-lg);
+            border-bottom: 2px solid var(--accent-terracotta);
+            padding-bottom: 8px;
+        }
+
+        .grocery-section ul {
+            margin: 10px 0 10px 25px;
+        }
+
+        .grocery-section li {
+            margin: 6px 0;
+            font-size: var(--text-sm);
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { padding: 20px; }
+            h1 { font-size: var(--text-3xl); }
+            .tab-nav { overflow-x: auto; flex-wrap: nowrap; }
+            .tab-button { flex-shrink: 0; padding: 10px 16px; font-size: var(--text-xs); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📅 Weekly Meal Plan: Jan 12-18, 2026</h1>
+
+        <div class="tab-nav">
+            <button class="tab-button active" onclick="showTab('overview')">Overview</button>
+            <button class="tab-button" onclick="showTab('monday')">Monday</button>
+            <button class="tab-button" onclick="showTab('tuesday')">Tuesday</button>
+            <button class="tab-button" onclick="showTab('wednesday')">Wednesday</button>
+            <button class="tab-button" onclick="showTab('thursday')">Thursday</button>
+            <button class="tab-button" onclick="showTab('friday')">Friday</button>
+            <button class="tab-button" onclick="showTab('saturday')">Saturday</button>
+            <button class="tab-button" onclick="showTab('sunday')">Sunday</button>
+            <button class="tab-button" onclick="showTab('groceries')">Groceries</button>
+        </div>
+
+        <!-- OVERVIEW TAB -->
+        <div id="overview" class="tab-content active">
+            <div class="freezer-backup">
+                <h3>❄️ Freezer Backup Status</h3>
+                <p><strong>Current backups:</strong> 2 meals (Target: 3)</p>
+                <ul>
+                    <li>Spinach ravioli leftover (1 serving) - <strong>Using Friday!</strong></li>
+                    <li>Protein muffins (5 servings)</li>
+                </ul>
+                <p><strong>This week's plan:</strong> No batch cooking scheduled. Will maintain 2 backups.</p>
+            </div>
+
+            <div class="from-scratch">
+                <h3>✨ From Scratch Recipe This Week</h3>
+                <p><strong>Wednesday: Vegan Spicy Thai Drunken Noodles with Seared Tofu</strong></p>
+                <p>This Thai-inspired dish brings exciting new flavors to the week with rice noodles, seared tofu, and a spicy-sweet sauce featuring basil, garlic, and lime. It's a departure from the typical Indian/Mexican rotation while remaining vegetarian and family-friendly. Uses carrots and corn from the farmers market, and the prep can be completed by Wednesday PM for minimal evening assembly.</p>
+            </div>
+
+            <div class="week-glance">
+                <h3>Week at a Glance</h3>
+                <ul>
+                    <li><strong>Monday:</strong> Cowboy Caviar Salad (easy cold salad to start the week)</li>
+                    <li><strong>Tuesday:</strong> Pav Bhaji (Indian vegetable mash with pav buns)</li>
+                    <li><strong>Wednesday:</strong> Vegan Spicy Thai Drunken Noodles ⭐ (Novelty recipe)</li>
+                    <li><strong>Thursday:</strong> Quick Tortilla Pizzas (no-chop, busy day)</li>
+                    <li><strong>Friday:</strong> Spinach Ravioli from freezer (no prep)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- MONDAY TAB -->
+        <div id="monday" class="tab-content">
+            <div class="day-header">Monday, Jan 12 <span class="energy-level energy-high">HIGH ENERGY</span></div>
+
+            <div class="lunch-section">
+                <h4>Lunch</h4>
+                <p><strong>Kids:</strong> Rasam rice (using leftover rasam from fridge)</p>
+                <p><strong>Adult:</strong> Sambar rice (using leftover sambar from fridge)</p>
+            </div>
+
+            <div class="snacks">
+                <h4>Snack</h4>
+                <p>Avocado packs (from fridge, have 10 packs available)</p>
+            </div>
+
+            <div class="meal-card">
+                <h3>Dinner</h3>
+                <div class="meal-type"><a href="../recipes/raw_html/Cowboy Caviar Salad.html">Cowboy Caviar Salad</a> - Salad</div>
+                <div class="vegetables">Vegetables: corn, tomatoes, bell pepper, cilantro, onion</div>
+                <div class="prep-notes"><strong>Prep notes:</strong> Easy cold salad with canned beans, corn, and fresh veggies. Mix ingredients, dress with lime vinaigrette.</div>
+                <div class="evening-assembly"><strong>Evening assembly (5-9pm):</strong> Toss salad components together and serve. No cooking required.</div>
+            </div>
+
+            <div class="prep-tasks">
+                <h4>Monday PM Prep (after dinner)</h4>
+                <p><strong>For Tuesday & Wednesday dinners:</strong></p>
+                <ul>
+                    <li>Chop cauliflower for Tuesday's Pav Bhaji</li>
+                    <li>Dice carrots for Tuesday's Pav Bhaji</li>
+                    <li>Chop tomatoes for Tuesday's Pav Bhaji</li>
+                    <li>Slice carrots for Wednesday's Thai noodles</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TUESDAY TAB -->
+        <div id="tuesday" class="tab-content">
+            <div class="day-header">Tuesday, Jan 13 <span class="energy-level energy-high">HIGH ENERGY</span></div>
+
+            <div class="prep-tasks">
+                <h4>Tuesday AM Prep (8-9am)</h4>
+                <p><strong>For Wednesday, Thursday, Friday lunches:</strong></p>
+                <ul>
+                    <li>Pack leftover sweet potato quesadilla for Wednesday kids lunch</li>
+                    <li>Prep Thursday lunch: egg sandwiches (hard boil eggs)</li>
+                    <li>Prep Friday lunch: chapati rolls (prep filling components)</li>
+                </ul>
+            </div>
+
+            <div class="lunch-section">
+                <h4>Lunch</h4>
+                <p><strong>Kids:</strong> Masala puri (using leftover masala puri mix from fridge, have 4 servings)</p>
+                <p><strong>Adult:</strong> Chow chow kootu leftover from fridge (1 serving)</p>
+            </div>
+
+            <div class="snacks">
+                <h4>Snack</h4>
+                <p>Grapes (from fridge)</p>
+            </div>
+
+            <div class="meal-card">
+                <h3>Dinner</h3>
+                <div class="meal-type"><a href="../recipes/raw_html/Pav Bhaji.html">Pav Bhaji</a> - Indian Soup/Stew</div>
+                <div class="vegetables">Vegetables: cauliflower, carrots, tomatoes (all pre-chopped Monday PM)</div>
+                <div class="prep-notes"><strong>Prep notes:</strong> Vegetables already chopped. Mash cooked vegetables with pav bhaji masala, serve with toasted pav buns.</div>
+                <div class="evening-assembly"><strong>Evening assembly (5-9pm):</strong> Toast pav buns, warm bhaji, serve with butter and lemon wedges.</div>
+            </div>
+
+            <div class="prep-tasks">
+                <h4>Tuesday PM Prep</h4>
+                <p><strong>For Wednesday & Thursday dinners:</strong></p>
+                <ul>
+                    <li>Slice bell peppers for Wednesday's Thai noodles</li>
+                    <li>Prep tofu: drain, press, and cube for Wednesday</li>
+                    <li>Chop broccoli for Thursday's tortilla pizzas (optional - can use frozen)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- WEDNESDAY TAB -->
+        <div id="wednesday" class="tab-content">
+            <div class="day-header">Wednesday, Jan 14 <span class="energy-level energy-mild">MILD ENERGY</span></div>
+
+            <div class="lunch-section">
+                <h4>Lunch</h4>
+                <p><strong>Kids:</strong> Sweet potato black bean quesadilla leftover (2 servings from fridge)</p>
+                <p><strong>Adult:</strong> Keerai maseeyil leftover from fridge (1 serving)</p>
+            </div>
+
+            <div class="snacks">
+                <h4>Snack</h4>
+                <p>Kiwi slices (from fridge)</p>
+            </div>
+
+            <div class="meal-card">
+                <h3>Dinner</h3>
+                <div class="meal-type"><a href="../recipes/raw_html/Vegan Spicy Thai Drunken Noodles with Seared Tofu.html">Vegan Spicy Thai Drunken Noodles with Seared Tofu</a> - Asian Pasta/Noodles ⭐</div>
+                <div class="vegetables">Vegetables: carrots (pre-sliced), bell peppers (pre-sliced), corn, basil, garlic</div>
+                <div class="prep-notes"><strong>Prep notes:</strong> Vegetables pre-sliced, tofu prepped. Sear tofu, cook rice noodles, stir-fry vegetables with sauce (soy sauce, lime, chili).</div>
+                <div class="evening-assembly"><strong>Evening assembly (5-9pm):</strong> Quick sear of prepped tofu, toss noodles with vegetables and sauce, garnish with basil.</div>
+            </div>
+
+            <div class="prep-tasks">
+                <h4>Wednesday PM Prep - FINISH ALL REMAINING PREP</h4>
+                <p><strong>For Thursday & Friday:</strong></p>
+                <ul>
+                    <li>Shred cheese for Thursday's tortilla pizzas</li>
+                    <li>Prep any remaining vegetables for Thursday</li>
+                    <li>Set out frozen spinach ravioli to thaw for Friday</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- THURSDAY TAB -->
+        <div id="thursday" class="tab-content">
+            <div class="day-header">Thursday, Jan 15 <span class="energy-level energy-morning-ok">MORNING PREP OK</span></div>
+
+            <div class="prep-tasks">
+                <h4>Thursday AM Prep (8-9am ONLY)</h4>
+                <p><strong>Light morning prep allowed:</strong></p>
+                <ul>
+                    <li>Shred cheese if not done Wednesday (ideally already done)</li>
+                    <li>Set out pizza toppings</li>
+                </ul>
+                <p><strong>⚠️ NO CHOPPING AFTER NOON ⚠️</strong></p>
+            </div>
+
+            <div class="lunch-section">
+                <h4>Lunch</h4>
+                <p><strong>Kids:</strong> Egg sandwiches (eggs pre-boiled Tuesday AM)</p>
+                <p><strong>Adult:</strong> Leftover Pav Bhaji from Tuesday</p>
+            </div>
+
+            <div class="snacks">
+                <h4>Snack</h4>
+                <p>Kale chips (make fresh with kale from fridge)</p>
+            </div>
+
+            <div class="meal-card">
+                <h3>Dinner</h3>
+                <div class="meal-type"><a href="../recipes/raw_html/Quick Tortilla Pizzas.html">Quick Tortilla Pizzas</a> - Mexican Tacos/Wraps</div>
+                <div class="vegetables">Vegetables: broccoli (use frozen or pre-chopped), tomatoes from jar of salsa</div>
+                <div class="prep-notes"><strong>Prep notes:</strong> NO-CHOP recipe. Use flour tortillas, spread tomato sauce, add pre-shredded cheese and frozen/pre-cut vegetables, bake.</div>
+                <div class="evening-assembly"><strong>Evening assembly (5-9pm):</strong> Assemble pizzas with pre-prepped ingredients, bake 8-10 minutes at 400°F. Zero chopping.</div>
+            </div>
+        </div>
+
+        <!-- FRIDAY TAB -->
+        <div id="friday" class="tab-content">
+            <div class="day-header">Friday, Jan 16 <span class="energy-level energy-none">ZERO PREP</span></div>
+
+            <div class="lunch-section">
+                <h4>Lunch</h4>
+                <p><strong>Kids:</strong> Chapati rolls with pre-made filling (prepped Tuesday AM)</p>
+                <p><strong>Adult:</strong> Leftover Thai noodles from Wednesday</p>
+            </div>
+
+            <div class="snacks">
+                <h4>Snack</h4>
+                <p>Avocado packs (still have plenty from fridge)</p>
+            </div>
+
+            <div class="meal-card">
+                <h3>Dinner</h3>
+                <div class="meal-type">Spinach Ravioli (from freezer) - Freezer Backup</div>
+                <div class="vegetables">Vegetables: none needed</div>
+                <div class="prep-notes"><strong>Prep notes:</strong> FREEZER MEAL - no prep required. Boil ravioli according to package directions, serve with butter and parmesan or simple store-bought sauce.</div>
+                <div class="evening-assembly"><strong>Evening assembly (5-9pm):</strong> Boil water, cook ravioli 3-4 minutes, drain, toss with butter/parmesan. Completely no-chop.</div>
+            </div>
+        </div>
+
+        <!-- SATURDAY TAB -->
+        <div id="saturday" class="tab-content">
+            <div class="day-header">Saturday, Jan 17</div>
+            <p>Weekend meals - plan as needed. Suggestions:</p>
+            <ul style="margin: 20px 0 20px 30px; font-size: var(--text-sm);">
+                <li>Brunch: Pancakes or dosa with leftover sambar</li>
+                <li>Lunch: Use up any remaining leftovers or make simple sandwiches</li>
+                <li>Dinner: Dining out or simple comfort food</li>
+            </ul>
+        </div>
+
+        <!-- SUNDAY TAB -->
+        <div id="sunday" class="tab-content">
+            <div class="day-header">Sunday, Jan 18</div>
+            <p>Weekend meals - plan as needed. Suggestions:</p>
+            <ul style="margin: 20px 0 20px 30px; font-size: var(--text-sm);">
+                <li>Brunch: Eggs and toast or idli with chutney</li>
+                <li>Lunch: Light meal or leftovers</li>
+                <li>Dinner: Prep-ahead for next week or takeout</li>
+            </ul>
+        </div>
+
+        <!-- GROCERIES TAB -->
+        <div id="groceries" class="tab-content">
+            <h2>Grocery List</h2>
+
+            <div class="grocery-section">
+                <h4>Fresh Produce</h4>
+                <ul>
+                    <li>Bell peppers (2-3 for Cowboy Caviar & Thai noodles)</li>
+                    <li>Jalapeño (1 for Cowboy Caviar)</li>
+                    <li>Cilantro (1 bunch - for Cowboy Caviar & Pav Bhaji)</li>
+                    <li>Lime (4-5 for Cowboy Caviar & Thai noodles)</li>
+                    <li>Basil (1 bunch for Thai noodles)</li>
+                    <li>Garlic (1 head)</li>
+                    <li>Onions (need 2 more - only have 2, need 4 total)</li>
+                </ul>
+            </div>
+
+            <div class="grocery-section">
+                <h4>Protein</h4>
+                <ul>
+                    <li>Tofu (1 block, extra firm for Thai noodles)</li>
+                    <li>Eggs (1 dozen for Thursday lunch)</li>
+                </ul>
+            </div>
+
+            <div class="grocery-section">
+                <h4>Dairy</h4>
+                <ul>
+                    <li>Butter (for ravioli & pav bhaji)</li>
+                    <li>Parmesan cheese (for ravioli & tortilla pizzas)</li>
+                    <li>Shredded mozzarella or Mexican cheese (for tortilla pizzas)</li>
+                </ul>
+            </div>
+
+            <div class="grocery-section">
+                <h4>Grains & Bread</h4>
+                <ul>
+                    <li>Pav buns (8 buns for Tuesday's Pav Bhaji)</li>
+                    <li>Rice noodles (1 package, wide for Thai noodles)</li>
+                    <li>Bread (for egg sandwiches)</li>
+                    <li>Chapatis (for Friday lunch rolls)</li>
+                </ul>
+            </div>
+
+            <div class="grocery-section">
+                <h4>Canned & Pantry</h4>
+                <ul>
+                    <li>Black beans (2-3 cans - only have 1, need for Cowboy Caviar)</li>
+                    <li>Pav bhaji masala (spice mix for Tuesday)</li>
+                    <li>Pizza sauce or marinara (for tortilla pizzas)</li>
+                    <li>Rice vinegar (for Cowboy Caviar dressing)</li>
+                    <li>Chili garlic sauce or sriracha (for Thai noodles)</li>
+                </ul>
+            </div>
+
+            <div class="grocery-section">
+                <h4>Frozen (if needed)</h4>
+                <ul>
+                    <li>Broccoli florets (for tortilla pizzas if not using fresh)</li>
+                </ul>
+            </div>
+
+            <div class="grocery-section">
+                <h4>Already Have (from inventory)</h4>
+                <ul>
+                    <li>Lettuce, cauliflower, kale, carrots, corn, tomatoes (fridge)</li>
+                    <li>Avocado packs (10)</li>
+                    <li>Grapes, kiwi (snacks)</li>
+                    <li>Soy sauce, sesame oil</li>
+                    <li>Frozen corn, peas, mixed peas & carrots</li>
+                    <li>Spinach ravioli (freezer - for Friday)</li>
+                    <li>Various leftovers (rasam, sambar, quesadilla, masala puri, kootu)</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => button.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

@@ -8,7 +8,7 @@ from scripts.workflow import (
 )
 from api.utils import storage, invalidate_cache
 from api.utils.auth import require_auth
-from scripts.log_execution import find_week, calculate_adherence
+from scripts import log_execution
 
 meals_bp = Blueprint('meals', __name__)
 
@@ -282,17 +282,17 @@ def log_meal():
                          existing.add(t)
 
         if not is_feedback_only:
-             # Freezer/Inventory updates
-             if made_2x:
-                 target_dinner['made_2x_for_freezer'] = True
-                 meal_name = target_dinner.get('recipe_id', 'Unknown').replace('_', ' ').title()
-                 storage.StorageEngine.update_inventory_item('freezer_backup', meal_name, updates={'servings': 4, 'frozen_date': datetime.now().strftime('%Y-%m-%d')})
-             
-             if freezer_meal and target_dinner.get('made') == 'freezer_backup':
-                 target_dinner['freezer_used'] = {'meal': freezer_meal, 'frozen_date': 'Unknown'}
-                 storage.StorageEngine.update_inventory_item('freezer_backup', freezer_meal, delete=True)
+            # Freezer/Inventory updates
+            if made_2x:
+                target_dinner['made_2x_for_freezer'] = True
+                meal_name = target_dinner.get('recipe_id', 'Unknown').replace('_', ' ').title()
+                storage.StorageEngine.update_inventory_item('freezer_backup', meal_name, updates={'servings': 4, 'frozen_date': datetime.now().strftime('%Y-%m-%d')})
+            
+            if freezer_meal and target_dinner.get('made') == 'freezer_backup':
+                target_dinner['freezer_used'] = {'meal': freezer_meal, 'frozen_date': 'Unknown'}
+                storage.StorageEngine.update_inventory_item('freezer_backup', freezer_meal, delete=True)
 
-             calculate_adherence(history_week)
+            log_execution.calculate_adherence(history_week)
              
              # Handle "Add as Recipe" request
              if request_recipe and actual_meal:
@@ -432,8 +432,9 @@ def update_plan_with_actuals():
                 return jsonify({"status": "error", "message": "Week required and no active week found"}), 400
 
         # Check if week exists in DB history
+        from scripts import log_execution # Safety import
         history = storage.StorageEngine.get_history()
-        week_history = find_week(history, week_str)
+        week_history = log_execution.find_week(history, week_str)
         if not week_history:
             return jsonify({"status": "error", "message": f"Week {week_str} not found in database"}), 404
 

@@ -4,11 +4,13 @@ from pathlib import Path
 from datetime import datetime
 from flask import Blueprint, jsonify, request
 from api.utils import get_yaml_data, invalidate_cache
+from api.utils.auth import require_auth
 from scripts.github_helper import commit_file_to_github
 
 inventory_bp = Blueprint('inventory', __name__)
 
 @inventory_bp.route("/api/inventory")
+@require_auth
 def get_inventory():
     try:
         # Use Cached Inventory logic by accessing directly or using helper
@@ -27,6 +29,7 @@ def get_inventory():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @inventory_bp.route("/api/inventory/add", methods=["POST"])
+@require_auth
 def add_inventory():
     try:
         data = request.json or {}
@@ -96,6 +99,7 @@ def add_inventory():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @inventory_bp.route("/api/inventory/bulk-add", methods=["POST"])
+@require_auth
 def bulk_add_inventory():
     try:
         data = request.json or {}
@@ -161,6 +165,7 @@ def bulk_add_inventory():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @inventory_bp.route("/api/inventory/delete", methods=["POST"])
+@require_auth
 def delete_inventory():
     try:
         data = request.json or {}
@@ -220,6 +225,7 @@ def delete_inventory():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @inventory_bp.route("/api/inventory/update", methods=["POST"])
+@require_auth
 def update_inventory():
     try:
         data = request.json or {}
@@ -287,6 +293,7 @@ def update_inventory():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 @inventory_bp.route("/api/inventory/move", methods=["POST"])
+@require_auth
 def move_inventory_item():
     try:
         data = request.json or {}

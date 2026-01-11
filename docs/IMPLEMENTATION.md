@@ -58,7 +58,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ## Development Status
 
-**Current State:** Fully functional. All core features complete (Phases 1-13.4).
+**Current State:** Fully functional. All core features complete (Phases 1-13.4). Phase 14 in planning.
 
 **Completed Phases:**
 - **1-9:** Foundation (recipe parsing, CLI, energy-based prep, HTML plans)
@@ -88,10 +88,45 @@ System now fully configurable via `config.yml` with:
 
 ## Future Roadmap
 
-**Phase 13.5: User Authentication** (Optional)
-- Multi-user support with email/password or OAuth
-- Profile setup wizard
-- Per-user config.yml generation
+**Phase 14: User Authentication & Scale (Cost-Efficiency Focus)**
+
+**Strategy:** Maximize "Free Tier" longevity before incurring infrastructure costs.
+
+### Phase 14.1: The "Family Gate" (Security)
+**Goal:** Secure the current single-household application so only authorized family members can access it.
+**Cost:** $0/mo (Free Tiers).
+
+*   **Auth Provider:** **Supabase Auth** (Free up to 50,000 MAUs) or **NextAuth.js** (Self-hosted).
+    *   *Why Supabase?* Easier integration for future database needs.
+*   **Data Model:** Continue using **GitOps (YAML files)**.
+    *   *Logic:* Database migration is expensive (dev time) and unnecessary for a single family.
+    *   *Mechanism:* A simple "Login" screen that gates access to the existing dashboard. All logged-in users modify the same `history.yml`.
+*   **Limits:**
+    *   Single Household object only (everyone shares the same data).
+    *   No "private" views per user.
+
+### Phase 14.2: Database Migration (The "SaaS Foundation")
+**Goal:** Move data from YAML to a Relational Database to support concurrency and future multi-tenancy.
+**Cost:** $0/mo (Supabase Free Tier).
+**Limits & Risks:**
+    *   **Database Pausing:** Supabase Free projects "pause" after 1 week of inactivity. Cold starts ~5-10s.
+    *   **Storage:** 500MB DB space. (Enough for ~5-10 years of text-only meal plans).
+    *   **Backups:** Free tier does not include Point-in-Time recovery (Git was better for this).
+
+*   **Action:** Refactor `api/` to read/write to Postgres instead of `yaml` files.
+*   **Optimization:** Keep "generated HTML plans" as static files (Vercel Blob or Supabase Storage) to save DB space.
+
+### Phase 14.3: Multi-Tenancy (Productization)
+**Goal:** Allow *other* families to signup.
+**Cost:**
+    *   **Infra:** Still $0/mo until >500MB data or >50k users.
+    *   **Payment Processing:** Stripe (Transaction fees only).
+
+*   **Architecture:** Add `household_id` to all DB tables.
+*   **Logic:** Row Level Security (RLS) in Supabase is critical here to ensure Family A cannot see Family B's dinner.
+
+
+---
 
 **Other Ideas:**
 - Freezer ingredients tracking (raw components vs backup meals)

@@ -9,6 +9,7 @@ from scripts.github_helper import get_file_from_github, list_files_in_dir_from_g
 from scripts.log_execution import find_week
 from scripts.compute_analytics import compute_analytics
 from api.utils import get_cached_data, get_actual_path, get_yaml_data
+from api.utils.auth import require_auth
 
 status_bp = Blueprint('status', __name__)
 
@@ -236,15 +237,18 @@ def _get_current_status(skip_sync=False):
     })
 
 @status_bp.route("/api/status")
+@require_auth
 def get_status():
     return _get_current_status(skip_sync=False)
 
 @status_bp.route("/api/history")
+@require_auth
 def get_history():
     history = get_cached_data('history', 'data/history.yml')
     return jsonify(history or {})
 
 @status_bp.route("/api/analytics")
+@require_auth
 def get_analytics():
     history = get_cached_data('history', 'data/history.yml')
     start_date = request.args.get('start_date')
@@ -253,5 +257,6 @@ def get_analytics():
     return jsonify(analytics)
 
 @status_bp.route("/api/hello")
+@require_auth
 def hello():
     return jsonify({"message": "Hello from Flask on Vercel!"})

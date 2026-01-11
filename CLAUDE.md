@@ -152,6 +152,20 @@ If blocked, explain which constraint failed:
 
 NEVER proceed with invalid plan. Ask for guidance.
 
+## Engineering Standards
+
+**Dependency Management:**
+- **Pin Every Version**: Use `==` for all Python dependencies in `requirements.txt` to prevent breaking updates (e.g., `httpx==0.27.2`).
+- **Check Stable Versions**: In `package.json`, use current stable versions (e.g., Next.js 15.x, React 19.x). Avoid typos or "future" versions (e.g., `^16.x`).
+
+**Frontend Patterns:**
+- **Next.js 15 Async Props**: Always `await props.searchParams` and `await props.params` in Server Components.
+- **Client Components**: Mark with `'use client';` only when interaction is required. Keep logic in Server Components where possible.
+
+**Production Readiness:**
+- **Environment Variables**: Verify `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are in Vercel before deployment.
+- **Debug Endpoints**: Keep `/api/debug` updated to expose connection/init errors.
+
 ## Workflow
 
 **Web Dashboard (Primary):**

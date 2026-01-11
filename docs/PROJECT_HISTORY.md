@@ -321,6 +321,31 @@ Previously, the frontend received a merged "week view" where actual execution da
 
 **Learning:** Separating "intent" from "reality" is critical for analytics. A "merged" view is good for UI, but bad for data science. Always store the raw layers.
 
+### Phase 15: Database Migration & Infrastructure Stability (2026-01-10 - 2026-01-11)
+
+**Goal:** Establish a robust database foundation (Supabase) and resolve technical debt introduced by Next.js/React framework upgrades.
+
+**Key Decisions:**
+1. **Supabase Integration:** Transitioned from file-based (YAML/GitOps) storage to Supabase (PostgreSQL).
+   - **Rationale:** Eliminate race conditions during concurrent updates and provide a real query engine for future features (like "Smart Suggestions").
+   - **Learning:** Database schemas force data cleanliness. The migration script revealed structural inconsistencies in historical YAML files that the application was previously "masking."
+2. **Next.js 15 Compatibility:** Proactively addressed the breaking change in Next.js 15 where `searchParams` and `params` became async.
+3. **Dependency Consolidation:** Downgraded to stable versions of Next.js/React to eliminate "noise" from deprecation warnings while ensuring core functionality remained modern.
+
+**Built:**
+- `scripts/migrate_to_supabase.py`: Full ETL pipeline for porting YAML data to SQL.
+- `scripts/verify_supabase.py`: Integrity checker for the new data layer.
+- `api/utils/meal_resolution.py`: Merged Plan vs. Actual logic into a unified "Resolved" state.
+- Automated tests for database integration (100% coverage on new resolution logic).
+
+**Critical Lessons from Phase 15 Deployment:**
+- **Pinning is Mandatory**: Never leave library names "barefoot" in `requirements.txt`. A transient update to `httpx` broke the incompatible `supabase-py` library in production. Always use `==` for every dependency.
+- **Async Props in Next.js 15**: `params` and `searchParams` in Page components are now Promises. Failing to `await` them causes build-time TypeScript errors and runtime crashes.
+- **Env Var Pre-flight**: Local `.env.local` success does not guarantee production success. Always verify Vercel secrets before merging to `main`.
+- **Debug Endpoints Save Time**: Adding `/api/debug` to expose initialization errors (`init_error: string`) turned a "black box" 500 error into a 5-minute fix.
+
+**Learning:** The "Git-as-a-Database" model was an excellent starting point for speed, but SQL becomes necessary once you need to perform complex analytical queries across history and inventory.
+
 ## Recurring Error Patterns & Solutions
 
 ### Pattern 1: State Synchronization in Serverless
@@ -361,13 +386,23 @@ Previously, the frontend received a merged "week view" where actual execution da
 - Lifted all hooks to top of component (before any logic)
 - Extracted sub-components outside render function
 
-### Pattern 4: Indentation/Syntax Errors Cascade
+### Pattern 5: Next.js 15 Async Params
 
-**Symptoms:** 500 errors across all endpoints, obscure error messages
+**Symptoms:** "Type '{ searchParams: ... }' does not satisfy the constraint 'PageProps'" and runtime errors in LoginPage.
 
-**Example:** Single indentation error in `html_generator.py:409` blocked entire API
+**Root Cause:** Next.js 15 changed `params` and `searchParams` from plain objects to Promises in page/layout components.
 
-**Learning:** Module-level errors propagate silently - test imports in isolation
+**Solution:** Updated component types and awaited `searchParams` before access.
+
+### Pattern 6: Supabase/Vercel Proxy Conflict
+
+**Symptoms:** Success locally but 500/Crash in Vercel with "proxy" argument errors.
+
+**Root Cause:** `supabase-py` versions < 2.11.0 had a bug trying to handle proxies in serverless environments.
+
+**Solution:** Forced upgrade to `supabase>=2.11.0` and `httpx>=0.28.0`.
+
+### Pattern 7: Module-level errors propagate silently - test imports in isolation
 
 ## Decision Frameworks
 
@@ -445,7 +480,8 @@ Previously, the frontend received a merged "week view" where actual execution da
 ### Code Quality Evolution:
 - Phase 0-6: 3 Python files, no types, no tests
 - Phase 12 Complete: 40+ modular files, 30+ TypeScript interfaces, 15+ test suites
-- TypeScript errors: 34 → 7 (79% reduction)
+- Phase 15 Complete: Supabase Postgres migration, 100% resolution logic test coverage, Next.js 15 compatibility
+- TypeScript errors: 34 → 0 (100% resolution of build errors)
 - API response time (cached): <10ms (instant)
 
 ## Lessons for Future Projects

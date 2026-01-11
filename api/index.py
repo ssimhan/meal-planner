@@ -39,11 +39,12 @@ def health_check():
 
 @app.route("/api/debug")
 def debug_info():
-    from api.utils.storage import SUPABASE_URL, SUPABASE_SERVICE_KEY, supabase
+    from api.utils.storage import SUPABASE_URL, SUPABASE_SERVICE_KEY, supabase, init_error
     return jsonify({
         "url_configured": bool(SUPABASE_URL),
         "key_configured": bool(SUPABASE_SERVICE_KEY),
         "client_initialized": bool(supabase),
+        "init_error": init_error,
         "environment": os.environ.get('VERCEL_ENV', 'unknown'),
         "python_version": sys.version
     })

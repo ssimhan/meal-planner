@@ -23,11 +23,14 @@ if not SUPABASE_SERVICE_KEY:
     print("WARNING: SUPABASE_SERVICE_KEY is missing from environment!")
 
 supabase = None
+init_error = None
+
 if SUPABASE_URL and SUPABASE_SERVICE_KEY:
     try:
         supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
         print("Supabase client initialized successfully.")
     except Exception as e:
+        init_error = str(e)
         print(f"ERROR: Failed to initialize Supabase client: {e}")
 
 def get_household_id():

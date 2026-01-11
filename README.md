@@ -110,9 +110,9 @@ meal-planner/
 ├── recipes/                # Recipe database
 │   ├── index.yml          # Curated recipe index
 │   └── raw_html/          # Source HTML files
-├── data/                   # State and history
-│   ├── history.yml        # Execution history
-│   └── inventory.yml      # Current inventory
+├── data/                   # Backup/Template files
+│   ├── history.yml        # (Sync to Supabase via migrate_to_supabase.py)
+│   └── inventory.yml      # (Sync to Supabase via migrate_to_supabase.py)
 ├── inputs/                 # Weekly input files
 └── public/plans/          # Generated HTML plans
 ```
@@ -140,10 +140,10 @@ meal-planner/
 
 ## 🛠️ Technology Stack
 
-- **Backend**: Python 3.9, Flask, PyYAML
+- **Backend**: Python 3.9, Flask, PyYAML, Supabase (PostgreSQL)
 - **Frontend**: Next.js 15, React, TypeScript
 - **Deployment**: Vercel (serverless)
-- **Storage**: YAML files + GitHub as database
+- **Storage**: Supabase Managed Database (Source of Truth) + local YAML (Backup/Templates)
 - **Parsing**: BeautifulSoup4, lxml
 
 ## 🤝 Contributing

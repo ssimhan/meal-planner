@@ -83,7 +83,24 @@ When testing a new week's logic, verify:
 *   [ ] **Lunch Balance:** Do kids and adults have distinct, sensible options?
 *   [ ] **Grocery List:** Are new ingredients from your recipes appearing in the "Groceries" tab?
 *   [ ] **Energy Flow:** Does the prep schedule feel balanced (Mon-Tue vs. Wed-Fri)?
-*   [ ] **Sticking Choices:** If you manually override a meal in `history.yml`, does the generator respect it?
+*   [ ] **Sticking Choices:** If you manually override a meal in the dashboard (or via sync), does the generator respect it?
+
+---
+
+## ⚠️ Important: Data Source of Truth
+
+As of Phase 15, the **Dashboard is the primary source of truth**. All data (Inventory, History, Meal Plans) lives in a cloud database (Supabase).
+
+### Manual Overrides & File Edits
+If you prefer to edit the YAML files (`data/inventory.yml`, `data/history.yml`, or `config.yml`) on your computer:
+1.  **Edit the file** locally.
+2.  **Push the changes** to the cloud by running the migration script:
+    ```bash
+    python3 scripts/migrate_to_supabase.py
+    ```
+3.  **Refesh the Dashboard**. Your changes will now be visible in production.
+
+**Note:** Simply pushing YAML changes to GitHub will **no longer** update the live application. You must use either the Dashboard or the migration script.
 
 ---
 
@@ -92,4 +109,3 @@ When testing a new week's logic, verify:
 *   **Friday is "No Prep" day.** The plan ensures you never have to chop vegetables on a Friday night.
 *   **Variety is guaranteed.** You won't see the same recipe twice in 3 weeks.
 *   **Device-Free Evenings.** The plan is designed so usually all the hard work is done *before* 5 PM.
-*   **Manual Overrides:** You can always manually edit your `history.yml` to "pin" a specific meal (like a Freezer Backup), and the system will build the rest of your plan around it.

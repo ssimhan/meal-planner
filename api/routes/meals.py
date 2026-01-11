@@ -184,13 +184,22 @@ def log_meal():
              
         # Fetch plan from DB
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).single().execute()
+        print(f"DEBUG: Logging meal for week={week_str}, day={day}, h_id={h_id}")
+        
+        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).order("week_of", desc=True).limit(1).execute()
         if not res.data:
-            return jsonify({"status": "error", "message": "Meal plan not found"}), 404
+            print(f"DEBUG: Meal plan for {week_str} not found in DB")
+            return jsonify({"status": "error", "message": f"Meal plan for week {week_str} not found"}), 404
             
-        plan_record = res.data
-        history_week = plan_record['history_data']
-        active_plan_data = plan_record['plan_data']
+        plan_record = res.data[0]
+        history_week = plan_record.get('history_data') or {}
+        active_plan_data = plan_record.get('plan_data') or {}
+        
+        # Ensure minimal structure
+        if not history_week:
+            history_week = {'week_of': week_str, 'dinners': []}
+        if 'dinners' not in history_week:
+            history_week['dinners'] = []
 
         target_day = day.lower()[:3]
         target_dinner = None
@@ -315,6 +324,7 @@ def log_meal():
         return _get_current_status(skip_sync=True, week_override=week_str)
 
     except Exception as e:
+        print(f"ERROR in log_meal: {e}")
         import traceback; traceback.print_exc()
         return jsonify({"status": "error", "message": str(e)}), 500
 

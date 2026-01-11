@@ -213,9 +213,9 @@ class StorageEngine:
             return 'new_week', None
 
         # Transform DB plan back to compatibility format for logic
-        data = plan['plan_data']
-        history_data = plan['history_data']
-        week_of = plan['week_of']
+        data = plan.get('plan_data') or {}
+        history_data = plan.get('history_data') or {}
+        week_of = plan.get('week_of')
         status = plan.get('status')
         
         # Cross-reference with dates

@@ -1,10 +1,9 @@
 import { login } from './actions'
 
-export default function LoginPage({
-    searchParams,
-}: {
-    searchParams: { error?: string }
+export default async function LoginPage(props: {
+    searchParams: Promise<{ error?: string }>
 }) {
+    const searchParams = await props.searchParams;
     return (
         <main className="container mx-auto max-w-md px-4 py-24">
             <div className="card shadow-2xl">

@@ -229,5 +229,8 @@ def update_history(history_path, inputs, selected_dinners, selected_lunches=None
         week_entry['prep_tasks'] = new_week['prep_tasks']
     else:
         history.setdefault('weeks', []).append(new_week)
-    with open(history_path, 'w') as f:
-        yaml.dump(history, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+    if history_path:
+        with open(history_path, 'w') as f:
+            yaml.dump(history, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+    
+    return history

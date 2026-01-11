@@ -81,6 +81,46 @@ def bulk_add_inventory():
             
         invalidate_cache('inventory')
         return jsonify({"status": "success", "inventory": StorageEngine.get_inventory()})
+        invalidate_cache('inventory')
+        return jsonify({"status": "success", "inventory": StorageEngine.get_inventory()})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@inventory_bp.route("/api/inventory/bulk-update", methods=["POST"])
+@require_auth
+def bulk_update_inventory():
+    """
+    Handle bulk operations (add/remove) for inventory items.
+    Payload: { "changes": [ { "category": "...", "item": "...", "operation": "add"|"remove" } ] }
+    """
+    try:
+        data = request.json or {}
+        changes = data.get('changes', [])
+            
+        if not changes:
+             return jsonify({"status": "error", "message": "No changes provided"}), 400
+
+        for change in changes:
+            category = change.get('category')
+            item = change.get('item')
+            op = change.get('operation')
+            
+            db_category = category
+            if category == 'meals': db_category = 'freezer_backup'
+            elif category == 'frozen_ingredient': db_category = 'freezer_ingredient'
+            
+            if op == 'remove':
+                StorageEngine.update_inventory_item(db_category, item, delete=True)
+            elif op == 'add':
+                updates = {}
+                if category == 'fridge':
+                    updates = {'added': datetime.now().strftime('%Y-%m-%d')}
+                elif category == 'meals':
+                    updates = {'quantity': 4, 'frozen_date': datetime.now().strftime('%Y-%m-%d')}
+                StorageEngine.update_inventory_item(db_category, item, updates=updates)
+
+        invalidate_cache('inventory')
+        return jsonify({"status": "success", "inventory": StorageEngine.get_inventory()})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 

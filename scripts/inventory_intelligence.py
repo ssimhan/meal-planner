@@ -152,7 +152,70 @@ def get_substitutions(limit=3):
     ]
     suggestions['quick_fix'] = quick_recipes[:limit]
     
+    suggestions['quick_fix'] = quick_recipes[:limit]
+    
     return suggestions
+
+def get_waste_not_suggestions(limit=4):
+    """
+    Generate suggestions specifically for Monday/Tuesday to use up perishables.
+    Prioritizes:
+    1. Direct Leftovers (marked is_leftover=True)
+    2. High-perishable fridge items
+    """
+    inventory_set, inventory_data = get_inventory_items()
+    
+    # Identify leftovers explicitly
+    leftovers = []
+    if 'fridge' in inventory_data:
+        for item in inventory_data['fridge']:
+             if isinstance(item, dict) and item.get('is_leftover'):
+                 leftovers.append(normalize_ingredient(item['item']))
+    
+    # Load recipes
+    try:
+        recipes = StorageEngine.get_recipes()
+    except Exception:
+        recipes = []
+        
+    scored_recipes = []
+    
+    for recipe in recipes:
+        score = 0
+        rationale = []
+        
+        # Check leftovers
+        for lo in leftovers:
+            # Heuristic: Check if recipe name or ingredients match leftover
+            # e.g. "Rice" -> "Fried Rice"
+            norm_name = normalize_ingredient(recipe.get('name', ''))
+            if lo in norm_name:
+                score += 10
+                rationale.append(f"Uses leftover {lo}")
+                
+            # Check ingredients (if we had full ingredient breakdown beyond main_veg)
+            # For now, rely on main_veg and metadata
+            
+        # Check fridge items (Perishables)
+        # We assume anything in 'fridge' is perishable
+        for veg in recipe.get('main_veg', []):
+            norm_veg = normalize_ingredient(veg)
+            if norm_veg in inventory_set:
+                score += 3
+                rationale.append(f"Uses {veg}")
+                if norm_veg in leftovers: # Double bonus if it's a specific leftover veg
+                    score += 5
+                    
+        if score > 0:
+            scored_recipes.append({
+                'recipe': recipe,
+                'score': score,
+                'rationale': list(set(rationale))
+            })
+            
+    scored_recipes.sort(key=lambda x: x['score'], reverse=True)
+    
+    return scored_recipes[:limit]
 
 if __name__ == "__main__":
     subs = get_substitutions()

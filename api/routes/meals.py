@@ -26,22 +26,37 @@ def generate_plan_route():
         week_str = active_plan['week_of']
         data = active_plan['plan_data']
         
-        # We still need the input_file for the legacy generation script? 
-        # Actually, let's try to pass the data directly if possible, or use a temp file.
-        # For Phase 14.2, we keep legacy scripts running on /tmp.
-        input_file = Path(f"/tmp/inputs/{week_str}.yml")
-        os.makedirs(input_file.parent, exist_ok=True)
-        with open(input_file, 'w') as f:
-            yaml.dump(data, f)
-
-        # Call the existing generator
-        generate_meal_plan(input_file, data)
+        # 1. Fetch contexts from DB
+        history = storage.StorageEngine.get_history()
+        # We need the full recipe details for generation (with main_veg, etc.)
+        all_recipes_res = storage.supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id).execute()
+        all_recipes = [
+            {
+                "id": r['id'],
+                "name": r['name'],
+                **r['metadata']
+            } for r in all_recipes_res.data
+        ]
         
-        # Refresh data after generation (it might have updated the file)
-        with open(input_file, 'r') as f:
-            new_data = yaml.safe_load(f)
+        # 2. Run Database-First Generation Logic
+        # We still pass data directly. input_file=None means skip file writing.
+        new_data, new_history = generate_meal_plan(
+            input_file=None, 
+            data=data,
+            recipes_list=all_recipes,
+            history_dict=history
+        )
         
-        storage.StorageEngine.update_meal_plan(week_str, plan_data=new_data)
+        # 3. Save back to DB
+        # Find the specific week in history to update
+        current_history_week = next((w for w in new_history.get('weeks', []) if w.get('week_of') == week_str), None)
+        
+        storage.StorageEngine.update_meal_plan(
+            week_str, 
+            plan_data=new_data, 
+            history_data=current_history_week,
+            status='active' # Generation marks it as active
+        )
         
         invalidate_cache()
             
@@ -60,11 +75,31 @@ def create_week():
         data = request.json or {}
         week_str = data.get('week_of')
         
-        if not week_str:
-             return jsonify({"status": "error", "message": "Week start date required"}), 400
-            
-        # Initialize in DB
-        storage.StorageEngine.update_meal_plan(week_str, plan_data={'week_of': week_str}, history_data={'week_of': week_str, 'dinners': []}, status='planning')
+        # 1. Fetch Latest Data for Proposal
+        h_id = storage.get_household_id()
+        history = storage.StorageEngine.get_history()
+        all_recipes_res = storage.supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id).execute()
+        all_recipes = [{"id": r['id'], "name": r['name'], **r['metadata']} for r in all_recipes_res.data]
+        
+        # Load config from DB (or fallback to file for now)
+        from api.routes.status import _get_config
+        config = _get_config()
+        
+        # 2. Run Database-First Initialization
+        new_plan_data = create_new_week(
+            week_str, 
+            history_dict=history, 
+            recipes_list=all_recipes, 
+            config_dict=config
+        )
+        
+        # 3. Initialize in DB
+        storage.StorageEngine.update_meal_plan(
+            week_str, 
+            plan_data=new_plan_data, 
+            history_data={'week_of': week_str, 'dinners': []}, 
+            status='planning'
+        )
         
         return jsonify({
             "status": "success", 
@@ -84,22 +119,30 @@ def replan_route():
         week_str = active_plan['week_of']
         data = active_plan['plan_data']
         
-        # We need a temp file for the legacy replan script
-        input_file = Path(f"/tmp/inputs/{week_str}.yml")
-        os.makedirs(input_file.parent, exist_ok=True)
-        with open(input_file, 'w') as f:
-            yaml.dump(data, f)
-            
-        replan_meal_plan(input_file, data)
+        # 1. Fetch Latest Data from Supabase
+        inventory = storage.StorageEngine.get_inventory()
+        history = storage.StorageEngine.get_history()
+        # active_plan['plan_data'] and active_plan['history_data'] are already loaded
         
-        # Read back modified data
-        with open(input_file, 'r') as f:
-            new_data = yaml.safe_load(f)
-            
-        storage.StorageEngine.update_meal_plan(week_str, plan_data=new_data)
-        invalidate_cache()
+        # 2. Run Database-First Replan Logic
+        new_plan_data, new_history_data = replan_meal_plan(
+            input_file=None, 
+            data=active_plan['plan_data'],
+            inventory_dict=inventory,
+            history_dict=history
+        )
         
-        return jsonify({"status": "success", "message": "Plan updated based on execution"})
+        if new_plan_data and new_history_data:
+            # 3. Save directly to DB
+            storage.StorageEngine.update_meal_plan(
+                week_str, 
+                plan_data=new_plan_data, 
+                history_data=new_history_data
+            )
+            invalidate_cache()
+            return jsonify({"status": "success", "message": "Plan updated based on execution and latest inventory"})
+        else:
+            return jsonify({"status": "error", "message": "Replanning logic returned no data. Ensure week history exists."}), 400
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 

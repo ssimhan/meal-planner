@@ -3,8 +3,10 @@ import yaml
 from pathlib import Path
 from datetime import datetime, timedelta
 
-def _load_config():
-    """Load config.yml for fallback values."""
+def _load_config(config_dict=None):
+    """Load config.yml for fallback values or use provided dict."""
+    if config_dict:
+        return config_dict
     config_path = Path('config.yml')
     if config_path.exists():
         with open(config_path, 'r') as f:
@@ -48,7 +50,7 @@ def generate_lunch_html(lunch_suggestion, day_name):
     html.append('            </div>')
     return '\n'.join(html)
 
-def generate_html_plan(inputs, history, selected_dinners, from_scratch_recipe=None, selected_lunches=None):
+def generate_html_plan(inputs, history, selected_dinners, from_scratch_recipe=None, selected_lunches=None, inventory_dict=None, config_dict=None):
     """Generate the weekly plan as HTML."""
     template_path = Path('templates/weekly-plan-template.html')
     with open(template_path, 'r') as f:
@@ -87,8 +89,8 @@ def generate_html_plan(inputs, history, selected_dinners, from_scratch_recipe=No
             if week_data.get('week_of') == week_of:
                 week_history = week_data
                 break
-    html.extend(generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe, selected_lunches or {}))
-    html.extend(generate_weekday_tabs(inputs, selected_dinners, selected_lunches or {}, week_history))
+    html.extend(generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe, selected_lunches or {}, inventory_dict=inventory_dict))
+    html.extend(generate_weekday_tabs(inputs, selected_dinners, selected_lunches or {}, week_history, config_dict=config_dict))
     html.extend(generate_weekend_tabs())
     html.extend(generate_groceries_tab(inputs, selected_dinners, selected_lunches or {}))
     html.append('    </div>')
@@ -113,7 +115,7 @@ def generate_html_plan(inputs, history, selected_dinners, from_scratch_recipe=No
     html.append('</html>')
     return '\n'.join(html)
 
-def generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe, selected_lunches=None):
+def generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe, selected_lunches=None, inventory_dict=None):
     """Generate the Overview tab content."""
     html = []
     html.append('        <!-- Overview Tab -->')
@@ -121,14 +123,18 @@ def generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe
     html.append('            <div class="freezer-backup">')
     html.append('                <h3>🧊 Freezer Backup Status</h3>')
     freezer_meals = []
-    inventory_path = Path('data/inventory.yml')
-    if inventory_path.exists():
-        try:
-            with open(inventory_path, 'r') as f:
-                inventory = yaml.safe_load(f)
-                if inventory and 'freezer' in inventory and 'backups' in inventory['freezer']:
-                    freezer_meals = inventory['freezer']['backups']
-        except Exception: pass
+    
+    inventory = inventory_dict
+    if not inventory:
+        inventory_path = Path('data/inventory.yml')
+        if inventory_path.exists():
+            try:
+                with open(inventory_path, 'r') as f:
+                    inventory = yaml.safe_load(f)
+            except Exception: pass
+
+    if inventory and 'freezer' in inventory and 'backups' in inventory['freezer']:
+        freezer_meals = inventory['freezer']['backups']
     if freezer_meals:
         html.append(f'                <p style="margin-bottom: 15px;">You have <strong>{len(freezer_meals)}/3</strong> backup meals in stock:</p>')
         html.append('                <ul>')
@@ -210,14 +216,14 @@ def generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe
     html.append('        </div>')
     return html
 
-def generate_weekday_tabs(inputs, selected_dinners, selected_lunches, week_history=None):
+def generate_weekday_tabs(inputs, selected_dinners, selected_lunches, week_history=None, config_dict=None):
     """Generate tabs for Monday through Friday."""
     html = []
     days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
     day_abbr = ['mon', 'tue', 'wed', 'thu', 'fri']
 
     # Load config for fallback values if not in inputs
-    config = _load_config()
+    config = _load_config(config_dict=config_dict)
     config_schedule = config.get('schedule', {})
 
     late_class_days = inputs.get('schedule', {}).get('late_class_days',

@@ -344,14 +344,13 @@ function DashboardContent() {
             )}
             {/* Show "Start New Week" for new_week and archived states */}
             {(status?.state === 'new_week' || status?.state === 'archived') && (
-              <button
-                onClick={handleCreateWeek}
-                disabled={ui.actionLoading}
+              <Link
+                href="/plan"
                 className="btn-primary w-full text-left flex justify-between items-center group"
               >
-                <span>{ui.actionLoading ? 'Initializing...' : 'Start New Week'}</span>
+                <span>Start New Week</span>
                 <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-              </button>
+              </Link>
             )}
             {/* Show "Generate Weekly Plan" only when ready to plan */}
             {status?.state === 'ready_to_plan' && (

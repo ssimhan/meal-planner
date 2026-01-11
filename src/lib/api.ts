@@ -161,6 +161,15 @@ export async function bulkAddItemsToInventory(items: BulkAddInventoryItem[]): Pr
     return handleResponse<InventoryOperationResponse>(res, 'Failed to bulk add items to inventory');
 }
 
+export async function bulkUpdateInventory(changes: { category: string, item: string, operation: 'add' | 'remove' }[]): Promise<InventoryOperationResponse> {
+    const res = await fetch('/api/inventory/bulk-update', {
+        method: 'POST',
+        headers: await getAuthHeaders(),
+        body: JSON.stringify({ changes }),
+    });
+    return handleResponse<InventoryOperationResponse>(res, 'Failed to bulk update inventory');
+}
+
 export async function importRecipe(url: string): Promise<ImportRecipeResponse> {
     const res = await fetch('/api/recipes/import', {
         method: 'POST',
@@ -208,6 +217,29 @@ export async function getSuggestions(): Promise<any> {
         headers: await getAuthHeaders(false),
     });
     return handleResponse<any>(res, 'Failed to fetch suggestions');
+}
+
+export async function getLastWeekReview(): Promise<any> {
+    const res = await fetch('/api/reviews/last_week', {
+        headers: await getAuthHeaders(false),
+    });
+    return handleResponse<any>(res, 'Failed to fetch last week review');
+}
+
+export async function submitReview(week_of: string, reviews: any[]): Promise<any> {
+    const res = await fetch('/api/reviews/submit', {
+        method: 'POST',
+        headers: await getAuthHeaders(),
+        body: JSON.stringify({ week_of, reviews }),
+    });
+    return handleResponse<any>(res, 'Failed to submit review');
+}
+
+export async function getWasteNotSuggestions(): Promise<any> {
+    const res = await fetch('/api/suggestions/waste-not', {
+        headers: await getAuthHeaders(false),
+    });
+    return handleResponse<any>(res, 'Failed to fetch waste-not suggestions');
 }
 
 // Re-export types for convenience

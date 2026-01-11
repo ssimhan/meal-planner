@@ -504,3 +504,16 @@ Previously, the frontend received a merged "week view" where actual execution da
 The best tools are the ones you actually use. This system works because it reduces cognitive load, respects constraints (evening time, energy levels), and builds in flexibility.
 
 **Meta-Learning:** The best documentation is written during implementation (not after). This history file captured decisions in real-time, making consolidation possible. Future projects should maintain a running PROJECT_HISTORY.md from Day 1.
+
+### Phase 16: Smart Weekly Planning Workflow (End-to-End) (2026-01-11)
+
+**Goal:** Create a guided, intelligent wizard for weekly planning that leverages historical data.
+
+**Block 1: Smart Data Collection (Completed)**
+- **Step 0 (Prior Week Review):** Interactive UI to confirm made/skipped meals and log leftovers.
+- **Step 1 (Inventory Update):** Bulk update interface integrated into the planning wizard.
+- **Step 2 (Waste Not Engine):** Suggests recipes for Mon/Tue based on leftovers and perishable fridge items.
+- **Technical Implementation:**
+    - New `PlanningWizard` component in `src/app/plan/page.tsx` managing wizard steps.
+    - New API endpoints (`/api/reviews`, `/api/suggestions/waste-not`) backing the wizard.
+    - `scripts/reset_week.py` utility for development testing.

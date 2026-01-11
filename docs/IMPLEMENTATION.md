@@ -58,7 +58,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ## Development Status
 
-**Current State:** Fully functional. All core features complete (Phases 1-14). Phase 15 in planning.
+**Current State:** Phase 16 (Block 1 Complete). Database migration complete.
 
 **Completed Phases:**
 - **1-9:** Foundation (recipe parsing, CLI, energy-based prep, HTML plans)
@@ -66,6 +66,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
 - **12:** Architecture refactoring, TypeScript migration, testing
 - **13.1-13.4:** State fixes, inventory UX, prep workflow, white-labeling
 - **14:** Data Layer Redesign (Plan vs Actual separation)
+- **15:** Database Migration (Supabase integration)
 
 **Phase 13.4 (White-labeling):** ✅ Complete
 System now fully configurable via `config.yml` with:
@@ -92,21 +93,23 @@ System now fully configurable via `config.yml` with:
 > [!IMPORTANT]
 > **Priority Shift:** The immediate focus is completing the ongoing Supabase migration to resolve current frontend instability.
 
-### Phase 15: Complete Database Migration (Supabase)
-**Goal:** Finish the shift from YAML to Postgres to stabilize the application and enable complex queries.
-- **Block 1: Connection & Infrastructure:** Ensure Supabase connection is stable in Vercel.
-- **Block 2: Schema & Data Migration:** Move `inventory`, `history`, and `recipes` data to Postgres tables.
-- **Block 3: API Refactor:** Update `api/` routes to read/write from DB. Verify frontend issues resolve.
+### Phase 15: Complete Database Migration (Supabase) ✅ Complete
+**Goal:** Shift from YAML to Postgres to stabilize the application and enable complex queries.
+- **Block 1: Connection & Infrastructure:** Established stable Supabase connection in Vercel.
+- **Block 2: Schema & Data Migration:** Ported `inventory`, `history`, and `recipes` data to Postgres.
+- **Block 3: API Refactor:** Updated `api/` routes to use Supabase StorageEngine.
 
-### Phase 16: Smart Weekly Workflow
-**Goal:** Implement the "End-to-End" planning flow using the new database capabilities.
-- **Block 1: Inventory Update UX:** "Update Inventory" step before planning.
-- **Block 2: Intelligent Suggestions:**
-    - Query 1: Meals to use up leftovers (perishables first).
-    - Query 2: Meals to use up existing inventory.
-- **Block 3: Planning Interface:** Tentative plan generation with "Suggest what to buy" feature.
-- **Block 4: Shopping & Finalization:** Confirm grocery list -> Finalize Meal Plan.
-- **Block 5: Mid-Week Updates:** Ability to modify the plan dynamically during execution.
+### Phase 16: Smart Weekly Workflow (8-Step)
+**Goal:** Implement an "End-to-End" planning flow using database intelligence.
+
+1.  **Step 0: Review Prior Week:** Prompt user to confirm which meals were made and log any leftovers (for the Fridge).
+2.  **Step 1: Inventory Update:** Bulk update interface to ensure stock levels are accurate. ✅ Complete
+3.  **Step 2: "Waste Not" Suggestions:** Propose meals for Mon/Tue that use up leftovers and perishables. ✅ Complete
+4.  **Step 3: Tentative Plan:** Generate a draft plan for the rest of the week based on preferences.
+5.  **Step 4: Smart Grocery List:** Auto-generate a shopping list based on (Plan Ingredients - Current Inventory).
+6.  **Step 5: Purchase Confirmation:** Interactive list to "check off" items -> automatically moves them to Inventory.
+7.  **Step 6: Finalize Plan:** Lock in the week to "Active" status.
+8.  **Step 7: Mid-Week Adjustments:** Allow dynamic replanning for "life happens" moments.
 
 ### Phase 17: System Cleanup
 **Goal:** Remove legacy workflows and annoyances.

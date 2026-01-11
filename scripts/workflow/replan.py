@@ -5,53 +5,94 @@ from .selection import _load_inventory_data, score_recipe_by_inventory
 from .state import load_history, get_actual_path
 from .html_generator import generate_html_plan
 
-def replan_meal_plan(input_file, data):
+def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None):
     """Re-distribute remaining and skipped meals across the rest of the week."""
     today = datetime.now()
+    # If it's early morning (before 4am), consider it still 'yesterday' for replan purposes
+    if today.hour < 4:
+        today = today - timedelta(days=1)
+        
     monday = today - timedelta(days=today.weekday())
     monday_str = monday.strftime('%Y-%m-%d')
     today_abbr = today.strftime('%a').lower()[:3]
+    
     if data is None:
-        if not input_file: input_file = get_actual_path(f'inputs/{monday_str}.yml')
+        if not input_file: 
+            input_file = get_actual_path(f'inputs/{monday_str}.yml')
         if input_file.exists():
-            with open(input_file, 'r') as f: data = yaml.safe_load(f)
-        else: return
-    history_path = get_actual_path('data/history.yml')
-    history = load_history(history_path)
-    days_list = ['mon', 'tue', 'wed', 'thu', 'fri']
-    if today_abbr not in days_list: return
+            with open(input_file, 'r') as f: 
+                data = yaml.safe_load(f)
+        else: 
+            return None, None
+
+    if history_dict:
+        history = history_dict
+    else:
+        history_path = get_actual_path('data/history.yml')
+        history = load_history(history_path)
+
+    days_list = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+    if today_abbr not in days_list: 
+        return data, None # Should not happen with expanded list
+        
     week_entry = None
     for week in history.get('weeks', []):
         if week.get('week_of') == monday_str:
             week_entry = week
             break
-    if not week_entry: return
+    
+    if not week_entry:
+        # If no history entry found for this week, we can't replan based on 'made' status
+        return data, None
+
     successful_dinners, to_be_planned = [], []
     current_day_idx = days_list.index(today_abbr)
     planned_dinners = {d['day']: d for d in week_entry.get('dinners', [])}
+    
     for day in days_list:
         dinner = planned_dinners.get(day)
-        if not dinner: continue
+        if not dinner: 
+            continue
+            
         day_idx = days_list.index(day)
-        is_done = dinner.get('made') in [True, 'yes', 'freezer_backup']
-        if is_done: successful_dinners.append(dinner)
+        # Check 'made' status. If not present, it's 'to be planned'
+        is_done = dinner.get('made') in [True, 'yes', 'freezer_backup', 'outside_meal']
+        
+        if is_done:
+            successful_dinners.append(dinner)
         elif day_idx < current_day_idx:
+            # Past meal that wasn't marked as made - needs to be rescheduled
             dinner.pop('made', None)
             to_be_planned.append(dinner)
-        else: to_be_planned.append(dinner)
+        else:
+            # Future meal - remains in the 'to be planned' pool
+            to_be_planned.append(dinner)
+
     remaining_days = days_list[current_day_idx:]
-    inventory_data = _load_inventory_data()
+    inventory_data = _load_inventory_data(inventory_dict=inventory_dict)
+    
     all_recipes = []
     index_path = Path('recipes/index.yml')
     if index_path.exists():
-        with open(index_path, 'r') as f: all_recipes = yaml.safe_load(f) or []
-    if inventory_data['fridge_items'] or inventory_data['pantry_items']:
+        with open(index_path, 'r') as f: 
+            all_recipes = yaml.safe_load(f) or []
+    
+    # Sort remaining meals by inventory scoring
+    if (inventory_data['fridge_items'] or inventory_data['pantry_items']) and to_be_planned:
         scored_recipes = []
         for recipe_entry in to_be_planned:
-            score, details = score_recipe_by_inventory(recipe_id=recipe_entry.get('recipe_id'), recipe_obj=recipe_entry, inventory=inventory_data, all_recipes=all_recipes)
+            score, details = score_recipe_by_inventory(
+                recipe_id=recipe_entry.get('recipe_id'), 
+                recipe_obj=recipe_entry, 
+                inventory=inventory_data, 
+                all_recipes=all_recipes
+            )
             scored_recipes.append((recipe_entry, score, details))
+        
+        # Sort best inventory matches to the earliest available days
         scored_recipes.sort(key=lambda x: x[1], reverse=True)
         to_be_planned = [r[0] for r in scored_recipes]
+
     new_dinners = list(successful_dinners)
     idx = 0
     for day in remaining_days:
@@ -60,38 +101,81 @@ def replan_meal_plan(input_file, data):
             recipe_entry['day'] = day
             new_dinners.append(recipe_entry)
             idx += 1
+    
+    # Handle rollover for meals that couldn't fit in the remaining days
     if idx < len(to_be_planned):
         rollover_recipes = to_be_planned[idx:]
         week_entry['rollover'] = []
         for r in rollover_recipes:
-             week_entry['rollover'].append({'recipe_id': r.get('recipe_id'), 'cuisine': r.get('cuisine'), 'meal_type': r.get('meal_type'), 'vegetables': r.get('vegetables', [])})
-    else: week_entry.pop('rollover', None)
+             week_entry['rollover'].append({
+                 'recipe_id': r.get('recipe_id'), 
+                 'cuisine': r.get('cuisine'), 
+                 'meal_type': r.get('meal_type'), 
+                 'vegetables': r.get('vegetables', [])
+             })
+    else:
+        week_entry.pop('rollover', None)
+
+    # Sort and update week entry
     new_dinners.sort(key=lambda d: days_list.index(d['day']) if d['day'] in days_list else 99)
     week_entry['dinners'] = new_dinners
-    with open(history_path, 'w') as f: yaml.dump(history, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+    
+    # Update data (plan_data) for consistency
+    data['dinners'] = [{'day': d.get('day'), 'recipe_id': d.get('recipe_id')} for d in new_dinners]
+    if 'workflow' in data:
+        data['workflow']['updated_at'] = datetime.now().isoformat()
+    data['replan_notice'] = f"Plan updated on {datetime.now().strftime('%a at %-I:%M %p')} due to skips/shifts."
+
+    # Write fallback files for legacy support if paths exist
+    if not history_dict:
+        history_path = get_actual_path('data/history.yml')
+        with open(history_path, 'w') as f: 
+            yaml.dump(history, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+            
     if input_file and input_file.exists():
-        data['dinners'] = [{'day': d.get('day'), 'recipe_id': d.get('recipe_id')} for d in new_dinners]
-        if 'workflow' in data: data['workflow']['updated_at'] = datetime.now().isoformat()
-        with open(input_file, 'w') as f: yaml.dump(data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        with open(input_file, 'w') as f: 
+            yaml.dump(data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+
+    # Regenerate HTML and lunches
     try:
         from scripts.lunch_selector import LunchSelector
-    except ModuleNotFoundError:
+    except ImportError:
         import sys
         sys.path.insert(0, str(Path(__file__).parent.parent.parent))
         from scripts.lunch_selector import LunchSelector
-    formatted_dinners = [{'day': d.get('day'), 'recipe_id': d.get('recipe_id'), 'recipe_name': d.get('recipe_id').replace('_', ' ').title()} for d in new_dinners]
-    selector = LunchSelector()
+
+    formatted_dinners = [{
+        'day': d.get('day'), 
+        'recipe_id': d.get('recipe_id'), 
+        'recipe_name': d.get('recipe_id').replace('_', ' ').title()
+    } for d in new_dinners]
+    
+    selector = LunchSelector(recipes=all_recipes)
     selected_lunches = selector.select_weekly_lunches(formatted_dinners, monday_str)
+    
     selected_dinners_objs = {}
     for d in new_dinners:
         r_id, day = d.get('recipe_id'), d.get('day')
-        if r_id == 'freezer_meal': selected_dinners_objs[day] = {'id': 'freezer_meal', 'name': 'Freezer Backup Meal', 'main_veg': [], 'meal_type': 'freezer', 'cuisine': 'various'}
+        if r_id == 'freezer_meal':
+            selected_dinners_objs[day] = {'id': 'freezer_meal', 'name': 'Freezer Backup Meal', 'main_veg': [], 'meal_type': 'freezer', 'cuisine': 'various'}
         else:
             recipe = next((r for r in all_recipes if r.get('id') == r_id), None)
-            if recipe: selected_dinners_objs[day] = recipe
-    data['replan_notice'] = f"Plan updated on {datetime.now().strftime('%a at %-I:%M %p')} due to skips/shifts."
-    plan_content = generate_html_plan(data, history, selected_dinners_objs, selected_lunches=selected_lunches)
+            if recipe: 
+                selected_dinners_objs[day] = recipe
+            else:
+                selected_dinners_objs[day] = {'id': r_id, 'name': r_id.replace('_', ' ').title()}
+
+    plan_content = generate_html_plan(
+        data, 
+        history, 
+        selected_dinners_objs, 
+        selected_lunches=selected_lunches, 
+        inventory_dict=inventory_data
+    ) or ""
     plans_dir = get_actual_path('public/plans')
     plans_dir.mkdir(exist_ok=True, parents=True)
     plan_file = plans_dir / f'{monday_str}-weekly-plan.html'
-    with open(plan_file, 'w') as f: f.write(plan_content)
+    with open(plan_file, 'w') as f: 
+        f.write(plan_content)
+        
+    return data, week_entry

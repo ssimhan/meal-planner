@@ -57,33 +57,43 @@ def _calculate_ingredient_freshness(inventory):
                 freshness[item_name] = 0
     return freshness
 
-def _load_inventory_data(inventory_path='data/inventory.yml'):
-    """Load and normalize inventory data."""
-    inv_path = get_actual_path(inventory_path)
-    if not inv_path.exists():
-        return {
-            'fridge_items': set(),
-            'pantry_items': set(),
-            'freezer_backups': [],
-            'freshness': {}
-        }
-    with open(inv_path, 'r') as f:
-        inventory = yaml.safe_load(f) or {}
+def _load_inventory_data(inventory_path='data/inventory.yml', inventory_dict=None):
+    """Load and normalize inventory data. If inventory_dict is provided, use it instead of file."""
+    if inventory_dict:
+        inventory = inventory_dict
+    else:
+        inv_path = get_actual_path(inventory_path)
+        if not inv_path.exists():
+            return {
+                'fridge_items': set(),
+                'pantry_items': set(),
+                'freezer_backups': [],
+                'freshness': {}
+            }
+        with open(inv_path, 'r') as f:
+            inventory = yaml.safe_load(f) or {}
+
     fridge_items = set()
     for item_data in inventory.get('fridge', []):
         normalized = _normalize_ingredient_name(item_data.get('item', ''))
         if normalized:
             fridge_items.add(normalized)
+    
     pantry_items = set()
     for item_data in inventory.get('pantry', []):
         normalized = _normalize_ingredient_name(item_data.get('item', ''))
         if normalized:
             pantry_items.add(normalized)
+            
     freezer_backups = []
-    for backup in inventory.get('freezer', {}).get('backups', []):
-        meal_name = backup.get('meal', '')
-        if meal_name:
-            freezer_backups.append(meal_name)
+    # Support both nested structure and flat category
+    freezer_data = inventory.get('freezer', {})
+    if isinstance(freezer_data, dict):
+         for backup in freezer_data.get('backups', []):
+            meal_name = backup.get('meal', '')
+            if meal_name:
+                freezer_backups.append(meal_name)
+    
     freshness = _calculate_ingredient_freshness(inventory)
     return {
         'fridge_items': fridge_items,
@@ -131,11 +141,15 @@ def score_recipe_by_inventory(recipe_id, recipe_obj, inventory, all_recipes):
     }
     return score, details
 
-def generate_farmers_market_proposal(history_path, index_path):
+def generate_farmers_market_proposal(history_path, index_path, history_dict=None, recipes_list=None):
     """Generate a proposed farmers market vegetable list."""
     inventory_path = get_actual_path('data/inventory.yml')
     current_fridge_items = set()
     freezer_backup_count = 0
+    
+    # We could also refactor this to accept inventory_dict, but for proposal, 
+    # we'll stick to files for now unless explicitly needed, or just use the local file as a cached version.
+    # Actually, let's just make it robust.
     if inventory_path.exists():
         try:
             with open(inventory_path, 'r') as f:
@@ -146,31 +160,42 @@ def generate_farmers_market_proposal(history_path, index_path):
                             current_fridge_items.add(item['item'].lower())
                     if 'freezer' in inventory and 'backups' in inventory['freezer']:
                         freezer_backup_count = len(inventory['freezer']['backups'])
-        except Exception: pass
+        except Exception: 
+            pass
+
     recent_veg = set()
-    if history_path.exists():
+    history = history_dict
+    if not history and history_path and history_path.exists():
         try:
             with open(history_path, 'r') as f:
                 history = yaml.safe_load(f)
-                if history and 'weeks' in history:
-                    for week in history['weeks'][-2:]:
-                        for dinner in week.get('dinners', []):
-                            recent_veg.update(dinner.get('vegetables', []))
-        except Exception: pass
+        except Exception: 
+            pass
+            
+    if history and 'weeks' in history:
+        for week in history['weeks'][-2:]:
+            for dinner in week.get('dinners', []):
+                recent_veg.update(dinner.get('vegetables', []))
+
     common_veg = Counter()
-    if index_path.exists():
+    recipes = recipes_list
+    if not recipes and index_path and index_path.exists():
         try:
             with open(index_path, 'r') as f:
                 recipes = yaml.safe_load(f)
-                if recipes:
-                    for recipe in recipes:
-                        main_veg = recipe.get('main_veg', [])
-                        common_veg.update(main_veg)
-        except Exception: pass
+        except Exception: 
+            pass
+            
+    if recipes:
+        for recipe in recipes:
+            main_veg = recipe.get('main_veg', [])
+            common_veg.update(main_veg)
+
     top_veg = [veg for veg, count in common_veg.most_common(20)
                if veg not in recent_veg
                and veg not in ['garlic', 'onion', 'ginger']
                and veg not in current_fridge_items]
+    
     current_month = datetime.now().month
     seasonal = []
     if current_month in [12, 1, 2]:
@@ -181,20 +206,21 @@ def generate_farmers_market_proposal(history_path, index_path):
         seasonal = ['tomato', 'zucchini', 'bell pepper', 'corn', 'cucumber', 'green beans']
     else:
         seasonal = ['squash', 'sweet potato', 'kale', 'brussels sprouts', 'cauliflower', 'broccoli']
+        
     proposed = []
     for veg in seasonal:
         if veg in top_veg:
             proposed.append(veg)
         if len(proposed) >= 5:
             break
+            
     for veg in top_veg:
         if veg not in proposed:
             proposed.append(veg)
         if len(proposed) >= 6:
             break
+            
     staples = ['onion', 'garlic', 'cilantro']
-    if freezer_backup_count < 3:
-        print(f"\n⚠️  Freezer backup status: {freezer_backup_count}/3 meals")
     return proposed, staples
 
 def get_recent_recipes(history, lookback_weeks=3):

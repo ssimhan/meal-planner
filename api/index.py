@@ -25,12 +25,14 @@ from api.routes.status import status_bp
 from api.routes.meals import meals_bp
 from api.routes.inventory import inventory_bp
 from api.routes.recipes import recipes_bp
+from api.routes.reviews import reviews_bp
 
 # Register Blueprints
 app.register_blueprint(status_bp)
 app.register_blueprint(meals_bp)
 app.register_blueprint(inventory_bp)
 app.register_blueprint(recipes_bp)
+app.register_blueprint(reviews_bp)
 
 # Health Check
 @app.route("/api/health")
@@ -59,6 +61,19 @@ def get_meal_suggestions():
     try:
         from scripts.inventory_intelligence import get_substitutions
         suggestions = get_substitutions(limit=5)
+        return jsonify({
+            "status": "success",
+            "suggestions": suggestions
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route("/api/suggestions/waste-not")
+@require_auth
+def get_waste_not_suggestions_route():
+    try:
+        from scripts.inventory_intelligence import get_waste_not_suggestions
+        suggestions = get_waste_not_suggestions(limit=4)
         return jsonify({
             "status": "success",
             "suggestions": suggestions

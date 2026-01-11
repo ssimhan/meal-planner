@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { getStatus, getRecipes, WorkflowStatus, replan, swapMeals } from '@/lib/api';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { getStatus, getRecipes, WorkflowStatus, replan, swapMeals, logMeal } from '@/lib/api';
 import { useToast } from '@/context/ToastContext';
 import MealCorrectionInput from '@/components/MealCorrectionInput';
 import SwapConfirmationModal from '@/components/SwapConfirmationModal';
@@ -32,7 +33,10 @@ const SelectionCheckbox = ({ day, type, label, value, editMode, selectedItems, t
   );
 };
 
-export default function WeekView() {
+function WeekViewContent() {
+  const searchParams = useSearchParams();
+  const weekParam = searchParams.get('week');
+
   const [status, setStatus] = useState<WorkflowStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
@@ -56,7 +60,8 @@ export default function WeekView() {
   useEffect(() => {
     async function fetchWeekData() {
       try {
-        const data = await getStatus();
+        setLoading(true);
+        const data = await getStatus(weekParam || undefined);
         setStatus(data);
       } catch (err) {
         showToast(err instanceof Error ? err.message : 'Failed to fetch week data', 'error');
@@ -65,7 +70,7 @@ export default function WeekView() {
       }
     }
     fetchWeekData();
-  }, []);
+  }, [weekParam]);
 
   useEffect(() => {
     async function loadRecipes() {
@@ -143,26 +148,19 @@ export default function WeekView() {
     if (!status?.week_data?.week_of) return;
 
     try {
-      const res = await fetch('/api/log-meal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          week: status.week_data.week_of,
-          day,
-          request_recipe: requestRecipe,
-          ...(type === 'dinner'
-            ? { actual_meal: value, dinner_needs_fix: false }
-            : { [`${type}_feedback`]: value, [`${type}_needs_fix`]: false })
-        })
+      const data = await logMeal({
+        week: status.week_data.week_of,
+        day,
+        request_recipe: requestRecipe,
+        ...(type === 'dinner'
+          ? { actual_meal: value, dinner_needs_fix: false }
+          : { [`${type}_feedback`]: value, [`${type}_needs_fix`]: false })
       });
 
-      if (!res.ok) throw new Error("Failed to save correction");
-      const data = await res.json();
-
       if (data.week_of) {
-        setStatus(data);
+        setStatus(data as WorkflowStatus);
       } else {
-        const newData = await getStatus();
+        const newData = await getStatus(status.week_data.week_of);
         setStatus(newData);
       }
 
@@ -235,18 +233,12 @@ export default function WeekView() {
     }
 
     try {
-      const res = await fetch('/api/log-meal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      const data = await logMeal(payload);
 
-      if (!res.ok) throw new Error("Correction failed");
-      const data = await res.json();
       if (data.week_of) {
-        setStatus(data);
+        setStatus(data as WorkflowStatus);
       } else {
-        const newData = await getStatus();
+        const newData = await getStatus(status.week_data.week_of);
         setStatus(newData);
       }
 
@@ -1050,5 +1042,17 @@ export default function WeekView() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function WeekView() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen text-[var(--bg-primary)]">
+        <p className="text-[var(--text-muted)] font-mono animate-pulse">LOADING WEEK VIEW...</p>
+      </div>
+    }>
+      <WeekViewContent />
+    </Suspense>
   );
 }

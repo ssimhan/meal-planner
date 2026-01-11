@@ -2,6 +2,18 @@ from flask import Flask, jsonify, request
 import sys
 import os
 from flask_cors import CORS
+
+# Load local environment variables if they exist
+try:
+    from dotenv import load_dotenv
+    # Prioritize .env.local for Next.js compatibility
+    for env_file in ['.env.local', '.env']:
+        if os.path.exists(env_file):
+            load_dotenv(env_file)
+            break
+except ImportError:
+    pass
+
 from api.utils import get_yaml_data, invalidate_cache, CACHE, get_cached_data
 from api.utils.auth import require_auth
 
@@ -23,7 +35,18 @@ app.register_blueprint(recipes_bp)
 # Health Check
 @app.route("/api/health")
 def health_check():
-    return jsonify({"status": "healthy", "version": "2.0.0"})
+    return jsonify({"status": "healthy", "version": "2.0.1"})
+
+@app.route("/api/debug")
+def debug_info():
+    from api.utils.storage import SUPABASE_URL, SUPABASE_SERVICE_KEY, supabase
+    return jsonify({
+        "url_configured": bool(SUPABASE_URL),
+        "key_configured": bool(SUPABASE_SERVICE_KEY),
+        "client_initialized": bool(supabase),
+        "environment": os.environ.get('VERCEL_ENV', 'unknown'),
+        "python_version": sys.version
+    })
 
 
 

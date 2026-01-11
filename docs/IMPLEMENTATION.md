@@ -58,13 +58,14 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ## Development Status
 
-**Current State:** Fully functional. All core features complete (Phases 1-13.4). Phase 14 in planning.
+**Current State:** Fully functional. All core features complete (Phases 1-14). Phase 15 in planning.
 
 **Completed Phases:**
 - **1-9:** Foundation (recipe parsing, CLI, energy-based prep, HTML plans)
 - **10-11:** Logging, performance, inventory intelligence, analytics
 - **12:** Architecture refactoring, TypeScript migration, testing
 - **13.1-13.4:** State fixes, inventory UX, prep workflow, white-labeling
+- **14:** Data Layer Redesign (Plan vs Actual separation)
 
 **Phase 13.4 (White-labeling):** ✅ Complete
 System now fully configurable via `config.yml` with:
@@ -88,11 +89,11 @@ System now fully configurable via `config.yml` with:
 
 ## Future Roadmap
 
-**Phase 14: User Authentication & Scale (Cost-Efficiency Focus)**
+**Phase 15: User Authentication & Scale (Cost-Efficiency Focus)**
 
 **Strategy:** Maximize "Free Tier" longevity before incurring infrastructure costs.
 
-### Phase 14.1: The "Family Gate" (Security)
+### Phase 15.1: The "Family Gate" (Security)
 **Goal:** Secure the current single-household application so only authorized family members can access it.
 **Cost:** $0/mo (Free Tiers).
 
@@ -105,7 +106,7 @@ System now fully configurable via `config.yml` with:
     *   Single Household object only (everyone shares the same data).
     *   No "private" views per user.
 
-### Phase 14.2: Database Migration (The "SaaS Foundation")
+### Phase 15.2: Database Migration (The "SaaS Foundation")
 **Goal:** Move data from YAML to a Relational Database to support concurrency and future multi-tenancy.
 **Cost:** $0/mo (Supabase Free Tier).
 **Limits & Risks:**
@@ -116,7 +117,7 @@ System now fully configurable via `config.yml` with:
 *   **Action:** Refactor `api/` to read/write to Postgres instead of `yaml` files.
 *   **Optimization:** Keep "generated HTML plans" as static files (Vercel Blob or Supabase Storage) to save DB space.
 
-### Phase 14.3: Multi-Tenancy (Productization)
+### Phase 15.3: Multi-Tenancy (Productization)
 **Goal:** Allow *other* families to signup.
 **Cost:**
     *   **Infra:** Still $0/mo until >500MB data or >50k users.

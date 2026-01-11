@@ -24,6 +24,18 @@ export interface WorkflowStatus {
   // Wait, looking at status.py, it returns "today": { ..., "prep_tasks": [...] }. It does NOT return "prep_tasks" at top level.
 
   week_data?: WeekData;
+  available_weeks?: AvailableWeek[];
+  next_week?: {
+    week_of: string;
+    status: string;
+  };
+}
+
+export interface AvailableWeek {
+  week_of: string;
+  exists: boolean;
+  status: string;
+  is_selectable: boolean;
 }
 
 export interface PrepTask {

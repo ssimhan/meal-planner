@@ -294,6 +294,33 @@ Identified 7 locations with hardcoded personal data:
 
 **Learning:** Systematic audit enabled laser-focused fixes. Distributed config loading (each module loads independently) worked better than centralized helper. Comprehensive documentation + interactive tooling as critical as code for white-labeling success.
 
+
+### Phase 14: Data Layer Redesign (2026-01-10)
+
+**Goal:** Strict separation of "Plan" (Historical Intent) vs "Actual" (Reality) for accurate analytics.
+
+**Problem:**
+Previously, the frontend received a merged "week view" where actual execution data overwrote the planned slot. This made it impossible to answer questions like "how often do we stick to the plan?" or "what do we usually eat when we skip the plan?".
+
+**Solution: The 3-Layer Data Model**
+1.  **Plan Layer (Intent):** Immutable record of what was generated/planned (e.g., "Tacos").
+2.  **Actual Layer (Reality):** Sparse record of what actually happened (e.g., "Pizza", "Skipped", "Leftovers").
+3.  **Resolved Layer (Display):** Runtime logic merging Plan + Actual -> Final State.
+
+**Implementation:**
+- **New Module:** `api/utils/meal_resolution.py` handles the merge logic.
+- **Strict Adherence States:**
+    - `ADHERED`: Actual matches Plan.
+    - `SUBSTITUTED`: Actual exists but differs from Plan.
+    - `SKIPPED`: Explicitly marked as not made.
+    - `NOT_LOGGED`: Plan exists, no actual data.
+    - `UNPLANNED`: No plan, but meal logged.
+    - `EMPTY`: Neither plan nor actual.
+- **API Strategy:** `GET /api/status` now returns a new `slots` object with strict state, while maintaining the legacy `dinners` list for frontend compatibility.
+- **Testing:** Moved from mocking external libraries (Supabase) to mocking the internal `StorageEngine` for robust, deterministic tests.
+
+**Learning:** Separating "intent" from "reality" is critical for analytics. A "merged" view is good for UI, but bad for data science. Always store the raw layers.
+
 ## Recurring Error Patterns & Solutions
 
 ### Pattern 1: State Synchronization in Serverless

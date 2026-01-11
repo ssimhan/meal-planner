@@ -10,15 +10,18 @@ import re
 import yaml
 from pathlib import Path
 from datetime import datetime, timedelta
+import os
+from api.utils.storage import StorageEngine
 
 
 def load_history():
-    """Load history.yml."""
-    history_path = Path('data/history.yml')
-    if history_path.exists():
-        with open(history_path, 'r') as f:
-            return yaml.safe_load(f) or {}
-    return {}
+    """Load history from DB."""
+    try:
+        data = StorageEngine.get_history()
+        return data
+    except Exception as e:
+        print(f"Error loading history from DB: {e}")
+        return {}
 
 
 def find_week_in_history(history, week_of):

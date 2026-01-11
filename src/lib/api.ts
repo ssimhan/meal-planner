@@ -58,8 +58,9 @@ async function getAuthHeaders(includeJson: boolean = true) {
     return headers;
 }
 
-export async function getStatus(): Promise<WorkflowStatus> {
-    const res = await fetch('/api/status', {
+export async function getStatus(week?: string): Promise<WorkflowStatus> {
+    const url = week ? `/api/status?week=${week}` : '/api/status';
+    const res = await fetch(url, {
         headers: await getAuthHeaders(false),
     });
     return handleResponse<WorkflowStatus>(res, 'Failed to fetch status');
@@ -200,6 +201,13 @@ export async function checkPrepTask(week: string, taskId: string, status: 'compl
         body: JSON.stringify({ week, task_id: taskId, status }),
     });
     return handleResponse<{ status: string }>(res, 'Failed to update prep task');
+}
+
+export async function getSuggestions(): Promise<any> {
+    const res = await fetch('/api/suggestions', {
+        headers: await getAuthHeaders(false),
+    });
+    return handleResponse<any>(res, 'Failed to fetch suggestions');
 }
 
 // Re-export types for convenience

@@ -13,5 +13,9 @@ PyGithub==2.1.1
 python-dotenv==1.0.0
 pytz==2024.1
 
+# Database
+supabase==2.3.0
+httpx
+
 # Testing
 pytest==7.4.3

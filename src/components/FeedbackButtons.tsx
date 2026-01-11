@@ -37,6 +37,28 @@ export default function FeedbackButtons({
     setIsEditing(false);
   };
 
+  // Step 1: Initial State (Not logged yet)
+  if (madeStatus === undefined || madeStatus === null) {
+    return (
+      <div className="flex gap-2 justify-center">
+        <button
+          onClick={() => onLogFeedback(feedbackType, '👍', true)}
+          disabled={logLoading}
+          className="btn-primary text-xs py-1 px-3 bg-[var(--accent-sage)] hover:bg-[var(--accent-sage-dark)]"
+        >
+          ✓ Made
+        </button>
+        <button
+          onClick={() => onLogFeedback(feedbackType, 'Skipped', false)}
+          disabled={logLoading}
+          className="btn-secondary text-xs py-1 px-3 border-gray-300 hover:bg-gray-100"
+        >
+          ✗ Not Made
+        </button>
+      </div>
+    );
+  }
+
   // Step 2b: If Made, show preference emojis + Fix button
   if (madeStatus === true && !isEditing) {
     return (

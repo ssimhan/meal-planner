@@ -146,31 +146,37 @@ def _get_current_status(skip_sync=False, week_override=None):
                 if key in day_feedback:
                     today_lunch[key + ('_feedback' if 'feedback' not in key and 'made' not in key else '')] = day_feedback[key]
 
-        # Merge history into week_data for full-week visibility on frontend
-        if history_week:
-            # We want the frontend to prioritize historical logs for the whole week
-            if history_week.get('dinners'):
-                # Deep merge dinners by day
-                h_dinners = {d['day']: d for d in history_week['dinners']}
-                merged_dinners = []
-                # Use data['dinners'] (planned) as the base
-                for p_dinner in data.get('dinners', []):
-                    day = p_dinner.get('day')
-                    if day in h_dinners:
-                        merged_dinners.append(h_dinners[day])
-                    else:
-                        merged_dinners.append(p_dinner)
-                # Add any history dinners that weren't in the plan (e.g. unplanned meals)
-                planned_days = {d.get('day') for d in data.get('dinners', [])}
-                for day, h_dinner in h_dinners.items():
-                    if day not in planned_days:
-                        merged_dinners.append(h_dinner)
-                
-                data['dinners'] = merged_dinners
-            if 'daily_feedback' in history_week:
-                data['daily_feedback'] = history_week['daily_feedback']
-            if 'prep_tasks' in history_week:
-                data['prep_tasks'] = history_week['prep_tasks']
+    resolved_slots = {}
+    if history_week or data:
+             data = data or {}
+             # Use new resolution logic
+             from api.utils.meal_resolution import resolve_week
+             
+             resolved_slots = resolve_week(data, history_week)
+             
+             # Reconstruct compatible 'dinners' list for frontend
+             merged_dinners = []
+             days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+             
+             for day in days:
+                 slot = resolved_slots.get(f"{day}_dinner")
+                 if slot and slot['resolved']:
+                     # Use the resolved object
+                     # Ensure it has 'day'
+                     r_meal = slot['resolved'].copy()
+                     r_meal['day'] = day
+                     
+                     # If it was an actual check for adherence info to pass to UI (optional, or UI infers it)
+                     # For now, just passing the resolved object supports the "Actual wins" logic
+                     merged_dinners.append(r_meal)
+            
+             data['dinners'] = merged_dinners
+
+             if history_week:
+                if 'daily_feedback' in history_week:
+                    data['daily_feedback'] = history_week['daily_feedback']
+                if 'prep_tasks' in history_week:
+                    data['prep_tasks'] = history_week['prep_tasks']
 
     # Extract completed prep tasks from history
     completed_prep = []
@@ -231,7 +237,8 @@ def _get_current_status(skip_sync=False, week_override=None):
             "next_week_planned": False,
             "next_week": None,
             "week_data": data,
-            "available_weeks": []
+            "available_weeks": [],
+            "slots": resolved_slots
         }
 
         # Check for next week

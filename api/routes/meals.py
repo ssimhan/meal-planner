@@ -260,14 +260,14 @@ def log_meal():
             
             day_fb = history_week.setdefault('daily_feedback', {}).setdefault(target_day, {})
             
-            if school_snack_feedback: day_fb['school_snack'] = school_snack_feedback
-            if school_snack_made: day_fb['school_snack_made'] = school_snack_made
-            if home_snack_feedback: day_fb['home_snack'] = home_snack_feedback
-            if home_snack_made: day_fb['home_snack_made'] = home_snack_made
-            if kids_lunch_feedback: day_fb['kids_lunch'] = kids_lunch_feedback
-            if kids_lunch_made: day_fb['kids_lunch_made'] = kids_lunch_made
-            if adult_lunch_feedback: day_fb['adult_lunch'] = adult_lunch_feedback
-            if adult_lunch_made: day_fb['adult_lunch_made'] = adult_lunch_made
+            if school_snack_feedback is not None: day_fb['school_snack'] = school_snack_feedback
+            if school_snack_made is not None: day_fb['school_snack_made'] = school_snack_made
+            if home_snack_feedback is not None: day_fb['home_snack'] = home_snack_feedback
+            if home_snack_made is not None: day_fb['home_snack_made'] = home_snack_made
+            if kids_lunch_feedback is not None: day_fb['kids_lunch'] = kids_lunch_feedback
+            if kids_lunch_made is not None: day_fb['kids_lunch_made'] = kids_lunch_made
+            if adult_lunch_feedback is not None: day_fb['adult_lunch'] = adult_lunch_feedback
+            if adult_lunch_made is not None: day_fb['adult_lunch_made'] = adult_lunch_made
             
             if school_snack_needs_fix is not None: day_fb['school_snack_needs_fix'] = school_snack_needs_fix
             if home_snack_needs_fix is not None: day_fb['home_snack_needs_fix'] = home_snack_needs_fix
@@ -293,27 +293,27 @@ def log_meal():
                 storage.StorageEngine.update_inventory_item('freezer_backup', freezer_meal, delete=True)
 
             log_execution.calculate_adherence(history_week)
-             
-             # Handle "Add as Recipe" request
-             if request_recipe and actual_meal:
-                 try:
-                     recipe_id = actual_meal.lower().replace(' ', '_')
-                     # Check if it exists first
-                     existing = storage.supabase.table("recipes").select("id").eq("household_id", h_id).eq("id", recipe_id).execute()
-                     if not existing.data:
-                         storage.supabase.table("recipes").insert({
-                             "id": recipe_id,
-                             "household_id": h_id,
-                             "name": actual_meal,
-                             "metadata": {
-                                 "cuisine": "Indian" if "rice" in actual_meal.lower() or "sambar" in actual_meal.lower() else "unknown",
-                                 "meal_type": "dinner",
-                                 "effort_level": "normal"
-                             },
-                             "content": f"# {actual_meal}\n\nAdded automatically from meal correction."
-                         }).execute()
-                 except Exception as re:
-                     print(f"Error auto-adding recipe: {re}")
+
+            # Handle "Add as Recipe" request
+            if request_recipe and actual_meal:
+                try:
+                    recipe_id = actual_meal.lower().replace(' ', '_')
+                    # Check if it exists first
+                    existing = storage.supabase.table("recipes").select("id").eq("household_id", h_id).eq("id", recipe_id).execute()
+                    if not existing.data:
+                        storage.supabase.table("recipes").insert({
+                            "id": recipe_id,
+                            "household_id": h_id,
+                            "name": actual_meal,
+                            "metadata": {
+                                "cuisine": "Indian" if "rice" in actual_meal.lower() or "sambar" in actual_meal.lower() else "unknown",
+                                "meal_type": "dinner",
+                                "effort_level": "normal"
+                            },
+                            "content": f"# {actual_meal}\n\nAdded automatically from meal correction."
+                        }).execute()
+                except Exception as re:
+                    print(f"Error auto-adding recipe: {re}")
 
         # Save to DB
         storage.StorageEngine.update_meal_plan(week_str, history_data=history_week)

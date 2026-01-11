@@ -78,42 +78,35 @@ System now fully configurable via `config.yml` with:
 
 ## Future Roadmap
 
-**Phase 15: User Authentication & Scale (Cost-Efficiency Focus)**
+> [!IMPORTANT]
+> **Priority Shift:** The immediate focus is completing the ongoing Supabase migration to resolve current frontend instability.
 
-**Strategy:** Maximize "Free Tier" longevity before incurring infrastructure costs.
+### Phase 15: Complete Database Migration (Supabase)
+**Goal:** Finish the shift from YAML to Postgres to stabilize the application and enable complex queries.
+- **Block 1: Connection & Infrastructure:** Ensure Supabase connection is stable in Vercel.
+- **Block 2: Schema & Data Migration:** Move `inventory`, `history`, and `recipes` data to Postgres tables.
+- **Block 3: API Refactor:** Update `api/` routes to read/write from DB. Verify frontend issues resolve.
 
-### Phase 15.1: The "Family Gate" (Security)
-**Goal:** Secure the current single-household application so only authorized family members can access it.
-**Cost:** $0/mo (Free Tiers).
+### Phase 16: Smart Weekly Workflow
+**Goal:** Implement the "End-to-End" planning flow using the new database capabilities.
+- **Block 1: Inventory Update UX:** "Update Inventory" step before planning.
+- **Block 2: Intelligent Suggestions:**
+    - Query 1: Meals to use up leftovers (perishables first).
+    - Query 2: Meals to use up existing inventory.
+- **Block 3: Planning Interface:** Tentative plan generation with "Suggest what to buy" feature.
+- **Block 4: Shopping & Finalization:** Confirm grocery list -> Finalize Meal Plan.
+- **Block 5: Mid-Week Updates:** Ability to modify the plan dynamically during execution.
 
-*   **Auth Provider:** **Supabase Auth** (Free up to 50,000 MAUs) or **NextAuth.js** (Self-hosted).
-    *   *Why Supabase?* Easier integration for future database needs.
-*   **Data Model:** Continue using **GitOps (YAML files)**.
-    *   *Logic:* Database migration is expensive (dev time) and unnecessary for a single family.
-    *   *Mechanism:* A simple "Login" screen that gates access to the existing dashboard. All logged-in users modify the same `history.yml`.
-*   **Limits:**
-    *   Single Household object only (everyone shares the same data).
-    *   No "private" views per user.
+### Phase 17: System Cleanup
+**Goal:** Remove legacy workflows and annoyances.
+- **Block 1: Remove Daily Check-in:** Locate and delete the GitHub workflow/cron triggering daily issues.
+- **Block 2: Legacy File Cleanup:** Remove unused YAML parser code once DB is primary.
 
-### Phase 15.2: Database Migration (The "SaaS Foundation")
-**Goal:** Move data from YAML to a Relational Database to support concurrency and future multi-tenancy.
-**Cost:** $0/mo (Supabase Free Tier).
-**Limits & Risks:**
-    *   **Database Pausing:** Supabase Free projects "pause" after 1 week of inactivity. Cold starts ~5-10s.
-    *   **Storage:** 500MB DB space. (Enough for ~5-10 years of text-only meal plans).
-    *   **Backups:** Free tier does not include Point-in-Time recovery (Git was better for this).
-
-*   **Action:** Refactor `api/` to read/write to Postgres instead of `yaml` files.
-*   **Optimization:** Keep "generated HTML plans" as static files (Vercel Blob or Supabase Storage) to save DB space.
-
-### Phase 15.3: Multi-Tenancy (Productization)
-**Goal:** Allow *other* families to signup.
-**Cost:**
-    *   **Infra:** Still $0/mo until >500MB data or >50k users.
-    *   **Payment Processing:** Stripe (Transaction fees only).
-
-*   **Architecture:** Add `household_id` to all DB tables.
-*   **Logic:** Row Level Security (RLS) in Supabase is critical here to ensure Family A cannot see Family B's dinner.
+### Phase 18: User Authentication (The "Family Gate")
+**Goal:** Secure the application for single-household access.
+*   **Auth Provider:** Supabase Auth.
+*   **Mechanism:** Simple login screen gating the existing dashboard.
+*   **Data Model:** Single household (shared data).
 
 
 ---

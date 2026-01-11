@@ -1,0 +1,22 @@
+week_of: '2026-01-12'
+confirmed_veg:
+  - lettuce
+  - cauliflower
+  - kale
+  - carrots
+  - corn
+  - tomatoes
+schedule:
+  busy_days: [thu, fri]
+  late_class_days: []
+  special_notes: "Monday needs easy dinner, but can prep after dinner"
+constraints:
+  - Use up spinach ravioli from freezer
+  - Use up existing leftovers (rasam, sambar, quesadilla, masala puri)
+  - Kale available for kale chips as snack
+  - Plenty of avocado packs for snacks (10)
+  - Only 2 onions and 1 can black beans in pantry
+freezer_status:
+  current_backups: 2
+  target: 3
+  to_use: "Spinach ravioli leftover"

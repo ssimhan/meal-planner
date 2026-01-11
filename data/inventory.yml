@@ -1,87 +1,85 @@
-last_updated: '2026-01-06'
+last_updated: '2026-01-12'
 fridge:
-- item: pomegranates
+- item: keerai maseeyil leftover meal
+  quantity: 1
+  unit: serving
+  added: '2026-01-12'
+- item: chow chow kootu leftover meal
+  quantity: 1
+  unit: serving
+  added: '2026-01-12'
+- item: grapes
+  quantity: 1
+  unit: bag
+  added: '2026-01-12'
+  notes: Good for snacks
+- item: kiwi
+  quantity: 1
+  unit: bag
+  added: '2026-01-12'
+  notes: Good for snacks
+- item: rasam
+  quantity: 6
+  unit: servings
+  added: '2026-01-12'
+- item: sambar
   quantity: 4
+  unit: servings
+  added: '2026-01-12'
+- item: sambar rice puree
+  quantity: 2
+  unit: servings
+  added: '2026-01-12'
+- item: sweet potato black bean quesadilla leftover meal
+  quantity: 2
+  unit: servings
+  added: '2026-01-12'
+- item: masala puri mix
+  quantity: 4
+  unit: servings
+  added: '2026-01-12'
+- item: lettuce
+  quantity: 1
+  unit: head
+  added: '2026-01-12'
+- item: cauliflower florets
+  quantity: 1
+  unit: bag
+  added: '2026-01-12'
+- item: kale
+  quantity: 1
+  unit: bunch
+  added: '2026-01-12'
+  notes: To make kale chips
+- item: carrots
+  quantity: 1
+  unit: bag
+  added: '2026-01-12'
+- item: corn
+  quantity: 1
+  unit: bag
+  added: '2026-01-12'
+- item: avocado packs
+  quantity: 10
   unit: count
-  added: '2026-01-04'
-  notes: For Wednesday home snack
+  added: '2026-01-12'
 - item: tomatoes
   quantity: 10
   unit: count
   added: '2026-01-04'
-- item: okra
-  quantity: 1
-  unit: bag
-  added: '2026-01-04'
-  notes: Prep tomorrow - cut okra
-- item: avocado packs
-  quantity: 14
-  unit: count
-  added: '2026-01-04'
-  notes: Started with 16, used 2 on Tuesday
-- item: cut green beans
-  quantity: 1
-  unit: meal portion
-  added: '2026-01-05'
-- item: diced carrots
-  quantity: 1
-  unit: meal portion
-  added: '2026-01-05'
-- item: kiwi
-  quantity: 1
-  unit: bag
-  added: '2026-01-06'
-  notes: Good for home snacks
-- item: grapes
-  quantity: 1
-  unit: bag
-  added: '2026-01-06'
-  notes: Good for home snacks
-- item: blueberries
-  quantity: 1
-  unit: container
-  added: '2026-01-06'
-  notes: Good for school snacks
-- item: corn
-  quantity: 1
-  unit: bag
-  added: '2026-01-06'
-- item: lettuce
-  quantity: 1
-  unit: head
-  added: '2026-01-06'
-- item: cauliflower florets
-  quantity: 1
-  unit: bag
-  added: '2026-01-06'
-- item: flour tortillas
-  quantity: 1
-  unit: package
-  added: '2026-01-06'
 - item: salsa
   quantity: 1
   unit: jar
   added: '2026-01-06'
 pantry:
 - item: black beans
-  quantity: 4
-  unit: cans
-- item: rice
-  quantity: 5
-  unit: cups
-- item: white rice
   quantity: 1
-  unit: bag
+  unit: cans
 - item: onions
-  quantity: 3
+  quantity: 2
   unit: count
   added: '2026-01-04'
-- item: sweet potatoes
-  quantity: 7
-  unit: count
-  added: '2026-01-04'
-  notes: Prep tomorrow - cut sweet potatoes
-- item: potato
+- item: potatoes
   quantity: 3
   unit: count
   added: '2026-01-04'
@@ -96,29 +94,40 @@ pantry:
 - item: sesame oil
   quantity: 1
   unit: bottle
-- item: cilantro
-  quantity: 1
-  unit: bunch
-  added: '2026-01-06'
-- item: dried mangoes
-  quantity: 1
-  unit: bag
-  added: '2026-01-08'
 freezer:
   backups:
-  - meal: Keerai maseeyil
-    servings: 4
-    frozen_date: '2026-01-05'
-  - meal: Chow chow puli kootu leftover
-    servings: 1
-    frozen_date: '2026-01-06'
-  - meal: Protein muffins
-    servings: 5
-    frozen_date: unknown
   - meal: Spinach ravioli leftover
     servings: 1
     frozen_date: unknown
+    notes: To use up
+  - meal: Protein muffins
+    servings: 5
+    frozen_date: unknown
   ingredients:
+  - item: Diced sweet potatoes
+    quantity: 1
+    unit: bag
+    frozen_date: '2026-01-12'
+  - item: Diced beans
+    quantity: 1
+    unit: bag
+    frozen_date: '2026-01-12'
+  - item: Diced carrots
+    quantity: 1
+    unit: bag
+    frozen_date: '2026-01-12'
+  - item: Frozen corn
+    quantity: 1
+    unit: bag
+    frozen_date: unknown
+  - item: Green peas
+    quantity: 1
+    unit: bag
+    frozen_date: unknown
+  - item: Mixed peas and carrots
+    quantity: 1
+    unit: bag
+    frozen_date: unknown
   - item: Parotta frozen
     quantity: 8
     unit: servings
@@ -135,15 +144,7 @@ freezer:
     quantity: 1
     unit: bag
     frozen_date: unknown
-  - item: Green peas
-    quantity: 1
-    unit: bag
-    frozen_date: unknown
   - item: Edamame
-    quantity: 1
-    unit: bag
-    frozen_date: unknown
-  - item: Mixed peas and carrots
     quantity: 1
     unit: bag
     frozen_date: unknown

@@ -213,52 +213,45 @@ weeks:
       school_snack_needs_fix: false
 - week_of: '2026-01-12'
   dinners:
-  - recipe_id: cauliflower_rasam
-    cuisine: indian
-    meal_type: soup_stew
+  - recipe_id: cowboy_caviar_salad
+    cuisine: unknown
+    meal_type: salad
     day: mon
     vegetables:
-    - cauliflower
-    - cilantro
-    - lemon
+    - corn
     - tomato
-    - tomatoe
-  - recipe_id: cheesy_veggie_quesadilla
-    cuisine: mexican
-    meal_type: tacos_wraps
+    - bell pepper
+    - cilantro
+    - onion
+  - recipe_id: pav_bhaji
+    cuisine: indian
+    meal_type: soup_stew
     day: tue
     vegetables:
-    - bell pepper
-    - corn
-    - garlic
-    - onion
-  - recipe_id: chickpea_chaat_salad
-    cuisine: indian
-    meal_type: salad
+    - cauliflower
+    - carrot
+    - tomato
+  - recipe_id: vegan_spicy_thai_drunken_noodles_with_seared_tofu
+    cuisine: asian
+    meal_type: pasta_noodles
     day: wed
     vegetables:
-    - bell pepper
     - carrot
-    - cilantro
-    - cucumber
+    - bell pepper
+    - corn
+    - basil
     - garlic
-    - lemon
-    - onion
-    - peas
-    - tomato
-  - recipe_id: curried_egg_salad_sandwich
-    cuisine: indian
-    meal_type: sandwich
+  - recipe_id: quick_tortilla_pizzas
+    cuisine: mexican
+    meal_type: tacos_wraps
     day: thu
     vegetables:
-    - cilantro
-    - garlic
-  - recipe_id: easy_chickpea_fritters
-    cuisine: mediterranean
-    meal_type: appetizer
+    - broccoli
+  - recipe_id: freezer_meal
+    cuisine: unknown
+    meal_type: freezer
     day: fri
-    vegetables:
-    - beans
-    - cucumber
-    - garlic
-    - peas
+    vegetables: []
+    freezer_used:
+      meal: Spinach ravioli leftover
+      frozen_date: unknown

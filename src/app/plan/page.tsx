@@ -340,7 +340,7 @@ export default function PlanningWizard() {
 
             await finalizePlan(planningWeek);
             showToast('Plan finalized! Moving to Dashboard.', 'success');
-            router.push('/');
+            router.push(`/?week=${planningWeek}`);
         } catch (err: any) {
             showToast(err.message, 'error');
         } finally {

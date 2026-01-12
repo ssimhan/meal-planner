@@ -140,7 +140,7 @@ class StorageEngine:
                 "household_id": h_id,
                 "week_of": week_of,
                 **update_payload
-            }).execute()
+            }, on_conflict="household_id,week_of").execute()
         except Exception as e:
             print(f"Error updating meal plan for {week_of}: {e}")
 

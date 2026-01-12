@@ -49,7 +49,8 @@ def get_last_week_review_data():
         actual_dinners = {d.get('day'): d for d in history_data.get('dinners', [])}
         
         # 2. Get All Recipes for name resolution
-        all_recipes = storage.supabase.table("recipes").select("id, name").eq("household_id", h_id).execute().data
+        all_recipes_res = storage.supabase.table("recipes").select("id, name").eq("household_id", h_id).execute()
+        all_recipes = all_recipes_res.data or []
         recipe_map = {r['id']: r['name'] for r in all_recipes}
         
         # 3. Get Snacks and other feedback

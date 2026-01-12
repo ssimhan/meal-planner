@@ -35,7 +35,7 @@ def generate_plan_route():
             {
                 "id": r['id'],
                 "name": r['name'],
-                **r['metadata']
+                **r.get('metadata') or {}
             } for r in all_recipes_res.data
         ]
         
@@ -125,7 +125,7 @@ def generate_draft_route():
             history.setdefault('weeks', []).append(history_week)
 
         all_recipes_res = storage.supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id).execute()
-        all_recipes = [{"id": r['id'], "name": r['name'], **r['metadata']} for r in all_recipes_res.data]
+        all_recipes = [{"id": r['id'], "name": r['name'], **(r.get('metadata') or {})} for r in all_recipes_res.data]
         
         # 4. Generate the rest of the plan
         new_plan_data, new_history = generate_meal_plan(
@@ -224,7 +224,7 @@ def create_week():
         h_id = storage.get_household_id()
         history = storage.StorageEngine.get_history()
         all_recipes_res = storage.supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id).execute()
-        all_recipes = [{"id": r['id'], "name": r['name'], **r['metadata']} for r in all_recipes_res.data]
+        all_recipes = [{"id": r['id'], "name": r['name'], **(r.get('metadata') or {})} for r in all_recipes_res.data]
         
         # Load config from DB (or fallback to file for now)
         from api.routes.status import _load_config

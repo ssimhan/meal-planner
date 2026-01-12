@@ -54,7 +54,7 @@ class StorageEngine:
                 'item': item['item'],
                 'quantity': item['quantity'],
                 'unit': item['unit'],
-                **item['metadata']
+                **(item.get('metadata') or {})
             }
             
             if category == 'fridge':
@@ -82,10 +82,10 @@ class StorageEngine:
                 {
                     "id": r['id'],
                     "name": r['name'],
-                    "cuisine": r['metadata'].get('cuisine', 'unknown'),
-                    "meal_type": r['metadata'].get('meal_type', 'unknown'),
-                    "effort_level": r['metadata'].get('effort_level', 'normal'),
-                    "no_chop_compatible": r['metadata'].get('no_chop_compatible', False)
+                    "cuisine": (r.get('metadata') or {}).get('cuisine', 'unknown'),
+                    "meal_type": (r.get('metadata') or {}).get('meal_type', 'unknown'),
+                    "effort_level": (r.get('metadata') or {}).get('effort_level', 'normal'),
+                    "no_chop_compatible": (r.get('metadata') or {}).get('no_chop_compatible', False)
                 } for r in res.data
             ]
         except Exception as e:
@@ -102,7 +102,7 @@ class StorageEngine:
                 return None
             row = res.data[0]
             # Merge name into recipe metadata for UI
-            recipe_data = row['metadata']
+            recipe_data = row.get('metadata') or {}
             recipe_data['name'] = row['name']
             recipe_data['id'] = row['id']
             

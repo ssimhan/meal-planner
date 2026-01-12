@@ -167,15 +167,18 @@ def get_shopping_list_route():
             return jsonify({"status": "error", "message": "week_of parameter required"}), 400
             
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("history_data").eq("household_id", h_id).eq("week_of", week_of).single().execute()
+        res = storage.supabase.table("meal_plans").select("plan_data, history_data").eq("household_id", h_id).eq("week_of", week_of).single().execute()
         
         if not res.data:
             return jsonify({"status": "error", "message": f"No plan found for week {week_of}"}), 404
             
-        history_data = res.data['history_data']
+        plan_data = res.data.get('plan_data') or {}
+        history_data = res.data.get('history_data') or {}
         
         from scripts.inventory_intelligence import get_shopping_list
-        shopping_list = get_shopping_list(history_data)
+        # During planning, plan_data is often more up-to-date in the DB
+        data_to_use = plan_data if plan_data.get('dinners') else history_data
+        shopping_list = get_shopping_list(data_to_use)
         
         return jsonify({
             "status": "success",

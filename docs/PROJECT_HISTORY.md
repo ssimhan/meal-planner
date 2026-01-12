@@ -496,6 +496,7 @@ Previously, the frontend received a merged "week view" where actual execution da
 8. **Let AI handle complex logic** - Constraint satisfaction is hard for humans, easy for AI
 9. **Progressive enhancement** - Each phase delivers working software
 10. **Documentation during implementation** - This history file captured decisions in real-time
+11. **Chunking for sanity** - Break work into 1-2 hour execution blocks. "Heavy" blocks lead to painful debugging sessions.
 
 ## Final Thoughts
 

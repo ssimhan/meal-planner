@@ -88,39 +88,33 @@ System now fully configurable via `config.yml` with:
 
 ---
 
-## Future Roadmap
+### Phase 17: Core Stability & Data Hygiene (Immediate)
+**Goal:** Fix known bugs and standardize data to ensure a reliable foundation.
+- **Block 1: Fix Week View Bug (1h).** Ensure "Actual Meals" appear correctly in the weekly overview.
+- **Block 2: System Cleanup (0.5h).** Remove legacy GitHub Actions/Cron jobs (Daily Check-in) and unused YAML parsing code.
+- **Block 3: Recipe Index Standardization (1.5h).** Standardize spelling (e.g., "tomato" vs "tomatoe") and deduplicate entries.
 
-> [!IMPORTANT]
-> **Priority Shift:** The immediate focus is completing the ongoing Supabase migration to resolve current frontend instability.
+### Phase 18: Enhanced Planning Workflow (Wizard 2.0)
+**Goal:** Remove friction from the weekly planning process and daily execution.
+- **Block 1: Wizard UX Overhaul.**
+    - Chunk 1: Split "Dinners" and "Snacks" into separate wizard pages (1.5h).
+    - Chunk 2: Update Inventory: Separate meals vs. veggies; add quantity tracking (2h).
+    - Chunk 3: Improve Leftovers logic: Ask for specific serving counts (1h).
+- **Block 2: Pause Capability (2h).** Allow saving the wizard state ("Draft Mode") to pause planning (e.g., for shopping) and resume later.
+- **Block 3: Nightly Confirmation (1.5h).** Add a persistent 6pm banner prompting validation of that day's meals (Snacks/Lunch/Dinner).
 
-### Phase 15: Complete Database Migration (Supabase) ✅ Complete
-**Goal:** Shift from YAML to Postgres to stabilize the application and enable complex queries.
-- **Block 1: Connection & Infrastructure:** Established stable Supabase connection in Vercel.
-- **Block 2: Schema & Data Migration:** Ported `inventory`, `history`, and `recipes` data to Postgres.
-- **Block 3: API Refactor:** Updated `api/` routes to use Supabase StorageEngine.
+### Phase 19: Loop Closure & Adjustments
+**Goal:** Close the loop between execution and planning.
+- **Block 1: Recipe Ingestion Workflow.**
+    - Chunk 1: Detect new "Actual Meals" not in index (1.5h).
+    - Chunk 2: Banner & Ingestion Form (1.5h).
+- **Block 2: Mid-Week Adjustments (2h).** Enable dynamic replanning for the current active week.
 
-### Phase 16: Smart Weekly Workflow (8-Step)
-**Goal:** Implement an "End-to-End" planning flow using database intelligence.
-
-1.  **Step 0: Review Prior Week:** Prompt user to confirm which meals were made and log any leftovers (for the Fridge).
-2.  **Step 1: Inventory Update:** Bulk update interface to ensure stock levels are accurate. ✅ Complete
-3.  **Step 2: "Waste Not" Suggestions:** Propose meals for Mon/Tue that use up leftovers and perishables. ✅ Complete
-4.  **Step 3: Tentative Plan:** Generate a draft plan for the rest of the week based on preferences. ✅ Complete
-5.  **Step 4: Smart Grocery List:** Auto-generate a shopping list based on (Plan Ingredients - Current Inventory). ✅ Complete
-6.  **Step 5: Purchase Confirmation:** Interactive list to "check off" items -> automatically moves them to Inventory. ✅ Complete
-7.  **Step 6: Finalize Plan:** Lock in the week to "Active" status. ✅ Complete
-8.  **Step 7: Mid-Week Adjustments:** Allow dynamic replanning for "life happens" moments.
-
-### Phase 17: System Cleanup
-**Goal:** Remove legacy workflows and annoyances.
-- **Block 1: Remove Daily Check-in:** Locate and delete the GitHub workflow/cron triggering daily issues.
-- **Block 2: Legacy File Cleanup:** Remove unused YAML parser code once DB is primary.
-
-### Phase 18: User Authentication (The "Family Gate")
-**Goal:** Secure the application for single-household access.
-*   **Auth Provider:** Supabase Auth.
-*   **Mechanism:** Simple login screen gating the existing dashboard.
-*   **Data Model:** Single household (shared data).
+### Phase 20: User Authentication (The "Family Gate")
+**Goal:** Secure the application for single-household access (architected for future multi-tenant support).
+- **Block 1: Supabase Auth.**
+    - Chunk 1: Infrastructure & RLS Policies (1h).
+    - Chunk 2: Login Page Implementation (1h).
 
 
 ---

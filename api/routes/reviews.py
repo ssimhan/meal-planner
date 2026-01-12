@@ -48,17 +48,64 @@ def get_last_week_review_data():
         planned_dinners = {d.get('day'): d for d in plan_data.get('dinners', [])}
         actual_dinners = {d.get('day'): d for d in history_data.get('dinners', [])}
         
+        # 2. Get All Recipes for name resolution
+        all_recipes = storage.supabase.table("recipes").select("id, name").eq("household_id", h_id).execute().data
+        recipe_map = {r['id']: r['name'] for r in all_recipes}
+        
+        # 3. Get Snacks and other feedback
+        daily_feedback = history_data.get('daily_feedback', {})
+        planned_lunches = plan_data.get('lunches', {})
+        
         for day in days:
+            # TRY to find in plan_data or history_data (for consistency)
             p_dinner = planned_dinners.get(day)
+            if not p_dinner:
+                # Fallback: check history_data['dinners'] directly
+                p_dinner = next((d for d in history_data.get('dinners', []) if d.get('day') == day), None)
+            
             a_dinner = actual_dinners.get(day)
+            feedback = daily_feedback.get(day, {})
+            p_lunch = planned_lunches.get(day, {})
+            
+            # Resolve planned dinner name
+            p_name = None
+            if p_dinner:
+                # Priority: name -> recipe_name -> recipe_id lookup -> formatted recipe_id
+                p_name = p_dinner.get('name') or p_dinner.get('recipe_name')
+                r_id = p_dinner.get('recipe_id')
+                
+                if not p_name and r_id:
+                    p_name = recipe_map.get(r_id) or r_id.replace('_', ' ').title()
+            
+            if not p_name and day in ['sat', 'sun']:
+                p_name = "Make at home"
+
+            # Resolve actual meal name
+            a_name = a_dinner.get('actual_meal') if a_dinner else None
+            if not a_name and a_dinner and a_dinner.get('recipe_id'):
+                 a_name = recipe_map.get(a_dinner.get('recipe_id')) or a_dinner.get('recipe_id').replace('_', ' ').title()
+            
             
             day_obj = {
                 "day": day,
-                "planned_recipe_id": p_dinner.get('recipe_id') if p_dinner else None,
-                "planned_recipe_name": p_dinner.get('name') if p_dinner else ("Make at home" if day in ['sat', 'sun'] else None),
-                "made": a_dinner.get('made') if a_dinner else None,
-                "actual_meal": a_dinner.get('actual_meal') if a_dinner else None,
-                "leftovers": False # Default, user will check this
+                "dinner": {
+                    "planned_recipe_id": p_dinner.get('recipe_id') if p_dinner else None,
+                    "planned_recipe_name": p_name,
+                    "made": a_dinner.get('made') if a_dinner else None,
+                    "actual_meal": a_name,
+                    "leftovers": False
+                },
+                "snacks": {
+                    "school_snack": feedback.get('school_snack'),
+                    "home_snack": feedback.get('home_snack'),
+                    "kids_lunch": feedback.get('kids_lunch'),
+                    "adult_lunch": feedback.get('adult_lunch')
+                },
+                "planned_snacks": {
+                    "school_snack": "Default Snack",
+                    "home_snack": "Default Snack",
+                    "kids_lunch": p_lunch.get('recipe_name') if isinstance(p_lunch, dict) else getattr(p_lunch, 'recipe_name', None)
+                }
             }
             review_days.append(day_obj)
             
@@ -103,30 +150,39 @@ def submit_review():
         
         # 2. Process Reviews
         leftovers_to_add = []
+        daily_feedback = history_data.get('daily_feedback', {})
         
         for rev in reviews:
             day = rev.get('day')
-            # Update History
-            # Find existing dinner entry or create one
+            
+            # --- Dinner Logic ---
+            dinner_rev = rev.get('dinner', {})
             target_dinner = next((d for d in history_data['dinners'] if d.get('day') == day), None)
             if not target_dinner:
                 target_dinner = {'day': day}
                 history_data['dinners'].append(target_dinner)
                 
-            # Update status
-            made_val = rev.get('made') # boolean or string
+            made_val = dinner_rev.get('made')
             target_dinner['made'] = made_val
-            if rev.get('actual_meal'):
-                target_dinner['actual_meal'] = rev.get('actual_meal')
+            if dinner_rev.get('actual_meal'):
+                target_dinner['actual_meal'] = dinner_rev.get('actual_meal')
                 
-            # Collect Leftovers
-            if rev.get('leftovers'):
-                # leftovers is boolean? Or the note string?
-                # User prompt: "If 'Leftovers': Prompt to add to Fridge Inventory"
-                # Let's assume the UI sends 'leftovers_note' if checked
-                note = rev.get('leftovers_note')
+            if dinner_rev.get('leftovers'):
+                note = dinner_rev.get('leftovers_note')
                 if note:
                     leftovers_to_add.append(note)
+            
+            # --- Snacks/Lunch Logic ---
+            snacks_rev = rev.get('snacks', {})
+            if snacks_rev:
+                if day not in daily_feedback:
+                    daily_feedback[day] = {}
+                
+                for key in ['school_snack', 'home_snack', 'kids_lunch', 'adult_lunch']:
+                    if key in snacks_rev:
+                        daily_feedback[day][key] = snacks_rev[key]
+                        
+        history_data['daily_feedback'] = daily_feedback
                     
         # 3. Update Inventory (Add Leftovers)
         added_items = []

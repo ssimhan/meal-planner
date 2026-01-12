@@ -191,7 +191,7 @@ def archive_all_input_files():
 
 def update_history(history_path, inputs, selected_dinners, selected_lunches=None):
     """Update history.yml with the new week's dinners and lunches."""
-    history = load_history(history_path)
+    history = load_history()
     week_of = inputs['week_of']
     new_week = {
         'week_of': week_of,

@@ -313,15 +313,29 @@ def select_dinners(filtered_recipes, inputs, current_week_history=None, all_reci
             if recipe: selected[day] = recipe
     remaining_days = [d for d in days if d not in selected]
     all_available = normal_recipes + all_other_recipes + no_chop_recipes
-    for day in remaining_days:
+    
+    # First pass: try to maintain meal type uniqueness
+    for day in remaining_days[:]: # slice copy to iterate safely
         recipe = None
         for r in all_available:
             meal_type = r.get('meal_type')
+            # Check unique meal type
             if meal_type not in used_meal_types:
                 recipe = r
                 used_meal_types.add(meal_type)
                 all_available.remove(r)
                 break
-        if recipe: selected[day] = recipe
+        if recipe: 
+            selected[day] = recipe
+            remaining_days.remove(day)
+
+    # Second pass: fill any remaining days with any available recipe (relax uniqueness)
+    if remaining_days:
+        print(f"WARN: Could not find unique meal types for {remaining_days}. Relaxing constraints.")
+        for day in remaining_days:
+             if all_available:
+                 recipe = all_available.pop(0) # Just take the next available
+                 selected[day] = recipe
+    
     return selected
 

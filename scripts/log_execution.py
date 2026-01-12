@@ -21,9 +21,12 @@ def get_actual_path(rel_path):
         return tmp_path
     return Path(rel_path)
 
-def load_history():
+def load_history(history_path=None):
     """Load history.yml or return empty structure."""
-    path = get_actual_path('data/history.yml')
+    if history_path:
+        path = Path(history_path)
+    else:
+        path = get_actual_path('data/history.yml')
     if not path.exists():
         # Fallback to local if /tmp doesn't have it yet
         path = Path('data/history.yml')

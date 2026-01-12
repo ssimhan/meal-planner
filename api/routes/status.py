@@ -125,7 +125,7 @@ def _get_current_status(skip_sync=False, week_override=None):
             if 'home_snack_needs_fix' in day_feedback:
                 today_snacks['home_snack_needs_fix'] = day_feedback['home_snack_needs_fix']
         
-        dinners = (history_week.get('dinners') if history_week else None) or (data.get('dinners') if data else [])
+        dinners = (history_week.get('dinners') if history_week else None) or (data.get('dinners') if data else []) or []
         for dinner in dinners:
             if dinner.get('day') == current_day:
                 today_dinner = dinner

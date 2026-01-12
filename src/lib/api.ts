@@ -251,6 +251,7 @@ export async function generateDraft(week_of: string, selections: { day: string, 
     return handleResponse<any>(res, 'Failed to generate draft plan');
 }
 
+
 export async function getShoppingList(week_of: string): Promise<any> {
     const res = await fetch(`/api/plan/shopping-list?week_of=${week_of}`, {
         headers: await getAuthHeaders(false),

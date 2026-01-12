@@ -67,6 +67,7 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
     print("="*60)
     
     week_of = data['week_of']
+    history_path = get_actual_path('data/history.yml')
     
     if recipes_list:
         recipes = recipes_list
@@ -78,8 +79,7 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
     if history_dict:
         history = history_dict
     else:
-        history_path = Path('data/history.yml')
-        history = load_history(history_path)
+        history = load_history()
 
     recent_recipes = get_recent_recipes(history, lookback_weeks=3)
     filtered = filter_recipes(recipes, data, recent_recipes)
@@ -99,13 +99,54 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
         if d not in selected_lunches:
             selected_lunches[d] = LunchSuggestion(recipe_id=f'weekend_lunch_{d}', recipe_name='Make at home', kid_friendly=True, prep_style='fresh', prep_components=[], storage_days=0, prep_day=d, assembly_notes='Weekend flexibility', reuses_ingredients=[], default_option=None, kid_profiles=None)
             
+    # Populate data with generated plan for frontend/DB
+    data['dinners'] = [
+        {
+            'day': d, 
+            'recipe_id': r.get('id'), 
+            'recipe_name': r.get('name'), 
+            'vegetables': r.get('main_veg', []),
+            'cuisine': r.get('cuisine'),
+            'meal_type': r.get('meal_type')
+        } 
+        for d, r in selected_dinners.items() if isinstance(r, dict)
+    ]
+    
+    data['lunches'] = {
+        d: {
+            'recipe_id': getattr(l, 'recipe_id', None) if not isinstance(l, dict) else l.get('recipe_id'),
+            'recipe_name': getattr(l, 'recipe_name', 'Unknown') if not isinstance(l, dict) else l.get('recipe_name'),
+            'kid_friendly': getattr(l, 'kid_friendly', True) if not isinstance(l, dict) else l.get('kid_friendly'),
+            'prep_style': getattr(l, 'prep_style', 'fresh') if not isinstance(l, dict) else l.get('prep_style'),
+            'prep_components': getattr(l, 'prep_components', []) if not isinstance(l, dict) else l.get('prep_components'),
+            'assembly_notes': getattr(l, 'assembly_notes', '') if not isinstance(l, dict) else l.get('assembly_notes')
+        }
+        for d, l in selected_lunches.items()
+    }
+    
+    # Simple snack generation for the plan
+    default_snacks = {
+        'mon': 'Apple slices with Sunbutter',
+        'tue': 'Cheese and crackers',
+        'wed': 'Cucumber rounds with cream cheese',
+        'thu': 'Grapes',
+        'fri': 'Crackers with hummus'
+    }
+    data['snacks'] = {
+        d: {
+            'school_snack': default_snacks.get(d, 'Fruit'),
+            'home_snack': default_snacks.get(d, 'Fruit')
+        }
+        for d in ['mon', 'tue', 'wed', 'thu', 'fri']
+    }
+
     # NEW: Extract structured prep tasks and save to persistence
     from .html_generator import extract_prep_tasks_for_db
     prep_tasks = extract_prep_tasks_for_db(selected_dinners, selected_lunches)
     data['prep_tasks'] = prep_tasks
 
     # Update history dict/file
-    update_history(None if history_dict else history_path, data, selected_dinners, selected_lunches)
+    history = update_history(None if history_dict else history_path, data, selected_dinners, selected_lunches)
 
     if 'workflow' not in data: 
         data['workflow'] = {'status': 'plan_complete', 'created_at': datetime.now().isoformat(), 'updated_at': datetime.now().isoformat()}

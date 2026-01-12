@@ -10,26 +10,40 @@ import {
     getWasteNotSuggestions,
     generateDraft,
     getShoppingList,
-    finalizePlan
+    finalizePlan,
+    createWeek
 } from '@/lib/api';
 import Skeleton from '@/components/Skeleton';
 import { useToast } from '@/context/ToastContext';
 
 type ReviewDay = {
     day: string;
-    planned_recipe_id: string | null;
-    planned_recipe_name: string | null;
-    made: boolean | string | null;
-    actual_meal: string | null;
-    leftovers: boolean;
-    leftovers_note: string;
-    review_status: 'made' | 'skipped' | 'leftovers' | null; // For UI state
+    dinner: {
+        planned_recipe_id: string | null;
+        planned_recipe_name: string | null;
+        made: boolean | null;
+        actual_meal: string | null;
+        leftovers: boolean | null;
+        leftovers_note: string;
+        instead_meal?: string;
+    };
+    snacks: {
+        school_snack: string | null;
+        home_snack: string | null;
+        kids_lunch: string | null;
+        adult_lunch: string | null;
+    };
+    planned_snacks: {
+        school_snack: string | null;
+        home_snack: string | null;
+        kids_lunch: string | null;
+    };
 };
 
 type InventoryState = {
     fridge: string[];
     pantry: string[];
-    freezer_backup: any[]; // complex object
+    freezer_backup: any[];
     freezer_ingredient: any[];
     spice_rack: string[];
 };
@@ -41,9 +55,12 @@ export default function PlanningWizard() {
 
     // Step State
     const [reviews, setReviews] = useState<ReviewDay[]>([]);
-    const [week, setWeek] = useState<string | null>(null);
+    const [reviewWeek, setReviewWeek] = useState<string | null>(null);
+    const [planningWeek, setPlanningWeek] = useState<string | null>(null);
+
     const [submitting, setSubmitting] = useState(false);
     const [step, setStep] = useState<'review' | 'inventory' | 'suggestions' | 'draft' | 'groceries'>('review');
+    const [reviewSubStep, setReviewSubStep] = useState<'dinners' | 'snacks'>('dinners');
 
     // Inventory State
     const [inventory, setInventory] = useState<InventoryState | null>(null);
@@ -52,7 +69,7 @@ export default function PlanningWizard() {
 
     // Suggestions State
     const [suggestions, setSuggestions] = useState<any[]>([]);
-    const [selectedSuggestions, setSelectedSuggestions] = useState<string[]>([]); // Store IDs
+    const [selectedSuggestions, setSelectedSuggestions] = useState<string[]>([]);
     const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
     // Draft State
@@ -62,19 +79,39 @@ export default function PlanningWizard() {
     const [shoppingList, setShoppingList] = useState<string[]>([]);
     const [purchasedItems, setPurchasedItems] = useState<string[]>([]);
 
+    // Helpers
+    const getNextMonday = () => {
+        const today = new Date();
+        const day = today.getDay();
+        const diff = today.getDate() + (day === 0 ? 1 : 8 - day);
+        const nextMonday = new Date(today.setDate(diff));
+        return nextMonday.toISOString().split('T')[0];
+    };
+
     useEffect(() => {
         async function load() {
             try {
+                const nextWeek = getNextMonday();
+                setPlanningWeek(nextWeek);
+
                 const data = await getLastWeekReview();
                 if (data.days && data.days.length > 0) {
                     const uiReviews = data.days.map((d: any) => ({
-                        ...d,
-                        leftovers: false,
-                        leftovers_note: d.actual_meal || d.planned_recipe_name,
-                        review_status: d.made === true ? 'made' : d.made === false ? 'skipped' : null
+                        day: d.day,
+                        dinner: {
+                            planned_recipe_id: d.dinner?.planned_recipe_id || null,
+                            planned_recipe_name: d.dinner?.planned_recipe_name || null,
+                            made: d.dinner?.made ?? null,
+                            actual_meal: d.dinner?.actual_meal || null,
+                            leftovers: d.dinner?.leftovers ?? null,
+                            leftovers_note: d.dinner?.leftovers_note || d.dinner?.actual_meal || d.dinner?.planned_recipe_name || '',
+                            instead_meal: d.dinner?.made === false ? (d.dinner?.actual_meal || '') : ''
+                        },
+                        snacks: d.snacks || { school_snack: null, home_snack: null, kids_lunch: null, adult_lunch: null },
+                        planned_snacks: d.planned_snacks || { school_snack: null, home_snack: null, kids_lunch: null }
                     }));
                     setReviews(uiReviews);
-                    setWeek(data.week_of);
+                    setReviewWeek(data.week_of);
                     setStep('review');
                 } else {
                     await loadInventory();
@@ -118,11 +155,11 @@ export default function PlanningWizard() {
     }
 
     async function loadShoppingList() {
-        if (!week) return;
+        if (!planningWeek) return;
         try {
-            const res = await getShoppingList(week);
+            const res = await getShoppingList(planningWeek);
             setShoppingList(res.shopping_list);
-            setPurchasedItems([]); // Reset checks
+            setPurchasedItems([]);
         } catch (err) {
             showToast('Failed to load shopping list', 'error');
         }
@@ -140,7 +177,7 @@ export default function PlanningWizard() {
     };
 
     const goToDraft = async () => {
-        if (!week) return;
+        if (!planningWeek) return;
         try {
             setSubmitting(true);
             const selections = selectedSuggestions.map((id, idx) => ({
@@ -148,7 +185,7 @@ export default function PlanningWizard() {
                 recipe_id: id
             }));
 
-            const res = await generateDraft(week, selections);
+            const res = await generateDraft(planningWeek, selections);
             setDraftPlan(res.plan_data);
             setStep('draft');
         } catch (err: any) {
@@ -164,46 +201,48 @@ export default function PlanningWizard() {
     };
 
     // Review Handlers
-    const handleUpdateReview = (day: string, status: 'made' | 'skipped' | 'leftovers', note?: string) => {
+    const handleUpdateDinner = (day: string, field: string, value: any) => {
         setReviews(prev => prev.map(r => {
             if (r.day === day) {
-                let updates: Partial<ReviewDay> = { review_status: status };
-                if (status === 'made') {
-                    updates.made = true;
-                    updates.leftovers = false;
-                } else if (status === 'skipped') {
-                    updates.made = false;
-                    updates.leftovers = false;
-                } else if (status === 'leftovers') {
-                    updates.made = true;
-                    updates.leftovers = true;
-                    if (note) updates.leftovers_note = note;
-                }
-                return { ...r, ...updates };
+                return {
+                    ...r,
+                    dinner: {
+                        ...r.dinner,
+                        [field]: value,
+                        // Clear or update dependent fields
+                        ...(field === 'made' && value === true ? { instead_meal: '' } : {}),
+                        ...(field === 'instead_meal' ? { leftovers_note: value } : {}),
+                        ...(field === 'made' && value === true ? { leftovers_note: r.dinner.planned_recipe_name || '' } : {})
+                    }
+                };
             }
             return r;
         }));
     };
 
-    const handleNoteChange = (day: string, note: string) => {
-        setReviews(prev => prev.map(r => r.day === day ? { ...r, leftovers_note: note } : r));
+    const handleUpdateSnack = (day: string, key: string, value: string) => {
+        setReviews(prev => prev.map(r => r.day === day ? { ...r, snacks: { ...r.snacks, [key]: value } } : r));
     };
 
     const handleSubmitReview = async () => {
-        if (!week) return;
+        if (!reviewWeek || !planningWeek) return;
         try {
             setSubmitting(true);
             const payload = reviews.map(r => ({
                 day: r.day,
-                made: r.review_status === 'skipped' ? false : true,
-                actual_meal: r.actual_meal,
-                leftovers: r.leftovers,
-                leftovers_note: r.leftovers ? r.leftovers_note : undefined
+                dinner: {
+                    made: r.dinner.made,
+                    actual_meal: r.dinner.made === false ? r.dinner.instead_meal : (r.dinner.actual_meal || r.dinner.planned_recipe_name),
+                    leftovers: r.dinner.leftovers,
+                    leftovers_note: r.dinner.leftovers ? r.dinner.leftovers_note : undefined
+                },
+                snacks: r.snacks
             }));
 
-            await submitReview(week, payload);
-            showToast('Review submitted! Updating inventory...', 'success');
+            await submitReview(reviewWeek, payload);
+            showToast('Review submitted! Initializing new week...', 'success');
 
+            await createWeek(planningWeek);
             await goToInventory();
         } catch (err: any) {
             showToast(err.message, 'error');
@@ -260,7 +299,7 @@ export default function PlanningWizard() {
         if (selectedSuggestions.includes(recipeId)) {
             setSelectedSuggestions(prev => prev.filter(id => id !== recipeId));
         } else {
-            if (selectedSuggestions.length >= 2) return; // Limit to 2 for Mon/Tue
+            if (selectedSuggestions.length >= 2) return;
             setSelectedSuggestions(prev => [...prev, recipeId]);
         }
     };
@@ -279,7 +318,7 @@ export default function PlanningWizard() {
     };
 
     const handleConfirmPurchase = async () => {
-        if (!week) return;
+        if (!planningWeek) return;
         try {
             setSubmitting(true);
             if (purchasedItems.length > 0) {
@@ -291,7 +330,7 @@ export default function PlanningWizard() {
                 await bulkUpdateInventory(changes);
             }
 
-            await finalizePlan(week);
+            await finalizePlan(planningWeek);
             showToast('Plan finalized! Moving to Dashboard.', 'success');
             router.push('/');
         } catch (err: any) {
@@ -318,7 +357,7 @@ export default function PlanningWizard() {
                     <div>
                         <div className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-2">Step 4 of 7</div>
                         <h1 className="text-3xl">Shopping List</h1>
-                        <p className="text-[var(--text-muted)] mt-2">Checked items will be added to your inventory.</p>
+                        <p className="text-[var(--text-muted)] mt-1">Planning for week of: <strong>{planningWeek}</strong></p>
                     </div>
                     <div className="flex gap-4">
                         <button onClick={() => setStep('draft')} className="btn-secondary">
@@ -370,7 +409,7 @@ export default function PlanningWizard() {
                     <div>
                         <div className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-2">Step 3 of 7</div>
                         <h1 className="text-3xl">Tentative Plan</h1>
-                        <p className="text-[var(--text-muted)] mt-2">Here is a draft for the week. Take a look before we generate the shop list.</p>
+                        <p className="text-[var(--text-muted)] mt-1">Planning for week of: <strong>{planningWeek}</strong></p>
                     </div>
                     <div className="flex gap-4">
                         <button onClick={() => setStep('suggestions')} className="btn-secondary">
@@ -404,6 +443,16 @@ export default function PlanningWizard() {
                                     <span className="text-xs font-mono uppercase text-[var(--accent-gold)]">Lunch</span>
                                     <h3 className="text-lg">{lunch?.recipe_name || 'No lunch planned'}</h3>
                                     <p className="text-xs text-[var(--text-muted)] italic mt-1">{lunch?.kid_friendly ? '✓ Kids friendly' : 'Adults'}</p>
+
+                                    {(draftPlan as any).snacks?.[day] && (
+                                        <div className="mt-4 pt-2 border-t border-[var(--border-subtle)]">
+                                            <span className="text-xs font-mono uppercase text-[var(--accent-terracotta)]">Snacks</span>
+                                            <div className="flex flex-col gap-1 mt-1">
+                                                <p className="text-xs">🏫 {(draftPlan as any).snacks[day].school_snack}</p>
+                                                <p className="text-xs">🏠 {(draftPlan as any).snacks[day].home_snack}</p>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         );
@@ -421,7 +470,7 @@ export default function PlanningWizard() {
                     <div>
                         <div className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-2">Step 2 of 7</div>
                         <h1 className="text-3xl">Let's Use Up Leftovers</h1>
-                        <p className="text-[var(--text-muted)] mt-2">Pick ideas for Monday & Tuesday based on your fridge.</p>
+                        <p className="text-[var(--text-muted)] mt-1">Planning for week of: <strong>{planningWeek}</strong></p>
                     </div>
                     <div className="flex gap-4">
                         <button onClick={() => setStep('inventory')} className="btn-secondary">
@@ -487,7 +536,7 @@ export default function PlanningWizard() {
                     <div>
                         <div className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-2">Step 1 of 7</div>
                         <h1 className="text-3xl">Update Inventory</h1>
-                        <p className="text-[var(--text-muted)] mt-2">Quickly check off what you have before we plan.</p>
+                        <p className="text-[var(--text-muted)] mt-1">Planning for week of: <strong>{planningWeek}</strong></p>
                     </div>
                     <div className="flex gap-4">
                         <button onClick={() => setStep('review')} className="btn-secondary">
@@ -545,76 +594,188 @@ export default function PlanningWizard() {
     }
 
     // STEP 0: REVIEW UI
-    return (
-        <main className="container mx-auto max-w-2xl px-4 py-12">
-            <header className="mb-8">
-                <div className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-2">
-                    Step 0 of 7
-                </div>
-                <h1 className="text-3xl">Review Previous Week</h1>
-                <p className="text-[var(--text-muted)] mt-2">
-                    Confirm what you cooked last week ({week}) to update your history and identify leftovers.
-                </p>
-            </header>
+    if (step === 'review') {
+        const dayNames = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
 
-            <div className="space-y-6 mb-8">
-                {reviews.map((day) => (
-                    <div key={day.day} className="card flex flex-col gap-3">
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <span className="font-mono text-xs uppercase text-[var(--accent-sage)]">{day.day}</span>
-                                <h3 className="font-medium text-lg">
-                                    {day.actual_meal || day.planned_recipe_name || 'No Meal Planned'}
-                                </h3>
-                            </div>
-                        </div>
-
-                        <div className="flex flex-wrap gap-2">
-                            <button
-                                onClick={() => handleUpdateReview(day.day, 'made')}
-                                className={`px-3 py-1 rounded-full text-sm border transiton-colors ${day.review_status === 'made' ? 'bg-[var(--accent-green)] text-black border-[var(--accent-green)]' : 'border-[var(--border-subtle)] hover:border-[var(--text-default)]'}`}
-                            >
-                                ✓ Made
-                            </button>
-                            <button
-                                onClick={() => handleUpdateReview(day.day, 'leftovers')}
-                                className={`px-3 py-1 rounded-full text-sm border transiton-colors ${day.review_status === 'leftovers' ? 'bg-[var(--accent-gold)] text-black border-[var(--accent-gold)]' : 'border-[var(--border-subtle)] hover:border-[var(--text-default)]'}`}
-                            >
-                                ♻️ Leftovers
-                            </button>
-                            <button
-                                onClick={() => handleUpdateReview(day.day, 'skipped')}
-                                className={`px-3 py-1 rounded-full text-sm border transiton-colors ${day.review_status === 'skipped' ? 'bg-[var(--accent-terracotta)] text-white border-[var(--accent-terracotta)]' : 'border-[var(--border-subtle)] hover:border-[var(--text-default)]'}`}
-                            >
-                                ✗ Skipped
-                            </button>
-                        </div>
-
-                        {day.review_status === 'leftovers' && (
-                            <div className="mt-2 animate-in fade-in slide-in-from-top-1">
-                                <label className="text-xs text-[var(--text-muted)] block mb-1">What did you put in the fridge?</label>
-                                <input
-                                    type="text"
-                                    value={day.leftovers_note}
-                                    onChange={(e) => handleNoteChange(day.day, e.target.value)}
-                                    className="w-full p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
-                                    placeholder="e.g. Leftover Lasagna (2 servings)"
-                                />
-                            </div>
+        return (
+            <main className="container mx-auto max-w-3xl px-4 py-12">
+                <header className="mb-8 flex justify-between items-center">
+                    <div>
+                        <div className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-2">Step 0 of 7</div>
+                        <h1 className="text-3xl">Review Previous Week</h1>
+                        <p className="text-[var(--text-muted)] mt-2">
+                            Let's confirm what happened last week ({reviewWeek}).
+                        </p>
+                    </div>
+                    <div className="flex gap-4">
+                        {reviewSubStep === 'snacks' ? (
+                            <>
+                                <button onClick={() => setReviewSubStep('dinners')} className="btn-secondary">← Back to Dinners</button>
+                                <button onClick={handleSubmitReview} disabled={submitting} className="btn-primary">
+                                    {submitting ? 'Submitting...' : 'Confirm & Continue →'}
+                                </button>
+                            </>
+                        ) : (
+                            <button onClick={() => setReviewSubStep('snacks')} className="btn-primary">Next: Review Snacks →</button>
                         )}
                     </div>
-                ))}
-            </div>
+                </header>
 
-            <div className="flex justify-end sticky bottom-4">
-                <button
-                    onClick={handleSubmitReview}
-                    disabled={submitting}
-                    className="btn-primary shadow-lg"
-                >
-                    {submitting ? 'Updating...' : 'Confirm & Continue →'}
-                </button>
-            </div>
-        </main>
-    );
+                {reviewSubStep === 'dinners' && (
+                    <div className="space-y-8">
+                        {reviews.map((day) => (
+                            <div key={day.day} className="card relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-1 h-full bg-[var(--accent-sage)] opacity-50" />
+                                <div className="mb-4">
+                                    <span className="font-mono text-xs uppercase text-[var(--accent-sage)] tracking-widest">{(dayNames as any)[day.day]}</span>
+                                    <h3 className="text-2xl font-bold">{day.dinner.planned_recipe_name || 'No Meal Planned'}</h3>
+                                </div>
+
+                                <div className="space-y-6">
+                                    {/* Question 1: Did you make it? */}
+                                    <div>
+                                        <p className="text-lg mb-3">Did you make this?</p>
+                                        <div className="flex gap-3">
+                                            <button
+                                                onClick={() => handleUpdateDinner(day.day, 'made', true)}
+                                                className={`px-6 py-2 rounded-full border transition-all ${day.dinner.made === true ? 'bg-[var(--accent-green)] text-black border-[var(--accent-green)]' : 'border-[var(--border-subtle)] hover:bg-[var(--bg-secondary)]'}`}
+                                            >
+                                                Yes
+                                            </button>
+                                            <button
+                                                onClick={() => handleUpdateDinner(day.day, 'made', false)}
+                                                className={`px-6 py-2 rounded-full border transition-all ${day.dinner.made === false ? 'bg-[var(--accent-terracotta)] text-white border-[var(--accent-terracotta)]' : 'border-[var(--border-subtle)] hover:bg-[var(--bg-secondary)]'}`}
+                                            >
+                                                No
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Conditional Follow-ups */}
+                                    {day.dinner.made === true && (
+                                        <div className="animate-in fade-in slide-in-from-top-2">
+                                            <p className="text-lg mb-3">Are there leftovers?</p>
+                                            <div className="flex gap-3 mb-4">
+                                                <button
+                                                    onClick={() => handleUpdateDinner(day.day, 'leftovers', true)}
+                                                    className={`px-6 py-2 rounded-full border transition-all ${day.dinner.leftovers === true ? 'bg-[var(--accent-gold)] text-black border-[var(--accent-gold)]' : 'border-[var(--border-subtle)] hover:bg-[var(--bg-secondary)]'}`}
+                                                >
+                                                    Yes
+                                                </button>
+                                                <button
+                                                    onClick={() => handleUpdateDinner(day.day, 'leftovers', false)}
+                                                    className={`px-6 py-2 rounded-full border transition-all ${day.dinner.leftovers === false ? 'bg-[var(--bg-secondary)] border-[var(--border-subtle)]' : 'border-[var(--border-subtle)] hover:bg-[var(--bg-secondary)]'}`}
+                                                >
+                                                    No
+                                                </button>
+                                            </div>
+                                            {day.dinner.leftovers && (
+                                                <div className="animate-in fade-in zoom-in-95">
+                                                    <label className="text-xs text-[var(--text-muted)] uppercase tracking-wider block mb-1">Leftover Note</label>
+                                                    <input
+                                                        type="text"
+                                                        value={day.dinner.leftovers_note}
+                                                        onChange={(e) => handleUpdateDinner(day.day, 'leftovers_note', e.target.value)}
+                                                        className="w-full p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg text-lg"
+                                                        placeholder="e.g. Leftover Curry"
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {day.dinner.made === false && (
+                                        <div className="animate-in fade-in slide-in-from-top-2 space-y-4">
+                                            <div>
+                                                <p className="text-lg mb-3">What did you make instead?</p>
+                                                <input
+                                                    type="text"
+                                                    value={day.dinner.instead_meal}
+                                                    onChange={(e) => handleUpdateDinner(day.day, 'instead_meal', e.target.value)}
+                                                    className="w-full p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg text-lg"
+                                                    placeholder="e.g. Takeout Pizza"
+                                                />
+                                            </div>
+                                            {day.dinner.instead_meal && (
+                                                <div>
+                                                    <p className="text-lg mb-3">Were there leftovers for this?</p>
+                                                    <div className="flex gap-3">
+                                                        <button
+                                                            onClick={() => handleUpdateDinner(day.day, 'leftovers', true)}
+                                                            className={`px-6 py-2 rounded-full border transition-all ${day.dinner.leftovers === true ? 'bg-[var(--accent-gold)] text-black border-[var(--accent-gold)]' : 'border-[var(--border-subtle)] hover:bg-[var(--bg-secondary)]'}`}
+                                                        >
+                                                            Yes
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleUpdateDinner(day.day, 'leftovers', false)}
+                                                            className={`px-6 py-2 rounded-full border transition-all ${day.dinner.leftovers === false ? 'bg-[var(--bg-secondary)] border-[var(--border-subtle)]' : 'border-[var(--border-subtle)] hover:bg-[var(--bg-secondary)]'}`}
+                                                        >
+                                                            No
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {reviewSubStep === 'snacks' && (
+                    <div className="space-y-6">
+                        <div className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)] mb-8">
+                            <p className="text-sm text-[var(--accent-sage)] font-mono uppercase tracking-widest">Tip</p>
+                            <p className="text-[var(--text-muted)] italic">Review your snacks and lunches. If something was different from the plan, update it here!</p>
+                        </div>
+
+                        {reviews.map((day) => (
+                            <div key={day.day} className="card">
+                                <span className="font-mono text-xs uppercase text-[var(--accent-sage)] tracking-widest">{(dayNames as any)[day.day]}</span>
+                                <div className="grid md:grid-cols-2 gap-6 mt-4">
+                                    {[
+                                        { key: 'school_snack', label: '🍎 School Snack', planned: day.planned_snacks.school_snack },
+                                        { key: 'home_snack', label: '🥨 Home Snack', planned: day.planned_snacks.home_snack },
+                                        { key: 'kids_lunch', label: '🍱 Kids Lunch', planned: day.planned_snacks.kids_lunch },
+                                        { key: 'adult_lunch', label: '🥗 Adult Lunch', planned: 'Leftovers/Manual' },
+                                    ].map((item) => (
+                                        <div key={item.key}>
+                                            <label className="text-xs uppercase tracking-widest text-[var(--text-muted)] block mb-1">{item.label}</label>
+                                            <input
+                                                type="text"
+                                                value={(day.snacks as any)[item.key] || ''}
+                                                onChange={(e) => handleUpdateSnack(day.day, item.key, e.target.value)}
+                                                placeholder={item.planned || 'Not logged'}
+                                                className="w-full p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                <div className="flex justify-end mt-12 mb-8 sticky bottom-4">
+                    {reviewSubStep === 'dinners' ? (
+                        <button onClick={() => setReviewSubStep('snacks')} className="btn-primary shadow-xl scale-110">
+                            Next: Review Snacks →
+                        </button>
+                    ) : (
+                        <button
+                            onClick={handleSubmitReview}
+                            disabled={submitting}
+                            className="btn-primary shadow-xl scale-110"
+                        >
+                            {submitting ? 'Updating...' : 'Confirm All & Continue →'}
+                        </button>
+                    )}
+                </div>
+            </main>
+        );
+    }
+
+    // Initial Review UI (fallback) - shouldn't really be visible
+    return null;
 }

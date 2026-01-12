@@ -28,8 +28,7 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None):
     if history_dict:
         history = history_dict
     else:
-        history_path = get_actual_path('data/history.yml')
-        history = load_history(history_path)
+        history = load_history()
 
     days_list = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
     if today_abbr not in days_list: 

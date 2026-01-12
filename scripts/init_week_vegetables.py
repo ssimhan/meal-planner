@@ -10,10 +10,12 @@ from bs4 import BeautifulSoup
 HISTORY_FILE = Path('data/history.yml')
 PLANS_DIR = Path('plans')
 
-def load_history():
-    if not HISTORY_FILE.exists():
+def load_history(history_path=None):
+    """Load history from DB."""
+    file_to_load = history_path if history_path is not None else HISTORY_FILE
+    if not file_to_load.exists():
         return {'weeks': []}
-    with open(HISTORY_FILE, 'r') as f:
+    with open(file_to_load, 'r') as f:
         return yaml.safe_load(f) or {'weeks': []}
 
 def save_history(history):

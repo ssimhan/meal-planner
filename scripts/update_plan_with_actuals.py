@@ -14,7 +14,7 @@ import os
 from api.utils.storage import StorageEngine
 
 
-def load_history():
+def load_history(history_path=None):
     """Load history from DB."""
     try:
         data = StorageEngine.get_history()

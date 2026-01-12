@@ -6,6 +6,7 @@ from flask import Blueprint, jsonify, request
 from scripts.workflow import (
     generate_meal_plan, replan_meal_plan
 )
+from scripts.workflow.actions import create_new_week
 from api.utils import storage, invalidate_cache
 from api.utils.auth import require_auth
 from scripts import log_execution
@@ -166,15 +167,15 @@ def get_shopping_list_route():
             return jsonify({"status": "error", "message": "week_of parameter required"}), 400
             
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).single().execute()
+        res = storage.supabase.table("meal_plans").select("history_data").eq("household_id", h_id).eq("week_of", week_of).single().execute()
         
         if not res.data:
             return jsonify({"status": "error", "message": f"No plan found for week {week_of}"}), 404
             
-        plan_data = res.data['plan_data']
+        history_data = res.data['history_data']
         
         from scripts.inventory_intelligence import get_shopping_list
-        shopping_list = get_shopping_list(plan_data)
+        shopping_list = get_shopping_list(history_data)
         
         return jsonify({
             "status": "success",
@@ -223,8 +224,8 @@ def create_week():
         all_recipes = [{"id": r['id'], "name": r['name'], **r['metadata']} for r in all_recipes_res.data]
         
         # Load config from DB (or fallback to file for now)
-        from api.routes.status import _get_config
-        config = _get_config()
+        from api.routes.status import _load_config
+        config = _load_config()
         
         # 2. Run Database-First Initialization
         new_plan_data = create_new_week(

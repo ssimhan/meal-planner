@@ -167,7 +167,7 @@ def get_shopping_list_route():
             return jsonify({"status": "error", "message": "week_of parameter required"}), 400
             
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("plan_data, history_data").eq("household_id", h_id).eq("week_of", week_of).single().execute()
+        res = storage.supabase.table("meal_plans").select("plan_data, history_data").eq("household_id", h_id).eq("week_of", week_of).execute()
         
         if not res.data:
             return jsonify({"status": "error", "message": f"No plan found for week {week_of}"}), 404

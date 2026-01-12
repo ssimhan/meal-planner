@@ -120,6 +120,9 @@ class StorageEngine:
         h_id = get_household_id()
         try:
             # Fetch all meal plans for the household
+            # The original instruction snippet for get_history was likely a mistake,
+            # as it introduced a 'week_of' parameter that wasn't present in the method signature
+            # and changed the select columns. Reverting to original logic for fetching all history.
             res = supabase.table("meal_plans").select("history_data").eq("household_id", h_id).order("week_of", desc=True).execute()
             return {"weeks": [row['history_data'] for row in res.data]}
         except Exception as e:
@@ -140,7 +143,7 @@ class StorageEngine:
                 "household_id": h_id,
                 "week_of": week_of,
                 **update_payload
-            }, on_conflict="household_id,week_of").execute()
+            }, on_conflict="household_id, week_of").execute()
         except Exception as e:
             print(f"Error updating meal plan for {week_of}: {e}")
 

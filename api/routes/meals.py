@@ -35,7 +35,7 @@ def generate_plan_route():
             {
                 "id": r['id'],
                 "name": r['name'],
-                **r.get('metadata') or {}
+                **(r.get('metadata') or {})
             } for r in all_recipes_res.data
         ]
         

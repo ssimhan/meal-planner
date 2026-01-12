@@ -48,7 +48,7 @@ type InventoryState = {
     spice_rack: string[];
 };
 
-export default function PlanningWizard() {
+function PlanningWizardContent() {
     const router = useRouter();
     const { showToast } = useToast();
     const [loading, setLoading] = useState(true);
@@ -786,4 +786,12 @@ export default function PlanningWizard() {
 
     // Initial Review UI (fallback) - shouldn't really be visible
     return null;
+}
+
+export default function PlanningWizard() {
+    return (
+        <React.Suspense fallback={<Skeleton className="h-64 w-full" />}>
+            <PlanningWizardContent />
+        </React.Suspense>
+    );
 }

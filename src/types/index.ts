@@ -145,6 +145,7 @@ export interface Lunch {
 export interface Inventory {
   fridge: InventoryItem[];
   pantry: InventoryItem[];
+  spice_rack: InventoryItem[];
   freezer: FreezerInventory;
 }
 
@@ -163,6 +164,7 @@ export interface FreezerInventory {
 export interface InventoryResponse {
   fridge: InventoryItem[];
   pantry: InventoryItem[];
+  spice_rack: InventoryItem[];
   freezer: FreezerInventory;
   inventory?: Inventory; // For compatibility with some endpoints
 }

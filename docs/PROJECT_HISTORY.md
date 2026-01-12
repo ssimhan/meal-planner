@@ -535,3 +535,20 @@ The best tools are the ones you actually use. This system works because it reduc
     - Removed unused imports (`yaml`, `log_execution`).
     - Standardized recipe index (fixed "tomatoe" typo, removed duplicate `ragada_patty`).
 
+
+### Phase 18: Enhanced Planning Workflow (Wizard 2.0) (2026-01-11)
+
+**Goal:** Refine the planning wizard UX to be more robust, robust, and user-friendly, handling edge cases like "no previous week" and ensuring React stability.
+
+**Block 1: Wizard UX Overhaul & Stability (Completed)**
+- **UI Enhancements:**
+    - Split "Review" into distinct "Dinners" (Step 0) and "Snacks" (Step 1) screens for focus.
+    - Improved "Inventory" (Step 2) with "Leftovers" vs "Ingredients" categorization and quantity inputs.
+    - Added "Meal Suggestions" dashboard (Step 3) as a clear bridge between Inventory and Planning.
+- **Critical Fixes:**
+    - **React Hook Order:** Resolved invalid hook calls by moving conditional logic out of component rendering path.
+    - **Review Fetching:** Fixed backend crash (`invalid input syntax for type date: "None"`) when no prior week existed.
+    - **Draft Loading:** Fixed `planningWeek` initialization logic to correctly target the upcoming Monday.
+    - **Inventory Safety:** Added robust null-checks to prevent wizard crashes on empty inventory states.
+- **Workflow:** Verified full end-to-end flow from "Start Fresh" -> "Active Plan".
+

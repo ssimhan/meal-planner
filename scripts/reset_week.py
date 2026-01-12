@@ -1,53 +1,38 @@
 import sys
 import os
-# Ensure we can import from parent directory
-from api.utils.storage import supabase
-from api.utils import invalidate_cache
+
+# Add the project root to the python path so we can import api modules
+sys.path.append(os.getcwd())
+
+from api.utils.storage import supabase, get_household_id
 
 def reset_week(week_of):
-    print(f"Attempting to reset week: {week_of}")
+    if not supabase:
+        print("Error: Supabase client not initialized.")
+        return
+
+    # We can't use get_household_id() easily because it relies on request context
+    # Hardcode the default ID used in storage.py fallback for now for local dev
+    # Or fetch it from a user if we had one.
+    # storage.py: return getattr(request, 'household_id', "00000000-0000-0000-0000-000000000001")
+    h_id = "00000000-0000-0000-0000-000000000001"
+    
+    print(f"Attempting to reset (delete) meal plan for week: {week_of}")
+    
     try:
-        # Default dev ID since we are in CLI
-        h_id = "00000000-0000-0000-0000-000000000001"
-        print(f"Household ID: {h_id}")
-        
-        if not supabase:
-            print("Supabase client not initialized.")
-            return
-
-        # Check if it exists
-        res = supabase.table("meal_plans") \
-            .select("*") \
-            .eq("household_id", h_id) \
-            .eq("week_of", week_of) \
-            .execute()
-            
+        # Check if it exists first
+        res = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_of).execute()
         if not res.data:
-            print(f"Week {week_of} not found in database. Nothing to delete.")
+            print(f"No plan found for {week_of}. Nothing to delete.")
             return
 
-        print(f"Found week {week_of}. Status: {res.data[0].get('status')}")
-        
-        # Delete it
-        del_res = supabase.table("meal_plans") \
-            .delete() \
-            .eq("household_id", h_id) \
-            .eq("week_of", week_of) \
-            .execute()
-            
-        print(f"Deleted week {week_of}.")
-        
-        # Invalidate cache
-        invalidate_cache()
-        print("Cache invalidated.")
+        # Delete the plan
+        del_res = supabase.table("meal_plans").delete().eq("household_id", h_id).eq("week_of", week_of).execute()
+        print(f"Successfully deleted plan for {week_of}")
         
     except Exception as e:
-        print(f"Error resetting week: {e}")
-        import traceback
-        traceback.print_exc()
+        print(f"Error deleting plan: {e}")
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python scripts/reset_week.py <YYYY-MM-DD>")
-    else:
-        reset_week(sys.argv[1])
+    # Target week: Jan 12, 2026
+    reset_week("2026-01-12")

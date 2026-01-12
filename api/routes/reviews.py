@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import Blueprint, jsonify, request
 from api.utils import storage, invalidate_cache
 from api.utils.auth import require_auth
@@ -27,14 +27,21 @@ def get_last_week_review_data():
             .execute()
             
         if not res.data:
+            today = datetime.now()
+            days_ahead = (7 - today.weekday()) % 7
+            target = today + timedelta(days=days_ahead)
             return jsonify({
                 "status": "success", 
                 "message": "No prior weeks found to review.",
-                "week": None
+                "week": None,
+                "next_week_of": target.strftime("%Y-%m-%d")
             })
             
         week_record = res.data[0]
         week_str = week_record['week_of']
+        curr_date = datetime.strptime(week_str, "%Y-%m-%d")
+        next_date = curr_date + timedelta(days=7)
+        next_week_str = next_date.strftime("%Y-%m-%d")
         plan_data = week_record.get('plan_data', {})
         history_data = week_record.get('history_data', {})
         
@@ -113,6 +120,7 @@ def get_last_week_review_data():
         return jsonify({
             "status": "success",
             "week_of": week_str,
+            "next_week_of": next_week_str,
             "days": review_days
         })
         
@@ -170,8 +178,9 @@ def submit_review():
                 
             if dinner_rev.get('leftovers'):
                 note = dinner_rev.get('leftovers_note')
+                qty = dinner_rev.get('leftovers_qty', 1)
                 if note:
-                    leftovers_to_add.append(note)
+                    leftovers_to_add.append({'item': note, 'quantity': qty})
             
             # --- Snacks/Lunch Logic ---
             snacks_rev = rev.get('snacks', {})
@@ -188,15 +197,22 @@ def submit_review():
         # 3. Update Inventory (Add Leftovers)
         added_items = []
         if leftovers_to_add:
-            for item_name in leftovers_to_add:
-                # Add to inventory (category: fridge, or maybe a new 'leftovers' category?)
-                # Stick to 'fridge' for now as 'leftovers' isn't standard in the YAML/Schema yet
+            for entry in leftovers_to_add:
+                item_name = entry['item']
+                qty = entry['quantity']
+                # Add to inventory (category: fridge)
                 storage.StorageEngine.update_inventory_item(
                     'fridge', 
                     item_name, 
-                    updates={'added': datetime.now().strftime('%Y-%m-%d'), 'is_leftover': True}
+                    updates={
+                        'added': datetime.now().strftime('%Y-%m-%d'), 
+                        'is_leftover': True,
+                        'quantity': qty,
+                        'unit': 'serving',
+                        'type': 'meal'
+                    }
                 )
-                added_items.append(item_name)
+                added_items.append(f"{item_name} ({qty})")
         
         # 4. Archive the week (Transition status)
         # Only archive if it was 'active'. If it was already 'archived', keep it.

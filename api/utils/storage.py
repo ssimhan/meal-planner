@@ -46,7 +46,8 @@ class StorageEngine:
         res = supabase.table("inventory_items").select("*").eq("household_id", h_id).execute()
         
         # Transform flat DB rows back to the nested YAML structure for compatibility
-        inventory = {'fridge': [], 'pantry': [], 'freezer': {'backups': [], 'ingredients': []}}
+        # Transform flat DB rows back to the nested YAML structure for compatibility
+        inventory = {'fridge': [], 'pantry': [], 'spice_rack': [], 'freezer': {'backups': [], 'ingredients': []}}
         
         for item in res.data:
             category = item['category']
@@ -61,6 +62,8 @@ class StorageEngine:
                 inventory['fridge'].append(formatted)
             elif category == 'pantry':
                 inventory['pantry'].append(formatted)
+            elif category == 'spice_rack':
+                inventory['spice_rack'].append(formatted)
             elif category == 'freezer_ingredient':
                 inventory['freezer']['ingredients'].append(formatted)
             elif category == 'freezer_backup':

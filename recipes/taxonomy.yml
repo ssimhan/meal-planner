@@ -135,6 +135,7 @@ meal_type_keywords:
     - dal
     - daal
     - chili
+    - garlic parmesan white bean
   pasta_noodles:
     - pasta
     - spaghetti
@@ -323,3 +324,25 @@ effort_heuristics:
   minimal_chop:
     max_prep_time: 20
     max_cook_time: 30
+
+# Term normalization (typos -> standard term)
+term_normalization:
+  tomatoe: tomato
+  potatoes: potato
+  onions: onion
+  carrots: carrot
+  peppers: pepper
+  chillis: chili
+  chili powder: chili powder
+  chilli: chili
+  yoghurt: yogurt
+  avocados: avocado
+  bananas: banana
+  apples: apple
+  oranges: orange
+  strawberries: strawberry
+  blueberries: blueberry
+  raspberries: raspberry
+  blackberries: blackberry
+  spinaches: spinach
+  kales: kale

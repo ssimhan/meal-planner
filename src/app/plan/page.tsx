@@ -11,9 +11,12 @@ import {
     generateDraft,
     getShoppingList,
     finalizePlan,
-    createWeek
+    finalizePlan,
+    createWeek,
+    getRecipes
 } from '@/lib/api';
 import Skeleton from '@/components/Skeleton';
+import ReplacementModal from '@/components/ReplacementModal';
 import { useToast } from '@/context/ToastContext';
 
 type ReviewDay = {
@@ -74,6 +77,9 @@ function PlanningWizardContent() {
 
     // Draft State
     const [draftPlan, setDraftPlan] = useState<any>(null);
+    const [selections, setSelections] = useState<{ day: string, recipe_id: string }[]>([]);
+    const [isReplacing, setIsReplacing] = useState<string | null>(null);
+    const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
 
     // Shopping List State
     const [shoppingList, setShoppingList] = useState<string[]>([]);
@@ -232,11 +238,21 @@ function PlanningWizardContent() {
 
     const handleUpdateDinner = (day: string, field: keyof ReviewDay['dinner'], value: any) => {
         setReviews(prevReviews =>
-            prevReviews.map(reviewDay =>
-                reviewDay.day === day
-                    ? { ...reviewDay, dinner: { ...reviewDay.dinner, [field]: value } }
-                    : reviewDay
-            )
+            prevReviews.map(reviewDay => {
+                if (reviewDay.day !== day) return reviewDay;
+
+                const updatedDinner = { ...reviewDay.dinner, [field]: value };
+
+                // Auto-fill leftover note if turning on leftovers and note is empty
+                if (field === 'leftovers' && value === true && !updatedDinner.leftovers_note) {
+                    const mealName = updatedDinner.planned_recipe_name || updatedDinner.actual_meal || 'Meal';
+                    updatedDinner.leftovers_note = `Leftover ${mealName}`;
+                    // Default qty is already handled by default state or UI default, but we can ensure it
+                    if (!updatedDinner.leftovers_qty) updatedDinner.leftovers_qty = 1;
+                }
+
+                return { ...reviewDay, dinner: updatedDinner };
+            })
         );
     };
 
@@ -346,7 +362,7 @@ function PlanningWizardContent() {
             const fetchDraft = async () => {
                 setLoading(true);
                 try {
-                    const res = await generateDraft(planningWeek, []);
+                    const res = await generateDraft(planningWeek, selections);
                     setDraftPlan(res.plan_data);
                 } catch (e) {
                     console.error(e);
@@ -357,7 +373,49 @@ function PlanningWizardContent() {
             };
             fetchDraft();
         }
-    }, [step, draftPlan, planningWeek]);
+    }, [step, draftPlan, planningWeek, selections]);
+
+    // Load recipes on mount
+    useEffect(() => {
+        async function loadRecipes() {
+            try {
+                const data = await getRecipes();
+                setRecipes(data.recipes.map((r: any) => ({ id: r.id, name: r.name })));
+            } catch (e) {
+                console.error("Failed to load recipes", e);
+            }
+        }
+        loadRecipes();
+    }, []);
+
+    const handleReplacementConfirm = async (newMeal: string) => {
+        if (!isReplacing || !planningWeek) return;
+
+        // Find recipe ID if possible, otherwise use name as ID (or handle manual entry)
+        // ideally we map name back to ID. 
+        const recipe = recipes.find(r => r.name === newMeal);
+        const recipeId = recipe ? recipe.id : newMeal;
+
+        const newSelections = [
+            ...selections.filter(s => s.day !== isReplacing),
+            { day: isReplacing, recipe_id: recipeId }
+        ];
+
+        setSelections(newSelections);
+        setIsReplacing(null);
+        setLoading(true); // Show skeleton while regenerating
+
+        try {
+            const res = await generateDraft(planningWeek, newSelections);
+            setDraftPlan(res.plan_data);
+            showToast('Plan updated!', 'success');
+        } catch (e) {
+            showToast('Failed to update plan', 'error');
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // ... (UI Sections) ...
 
@@ -465,17 +523,39 @@ function PlanningWizardContent() {
                         <div className="grid gap-4">
                             {['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map(day => {
                                 const dinner = draftPlan.dinners?.find((d: any) => d.day === day);
+                                const isSelected = selections.some(s => s.day === day);
+
                                 return (
-                                    <div key={day} className="card flex items-center justify-between">
+                                    <div key={day} className={`card flex items-center justify-between ${isSelected ? 'border-[var(--accent-sage)] bg-green-50' : ''}`}>
                                         <div className="flex items-center gap-4">
                                             <span className="font-mono uppercase text-[var(--accent-sage)] w-12">{day}</span>
-                                            <span className="text-lg font-bold">{dinner?.recipe_id?.replace(/_/g, ' ') || 'No Meal'}</span>
+                                            <div>
+                                                <span className="text-lg font-bold block">{dinner?.recipe_id?.replace(/_/g, ' ') || 'No Meal'}</span>
+                                                {isSelected && <span className="text-xs text-[var(--accent-sage)] font-bold uppercase tracking-wider">Manual Selection</span>}
+                                            </div>
                                         </div>
+                                        <button
+                                            onClick={() => setIsReplacing(day)}
+                                            className="text-[var(--text-muted)] hover:text-[var(--accent-sage)] p-2 rounded-full hover:bg-[var(--bg-secondary)]"
+                                            title="Edit Meal"
+                                        >
+                                            ✏️
+                                        </button>
                                     </div>
                                 );
                             })}
                         </div>
                     </div>
+                )}
+
+                {isReplacing && (
+                    <ReplacementModal
+                        day={isReplacing}
+                        currentMeal={draftPlan?.dinners?.find((d: any) => d.day === isReplacing)?.recipe_id || ''}
+                        recipes={recipes}
+                        onConfirm={(newMeal) => handleReplacementConfirm(newMeal)}
+                        onCancel={() => setIsReplacing(null)}
+                    />
                 )}
             </main>
         );
@@ -513,7 +593,7 @@ function PlanningWizardContent() {
                                 // Initialize the week
                                 await createWeek(planningWeek!);
                                 // Fetch the draft
-                                const res = await generateDraft(planningWeek!, []);
+                                const res = await generateDraft(planningWeek!, selections);
                                 setDraftPlan(res.plan_data);
                                 setStep('draft');
                             } catch (e) {

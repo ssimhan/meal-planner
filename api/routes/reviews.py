@@ -197,17 +197,40 @@ def submit_review():
         # 3. Update Inventory (Add Leftovers)
         added_items = []
         if leftovers_to_add:
+            # Aggregate quantities by item name
+            aggregated_leftovers = {}
             for entry in leftovers_to_add:
-                item_name = entry['item']
+                name = entry['item']
                 qty = entry['quantity']
+                if name in aggregated_leftovers:
+                    aggregated_leftovers[name] += qty
+                else:
+                    aggregated_leftovers[name] = qty
+
+            for item_name, qty in aggregated_leftovers.items():
                 # Add to inventory (category: fridge)
+                # Note: Ideally we would increment, but 'update_inventory_item' uses upsert.
+                # For now, we assume this is a fresh add or overwrite is acceptable for the review workflow.
+                # To be safer, we could fetch existing, but reviews are typically for past week so assume addition.
+                # Actually for "low friction", if I already have some in fridge, this bumps it.
+                # But 'update_inventory_item' REPLACES quantity. 
+                # Improving this to Fetch-then-Add would be better but let's stick to aggregation for now to fix the overwrite-within-batch issue.
+                
+                # Fetch existing to increment (Low Friction improvement)
+                existing_res = storage.supabase.table("inventory_items").select("quantity").eq("household_id", h_id).eq("category", "fridge").eq("item", item_name).execute()
+                current_qty = 0
+                if existing_res.data:
+                    current_qty = existing_res.data[0]['quantity']
+
+                new_qty = current_qty + qty
+
                 storage.StorageEngine.update_inventory_item(
                     'fridge', 
                     item_name, 
                     updates={
                         'added': datetime.now().strftime('%Y-%m-%d'), 
                         'is_leftover': True,
-                        'quantity': qty,
+                        'quantity': new_qty,
                         'unit': 'serving',
                         'type': 'meal'
                     }

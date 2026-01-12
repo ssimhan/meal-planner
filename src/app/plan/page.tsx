@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
     getLastWeekReview,
     submitReview,
@@ -88,11 +88,19 @@ export default function PlanningWizard() {
         return nextMonday.toISOString().split('T')[0];
     };
 
+    const searchParams = useSearchParams();
+    const weekParam = searchParams.get('week');
+
     useEffect(() => {
         async function load() {
             try {
-                const nextWeek = getNextMonday();
-                setPlanningWeek(nextWeek);
+                const targetWeek = weekParam || getNextMonday();
+                setPlanningWeek(targetWeek);
+
+                // If week was explicitly chosen from dashboard/dropdown, ensure it exists in DB
+                if (weekParam) {
+                    try { await createWeek(weekParam); } catch (e) { /* ignore if exists */ }
+                }
 
                 const data = await getLastWeekReview();
                 if (data.days && data.days.length > 0) {
@@ -374,9 +382,9 @@ export default function PlanningWizard() {
                 </header>
 
                 <div className="card divide-y divide-[var(--border-subtle)]">
-                    {shoppingList.map(item => (
+                    {shoppingList.map((item, idx) => (
                         <div
-                            key={item}
+                            key={`${item}-${idx}`}
                             onClick={() => togglePurchased(item)}
                             className="flex items-center gap-4 py-4 cursor-pointer hover:bg-[var(--bg-secondary)] px-2 rounded transition-colors"
                         >
@@ -432,8 +440,8 @@ export default function PlanningWizard() {
                                     <span className="text-xs font-mono uppercase text-[var(--accent-sage)]">{(dayNames as any)[day]} Dinner</span>
                                     <h3 className="text-xl font-bold">{dinner?.recipe_name || 'No dinner planned'}</h3>
                                     <div className="mt-2 flex flex-wrap gap-1">
-                                        {dinner?.vegetables?.map((v: string) => (
-                                            <span key={v} className="text-[10px] bg-[var(--bg-secondary)] px-2 py-0.5 rounded border border-[var(--border-subtle)]">
+                                        {dinner?.vegetables?.map((v: string, vIdx: number) => (
+                                            <span key={`${v}-${vIdx}`} className="text-[10px] bg-[var(--bg-secondary)] px-2 py-0.5 rounded border border-[var(--border-subtle)]">
                                                 {v}
                                             </span>
                                         ))}

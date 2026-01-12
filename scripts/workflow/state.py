@@ -197,7 +197,8 @@ def update_history(history_path, inputs, selected_dinners, selected_lunches=None
         'week_of': week_of,
         'prep_tasks': inputs.get('prep_tasks', []),
         'dinners': [],
-        'lunches': {}
+        'lunches': {},
+        'snacks': inputs.get('snacks', {})
     }
     days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
     for day in days:
@@ -213,10 +214,11 @@ def update_history(history_path, inputs, selected_dinners, selected_lunches=None
         if selected_lunches and day in selected_lunches:
             lunch = selected_lunches[day]
             new_week['lunches'][day] = {
-                'recipe_id': getattr(lunch, 'recipe_id', None),
-                'recipe_name': getattr(lunch, 'recipe_name', 'Unknown'),
-                'prep_style': getattr(lunch, 'prep_style', 'quick_fresh'),
-                'assembly_notes': getattr(lunch, 'assembly_notes', '')
+                'recipe_id': getattr(lunch, 'recipe_id', None) if not isinstance(lunch, dict) else lunch.get('recipe_id'),
+                'recipe_name': getattr(lunch, 'recipe_name', 'Unknown') if not isinstance(lunch, dict) else lunch.get('recipe_name'),
+                'prep_style': getattr(lunch, 'prep_style', 'quick_fresh') if not isinstance(lunch, dict) else lunch.get('prep_style'),
+                'prep_components': getattr(lunch, 'prep_components', []) if not isinstance(lunch, dict) else lunch.get('prep_components', []),
+                'assembly_notes': getattr(lunch, 'assembly_notes', '') if not isinstance(lunch, dict) else lunch.get('assembly_notes', '')
             }
     week_entry = None
     for week in history.get('weeks', []):

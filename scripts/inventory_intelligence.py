@@ -220,7 +220,7 @@ def get_waste_not_suggestions(limit=4):
 def get_shopping_list(plan_data):
     """
     Generate shopping list by identifying missing ingredients from plan.
-    Considers dinners, lunches, and default snacks.
+    Considers dinners, lunches, and planned snacks.
     """
     inventory_set, _ = get_inventory_items()
     needed = []
@@ -238,8 +238,6 @@ def get_shopping_list(plan_data):
     lunches = plan_data.get('lunches', {})
     if isinstance(lunches, dict):
         for day, lunch in lunches.items():
-            # If lunch is a dict (standard for plan_data)
-            # Handle both LunchSuggestion objects (from logic) and dicts (from DB)
             components = []
             if isinstance(lunch, dict):
                 components = lunch.get('prep_components', [])
@@ -252,12 +250,30 @@ def get_shopping_list(plan_data):
                 if norm not in inventory_set:
                     needed.append(display_name)
                     
-    # 3. Default Snacks (Heuristic from html_generator)
-    default_snacks = ['Apple', 'Peanut Butter', 'Cheese', 'Cracker', 'Cucumber', 'Cream Cheese', 'Grape', 'Hummus']
-    for snack in default_snacks:
-        norm = normalize_ingredient(snack)
+    # 3. Planned Snacks (Heuristic extraction)
+    snacks = plan_data.get('snacks', {})
+    if isinstance(snacks, dict):
+        for day, daily_snacks in snacks.items():
+            for key in ['school_snack', 'home_snack']:
+                snack_text = daily_snacks.get(key, '') if isinstance(daily_snacks, dict) else ""
+                if snack_text:
+                    # Extract main item (e.g. "Apple slices with Sunbutter" -> "Apple slices" -> "Apple")
+                    # We split by 'with', 'and', '&', or comma
+                    parts = re.split(r'\s+(?:with|and|&)\s+|,', snack_text, flags=re.IGNORECASE)
+                    for part in parts:
+                        item = part.strip()
+                        # Remove words like "slices", "rounds", "sticks"
+                        item = re.sub(r'\s+(?:slices|rounds|sticks|pieces|cubes)\b', '', item, flags=re.IGNORECASE)
+                        norm = normalize_ingredient(item)
+                        if norm and norm not in inventory_set:
+                            needed.append(item.title())
+
+    # 4. Default Snack Fallbacks (Ensure staples are checked)
+    default_staples = ['Apple', 'Peanut Butter', 'Cheese', 'Cracker', 'Cucumber', 'Cream Cheese', 'Grape', 'Hummus']
+    for staple in default_staples:
+        norm = normalize_ingredient(staple)
         if norm not in inventory_set:
-            needed.append(snack)
+            needed.append(staple)
             
     return sorted(list(set(needed)))
 

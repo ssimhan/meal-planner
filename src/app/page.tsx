@@ -342,13 +342,13 @@ function DashboardContent() {
                 <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
               </Link>
             )}
-            {/* Show "Start New Week" for new_week and archived states */}
-            {(status?.state === 'new_week' || status?.state === 'archived') && (
+            {/* Show "Planning Wizard" for any week not yet active/complete */}
+            {(status?.state === 'new_week' || status?.state === 'archived' || status?.state === 'awaiting_farmers_market' || status?.state === 'ready_to_plan') && (
               <Link
-                href="/plan"
+                href={selectedWeek ? `/plan?week=${selectedWeek}` : "/plan"}
                 className="btn-primary w-full text-left flex justify-between items-center group"
               >
-                <span>Start New Week</span>
+                <span>{status?.state === 'new_week' || status?.state === 'archived' ? 'Start New Week' : 'Continue Planning Wizard'}</span>
                 <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
               </Link>
             )}
@@ -517,35 +517,17 @@ function DashboardContent() {
           </section>
         )}
 
-        {/* Next Steps / Farmers Market */}
+        {/* Next Steps / Farmers Market Prompt */}
         {!(status?.state === 'active' || status?.state === 'waiting_for_checkin') && status?.state !== 'archived' && (
           <section className="card md:col-span-2">
             <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
-              {status?.state === 'awaiting_farmers_market' ? 'Confirm Vegetables' : 'Next Steps'}
+              {status?.state === 'awaiting_farmers_market' || status?.state === 'ready_to_plan' ? 'Action Required' : 'Next Steps'}
             </h2>
-            <div className="p-4 bg-[var(--bg-secondary)] border-l-4 border-[var(--accent-terracotta)]">
+            <div className={`p-4 bg-[var(--bg-secondary)] border-l-4 ${status?.state === 'awaiting_farmers_market' || status?.state === 'ready_to_plan' ? 'border-[var(--accent-sage)]' : 'border-[var(--accent-terracotta)]'}`}>
               {status?.state === 'ready_to_plan' ? (
-                <p>✓ Farmers market vegetables are confirmed. Click "Generate Weekly Plan" above!</p>
+                <p>✓ Your planning steps are underway. <Link href={`/plan?week=${status.week_of}`} className="text-[var(--accent-sage)] underline font-bold">Return to the Wizard</Link> to generate your week plan!</p>
               ) : status?.state === 'awaiting_farmers_market' ? (
-                <div className="space-y-4">
-                  <p>What did you buy? Enter comma-separated list:</p>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={vegInput}
-                      onChange={(e) => setVegInput(e.target.value)}
-                      placeholder="broccoli, sweet potato, spinach..."
-                      className="flex-1 p-2 border border-[var(--border-subtle)] rounded-sm bg-white"
-                    />
-                    <button
-                      onClick={handleConfirmVeg}
-                      disabled={ui.actionLoading}
-                      className="btn-primary"
-                    >
-                      {ui.actionLoading ? 'Confirming...' : 'Confirm'}
-                    </button>
-                  </div>
-                </div>
+                <p>Time to start your week! Use the <Link href={`/plan?week=${status.week_of}`} className="text-[var(--accent-sage)] underline font-bold">Planning Wizard</Link> to review history, check inventory, and log your market veggies.</p>
               ) : (
                 <p>Start a new week to begin the planning process.</p>
               )}

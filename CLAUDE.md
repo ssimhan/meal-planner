@@ -170,6 +170,13 @@ NEVER proceed with invalid plan. Ask for guidance.
     - **Testing**: Test changes locally first.
     - **Deployment**: Push to the feature branch to trigger Vercel preview deployment.
     - **Merging**: Only merge to `main` after local verification and successful Vercel preview.
+    - **Testing Procedure**:
+        - **Local**: Run `npm run dev:full`. Verify changes in browser at `localhost:3000`.
+        - **Vercel Preview**:
+            1. Push changes to the feature branch.
+            2. Open the Vercel Preview URL (from GitHub PR).
+            3. Verify functionality matches local behavior.
+            4. ONLY merge to `main` if Vercel Preview is correct.
 
 ## Workflow
 

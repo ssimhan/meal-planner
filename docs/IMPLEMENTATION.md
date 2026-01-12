@@ -92,8 +92,8 @@ Declining energy model: Monday (high) → Friday (zero prep)
 - **Block 1: Wizard UX Overhaul (In Progress).**
     - Dinners/Snacks Split (Step 0/1). ✅ Complete.
     - Inventory Improvements (Step 2). ✅ Complete.
-    - **Chunk 3: Editable Tentative Plan.** Allow users to edit the generated plan in the "Draft" step before confirming.
-    - Chunk 4: Low-friction "Leftovers" logic.
+    - **Chunk 3: Editable Tentative Plan.** ✅ Complete.
+    - **Chunk 4: Low-friction "Leftovers" logic.** ✅ Complete.
 - **Block 2: Pause Capability.** Allow saving state to resume later (e.g., "Draft Mode").
 - **Block 3: Nightly Confirmation.** Persistent 6pm banner for day's meals validation.
 

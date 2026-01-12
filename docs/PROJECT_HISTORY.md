@@ -551,4 +551,8 @@ The best tools are the ones you actually use. This system works because it reduc
     - **Draft Loading:** Fixed `planningWeek` initialization logic to correctly target the upcoming Monday.
     - **Inventory Safety:** Added robust null-checks to prevent wizard crashes on empty inventory states.
 - **Workflow:** Verified full end-to-end flow from "Start Fresh" -> "Active Plan".
+    - **Editable Tentative Plan:** Added pencil icon and modal to "Draft" step (Step 4) for immediate corrections without restarting.
+    - **Low-Friction Leftovers:** "Did you have leftovers?" now auto-fills item name and backend intelligently aggregates batches.
+
+
 

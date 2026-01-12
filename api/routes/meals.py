@@ -172,8 +172,8 @@ def get_shopping_list_route():
         if not res.data:
             return jsonify({"status": "error", "message": f"No plan found for week {week_of}"}), 404
             
-        plan_data = res.data.get('plan_data') or {}
-        history_data = res.data.get('history_data') or {}
+        plan_data = res.data[0].get('plan_data') or {}
+        history_data = res.data[0].get('history_data') or {}
         
         from scripts.inventory_intelligence import get_shopping_list
         # During planning, plan_data is often more up-to-date in the DB

@@ -378,11 +378,38 @@ def generate_granular_prep_tasks(selected_dinners, selected_lunches, day_keys, t
 def extract_prep_tasks_for_db(selected_dinners, selected_lunches):
     """
     Extract all prep tasks for the week as structured objects for database persistence.
+    Sorted by Usage Day and Prep Priority.
     """
     structured_tasks = []
     days = ['mon', 'tue', 'wed', 'thu', 'fri']
+    day_map = {d: i for i, d in enumerate(days)}
     
-    # Dinner Tasks
+    # Priority mapping for verbs (lower number = higher priority)
+    # Thaw needs to happen early. Cook takes time. Chop is standard.
+    verb_priority = {
+        'thaw': 10,
+        'marinate': 20,
+        'soak': 25,
+        'cook': 30,
+        'roast': 30,
+        'bake': 30,
+        'chop': 40,
+        'dice': 40,
+        'slice': 40,
+        'mince': 40,
+        'prep': 50,
+        'wash': 60,
+        'assemble': 70
+    }
+    
+    def get_priority(task_desc):
+        desc_lower = task_desc.lower()
+        for verb, prio in verb_priority.items():
+            if desc_lower.startswith(verb):
+                return prio
+        return 99 # Default
+    
+    # 1. Collect all Dinners
     for day in days:
         if day in selected_dinners:
             recipe = selected_dinners[day]
@@ -418,7 +445,7 @@ def extract_prep_tasks_for_db(selected_dinners, selected_lunches):
                         "status": "pending"
                     })
 
-    # Lunch Tasks
+    # 2. Collect all Lunches
     for day in days:
         if day in selected_lunches:
             lunch = selected_lunches[day]
@@ -430,15 +457,35 @@ def extract_prep_tasks_for_db(selected_dinners, selected_lunches):
             for component in prep_components:
                 component_clean = component.replace('_', ' ')
                 task_id = f"lunch_{day}_{component_clean.replace(' ', '_').lower()}"
+                
+                # Heuristic: try to guess verb if missing (usually "Prep")
+                task_desc = f"Prep {component_clean}"
+                
                 structured_tasks.append({
                     "id": task_id,
-                    "task": f"Prep {component_clean}",
+                    "task": task_desc,
                     "meal_id": recipe_id,
                     "meal_name": recipe_name,
                     "day": day,
                     "type": "lunch",
                     "status": "pending"
                 })
+                
+    # 3. Sort Everything
+    # Key: (Day Index, Priority, Lunch/Dinner Order, Task Description)
+    # Lunch/Dinner Order: Lunch (1) before Dinner (2) generally? Or Logic?
+    # Actually, usually logical flow is Prep logic. 
+    # Let's say Lunch items for Monday are needed Monday AM. Dinner items needed Monday PM.
+    # So Lunch < Dinner for same day.
+    
+    type_priority = {'lunch': 1, 'dinner': 2}
+    
+    structured_tasks.sort(key=lambda x: (
+        day_map.get(x['day'], 99),
+        type_priority.get(x['type'], 99),
+        get_priority(x['task']),
+        x['task']
+    ))
                 
     return structured_tasks
 

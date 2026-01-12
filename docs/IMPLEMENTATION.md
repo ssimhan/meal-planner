@@ -79,8 +79,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
 **Goal:** Fix known bugs and standardize data to ensure a reliable foundation.
 - **Block 1: Fix Week View Bug.** ✅ Complete.
 - **Block 2: System Cleanup.** ✅ Complete.
-- **Block 3: Recipe Index Standardization (Expanded).**
-    - **Chunk 1: Term Standardization.** Normalize variations like "tomato" vs "tomatoe" during ingestion.
+- **Block 3: Recipe Index Standardization (Expanded).** ✅ Complete.
     - **Chunk 2: Prep Step Standardization.** Ensure consistently structured prep steps across all recipes.
     - **Chunk 3: Auto-Generation.** First time a recipe is finalized in a plan, generate and save missing prep steps.
 - **Block 4: Main Page & Prep Logic.**

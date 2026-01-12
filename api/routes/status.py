@@ -69,16 +69,19 @@ def _get_current_status(skip_sync=False, week_override=None):
             data = {}
             week_str = requested_week
     else:
-        # Default logic: Look for active or incomplete weeks from DB
-        active_plan = storage.StorageEngine.get_active_week()
-        state, data = storage.StorageEngine.get_workflow_state(active_plan)
+        # Default logic: ALWAYS use the current calendar week
+        # This ensures the dashboard aligns with reality.
+        # We try to fetch the plan for the *current* week.
+        week_str = monday.strftime('%Y-%m-%d')
+        res = storage.supabase.table("meal_plans").select("*").eq("household_id", storage.get_household_id()).eq("week_of", week_str).execute()
         
-        if active_plan:
-            week_str = active_plan['week_of']
+        if res.data:
+            active_plan = res.data[0]
+            state, data = storage.StorageEngine.get_workflow_state(active_plan)
         else:
-            # Fallback to calendar week
-            monday = today - timedelta(days=today.weekday())
-            week_str = monday.strftime('%Y-%m-%d')
+            # No plan for current week yet
+            active_plan = None
+            state = 'new_week' # Or 'no_plan'
             data = {}
     current_day = today.strftime('%a').lower()[:3]
 

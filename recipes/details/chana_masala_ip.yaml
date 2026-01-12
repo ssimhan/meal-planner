@@ -34,7 +34,6 @@ main_veg:
 - onion
 - peas
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Chop 1 large onion and 2 tomatoes (or 1 can of diced tomatoes). Drain
   and rinse 2 cans of chickpeas.

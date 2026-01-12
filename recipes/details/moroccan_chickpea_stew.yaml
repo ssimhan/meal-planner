@@ -46,7 +46,6 @@ main_veg:
 - spinach
 - sweet potato
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Make the quinoa using the stovetop method or Instant Pot method. When
   it’s done, sprinkle with a little kosher salt to taste.

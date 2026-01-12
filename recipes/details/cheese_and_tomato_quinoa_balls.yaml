@@ -28,7 +28,6 @@ main_veg:
 - garlic
 - onion
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Grate cheddar cheese. Heat water for broth.
 

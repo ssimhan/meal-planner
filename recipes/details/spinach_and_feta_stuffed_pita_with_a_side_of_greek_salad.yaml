@@ -30,7 +30,6 @@ main_veg:
 - onion
 - spinach
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Prep:Roughly chop 2 cups of fresh spinach.
 

@@ -67,7 +67,6 @@ main_veg:
 - squash
 - sweet potato
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Original recipe makes 3 servings
 

@@ -39,7 +39,6 @@ main_veg:
 - potato
 - potatoe
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'This recipe is for 4 adult lunch servings
 

@@ -42,7 +42,6 @@ main_veg:
 - pepper
 - spinach
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Add onion, bell peppers, garlic and olive oil to a large pan over medium
   heat. Saute until onions are translucent, about 5-10 minutes.

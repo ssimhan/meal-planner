@@ -42,7 +42,6 @@ main_veg:
 - lime
 - onion
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Start the instant pot in Saute (More) mode and let it heat until it
   displays HOT. Add oil, cumin seeds and green chili.

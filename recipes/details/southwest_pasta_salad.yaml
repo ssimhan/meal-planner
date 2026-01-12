@@ -45,7 +45,6 @@ main_veg:
 - parsley
 - scallion
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: '**Prep**Dice bell pepper, red onion, cilantro, scallionsCut cherry
   tomatoes, avocado

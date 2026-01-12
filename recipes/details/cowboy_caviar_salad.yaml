@@ -36,7 +36,6 @@ main_veg:
 - onion
 - peas
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'In a small bowl, mix together the dressing ingredients.
 

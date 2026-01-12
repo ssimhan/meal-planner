@@ -37,7 +37,6 @@ main_veg:
 - lime
 - onion
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Wash the lentils with water and keep aside. Finely dice onion and tomato.
   Set water in kettle for boiling.

@@ -25,7 +25,6 @@ main_veg:
 - basil
 - garlic
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Gather all ingredients.
 

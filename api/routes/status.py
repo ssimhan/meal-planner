@@ -1,10 +1,10 @@
 import os
-import yaml
+
 from pathlib import Path
 from datetime import datetime, timedelta
 import pytz
 from flask import Blueprint, jsonify, request
-from scripts.log_execution import find_week
+
 from scripts.compute_analytics import compute_analytics
 from api.utils import CACHE, CACHE_TTL
 from api.utils.auth import require_auth
@@ -160,14 +160,25 @@ def _get_current_status(skip_sync=False, week_override=None):
              
              for day in days:
                  slot = resolved_slots.get(f"{day}_dinner")
-                 if slot and slot['resolved']:
-                     # Use the resolved object
-                     # Ensure it has 'day'
-                     r_meal = slot['resolved'].copy()
-                     r_meal['day'] = day
-                     
-                     # If it was an actual check for adherence info to pass to UI (optional, or UI infers it)
-                     # For now, just passing the resolved object supports the "Actual wins" logic
+                 if not slot:
+                     continue
+
+                 # Start with plan details (if any) so we have the recipe_id
+                 r_meal = slot['plan'].copy() if slot['plan'] else {}
+                 
+                 # Overlay actual details if they exist
+                 if slot['resolved']:
+                     r_meal.update(slot['resolved'])
+                 
+                 # Handle generic fields
+                 r_meal['day'] = day
+                 
+                 # Explicitly handle SKIPPED state to ensure it shows up
+                 if slot['adherence'] == 'SKIPPED':
+                     r_meal['made'] = False
+                     # We keep the plan details so UI shows "Tacos" (Skipped)
+                 
+                 if r_meal:
                      merged_dinners.append(r_meal)
             
              data['dinners'] = merged_dinners

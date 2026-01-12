@@ -42,7 +42,6 @@ main_veg:
 - lime
 - onion
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Start the pressure cooker in sauté mode and let it heat. Add oil and
   cumin seeds. Sauté for 30 seconds.

@@ -27,7 +27,6 @@ main_veg:
 - cilantro
 - lemon
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Boil florets with a little salt in hot water.
 

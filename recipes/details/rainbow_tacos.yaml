@@ -33,7 +33,6 @@ main_veg:
 - cucumber
 - onion
 - tomato
-- tomatoe
 avoid_contains:
 - cabbage
 instructions: 1. Saute chopped veggies in oil2. Add beans, chili powder, cumin and

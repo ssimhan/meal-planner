@@ -33,7 +33,6 @@ main_veg:
 - cilantro
 - onion
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Preheat the oven to 350 degrees F.
 

@@ -28,7 +28,6 @@ main_veg:
 - onion
 - spinach
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Preheat the oven to 425 degrees and put a quarter sheet pan (9x13 inches)
   in the oven.

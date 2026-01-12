@@ -39,7 +39,6 @@ main_veg:
 - onion
 - radish
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'PrepPeel and dice the onion. Dice the green pepper. Peel and mince
   the garlic. Drain and rinse the beans.

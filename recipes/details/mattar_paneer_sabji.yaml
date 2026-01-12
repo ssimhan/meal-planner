@@ -39,7 +39,6 @@ main_veg:
 - onion
 - peas
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: '**Prep:**Roughly chop onion and tomatoes.Cube paneerCook the frozen
   peas in the microwave.

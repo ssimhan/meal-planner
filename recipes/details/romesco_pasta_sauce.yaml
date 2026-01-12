@@ -29,7 +29,6 @@ main_veg:
 - parsley
 - pepper
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Prep:Preheat your oven to 180°C (356°F).
 

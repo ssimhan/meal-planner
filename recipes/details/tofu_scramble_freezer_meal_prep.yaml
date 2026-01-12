@@ -30,7 +30,6 @@ main_veg:
 - onion
 - spinach
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Meal Prep Instructions:Label your gallon-sized freezer bag with the
   name, instructions, and a use-by date (recommended 90 days after prep date).Add

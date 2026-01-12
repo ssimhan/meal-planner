@@ -24,7 +24,6 @@ main_veg:
 - garlic
 - onion
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Place the onion and garlic in a food processor, and pulse until very
   finely minced, stopping periodically to scrape down the sides of the bowl with a

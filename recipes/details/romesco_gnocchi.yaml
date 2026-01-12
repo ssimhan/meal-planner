@@ -31,7 +31,6 @@ main_veg:
 - pepper
 - spinach
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Bring a large saucepan of water to a boil, seasoned with about 1 tablespoon
   kosher salt.

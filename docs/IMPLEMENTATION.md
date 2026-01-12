@@ -5,6 +5,8 @@
 
 ---
 
+> **Workflow Rule:** Every subphase MUST be implemented in a dedicated branch. Test locally -> Push to Branch (Vercel Preview) -> Merge to Main.
+
 ## System Overview
 
 Hybrid Serverless application for weekly meal planning, daily execution tracking, and inventory management. Python logic engine + Next.js frontend.

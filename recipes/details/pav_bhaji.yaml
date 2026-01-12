@@ -37,7 +37,6 @@ main_veg:
 - potato
 - potatoe
 - tomato
-- tomatoe
 avoid_contains: []
 instructions: 'Pressure cook peeled, chopped potatoes and other chopped veggies together
   with little water, upto 3 whistles in pressure cooker.

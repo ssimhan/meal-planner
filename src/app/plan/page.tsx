@@ -574,7 +574,7 @@ export default function PlanningWizard() {
                             </div>
 
                             <ul className="space-y-2 max-h-60 overflow-y-auto pr-2">
-                                {getDisplayList(cat.id).map((item, idx) => {
+                                {getDisplayList(cat.id).map((item: any, idx: number) => {
                                     const name = typeof item === 'string' ? item : item.item;
                                     const isNew = pendingChanges.some(c => c.category === cat.id && c.item === name && c.operation === 'add');
 

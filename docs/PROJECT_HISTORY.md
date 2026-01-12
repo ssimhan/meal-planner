@@ -524,3 +524,14 @@ The best tools are the ones you actually use. This system works because it reduc
     - New Backend routes: `/api/plan/draft`, `/api/plan/shopping-list`, `/api/plan/finalize`.
     - Integrated `inventory_intelligence.get_shopping_list` for smart subtraction.
     - Full end-to-end flow from Review -> Active Plan.
+
+### Phase 17: Core Stability & Data Hygiene (2026-01-11)
+
+**Goal:** Establish a stable foundation by fixing critical bugs and standardizing data before adding new features.
+
+- **Bug Fix:** Resolved critical "Week View" issue where adhered meals showed "Not planned" due to missing recipe metadata in the resolved state. Updated `api/routes/status.py` to correctly merge Plan + Actual data.
+- **Workflow Standards:** Formalized branching strategy in `CLAUDE.md`. Every subphase now requires a dedicated branch, local testing, and Vercel preview validation.
+- **Data Cleanup:** 
+    - Removed unused imports (`yaml`, `log_execution`).
+    - Standardized recipe index (fixed "tomatoe" typo, removed duplicate `ragada_patty`).
+

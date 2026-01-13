@@ -255,7 +255,6 @@ def _get_current_status(skip_sync=False, week_override=None):
                 "dinner": today_dinner,
                 "lunch": today_lunch,
                 "snacks": today_snacks,
-                "snacks": today_snacks,
                 "prep_tasks": [
                     t for t in (history_week.get('prep_tasks', []) if history_week else [])
                     if t.get('day') == current_day or (

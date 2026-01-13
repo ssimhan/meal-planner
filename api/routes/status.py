@@ -105,15 +105,21 @@ def _get_current_status(skip_sync=False, week_override=None):
 
     # Load meals_covered from config
     meals_covered = config.get('meals_covered', {})
-    cover_dinner = meals_covered.get('dinner', True)
-    cover_kids_lunch = meals_covered.get('kids_lunch', True)
-    cover_adult_lunch = meals_covered.get('adult_lunch', True)
-    cover_school_snack = meals_covered.get('school_snack', True)
-    cover_home_snack = meals_covered.get('home_snack', True)
+    # Helper to check if a specific day is covered for a meal type
+    def is_covered(meal_type, day):
+        # 1. New List Format: ['mon', 'tue']
+        val = meals_covered.get(meal_type)
+        if isinstance(val, list):
+            return day in val
+        # 2. Legacy Boolean Format or Default
+        if isinstance(val, bool):
+            return val
+        # 3. Default True if undefined
+        return True
 
     today_snacks = {
-        "school": snack_by_day.get(current_day, snack_fallbacks.get("school", "Fruit")) if cover_school_snack else None,
-        "home": snack_fallbacks.get("home", "Cucumber or Crackers") if cover_home_snack else None
+        "school": snack_by_day.get(current_day, snack_fallbacks.get("school", "Fruit")) if is_covered('school_snack', current_day) else None,
+        "home": snack_fallbacks.get("home", "Cucumber or Crackers") if is_covered('home_snack', current_day) else None
     }
 
     history_week = active_plan.get('history_data') if active_plan else None
@@ -123,9 +129,9 @@ def _get_current_status(skip_sync=False, week_override=None):
         if history_week and 'daily_feedback' in history_week:
             day_feedback = history_week['daily_feedback'].get(current_day, {})
             # Map daily_feedback fields to today_snacks structure
-            if 'school_snack' in day_feedback and cover_school_snack:
+            if 'school_snack' in day_feedback and is_covered('school_snack', current_day):
                 today_snacks['school'] = day_feedback['school_snack']
-            if 'home_snack' in day_feedback and cover_home_snack:
+            if 'home_snack' in day_feedback and is_covered('home_snack', current_day):
                 today_snacks['home'] = day_feedback['home_snack']
             if 'school_snack_made' in day_feedback:
                 today_snacks['school_snack_made'] = day_feedback['school_snack_made']
@@ -136,21 +142,21 @@ def _get_current_status(skip_sync=False, week_override=None):
             if 'home_snack_needs_fix' in day_feedback:
                 today_snacks['home_snack_needs_fix'] = day_feedback['home_snack_needs_fix']
         
-        if cover_dinner:
+        if is_covered('dinner', current_day):
             dinners = (history_week.get('dinners') if history_week else None) or (data.get('dinners') if data else []) or []
             for dinner in dinners:
                 if dinner.get('day') == current_day:
                     today_dinner = dinner
                     break
         
-        if cover_kids_lunch or cover_adult_lunch:
+        if is_covered('kids_lunch', current_day) or is_covered('adult_lunch', current_day):
             history_lunches = history_week.get('lunches', {}) if history_week else {}
             if current_day in history_lunches:
                 today_lunch = history_lunches[current_day]
             elif data and 'selected_lunches' in data:
                 today_lunch = data['selected_lunches'].get(current_day)
 
-            if not today_lunch and (cover_kids_lunch or cover_adult_lunch):
+            if not today_lunch and (is_covered('kids_lunch', current_day) or is_covered('adult_lunch', current_day)):
                  today_lunch = {"recipe_name": "Leftovers or Simple Lunch", "prep_style": "quick_fresh"}
 
         if today_lunch and history_week and 'daily_feedback' in history_week:

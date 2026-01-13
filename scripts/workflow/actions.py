@@ -69,12 +69,18 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
     
     week_of = data['week_of']
     meals_covered = data.get('meals_covered', {})
-    # Defaults (True if not specified)
-    cover_dinner = meals_covered.get('dinner', True)
-    cover_kids_lunch = meals_covered.get('kids_lunch', True)
-    cover_adult_lunch = meals_covered.get('adult_lunch', True)
-    cover_school_snack = meals_covered.get('school_snack', True)
-    cover_home_snack = meals_covered.get('home_snack', True)
+    
+    # Helper to check if a specific day is covered for a meal type
+    def is_covered(meal_type, day):
+        # 1. New List Format: ['mon', 'tue']
+        val = meals_covered.get(meal_type)
+        if isinstance(val, list):
+            return day in val
+        # 2. Legacy Boolean Format or Default
+        if isinstance(val, bool):
+            return val
+        # 3. Default True if undefined
+        return True
 
     history_path = get_actual_path('data/history.yml')
     
@@ -96,19 +102,34 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
     current_week_history = next((w for w in history.get('weeks', []) if w.get('week_of') == week_of), None)
     
     selected_dinners = {}
-    if cover_dinner:
-        selected_dinners = select_dinners(filtered, data, current_week_history, recipes)
+    selected_dinners = {}
+    # Only select dinners for days covered
+    days_needing_dinner = [d for d in ['mon', 'tue', 'wed', 'thu', 'fri'] if is_covered('dinner', d)]
+    
+    if days_needing_dinner:
+        # We need to adapt select_dinners to verify day coverage or filter afterwards
+        # For now, let's select for all and filter, or assume select_dinners selects for all 5 days
+        full_week_dinners = select_dinners(filtered, data, current_week_history, recipes)
+        selected_dinners = {d: r for d, r in full_week_dinners.items() if d in days_needing_dinner or d in ['sat', 'sun']}
     
     lunch_selector = LunchSelector(recipes=recipes)
     days = ['mon', 'tue', 'wed', 'thu', 'fri']
     dinner_plan_list = [{'recipe_id': r.get('id'), 'recipe_name': r.get('name'), 'day': d, 'vegetables': r.get('main_veg', [])} for d, r in selected_dinners.items() if d in days]
     
     selected_lunches = {}
-    if cover_kids_lunch or cover_adult_lunch:
+    selected_lunches = {}
+    
+    # Check if ANY day needs lunch to run the selector
+    any_lunch_needed = any(is_covered('kids_lunch', d) or is_covered('adult_lunch', d) for d in days)
+    
+    if any_lunch_needed:
         # Note: LunchSelector currently generates for both. We might need to split it or filter results.
         # For now, we generate if EITHER is needed, and frontend will hide/show? 
         # Or we suppress the output data. 
         selected_lunches = lunch_selector.select_weekly_lunches(dinner_plan=dinner_plan_list, week_of=week_of)
+        # Filter selected lunches to remove days logic - wait, selected_lunches returns a dict of days
+        # We keep the object for now, Status API handles visibility based on config 
+        pass
     
     for d in ['sat', 'sun']:
         if cover_dinner and d not in selected_dinners:
@@ -126,7 +147,7 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
             'cuisine': r.get('cuisine'),
             'meal_type': r.get('meal_type')
         } 
-        for d, r in selected_dinners.items() if isinstance(r, dict)
+        for d, r in selected_dinners.items() if isinstance(r, dict) and is_covered('dinner', d)
     ]
     
     data['lunches'] = {}
@@ -153,14 +174,14 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
     }
     
     data['snacks'] = {}
-    if cover_school_snack or cover_home_snack:
-        data['snacks'] = {
-            d: {
-                'school_snack': default_snacks.get(d, 'Fruit') if cover_school_snack else None,
-                'home_snack': default_snacks.get(d, 'Fruit') if cover_home_snack else None
-            }
-            for d in ['mon', 'tue', 'wed', 'thu', 'fri']
+    # Generate snacks for all days, filtered by coverage
+    data['snacks'] = {
+        d: {
+            'school_snack': default_snacks.get(d, 'Fruit') if is_covered('school_snack', d) else None,
+            'home_snack': default_snacks.get(d, 'Fruit') if is_covered('home_snack', d) else None
         }
+        for d in ['mon', 'tue', 'wed', 'thu', 'fri']
+    }
 
     # NEW: Extract structured prep tasks and save to persistence
     from .html_generator import extract_prep_tasks_for_db

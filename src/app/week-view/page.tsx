@@ -752,7 +752,9 @@ function WeekViewContent() {
                   const needsFix = dinner?.needs_fix;
 
                   return (
-                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${dinner?.made === true ? 'bg-[var(--accent-sage)]/5 shadow-inner' : ''}`}>
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] transition-all duration-300 ${dinner?.made === true
+                      ? 'bg-[var(--accent-sage)]/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)] border-l-[3px] border-l-[var(--accent-sage)]'
+                      : 'hover:bg-gray-50'}`}>
                       <div className="flex items-start gap-2">
                         <SelectionCheckbox
                           day={day}

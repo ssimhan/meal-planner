@@ -226,6 +226,7 @@ export default function InventoryPage() {
                         onChange={(e) => setNewItem({ ...newItem, category: e.target.value })}
                     >
                         <option value="fridge">Fridge</option>
+                        <option value="leftovers">Leftover Meal</option>
                         <option value="pantry">Pantry</option>
                         <option value="meals">Freezer Meal</option>
                         <option value="frozen_ingredient">Freezer Ingr</option>
@@ -233,7 +234,7 @@ export default function InventoryPage() {
                     <div className="w-px bg-gray-200"></div>
                     <input
                         type="text"
-                        placeholder={`Add item to ${newItem.category.replace('_', ' ')}...`}
+                        placeholder={newItem.category === 'leftovers' ? "e.g. Lasagna (2 servings)" : `Add item to ${newItem.category.replace('_', ' ')}...`}
                         className="flex-1 bg-transparent border-none focus:ring-0 text-sm"
                         value={newItem.name}
                         onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
@@ -282,13 +283,13 @@ export default function InventoryPage() {
                                 <header className="flex justify-between items-center mb-4">
                                     <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--accent-sage)] font-bold">Leftovers</h2>
                                     <span className="text-xs bg-white border border-[var(--accent-sage)] text-[var(--accent-sage)] px-2 py-0.5 rounded-full">
-                                        {inventory?.fridge?.filter((i: any) => i.item.toLowerCase().includes('leftover')).length || 0}
+                                        {inventory?.fridge?.filter((i: any) => i.item.toLowerCase().includes('leftover') || i.category === 'leftovers').length || 0}
                                     </span>
                                 </header>
                                 <div className="space-y-1">
-                                    {inventory?.fridge?.filter((i: any) => i.item.toLowerCase().includes('leftover')).length > 0 ? (
+                                    {inventory?.fridge?.filter((i: any) => i.item.toLowerCase().includes('leftover') || i.category === 'leftovers').length > 0 ? (
                                         inventory.fridge
-                                            .filter((i: any) => i.item.toLowerCase().includes('leftover'))
+                                            .filter((i: any) => i.item.toLowerCase().includes('leftover') || i.category === 'leftovers')
                                             .map((item: any, idx: number) => (
                                                 <InventoryItemRow
                                                     key={`leftover-${idx}`}
@@ -369,7 +370,7 @@ export default function InventoryPage() {
 
                                     // Group items
                                     const grouped = (currentItems as any[]).reduce((acc, item) => {
-                                        const cat = classifyItem(item.item, activeTab);
+                                        const cat = classifyItem(item, activeTab);
                                         if (!acc[cat]) acc[cat] = [];
                                         acc[cat].push(item);
                                         return acc;
@@ -437,10 +438,16 @@ export default function InventoryPage() {
     );
 }
 
-function classifyItem(itemName: string, categoryType: 'fridge' | 'pantry' | 'frozen_ingredient'): string {
-    const item = itemName.toLowerCase();
+function classifyItem(itemObj: any | string, categoryType: 'fridge' | 'pantry' | 'frozen_ingredient'): string {
+    // Handle both raw string (legacy) and object inputs
+    const item = (typeof itemObj === 'string' ? itemObj : (itemObj.item || '')).toLowerCase();
+
+    // Explicit category override from backend
+    if (itemObj.category === 'leftovers') return 'Leftovers';
 
     if (categoryType === 'fridge') {
+        if (item.includes('leftover')) return 'Leftovers';
+
         const produce = [
             'apple', 'banana', 'carrot', 'lettuce', 'onion', 'garlic', 'lemon', 'lime', 'tomato', 'potato',
             'spinach', 'cilantro', 'ginger', 'cucumber', 'pepper', 'squash', 'fruit', 'veg', 'herb', 'avocado',
@@ -459,8 +466,6 @@ function classifyItem(itemName: string, categoryType: 'fridge' | 'pantry' | 'fro
 
         const drinks = ['juice', 'drink', 'soda', 'water', 'beer', 'wine'];
         if (drinks.some(k => item.includes(k))) return 'Beverages';
-
-        if (item.includes('leftover')) return 'Leftovers';
     }
 
     if (categoryType === 'pantry') {

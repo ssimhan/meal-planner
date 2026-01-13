@@ -42,6 +42,15 @@ def add_inventory():
             updates = {'quantity': 1, 'unit': 'count'}
         elif category == 'fridge':
             updates = {'quantity': 1, 'unit': 'count', 'added': datetime.now().strftime('%Y-%m-%d')}
+        elif category == 'leftovers':
+            # Store in 'fridge' but with 'category': 'leftovers' for grouping
+            db_category = 'fridge'
+            updates = {
+                'quantity': 1, 
+                'unit': 'servings', 
+                'added': datetime.now().strftime('%Y-%m-%d'),
+                'category': 'leftovers' 
+            }
 
         # Deduplication Logic: Check if exists
         current_inv = StorageEngine.get_inventory()

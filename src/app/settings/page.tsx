@@ -153,7 +153,18 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 ))}
-                {/* Simple Add Adult Logic could go here later */}
+                ))}
+                {/* Dynamic Add Adult */}
+                <button
+                  onClick={() => {
+                    const split = Object.keys(config.adult_profiles || {}).length + 1;
+                    const newKey = `Person ${split}`;
+                    updateConfig(['adult_profiles', newKey], { office_days: [] });
+                  }}
+                  className="mt-2 text-xs font-bold text-[var(--accent-sage)] hover:underline flex items-center gap-1"
+                >
+                  <span>+</span> Add Person
+                </button>
               </div>
             </div>
 
@@ -190,61 +201,45 @@ export default function SettingsPage() {
             </h3>
             <p className="text-sm text-[var(--text-muted)] mb-4">Select which meals you want to track and plan for.</p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {/* Dinner */}
-              <label className="flex items-center gap-3 p-3 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)] cursor-pointer hover:border-[var(--accent-sage)] transition-colors">
-                <input
-                  type="checkbox"
-                  checked={config.meals_covered?.dinner ?? true} // Default true
-                  onChange={(e) => updateConfig(['meals_covered', 'dinner'], e.target.checked)}
-                  className="w-5 h-5 accent-[var(--accent-sage)]"
-                />
-                <span className="font-bold">Dinner</span>
-              </label>
+            <div className="space-y-6">
+              {[
+                { key: 'dinner', label: 'Dinner' },
+                { key: 'kids_lunch', label: 'Kids Lunch' },
+                { key: 'adult_lunch', label: 'Adult Lunch' },
+                { key: 'school_snack', label: 'School Snack' },
+                { key: 'home_snack', label: 'Home Snack' },
+              ].map(({ key, label }) => (
+                <div key={key} className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)]">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="font-bold">{label} - Active Days</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map(day => {
+                      const current = Array.isArray(config.meals_covered?.[key])
+                        ? config.meals_covered[key]
+                        : (config.meals_covered?.[key] === false ? [] : ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']); // Default all if boolean true/undefined
 
-              {/* Kids Lunch */}
-              <label className="flex items-center gap-3 p-3 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)] cursor-pointer hover:border-[var(--accent-sage)] transition-colors">
-                <input
-                  type="checkbox"
-                  checked={config.meals_covered?.kids_lunch ?? true}
-                  onChange={(e) => updateConfig(['meals_covered', 'kids_lunch'], e.target.checked)}
-                  className="w-5 h-5 accent-[var(--accent-sage)]"
-                />
-                <span className="font-bold">Kids Lunch</span>
-              </label>
-
-              {/* Adult Lunch */}
-              <label className="flex items-center gap-3 p-3 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)] cursor-pointer hover:border-[var(--accent-sage)] transition-colors">
-                <input
-                  type="checkbox"
-                  checked={config.meals_covered?.adult_lunch ?? true}
-                  onChange={(e) => updateConfig(['meals_covered', 'adult_lunch'], e.target.checked)}
-                  className="w-5 h-5 accent-[var(--accent-sage)]"
-                />
-                <span className="font-bold">Adult Lunch</span>
-              </label>
-
-              {/* School Snack */}
-              <label className="flex items-center gap-3 p-3 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)] cursor-pointer hover:border-[var(--accent-sage)] transition-colors">
-                <input
-                  type="checkbox"
-                  checked={config.meals_covered?.school_snack ?? true}
-                  onChange={(e) => updateConfig(['meals_covered', 'school_snack'], e.target.checked)}
-                  className="w-5 h-5 accent-[var(--accent-sage)]"
-                />
-                <span className="font-bold">School Snack</span>
-              </label>
-
-              {/* Home Snack */}
-              <label className="flex items-center gap-3 p-3 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)] cursor-pointer hover:border-[var(--accent-sage)] transition-colors">
-                <input
-                  type="checkbox"
-                  checked={config.meals_covered?.home_snack ?? true}
-                  onChange={(e) => updateConfig(['meals_covered', 'home_snack'], e.target.checked)}
-                  className="w-5 h-5 accent-[var(--accent-sage)]"
-                />
-                <span className="font-bold">Home Snack</span>
-              </label>
+                      return (
+                        <button
+                          key={`${key}-${day}`}
+                          onClick={() => {
+                            const next = current.includes(day)
+                              ? current.filter((d: string) => d !== day)
+                              : [...current, day];
+                            updateConfig(['meals_covered', key], next);
+                          }}
+                          className={`px-3 py-1 rounded-full text-xs font-bold border ${current.includes(day)
+                              ? 'bg-[var(--accent-sage)] text-white border-[var(--accent-sage)]'
+                              : 'bg-[var(--bg-primary)] border-[var(--border-subtle)] text-[var(--text-muted)]'
+                            }`}
+                        >
+                          {day.toUpperCase()}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </div>
           </section>
 
@@ -255,21 +250,42 @@ export default function SettingsPage() {
             </h3>
 
             <div className="space-y-6">
-              {/* Prep Time */}
-              <div>
-                <label className="text-sm font-bold mb-2 block">Preferred Prep Time</label>
-                <div className="flex bg-[var(--bg-secondary)] p-1 rounded-lg border border-[var(--border-subtle)] inline-flex">
-                  {['morning', 'afternoon', 'evening'].map(slot => (
-                    <button
-                      key={slot}
-                      onClick={() => updateConfig(['prep_preferences', 'default_time_slot'], slot)}
-                      className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${(config.prep_preferences?.default_time_slot || 'morning') === slot
-                          ? 'bg-[var(--accent-sage)] text-white shadow-sm'
-                          : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
-                        }`}
-                    >
-                      {slot.charAt(0).toUpperCase() + slot.slice(1)}
-                    </button>
+              {/* Prep Time Grid */}
+              <div className="overflow-x-auto">
+                <label className="text-sm font-bold mb-4 block">Prep Time Schedule</label>
+                <div className="grid grid-cols-[80px_1fr_1fr_1fr_1fr] gap-2 min-w-[500px]">
+                  <div className="font-mono text-xs text-[var(--text-muted)] pt-2">DAY</div>
+                  <div className="font-mono text-xs text-center text-[var(--text-muted)]">MORNING</div>
+                  <div className="font-mono text-xs text-center text-[var(--text-muted)]">AFTERNOON</div>
+                  <div className="font-mono text-xs text-center text-[var(--text-muted)]">BEFORE DINNER</div>
+                  <div className="font-mono text-xs text-center text-[var(--text-muted)]">AFTER DINNER</div>
+
+                  {['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map(day => (
+                    <React.Fragment key={`prep-${day}`}>
+                      <div className="font-bold text-xs uppercase pt-3 text-[var(--text-muted)] self-center">{day}</div>
+                      {['morning', 'afternoon', 'pre_dinner', 'post_dinner'].map(slot => {
+                        // Current structure might be simple: prep_preferences: { days: { mon: 'evening' } }
+                        // Or default fallback. Let's assume structure: config.prep_preferences.schedule[day] = slot
+                        const currentSchedule = config.prep_preferences?.schedule || {};
+                        const currentSlot = currentSchedule[day] || config.prep_preferences?.default_time_slot || 'afternoon';
+
+                        // Map 'evening' -> 'pre_dinner' for legacy compat if needed, or just standard
+                        const isSelected = currentSlot === slot;
+
+                        return (
+                          <button
+                            key={`${day}-${slot}`}
+                            onClick={() => updateConfig(['prep_preferences', 'schedule', day], slot)}
+                            className={`py-2 rounded-md text-xs font-bold border transition-colors ${isSelected
+                                ? 'bg-[var(--accent-sage)] text-white border-[var(--accent-sage)]'
+                                : 'hover:bg-gray-50 border-[var(--border-subtle)] text-gray-400'
+                              }`}
+                          >
+                            {(slot === 'pre_dinner' ? 'Before' : slot === 'post_dinner' ? 'After' : '✓')}
+                          </button>
+                        );
+                      })}
+                    </React.Fragment>
                   ))}
                 </div>
               </div>
@@ -327,25 +343,37 @@ export default function SettingsPage() {
           {/* 5. Defaults (Lunch/Snacks) - Read Only for now as complex list */}
           <section className="card opacity-75">
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <span>🍱</span> Meal Defaults (Read Only)
+              <span>🍱</span> Meal Defaults
             </h3>
-            <p className="text-sm text-[var(--text-muted)] mb-4">Edit `config.yml` directly to change these for now.</p>
-            <div className="grid grid-cols-2 gap-4 text-xs">
-              <div className="p-3 bg-[var(--bg-secondary)] rounded">
-                <strong>Lunch Rotation</strong>
-                <ul className="list-disc pl-4 mt-2 space-y-1 text-[var(--text-muted)]">
-                  {(config.lunch_defaults?.kids || []).slice(0, 5).map((l: string, i: number) => (
-                    <li key={i}>{l}</li>
-                  ))}
-                </ul>
+            <p className="text-sm text-[var(--text-muted)] mb-4">Edit your default rotations for lunches and snacks.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
+              <div className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)]">
+                <strong className="block mb-2 text-[var(--accent-sage)]">Lunch Defaults/Rotation</strong>
+                <p className="text-xs text-[var(--text-muted)] mb-3">Comma separated list of lunch ideas to rotate through.</p>
+                <textarea
+                  className="input w-full font-mono text-xs"
+                  rows={6}
+                  value={(config.lunch_defaults?.kids || []).join(', ')}
+                  onChange={(e) => updateConfig(['lunch_defaults', 'kids'], e.target.value.replace(/\n/g, ',').split(',').map((s: string) => s.trim()).filter(Boolean))}
+                  placeholder="Sandwich, Pasta, Wrap..."
+                />
               </div>
-              <div className="p-3 bg-[var(--bg-secondary)] rounded">
-                <strong>Snack Rotation</strong>
-                <ul className="list-disc pl-4 mt-2 space-y-1 text-[var(--text-muted)]">
-                  {Object.entries(config.snack_defaults?.by_day || {}).map(([d, s]: [string, any]) => (
-                    <li key={d}><span className="uppercase font-bold text-[10px] w-8 inline-block">{d}</span> {s}</li>
+              <div className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)]">
+                <strong className="block mb-2 text-[var(--accent-sage)]">Snack Defaults</strong>
+                <p className="text-xs text-[var(--text-muted)] mb-3">Format: "mon: Apple, tue: Yogurt" (one per line or comma)</p>
+                <div className="space-y-2">
+                  {['mon', 'tue', 'wed', 'thu', 'fri'].map(day => (
+                    <div key={day} className="flex items-center gap-2">
+                      <span className="w-8 font-bold uppercase text-xs text-[var(--text-muted)]">{day}</span>
+                      <input
+                        type="text"
+                        className="input flex-1 py-1 text-xs"
+                        value={config.snack_defaults?.by_day?.[day] || ''}
+                        onChange={(e) => updateConfig(['snack_defaults', 'by_day', day], e.target.value)}
+                      />
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
             </div>
           </section>

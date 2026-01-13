@@ -164,5 +164,3 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
         </div>
     );
 }
-    );
-}

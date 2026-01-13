@@ -61,7 +61,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ## Development Status
 
-**Current State:** Phase 19 In Progress.
+**Current State:** Phase 21 Complete. Phase 22 (Auth) Pending.
 
 **Completed Phases:**
 - **1-9:** Foundation (recipe parsing, CLI, energy-based prep, HTML plans)
@@ -71,73 +71,46 @@ Declining energy model: Monday (high) → Friday (zero prep)
 - **14:** Data Layer Redesign (Plan vs Actual separation)
 - **15:** Database Migration (Supabase integration)
 - **16:** Smart Weekly Planning Workflow (End-to-End)
-- **17:** Core Stability & Data Hygiene (Blocks 1, 2, 4)
+- **17:** Core Stability & Data Hygiene
 - **18:** Enhanced Planning Workflow (Wizard 2.0)
+- **19:** Recipe Ecosystem & UX Polish
+- **20:** Advanced Planning Control (Selective Replanning, Confirm Today)
+- **21:** Inventory UI/UX Overhaul (Visuals, Move Logic, Dedup)
 
 ---
 
 ## Implementation Roadmap (Ideal Order)
 
-### Phase 17: Core Stability & Data Hygiene (Current)
-**Goal:** Fix known bugs and standardize data to ensure a reliable foundation.
-- **Block 1: Fix Week View Bug.** ✅ Complete.
-- **Block 2: System Cleanup.** ✅ Complete.
-- **Block 3: Recipe Index Standardization.**
-    - **Chunk 1: Ingredient Normalization.** Standardize canonical forms (e.g., "tomato" vs "tomatoe"). Ask for confirmation on conflicts and record perm-fix in plan.
-    - **Chunk 2: Prep Step Standardization.** Ensure consistently structured prep steps across all recipes using templates where possible.
-    - **Chunk 3: One-time Auto-Generation.** First time a recipe is finalized in a plan, generate and save missing prep steps to the recipe file (only changes if recipe is edited).
-    - **Chunk 4: Ingredient Preferences.** Implement system to store and apply ingredient preferences (canonical names/brands). Needs easy entry for new preferences as they are thought of.
-    - **Chunk 5: Index Audit & Deduplication.** Parse through entire index to review metadata, remove duplicates, and ensure all recipes follow the latest standards.
-- **Block 4: Main Page & Prep Logic.**
-    - **Chunk 1: Default Week.** Main page should always load the current calendar week by default.
-    - **Chunk 2: Prep Ordering.** Prep tasks should be sorted chronologically based on their associated meals.
-    - **Chunk 3: Dynamic Prep Updates.** Prep tasks must automatically recalculate/move when meals are swapped or changed (on next visit).
-    - **Chunk 4: "Confirm for Today".** Add button to run confirm-meals logic only for the current day to handle missed logging efficiently.
+### Phase 22: User Authentication (The "Family Gate")
+**Goal:** Transition from single-user system to secure, multi-tenant application via Supabase Auth + RLS.
 
-### Phase 18: Enhanced Planning Workflow (Wizard 2.0)
-**Goal:** Remove friction from the weekly planning process and daily execution.
-- **Block 1: Wizard UX Overhaul.** ✅ Complete.
-    - Dinners/Snacks Split (Step 0/1). ✅ Complete.
-    - Inventory Improvements (Step 2). ✅ Complete.
-    - **Chunk 3: Editable Tentative Plan.** ✅ Complete.
-    - **Chunk 4: Low-friction "Leftovers" logic.** ✅ Complete.
-- **Block 2: Pause Capability.** ✅ Complete.
-    - Implemented auto-save/restore of wizard state.
-- **Block 3: Nightly Confirmation.** ✅ Complete.
-    - Persistent 6pm banner for day's meals validation.
-- **Block 4: Interactive Shopping List.** ✅ Complete.
-    - Check-off items during shopping, sync to inventory, and add custom items.
+---
 
-### Phase 19: Recipe Ecosystem & UX Polish
-**Goal:** Close the loop on data entry and ensure the system feels "smart" to use.
-- **Block 1: Recipe Capture 2.0.** ✅ Complete.
-    - **Chunk 1: Main Page UX.** Replace list with a number badge/counter on the homepage that opens a modal with the list of pending recipes to add.
-    - **Chunk 2: Smart Entry.** 
-        - Add "Snack Only" toggle during capture.
-        - Add "Discard/Ignore" option for detected recipes.
-    - **Chunk 3: Ingredient Preferences.** "Easy Entry" for new ingredient preferences (brand/name) during capture. Apply standardization immediately.
-- **Block 2: Index Intelligence & Hygiene.** ✅ Complete. (Consolidated from Phase 17)
-    - **Chunk 1: Index Audit.** Deduplication and metadata review.
-    - **Chunk 2: Prep Standardization.** Consistent templates.
-    - **Chunk 3: Auto-Generation.** One-time generation of prep steps for new recipes.
-- **Block 3: Flexible Logging.** ✅ Complete.
-    - **Chunk 1: Expanded Options.** Support "Fresh (Unplanned)", "Freezer Meal", "Leftovers", "Ate Out".
-    - **Chunk 2: Flexible Plan Adjustments.** Move/swap meals directly from the dashboard.
+## Previously Completed (Recent)
 
-### Phase 20: Advanced Planning Control
+### Phase 17: Core Stability & Data Hygiene ✅ Complete
+**Goal:** Fix known bugs and standardise data.
+
+### Phase 18: Enhanced Planning Workflow (Wizard 2.0) ✅ Complete
+**Goal:** Remove friction from the weekly planning process.
+
+### Phase 19: Recipe Ecosystem & UX Polish ✅ Complete
+**Goal:** Close the loop on data entry.
+
+### Phase 20: Advanced Planning Control ✅ Complete
 **Goal:** Give the user more control over the automated plans.
 - **Block 1: Logic Refinements.**
     - **Chunk 1: Selective Replanning.** UI to select specific meals/slots that should be replanned vs kept.
     - **Chunk 2: "Confirm for Today".** Add button to run confirm-meals logic only for the current day to handle missed logging efficiently.
     - **Chunk 3: Default Week Fix.** Ensure calendar week is always loaded by default.
 
-### Phase 21: Inventory UI/UX Overhaul
+### Phase 21: Inventory UI/UX Overhaul ✅ Complete
 **Goal:** Improve layout and data integrity of the inventory system.
 - **Block 1: Visual Improvements.**
     - Ingredient names wrap/expand (no truncation).
     - Layout: 1. Search, 2. Leftovers Card, 3. Freezer Meals Card, 4. Tabs (Fridge/Pantry/Freezer).
 - **Block 2: Drag and Drop.**
-    - Enable dragging items between Fridge, Pantry, and Freezer categories.
+    - Move items between Fridge, Pantry, and Freezer categories.
 - **Block 3: Ingredient Deduplication.**
     - Merge identical ingredients regardless of unit (e.g., "2 cups milk" + "1 liter milk" -> one "milk" entry).
 

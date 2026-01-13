@@ -43,6 +43,47 @@ def add_inventory():
         elif category == 'fridge':
             updates = {'quantity': 1, 'unit': 'count', 'added': datetime.now().strftime('%Y-%m-%d')}
 
+        # Deduplication Logic: Check if exists
+        current_inv = StorageEngine.get_inventory()
+        # Map category to inventory key
+        inv_key_map = {
+            'fridge': 'fridge',
+            'pantry': 'pantry',
+            'meals': 'freezer', # Special handling needed as freezer is dict
+            'frozen_ingredient': 'freezer',
+            'freezer_backup': 'freezer',
+            'freezer_ingredient': 'freezer'
+        }
+        
+        inv_key = inv_key_map.get(category)
+        existing_item = None
+        
+        if inv_key == 'freezer':
+            # Check backups or ingredients
+            if category == 'meals':
+                existing_item = next((x for x in current_inv.get('freezer', {}).get('backups', []) if x.get('meal') == item), None)
+            else:
+                existing_item = next((x for x in current_inv.get('freezer', {}).get('ingredients', []) if x.get('item') == item), None)
+        elif inv_key:
+            existing_item = next((x for x in current_inv.get(inv_key, []) if x.get('item') == item), None)
+            
+        if existing_item:
+            # Merge/Increment
+            current_qty = existing_item.get('quantity') or existing_item.get('servings', 1)
+            # Default increment is 1 (or 4 for meals, based on original logic?)
+            # Logic: If quick-adding via "Add", usually implies adding 1 unit/batch
+            increment = 4 if category == 'meals' else 1
+            new_qty = int(current_qty) + increment
+            
+            if category == 'meals':
+                updates['quantity'] = new_qty # mapped to servings in storage
+            else:
+                updates['quantity'] = new_qty
+            
+            # Keep existing unit
+            if 'unit' in existing_item:
+                updates['unit'] = existing_item['unit']
+
         StorageEngine.update_inventory_item(db_category, item, updates)
         
         # Legacy: Still invalidate cache if any
@@ -76,11 +117,13 @@ def bulk_add_inventory():
                 updates['frozen_date'] = datetime.now().strftime('%Y-%m-%d')
             elif category == 'fridge':
                 updates['added'] = datetime.now().strftime('%Y-%m-%d')
+                
+            # TODO: Add deduplication here too for full correctness, 
+            # but standard 'upsert' acts as overwrite for bulk operations usually.
+            # Leaving as overwrite for now to allow explicit setting of quantities.
             
             StorageEngine.update_inventory_item(db_category, item, updates)
             
-        invalidate_cache('inventory')
-        return jsonify({"status": "success", "inventory": StorageEngine.get_inventory()})
         invalidate_cache('inventory')
         return jsonify({"status": "success", "inventory": StorageEngine.get_inventory()})
     except Exception as e:
@@ -168,6 +211,7 @@ def update_inventory():
         return jsonify({"status": "success", "inventory": StorageEngine.get_inventory()})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
 @inventory_bp.route("/api/inventory/move", methods=["POST"])
 @require_auth
 def move_inventory_item():
@@ -188,10 +232,56 @@ def move_inventory_item():
             'fridge': 'fridge'
         }
         
-        # In Db, move is just changing the category
-        StorageEngine.update_inventory_item(cat_map.get(to_category), item_name, updates={'moved_from': from_category})
-        # Note: In a real app we should verify it exists in from_category, 
-        # but for now we follow the simple upsert logic.
+        from_db = cat_map.get(from_category)
+        to_db = cat_map.get(to_category)
+        
+        # 1. Fetch current inventory to get source item details
+        inv = StorageEngine.get_inventory()
+        
+        # Helper to find item in nested structure
+        def find_in_inv(cat_key, search_name):
+            if cat_key == 'meals':
+                return next((x for x in inv.get('freezer', {}).get('backups', []) if x.get('meal') == search_name), None)
+            elif cat_key == 'frozen_ingredient':
+                return next((x for x in inv.get('freezer', {}).get('ingredients', []) if x.get('item') == search_name), None)
+            else:
+                return next((x for x in inv.get(cat_key, []) if x.get('item') == search_name), None)
+
+        source_item = find_in_inv(from_category, item_name)
+        if not source_item:
+            return jsonify({"status": "error", "message": f"Item {item_name} not found in {from_category}"}), 404
+            
+        # Extract metadata
+        qty = source_item.get('quantity') or source_item.get('servings', 1)
+        unit = source_item.get('unit', 'count')
+        meta = {k: v for k, v in source_item.items() if k not in ['item', 'meal', 'quantity', 'servings', 'unit', 'category']}
+        
+        # 2. Check for duplicate in target
+        target_item = find_in_inv(to_category, item_name)
+        
+        updates = {
+            'quantity': qty,
+            'unit': unit,
+            **meta,
+            'moved_from': from_category,
+            'moved_at': datetime.now().strftime('%Y-%m-%d')
+        }
+        
+        if target_item:
+            # Merge logic
+            target_qty = target_item.get('quantity') or target_item.get('servings', 1)
+            updates['quantity'] = int(target_qty) + int(qty)
+            # Keep target unit and metadata preference?
+            # For now, updates overwrites, so we want to Preserve target's unit unless we want to overwrite.
+            # Let's trust target unit if exists
+            if 'unit' in target_item:
+                 updates['unit'] = target_item['unit']
+                 
+        # 3. Add/Update Target
+        StorageEngine.update_inventory_item(to_db, item_name, updates=updates)
+        
+        # 4. Remove Source
+        StorageEngine.update_inventory_item(from_db, item_name, delete=True)
         
         invalidate_cache('inventory')
         return jsonify({"status": "success", "inventory": StorageEngine.get_inventory()})

@@ -14,6 +14,7 @@ export default function InventoryPage() {
     const [newItem, setNewItem] = useState({ category: 'fridge', name: '' });
     const [updating, setUpdating] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [activeTab, setActiveTab] = useState<'fridge' | 'pantry' | 'frozen_ingredient'>('fridge');
 
     // Undo states
     const [lastDeleted, setLastDeleted] = useState<{ category: string, item: any } | null>(null);
@@ -243,7 +244,6 @@ export default function InventoryPage() {
                 </button>
             </div>
 
-            {/* Unified Search Results */}
             {searchQuery ? (
                 <section className="card">
                     <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
@@ -268,100 +268,107 @@ export default function InventoryPage() {
                     </div>
                 </section>
             ) : (
-                <div className="grid gap-8 md:grid-cols-2">
-                    {/* Standard Category Layout */}
+                <div className="space-y-8">
+                    {/* High Priority: Leftovers & Freezer Meals */}
+                    <div className="grid gap-8 md:grid-cols-2">
+                        {/* Leftovers (Filtered from Fridge) */}
+                        <section className="card border-[var(--accent-sage)] bg-green-50/30">
+                            <header className="flex justify-between items-center mb-4">
+                                <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--accent-sage)] font-bold">Leftovers</h2>
+                                <span className="text-xs bg-white border border-[var(--accent-sage)] text-[var(--accent-sage)] px-2 py-0.5 rounded-full">
+                                    {inventory?.fridge?.filter((i: any) => i.item.toLowerCase().includes('leftover')).length || 0}
+                                </span>
+                            </header>
+                            <div className="space-y-1">
+                                {inventory?.fridge?.filter((i: any) => i.item.toLowerCase().includes('leftover')).length > 0 ? (
+                                    inventory.fridge
+                                        .filter((i: any) => i.item.toLowerCase().includes('leftover'))
+                                        .map((item: any, idx: number) => (
+                                            <InventoryItemRow
+                                                key={`leftover-${idx}`}
+                                                item={item}
+                                                category="fridge"
+                                                onUpdate={handleUpdateItem}
+                                                onDelete={handleDeleteItem}
+                                                onMove={handleMoveItem}
+                                                disabled={updating}
+                                            />
+                                        ))
+                                ) : <p className="text-sm text-[var(--text-muted)] italic">No leftovers recorded.</p>}
+                            </div>
+                        </section>
 
-                    {/* Fridge */}
-                    <section className="card">
-                        <header className="flex justify-between items-center mb-4">
-                            <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)]">Fridge</h2>
-                            <span className="text-xs bg-gray-100 px-2 py-0.5 rounded-full">{inventory?.fridge?.length || 0}</span>
-                        </header>
-                        <div className="space-y-1">
-                            {inventory?.fridge?.length ? (
-                                inventory.fridge.map((item: any, idx: number) => (
-                                    <InventoryItemRow
-                                        key={`fridge-${idx}`}
-                                        item={item}
-                                        category="fridge"
-                                        onUpdate={handleUpdateItem}
-                                        onDelete={handleDeleteItem}
-                                        onMove={handleMoveItem}
-                                        disabled={updating}
-                                    />
-                                ))
-                            ) : <p className="text-sm text-[var(--text-muted)] italic">Empty</p>}
-                        </div>
-                    </section>
+                        {/* Freezer Meals (Backups) */}
+                        <section className="card border-[var(--accent-terracotta)] bg-orange-50/30">
+                            <header className="flex justify-between items-center mb-4">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xl">🧊</span>
+                                    <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--accent-terracotta)] font-bold">Freezer Stash</h2>
+                                </div>
+                                <span className="text-xs bg-white border border-[var(--accent-terracotta)] text-[var(--accent-terracotta)] px-2 py-0.5 rounded-full">
+                                    {inventory?.freezer?.backups?.length || 0}
+                                </span>
+                            </header>
+                            <div className="space-y-1">
+                                {inventory?.freezer?.backups?.length ? (
+                                    inventory.freezer.backups.map((item: any, idx: number) => (
+                                        <InventoryItemRow
+                                            key={`meals-${idx}`}
+                                            item={item}
+                                            category="meals"
+                                            onUpdate={handleUpdateItem}
+                                            onDelete={handleDeleteItem}
+                                            onMove={handleMoveItem}
+                                            disabled={updating}
+                                        />
+                                    ))
+                                ) : <p className="text-sm text-[var(--text-muted)] italic">No freezer meals.</p>}
+                            </div>
+                        </section>
+                    </div>
 
-                    {/* Pantry */}
-                    <section className="card">
-                        <header className="flex justify-between items-center mb-4">
-                            <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)]">Pantry</h2>
-                            <span className="text-xs bg-gray-100 px-2 py-0.5 rounded-full">{inventory?.pantry?.length || 0}</span>
-                        </header>
-                        <div className="space-y-1">
-                            {inventory?.pantry?.length ? (
-                                inventory.pantry.map((item: any, idx: number) => (
-                                    <InventoryItemRow
-                                        key={`pantry-${idx}`}
-                                        item={item}
-                                        category="pantry"
-                                        onUpdate={handleUpdateItem}
-                                        onDelete={handleDeleteItem}
-                                        onMove={handleMoveItem}
-                                        disabled={updating}
-                                    />
-                                ))
-                            ) : <p className="text-sm text-[var(--text-muted)] italic">Empty</p>}
+                    {/* Tabbed Inventory View */}
+                    <div className="card">
+                        <div className="flex border-b border-[var(--border-subtle)] mb-6">
+                            {/* Tabs Header */}
+                            {['fridge', 'pantry', 'frozen_ingredient'].map((tab) => (
+                                <button
+                                    key={tab}
+                                    onClick={() => setActiveTab(tab as any)}
+                                    className={`px-6 py-3 text-sm font-mono uppercase tracking-wider border-b-2 transition-colors ${activeTab === tab
+                                        ? 'border-[var(--accent-sage)] text-[var(--accent-sage)] font-bold'
+                                        : 'border-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                                        }`}
+                                >
+                                    {tab.replace('_', ' ')}
+                                    <span className="ml-2 text-xs opacity-50">
+                                        {tab === 'fridge' ? (inventory?.fridge?.length || 0) :
+                                            tab === 'pantry' ? (inventory?.pantry?.length || 0) :
+                                                (inventory?.freezer?.ingredients?.length || 0)}
+                                    </span>
+                                </button>
+                            ))}
                         </div>
-                    </section>
 
-                    {/* Freezer Backups */}
-                    <section className="card">
-                        <header className="flex justify-between items-center mb-4">
-                            <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)]">Freezer Meals</h2>
-                            <span className="text-xs bg-gray-100 px-2 py-0.5 rounded-full">{inventory?.freezer?.backups?.length || 0}</span>
-                        </header>
-                        <div className="space-y-1">
-                            {inventory?.freezer?.backups?.length ? (
-                                inventory.freezer.backups.map((item: any, idx: number) => (
-                                    <InventoryItemRow
-                                        key={`meals-${idx}`}
-                                        item={item}
-                                        category="meals"
-                                        onUpdate={handleUpdateItem}
-                                        onDelete={handleDeleteItem}
-                                        onMove={handleMoveItem}
-                                        disabled={updating}
-                                    />
-                                ))
-                            ) : <p className="text-sm text-[var(--text-muted)] italic">Empty</p>}
+                        {/* Tab Content */}
+                        <div className="space-y-1 min-h-[300px]">
+                            {activeTab === 'fridge' && (
+                                inventory?.fridge?.map((item: any, idx: number) => (
+                                    <InventoryItemRow key={`fridge-${idx}`} item={item} category="fridge" onUpdate={handleUpdateItem} onDelete={handleDeleteItem} onMove={handleMoveItem} disabled={updating} />
+                                )) || <p className="text-sm text-[var(--text-muted)] italic">Fridge empty.</p>
+                            )}
+                            {activeTab === 'pantry' && (
+                                inventory?.pantry?.map((item: any, idx: number) => (
+                                    <InventoryItemRow key={`pantry-${idx}`} item={item} category="pantry" onUpdate={handleUpdateItem} onDelete={handleDeleteItem} onMove={handleMoveItem} disabled={updating} />
+                                )) || <p className="text-sm text-[var(--text-muted)] italic">Pantry empty.</p>
+                            )}
+                            {activeTab === 'frozen_ingredient' && (
+                                inventory?.freezer?.ingredients?.map((item: any, idx: number) => (
+                                    <InventoryItemRow key={`frozen-${idx}`} item={item} category="frozen_ingredient" onUpdate={handleUpdateItem} onDelete={handleDeleteItem} onMove={handleMoveItem} disabled={updating} />
+                                )) || <p className="text-sm text-[var(--text-muted)] italic">No frozen ingredients.</p>
+                            )}
                         </div>
-                    </section>
-
-                    {/* Freezer Ingredients */}
-                    <section className="card">
-                        <header className="flex justify-between items-center mb-4">
-                            <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)]">frozen Ingredients</h2>
-                            <span className="text-xs bg-gray-100 px-2 py-0.5 rounded-full">{inventory?.freezer?.ingredients?.length || 0}</span>
-                        </header>
-                        <div className="space-y-1">
-                            {inventory?.freezer?.ingredients?.length ? (
-                                inventory.freezer.ingredients.map((item: any, idx: number) => (
-                                    <InventoryItemRow
-                                        key={`frozen-${idx}`}
-                                        item={item}
-                                        category="frozen_ingredient"
-                                        onUpdate={handleUpdateItem}
-                                        onDelete={handleDeleteItem}
-                                        onMove={handleMoveItem}
-                                        disabled={updating}
-                                    />
-                                ))
-                            ) : <p className="text-sm text-[var(--text-muted)] italic">Empty</p>}
-                        </div>
-                    </section>
+                    </div>
                 </div>
             )}
 

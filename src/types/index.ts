@@ -271,6 +271,7 @@ export interface LogMealData {
   made_2x?: boolean;
   freezer_meal?: string;
   reason?: string;
+  confirm_day?: boolean;
   // Snack/lunch feedback
   school_snack_feedback?: string;
   home_snack_feedback?: string;

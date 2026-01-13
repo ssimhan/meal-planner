@@ -81,7 +81,7 @@ export default function InventoryItemRow({ item, category, onUpdate, onDelete, o
             {/* Left: Item Info */}
             <div className="flex flex-col flex-1 min-w-0 pr-4">
                 <div className="flex items-center gap-2">
-                    <span className={`font-medium truncate ${category === 'fridge' ? 'text-[var(--text-primary)]' : 'text-gray-700'}`}>
+                    <span className={`font-medium break-words ${category === 'fridge' ? 'text-[var(--text-primary)]' : 'text-gray-700'}`}>
                         {itemName}
                     </span>
                     {dateStr && (

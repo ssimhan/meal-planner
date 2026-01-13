@@ -75,7 +75,7 @@ def generate_draft_route():
     try:
         data = request.json or {}
         week_of = data.get('week_of')
-        selections = data.get('selections', []) # [{day: 'mon', recipe_id: '...'}]
+        locked_days = data.get('locked_days', []) # ['mon', ' tue']
         
         h_id = storage.get_household_id()
         
@@ -88,6 +88,14 @@ def generate_draft_route():
         plan_data = active_plan['plan_data']
         history_week = active_plan['history_data'] or {'week_of': week_of, 'dinners': []}
         
+        # 1b. Selective Replanning: Clear unlocked days from history
+        # If locked_days is provided (even if empty list), we assume this is a regeneration request
+        # and we should clear anything NOT locked.
+        if 'locked_days' in data:
+            current_dinners = history_week.get('dinners', [])
+            # Keep only dinners that are in locked_days
+            history_week['dinners'] = [d for d in current_dinners if d.get('day') in locked_days]
+
         # 2. Apply manual selections to history_week
         # This ensures the generation logic respects these choices
         days_covered = set()
@@ -392,12 +400,14 @@ def log_meal():
         target_day = day.lower()[:3]
         target_dinner = None
         
+        confirm_day = data.get('confirm_day', False)
+        
         # Logic to skip made check if strictly feedback
         is_feedback_only = (school_snack_feedback or home_snack_feedback or kids_lunch_feedback or adult_lunch_feedback or
                             school_snack_needs_fix is not None or home_snack_needs_fix is not None or
-                            kids_lunch_needs_fix is not None or adult_lunch_needs_fix is not None) and not made
+                            kids_lunch_needs_fix is not None or adult_lunch_needs_fix is not None) and not made and not confirm_day
 
-        if not is_feedback_only or dinner_needs_fix is not None or actual_meal:
+        if not is_feedback_only or dinner_needs_fix is not None or actual_meal or confirm_day:
              for d in history_week.get('dinners', []):
                  if d.get('day') == target_day:
                      target_dinner = d
@@ -408,7 +418,11 @@ def log_meal():
                  history_week.setdefault('dinners', []).append(target_dinner)
 
              # Update execution data
-             if str(made).lower() in ('yes', 'true', '1', 'y'): target_dinner['made'] = True
+             if confirm_day:
+                 # Only update if not already marked
+                 if target_dinner.get('made') is None:
+                    target_dinner['made'] = True
+             elif str(made).lower() in ('yes', 'true', '1', 'y'): target_dinner['made'] = True
              elif str(made).lower() in ('no', 'false', '0', 'n'): target_dinner['made'] = False
              elif str(made).lower() in ('freezer', 'backup'): target_dinner['made'] = 'freezer_backup'
              elif str(made).lower() == 'outside_meal' or str(made).lower() == 'ate_out': target_dinner['made'] = 'outside_meal'
@@ -417,7 +431,7 @@ def log_meal():
                  target_dinner['actual_meal'] = "Leftovers"
              else: target_dinner['made'] = made
         
-        if not is_feedback_only:
+        if not is_feedback_only or confirm_day:
              if vegetables: 
                  v_list = [v.strip() for v in vegetables.split(',')]
                  target_dinner['vegetables_used'] = v_list
@@ -447,9 +461,16 @@ def log_meal():
             kids_lunch_made is not None or adult_lunch_made is not None or
             school_snack_needs_fix is not None or home_snack_needs_fix is not None or
             kids_lunch_needs_fix is not None or adult_lunch_needs_fix is not None or
-            (prep_completed and len(prep_completed) > 0)):
+            (prep_completed and len(prep_completed) > 0) or confirm_day):
             
             day_fb = history_week.setdefault('daily_feedback', {}).setdefault(target_day, {})
+            
+            if confirm_day:
+                # Mark all as made if not already set
+                if 'school_snack_made' not in day_fb: day_fb['school_snack_made'] = True
+                if 'home_snack_made' not in day_fb: day_fb['home_snack_made'] = True
+                if 'kids_lunch_made' not in day_fb: day_fb['kids_lunch_made'] = True
+                if 'adult_lunch_made' not in day_fb: day_fb['adult_lunch_made'] = True
             
             if school_snack_feedback is not None: day_fb['school_snack'] = school_snack_feedback
             if school_snack_made is not None: day_fb['school_snack_made'] = school_snack_made

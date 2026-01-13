@@ -84,6 +84,7 @@ function PlanningWizardContent() {
     // Draft State
     const [draftPlan, setDraftPlan] = useState<any>(null);
     const [selections, setSelections] = useState<{ day: string, recipe_id: string }[]>([]);
+    const [lockedDays, setLockedDays] = useState<string[]>([]);
     const [isReplacing, setIsReplacing] = useState<string | null>(null);
     const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
 
@@ -401,7 +402,8 @@ function PlanningWizardContent() {
                 // We save 'selections' which allows regenerating the draft.
                 shoppingList,
                 purchasedItems,
-                customShoppingItems
+                customShoppingItems,
+                lockedDays
             });
         }, 1000);
 
@@ -423,7 +425,10 @@ function PlanningWizardContent() {
                     if (res.state.selections) setSelections(res.state.selections);
                     if (res.state.shoppingList) setShoppingList(res.state.shoppingList);
                     if (res.state.purchasedItems) setPurchasedItems(res.state.purchasedItems);
+                    if (res.state.shoppingList) setShoppingList(res.state.shoppingList);
+                    if (res.state.purchasedItems) setPurchasedItems(res.state.purchasedItems);
                     if (res.state.customShoppingItems) setCustomShoppingItems(res.state.customShoppingItems);
+                    if (res.state.lockedDays) setLockedDays(res.state.lockedDays);
                 }
             } catch (e) {
                 console.error("Failed to restore state", e);
@@ -628,31 +633,63 @@ function PlanningWizardContent() {
                     </div>
                 ) : (
                     <div className="space-y-6">
-                        {/* Simple list view of the draft plan */}
                         <div className="grid gap-4">
                             {['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map(day => {
                                 const dinner = draftPlan.dinners?.find((d: any) => d.day === day);
                                 const isSelected = selections.some(s => s.day === day);
+                                const isLocked = lockedDays.includes(day);
 
                                 return (
-                                    <div key={day} className={`card flex items-center justify-between ${isSelected ? 'border-[var(--accent-sage)] bg-green-50' : ''}`}>
+                                    <div key={day} className={`card flex items-center justify-between ${isSelected ? 'border-[var(--accent-sage)] bg-green-50' : ''} ${isLocked ? 'border-l-4 border-l-[var(--accent-sage)]' : ''}`}>
                                         <div className="flex items-center gap-4">
                                             <span className="font-mono uppercase text-[var(--accent-sage)] w-12">{day}</span>
                                             <div>
                                                 <span className="text-lg font-bold block">{dinner?.recipe_id?.replace(/_/g, ' ') || 'No Meal'}</span>
-                                                {isSelected && <span className="text-xs text-[var(--accent-sage)] font-bold uppercase tracking-wider">Manual Selection</span>}
+                                                {isSelected && <span className="text-xs text-[var(--accent-sage)] font-bold uppercase tracking-wider mr-2">Manual Selection</span>}
                                             </div>
                                         </div>
-                                        <button
-                                            onClick={() => setIsReplacing(day)}
-                                            className="text-[var(--text-muted)] hover:text-[var(--accent-sage)] p-2 rounded-full hover:bg-[var(--bg-secondary)]"
-                                            title="Edit Meal"
-                                        >
-                                            ✏️
-                                        </button>
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => setLockedDays(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day])}
+                                                className={`p-2 rounded-full ${isLocked ? 'text-[var(--accent-sage)] bg-[var(--bg-secondary)]' : 'text-[var(--text-muted)] hover:bg-[var(--bg-secondary)]'}`}
+                                                title={isLocked ? "Unlock Day" : "Lock Day (Keep when regenerating)"}
+                                            >
+                                                {isLocked ? '🔒' : '🔓'}
+                                            </button>
+                                            <button
+                                                onClick={() => setIsReplacing(day)}
+                                                className="text-[var(--text-muted)] hover:text-[var(--accent-sage)] p-2 rounded-full hover:bg-[var(--bg-secondary)]"
+                                                title="Edit Meal"
+                                            >
+                                                ✏️
+                                            </button>
+                                        </div>
                                     </div>
                                 );
                             })}
+                        </div>
+
+                        <div className="flex justify-center mt-6">
+                            <button
+                                onClick={async () => {
+                                    setLoading(true);
+                                    try {
+                                        // Pass lockedDays to regenerate everything else
+                                        const res = await generateDraft(planningWeek!, selections, lockedDays);
+                                        setDraftPlan(res.plan_data);
+                                        showToast('Plan regenerated!', 'success');
+                                    } catch (e) {
+                                        console.error(e);
+                                        showToast('Failed to regenerate plan', 'error');
+                                    } finally {
+                                        setLoading(false);
+                                    }
+                                }}
+                                disabled={loading}
+                                className="text-sm text-[var(--text-muted)] hover:text-[var(--foreground)] underline"
+                            >
+                                🔄 Regenerate Unlocked Days
+                            </button>
                         </div>
                     </div>
                 )}

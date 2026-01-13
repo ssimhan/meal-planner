@@ -596,3 +596,39 @@ The best tools are the ones you actually use. This system works because it reduc
 - **UX:** Users can now move today's dinner to another day with one click, swapping meals if necessary, handling the common "too tired today, will cook Friday" scenario.
 
 **Learning:** Automated "loop closure" is critical. By detecting missing recipes (`pending_recipes`) and allowing easy mid-week pivots ("Change Plan"), the system minimizes friction and prevents "abandonment due to rigidity."
+
+### Phase 20: Advanced Planning Control (2026-01-13) ✅ Complete
+
+**Goal:** Give users granular control over the automated planning process.
+
+**Block 1: Selective Replanning (Completed)**
+- **Feature:** Added "Lock" toggles (🔒/🔓) to meal cards in the Tentative Plan wizard step.
+- **Logic:** Users can now lock perfectly good days (e.g., "Monday looks great") and regenerate only the days that don't fit.
+- **Technical:** `generate_draft_route` filters history to preserve locked slots before calling the allocation engine.
+
+**Block 2: "Confirm for Today" (Completed)**
+- **Feature:** Added a "✓ Confirm Plan" button to the Dashboard header.
+- **Impact:** One-tap validation for days where the plan was followed exactly. No more multi-click logging for success paths.
+- **Technical:** Extended `log_meal` endpoint with `confirm_day=True` flag that marks all scheduled meals (dinner + snacks + lunch) as `made`.
+
+**Block 3: Default Week Fix (Completed)**
+- **Stabilization:** Verified and locked in logic ensuring the dashboard always defaults to the current calendar week, preventing "blank screens" on new visits.
+
+### Phase 21: Inventory UI/UX Overhaul (2026-01-13) ✅ Complete
+
+**Goal:** Transform the inventory from a raw list into a managed tool with high data integrity.
+
+**Block 1: Visual Improvements (Completed)**
+- **Feature:** Tabbed interface for Fridge / Pantry / Frozen Ingredients.
+- **Layout:** "leftovers" and "Freezer Meals" (Backups) promoted to high-priority sections at the top.
+- **UX:** Removed text truncation, allowing full ingredient visibility (critical for "Trader Joe's..." items).
+
+**Block 2: Interactive Management (Completed)**
+- **Feature:** "Move" action with Move-to-Category logic.
+- **Logic:** Atomic move (Add Destination + Delete Source) with quantity merging.
+- **Impact:** Users can easily "defrost" items (Freezer -> Fridge) or "store" leftovers (Fridge -> Freezer).
+
+**Block 3: Data Integrity (Completed)**
+- **Feature:** Backend deduplication.
+- **Logic:** Adding an item that already exists now increments the quantity of the existing entry (merging them) rather than creating a duplicate row.
+- **Cleanup:** Ran a database scrubber to merge all 100% duplicate entries, leaving a clean slate for the new logic.

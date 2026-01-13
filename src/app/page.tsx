@@ -285,6 +285,25 @@ function DashboardContent() {
     }
   }
 
+  async function handleConfirmToday() {
+    if (!status?.week_of || !status?.current_day) return;
+
+    try {
+      setUi(prev => ({ ...prev, logLoading: true }));
+      const updatedStatus = await logMeal({
+        week: status.week_of,
+        day: status.current_day,
+        confirm_day: true
+      });
+      showToast(`Confirmed all meals for today!`, 'success');
+      setStatus(updatedStatus);
+    } catch (err: any) {
+      showToast(err.message || 'Failed to confirm today', 'error');
+    } finally {
+      setUi(prev => ({ ...prev, logLoading: false }));
+    }
+  }
+
   const getDisplayName = (planned: string, actual?: string) => {
     if (!actual) return planned;
     const isEmoji = ['❤️', '👍', '😐', '👎', '❌'].some(emoji => actual.includes(emoji));
@@ -470,6 +489,13 @@ function DashboardContent() {
                 <span className="text-xs font-mono px-2 py-1 bg-[var(--bg-secondary)] rounded border border-[var(--border-subtle)] text-[var(--accent-sage)] uppercase">
                   ACTIVE PLAN
                 </span>
+                <button
+                  onClick={handleConfirmToday}
+                  disabled={ui.logLoading}
+                  className="text-xs px-2 py-1 bg-[var(--accent-sage)] text-white rounded hover:opacity-90 disabled:opacity-50"
+                >
+                  {ui.logLoading ? '...' : '✓ Confirm Plan'}
+                </button>
               </div>
             </header>
 

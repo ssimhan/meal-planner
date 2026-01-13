@@ -16,6 +16,7 @@ Hybrid Serverless application for weekly meal planning, daily execution tracking
 1. **Weekly Planning:** "Start New Week" → enter farmers market purchases → "Generate Weekly Plan"
 2. **Daily Execution:** View "Today's Schedule" → one-tap logging for meals/prep tasks
 3. **Inventory:** Update via "Quick Add" or "Brain Dump"
+4. **Confirmation-Driven Fixes:** When normalization or prep-step ambiguity arises, system asks user, records decision, and updates implementation plan for permanent resolution.
 
 ### Data Files
 
@@ -79,13 +80,15 @@ Declining energy model: Monday (high) → Friday (zero prep)
 **Goal:** Fix known bugs and standardize data to ensure a reliable foundation.
 - **Block 1: Fix Week View Bug.** ✅ Complete.
 - **Block 2: System Cleanup.** ✅ Complete.
-- **Block 3: Recipe Index Standardization (Expanded).** ✅ Complete.
-    - **Chunk 2: Prep Step Standardization.** Ensure consistently structured prep steps across all recipes.
-    - **Chunk 3: Auto-Generation.** First time a recipe is finalized in a plan, generate and save missing prep steps.
+- **Block 3: Recipe Index Standardization.**
+    - **Chunk 1: Ingredient Normalization.** Standardize canonical forms (e.g., "tomato" vs "tomatoe"). Ask for confirmation on conflicts and record perm-fix in plan.
+    - **Chunk 2: Prep Step Standardization.** Ensure consistently structured prep steps across all recipes using templates where possible.
+    - **Chunk 3: One-time Auto-Generation.** First time a recipe is finalized in a plan, generate and save missing prep steps to the recipe file (only changes if recipe is edited).
 - **Block 4: Main Page & Prep Logic.**
     - **Chunk 1: Default Week.** Main page should always load the current calendar week by default.
-    - **Chunk 2: Prep Ordering.** Prep tasks should be sorted biologically (when the meal is needed).
-    - **Chunk 3: Dynamic Prep Updates.** Prep tasks must automatically move/update when meals are swapped.
+    - **Chunk 2: Prep Ordering.** Prep tasks should be sorted chronologically based on their associated meals.
+    - **Chunk 3: Dynamic Prep Updates.** Prep tasks must automatically recalculate/move when meals are swapped or changed (on next visit).
+    - **Chunk 4: "Confirm for Today".** Add button to run confirm-meals logic only for the current day to handle missed logging efficiently.
 
 ### Phase 18: Enhanced Planning Workflow (Wizard 2.0)
 **Goal:** Remove friction from the weekly planning process and daily execution.
@@ -103,15 +106,26 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ### Phase 19: Loop Closure & Adjustments
 **Goal:** Close the loop between execution and planning.
-- **Block 1: Recipe Ingestion Workflow.**
-    - Chunk 1: Detect new "Actual Meals" not in index.
-    - Chunk 2: Banner & Ingestion Form.
+- **Block 1: New Recipe Capture Flow.**
+    - **Chunk 1: Detection.** Detect "Actual Meals" logged that are not in the index.
+    - **Chunk 2: Banner & Capture.** Show banner on main page prompting for Recipe Link (URL) or Manual Input (Ingredients + Instructions).
+    - **Chunk 3: Ingestion logic.** Apply normalization and generate/save prep steps immediately upon capture.
 - **Block 2: Mid-Week Adjustments.** Enable dynamic replanning for the current active week.
 
 ### Phase 20: User Authentication (The "Family Gate")
 **Goal:** Secure the application for single-household access.
 - **Block 1: Supabase Auth.** Infrastructure & RLS Policies.
 - **Block 2: Login Page.**
+
+### Phase 21: Inventory UI/UX Overhaul
+**Goal:** Improve layout and data integrity of the inventory system.
+- **Block 1: Visual Improvements.**
+    - Ingredient names wrap/expand (no truncation).
+    - Layout: 1. Search, 2. Leftovers Card, 3. Freezer Meals Card, 4. Tabs (Fridge/Pantry/Freezer).
+- **Block 2: Drag and Drop.**
+    - Enable dragging items between Fridge, Pantry, and Freezer (updates location only).
+- **Block 3: Ingredient Deduplication.**
+    - Merge identical ingredients regardless of unit (e.g., "2 cups milk" + "1 liter milk" -> one "milk" entry).
 
 ---
 

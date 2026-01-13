@@ -106,6 +106,8 @@ Note: "Make 2x batch, freeze half"
 - Dinner → next day lunch for entire family
 - Batch suggestions coordinated with lunch plan
 - Dynamic "Pack leftovers" prep tasks
+**Confirmation-Driven Fixes:**
+Whenever ingredient normalization or prep-step ambiguity arises, ask for user confirmation, record the decision, and update `docs/IMPLEMENTATION.md` for a permanent fix.
 
 **Recipe Importing:**
 - Use `python3 scripts/import_recipe.py <URL>` to add new recipes

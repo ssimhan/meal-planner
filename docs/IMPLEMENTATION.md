@@ -108,23 +108,27 @@ Declining energy model: Monday (high) → Friday (zero prep)
 - **Block 4: Interactive Shopping List.** ✅ Complete.
     - Check-off items during shopping, sync to inventory, and add custom items.
 
-### Phase 19: Loop Closure & Adjustments
-**Goal:** Close the loop between execution and planning.
-- **Block 1: New Recipe Capture Flow.**
-    - **Chunk 2: Banner & Capture.** Show banner on main page.
-        - *UX Enhancement:* Replace list with a number badge/counter that opens a modal with the list of recipes to add.
-    - **Chunk 3: Ingestion logic.** Apply normalization and generate/save prep steps immediately upon capture. Ensure standardization of ingredient preferences on entry.
-    - **Chunk 4: Option to Discard.** Allow user to dismiss/discard a "new recipe detected" notification.
-    - **Chunk 5: Snack Categorization.** Ability to tag specific recipes/items as "Snacks Only" during entry.
-- **Block 2: Mid-Week Adjustments.** Enable dynamic replanning for the current active week.
-    - *Enhancement:* Allow selection of specific meals/slots that should be replanned vs kept.
-- **Block 3: Expanded Meal Logging.**
-    - Options: Fresh Meal (Planned), Fresh Meal (Not Planned), Ate Out, Freezer Meal, Leftovers.
+### Phase 19: Recipe Ecosystem & UX Polish
+**Goal:** Close the loop on data entry and ensure the system feels "smart" to use.
+- **Block 1: Recipe Capture 2.0.**
+    - **Chunk 1: Main Page UX.** Replace list with a number badge/counter on the homepage that opens a modal with the list of pending recipes to add.
+    - **Chunk 2: Smart Entry.** 
+        - Add "Snack Only" toggle during capture.
+        - Add "Discard/Ignore" option for detected recipes.
+    - **Chunk 3: Ingredient Preferences.** "Easy Entry" for new ingredient preferences (brand/name) during capture. Apply standardization immediately.
+- **Block 2: Index Intelligence & Hygiene.** (Consolidated from Phase 17)
+    - **Chunk 1: Index Audit.** Deduplication and metadata review.
+    - **Chunk 2: Prep Standardization.** Consistent templates.
+    - **Chunk 3: Auto-Generation.** One-time generation of prep steps for new recipes.
+- **Block 3: Flexible Logging.**
+    - **Chunk 1: Expanded Options.** Support "Fresh (Unplanned)", "Freezer Meal", "Leftovers", "Ate Out".
 
-### Phase 20: User Authentication (The "Family Gate")
-**Goal:** Secure the application for single-household access.
-- **Block 1: Supabase Auth.** Infrastructure & RLS Policies.
-- **Block 2: Login Page.**
+### Phase 20: Advanced Planning Control
+**Goal:** Give the user more control over the automated plans.
+- **Block 1: Logic Refinements.**
+    - **Chunk 1: Selective Replanning.** UI to select specific meals/slots that should be replanned vs kept.
+    - **Chunk 2: "Confirm for Today".** Add button to run confirm-meals logic only for the current day to handle missed logging efficiently.
+    - **Chunk 3: Default Week Fix.** Ensure calendar week is always loaded by default.
 
 ### Phase 21: Inventory UI/UX Overhaul
 **Goal:** Improve layout and data integrity of the inventory system.
@@ -132,9 +136,14 @@ Declining energy model: Monday (high) → Friday (zero prep)
     - Ingredient names wrap/expand (no truncation).
     - Layout: 1. Search, 2. Leftovers Card, 3. Freezer Meals Card, 4. Tabs (Fridge/Pantry/Freezer).
 - **Block 2: Drag and Drop.**
-    - Enable dragging items between Fridge, Pantry, and Freezer (updates location only).
+    - Enable dragging items between Fridge, Pantry, and Freezer categories.
 - **Block 3: Ingredient Deduplication.**
     - Merge identical ingredients regardless of unit (e.g., "2 cups milk" + "1 liter milk" -> one "milk" entry).
+
+### Phase 22: User Authentication (The "Family Gate")
+**Goal:** Secure the application for single-household access.
+- **Block 1: Supabase Auth.** Infrastructure & RLS Policies.
+- **Block 2: Login Page.**
 
 ---
 

@@ -376,33 +376,44 @@ export default function InventoryPage() {
                                         return acc;
                                     }, {} as Record<string, any[]>);
 
-                                    // Sort categories (put 'General' last)
+                                    // Sort categories (Leftovers first, General last)
                                     const categories = Object.keys(grouped).sort((a, b) => {
+                                        if (a === 'Leftovers') return -1;
+                                        if (b === 'Leftovers') return 1;
                                         if (a === 'General') return 1;
                                         if (b === 'General') return -1;
                                         return a.localeCompare(b);
                                     });
 
-                                    return categories.map(group => (
-                                        <div key={group}>
-                                            <h3 className="text-xs font-bold text-[var(--accent-sage)] uppercase tracking-wider mb-2 border-b border-[var(--border-subtle)] pb-1">
-                                                {group}
-                                            </h3>
-                                            <div className="space-y-1">
-                                                {grouped[group].map((item: any, idx: number) => (
-                                                    <InventoryItemRow
-                                                        key={`${activeTab}-${idx}`}
-                                                        item={item}
-                                                        category={activeTab}
-                                                        onUpdate={handleUpdateItem}
-                                                        onDelete={handleDeleteItem}
-                                                        onMove={handleMoveItem}
-                                                        disabled={updating}
-                                                    />
-                                                ))}
+                                    return categories.map(group => {
+                                        const meta = getCategoryMetadata(group);
+                                        return (
+                                            <div key={group} className={`rounded-xl border ${meta.border} overflow-hidden`}>
+                                                <div className={`px-4 py-2 ${meta.bg} border-b ${meta.border} flex items-center gap-2`}>
+                                                    <span className="text-lg">{meta.icon}</span>
+                                                    <h3 className={`text-xs font-bold uppercase tracking-wider ${meta.color}`}>
+                                                        {group}
+                                                    </h3>
+                                                    <span className={`ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-white/50 ${meta.color}`}>
+                                                        {grouped[group].length}
+                                                    </span>
+                                                </div>
+                                                <div className="p-2 space-y-1 bg-white">
+                                                    {grouped[group].map((item: any, idx: number) => (
+                                                        <InventoryItemRow
+                                                            key={`${activeTab}-${idx}`}
+                                                            item={item}
+                                                            category={activeTab}
+                                                            onUpdate={handleUpdateItem}
+                                                            onDelete={handleDeleteItem}
+                                                            onMove={handleMoveItem}
+                                                            disabled={updating}
+                                                        />
+                                                    ))}
+                                                </div>
                                             </div>
-                                        </div>
-                                    ));
+                                        );
+                                    });
                                 })()}
                             </div>
                         </div>
@@ -490,4 +501,24 @@ function classifyItem(itemObj: any | string, categoryType: 'fridge' | 'pantry' |
     }
 
     return 'General';
+}
+
+function getCategoryMetadata(category: string) {
+    switch (category) {
+        case 'Leftovers': return { icon: '🥡', color: 'text-amber-700', border: 'border-amber-200', bg: 'bg-amber-50' };
+        case 'Produce': return { icon: '🥬', color: 'text-green-700', border: 'border-green-200', bg: 'bg-green-50' };
+        case 'Dairy & Eggs': return { icon: '🥛', color: 'text-sky-700', border: 'border-sky-200', bg: 'bg-sky-50' };
+        case 'Meat & Protein': return { icon: '🥩', color: 'text-red-700', border: 'border-red-200', bg: 'bg-red-50' };
+        case 'Condiments & Sauces': return { icon: '🥫', color: 'text-orange-700', border: 'border-orange-200', bg: 'bg-orange-50' };
+        case 'Grains & Bread': return { icon: '🍞', color: 'text-yellow-700', border: 'border-yellow-200', bg: 'bg-yellow-50' };
+        case 'Canned & Jars': return { icon: '🫙', color: 'text-stone-600', border: 'border-stone-200', bg: 'bg-stone-50' };
+        case 'Baking & Spices': return { icon: '🧂', color: 'text-amber-800', border: 'border-amber-200', bg: 'bg-amber-50' };
+        case 'Snacks': return { icon: '🥨', color: 'text-purple-700', border: 'border-purple-200', bg: 'bg-purple-50' };
+        case 'Beverages': return { icon: '🥤', color: 'text-cyan-700', border: 'border-cyan-200', bg: 'bg-cyan-50' };
+        case 'Vegetables': return { icon: '🥦', color: 'text-emerald-700', border: 'border-emerald-200', bg: 'bg-emerald-50' };
+        case 'Fruit': return { icon: '🍎', color: 'text-red-600', border: 'border-red-200', bg: 'bg-red-50' };
+        case 'Breads': return { icon: '🥯', color: 'text-yellow-700', border: 'border-yellow-200', bg: 'bg-yellow-50' };
+        case 'Meat': return { icon: '🍖', color: 'text-rose-700', border: 'border-rose-200', bg: 'bg-rose-50' };
+        default: return { icon: '📦', color: 'text-gray-600', border: 'border-gray-200', bg: 'bg-gray-50' };
+    }
 }

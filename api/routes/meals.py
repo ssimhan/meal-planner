@@ -421,7 +421,15 @@ def log_meal():
                      break
              
              if not target_dinner:
-                 target_dinner = {'day': target_day, 'recipe_id': 'unplanned_meal', 'cuisine': 'various', 'vegetables': []}
+                 # Try to find planned meal for this day to initialize correctly
+                 planned_recipe_id = 'unplanned_meal'
+                 if active_plan_data and 'dinners' in active_plan_data:
+                     for pd in active_plan_data['dinners']:
+                         if pd.get('day') == target_day:
+                             planned_recipe_id = pd.get('recipe_id', 'unplanned_meal')
+                             break
+                 
+                 target_dinner = {'day': target_day, 'recipe_id': planned_recipe_id, 'cuisine': 'various', 'vegetables': []}
                  history_week.setdefault('dinners', []).append(target_dinner)
 
              # Update execution data

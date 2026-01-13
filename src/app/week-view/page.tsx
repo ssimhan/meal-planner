@@ -112,6 +112,35 @@ function WeekViewContent() {
   const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
   const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+  const getSlot = (day: string, type: string) => {
+    return status?.slots?.[`${day}_${type}`];
+  };
+
+  const getMealName = (slot: any, fallback: string = 'Not planned') => {
+    if (!slot) return fallback;
+    const resolved = slot.resolved;
+    if (!resolved) return fallback;
+
+    // Check for actual execution first
+    if (resolved.actual_meal) return resolved.actual_meal;
+
+    // Fallback to recipe ID/name
+    const name = resolved.recipe_id || resolved.name || resolved.recipe_name;
+    if (!name) return fallback;
+
+    return name.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase());
+  };
+
+  const getSlotStatus = (slot: any) => {
+    if (!slot) return null;
+    return {
+      made: slot.actual?.made,
+      needs_fix: slot.actual?.needs_fix,
+      feedback: slot.actual?.kids_feedback || slot.actual?.school_snack || slot.actual?.home_snack || slot.actual?.kids_lunch || slot.actual?.adult_lunch
+      // Note: feedback field name varies by type in 'actual' object from daily_feedback map
+    };
+  };
+
   const getDisplayName = (planned: string, actual?: string) => {
     if (!actual) return planned;
     const isEmoji = ['❤️', '👍', '😐', '👎', '❌'].some(emoji => actual.includes(emoji));
@@ -469,23 +498,25 @@ function WeekViewContent() {
         {/* Mobile: Card view */}
         <div className="md:hidden space-y-4">
           {days.map((day, idx) => {
-            const dinner = weekData.dinners?.find((d: any) => d.day === day);
-            const lunch = weekData.lunches?.[day];
-            const snacks = weekData.snacks?.[day];
-            const dailyFeedback = weekData.daily_feedback?.[day];
+            const dinnerSlot = getSlot(day, 'dinner');
+            const kidsLunchSlot = getSlot(day, 'kids_lunch');
+            const schoolSnackSlot = getSlot(day, 'school_snack');
+            const homeSnackSlot = getSlot(day, 'home_snack');
+            const adultLunchSlot = getSlot(day, 'adult_lunch');
+
             const isToday = status?.current_day === day;
 
             return (
               <div
                 key={day}
-                className={`card ${isToday ? 'border-2 border-[var(--accent-sage)]' : ''} ${viewState.editMode ? 'ring-2 ring-amber-100' : ''}`}
+                className={`card ${isToday ? 'border-2 border-[var(--accent-sage)] shadow-lg' : ''} ${viewState.editMode ? 'ring-2 ring-amber-100' : ''}`}
               >
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-bold text-[var(--text-primary)]">
                     {dayNames[idx]}
                   </h3>
                   {isToday && (
-                    <span className="text-[10px] font-mono tracking-widest px-2 py-0.5 bg-[var(--accent-sage)] text-white rounded">
+                    <span className="text-[10px] font-mono tracking-widest px-2 py-0.5 bg-[var(--accent-sage)] text-white rounded shadow-sm">
                       TODAY
                     </span>
                   )}
@@ -493,12 +524,12 @@ function WeekViewContent() {
 
                 <div className="space-y-4">
                   {/* Dinner */}
-                  <div className="flex items-start">
+                  <div className={`flex items-start p-2 rounded-lg transition-all ${dinnerSlot?.actual?.made === true ? 'bg-green-50/50 shadow-sm border border-green-100' : ''}`}>
                     <SelectionCheckbox
                       day={day}
                       type="dinner"
                       label="Dinner"
-                      value={dinner?.actual_meal || ''}
+                      value={dinnerSlot?.resolved?.actual_meal || ''}
                       editMode={viewState.editMode}
                       selectedItems={selectedItems}
                       toggleSelection={toggleSelection}
@@ -514,14 +545,14 @@ function WeekViewContent() {
                     >
                       <div className="flex justify-between items-start">
                         <span className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider">Dinner</span>
-                        {getFeedbackBadge(dailyFeedback?.dinner_feedback || dinner?.kids_feedback, dinner?.made, dinner?.needs_fix)}
+                        {getFeedbackBadge(dinnerSlot?.actual?.kids_feedback || dinnerSlot?.actual?.feedback, dinnerSlot?.actual?.made, dinnerSlot?.actual?.needs_fix)}
                       </div>
                       <p className="font-medium text-[var(--text-primary)] leading-tight mt-0.5">
-                        {getDisplayName(dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Not planned', dinner?.actual_meal)}
+                        {getMealName(dinnerSlot)}
                       </p>
-                      {dinner?.vegetables && dinner.vegetables.length > 0 && (
+                      {dinnerSlot?.resolved?.vegetables && dinnerSlot.resolved.vegetables.length > 0 && (
                         <p className="text-[11px] text-[var(--text-muted)] mt-1">
-                          🥬 {dinner.vegetables.join(', ')}
+                          🥬 {dinnerSlot.resolved.vegetables.join(', ')}
                         </p>
                       )}
                       {!viewState.isSwapMode && viewState.editMode && (
@@ -533,7 +564,7 @@ function WeekViewContent() {
                               ...prev, replacementModal: {
                                 isOpen: true,
                                 day: day,
-                                currentMeal: dinner?.actual_meal || dinner?.recipe_id || '',
+                                currentMeal: dinnerSlot?.resolved?.actual_meal || dinnerSlot?.resolved?.recipe_id || '',
                                 type: 'dinner'
                               }
                             }));
@@ -546,12 +577,12 @@ function WeekViewContent() {
                   </div>
 
                   {/* Kids Lunch */}
-                  <div className="flex items-start">
+                  <div className={`flex items-start p-1.5 rounded-lg ${kidsLunchSlot?.actual?.made === true ? 'bg-gray-50/80' : ''}`}>
                     <SelectionCheckbox
                       day={day}
                       type="kids_lunch"
                       label="Kids Lunch"
-                      value={dailyFeedback?.kids_lunch || ''}
+                      value={kidsLunchSlot?.actual?.actual_meal || ''}
                       editMode={viewState.editMode}
                       selectedItems={selectedItems}
                       toggleSelection={toggleSelection}
@@ -559,10 +590,10 @@ function WeekViewContent() {
                     <div className="flex-1">
                       <div className="flex justify-between items-start">
                         <span className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider">Kids Lunch</span>
-                        {getFeedbackBadge(dailyFeedback?.kids_lunch, dailyFeedback?.kids_lunch_made, dailyFeedback?.kids_lunch_needs_fix)}
+                        {getFeedbackBadge(kidsLunchSlot?.actual?.actual_meal, kidsLunchSlot?.actual?.made, kidsLunchSlot?.actual?.needs_fix)}
                       </div>
                       <p className="text-sm font-medium text-[var(--text-primary)] mt-0.5">
-                        {getDisplayName(lunch?.recipe_name || 'Leftovers', dailyFeedback?.kids_lunch)}
+                        {getMealName(kidsLunchSlot, 'Leftovers')}
                       </p>
                       {!viewState.isSwapMode && viewState.editMode && (
                         <button
@@ -574,7 +605,7 @@ function WeekViewContent() {
                                 ...prev, replacementModal: {
                                   isOpen: true,
                                   day: day,
-                                  currentMeal: dailyFeedback?.kids_lunch || '',
+                                  currentMeal: kidsLunchSlot?.actual?.actual_meal || '',
                                   type: 'kids_lunch'
                                 }
                               }));
@@ -593,7 +624,7 @@ function WeekViewContent() {
                       day={day}
                       type="school_snack"
                       label="School Snack"
-                      value={dailyFeedback?.school_snack || ''}
+                      value={schoolSnackSlot?.actual?.actual_meal || ''}
                       editMode={viewState.editMode}
                       selectedItems={selectedItems}
                       toggleSelection={toggleSelection}
@@ -601,10 +632,10 @@ function WeekViewContent() {
                     <div className="flex-1">
                       <div className="flex justify-between items-start">
                         <span className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider">School Snack</span>
-                        {getFeedbackBadge(dailyFeedback?.school_snack, dailyFeedback?.school_snack_made, dailyFeedback?.school_snack_needs_fix)}
+                        {getFeedbackBadge(schoolSnackSlot?.actual?.actual_meal, schoolSnackSlot?.actual?.made, schoolSnackSlot?.actual?.needs_fix)}
                       </div>
                       <p className="text-sm font-medium text-[var(--text-primary)] mt-0.5">
-                        {getDisplayName(snacks?.school || 'TBD', dailyFeedback?.school_snack)}
+                        {getMealName(schoolSnackSlot, 'TBD')}
                       </p>
                       {!viewState.isSwapMode && viewState.editMode && (
                         <button
@@ -615,7 +646,7 @@ function WeekViewContent() {
                               ...prev, replacementModal: {
                                 isOpen: true,
                                 day: day,
-                                currentMeal: dailyFeedback?.school_snack || '',
+                                currentMeal: schoolSnackSlot?.actual?.actual_meal || '',
                                 type: 'school_snack'
                               }
                             }));
@@ -633,7 +664,7 @@ function WeekViewContent() {
                       day={day}
                       type="home_snack"
                       label="Home Snack"
-                      value={dailyFeedback?.home_snack || ''}
+                      value={homeSnackSlot?.actual?.actual_meal || ''}
                       editMode={viewState.editMode}
                       selectedItems={selectedItems}
                       toggleSelection={toggleSelection}
@@ -641,10 +672,10 @@ function WeekViewContent() {
                     <div className="flex-1">
                       <div className="flex justify-between items-start">
                         <span className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider">Home Snack</span>
-                        {getFeedbackBadge(dailyFeedback?.home_snack, dailyFeedback?.home_snack_made, dailyFeedback?.home_snack_needs_fix)}
+                        {getFeedbackBadge(homeSnackSlot?.actual?.actual_meal, homeSnackSlot?.actual?.made, homeSnackSlot?.actual?.needs_fix)}
                       </div>
                       <p className="text-sm font-medium text-[var(--text-primary)] mt-0.5">
-                        {getDisplayName(snacks?.home || 'TBD', dailyFeedback?.home_snack)}
+                        {getMealName(homeSnackSlot, 'TBD')}
                       </p>
                       {!viewState.isSwapMode && viewState.editMode && (
                         <button
@@ -655,7 +686,7 @@ function WeekViewContent() {
                               ...prev, replacementModal: {
                                 isOpen: true,
                                 day: day,
-                                currentMeal: dailyFeedback?.home_snack || '',
+                                currentMeal: homeSnackSlot?.actual?.actual_meal || '',
                                 type: 'home_snack'
                               }
                             }));
@@ -673,7 +704,7 @@ function WeekViewContent() {
                       day={day}
                       type="adult_lunch"
                       label="Adult Lunch"
-                      value={dailyFeedback?.adult_lunch || ''}
+                      value={adultLunchSlot?.actual?.actual_meal || ''}
                       editMode={viewState.editMode}
                       selectedItems={selectedItems}
                       toggleSelection={toggleSelection}
@@ -681,10 +712,10 @@ function WeekViewContent() {
                     <div className="flex-1">
                       <div className="flex justify-between items-start">
                         <span className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider">Adult Lunch</span>
-                        {getFeedbackBadge(dailyFeedback?.adult_lunch, dailyFeedback?.adult_lunch_made, dailyFeedback?.adult_lunch_needs_fix)}
+                        {getFeedbackBadge(adultLunchSlot?.actual?.actual_meal, adultLunchSlot?.actual?.made, adultLunchSlot?.actual?.needs_fix)}
                       </div>
                       <p className="text-sm font-medium text-[var(--text-primary)] mt-0.5">
-                        {getDisplayName(lunch?.recipe_name || 'Leftovers', dailyFeedback?.adult_lunch)}
+                        {getMealName(adultLunchSlot, 'Leftovers')}
                       </p>
                       {!viewState.isSwapMode && viewState.editMode && (
                         <button
@@ -695,7 +726,7 @@ function WeekViewContent() {
                               ...prev, replacementModal: {
                                 isOpen: true,
                                 day: day,
-                                currentMeal: dailyFeedback?.adult_lunch || '',
+                                currentMeal: adultLunchSlot?.actual?.actual_meal || '',
                                 type: 'adult_lunch'
                               }
                             }));
@@ -746,21 +777,20 @@ function WeekViewContent() {
                   <span>Dinner</span>
                 </td>
                 {days.map((day) => {
-                  const dinner = weekData.dinners?.find((d: any) => d.day === day);
-                  const dailyFeedback = weekData.daily_feedback?.[day];
-                  const dinnerName = dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Not planned';
-                  const needsFix = dinner?.needs_fix;
+                  const dinnerSlot = getSlot(day, 'dinner');
+                  const made = dinnerSlot?.actual?.made === true;
 
                   return (
-                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] transition-all duration-300 ${dinner?.made === true
-                      ? 'bg-[var(--accent-sage)]/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)] border-l-[3px] border-l-[var(--accent-sage)]'
-                      : 'hover:bg-gray-50'}`}>
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] transition-all duration-300 ${made
+                        ? 'bg-[var(--accent-sage)]/10 shadow-[inset_0_2px_4px_rgba(0,128,0,0.1)] border-l-[3px] border-l-[var(--accent-sage)]'
+                        : 'hover:bg-gray-50'
+                      }`}>
                       <div className="flex items-start gap-2">
                         <SelectionCheckbox
                           day={day}
                           type="dinner"
                           label="Dinner"
-                          value={dinner?.actual_meal || ''}
+                          value={dinnerSlot?.resolved?.actual_meal || ''}
                           editMode={viewState.editMode}
                           selectedItems={selectedItems}
                           toggleSelection={toggleSelection}
@@ -776,18 +806,19 @@ function WeekViewContent() {
                         >
                           <div className="flex justify-between items-start gap-2">
                             <span className="font-medium leading-tight">
-                              {dinner?.recipe_id ? (
+                              {dinnerSlot?.resolved?.recipe_id ? (
                                 <Link
-                                  href={viewState.isSwapMode ? '#' : `/recipes/${dinner.recipe_id}`}
+                                  href={viewState.isSwapMode ? '#' : `/recipes/${dinnerSlot.resolved.recipe_id}`}
                                   onClick={(e) => viewState.isSwapMode && e.preventDefault()}
                                   className={viewState.isSwapMode ? '' : "hover:text-[var(--accent-sage)] hover:underline"}
                                 >
-                                  {getDisplayName(dinnerName, dinner?.actual_meal)}
+                                  {getMealName(dinnerSlot)}
                                 </Link>
                               ) : (
-                                getDisplayName(dinnerName, dinner?.actual_meal)
+                                getMealName(dinnerSlot)
                               )}
                             </span>
+                            {getFeedbackBadge(dinnerSlot?.actual?.kids_feedback || dinnerSlot?.actual?.feedback, dinnerSlot?.actual?.made, dinnerSlot?.actual?.needs_fix)}
                           </div>
                           {!viewState.isSwapMode && viewState.editMode && (
                             <button
@@ -799,7 +830,7 @@ function WeekViewContent() {
                                   ...prev, replacementModal: {
                                     isOpen: true,
                                     day: day,
-                                    currentMeal: dinner?.actual_meal || dinner?.recipe_id || '',
+                                    currentMeal: dinnerSlot?.resolved?.actual_meal || dinnerSlot?.resolved?.recipe_id || '',
                                     type: 'dinner'
                                   }
                                 }));
@@ -822,16 +853,18 @@ function WeekViewContent() {
                   <span>Kids Lunch</span>
                 </td>
                 {days.map((day) => {
-                  const lunch = weekData.lunches?.[day];
-                  const dailyFeedback = weekData.daily_feedback?.[day];
+                  const kidsLunchSlot = getSlot(day, 'kids_lunch');
+                  const made = kidsLunchSlot?.actual?.made === true;
+
                   return (
-                    <td key={day} className="p-4 text-sm border-b border-l border-[var(--border-subtle)]">
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${made ? 'bg-gray-50 shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)]' : ''
+                      }`}>
                       <div className="flex items-start gap-2">
                         <SelectionCheckbox
                           day={day}
                           type="kids_lunch"
                           label="Kids Lunch"
-                          value={dailyFeedback?.kids_lunch || ''}
+                          value={kidsLunchSlot?.actual?.actual_meal || ''}
                           editMode={viewState.editMode}
                           selectedItems={selectedItems}
                           toggleSelection={toggleSelection}
@@ -839,9 +872,9 @@ function WeekViewContent() {
                         <div className="flex-1">
                           <div className="flex justify-between items-start gap-2">
                             <span className="text-gray-600 italic">
-                              {getDisplayName(lunch?.recipe_name || 'Leftovers', dailyFeedback?.kids_lunch)}
+                              {getMealName(kidsLunchSlot, 'Leftovers')}
                             </span>
-                            {getFeedbackBadge(dailyFeedback?.kids_lunch, dailyFeedback?.kids_lunch_made, dailyFeedback?.kids_lunch_needs_fix)}
+                            {getFeedbackBadge(kidsLunchSlot?.actual?.actual_meal, kidsLunchSlot?.actual?.made, kidsLunchSlot?.actual?.needs_fix)}
                           </div>
                           {!viewState.isSwapMode && viewState.editMode && (
                             <button
@@ -853,7 +886,7 @@ function WeekViewContent() {
                                   ...prev, replacementModal: {
                                     isOpen: true,
                                     day: day,
-                                    currentMeal: dailyFeedback?.kids_lunch || '',
+                                    currentMeal: kidsLunchSlot?.actual?.actual_meal || '',
                                     type: 'kids_lunch'
                                   }
                                 }));
@@ -876,18 +909,20 @@ function WeekViewContent() {
                   <span>School Snack</span>
                 </td>
                 {days.map((day) => {
-                  const snacks = weekData.snacks?.[day];
-                  const dailyFeedback = weekData.daily_feedback?.[day];
+                  const schoolSnackSlot = getSlot(day, 'school_snack');
                   const isWeekend = day === 'sat' || day === 'sun';
+                  const made = schoolSnackSlot?.actual?.made === true;
+
                   return (
-                    <td key={day} className="p-4 text-sm border-b border-l border-[var(--border-subtle)]">
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${made ? 'bg-gray-50 shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)]' : ''
+                      }`}>
                       {!isWeekend ? (
                         <div className="flex items-start gap-2">
                           <SelectionCheckbox
                             day={day}
                             type="school_snack"
                             label="School Snack"
-                            value={dailyFeedback?.school_snack || ''}
+                            value={schoolSnackSlot?.actual?.actual_meal || ''}
                             editMode={viewState.editMode}
                             selectedItems={selectedItems}
                             toggleSelection={toggleSelection}
@@ -895,9 +930,9 @@ function WeekViewContent() {
                           <div className="flex-1">
                             <div className="flex justify-between items-start gap-2">
                               <span className="text-gray-600 font-mono text-xs">
-                                {getDisplayName(snacks?.school || 'TBD', dailyFeedback?.school_snack)}
+                                {getMealName(schoolSnackSlot, 'TBD')}
                               </span>
-                              {getFeedbackBadge(dailyFeedback?.school_snack, dailyFeedback?.school_snack_made, dailyFeedback?.school_snack_needs_fix)}
+                              {getFeedbackBadge(schoolSnackSlot?.actual?.actual_meal, schoolSnackSlot?.actual?.made, schoolSnackSlot?.actual?.needs_fix)}
                             </div>
                             {!viewState.isSwapMode && viewState.editMode && (
                               <button
@@ -909,7 +944,7 @@ function WeekViewContent() {
                                     ...prev, replacementModal: {
                                       isOpen: true,
                                       day: day,
-                                      currentMeal: dailyFeedback?.school_snack || '',
+                                      currentMeal: schoolSnackSlot?.actual?.actual_meal || '',
                                       type: 'school_snack'
                                     }
                                   }));
@@ -935,18 +970,20 @@ function WeekViewContent() {
                   <span>Home Snack</span>
                 </td>
                 {days.map((day) => {
-                  const snacks = weekData.snacks?.[day];
-                  const dailyFeedback = weekData.daily_feedback?.[day];
+                  const homeSnackSlot = getSlot(day, 'home_snack');
                   const isWeekend = day === 'sat' || day === 'sun';
+                  const made = homeSnackSlot?.actual?.made === true;
+
                   return (
-                    <td key={day} className="p-4 text-sm border-b border-l border-[var(--border-subtle)]">
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${made ? 'bg-gray-50 shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)]' : ''
+                      }`}>
                       {!isWeekend ? (
                         <div className="flex items-start gap-2">
                           <SelectionCheckbox
                             day={day}
                             type="home_snack"
                             label="Home Snack"
-                            value={dailyFeedback?.home_snack || ''}
+                            value={homeSnackSlot?.actual?.actual_meal || ''}
                             editMode={viewState.editMode}
                             selectedItems={selectedItems}
                             toggleSelection={toggleSelection}
@@ -954,9 +991,9 @@ function WeekViewContent() {
                           <div className="flex-1">
                             <div className="flex justify-between items-start gap-2">
                               <span className="text-gray-600 font-mono text-xs">
-                                {getDisplayName(snacks?.home || 'TBD', dailyFeedback?.home_snack)}
+                                {getMealName(homeSnackSlot, 'TBD')}
                               </span>
-                              {getFeedbackBadge(dailyFeedback?.home_snack, dailyFeedback?.home_snack_made, dailyFeedback?.home_snack_needs_fix)}
+                              {getFeedbackBadge(homeSnackSlot?.actual?.actual_meal, homeSnackSlot?.actual?.made, homeSnackSlot?.actual?.needs_fix)}
                             </div>
                             {!viewState.isSwapMode && viewState.editMode && (
                               <button
@@ -968,7 +1005,7 @@ function WeekViewContent() {
                                     ...prev, replacementModal: {
                                       isOpen: true,
                                       day: day,
-                                      currentMeal: dailyFeedback?.home_snack || '',
+                                      currentMeal: homeSnackSlot?.actual?.actual_meal || '',
                                       type: 'home_snack'
                                     }
                                   }));
@@ -994,16 +1031,18 @@ function WeekViewContent() {
                   <span>Adult Lunch</span>
                 </td>
                 {days.map((day) => {
-                  const lunch = weekData.lunches?.[day];
-                  const dailyFeedback = weekData.daily_feedback?.[day];
+                  const adultLunchSlot = getSlot(day, 'adult_lunch');
+                  const made = adultLunchSlot?.actual?.made === true;
+
                   return (
-                    <td key={day} className="p-4 text-sm border-b border-l border-[var(--border-subtle)]">
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${made ? 'bg-gray-50 shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)]' : ''
+                      }`}>
                       <div className="flex items-start gap-2">
                         <SelectionCheckbox
                           day={day}
                           type="adult_lunch"
                           label="Adult Lunch"
-                          value={dailyFeedback?.adult_lunch || ''}
+                          value={adultLunchSlot?.actual?.actual_meal || ''}
                           editMode={viewState.editMode}
                           selectedItems={selectedItems}
                           toggleSelection={toggleSelection}
@@ -1011,9 +1050,9 @@ function WeekViewContent() {
                         <div className="flex-1">
                           <div className="flex justify-between items-start gap-2">
                             <span className="text-gray-500 italic text-xs">
-                              {getDisplayName(lunch?.recipe_name || 'Leftovers', dailyFeedback?.adult_lunch)}
+                              {getMealName(adultLunchSlot, 'Leftovers')}
                             </span>
-                            {getFeedbackBadge(dailyFeedback?.adult_lunch, dailyFeedback?.adult_lunch_made, dailyFeedback?.adult_lunch_needs_fix)}
+                            {getFeedbackBadge(adultLunchSlot?.actual?.actual_meal, adultLunchSlot?.actual?.made, adultLunchSlot?.actual?.needs_fix)}
                           </div>
                           {!viewState.isSwapMode && viewState.editMode && (
                             <button
@@ -1025,7 +1064,7 @@ function WeekViewContent() {
                                   ...prev, replacementModal: {
                                     isOpen: true,
                                     day: day,
-                                    currentMeal: dailyFeedback?.adult_lunch || '',
+                                    currentMeal: adultLunchSlot?.actual?.actual_meal || '',
                                     type: 'adult_lunch'
                                   }
                                 }));

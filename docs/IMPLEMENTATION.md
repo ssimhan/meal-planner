@@ -175,6 +175,18 @@ Declining energy model: Monday (high) → Friday (zero prep)
     - ✅ Add Adult Profiles (with Office Days).
     - ✅ Configure "Included Meals" (toggles for Dinner/Lunch/Snack planning).
     - ✅ Configure "Prep Time" preferences (Morning vs Evening slots).
+- **Block 3: Week at a Glance Refinements.** ✅ Complete
+    - ✅ **Visuals:** Enhance shadows/cues for completed and confirmed days.
+    - ✅ **Bug:** Fix missing meal plan data in view (backend resolution logic).
+    - ✅ **Bug:** Fix "Save Changes" failure when replacing a meal (history data integrity).
+- **Block 4: Inventory Refinements.** ✅ Complete
+    - ✅ **Leftover Meals:** Ability to add explicit "Leftover Meal" items to fridge (distinct from raw ingredients).
+    - ✅ **Visual Grouping:** Improve visual distinction between inventory groups (Leftovers vs Produce vs Condiments vs Fruit).
+- **Block 5: Advanced Settings.** ✅ Complete
+    - ✅ **Editable Defaults:** Make "Meal Defaults" section fully editable (read-only fix).
+    - ✅ **Person Management:** Ability to dynamically add/remove Adult profiles (not just Kids).
+    - ✅ **Meal Scope Granularity:** Customize "Included Meals" (Dinner/Lunch/Snack) per day of the week.
+    - ✅ **Prep Time Granularity:** Select specific prep time slots (Morning, Afternoon, Before Dinner, After Dinner) per day of the week.
 
 ### Phase 24: User Authentication (The "Family Gate")
 **Goal:** Secure the application for single-household access via Supabase.

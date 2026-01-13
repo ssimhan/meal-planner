@@ -59,6 +59,19 @@ export default function SettingsPage() {
     });
   }
 
+  function deleteProfile(type: 'adult_profiles' | 'kid_profiles', name: string) {
+    if (!confirm(`Are you sure you want to remove ${name}?`)) return;
+    setConfig((prev: any) => {
+      const newConfig = { ...prev };
+      if (newConfig[type]) {
+        const updated = { ...newConfig[type] };
+        delete updated[name];
+        newConfig[type] = updated;
+      }
+      return newConfig;
+    });
+  }
+
   if (loading) {
     return (
       <AppLayout>
@@ -127,6 +140,12 @@ export default function SettingsPage() {
                   <div key={name} className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)]">
                     <div className="flex justify-between items-start mb-3">
                       <div className="font-bold text-lg">{name}</div>
+                      <button
+                        onClick={() => deleteProfile('adult_profiles', name)}
+                        className="text-xs text-red-500 hover:text-red-700 font-bold uppercase tracking-wider"
+                      >
+                        Remove
+                      </button>
                     </div>
                     <div>
                       <label className="text-xs font-bold uppercase text-[var(--text-muted)] mb-2 block">Office Days (In Person)</label>
@@ -229,8 +248,8 @@ export default function SettingsPage() {
                             updateConfig(['meals_covered', key], next);
                           }}
                           className={`px-3 py-1 rounded-full text-xs font-bold border ${current.includes(day)
-                              ? 'bg-[var(--accent-sage)] text-white border-[var(--accent-sage)]'
-                              : 'bg-[var(--bg-primary)] border-[var(--border-subtle)] text-[var(--text-muted)]'
+                            ? 'bg-[var(--accent-sage)] text-white border-[var(--accent-sage)]'
+                            : 'bg-[var(--bg-primary)] border-[var(--border-subtle)] text-[var(--text-muted)]'
                             }`}
                         >
                           {day.toUpperCase()}
@@ -277,8 +296,8 @@ export default function SettingsPage() {
                             key={`${day}-${slot}`}
                             onClick={() => updateConfig(['prep_preferences', 'schedule', day], slot)}
                             className={`py-2 rounded-md text-xs font-bold border transition-colors ${isSelected
-                                ? 'bg-[var(--accent-sage)] text-white border-[var(--accent-sage)]'
-                                : 'hover:bg-gray-50 border-[var(--border-subtle)] text-gray-400'
+                              ? 'bg-[var(--accent-sage)] text-white border-[var(--accent-sage)]'
+                              : 'hover:bg-gray-50 border-[var(--border-subtle)] text-gray-400'
                               }`}
                           >
                             {(slot === 'pre_dinner' ? 'Before' : slot === 'post_dinner' ? 'After' : '✓')}
@@ -340,8 +359,8 @@ export default function SettingsPage() {
             </div>
           </section>
 
-          {/* 5. Defaults (Lunch/Snacks) - Read Only for now as complex list */}
-          <section className="card opacity-75">
+          {/* 5. Defaults (Lunch/Snacks) */}
+          <section className="card">
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <span>🍱</span> Meal Defaults
             </h3>

@@ -717,3 +717,9 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Adult Profiles:** Added management for Adult profiles, including "Office Days" tracking.
 - **Meal Scope:** Added toggles to `SettingsPage.tsx` allowing users to disable planning for specific meal types (Dinner, Lunch, Snacks).
 - **Backend Logic:** Updated `actions.py` (Generator) and `status.py` (Dashboard) to strictly respect "Meal Scope" toggles—disabled meals are excluded from generation and live view.
+
+**Block 3: Refinements & Bug Fixes (Completed)**
+- **Week View:** Fixed data resolution in `meal_resolution.py` to correctly display all meal types (Lunches/Snacks) and improved visual badges.
+- **Log Integrity:** Fixed a critical bug in `log_meal` where new history entries defaulted to unplanned_meal, causing adherence mismatches.
+- **Inventory:** Added visual grouping (icons/colors) and prioritized Leftovers in the Inventory tab.
+- **Settings:** Enabled full editing of "Meal Defaults" and dynamic removal of Adult profiles.

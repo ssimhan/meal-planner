@@ -10,8 +10,32 @@ import Card from '@/components/Card';
 import FeedbackButtons from '@/components/FeedbackButtons';
 import DinnerLogging from '@/components/DinnerLogging';
 import PrepTaskList from '@/components/PrepTaskList';
+import NightlyCheckinBanner from '@/components/NightlyCheckinBanner';
 import { useToast } from '@/context/ToastContext';
 import { logout } from './login/actions';
+
+function DraftPlanSummary({ wizardState }: { wizardState: any }) {
+  if (!wizardState?.selections || wizardState.selections.length === 0) return null;
+
+  return (
+    <div className="mt-6 border-t border-[var(--border-subtle)] pt-4">
+      <h3 className="text-xs font-mono uppercase tracking-widest text-[var(--text-muted)] mb-3">Draft Selections</h3>
+      <div className="grid grid-cols-2 gap-2">
+        {wizardState.selections.map((s: any, i: number) => (
+          <div key={i} className="flex items-center gap-2 p-2 bg-[var(--bg-primary)] rounded border border-[var(--border-subtle)]">
+            <span className="text-xs font-bold uppercase text-[var(--text-muted)] w-8">{s.day}</span>
+            <span className="text-sm truncate">{s.recipe_name || s.recipe_id?.replace(/_/g, ' ')}</span>
+          </div>
+        ))}
+      </div>
+      {wizardState.customShoppingItems?.length > 0 && (
+        <div className="mt-3">
+          <p className="text-xs text-[var(--text-muted)] italic">+{wizardState.customShoppingItems.length} custom shopping items</p>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function DashboardContent() {
   const searchParams = useSearchParams();
@@ -288,6 +312,7 @@ function DashboardContent() {
     <main className="container mx-auto max-w-4xl px-4 py-12">
       <header className="mb-12">
         <h1 className="text-5xl mb-4">Sandhya's Meal Planner</h1>
+        {status && <NightlyCheckinBanner status={status} />}
       </header>
 
       <div className="grid gap-8 md:grid-cols-2">
@@ -380,7 +405,7 @@ function DashboardContent() {
 
         {/* Today's Schedule (Show when plan is active or waiting for check-in) */}
         {(status?.state === 'active' || status?.state === 'waiting_for_checkin') && (
-          <section className="md:col-span-2 mt-8 p-6 rounded-lg">
+          <section id="today-schedule" className="md:col-span-2 mt-8 p-6 rounded-lg">
             <header className="flex justify-between items-center mb-6">
               <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)]">
                 Today's Schedule: {status?.current_day?.toUpperCase()}
@@ -525,9 +550,15 @@ function DashboardContent() {
             </h2>
             <div className={`p-4 bg-[var(--bg-secondary)] border-l-4 ${status?.state === 'awaiting_farmers_market' || status?.state === 'ready_to_plan' ? 'border-[var(--accent-sage)]' : 'border-[var(--accent-terracotta)]'}`}>
               {status?.state === 'ready_to_plan' ? (
-                <p>✓ Your planning steps are underway. <Link href={`/plan?week=${status.week_of}`} className="text-[var(--accent-sage)] underline font-bold">Return to the Wizard</Link> to generate your week plan!</p>
+                <div>
+                  <p>✓ Your planning steps are underway. <Link href={`/plan?week=${status.week_of}`} className="text-[var(--accent-sage)] underline font-bold">Return to the Wizard</Link> to generate your week plan!</p>
+                  {status.week_data?.wizard_state && <DraftPlanSummary wizardState={status.week_data.wizard_state} />}
+                </div>
               ) : status?.state === 'awaiting_farmers_market' ? (
-                <p>Time to start your week! Use the <Link href={`/plan?week=${status.week_of}`} className="text-[var(--accent-sage)] underline font-bold">Planning Wizard</Link> to review history, check inventory, and log your market veggies.</p>
+                <div>
+                  <p>Time to start your week! Use the <Link href={`/plan?week=${status.week_of}`} className="text-[var(--accent-sage)] underline font-bold">Planning Wizard</Link> to review history, check inventory, and log your market veggies.</p>
+                  {status.week_data?.wizard_state && <DraftPlanSummary wizardState={status.week_data.wizard_state} />}
+                </div>
               ) : (
                 <p>Start a new week to begin the planning process.</p>
               )}

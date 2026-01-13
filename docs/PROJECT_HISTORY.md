@@ -554,5 +554,19 @@ The best tools are the ones you actually use. This system works because it reduc
     - **Editable Tentative Plan:** Added pencil icon and modal to "Draft" step (Step 4) for immediate corrections without restarting.
     - **Low-Friction Leftovers:** "Did you have leftovers?" now auto-fills item name and backend intelligently aggregates batches.
 
+**Block 2: Pause Capability (Draft Mode) (Completed)**
+- **Feature:** Wizard state is now persisted to the `meal_plans` table (`wizard_state` JSON field).
+- **UX:** Refreshing the page or navigating away no longer loses progress.
+- **Auto-Resume:** Returning to `/plan` automatically restores the user to the correct step with all inputs (reviews, inventory draft, selections) intact.
+
+**Block 3: Nightly Confirmation (Completed)**
+- **Feature:** Dashboard now detects if it's after 6 PM and meals aren't logged.
+- **UX:** Persistent banner prompts for review, simplifying the daily "did we actually eat this?" check.
+
+**Block 4: Interactive Shopping List & Inventory Sync (Completed)**
+- **Feature:** Wizard Step 5 is now an interactive checklist.
+- **Integration:** Items checked off are automatically added back to the `fridge` inventory upon finalizing the plan. 
+- **UX:** Supports adding custom items (milk, eggs) directly to the grocery list within the wizard.
+
 
 

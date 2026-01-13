@@ -250,7 +250,7 @@ class StorageEngine:
             week_start_date = datetime.strptime(week_of, '%Y-%m-%d').date() if isinstance(week_of, str) else week_of
             today = now.date()
             if week_start_date <= today < (week_start_date + timedelta(days=7)):
-                if today.weekday() < 5 and now.hour >= 20: 
+                if today.weekday() < 5 and now.hour >= 18: 
                     current_day_abbr = now.strftime('%a').lower()[:3]
                     for dinner in history_data.get('dinners', []):
                         if dinner.get('day') == current_day_abbr:

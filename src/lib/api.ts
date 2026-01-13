@@ -268,5 +268,21 @@ export async function finalizePlan(week_of: string): Promise<any> {
     return handleResponse<any>(res, 'Failed to finalize plan');
 }
 
+export async function saveWizardState(week_of: string, state: any): Promise<any> {
+    const res = await fetch('/api/wizard/state', {
+        method: 'POST',
+        headers: await getAuthHeaders(),
+        body: JSON.stringify({ week_of, state }),
+    });
+    return handleResponse<any>(res, 'Failed to save wizard state');
+}
+
+export async function getWizardState(week_of: string): Promise<any> {
+    const res = await fetch(`/api/wizard/state?week_of=${week_of}`, {
+        headers: await getAuthHeaders(false),
+    });
+    return handleResponse<any>(res, 'Failed to fetch wizard state');
+}
+
 // Re-export types for convenience
 export type { WorkflowStatus, LogMealData } from '@/types';

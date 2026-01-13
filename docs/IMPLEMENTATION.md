@@ -89,13 +89,17 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ### Phase 18: Enhanced Planning Workflow (Wizard 2.0)
 **Goal:** Remove friction from the weekly planning process and daily execution.
-- **Block 1: Wizard UX Overhaul (In Progress).**
+- **Block 1: Wizard UX Overhaul.** ✅ Complete.
     - Dinners/Snacks Split (Step 0/1). ✅ Complete.
     - Inventory Improvements (Step 2). ✅ Complete.
     - **Chunk 3: Editable Tentative Plan.** ✅ Complete.
     - **Chunk 4: Low-friction "Leftovers" logic.** ✅ Complete.
-- **Block 2: Pause Capability.** Allow saving state to resume later (e.g., "Draft Mode").
-- **Block 3: Nightly Confirmation.** Persistent 6pm banner for day's meals validation.
+- **Block 2: Pause Capability.** ✅ Complete.
+    - Implemented auto-save/restore of wizard state.
+- **Block 3: Nightly Confirmation.** ✅ Complete.
+    - Persistent 6pm banner for day's meals validation.
+- **Block 4: Interactive Shopping List.** ✅ Complete.
+    - Check-off items during shopping, sync to inventory, and add custom items.
 
 ### Phase 19: Loop Closure & Adjustments
 **Goal:** Close the loop between execution and planning.

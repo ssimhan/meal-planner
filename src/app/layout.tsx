@@ -4,6 +4,7 @@ import "./globals.css";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { ToastProvider } from "@/context/ToastContext";
 import { ToastContainer } from "@/components/Toast";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 const crimsonPro = Crimson_Pro({
   variable: "--font-serif",
@@ -38,8 +39,10 @@ export default function RootLayout({
       >
         <ErrorBoundary>
           <ToastProvider>
-            {children}
-            <ToastContainer />
+            <ThemeProvider>
+              {children}
+              <ToastContainer />
+            </ThemeProvider>
           </ToastProvider>
         </ErrorBoundary>
       </body>

@@ -1,6 +1,6 @@
 'use client';
-
-import React, { useState, useEffect } from 'react';
+import { useTheme } from '@/context/ThemeContext';
+import React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
 interface AppLayoutProps {
@@ -10,22 +10,12 @@ interface AppLayoutProps {
 export default function AppLayout({ children }: AppLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const { theme, toggleTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
-      document.documentElement.setAttribute('data-theme', savedTheme);
-    }
+  React.useEffect(() => {
+    setMounted(true);
   }, []);
-
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-  };
 
   const navItems = [
     {
@@ -126,11 +116,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <button
                 key={item.id}
                 onClick={() => handleNavigation(item.path)}
-                className={`flex items-center gap-4 px-4 py-3.5 rounded-lg font-medium transition-all ${
-                  isActive
-                    ? 'bg-[var(--nav-active-bg)] text-[var(--nav-active-text)] font-semibold'
-                    : 'text-[var(--text-muted)] hover:bg-[var(--nav-hover)] hover:text-[var(--text-main)]'
-                }`}
+                className={`flex items-center gap-4 px-4 py-3.5 rounded-lg font-medium transition-all ${isActive
+                  ? 'bg-[var(--nav-active-bg)] text-[var(--nav-active-text)] font-semibold'
+                  : 'text-[var(--text-muted)] hover:bg-[var(--nav-hover)] hover:text-[var(--text-main)]'
+                  }`}
               >
                 {item.icon}
                 {item.label}
@@ -157,11 +146,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
               className="w-10 h-10 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-full flex items-center justify-center hover:bg-[var(--bg-sidebar)] transition-all"
               title="Toggle Theme"
             >
-              {theme === 'light' ? (
+              {mounted && theme === 'light' ? (
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                 </svg>
-              ) : (
+              ) : mounted && theme === 'dark' ? (
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
                   <circle cx="12" cy="12" r="5"></circle>
                   <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -173,6 +162,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
                   <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
                 </svg>
+              ) : (
+                <div className="w-5 h-5" /> // Placeholder to prevent layout shift
               )}
             </button>
           </div>

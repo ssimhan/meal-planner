@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import unittest
 import re
-from lunch_selector import LunchSuggestion
+from scripts.lunch_selector import LunchSuggestion
 
 # We'll re-implement the logic here for testing, or import it if we refactored workflow.py to be importable
 # Since workflow.py is a monolithic script, I'll copy the core logic function for verification.

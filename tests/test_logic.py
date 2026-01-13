@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import unittest
-from workflow import filter_recipes, get_next_monday
+from scripts.mealplan import filter_recipes
+from scripts.workflow.state import get_next_monday
 from datetime import date
 
 class TestMealPlannerLogic(unittest.TestCase):

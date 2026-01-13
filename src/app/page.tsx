@@ -15,6 +15,9 @@ import NightlyCheckinBanner from '@/components/NightlyCheckinBanner';
 import PendingRecipesIndicator from '@/components/PendingRecipesIndicator';
 import PendingRecipesListModal from '@/components/PendingRecipesListModal';
 import DinnerOptionsModal from '@/components/DinnerOptionsModal';
+import BrainDump from '@/components/dashboard/BrainDump';
+import StatCard from '@/components/dashboard/StatCard';
+import TimelineView from '@/components/dashboard/TimelineView';
 import { useToast } from '@/context/ToastContext';
 import { logout } from './login/actions';
 
@@ -346,345 +349,358 @@ function DashboardContent() {
     );
   }
 
+  // Construct Timeline Data
+  const timelineItems: any[] = [];
+  if (status?.today) {
+    // Lunch
+    const lunchName = getDisplayName(status.today_lunch?.recipe_name || "Leftovers", status.today_lunch?.adult_lunch_feedback);
+    timelineItems.push({
+      title: "Lunch",
+      description: lunchName,
+      status: status.today_lunch?.adult_lunch_made ? 'done' : undefined,
+    });
+
+    // Dinner
+    const dinnerName = getDisplayName(
+      status.today_dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Nothing planned',
+      status.today_dinner?.actual_meal
+    );
+    timelineItems.push({
+      title: "Dinner",
+      time: "6:30 PM",
+      description: dinnerName,
+      status: status.today_dinner?.made ? 'done' : undefined,
+      action: (status.state === 'active' && !status.today_dinner?.made) ? (
+        <button className="text-xs bg-[var(--accent-sage)] text-white px-2 py-1 rounded">Start Prep</button>
+      ) : undefined
+    });
+  }
+
   return (
+
     <AppLayout>
       <div className="container mx-auto max-w-4xl">
-      <header className="mb-12 relative">
-        <div className="flex justify-between items-start mb-4">
-          <h1 className="text-5xl">Sandhya's Meal Planner</h1>
-          {status?.pending_recipes && status.pending_recipes.length > 0 && (
-            <PendingRecipesIndicator
-              count={status.pending_recipes.length}
-              onClick={() => setPendingModalOpen(true)}
+        <header className="mb-8 relative">
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-2">Kitchen Dashboard</h1>
+              <p className="text-[var(--text-muted)] font-mono text-sm">{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+            </div>
+            {status?.pending_recipes && status.pending_recipes.length > 0 && (
+              <PendingRecipesIndicator
+                count={status.pending_recipes.length}
+                onClick={() => setPendingModalOpen(true)}
+              />
+            )}
+          </div>
+          {status && <NightlyCheckinBanner status={status} />}
+
+          {status?.pending_recipes && (
+            <PendingRecipesListModal
+              isOpen={pendingModalOpen}
+              onClose={() => setPendingModalOpen(false)}
+              pendingRecipes={status.pending_recipes}
+              onRefresh={() => fetchStatus(false, selectedWeek || undefined)}
             />
           )}
-        </div>
-        {status && <NightlyCheckinBanner status={status} />}
 
-        {status?.pending_recipes && (
-          <PendingRecipesListModal
-            isOpen={pendingModalOpen}
-            onClose={() => setPendingModalOpen(false)}
-            pendingRecipes={status.pending_recipes}
-            onRefresh={() => fetchStatus(false, selectedWeek || undefined)}
-          />
-        )}
+          {status && status.current_day && (status.state === 'active' || status.state === 'waiting_for_checkin') && status.week_of && (
+            <DinnerOptionsModal
+              isOpen={optionsModalOpen}
+              onClose={() => setOptionsModalOpen(false)}
+              currentDay={status.current_day}
+              currentMealName={status.today_dinner?.recipe_id?.replace(/_/g, ' ') || 'Dinner'}
+              weekOf={status.week_of}
+              days={['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']}
+              onSuccess={() => fetchStatus(false, selectedWeek || undefined)}
+            />
+          )}
+        </header>
 
-        {status && status.current_day && (status.state === 'active' || status.state === 'waiting_for_checkin') && status.week_of && (
-          <DinnerOptionsModal
-            isOpen={optionsModalOpen}
-            onClose={() => setOptionsModalOpen(false)}
-            currentDay={status.current_day}
-            currentMealName={status.today_dinner?.recipe_id?.replace(/_/g, ' ') || 'Dinner'}
-            weekOf={status.week_of}
-            days={['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']}
-            onSuccess={() => fetchStatus(false, selectedWeek || undefined)}
-          />
-        )}
-      </header>
+        <div className="flex flex-col gap-8">
+          {/* Top Grid: Stat Cards and Quick Actions */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-      <div className="grid gap-8 md:grid-cols-2">
-        {/* Status Card */}
-        <section className="card">
-          <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
-            System Status
-          </h2>
-          <div className="space-y-4">
-            <div>
-              <p className="text-xs uppercase tracking-tighter text-[var(--text-muted)]">Current Week</p>
-              <select
-                value={status?.week_of}
-                onChange={(e) => setSelectedWeek(e.target.value)}
-                className="bg-transparent text-xl font-bold border-none p-0 cursor-pointer focus:ring-1 focus:ring-[var(--accent-sage)] rounded hover:bg-[var(--bg-secondary)] pr-8"
-              >
-                {status?.available_weeks?.map(w => (
-                  <option
-                    key={w.week_of}
-                    value={w.week_of}
-                    disabled={!w.is_selectable}
-                    className="bg-white text-black"
-                  >
-                    {w.week_of} {w.status === 'archived' ? ' (Archived)' : w.status === 'planning' ? ' (Planning)' : w.status === 'not_created' ? ' (Not Started)' : ''}
-                    {!w.is_selectable && ' (Locked)'}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-tighter text-[var(--text-muted)]">Workflow State</p>
-              <p className="text-lg capitalize inline-block px-3 py-1 bg-[var(--bg-secondary)] rounded-sm border border-[var(--border-subtle)]">
-                {status?.state?.replace(/_/g, ' ') || 'New Week'}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Quick Actions */}
-        <section className="card">
-          <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
-            Quick Actions
-          </h2>
-          <div className="flex flex-col gap-4">
-            {/* Show "View Full Week" if plan is complete or active */}
-            {(status?.state === 'active' || status?.state === 'plan_complete' || status?.state === 'waiting_for_checkin') && (
-              <Link
-                href={selectedWeek ? `/week-view?week=${selectedWeek}` : "/week-view"}
-                className="btn-primary w-full text-left flex justify-between items-center group"
-              >
-                <span>View Full Week Plan</span>
-                <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-              </Link>
-            )}
-            {/* Show "Planning Wizard" for any week not yet active/complete */}
-            {(status?.state === 'new_week' || status?.state === 'archived' || status?.state === 'awaiting_farmers_market' || status?.state === 'ready_to_plan') && (
-              <Link
-                href={selectedWeek ? `/plan?week=${selectedWeek}` : "/plan"}
-                className="btn-primary w-full text-left flex justify-between items-center group"
-              >
-                <span>{status?.state === 'new_week' || status?.state === 'archived' ? 'Start New Week' : 'Continue Planning Wizard'}</span>
-                <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-              </Link>
-            )}
-            {/* Show "Generate Weekly Plan" only when ready to plan */}
-            {status?.state === 'ready_to_plan' && (
-              <button
-                onClick={handleGeneratePlan}
-                disabled={ui.actionLoading}
-                className="btn-primary w-full text-left flex justify-between items-center group disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <span>{ui.actionLoading ? 'Generating...' : 'Generate Weekly Plan'}</span>
-                <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-              </button>
-            )}
-
-            {(status?.state === 'active' || status?.state === 'waiting_for_checkin') && (
-              <button
-                onClick={handleReplan}
-                disabled={ui.actionLoading}
-                className="btn-primary w-full text-left flex justify-between items-center group disabled:opacity-50"
-              >
-                <span>{ui.actionLoading ? 'Replanning...' : 'Replan Rest of Week'}</span>
-                <span className="opacity-0 group-hover:opacity-100 transition-opacity">🔄</span>
-              </button>
-            )}
-
-            <Link href="/inventory" className="btn-secondary w-full text-left flex justify-between items-center group">
-              <span>Update Inventory</span>
-              <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-            </Link>
-
-            <Link href="/analytics" className="btn-secondary w-full text-left flex justify-between items-center group">
-              <span>Family Analytics & Insights</span>
-              <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-            </Link>
-          </div>
-        </section>
-
-
-
-        {/* Today's Schedule (Show when plan is active or waiting for check-in) */}
-        {(status?.state === 'active' || status?.state === 'waiting_for_checkin') && (
-          <section id="today-schedule" className="md:col-span-2 mt-8 p-6 rounded-lg">
-            <header className="flex justify-between items-center mb-6">
-              <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)]">
-                Today's Schedule: {status?.current_day?.toUpperCase()}
-              </h2>
-              <div className="flex gap-2">
-                <span className="text-xs font-mono px-2 py-1 bg-[var(--bg-secondary)] rounded border border-[var(--border-subtle)] text-[var(--accent-sage)] uppercase">
-                  ACTIVE PLAN
-                </span>
-                <button
-                  onClick={handleConfirmToday}
-                  disabled={ui.logLoading}
-                  className="text-xs px-2 py-1 bg-[var(--accent-sage)] text-white rounded hover:opacity-90 disabled:opacity-50"
-                >
-                  {ui.logLoading ? '...' : '✓ Confirm Plan'}
-                </button>
+            {/* 1. Dinner Card */}
+            <StatCard label="Dinner Tonight" className="relative group">
+              <div className="text-xl font-bold text-[var(--text-primary)] mb-2 line-clamp-2">
+                {status?.today_dinner?.recipe_id ? status.today_dinner.recipe_id.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) : 'Nothing planned'}
               </div>
-            </header>
+              {status?.today_dinner && (
+                <span className="inline-block text-[10px] px-2 py-1 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-muted)]">
+                  {(status.today_dinner as any).tags?.[0] || 'Meal'}
+                </span>
+              )}
+            </StatCard>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-              {/* School Snack */}
-              <Card
-                title="School Snack"
-                icon="🎒"
-                content={getDisplayName(status?.today_snacks?.school || "Fruit", status?.today_snacks?.school_snack_feedback)}
-                isConfirmed={status?.today_snacks?.school_snack_made !== undefined}
-                action={<FeedbackButtons
-                  feedbackType="school_snack"
-                  currentFeedback={status?.today_snacks?.school_snack_feedback}
-                  madeStatus={status?.today_snacks?.school_snack_made}
-                  mealName={status?.today_snacks?.school || "Fruit"}
-                  logLoading={ui.logLoading}
-                  recipes={recipes}
-                  onLogFeedback={handleLogFeedback}
-                />}
-              />
+            {/* 2. Prep Tasks */}
+            <StatCard label="Prep Tasks">
+              <div className="flex justify-between items-baseline mb-2">
+                <span className="text-3xl font-bold text-[var(--text-primary)]">
+                  {status?.today?.prep_tasks ? status.today.prep_tasks.length : 0}
+                </span>
+                <span className="text-xs text-[var(--text-muted)] uppercase">To-Do Today</span>
+              </div>
+              <ul className="text-xs text-[var(--text-muted)] space-y-1">
+                {status?.today?.prep_tasks?.slice(0, 3).map((task: any, i: number) => (
+                  <li key={i} className="truncate">• {task.task}</li>
+                ))}
+                {(status?.today?.prep_tasks?.length || 0) > 3 && <li>...</li>}
+              </ul>
+            </StatCard>
 
-              {/* Kids Lunch */}
-              <Card
-                title="Kids Lunch"
-                icon="🥪"
-                content={getDisplayName(status?.today_lunch?.recipe_name || "Leftovers", status?.today_lunch?.kids_lunch_feedback)}
-                subtitle={status?.today_lunch?.assembly_notes}
-                isConfirmed={status?.today_lunch?.kids_lunch_made !== undefined}
-                action={<FeedbackButtons
-                  feedbackType="kids_lunch"
-                  currentFeedback={status?.today_lunch?.kids_lunch_feedback}
-                  madeStatus={status?.today_lunch?.kids_lunch_made}
-                  mealName={status?.today_lunch?.recipe_name || "Leftovers"}
-                  logLoading={ui.logLoading}
-                  recipes={recipes}
-                  onLogFeedback={handleLogFeedback}
-                />}
-              />
-
-              {/* Adult Lunch */}
-              <Card
-                title="Adult Lunch"
-                icon="☕"
-                content={getDisplayName("Leftovers", status?.today_lunch?.adult_lunch_feedback)}
-                subtitle="Grain bowl + dinner components"
-                isConfirmed={status?.today_lunch?.adult_lunch_made !== undefined}
-                action={<FeedbackButtons
-                  feedbackType="adult_lunch"
-                  currentFeedback={status?.today_lunch?.adult_lunch_feedback}
-                  madeStatus={status?.today_lunch?.adult_lunch_made}
-                  mealName="Leftovers"
-                  logLoading={ui.logLoading}
-                  recipes={recipes}
-                  onLogFeedback={handleLogFeedback}
-                />}
-              />
-
-              {/* Home Snack */}
-              <Card
-                title="Home Snack"
-                icon="🏠"
-                content={getDisplayName(status?.today_snacks?.home || "Cucumber", status?.today_snacks?.home_snack_feedback)}
-                isConfirmed={status?.today_snacks?.home_snack_made !== undefined}
-                action={<FeedbackButtons
-                  feedbackType="home_snack"
-                  currentFeedback={status?.today_snacks?.home_snack_feedback}
-                  madeStatus={status?.today_snacks?.home_snack_made}
-                  mealName={status?.today_snacks?.home || "Cucumber"}
-                  logLoading={ui.logLoading}
-                  recipes={recipes}
-                  onLogFeedback={handleLogFeedback}
-                />}
-              />
-
-              {/* Dinner */}
-              <Card
-                title="Dinner"
-                icon="🍽️"
-                content={getDisplayName(status?.today_dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Nothing planned', status?.today_dinner?.actual_meal)}
-                subtitle={status?.today_dinner?.vegetables ? `Veggies: ${status.today_dinner.vegetables.join(', ')}` : undefined}
-                isConfirmed={status?.today_dinner?.made !== undefined}
-                badge={status?.today_dinner?.made !== undefined ? (
-                  status.today_dinner.made === true ? (status.today_dinner.actual_meal ? `✓ Made (${status.today_dinner.actual_meal})` : '✓ Made') :
-                    status.today_dinner.made === 'freezer_backup' ? '🧊 Freezer' :
-                      status.today_dinner.made === 'outside_meal' ? '🍽️ Restaurant' :
-                        status.today_dinner.actual_meal ? `✗ ${status.today_dinner.actual_meal}` :
-                          '✗ Skipped'
-                ) : (
-                  <button
-                    onClick={() => setOptionsModalOpen(true)}
-                    className="text-[10px] text-[var(--accent-sage)] underline decoration-dotted hover:text-[var(--text-primary)]"
-                  >
-                    Change Plan
-                  </button>
+            {/* 3. System & Actions */}
+            <StatCard label="System & Actions">
+              <div className="mb-3">
+                <select
+                  value={status?.week_of}
+                  onChange={(e) => setSelectedWeek(e.target.value)}
+                  className="w-full bg-[var(--bg-primary)] text-sm border border-[var(--border-subtle)] rounded p-1 mb-2"
+                >
+                  {status?.available_weeks?.map(w => (
+                    <option key={w.week_of} value={w.week_of} disabled={!w.is_selectable}>
+                      {w.week_of} {w.status === 'archived' ? '(Archived)' : ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                {(status?.state === 'active' || status?.state === 'waiting_for_checkin') && (
+                  <Link href="/week-view" className="text-sm hover:text-[var(--accent-sage)] transition-colors flex items-center justify-between group">
+                    Full Week Plan
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  </Link>
                 )}
-                action={<DinnerLogging
-                  status={status}
-                  logLoading={ui.logLoading}
-                  showAlternatives={dinnerState.showAlternatives}
-                  setShowAlternatives={(val) => setDinnerState(prev => ({ ...prev, showAlternatives: val }))}
-                  selectedAlternative={dinnerState.selectedAlternative}
-                  setSelectedAlternative={(val) => setDinnerState(prev => ({ ...prev, selectedAlternative: val }))}
-                  otherMealText={dinnerState.otherMealText}
-                  setOtherMealText={(val) => setDinnerState(prev => ({ ...prev, otherMealText: val }))}
-                  selectedFreezerMeal={dinnerState.selectedFreezerMeal}
-                  setSelectedFreezerMeal={(val) => setDinnerState(prev => ({ ...prev, selectedFreezerMeal: val }))}
-                  isDinnerEditing={dinnerState.isEditing}
-                  setIsDinnerEditing={(val) => setDinnerState(prev => ({ ...prev, isEditing: val }))}
-                  dinnerEditInput={dinnerState.editInput}
-                  setDinnerEditInput={(val) => setDinnerState(prev => ({ ...prev, editInput: val }))}
-                  recipes={recipes}
-                  onLogDay={handleLogDay}
-                />}
-              />
-            </div>
+                <Link href="/inventory" className="text-sm hover:text-[var(--accent-sage)] transition-colors flex items-center justify-between group">
+                  Update Inventory
+                  <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                </Link>
+                {/* Show "Start New Week" appropriately */}
+                {(status?.state === 'new_week' || status?.state === 'archived' || status?.state === 'ready_to_plan') && (
+                  <Link href="/plan" className="text-sm font-bold text-[var(--accent-sage)] hover:text-[var(--accent-sage-dark)] flex items-center justify-between group">
+                    {status.state === 'ready_to_plan' ? 'Continue Planning' : 'Start New Week'}
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  </Link>
+                )}
+              </div>
+            </StatCard>
+          </div>
 
-            {/* Persistent Prep Tasks */}
-            <div className="card bg-[var(--bg-secondary)] border-none shadow-none">
-              <header className="flex items-center gap-2 mb-4 border-b border-[var(--border-subtle)] pb-2">
-                <span className="text-xl">⏱️</span>
-                <h3 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)]">Prep Workflow</h3>
+          <BrainDump onAdd={(text) => {
+            showToast(`Saved to brain dump: ${text}`, 'success');
+            // Future: actually save this
+          }} />
+
+          {/* Timeline View */}
+          {(status?.state === 'active' || status?.state === 'waiting_for_checkin') && (
+            <TimelineView items={timelineItems} />
+          )}
+
+
+
+          {/* Today's Schedule (Show when plan is active or waiting for check-in) */}
+          {(status?.state === 'active' || status?.state === 'waiting_for_checkin') && (
+            <section id="today-details" className="mt-8 pt-6 border-t border-[var(--border-subtle)]">
+              <header className="flex justify-between items-center mb-6">
+                <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)]">
+                  Detailed Logistics: {status?.current_day?.toUpperCase()}
+                </h2>
+                <div className="flex gap-2">
+                  <span className="text-xs font-mono px-2 py-1 bg-[var(--bg-secondary)] rounded border border-[var(--border-subtle)] text-[var(--accent-sage)] uppercase">
+                    ACTIVE PLAN
+                  </span>
+                  <button
+                    onClick={handleConfirmToday}
+                    disabled={ui.logLoading}
+                    className="text-xs px-2 py-1 bg-[var(--accent-sage)] text-white rounded hover:opacity-90 disabled:opacity-50"
+                  >
+                    {ui.logLoading ? '...' : '✓ Confirm Plan'}
+                  </button>
+                </div>
               </header>
-              {status?.today?.prep_tasks ? (
-                <PrepTaskList
-                  tasks={status.today.prep_tasks}
-                  weekOf={status.week_of}
-                  onUpdate={fetchStatus}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+                {/* School Snack */}
+                <Card
+                  title="School Snack"
+                  icon="🎒"
+                  content={getDisplayName(status?.today_snacks?.school || "Fruit", status?.today_snacks?.school_snack_feedback)}
+                  isConfirmed={status?.today_snacks?.school_snack_made !== undefined}
+                  action={<FeedbackButtons
+                    feedbackType="school_snack"
+                    currentFeedback={status?.today_snacks?.school_snack_feedback}
+                    madeStatus={status?.today_snacks?.school_snack_made}
+                    mealName={status?.today_snacks?.school || "Fruit"}
+                    logLoading={ui.logLoading}
+                    recipes={recipes}
+                    onLogFeedback={handleLogFeedback}
+                  />}
                 />
-              ) : (
-                <p className="text-sm text-[var(--text-muted)] italic">No prep tasks found for this week.</p>
-              )}
-            </div>
-          </section>
-        )}
 
-        {/* Next Steps / Farmers Market Prompt */}
-        {!(status?.state === 'active' || status?.state === 'waiting_for_checkin') && status?.state !== 'archived' && (
-          <section className="card md:col-span-2">
-            <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
-              {status?.state === 'awaiting_farmers_market' || status?.state === 'ready_to_plan' ? 'Action Required' : 'Next Steps'}
-            </h2>
-            <div className={`p-4 bg-[var(--bg-secondary)] border-l-4 ${status?.state === 'awaiting_farmers_market' || status?.state === 'ready_to_plan' ? 'border-[var(--accent-sage)]' : 'border-[var(--accent-terracotta)]'}`}>
-              {status?.state === 'ready_to_plan' ? (
-                <div>
-                  <p>✓ Your planning steps are underway. <Link href={`/plan?week=${status.week_of}`} className="text-[var(--accent-sage)] underline font-bold">Return to the Wizard</Link> to generate your week plan!</p>
-                  {status.week_data?.wizard_state && <DraftPlanSummary wizardState={status.week_data.wizard_state} />}
-                </div>
-              ) : status?.state === 'awaiting_farmers_market' ? (
-                <div>
-                  <p>Time to start your week! Use the <Link href={`/plan?week=${status.week_of}`} className="text-[var(--accent-sage)] underline font-bold">Planning Wizard</Link> to review history, check inventory, and log your market veggies.</p>
-                  {status.week_data?.wizard_state && <DraftPlanSummary wizardState={status.week_data.wizard_state} />}
-                </div>
-              ) : (
-                <p>Start a new week to begin the planning process.</p>
-              )}
-            </div>
-          </section>
-        )}
+                {/* Kids Lunch */}
+                <Card
+                  title="Kids Lunch"
+                  icon="🥪"
+                  content={getDisplayName(status?.today_lunch?.recipe_name || "Leftovers", status?.today_lunch?.kids_lunch_feedback)}
+                  subtitle={status?.today_lunch?.assembly_notes}
+                  isConfirmed={status?.today_lunch?.kids_lunch_made !== undefined}
+                  action={<FeedbackButtons
+                    feedbackType="kids_lunch"
+                    currentFeedback={status?.today_lunch?.kids_lunch_feedback}
+                    madeStatus={status?.today_lunch?.kids_lunch_made}
+                    mealName={status?.today_lunch?.recipe_name || "Leftovers"}
+                    logLoading={ui.logLoading}
+                    recipes={recipes}
+                    onLogFeedback={handleLogFeedback}
+                  />}
+                />
 
-        {/* Archived Message */}
-        {status?.state === 'archived' && (
-          <section className="card md:col-span-2 opacity-75">
-            <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
-              Week Archived
-            </h2>
-            <div className="p-4 bg-[var(--bg-secondary)] border-l-4 border-gray-400">
-              <p>✓ This week's plan has been archived. Unused items have been rolled over. Start a new week to begin planning next week!</p>
-            </div>
-          </section>
-        )}
-      </div>
+                {/* Adult Lunch */}
+                <Card
+                  title="Adult Lunch"
+                  icon="☕"
+                  content={getDisplayName("Leftovers", status?.today_lunch?.adult_lunch_feedback)}
+                  subtitle="Grain bowl + dinner components"
+                  isConfirmed={status?.today_lunch?.adult_lunch_made !== undefined}
+                  action={<FeedbackButtons
+                    feedbackType="adult_lunch"
+                    currentFeedback={status?.today_lunch?.adult_lunch_feedback}
+                    madeStatus={status?.today_lunch?.adult_lunch_made}
+                    mealName="Leftovers"
+                    logLoading={ui.logLoading}
+                    recipes={recipes}
+                    onLogFeedback={handleLogFeedback}
+                  />}
+                />
 
-      {/* Footer */}
-      <footer className="mt-16 pt-8 border-t border-[var(--border-subtle)] flex justify-between items-center text-sm text-[var(--text-muted)]">
-        <p>© 2026 Meal Planner System</p>
-        <div className="flex gap-4 items-center">
-          <Link href="#" className="hover:text-[var(--accent-green)] underline underline-offset-4">History</Link>
-          <Link href="/recipes" className="hover:text-[var(--accent-green)] underline underline-offset-4">Recipes</Link>
-          <form action={logout}>
-            <button type="submit" className="hover:text-[var(--accent-terracotta)] underline underline-offset-4">
-              Sign Out
-            </button>
-          </form>
+                {/* Home Snack */}
+                <Card
+                  title="Home Snack"
+                  icon="🏠"
+                  content={getDisplayName(status?.today_snacks?.home || "Cucumber", status?.today_snacks?.home_snack_feedback)}
+                  isConfirmed={status?.today_snacks?.home_snack_made !== undefined}
+                  action={<FeedbackButtons
+                    feedbackType="home_snack"
+                    currentFeedback={status?.today_snacks?.home_snack_feedback}
+                    madeStatus={status?.today_snacks?.home_snack_made}
+                    mealName={status?.today_snacks?.home || "Cucumber"}
+                    logLoading={ui.logLoading}
+                    recipes={recipes}
+                    onLogFeedback={handleLogFeedback}
+                  />}
+                />
+
+                {/* Dinner */}
+                <Card
+                  title="Dinner"
+                  icon="🍽️"
+                  content={getDisplayName(status?.today_dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Nothing planned', status?.today_dinner?.actual_meal)}
+                  subtitle={status?.today_dinner?.vegetables ? `Veggies: ${status.today_dinner.vegetables.join(', ')}` : undefined}
+                  isConfirmed={status?.today_dinner?.made !== undefined}
+                  badge={status?.today_dinner?.made !== undefined ? (
+                    status.today_dinner.made === true ? (status.today_dinner.actual_meal ? `✓ Made (${status.today_dinner.actual_meal})` : '✓ Made') :
+                      status.today_dinner.made === 'freezer_backup' ? '🧊 Freezer' :
+                        status.today_dinner.made === 'outside_meal' ? '🍽️ Restaurant' :
+                          status.today_dinner.actual_meal ? `✗ ${status.today_dinner.actual_meal}` :
+                            '✗ Skipped'
+                  ) : (
+                    <button
+                      onClick={() => setOptionsModalOpen(true)}
+                      className="text-[10px] text-[var(--accent-sage)] underline decoration-dotted hover:text-[var(--text-primary)]"
+                    >
+                      Change Plan
+                    </button>
+                  )}
+                  action={<DinnerLogging
+                    status={status}
+                    logLoading={ui.logLoading}
+                    showAlternatives={dinnerState.showAlternatives}
+                    setShowAlternatives={(val) => setDinnerState(prev => ({ ...prev, showAlternatives: val }))}
+                    selectedAlternative={dinnerState.selectedAlternative}
+                    setSelectedAlternative={(val) => setDinnerState(prev => ({ ...prev, selectedAlternative: val }))}
+                    otherMealText={dinnerState.otherMealText}
+                    setOtherMealText={(val) => setDinnerState(prev => ({ ...prev, otherMealText: val }))}
+                    selectedFreezerMeal={dinnerState.selectedFreezerMeal}
+                    setSelectedFreezerMeal={(val) => setDinnerState(prev => ({ ...prev, selectedFreezerMeal: val }))}
+                    isDinnerEditing={dinnerState.isEditing}
+                    setIsDinnerEditing={(val) => setDinnerState(prev => ({ ...prev, isEditing: val }))}
+                    dinnerEditInput={dinnerState.editInput}
+                    setDinnerEditInput={(val) => setDinnerState(prev => ({ ...prev, editInput: val }))}
+                    recipes={recipes}
+                    onLogDay={handleLogDay}
+                  />}
+                />
+              </div>
+
+              {/* Persistent Prep Tasks */}
+              <div className="card bg-[var(--bg-secondary)] border-none shadow-none">
+                <header className="flex items-center gap-2 mb-4 border-b border-[var(--border-subtle)] pb-2">
+                  <span className="text-xl">⏱️</span>
+                  <h3 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)]">Prep Workflow</h3>
+                </header>
+                {status?.today?.prep_tasks ? (
+                  <PrepTaskList
+                    tasks={status.today.prep_tasks}
+                    weekOf={status.week_of}
+                    onUpdate={fetchStatus}
+                  />
+                ) : (
+                  <p className="text-sm text-[var(--text-muted)] italic">No prep tasks found for this week.</p>
+                )}
+              </div>
+            </section>
+          )}
+
+          {/* Next Steps / Farmers Market Prompt */}
+          {!(status?.state === 'active' || status?.state === 'waiting_for_checkin') && status?.state !== 'archived' && (
+            <section className="card md:col-span-2">
+              <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
+                {status?.state === 'awaiting_farmers_market' || status?.state === 'ready_to_plan' ? 'Action Required' : 'Next Steps'}
+              </h2>
+              <div className={`p-4 bg-[var(--bg-secondary)] border-l-4 ${status?.state === 'awaiting_farmers_market' || status?.state === 'ready_to_plan' ? 'border-[var(--accent-sage)]' : 'border-[var(--accent-terracotta)]'}`}>
+                {status?.state === 'ready_to_plan' ? (
+                  <div>
+                    <p>✓ Your planning steps are underway. <Link href={`/plan?week=${status.week_of}`} className="text-[var(--accent-sage)] underline font-bold">Return to the Wizard</Link> to generate your week plan!</p>
+                    {status.week_data?.wizard_state && <DraftPlanSummary wizardState={status.week_data.wizard_state} />}
+                  </div>
+                ) : status?.state === 'awaiting_farmers_market' ? (
+                  <div>
+                    <p>Time to start your week! Use the <Link href={`/plan?week=${status.week_of}`} className="text-[var(--accent-sage)] underline font-bold">Planning Wizard</Link> to review history, check inventory, and log your market veggies.</p>
+                    {status.week_data?.wizard_state && <DraftPlanSummary wizardState={status.week_data.wizard_state} />}
+                  </div>
+                ) : (
+                  <p>Start a new week to begin the planning process.</p>
+                )}
+              </div>
+            </section>
+          )}
+
+          {/* Archived Message */}
+          {status?.state === 'archived' && (
+            <section className="card md:col-span-2 opacity-75">
+              <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
+                Week Archived
+              </h2>
+              <div className="p-4 bg-[var(--bg-secondary)] border-l-4 border-gray-400">
+                <p>✓ This week's plan has been archived. Unused items have been rolled over. Start a new week to begin planning next week!</p>
+              </div>
+            </section>
+          )}
         </div>
-      </footer>
+
+        {/* Footer */}
+        <footer className="mt-16 pt-8 border-t border-[var(--border-subtle)] flex justify-between items-center text-sm text-[var(--text-muted)]">
+          <p>© 2026 Meal Planner System</p>
+          <div className="flex gap-4 items-center">
+            <Link href="#" className="hover:text-[var(--accent-green)] underline underline-offset-4">History</Link>
+            <Link href="/recipes" className="hover:text-[var(--accent-green)] underline underline-offset-4">Recipes</Link>
+            <form action={logout}>
+              <button type="submit" className="hover:text-[var(--accent-terracotta)] underline underline-offset-4">
+                Sign Out
+              </button>
+            </form>
+          </div>
+        </footer>
 
       </div>
     </AppLayout>

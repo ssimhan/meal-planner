@@ -14,7 +14,8 @@ import {
     createWeek,
     getRecipes,
     saveWizardState,
-    getWizardState
+    getWizardState,
+    getStatus
 } from '@/lib/api';
 import AppLayout from '@/components/AppLayout';
 import Skeleton from '@/components/Skeleton';
@@ -62,6 +63,29 @@ function PlanningWizardContent() {
     const { showToast } = useToast();
     const [loading, setLoading] = useState(true);
     const loadedState = React.useRef(false);
+
+    // Initial check for active plan
+    useEffect(() => {
+        const checkStatus = async () => {
+            try {
+                // If a specific week is requested via param, we respect that and don't redirect
+                // unless we want to enforce view-only mode for active weeks?
+                // For now, let's assume if there's no specific week param, we check current.
+                // Or if the requested week IS the active week.
+                const weekParam = searchParams.get('week');
+                const status = await getStatus(weekParam || undefined);
+
+                if (status.state === 'active' || status.state === 'plan_complete') {
+                    // Redirect to week view if plan is active
+                    console.log("Plan is active, redirecting to week view");
+                    router.push(`/week-view?week=${status.week_of}`);
+                }
+            } catch (e) {
+                console.error("Failed to check status", e);
+            }
+        };
+        checkStatus();
+    }, [searchParams, router]);
 
     const toTitleCase = (str: string) => {
         return str.replace(/\b\w/g, l => l.toUpperCase());

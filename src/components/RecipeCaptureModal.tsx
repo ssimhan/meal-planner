@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { toast } from 'react-hot-toast';
+import { useToast } from '@/context/ToastContext';
 
 interface RecipeCaptureModalProps {
     isOpen: boolean;
@@ -11,6 +11,7 @@ interface RecipeCaptureModalProps {
 }
 
 export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSuccess }: RecipeCaptureModalProps) {
+    const { showToast } = useToast();
     const [mode, setMode] = useState<'url' | 'manual'>('url');
     const [url, setUrl] = useState('');
     const [ingredients, setIngredients] = useState('');
@@ -43,10 +44,10 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
                 throw new Error(err.message || 'Failed to capture recipe');
             }
 
-            toast.success(`Successfully added ${mealName}!`);
+            showToast(`Successfully added ${mealName}!`, 'success');
             onSuccess();
         } catch (error: any) {
-            toast.error(error.message);
+            showToast(error.message, 'error');
         } finally {
             setIsSubmitting(false);
         }

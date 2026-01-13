@@ -17,7 +17,8 @@ export default function ReplanWorkflowModal({
     onCancel,
     recipes
 }: ReplanWorkflowModalProps) {
-    const [step, setStep] = useState<'confirm_meals' | 'inventory' | 'replan'>('confirm_meals');
+    const [step, setStep] = useState<'confirm_meals' | 'inventory' | 'constraints' | 'replan'>('confirm_meals');
+    const [notes, setNotes] = useState('');
     const [currentDayIndex, setCurrentDayIndex] = useState(0);
     const [loading, setLoading] = useState(false);
 
@@ -120,7 +121,7 @@ export default function ReplanWorkflowModal({
     const handleReplan = async () => {
         setLoading(true);
         try {
-            await replan();
+            await replan(notes);
             onComplete(); // Parent should refresh status
         } catch (e) {
             alert('Replan failed');
@@ -147,7 +148,8 @@ export default function ReplanWorkflowModal({
                 <div className="p-4 border-b border-gray-100 flex justify-between items-center">
                     <h2 className="text-lg font-bold">
                         {step === 'confirm_meals' ? 'Confirm Past Meals' :
-                            step === 'inventory' ? 'Update Inventory' : 'Replanning'}
+                            step === 'inventory' ? 'Update Inventory' :
+                                step === 'constraints' ? 'Special Requests' : 'Replanning'}
                     </h2>
                     <button onClick={onCancel} className="text-gray-400 hover:text-gray-600">✕</button>
                 </div>
@@ -249,7 +251,29 @@ export default function ReplanWorkflowModal({
                             </div>
 
                             <button
-                                onClick={() => setStep('replan')}
+                                onClick={() => setStep('constraints')}
+                                className="w-full py-3 bg-[var(--accent-primary)] text-white font-bold rounded shadow-lg hover:shadow-xl transition-all"
+                            >
+                                Next: Special Requests →
+                            </button>
+                        </div>
+                    )}
+
+                    {step === 'constraints' && (
+                        <div className="space-y-6">
+                            <p className="text-sm text-gray-500">
+                                Any specific requests for the remaining meals? (e.g. "No chicken", "I want soup", "Use up the broccoli")
+                            </p>
+
+                            <textarea
+                                value={notes}
+                                onChange={(e) => setNotes(e.target.value)}
+                                placeholder="Enter your preferences here..."
+                                className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--accent-sage)] focus:border-transparent"
+                            />
+
+                            <button
+                                onClick={handleReplan}
                                 className="w-full py-3 bg-[var(--accent-primary)] text-white font-bold rounded shadow-lg hover:shadow-xl transition-all"
                             >
                                 Confirm & Replan Week →

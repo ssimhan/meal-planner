@@ -149,11 +149,11 @@ def submit_review():
         h_id = storage.get_household_id()
         
         # 1. Fetch existing record
-        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).single().execute()
-        if not res.data:
+        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).execute()
+        if not res.data or len(res.data) == 0:
             return jsonify({"status": "error", "message": "Week not found"}), 404
             
-        record = res.data
+        record = res.data[0]
         history_data = record.get('history_data', {})
         if 'dinners' not in history_data: history_data['dinners'] = []
         

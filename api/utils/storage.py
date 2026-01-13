@@ -301,12 +301,16 @@ class StorageEngine:
             # Sunday 00:00 is ~ today + 2 days
             is_selectable = sunday_before <= today + timedelta(days=2)
             
-            available_weeks.append({
-                "week_of": week_str,
-                "exists": week_str in existing_weeks,
-                "status": existing_weeks.get(week_str, "not_created"),
-                "is_selectable": is_selectable
-            })
+            # Filter out weeks that don't exist and aren't selectable yet
+            # This prevents the "4-week view" bug where future unplannable weeks clutter the UI
+            if (week_str in existing_weeks) or is_selectable:
+                available_weeks.append({
+                    "week_of": week_str,
+                    "exists": week_str in existing_weeks,
+                    "status": existing_weeks.get(week_str, "not_created"),
+                    "is_selectable": is_selectable
+                })
+            
             current_monday += timedelta(weeks=1)
             
         return available_weeks
@@ -475,3 +479,39 @@ class StorageEngine:
         except Exception as e:
             print(f"Error saving preference: {e}")
             return False
+
+    @staticmethod
+    def get_config():
+        """Load config from DB or fallback to file."""
+        if not supabase: 
+            # Fallback to loading local config.yml if DB not available
+            try:
+                config_path = Path('config.yml')
+                if config_path.exists():
+                    with open(config_path, 'r') as f:
+                        return yaml.safe_load(f) or {}
+            except:
+                pass
+            return {}
+
+        h_id = get_household_id()
+        try:
+            res = supabase.table("households").select("config").eq("id", h_id).execute()
+            if res.data and len(res.data) > 0:
+                return res.data[0]['config'] or {}
+        except Exception as e:
+            print(f"Error fetching config: {e}")
+        return {}
+
+    @staticmethod
+    def save_config(new_config):
+        """Save config to DB."""
+        if not supabase: return False
+        h_id = get_household_id()
+        try:
+            supabase.table("households").update({"config": new_config}).eq("id", h_id).execute()
+            return True
+        except Exception as e:
+            print(f"Error saving config: {e}")
+            return False
+

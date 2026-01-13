@@ -64,7 +64,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ## Development Status
 
-**Current State:** Phase 23 (Bugs, Personalization & Advanced Replanning) In Progress.
+**Current State:** Phase 24 (User Authentication) Next.
 
 
 **Completed Phases:**
@@ -140,24 +140,26 @@ Declining energy model: Monday (high) → Friday (zero prep)
     - ✅ Ensure all existing "Wizard" functionality flows correctly in the new UI
     - ✅ Full testing of all features with new layout
 
-### Phase 23: Experience Refinement & Personalization
+### Phase 23: Experience Refinement & Personalization ✅ Complete
 **Goal:** Polish the UX to match the "Earth Tones" prototype and add personalization features.
+**Test Plan:** [docs/TEST_PLAN_PHASE_23.md](TEST_PLAN_PHASE_23.md)
 
-- **Block 1: Dashboard & Plan UX.**
-    - **Dashboard Visuals:** match `ux_redesign_prototype.html` (Brain dump area, Timeline view, visual hierarchy).
-    - **Prep Tasks:** Implement accordion/collapsible logic grouping tasks/ingredients by recipe on the main page.
-    - **Active Plan Access:** If a plan is active, the Plan tab should open it directly (bypass Wizard start screen).
-- **Block 2: Inventory & Recipes.**
-    - **Recipe Browser:** Implement Filter Chips (Cuisine, Effort, Tags) as per prototype.
-    - **Inventory Grouping:** Organize items within Fridge/Pantry tabs into logical sub-groups (e.g., Produce, Dairy, Grains) for better scanning.
-- **Block 3: Shopping Experience.**
-    - **Quick Add:** "Brain Dump" style input for rapidly adding multiple items.
-    - **Store Management:** Add tagging for specific stores (Costco, Trader Joe's, Indian Grocery).
-    - **Custom Stores:** Allow users to define/add their own store names.
-- **Block 4: Settings & Personalization.**
-    - **Settings UI:** Move configuration from `config.yml` to the UI (People Profiles, Store Lists, Dietary Preferences).
-    - **Advanced Replanning:** Implement "Replan with Notes" (LLM-based adjustment).
-    - **Data Integrity:** Fix known date bugs (4-week view).
+- **Block 1: Dashboard & Plan UX.** ✅ Complete
+    - ✅ **Dashboard Visuals:** match `ux_redesign_prototype.html` (Brain dump area, Timeline view, visual hierarchy).
+    - ✅ **Prep Tasks:** Implement accordion/collapsible logic grouping tasks/ingredients by recipe on the main page.
+    - ✅ **Active Plan Access:** If a plan is active, the Plan tab should open it directly (bypass Wizard start screen).
+- **Block 2: Inventory & Recipes.** ✅ Complete
+    - ✅ **Recipe Browser:** Implement Filter Chips (Cuisine, Effort, Tags) as per prototype.
+    - ✅ **Inventory Grouping:** Organize items within Fridge/Pantry tabs into logical sub-groups (e.g., Produce, Dairy, Grains) for better scanning.
+- **Block 3: Shopping Experience.** ✅ Complete
+    - ✅ **Quick Add:** "Brain Dump" style input for rapidly adding multiple items.
+    - ✅ **Store Management:** Add tagging for specific stores (Costco, Trader Joe's, Indian Grocery).
+    - ✅ **Custom Stores:** Allow users to define/add their own store names.
+- **Block 4: Settings & Personalization.** ✅ Complete
+    - ✅ **Settings UI:** Move configuration from `config.yml` to the UI (People Profiles, Store Lists, Dietary Preferences).
+    - ✅ **Advanced Replanning:** Implement "Replan with Notes" (Keyword/Smart filtering logic).
+    - ✅ **Data Integrity:** Fix known date bugs (4-week view).
+    - ✅ **Resilience:** Internalized error handling for Supabase edge cases (`PGRST116`).
 
 ### Phase 24: User Authentication (The "Family Gate")
 **Goal:** Secure the application for single-household access via Supabase.

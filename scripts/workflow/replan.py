@@ -5,7 +5,7 @@ from .selection import _load_inventory_data, score_recipe_by_inventory
 from .state import load_history, get_actual_path
 from .html_generator import generate_html_plan
 
-def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None):
+def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, notes=None):
     """Re-distribute remaining and skipped meals across the rest of the week."""
     today = datetime.now()
     # If it's early morning (before 4am), consider it still 'yesterday' for replan purposes
@@ -67,6 +67,43 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None):
             # Future meal - remains in the 'to be planned' pool
             to_be_planned.append(dinner)
 
+    # Apply Notes Filtering (Heuristic)
+    if notes:
+        try:
+            import re
+            notes_lower = notes.lower()
+            
+            # 1. Exclusions: "no chicken", "without pork", "no soup"
+            exclusions = re.findall(r'(?:no|without|hate)\s+(\w+)', notes_lower)
+            if exclusions:
+                print(f"Applying Replan Exclusions: {exclusions}")
+                filtered = []
+                for r in to_be_planned:
+                    # Construct search text from ID, name, veg, tags
+                    r_text = f"{r.get('recipe_id', '')} {r.get('recipe_name', '')} {' '.join(r.get('vegetables', []))} {r.get('cuisine', '')} {r.get('meal_type', '')}".lower()
+                    
+                    if not any(ex in r_text for ex in exclusions):
+                        filtered.append(r)
+                    else:
+                        print(f"Excluded {r.get('recipe_id')} due to {exclusions}")
+                
+                to_be_planned = filtered
+
+            # 2. Inclusions/Craving Boost: "want soup", "use broccoli" (handled in scoring if inventory matched, but here we can force priority)
+            inclusions = re.findall(r'(?:want|use|like|craving)\s+(\w+)', notes_lower)
+            # Also just check single keywords if they aren't exclusions? 
+            # For now stick to safe "verb + noun" patterns to avoid noise
+            
+            if inclusions:
+                 for r in to_be_planned:
+                    r_text = f"{r.get('recipe_id', '')} {r.get('recipe_name', '')} {' '.join(r.get('vegetables', []))}".lower()
+                    if any(inc in r_text for inc in inclusions):
+                        # Add a temporary boost flag or just artificially high inventory score later?
+                        # We'll attach metadata 'boost': True
+                        r['is_requested'] = True
+        except Exception as e:
+            print(f"Error applying notes: {e}")
+
     remaining_days = days_list[current_day_idx:]
     inventory_data = _load_inventory_data(inventory_dict=inventory_dict)
     
@@ -89,7 +126,8 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None):
             scored_recipes.append((recipe_entry, score, details))
         
         # Sort best inventory matches to the earliest available days
-        scored_recipes.sort(key=lambda x: x[1], reverse=True)
+        # Prioritize requested items (score + 1000 effectively)
+        scored_recipes.sort(key=lambda x: (1000 if x[0].get('is_requested') else 0) + x[1], reverse=True)
         to_be_planned = [r[0] for r in scored_recipes]
 
     new_dinners = list(successful_dinners)

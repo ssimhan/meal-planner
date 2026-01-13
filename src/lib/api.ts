@@ -181,10 +181,11 @@ export async function importRecipe(url: string): Promise<ImportRecipeResponse> {
     return handleResponse<ImportRecipeResponse>(res, 'Failed to import recipe');
 }
 
-export async function replan(): Promise<ReplanResponse> {
+export async function replan(notes?: string): Promise<ReplanResponse> {
     const res = await fetch('/api/replan', {
         method: 'POST',
         headers: await getAuthHeaders(),
+        body: JSON.stringify({ notes }),
     });
     return handleResponse<ReplanResponse>(res, 'Failed to replan week');
 }
@@ -316,34 +317,62 @@ export async function savePreference(ingredient: string, brand: string): Promise
 // Re-export types for convenience
 export type { WorkflowStatus, LogMealData } from '@/types';
 // Groceries & Stores
+// Groceries & Stores
 export async function getStores() {
-    return fetchAPI('/api/groceries/stores');
+    const res = await fetch('/api/groceries/stores', {
+        headers: await getAuthHeaders(false),
+    });
+    return handleResponse<{ stores: string[] }>(res, 'Failed to fetch stores');
 }
 
 export async function addStore(name: string) {
-    return fetchAPI('/api/groceries/stores', {
+    const res = await fetch('/api/groceries/stores', {
         method: 'POST',
+        headers: await getAuthHeaders(),
         body: JSON.stringify({ name }),
     });
+    return handleResponse<{ stores: string[] }>(res, 'Failed to add store');
 }
 
 export async function mapItemToStore(item: string, store: string) {
-    return fetchAPI('/api/groceries/map', {
+    const res = await fetch('/api/groceries/map', {
         method: 'POST',
+        headers: await getAuthHeaders(),
         body: JSON.stringify({ item, store }),
     });
+    return handleResponse<any>(res, 'Failed to map item');
 }
 
 export async function addShoppingListExtras(weekOf: string, items: string[]) {
-    return fetchAPI('/api/plan/shopping-list/add', {
+    const res = await fetch('/api/plan/shopping-list/add', {
         method: 'POST',
+        headers: await getAuthHeaders(),
         body: JSON.stringify({ week_of: weekOf, items }),
     });
+    return handleResponse<any>(res, 'Failed to add items');
 }
 
 export async function removeShoppingListExtra(weekOf: string, item: string) {
-    return fetchAPI('/api/plan/shopping-list/remove-extra', {
+    const res = await fetch('/api/plan/shopping-list/remove-extra', {
         method: 'POST',
+        headers: await getAuthHeaders(),
         body: JSON.stringify({ week_of: weekOf, item }),
     });
+    return handleResponse<any>(res, 'Failed to remove extra item');
+}
+
+export async function getSettings() {
+    const res = await fetch('/api/settings', {
+        headers: await getAuthHeaders(false),
+    });
+    return handleResponse<any>(res, 'Failed to fetch settings');
+}
+
+export async function saveSettings(settings: any) {
+    const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: await getAuthHeaders(),
+        body: JSON.stringify(settings),
+    });
+    return handleResponse<any>(res, 'Failed to save settings');
 }

@@ -676,3 +676,25 @@ The best tools are the ones you actually use. This system works because it reduc
   - **Build Stability:** Restored missing backend script (`log_execution.py`) and fixed test imports to ensure CI/CD reliability.
 
 **Learning:** "Feature Parity" is not just about looks; it's about detailed interaction testing. Migrating a complex wizard into a new layout requires careful checking of state persistence and hook ordering.
+
+### Phase 23: Experience Refinement & Personalization (2026-01-13) ✅ Complete
+**Goal:** Polish the UX to match the "Earth Tones" prototype and add personalization features.
+
+**Block 1: Dashboard & Plan UX (Completed)**
+- **Dashboard Visuals:** Realized the "Timeline View" for chronological meal tracking and added the "Brain Dump" area for quick notes.
+- **Prep Accordion:** Implemented collapsible list grouping prep tasks by recipe, reducing visual clutter on the main page.
+- **Direct Plan Access:** Added client-side routing to `plan/page.tsx` that automatically redirects to the active plan if the week is already generated, bypassing unnecessary wizard starts.
+
+**Block 2: Inventory & Recipes (Completed)**
+- **Recipe Browser:** Integrated filter chips (Cuisine, Effort, Tags) as client-side state filters for instant feedback.
+- **Inventory Grouping:** Added frontend classification logic to group items into categories (Produce, Dairy, etc.) within Fridge/Pantry tabs.
+- **Recipe Scaling:** Added dynamic 0.5x, 1x, and 2x scaling buttons to the recipe detail page using regex-based ingredient parsing.
+
+**Block 4: Settings & Personalization (Completed)**
+- **Settings UI:** Created a centralized management page for kid profiles, store lists (Costco, TJ), dietary preferences, and work schedules.
+- **Smart Replanning:** (MVP) Implemented "Special Requests" in the replan workflow. Users can now enter notes like "No chicken" or "Want soup", which triggers a keyword-based filter/boost logic in the allocation engine.
+- **Supabase Resilience:** Standardized backend routes to handle missing database records (`PGRST116`) gracefully, ensuring the UI doesn't crash on uninitialized weeks.
+
+**Bug Fix:** Resolved the "4 weeks of data" date bug by strictly filtering out future unselectable weeks in the wizard.
+
+**Learning:** Keyword-based "Smart Filtering" is a high-value MVP that provides 80% of the benefit of an LLM with 0% of the latency or cost. Resilience in data-fetching (`.execute()` vs `.single()`) is critical for "Draft Mode" where plan records might not exist yet.

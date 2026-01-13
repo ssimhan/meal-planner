@@ -53,12 +53,12 @@ def add_extra_items():
         if not items: return jsonify({"status": "success", "message": "No items to add"})
         
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).single().execute()
+        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).execute()
         
-        if not res.data:
+        if not res.data or len(res.data) == 0:
             return jsonify({"status": "error", "message": "Week not found"}), 404
             
-        plan_data = res.data.get('plan_data') or {}
+        plan_data = res.data[0].get('plan_data') or {}
         current_extras = plan_data.get('extra_items', [])
         
         # Determine items to append (avoid exact dupes if needed, or allow?)
@@ -90,10 +90,10 @@ def remove_extra_item():
         if not week_of or not item: return jsonify({"status": "error", "message": "Data required"}), 400
         
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).single().execute()
+        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).execute()
         
-        if res.data:
-            plan_data = res.data.get('plan_data') or {}
+        if res.data and len(res.data) > 0:
+            plan_data = res.data[0].get('plan_data') or {}
             current_extras = plan_data.get('extra_items', [])
             if item in current_extras:
                 current_extras.remove(item)

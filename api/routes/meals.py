@@ -80,11 +80,11 @@ def generate_draft_route():
         h_id = storage.get_household_id()
         
         # 1. Fetch current plan
-        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_of).single().execute()
-        if not res.data:
+        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_of).execute()
+        if not res.data or len(res.data) == 0:
              return jsonify({"status": "error", "message": f"Week {week_of} not found"}), 404
         
-        active_plan = res.data
+        active_plan = res.data[0]
         plan_data = active_plan['plan_data']
         history_week = active_plan['history_data'] or {'week_of': week_of, 'dinners': []}
         
@@ -272,6 +272,10 @@ def replan_route():
         week_str = active_plan['week_of']
         data = active_plan['plan_data']
         
+        # Extract optional notes
+        req_data = request.json or {}
+        notes = req_data.get('notes')
+        
         # 1. Fetch Latest Data from Supabase
         inventory = storage.StorageEngine.get_inventory()
         history = storage.StorageEngine.get_history()
@@ -282,7 +286,8 @@ def replan_route():
             input_file=None, 
             data=active_plan['plan_data'],
             inventory_dict=inventory,
-            history_dict=history
+            history_dict=history,
+            notes=notes
         )
         
         if new_plan_data and new_history_data:
@@ -554,11 +559,11 @@ def swap_meals():
 
         # Load from DB
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).single().execute()
-        if not res.data:
+        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).execute()
+        if not res.data or len(res.data) == 0:
             return jsonify({"status": "error", "message": f"Meal plan for week {week_str} not found"}), 404
         
-        plan_record = res.data
+        plan_record = res.data[0]
         week_data = plan_record['plan_data']
         
         # Helper to find dinner in list
@@ -600,11 +605,11 @@ def check_prep_task():
             
         # Load from DB
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).single().execute()
-        if not res.data:
+        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).execute()
+        if not res.data or len(res.data) == 0:
             return jsonify({"status": "error", "message": "Meal plan not found"}), 404
             
-        history_week = res.data['history_data']
+        history_week = res.data[0]['history_data']
         
         # Update logic
         updated = False
@@ -685,11 +690,11 @@ def save_wizard_state():
         h_id = storage.get_household_id()
         
         # 1. Fetch existing plan
-        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).single().execute()
+        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).execute()
         
         current_plan_data = {}
-        if res.data:
-            current_plan_data = res.data['plan_data'] or {}
+        if res.data and len(res.data) > 0:
+            current_plan_data = res.data[0]['plan_data'] or {}
             
         # 2. Merge Wizard State
         current_plan_data['wizard_state'] = wizard_state
@@ -711,12 +716,12 @@ def get_wizard_state():
             return jsonify({"status": "error", "message": "week_of required"}), 400
             
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).single().execute()
+        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).execute()
         
-        if not res.data:
+        if not res.data or len(res.data) == 0:
              return jsonify({"status": "success", "state": None})
              
-        plan_data = res.data.get('plan_data') or {}
+        plan_data = res.data[0].get('plan_data') or {}
         return jsonify({"status": "success", "state": plan_data.get('wizard_state')})
         
     except Exception as e:

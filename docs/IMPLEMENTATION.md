@@ -5,7 +5,10 @@
 
 ---
 
-> **Workflow Rule:** Every subphase MUST be implemented in a dedicated branch. Test locally -> Push to Branch (Vercel Preview) -> Merge to Main.
+> **Workflow Rule:** 
+> 1. **Phase = One Branch:** Every phase belongs in a single dedicated branch (e.g. `phase-22-ux-redesign`) until fully complete.
+> 2. **Block/Chunk Workflow:** Code -> Test Locally -> Push to Branch (Vercel Preview) -> Manual Verification on Vercel.
+> 3. **Merge to Main:** ONLY merge to `main` when the *entire phase* is 100% complete and verified.
 
 ## System Overview
 
@@ -61,7 +64,8 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ## Development Status
 
-**Current State:** Phase 21 Complete. Phase 22 (Auth) Pending.
+**Current State:** Phase 22 (UX Redesign) In Progress.
+
 
 **Completed Phases:**
 - **1-9:** Foundation (recipe parsing, CLI, energy-based prep, HTML plans)
@@ -81,7 +85,13 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ## Implementation Roadmap (Ideal Order)
 
-### Phase 22: User Authentication (The "Family Gate")
+### Phase 22: UX Redesign & Feature Parity
+**Goal:** Implement the new "Earth Tones" high-fidelity UX, ensuring all existing functionality is preserved.
+
+### Phase 23: Bugs, Personalization & Advanced Replanning
+**Goal:** Fix known UX/Logic issues and add layer of personalization.
+
+### Phase 24: User Authentication (The "Family Gate")
 **Goal:** Transition from single-user system to secure, multi-tenant application via Supabase Auth + RLS.
 
 ---

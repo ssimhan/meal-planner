@@ -54,80 +54,88 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-            <div className="bg-[var(--card-bg)] w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden border border-[var(--border-color)] flex flex-col max-h-[90vh]">
-                <div className="p-6 border-b border-[var(--border-color)] flex justify-between items-center">
-                    <div>
-                        <h2 className="text-2xl font-bold">Capture Recipe</h2>
-                        <p className="text-[var(--text-secondary)]">{mealName}</p>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-teal-950/40 backdrop-blur-md animate-in fade-in duration-300">
+            <div className="bg-[var(--bg-card)] w-full max-w-2xl rounded-sm shadow-2xl overflow-hidden border-2 border-[var(--accent-green)] flex flex-col max-h-[90vh]">
+                {/* Header with textured background */}
+                <div className="p-8 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)] relative overflow-hidden">
+                    <div className="absolute inset-0 opacity-10 pointer-events-none"
+                        style={{ backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="none" stroke="currentColor" stroke-width="0.5" stroke-dasharray="4 4" /></svg>')` }}>
                     </div>
-                    <button onClick={onClose} className="p-2 hover:bg-[var(--hover-bg)] rounded-full transition-colors">
-                        <span className="text-2xl">✕</span>
-                    </button>
+                    <div className="relative z-10 flex justify-between items-start">
+                        <div>
+                            <h2 className="text-3xl font-serif font-black text-[var(--accent-green)] mb-1">Capture Recipe</h2>
+                            <p className="text-[var(--text-muted)] font-medium">Adding details for: <span className="text-[var(--accent-terracotta)] font-bold">{mealName}</span></p>
+                        </div>
+                        <button onClick={onClose} className="p-2 hover:bg-neutral-200/50 rounded-full transition-colors">
+                            <span className="text-2xl text-[var(--accent-green)]">✕</span>
+                        </button>
+                    </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-6 flex-1 overflow-y-auto space-y-6">
-                    <div className="flex p-1 bg-[var(--hover-bg)] rounded-xl">
+                <form onSubmit={handleSubmit} className="p-8 flex-1 overflow-y-auto space-y-8 bg-[var(--bg-primary)]">
+                    {/* Mode Toggle */}
+                    <div className="flex p-1.5 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-sm">
                         <button
                             type="button"
                             onClick={() => setMode('url')}
-                            className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${mode === 'url' ? 'bg-white text-[var(--accent-indigo)] shadow-sm' : 'text-[var(--text-secondary)]'}`}
+                            className={`flex-1 py-3 text-sm font-black uppercase tracking-widest transition-all ${mode === 'url' ? 'bg-[var(--accent-green)] text-white shadow-md' : 'text-[var(--text-muted)] hover:text-[var(--accent-green)]'}`}
                         >
-                            Recipe URL
+                            Website URL
                         </button>
                         <button
                             type="button"
                             onClick={() => setMode('manual')}
-                            className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${mode === 'manual' ? 'bg-white text-[var(--accent-indigo)] shadow-sm' : 'text-[var(--text-secondary)]'}`}
+                            className={`flex-1 py-3 text-sm font-black uppercase tracking-widest transition-all ${mode === 'manual' ? 'bg-[var(--accent-green)] text-white shadow-md' : 'text-[var(--text-muted)] hover:text-[var(--accent-green)]'}`}
                         >
                             Manual Entry
                         </button>
                     </div>
 
                     {mode === 'url' ? (
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-[var(--text-secondary)]">
-                                    Website Link
-                                </label>
-                                <input
-                                    autoFocus
-                                    type="url"
-                                    required
-                                    placeholder="https://cooking.nytimes.com/recipes/..."
-                                    className="w-full p-4 rounded-xl bg-[var(--hover-bg)] border-2 border-transparent focus:border-[var(--accent-indigo)] outline-none transition-all"
-                                    value={url}
-                                    onChange={(e) => setUrl(e.target.value)}
-                                />
-                                <p className="mt-2 text-xs text-[var(--text-secondary)]">
-                                    Our AI will attempt to extract the ingredients and instructions automatically.
+                        <div className="animate-in slide-in-from-left-4 fade-in duration-300">
+                            <label className="block text-xs font-black mb-3 uppercase tracking-[0.2em] text-[var(--accent-sage)]">
+                                Recipe Website Link
+                            </label>
+                            <input
+                                autoFocus
+                                type="url"
+                                required
+                                placeholder="Paste link (NYT, Bon Appétit, etc.)"
+                                className="w-full p-5 rounded-sm bg-white border-2 border-[var(--border-subtle)] focus:border-[var(--accent-green)] outline-none transition-all shadow-inner text-lg"
+                                value={url}
+                                onChange={(e) => setUrl(e.target.value)}
+                            />
+                            <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-sm flex gap-3 items-start">
+                                <span className="text-xl">✨</span>
+                                <p className="text-sm text-amber-800 leading-relaxed">
+                                    Our parser will Extract ingredients and instructions automatically. You can always edit them later.
                                 </p>
                             </div>
                         </div>
                     ) : (
-                        <div className="space-y-4">
+                        <div className="space-y-6 animate-in slide-in-from-right-4 fade-in duration-300">
                             <div>
-                                <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-[var(--text-secondary)]">
-                                    Ingredients
+                                <label className="block text-xs font-black mb-3 uppercase tracking-[0.2em] text-[var(--accent-sage)]">
+                                    Ingredients List
                                 </label>
                                 <textarea
                                     required
-                                    rows={6}
-                                    placeholder="List components here..."
-                                    className="w-full p-4 rounded-xl bg-[var(--hover-bg)] border-2 border-transparent focus:border-[var(--accent-indigo)] outline-none transition-all resize-none"
+                                    rows={5}
+                                    placeholder="e.g., 2 cups flour, 1 tsp salt..."
+                                    className="w-full p-5 rounded-sm bg-white border-2 border-[var(--border-subtle)] focus:border-[var(--accent-green)] outline-none transition-all shadow-inner resize-none font-mono text-sm"
                                     value={ingredients}
                                     onChange={(e) => setIngredients(e.target.value)}
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-[var(--text-secondary)]">
-                                    Instructions
+                                <label className="block text-xs font-black mb-3 uppercase tracking-[0.2em] text-[var(--accent-sage)]">
+                                    Preparation Steps
                                 </label>
                                 <textarea
                                     required
-                                    rows={8}
-                                    placeholder="Step by step preparation..."
-                                    className="w-full p-4 rounded-xl bg-[var(--hover-bg)] border-2 border-transparent focus:border-[var(--accent-indigo)] outline-none transition-all resize-none"
+                                    rows={7}
+                                    placeholder="Describe how to cook it..."
+                                    className="w-full p-5 rounded-sm bg-white border-2 border-[var(--border-subtle)] focus:border-[var(--accent-green)] outline-none transition-all shadow-inner resize-none leading-relaxed"
                                     value={instructions}
                                     onChange={(e) => setInstructions(e.target.value)}
                                 />
@@ -135,24 +143,26 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
                         </div>
                     )}
 
-                    <div className="pt-4 flex gap-3">
+                    <div className="pt-6 border-t border-[var(--border-subtle)] flex gap-4">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 py-4 font-bold text-[var(--text-secondary)] hover:bg-[var(--hover-bg)] rounded-xl transition-all"
+                            className="flex-1 py-4 font-black uppercase tracking-widest text-[var(--text-muted)] hover:bg-[var(--bg-secondary)] rounded-sm transition-all border border-transparent hover:border-[var(--border-subtle)]"
                         >
-                            Cancel
+                            Discard
                         </button>
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className={`flex-1 py-4 font-bold text-white rounded-xl shadow-lg transition-all ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-[var(--accent-indigo)] hover:scale-[1.02] active:scale-[0.98]'}`}
+                            className={`flex-1 py-4 font-black uppercase tracking-widest text-white rounded-sm shadow-xl transition-all ${isSubmitting ? 'bg-neutral-400 cursor-not-allowed' : 'bg-[var(--accent-green)] hover:translate-y-[-2px] hover:shadow-2xl active:translate-y-[0]'}`}
                         >
-                            {isSubmitting ? 'Saving...' : 'Save Recipe'}
+                            {isSubmitting ? 'Processing...' : 'Save & Capture'}
                         </button>
                     </div>
                 </form>
             </div>
         </div>
+    );
+}
     );
 }

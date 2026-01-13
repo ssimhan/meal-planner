@@ -23,14 +23,21 @@ export default function RecipeCaptureBanner({ status, onRefresh }: RecipeCapture
     };
 
     return (
-        <div className="bg-[var(--accent-indigo)] text-white p-4 rounded-lg mb-8 shadow-lg animate-in fade-in slide-in-from-top-4 duration-500">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                    <span className="text-2xl">📝</span>
+        <div className="bg-[var(--bg-secondary)] border-2 border-[var(--accent-sage)] p-6 rounded-sm mb-8 shadow-sm animate-in fade-in slide-in-from-top-4 duration-500 relative overflow-hidden">
+            {/* Subtle background texture */}
+            <div className="absolute inset-0 opacity-5 pointer-events-none"
+                style={{ backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60"><path d="M0 0 L60 60 M60 0 L0 60" stroke="currentColor" stroke-width="0.5" fill="none"/></svg>')` }}>
+            </div>
+
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-[var(--accent-sage)] rounded-full flex items-center justify-center text-2xl shadow-inner">
+                        🌱
+                    </div>
                     <div>
-                        <h3 className="font-bold text-lg">New Recipes Detected</h3>
-                        <p className="text-sm opacity-90">
-                            You've logged {pendingCount} meal{pendingCount > 1 ? 's' : ''} that {pendingCount > 1 ? 'aren\'t' : 'isn\'t'} in your recipe book yet.
+                        <h3 className="font-serif font-black text-xl text-[var(--accent-green)]">New Recipes Detected</h3>
+                        <p className="text-sm text-[var(--text-muted)] font-medium">
+                            You've logged <span className="text-[var(--accent-terracotta)] font-bold">{pendingCount}</span> meal{pendingCount > 1 ? 's' : ''} not yet in your recipe index.
                         </p>
                     </div>
                 </div>
@@ -39,9 +46,9 @@ export default function RecipeCaptureBanner({ status, onRefresh }: RecipeCapture
                         <button
                             key={meal}
                             onClick={() => handleCapture(meal)}
-                            className="bg-white text-[var(--accent-indigo)] px-4 py-1.5 rounded-full font-bold hover:bg-opacity-90 transition-all text-xs whitespace-nowrap"
+                            className="bg-[var(--accent-green)] text-white px-5 py-2 rounded-sm font-black uppercase tracking-widest text-[10px] hover:bg-opacity-90 hover:translate-y-[-1px] transition-all shadow-md active:translate-y-0"
                         >
-                            Log {meal}
+                            Capture {meal}
                         </button>
                     ))}
                 </div>

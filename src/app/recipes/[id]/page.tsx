@@ -5,6 +5,7 @@ import path from 'path';
 import Link from 'next/link';
 import matter from 'gray-matter';
 import ReactMarkdown from 'react-markdown';
+import RecipeScaler from '@/components/RecipeScaler';
 
 interface RecipeViewerProps {
     params: Promise<{ id: string }>;
@@ -91,21 +92,7 @@ export default async function RecipeViewer({ params }: RecipeViewerProps) {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2">
-                        <article className="prose prose-stone max-w-none bg-white p-8 rounded shadow-sm border border-[var(--border-subtle)]">
-                            <ReactMarkdown
-                                components={{
-                                    h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mb-4 mt-8" {...props} />,
-                                    h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mb-4 mt-8 pb-2 border-b" {...props} />,
-                                    h3: ({ node, ...props }) => <h3 className="text-xl font-bold mb-3 mt-6 text-[var(--accent-sage)] uppercase tracking-wide" {...props} />,
-                                    ul: ({ node, ...props }) => <ul className="list-disc pl-6 mb-4 space-y-1" {...props} />,
-                                    ol: ({ node, ...props }) => <ol className="list-decimal pl-6 mb-4 space-y-2" {...props} />,
-                                    li: ({ node, ...props }) => <li className="text-[var(--text-primary)]" {...props} />,
-                                    p: ({ node, ...props }) => <p className="mb-4 leading-relaxed" {...props} />,
-                                }}
-                            >
-                                {markdownContent}
-                            </ReactMarkdown>
-                        </article>
+                        <RecipeScaler markdownContent={markdownContent} />
                     </div>
 
                     <div className="space-y-6">
@@ -151,6 +138,6 @@ export default async function RecipeViewer({ params }: RecipeViewerProps) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

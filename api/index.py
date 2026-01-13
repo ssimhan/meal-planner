@@ -34,10 +34,7 @@ app.register_blueprint(inventory_bp)
 app.register_blueprint(recipes_bp)
 app.register_blueprint(reviews_bp)
 
-# Only register testing routes in non-production or if explicitly allowed? 
-# For now, register it.
-from api.routes.testing.reset import testing_bp
-app.register_blueprint(testing_bp)
+
 
 # Health Check
 @app.route("/api/health")

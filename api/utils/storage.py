@@ -386,3 +386,20 @@ class StorageEngine:
         except Exception as e:
             print(f"Error in get_pending_recipes: {e}")
             return []
+
+    @staticmethod
+    def save_recipe(recipe_id, name, metadata, content):
+        """Save a single recipe to the database."""
+        if not supabase: return
+        h_id = get_household_id()
+        try:
+            supabase.table("recipes").upsert({
+                "id": recipe_id,
+                "household_id": h_id,
+                "name": name,
+                "metadata": metadata,
+                "content": content
+            }).execute()
+        except Exception as e:
+            print(f"Error saving recipe {recipe_id}: {e}")
+            raise e

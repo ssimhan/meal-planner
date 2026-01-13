@@ -110,10 +110,12 @@ def capture_recipe():
         if not meal_name:
             return jsonify({"status": "error", "message": "Meal name is required"}), 400
             
-        recipe_id = meal_name.lower().replace(' ', '_')
+        import re
+        recipe_id = re.sub(r'[^a-zA-Z0-9]', '_', meal_name.lower()).strip('_')
         
         # Check if already exists in DB
-        h_id = StorageEngine.get_household_id()
+        from api.utils import storage
+        h_id = storage.get_household_id()
         existing = StorageEngine.get_recipe_details(recipe_id)
         if existing:
             return jsonify({"status": "error", "message": f"Recipe '{meal_name}' already exists"}), 400
@@ -158,12 +160,9 @@ effort_level: normal
             # But we want to return a better result.
             import subprocess
             cmd = [sys.executable, "scripts/import_recipe.py", url]
-            subprocess.run(cmd, capture_output=True, text=True, cwd=os.getcwd())
-            
-            # import_recipe.py currently saves to recipes/raw_html and runs parse_recipes.py
-            # If parse_recipes.py doesn't find a corresponding .md in content/, it won't do much.
-            # So for now, URL capture might be limited unless we improve import_recipe.py.
-            # Let's provide a placeholder MD if it's missing.
+            import_res = subprocess.run(cmd, capture_output=True, text=True, cwd=os.getcwd())
+            if import_res.returncode != 0:
+                print(f"URL Import failed: {import_res.stderr}")
             
             md_path = Path(f'recipes/content/{recipe_id}.md')
             if not md_path.exists():
@@ -176,9 +175,6 @@ source_url: {url}
 
 Added from URL: {url}
 """
-            else:
-                # Already created by some other process?
-                pass
 
         # Save MD to disk if we generated content
         if markdown_content:
@@ -187,15 +183,37 @@ Added from URL: {url}
             with open(md_path, 'w', encoding='utf-8') as f:
                 f.write(markdown_content)
 
-        # Run prep step generation
+        import subprocess
         md_file_path = Path(f'recipes/content/{recipe_id}.md')
         if md_file_path.exists():
             subprocess.run([sys.executable, "scripts/generate_prep_steps.py", str(md_file_path)], capture_output=True)
 
-        # Run parser and migration to sync to DB
-        subprocess.run([sys.executable, "scripts/parse_recipes.py"], capture_output=True)
-        subprocess.run([sys.executable, "scripts/migrate_to_db.py"], capture_output=True)
+        # Run parser to update local index.yml
+        parse_res = subprocess.run([sys.executable, "scripts/parse_recipes.py"], capture_output=True, text=True)
+        if parse_res.returncode != 0:
+            print(f"Recipe parsing failed: {parse_res.stderr}")
+            return jsonify({"status": "error", "message": f"Parsing failed: {parse_res.stderr}"}), 500
         
+        # Targeted Sync to DB instead of full migration
+        try:
+            with open('recipes/index.yml', 'r') as f:
+                index = yaml.safe_load(f)
+            
+            entry = next((e for e in index if e['id'] == recipe_id), None)
+            if entry:
+                with open(md_file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                StorageEngine.save_recipe(recipe_id, entry['name'], entry, content)
+            else:
+                # If for some reason parser didn't pick it up, sync what we have
+                content = ""
+                with open(md_file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                StorageEngine.save_recipe(recipe_id, meal_name, {"name": meal_name}, content)
+        except Exception as e:
+            print(f"Targeted DB sync failed: {e}")
+            # Non-fatal for the user, but it means DB and local files are out of sync
+
         invalidate_cache('recipes')
         
         return jsonify({

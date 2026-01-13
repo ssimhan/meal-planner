@@ -26,10 +26,6 @@ source_file: Guacamole.html
 
 # Guacamole
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2 ripe avocados
 - 1/4 teaspoon kosher salt
@@ -38,6 +34,10 @@ source_file: Guacamole.html
 - 2 tablespoons cilantro, finely chopped
 - Pinch freshly ground black pepper
 - 1/2 ripe tomato, chopped
+
+## Prep Steps
+- Chop onions/shallots
+- Wash and chop herbs
 
 ### Instructions
 1. Cut the avocados, score and mash in the bowl.

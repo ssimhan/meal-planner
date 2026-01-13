@@ -21,10 +21,6 @@ source_file: Zucchini and Paneer Waffles.html
 
 # Zucchini and Paneer Waffles
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 zucchini
 - Salt
@@ -35,6 +31,10 @@ source_file: Zucchini and Paneer Waffles.html
 - Cilantro
 - Olive oil
 - Rice flour
+
+## Prep Steps
+- Chop zucchini
+- Wash and chop herbs
 
 ### Instructions
 1. Shred the Zucchini and add salt to it and leave it for 10 minutes

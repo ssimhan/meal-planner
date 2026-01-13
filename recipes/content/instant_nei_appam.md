@@ -20,10 +20,6 @@ source_file: Instant Nei Appam.html
 
 # Instant Nei Appam
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cupRice flour
 - ¼cup ghee

@@ -25,10 +25,6 @@ source_file: Vegan Lemon Pepper Tofu.html
 
 # Vegan Lemon Pepper Tofu
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 block extra firm tofu, frozen
 - 1/4CupCornstarch
@@ -39,6 +35,12 @@ source_file: Vegan Lemon Pepper Tofu.html
 - Steamed Broccoli (optional)
 - Pasta (optional)
 - Quinoa (optional side)
+
+## Prep Steps
+- Press/cube tofu
+- Chop peppers
+- Mince garlic
+- Cut florets
 
 ### Instructions
 1. Night before: freeze the block of tofu until completely frozen. This changes the texture.

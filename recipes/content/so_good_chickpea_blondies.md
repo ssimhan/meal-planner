@@ -21,10 +21,6 @@ source_file: So Good Chickpea Blondies.html
 
 # So Good Chickpea Blondies
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - US Customary Metric
 - 14.5- ounce can chickpeas (also called "garbanzo" beans)

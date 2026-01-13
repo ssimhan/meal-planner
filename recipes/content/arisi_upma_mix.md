@@ -20,10 +20,6 @@ source_file: Arisi Upma Mix.html
 
 # Arisi Upma Mix
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - Basmati rice
 - Toor dal

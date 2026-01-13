@@ -10,8 +10,8 @@ export interface DinnerLoggingProps {
   logLoading: boolean;
   showAlternatives: boolean;
   setShowAlternatives: (show: boolean) => void;
-  selectedAlternative: 'freezer' | 'outside' | 'other' | null;
-  setSelectedAlternative: (alt: 'freezer' | 'outside' | 'other' | null) => void;
+  selectedAlternative: 'freezer' | 'outside' | 'other' | 'leftovers' | null;
+  setSelectedAlternative: (alt: 'freezer' | 'outside' | 'other' | 'leftovers' | null) => void;
   otherMealText: string;
   setOtherMealText: (text: string) => void;
   selectedFreezerMeal: string;
@@ -59,7 +59,7 @@ export default function DinnerLogging({
     setShowAlternatives(true);
   };
 
-  const handleAlternativeSelect = (alt: 'freezer' | 'outside' | 'other') => {
+  const handleAlternativeSelect = (alt: 'freezer' | 'outside' | 'other' | 'leftovers') => {
     setSelectedAlternative(alt);
   };
 
@@ -70,6 +70,8 @@ export default function DinnerLogging({
       await onLogDay('outside_meal');
     } else if (selectedAlternative === 'other' && otherMealText.trim()) {
       await onLogDay(false, '', '', otherMealText);
+    } else if (selectedAlternative === 'leftovers') {
+      await onLogDay('leftovers');
     }
   };
 
@@ -177,6 +179,12 @@ export default function DinnerLogging({
         >
           📝 Something Else
         </button>
+        <button
+          onClick={() => handleAlternativeSelect('leftovers')}
+          className="w-full py-2 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90"
+        >
+          🥡 Leftovers
+        </button>
       </div>
     );
   }
@@ -227,6 +235,28 @@ export default function DinnerLogging({
     return (
       <div className="flex flex-col gap-2">
         <span className="text-xs text-[var(--text-muted)]">Confirm: Ate at restaurant or ordered out</span>
+        <button
+          onClick={handleSubmitAlternative}
+          disabled={logLoading}
+          className="w-full py-2 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
+        >
+          Confirm
+        </button>
+        <button
+          onClick={() => setSelectedAlternative(null)}
+          className="w-full py-1 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+        >
+          ← Back
+        </button>
+      </div>
+    );
+  }
+
+  // Step 3d: Leftovers confirmation
+  if (selectedAlternative === 'leftovers') {
+    return (
+      <div className="flex flex-col gap-2">
+        <span className="text-xs text-[var(--text-muted)]">Confirm: Ate leftovers</span>
         <button
           onClick={handleSubmitAlternative}
           disabled={logLoading}

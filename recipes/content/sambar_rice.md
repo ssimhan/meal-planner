@@ -25,7 +25,7 @@ effort_level: normal
 - Water as needed (about 4–5 cups total)
 
 ## Prep Steps
-- Chop onions
+- Chop onions/shallots
 
 ## Instructions
 For the Sambar Rice:

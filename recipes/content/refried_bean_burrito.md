@@ -25,10 +25,6 @@ source_file: Refried Bean Burrito.html
 
 # Refried Bean Burrito
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2 teaspoons olive oil
 - 1 medium onion
@@ -45,6 +41,10 @@ source_file: Refried Bean Burrito.html
 - ½avocado, halved, pitted, peeled, and sliced (about 3 to 4 slices per burrito)
 - ¼cup crumbled queso cotija, 2 tablespoons per burrito
 - 1 teaspoon vegetable oil, optional (if you want to pan fry the burritos)
+
+## Prep Steps
+- Chop onions/shallots
+- Chop peppers
 
 ### Instructions
 1. Heat olive oil

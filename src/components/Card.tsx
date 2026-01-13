@@ -5,7 +5,7 @@ export interface CardProps {
   icon: string;
   subtitle?: string;
   content: string;
-  badge?: string | null;
+  badge?: React.ReactNode;
   action?: React.ReactNode;
   isConfirmed?: boolean;
 }
@@ -29,9 +29,15 @@ export default function Card({
         <p className={`text-lg font-bold leading-tight ${isConfirmed ? 'text-[var(--text-muted)]' : ''}`}>{content}</p>
         {subtitle && <p className="text-xs text-[var(--text-muted)] mt-1">{subtitle}</p>}
         {badge && (
-          <span className="mt-2 inline-block px-2 py-0.5 bg-green-100 text-green-700 text-[10px] rounded-full font-bold uppercase">
-            {badge}
-          </span>
+          <div className="mt-2">
+            {typeof badge === 'string' ? (
+              <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-[10px] rounded-full font-bold uppercase">
+                {badge}
+              </span>
+            ) : (
+              badge
+            )}
+          </div>
         )}
       </div>
       {action && <div className="mt-4 pt-3 border-t border-[var(--border-subtle)]">{action}</div>}

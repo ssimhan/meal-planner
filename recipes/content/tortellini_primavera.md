@@ -26,10 +26,6 @@ source_file: Tortellini Primavera.html
 
 # Tortellini Primavera
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 114-ounce can vegetable broth
 - 2 tablespoons all-purpose flour
@@ -40,6 +36,11 @@ source_file: Tortellini Primavera.html
 - ⅛teaspoon salt
 - 4cupschopped vegetables, such as broccoli, carrots and snap peas, or 16-ounce bag frozen mixed vegetables
 - 116-ounce package frozen cheese tortellini
+
+## Prep Steps
+- Wash and chop herbs
+- Chop carrots
+- Cut florets
 
 ### Instructions
 1. Put a large pot of water on to boil.

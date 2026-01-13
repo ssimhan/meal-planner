@@ -24,10 +24,6 @@ source_file: Moong Dal Chilla.html
 
 # Moong Dal Chilla
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cupMoong Dal
 - 2 Green Chili
@@ -41,6 +37,12 @@ source_file: Moong Dal Chilla.html
 - ½teaspoon kashmiri red chili powder
 - Water
 - Oil
+
+## Prep Steps
+- Grate/mince ginger
+- Chop onions/shallots
+- Chop carrots
+- Wash and chop herbs
 
 ### Instructions
 1. Add moong dal to a medium bowl. Rinse the moong dal and soak for 3+ hours (ideally overnight).

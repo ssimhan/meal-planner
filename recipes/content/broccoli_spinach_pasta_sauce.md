@@ -23,10 +23,6 @@ source_file: Broccoli Spinach Pasta Sauce.html
 
 # Broccoli Spinach Pasta Sauce
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 4cupsbroccoli florets
 - 2cupsbaby spinach
@@ -41,6 +37,10 @@ source_file: Broccoli Spinach Pasta Sauce.html
 - Black pepper
 - Red pepper flakes
 - Lemon zest
+
+## Prep Steps
+- Wash and chop greens
+- Chop peppers
 
 ### Instructions
 1. Bring a large pot of water to a boil.Add the broccoli florets and cook for about 4 minutes, until tender.Use a slotted spoon to remove the broccoli and transfer it to a blender. Keep this water for the pasta.

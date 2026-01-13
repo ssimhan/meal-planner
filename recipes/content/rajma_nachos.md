@@ -29,10 +29,6 @@ source_file: Rajma Nachos.html
 
 # Rajma Nachos
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cupRed Kidney Beans
 - 1 tablespoon Ghee
@@ -55,6 +51,12 @@ source_file: Rajma Nachos.html
 - Guacamole (optional)
 - 8ozshredded cheese
 - Nacho chips
+
+## Prep Steps
+- Grate/mince ginger
+- Mince garlic
+- Chop onions/shallots
+- Wash and chop herbs
 
 ### Instructions
 1. Start the instant pot in Saute (More) mode and let it heat until it displays HOT. Add oil, cumin seeds and green chili.

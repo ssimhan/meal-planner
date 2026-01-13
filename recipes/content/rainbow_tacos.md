@@ -30,10 +30,6 @@ source_file: Rainbow Tacos.html
 
 # Rainbow Tacos
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2cansbeans (kidney, pinto, black, etc.)
 - 2 Tbs chili powder
@@ -47,6 +43,12 @@ source_file: Rainbow Tacos.html
 - Diced cucumbers (optional)
 - Sour cream (optional)
 - Salsa (optional)
+
+## Prep Steps
+- Chop onions/shallots
+- Chop peppers
+- Shred/chop cabbage
+- Chop carrots
 
 ### Instructions
 1. Saute chopped veggies in oil2. Add beans, chili powder, cumin and salt3. Add water to cover4. Bring to a boil and cook uncovered until water reduces. Mixture should be thick and well combined5. Service with tortillas and optional rainbow toppings

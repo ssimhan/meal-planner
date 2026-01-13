@@ -19,10 +19,6 @@ source_file: Homemade Frozen Yogurt.html
 
 # Homemade Frozen Yogurt
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cupfrozen berries (such as raspberries, strawberries, cherries, or blueberries, mango, pineapple, or banana slices)
 - 1/2cupvanilla Greek yogurt

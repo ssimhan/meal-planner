@@ -32,10 +32,6 @@ source_file: Veggie Marinara Sauce.html
 
 # Veggie Marinara Sauce
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2 tablespoons olive oil
 - 3cupsonion, carrot, butternut squash, sweet potato, bell pepper (any color but green) celery, and/or cauliflower (roughly chopped)
@@ -44,6 +40,13 @@ source_file: Veggie Marinara Sauce.html
 - 1/4 teaspoon pepper
 - 1 pound pasta optional
 - Parmesan cheese optional
+
+## Prep Steps
+- Chop carrots
+- Chop celery
+- Chop peppers
+- Peel/chop squash
+- Cut florets
 
 ### Instructions
 1. Gather your ingredients.

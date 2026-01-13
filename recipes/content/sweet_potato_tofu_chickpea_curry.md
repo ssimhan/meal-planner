@@ -34,10 +34,6 @@ source_file: Sweet Potato, Tofu & Chickpea Curry.html
 
 # Sweet Potato, Tofu & Chickpea Curry
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 10oztofu
 - Olive oil
@@ -80,6 +76,15 @@ source_file: Sweet Potato, Tofu & Chickpea Curry.html
 - 3 medium tomatoes
 - 1cupchickpeas
 - 2cupsbroth
+
+## Prep Steps
+- Peel/chop squash
+- Chop peppers
+- Press/cube tofu
+- Chop onions/shallots
+- Grate/mince ginger
+- Mince garlic
+- Marinate proteins (ahead of time)
 
 ### Instructions
 1. Original recipe makes 3 servings

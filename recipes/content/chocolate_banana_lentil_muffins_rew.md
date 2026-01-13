@@ -21,10 +21,6 @@ source_file: Chocolate Banana Lentil Muffins (REW).html
 
 # Chocolate Banana Lentil Muffins (REW)
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2/3cuprolled oats
 - 2/3cupwheat flour

@@ -26,10 +26,6 @@ source_file: Samosa Grilled Cheese.html
 
 # Samosa Grilled Cheese
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2tbspneutral oil like vegetable or canola
 - 1/2tspmustard seeds
@@ -48,6 +44,9 @@ source_file: Samosa Grilled Cheese.html
 - 1cupprepared Tamarind -Date Chutney
 - 1cupCilantro Chutney
 - 4tbspunsalted butter, softened
+
+## Prep Steps
+- Chop onions/shallots
 
 ### Instructions
 1. Peel, boil and dice potatoes.

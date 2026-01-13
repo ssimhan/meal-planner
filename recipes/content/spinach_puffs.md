@@ -23,10 +23,6 @@ source_file: Spinach Puffs.html
 
 # Spinach Puffs
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 3-4cupsspinach
 - 1/2cupcrumbled feta
@@ -37,6 +33,11 @@ source_file: Spinach Puffs.html
 - Kosher salt and freshly ground black pepper
 - 2 eggs
 - 1 sheet frozen puff pastry, thawed
+
+## Prep Steps
+- Chop onions/shallots
+- Wash and chop herbs
+- Mince garlic
 
 ### Instructions
 1. Cut and saute spinach until wilted. Squeeze out any remaining water.

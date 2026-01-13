@@ -21,10 +21,6 @@ source_file: Chef’s Paniyaram.html
 
 # Chef’s Paniyaram
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - Idli or dosa batter
 - 1 onion
@@ -32,6 +28,10 @@ source_file: Chef’s Paniyaram.html
 - cumin
 - salt
 - garam masala
+
+## Prep Steps
+- Chop onions/shallots
+- Wash and chop herbs
 
 ### Instructions
 1. Saute onion until caramelized.Turn off heat and add chopped cilantroOnce cooled, add batter and mix.Add more batter because you'll want a lot more.

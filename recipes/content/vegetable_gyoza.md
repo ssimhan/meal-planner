@@ -30,10 +30,6 @@ source_file: Vegetable Gyoza.html
 
 # Vegetable Gyoza
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - AD
 - 1 package extra firm tofu (12 oz, 340 g)
@@ -61,6 +57,14 @@ source_file: Vegetable Gyoza.html
 - neutral oil (1 Tbsp per batch)
 - water (¼ cup, 60 ml per batch)
 - toasted sesame oil (1 tsp per batch)
+
+## Prep Steps
+- Press/cube tofu
+- Shred/chop cabbage
+- Chop carrots
+- Chop onions/shallots
+- Chop scallions
+- Clean and slice mushrooms
 
 ### Instructions
 1. To Drain the Tofu

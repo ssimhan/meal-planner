@@ -20,10 +20,6 @@ source_file: Pizza Muffins (with Veggies!).html
 
 # Pizza Muffins (with Veggies!)
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - AD
 - 1½cups milk
@@ -41,6 +37,9 @@ source_file: Pizza Muffins (with Veggies!).html
 - ½teaspoon salt
 - AD
 - Marinara or pizza sauce (warmed for dipping, optional but recommended)
+
+## Prep Steps
+- Chop carrots
 
 ### Instructions
 1. AD

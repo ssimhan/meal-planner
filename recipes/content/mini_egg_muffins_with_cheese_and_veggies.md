@@ -25,10 +25,6 @@ source_file: Mini Egg Muffins with Cheese and Veggies.html
 
 # Mini Egg Muffins with Cheese and Veggies
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - US Customary Metric
 - 1 tablespoon onion, peeled and grated (or ¼ teaspoon onion powder)
@@ -37,6 +33,12 @@ source_file: Mini Egg Muffins with Cheese and Veggies.html
 - 1/2cupcottage cheese (drained if needed)
 - 1/4cupshredded cheddar cheese
 - 2 tablespoons grated Parmesan cheese
+
+## Prep Steps
+- Chop carrots
+- Peel/chop squash
+- Cut florets
+- Wash and chop greens
 
 ### Instructions
 1. Preheat the oven to 350 F and grease 12 mini muffin cups with nonstick spray very well.

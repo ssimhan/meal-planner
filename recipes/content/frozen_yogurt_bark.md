@@ -18,10 +18,6 @@ source_file: Frozen Yogurt Bark.html
 
 # Frozen Yogurt Bark
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - US Customary Metric
 - 1cupfrozen wild blueberries (or other desired fruit)

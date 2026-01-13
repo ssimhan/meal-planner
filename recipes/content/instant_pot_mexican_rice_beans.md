@@ -28,10 +28,6 @@ source_file: Instant Pot Mexican Rice & Beans.html
 
 # Instant Pot Mexican Rice & Beans
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cupBasmati Rice, uncooked, rinsed and drained
 - 115oz. can of pinto beans
@@ -51,6 +47,10 @@ source_file: Instant Pot Mexican Rice & Beans.html
 - lettuce (optional topping)
 - pico de gallo (optional topping)
 - sour cream (optional topping)
+
+## Prep Steps
+- Chop onions/shallots
+- Chop scallions
 
 ### Instructions
 1. Turn the Instant Pot on saute mode and add 2 tbsp of oil. Once the oil is hot, add the green chilis and white parts of the scallions. Let them splutter for about 30 seconds or so and then add the diced onions.

@@ -25,10 +25,6 @@ source_file: Tandoori Veggie Quesadillas.html
 
 # Tandoori Veggie Quesadillas
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 bell pepper, red
 - 1 bell pepper, green
@@ -48,6 +44,10 @@ source_file: Tandoori Veggie Quesadillas.html
 - 1 package tortillas
 - 1cupcream cheese or Greek yogurt
 - 2tspsriracha sauce
+
+## Prep Steps
+- Chop peppers
+- Chop onions/shallots
 
 ### Instructions
 1. Set corn to cook in microwave.

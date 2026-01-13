@@ -28,10 +28,6 @@ source_file: Oven-Baked Crispy Black Bean Tacos.html
 
 # Oven-Baked Crispy Black Bean Tacos
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - Olive oil
 - 1/2 medium onion
@@ -48,6 +44,11 @@ source_file: Oven-Baked Crispy Black Bean Tacos.html
 - Paprika
 - Salt
 - Pepper
+
+## Prep Steps
+- Chop onions/shallots
+- Wash and chop herbs
+- Chop peppers
 
 ### Instructions
 1. **For the Black Bean Tacos:**Preheat oven to 450F. Line a baking sheet pan with parchment paper.

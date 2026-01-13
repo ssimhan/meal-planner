@@ -23,10 +23,6 @@ source_file: Pesarattu.html
 
 # Pesarattu
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cupwhole moong beans
 - Ginger paste
@@ -36,6 +32,10 @@ source_file: Pesarattu.html
 - Ghee
 - 2 onions
 - 2 green chilies (chopped)
+
+## Prep Steps
+- Grate/mince ginger
+- Chop onions/shallots
 
 ### Instructions
 1. Rinse well a few times until the water runs clear.

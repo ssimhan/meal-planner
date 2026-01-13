@@ -21,10 +21,6 @@ source_file: Peanut Chutney.html
 
 # Peanut Chutney
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - ½cup Peanuts
 - 1 tablespoon Chana dal
@@ -36,6 +32,9 @@ source_file: Peanut Chutney.html
 - Mustard seeds
 - Urad dal
 - 1 curry leaf
+
+## Prep Steps
+- Mince garlic
 
 ### Instructions
 1. Dry roast peanuts in low flame to ensure even roasting.

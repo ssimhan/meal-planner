@@ -22,10 +22,6 @@ source_file: Chocolate Protein Muffins (with Veggies!).html
 
 # Chocolate Protein Muffins (with Veggies!)
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - US Customary Metric
 - 1cuppeanut butter
@@ -41,6 +37,9 @@ source_file: Chocolate Protein Muffins (with Veggies!).html
 - ¼teaspoon baking soda
 - Chocolate chips
 - ¼teaspoon salt
+
+## Prep Steps
+- Chop zucchini
 
 ### Instructions
 1. Preheat the oven to 350 degrees. Grease the muffin tin.

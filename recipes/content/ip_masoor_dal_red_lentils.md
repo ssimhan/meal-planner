@@ -29,10 +29,6 @@ source_file: IP Masoor Dal  Red Lentils.html
 
 # IP Masoor Dal / Red Lentils
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 tablespoon Ghee or Oil
 - 1 teaspoon Cumin
@@ -55,6 +51,13 @@ source_file: IP Masoor Dal  Red Lentils.html
 - 1.25 cup Water
 - 1 tablespoon Ghee or Oil
 - 1 teaspoon Salt
+
+## Prep Steps
+- Chop peppers
+- Chop onions/shallots
+- Grate/mince ginger
+- Mince garlic
+- Wash and chop herbs
 
 ### Instructions
 1. Start the pressure cooker in sauté mode and let it heat. Add oil and cumin seeds. Sauté for 30 seconds.

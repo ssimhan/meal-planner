@@ -22,10 +22,6 @@ source_file: Ginger Chutney Allam Chutney.html
 
 # Ginger Chutney Allam Chutney
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1& ½ tbsp Ginger chopped
 - 6 Red chilli
@@ -37,6 +33,9 @@ source_file: Ginger Chutney Allam Chutney.html
 - Oil
 - Mustard seeds
 - Curry leaves
+
+## Prep Steps
+- Grate/mince ginger
 
 ### Instructions
 1. In a pan/ kadai, add 1 tablespoon urad dal, 6 red chilli and roast in medium flame until slightly golden.

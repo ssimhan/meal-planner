@@ -32,10 +32,6 @@ source_file: Vegetarian Tortilla Soup.html
 
 # Vegetarian Tortilla Soup
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 medium onion
 - 1 bell pepper, green
@@ -52,6 +48,11 @@ source_file: Vegetarian Tortilla Soup.html
 - 4 radishes
 - 1 lime
 - 1bunchcilantro
+
+## Prep Steps
+- Chop onions/shallots
+- Chop peppers
+- Mince garlic
 
 ### Instructions
 1. PrepPeel and dice the onion. Dice the green pepper. Peel and mince the garlic. Drain and rinse the beans.

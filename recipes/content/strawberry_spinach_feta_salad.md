@@ -23,10 +23,6 @@ source_file: Strawberry Spinach Feta Salad.html
 
 # Strawberry Spinach Feta Salad
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 3cupshalved strawberries (about 1 pound)
 - ½cup crumbled feta (about 4 ounces)
@@ -42,6 +38,12 @@ source_file: Strawberry Spinach Feta Salad.html
 - ¾cup olive oil
 - ½teaspoon salt
 - ⅛teaspoon black pepper
+
+## Prep Steps
+- Chop onions/shallots
+- Slice cucumber
+- Wash and chop greens
+- Mince garlic
 
 ### Instructions
 1. Add all of the ingredients for the salad to a large bowl.

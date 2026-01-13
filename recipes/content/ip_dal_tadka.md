@@ -26,10 +26,6 @@ source_file: IP Dal Tadka.html
 
 # IP Dal Tadka
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - Ghee or Oil
 - 1 teaspoon Cumin seeds (Jeera)
@@ -46,6 +42,11 @@ source_file: IP Dal Tadka.html
 - Coriander powder
 - Red Chili powder
 - Salt
+
+## Prep Steps
+- Chop peppers
+- Chop onions/shallots
+- Wash and chop herbs
 
 ### Instructions
 1. Start the instant pot in sauté mode and heat the oil in it. Add cumin seeds, green chili, curry leaves, garlic and asafoetida.

@@ -28,10 +28,6 @@ source_file: Ragda Patty.html
 
 # Ragda Patty
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cupvatana
 - 1 medium potato
@@ -48,6 +44,11 @@ source_file: Ragda Patty.html
 - garam masala
 - salt
 - cilantro
+
+## Prep Steps
+- Chop onions/shallots
+- Mince garlic
+- Wash and chop herbs
 
 ### Instructions
 1. pressure cook vatana, potato, turmeric, salt and water for 5 whistles.

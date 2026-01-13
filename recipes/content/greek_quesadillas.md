@@ -22,10 +22,6 @@ source_file: Greek Quesadillas.html
 
 # Greek Quesadillas
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 8 whole wheat tortillas
 - 2cupsfresh spinach
@@ -35,6 +31,11 @@ source_file: Greek Quesadillas.html
 - ½cup feta cheese crumbles
 - 1½tablespoons fresh chopped oregano
 - Red pepper flakes (optional)
+
+## Prep Steps
+- Wash and chop greens
+- Chop onions/shallots
+- Chop peppers
 
 ### Instructions
 1. Thinly slice the spinach, red onion and olives. Chop the fresh oregano (if using).

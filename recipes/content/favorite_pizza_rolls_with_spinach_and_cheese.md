@@ -22,16 +22,15 @@ source_file: Favorite Pizza Rolls (with Spinach and Cheese).html
 
 # Favorite Pizza Rolls (with Spinach and Cheese)
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cupbaby spinach
 - 13-16 ounces pizza dough (at room temperature)
 - 3/4cuppizza sauce
 - 2cupsshredded mozzarella
 - 1/4cupgrated Parmesan cheese
+
+## Prep Steps
+- Wash and chop greens
 
 ### Instructions
 1. Prep:Preheat the oven to 400°F.

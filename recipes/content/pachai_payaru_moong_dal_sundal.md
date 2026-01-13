@@ -22,10 +22,6 @@ source_file: Pachai Payaru, Moong Dal Sundal.html
 
 # Pachai Payaru, Moong Dal Sundal
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - ½cup Green gram pachai payaru
 - ¼cup Grated coconut
@@ -39,6 +35,9 @@ source_file: Pachai Payaru, Moong Dal Sundal.html
 - ¼teaspoon Asafoetida
 - 2 Red chilli
 - 1 sprig Curry leaves
+
+## Prep Steps
+- Grate/mince ginger
 
 ### Instructions
 1. Heat heavy bottom pan, add oil, splutter mustard, followed by urad dal, asafoetida, red chilli and curry leaves.

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { getStatus, generatePlan, createWeek, confirmVeg, logMeal, getRecipes, WorkflowStatus } from '@/lib/api';
+import { getStatus, generatePlan, createWeek, confirmVeg, logMeal, getRecipes, replan, WorkflowStatus } from '@/lib/api';
 import type { RecipeListItem } from '@/types';
 import Skeleton from '@/components/Skeleton';
 import Card from '@/components/Card';
@@ -11,7 +11,9 @@ import FeedbackButtons from '@/components/FeedbackButtons';
 import DinnerLogging from '@/components/DinnerLogging';
 import PrepTaskList from '@/components/PrepTaskList';
 import NightlyCheckinBanner from '@/components/NightlyCheckinBanner';
-import RecipeCaptureBanner from '@/components/RecipeCaptureBanner';
+import PendingRecipesIndicator from '@/components/PendingRecipesIndicator';
+import PendingRecipesListModal from '@/components/PendingRecipesListModal';
+import DinnerOptionsModal from '@/components/DinnerOptionsModal';
 import { useToast } from '@/context/ToastContext';
 import { logout } from './login/actions';
 
@@ -53,6 +55,8 @@ function DashboardContent() {
   const [completedPrep, setCompletedPrep] = useState<string[]>([]);
   const [recipes, setRecipes] = useState<RecipeListItem[]>([]);
   const [selectedWeek, setSelectedWeek] = useState<string | null>(weekParam);
+  const [pendingModalOpen, setPendingModalOpen] = useState(false);
+  const [optionsModalOpen, setOptionsModalOpen] = useState(false);
 
   // Synchronize state with URL param
   useEffect(() => {
@@ -64,7 +68,7 @@ function DashboardContent() {
   // Dinner Logging State consolidated
   const [dinnerState, setDinnerState] = useState({
     showAlternatives: false,
-    selectedAlternative: null as 'freezer' | 'outside' | 'other' | null,
+    selectedAlternative: null as 'freezer' | 'outside' | 'other' | 'leftovers' | null,
     otherMealText: '',
     selectedFreezerMeal: '',
     isEditing: false,
@@ -322,10 +326,38 @@ function DashboardContent() {
 
   return (
     <main className="container mx-auto max-w-4xl px-4 py-12">
-      <header className="mb-12">
-        <h1 className="text-5xl mb-4">Sandhya's Meal Planner</h1>
+      <header className="mb-12 relative">
+        <div className="flex justify-between items-start mb-4">
+          <h1 className="text-5xl">Sandhya's Meal Planner</h1>
+          {status?.pending_recipes && status.pending_recipes.length > 0 && (
+            <PendingRecipesIndicator
+              count={status.pending_recipes.length}
+              onClick={() => setPendingModalOpen(true)}
+            />
+          )}
+        </div>
         {status && <NightlyCheckinBanner status={status} />}
-        {status && <RecipeCaptureBanner status={status} onRefresh={() => fetchStatus(false, selectedWeek || undefined)} />}
+
+        {status?.pending_recipes && (
+          <PendingRecipesListModal
+            isOpen={pendingModalOpen}
+            onClose={() => setPendingModalOpen(false)}
+            pendingRecipes={status.pending_recipes}
+            onRefresh={() => fetchStatus(false, selectedWeek || undefined)}
+          />
+        )}
+
+        {status && status.current_day && (status.state === 'active' || status.state === 'waiting_for_checkin') && status.week_of && (
+          <DinnerOptionsModal
+            isOpen={optionsModalOpen}
+            onClose={() => setOptionsModalOpen(false)}
+            currentDay={status.current_day}
+            currentMealName={status.today_dinner?.recipe_id?.replace(/_/g, ' ') || 'Dinner'}
+            weekOf={status.week_of}
+            days={['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']}
+            onSuccess={() => fetchStatus(false, selectedWeek || undefined)}
+          />
+        )}
       </header>
 
       <div className="grid gap-8 md:grid-cols-2">
@@ -525,7 +557,14 @@ function DashboardContent() {
                       status.today_dinner.made === 'outside_meal' ? '🍽️ Restaurant' :
                         status.today_dinner.actual_meal ? `✗ ${status.today_dinner.actual_meal}` :
                           '✗ Skipped'
-                ) : undefined}
+                ) : (
+                  <button
+                    onClick={() => setOptionsModalOpen(true)}
+                    className="text-[10px] text-[var(--accent-sage)] underline decoration-dotted hover:text-[var(--text-primary)]"
+                  >
+                    Change Plan
+                  </button>
+                )}
                 action={<DinnerLogging
                   status={status}
                   logLoading={ui.logLoading}
@@ -616,7 +655,29 @@ function DashboardContent() {
           </form>
         </div>
       </footer>
-    </main>
+
+      {/* Dev Tools (Quick Reset) */}
+      <div className="mt-8 p-4 bg-red-950/10 border border-red-900/20 rounded text-center opacity-50 hover:opacity-100 transition-opacity">
+        <p className="text-xs font-mono uppercase text-red-900/60 mb-2">Dev Tools</p>
+        <button
+          onClick={async () => {
+            try {
+              if (!confirm('Reset "Test Mystery Curry" test data?')) return;
+              const { getAuthHeaders } = await import('@/lib/api');
+              await fetch('/api/test/reset/pending_recipe', {
+                method: 'POST',
+                headers: await getAuthHeaders()
+              });
+              alert('Reset complete! Refreshing...');
+              window.location.reload();
+            } catch (e) { alert(e); }
+          }}
+          className="px-3 py-1 bg-red-900/10 hover:bg-red-900/20 text-red-900 rounded text-xs font-bold"
+        >
+          Reset "Test Mystery Curry"
+        </button>
+      </div>
+    </main >
   );
 }
 

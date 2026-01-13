@@ -23,10 +23,6 @@ source_file: Favorite Yogurt Muffins.html
 
 # Favorite Yogurt Muffins
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - US Customary Metric
 - ¾cup all-purpose flour
@@ -45,6 +41,9 @@ source_file: Favorite Yogurt Muffins.html
 - 2cupsfinely diced strawberries (add 1 tablespoon fresh lemon zest if desired)
 - 2cupsblueberries (add 1 teaspoon cinnamon if desired)
 - 2cupsfinely diced cherries
+
+## Prep Steps
+- Chop carrots
 
 ### Instructions
 1. With a base recipe that bakes up perfectly fluffy and just-sweet-enough muffins, and 6 options to add flavors from fruit, veggies, spices, and chocolate chips, this Yogurt Muffin recipe is as versatile as it is delicious!

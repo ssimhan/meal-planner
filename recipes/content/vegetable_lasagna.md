@@ -28,10 +28,6 @@ source_file: Vegetable Lasagna.html
 
 # Vegetable Lasagna
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2 teaspoons olive oil
 - 1 medium zucchini
@@ -47,6 +43,13 @@ source_file: Vegetable Lasagna.html
 - ½cup grated Parmesan cheese
 - 24 ounces marinara sauce
 - No-boil lasagna noodles
+
+## Prep Steps
+- Chop zucchini
+- Chop peppers
+- Chop onions/shallots
+- Mince garlic
+- Wash and chop herbs
 
 ### Instructions
 1. Preheat oven to 400 degrees F. Spray a 9 x 13-inch baking dish with cooking spray and set aside.

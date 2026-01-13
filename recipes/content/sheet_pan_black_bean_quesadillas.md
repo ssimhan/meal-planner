@@ -24,10 +24,6 @@ source_file: Sheet Pan Black Bean Quesadillas.html
 
 # Sheet Pan Black Bean Quesadillas
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - Flour tortillas
 - 2cansblack beans
@@ -35,6 +31,9 @@ source_file: Sheet Pan Black Bean Quesadillas.html
 - Sweet potato puree
 - Cumin powder
 - Salsa, cilantro, sour cream, guacamole, optional
+
+## Prep Steps
+- Wash and chop herbs
 
 ### Instructions
 1. Preheat oven to 375 degrees F and line 2 baking sheets with parchment paper.

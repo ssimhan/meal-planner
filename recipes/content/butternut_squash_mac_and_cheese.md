@@ -21,16 +21,15 @@ source_file: Butternut Squash Mac and Cheese.html
 
 # Butternut Squash Mac and Cheese
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cuppeeled and cubed butternut squash
 - 1/3cupmilk
 - 3/4cupgrated yellow or white cheddar cheese
 - 1 tablespoon butter
 - 8 ounces pasta
+
+## Prep Steps
+- Peel/chop squash
 
 ### Instructions
 1. Here’s a look at how to make this easy butternut squash mac and cheese recipe. Scroll down to the bottom of the post for the full recipe, including the amounts and timing.

@@ -24,10 +24,6 @@ source_file: Healthy Vegetable Sheet Pan Frittata.html
 
 # Healthy Vegetable Sheet Pan Frittata
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 teaspoon olive oil
 - ½cup onion, chopped
@@ -41,6 +37,11 @@ source_file: Healthy Vegetable Sheet Pan Frittata.html
 - 2 tablespoons feta
 - salt and pepper
 - cooking spray
+
+## Prep Steps
+- Chop onions/shallots
+- Wash and chop greens
+- Chop peppers
 
 ### Instructions
 1. Preheat the oven to 425 degrees and put a quarter sheet pan (9x13 inches) in the oven.

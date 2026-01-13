@@ -22,10 +22,6 @@ source_file: Creamy Macaroni Pasta Salad.html
 
 # Creamy Macaroni Pasta Salad
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 8 ounces salad macaroni or ditalini pasta
 - 1cuptiny broccoli florets
@@ -37,6 +33,13 @@ source_file: Creamy Macaroni Pasta Salad.html
 - 2 teaspoons vinegar
 - salt and pepper
 - 1/2 teaspoon sugar
+
+## Prep Steps
+- Cut florets
+- Slice cucumber
+- Chop peppers
+- Chop onions/shallots
+- Chop scallions
 
 ### Instructions
 1. Cook the pasta according to the directions on the package, adding a generous tablespoon or so of kosher salt to the water as it cooks. Just before the noodles are done cooking, add the broccoli to the pot. Let the broccoli boil for about 30 seconds and then drain everything into a large colander. Rinse well with cold water.

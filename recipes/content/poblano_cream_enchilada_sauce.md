@@ -25,10 +25,6 @@ source_file: Poblano Cream Enchilada Sauce.html
 
 # Poblano Cream Enchilada Sauce
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 6 medium Poblano Peppers
 - 2cupschicken broth
@@ -39,6 +35,10 @@ source_file: Poblano Cream Enchilada Sauce.html
 - 1 tablespoon cumin powder
 - 2cupscilantro, washed and chopped
 - 1/4cupqueso fresco, grated
+
+## Prep Steps
+- Chop peppers
+- Mince garlic
 
 ### Instructions
 1. Roasting the Poblano Peppers

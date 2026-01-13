@@ -28,10 +28,6 @@ source_file: Panchmel Dal.html
 
 # Panchmel Dal
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1.25 cups mixed dal
 - 2 tablespoon ghee
@@ -50,6 +46,11 @@ source_file: Panchmel Dal.html
 - ½teaspoon Garam Masala
 - 2 teaspoon Coriander powder
 - Salt
+
+## Prep Steps
+- Chop onions/shallots
+- Grate/mince ginger
+- Wash and chop herbs
 
 ### Instructions
 1. Wash the lentils with water and keep aside. Finely dice onion and tomato. Set water in kettle for boiling.

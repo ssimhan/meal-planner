@@ -21,10 +21,6 @@ source_file: Black Bean Brownie Bites.html
 
 # Black Bean Brownie Bites
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1/4cupcoconut oil (or melted butter)
 - 1/2cupchocolate chips

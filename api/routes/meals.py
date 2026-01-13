@@ -411,7 +411,10 @@ def log_meal():
              if str(made).lower() in ('yes', 'true', '1', 'y'): target_dinner['made'] = True
              elif str(made).lower() in ('no', 'false', '0', 'n'): target_dinner['made'] = False
              elif str(made).lower() in ('freezer', 'backup'): target_dinner['made'] = 'freezer_backup'
-             elif str(made).lower() == 'outside_meal': target_dinner['made'] = 'outside_meal'
+             elif str(made).lower() == 'outside_meal' or str(made).lower() == 'ate_out': target_dinner['made'] = 'outside_meal'
+             elif str(made).lower() == 'leftovers': 
+                 target_dinner['made'] = False
+                 target_dinner['actual_meal'] = "Leftovers"
              else: target_dinner['made'] = made
         
         if not is_feedback_only:

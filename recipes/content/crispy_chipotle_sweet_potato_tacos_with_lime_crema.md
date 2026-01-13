@@ -28,10 +28,6 @@ source_file: Crispy Chipotle Sweet Potato Tacos with Lime Crema.html
 
 # Crispy Chipotle Sweet Potato Tacos with Lime Crema
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - Oil
 - 2 medium sweet potatoes
@@ -52,6 +48,11 @@ source_file: Crispy Chipotle Sweet Potato Tacos with Lime Crema.html
 - 3 tablespoons mayonnaise
 - zest of 1 lime
 - sea salt
+
+## Prep Steps
+- Peel and cube sweet potatoes
+- Chop peppers
+- Wash and chop herbs
 
 ### Instructions
 1. Peel and cube the sweet potatoes.Seed and chop the poblano.

@@ -24,10 +24,6 @@ source_file: Tofu Scramble (Freezer Meal Prep).html
 
 # Tofu Scramble (Freezer Meal Prep)
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 package tofu
 - 1candiced tomatoes
@@ -43,6 +39,11 @@ source_file: Tofu Scramble (Freezer Meal Prep).html
 - 1cupspinach
 - Salt
 - Black pepper
+
+## Prep Steps
+- Press/cube tofu
+- Chop onions/shallots
+- Mince garlic
 
 ### Instructions
 1. Meal Prep Instructions:Label your gallon-sized freezer bag with the name, instructions, and a use-by date (recommended 90 days after prep date).Add all ingredients (except for the maple syrup and fresh kale/spinach) to the freezer bag.Stir gently to combine the ingredients.Remove air, seal the bag, and freeze.Cooking Instructions:

@@ -26,10 +26,6 @@ source_file: Mattar Paneer Sabji.html
 
 # Mattar Paneer Sabji
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2tbspoil
 - 2 onions
@@ -52,6 +48,10 @@ source_file: Mattar Paneer Sabji.html
 - 2tbspmilk
 - 1tspkasuri methi
 - Cilantro
+
+## Prep Steps
+- Chop onions/shallots
+- Wash and chop herbs
 
 ### Instructions
 1. **Prep:**Roughly chop onion and tomatoes.Cube paneerCook the frozen peas in the microwave.

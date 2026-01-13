@@ -22,10 +22,6 @@ source_file: Cauliflower Alfredo Sauce.html
 
 # Cauliflower Alfredo Sauce
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2cupraw cauliflower florets
 - 2tspgarlic powder
@@ -34,6 +30,9 @@ source_file: Cauliflower Alfredo Sauce.html
 - 1cupmilk
 - 1/2cupnutritional yeast
 - Shredded mozzarella
+
+## Prep Steps
+- Cut florets
 
 ### Instructions
 1. Put all ingredients into a medium pot and bring to a complete boil, then cover and simmer 15 minutes or until the cauliflower is fall-apart tender.

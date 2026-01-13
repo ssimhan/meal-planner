@@ -28,10 +28,6 @@ source_file: Mexican Sabudana Khichdi.html
 
 # Mexican Sabudana Khichdi
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1.5 cups sabudana
 - 2tbspoil
@@ -49,6 +45,10 @@ source_file: Mexican Sabudana Khichdi.html
 - 1/4tspturmeric
 - 2clovesgarlic
 - 1/2cupshredded mexican cheese
+
+## Prep Steps
+- Chop peppers
+- Chop scallions
 
 ### Instructions
 1. Quick Soak Sabudana

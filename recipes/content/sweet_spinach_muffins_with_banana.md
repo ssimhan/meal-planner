@@ -21,10 +21,6 @@ source_file: Sweet Spinach Muffins with Banana.html
 
 # Sweet Spinach Muffins with Banana
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cupsliced ripe banana
 - 2cupslightly packed spinach
@@ -38,6 +34,9 @@ source_file: Sweet Spinach Muffins with Banana.html
 - 1/8 teaspoon salt
 - 1cupwhole-wheat flour
 - Mini chocolate chips optional
+
+## Prep Steps
+- Wash and chop greens
 
 ### Instructions
 1. Preheat the oven to 375 degrees F and grease a muffin tin well with nonstick spray.

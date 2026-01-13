@@ -27,10 +27,6 @@ source_file: Mexican Pinwheels.html
 
 # Mexican Pinwheels
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2largetortillas
 - 2/3cupqueso
@@ -39,6 +35,10 @@ source_file: Mexican Pinwheels.html
 - 1/2cupred onion
 - 1/2cupfinely diced tomato or chunky salsa
 - 1/2cupfresh cilantro
+
+## Prep Steps
+- Chop onions/shallots
+- Wash and chop herbs
 
 ### Instructions
 1. Lay one tortilla flat and spread with a thin layer of spreadable cheese.

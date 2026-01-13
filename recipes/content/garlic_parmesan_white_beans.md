@@ -25,10 +25,6 @@ source_file: Garlic Parmesan White Beans.html
 
 # Garlic Parmesan White Beans
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 X 2 X 3 X
 - 3to 4 garlic cloves, minced
@@ -42,6 +38,11 @@ source_file: Garlic Parmesan White Beans.html
 - ¼ to ⅓cup shaved Parmesan cheese
 - ¼cup grated Pecorino Romano
 - Juice of half a lemon
+
+## Prep Steps
+- Mince garlic
+- Chop peppers
+- Wash and chop herbs
 
 ### Instructions
 1. In a large pan, warm 2 tablespoons extra virgin olive oil over medium heat. Add the garlic and cook briefly, tossing regularly, until just golden.

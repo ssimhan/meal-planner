@@ -34,10 +34,6 @@ source_file: Southwest Pasta Salad.html
 
 # Southwest Pasta Salad
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - ½cup mayonnaise
 - ¼cup sour cream
@@ -58,6 +54,12 @@ source_file: Southwest Pasta Salad.html
 - 1largeavocado, diced
 - Cilantro
 - Scallions
+
+## Prep Steps
+- Wash and chop herbs
+- Chop peppers
+- Chop onions/shallots
+- Chop scallions
 
 ### Instructions
 1. **Prep**Dice bell pepper, red onion, cilantro, scallionsCut cherry tomatoes, avocado

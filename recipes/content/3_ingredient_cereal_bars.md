@@ -18,10 +18,6 @@ source_file: 3-Ingredient Cereal Bars.html
 
 # 3-Ingredient Cereal Bars
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - US Customary Metric
 - ½cup smooth natural peanut butter (like Smucker's Natural)

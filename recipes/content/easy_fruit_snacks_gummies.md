@@ -20,10 +20,6 @@ source_file: Easy Fruit Snacks (Gummies).html
 
 # Easy Fruit Snacks (Gummies)
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - AD
 - 1cupstrawberries
@@ -31,6 +27,9 @@ source_file: Easy Fruit Snacks (Gummies).html
 - ½cup water (or apple juice)
 - 2 tablespoons honey (or maple syrup)
 - 6 teaspoons unflavored gelatin
+
+## Prep Steps
+- Chop carrots
 
 ### Instructions
 1. AD

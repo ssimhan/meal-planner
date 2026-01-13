@@ -23,10 +23,6 @@ source_file: Shiro Wot (Ground-Chickpea Stew).html
 
 # Shiro Wot (Ground-Chickpea Stew)
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1largered onion, coarsely chopped
 - 10 garlic cloves, peeled
@@ -37,6 +33,10 @@ source_file: Shiro Wot (Ground-Chickpea Stew).html
 - 1/2cupchickpea flour
 - 1to 2 jalapeños, stemmed and thinly sliced
 - Injera or baguette, for serving
+
+## Prep Steps
+- Chop onions/shallots
+- Mince garlic
 
 ### Instructions
 1. Place the onion and garlic in a food processor, and pulse until very finely minced, stopping periodically to scrape down the sides of the bowl with a rubber spatula to ensure even chopping. Set aside.

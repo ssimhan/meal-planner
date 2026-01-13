@@ -28,10 +28,6 @@ source_file: Baked Black Bean and Sweet Potato Flautas.html
 
 # Baked Black Bean and Sweet Potato Flautas
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 9 corn tortillas
 - 1canblack beans
@@ -48,6 +44,11 @@ source_file: Baked Black Bean and Sweet Potato Flautas.html
 - salsa (optional)
 - sour cream or Greek yogurt (optional)
 - guacamole (optional)
+
+## Prep Steps
+- Chop peppers
+- Chop onions/shallots
+- Wash and chop herbs
 
 ### Instructions
 1. Pre-heat your oven to 425F.

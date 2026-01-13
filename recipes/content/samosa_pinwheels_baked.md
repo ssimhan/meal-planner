@@ -24,10 +24,6 @@ source_file: Samosa Pinwheels (Baked).html
 
 # Samosa Pinwheels (Baked)
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 116 ozpuff pastry
 - 2largepotatoes

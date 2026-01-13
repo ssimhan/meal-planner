@@ -25,10 +25,6 @@ source_file: Cauliflower Rasam.html
 
 # Cauliflower Rasam
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - Cauliflower florets (package)
 - 2 medium tomatoes
@@ -40,6 +36,10 @@ source_file: Cauliflower Rasam.html
 - Ghee
 - Mustard seeds
 - Lemon juice
+
+## Prep Steps
+- Cut florets
+- Wash and chop herbs
 
 ### Instructions
 1. Boil florets with a little salt in hot water.

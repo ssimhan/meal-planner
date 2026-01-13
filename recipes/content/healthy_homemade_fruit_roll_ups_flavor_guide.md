@@ -21,10 +21,6 @@ source_file: Healthy Homemade Fruit Roll Ups (+ Flavor Guide).html
 
 # Healthy Homemade Fruit Roll Ups (+ Flavor Guide)
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2-3cupsfruit
 - 2-3Tbsphoney

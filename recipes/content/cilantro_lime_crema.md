@@ -23,10 +23,6 @@ source_file: Cilantro Lime Crema.html
 
 # Cilantro Lime Crema
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cupwhole milk Greek yogurt or sour cream
 - 2 tablespoons mayonnaise
@@ -35,6 +31,9 @@ source_file: Cilantro Lime Crema.html
 - ½teaspoon sea salt
 - ¼teaspoon onion powder
 - ½cup fresh cilantro
+
+## Prep Steps
+- Wash and chop herbs
 
 ### Instructions
 1. In a food processor, place the yogurt, mayo, lime juice, garlic, salt, and onion powder. Process until creamy.

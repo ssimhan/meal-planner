@@ -23,10 +23,6 @@ source_file: Mini Crustless Quiches.html
 
 # Mini Crustless Quiches
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1tbspButter
 - ½Onion
@@ -35,6 +31,9 @@ source_file: Mini Crustless Quiches.html
 - 1cupcheddar cheese
 - 5 Eggs
 - 300mlcream
+
+## Prep Steps
+- Chop peppers
 
 ### Instructions
 1. Pre heat oven to 180c / 350F / Gas 4

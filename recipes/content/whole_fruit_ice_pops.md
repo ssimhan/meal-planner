@@ -20,10 +20,6 @@ source_file: Whole Fruit Ice Pops.html
 
 # Whole Fruit Ice Pops
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - AD
 - 2cupsfruit (Pick one or a combo: watermelon, strawberries, mango, pineapple, or kiwi)

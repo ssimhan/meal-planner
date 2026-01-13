@@ -27,10 +27,6 @@ source_file: Cheese and Tomato Quinoa Balls.html
 
 # Cheese and Tomato Quinoa Balls
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1/2cupquinoa
 - 1tbspoil
@@ -41,6 +37,10 @@ source_file: Cheese and Tomato Quinoa Balls.html
 - 1/2cupcheddar cheese
 - 1tbspFresh Basil leaves
 - 1 Egg
+
+## Prep Steps
+- Chop onions/shallots
+- Wash and chop herbs
 
 ### Instructions
 1. Grate cheddar cheese. Heat water for broth.

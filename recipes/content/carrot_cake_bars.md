@@ -22,10 +22,6 @@ source_file: Carrot Cake Bars.html
 
 # Carrot Cake Bars
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 banana
 - 1 egg
@@ -36,6 +32,9 @@ source_file: Carrot Cake Bars.html
 - 1/2tspbaking powder ⁣
 - 1/2tspcinnamon ⁣
 - 1/4cupwhite chocolate chips (optional)⁣
+
+## Prep Steps
+- Chop carrots
 
 ### Instructions
 1. Grate carrot and mash a ripe banana.

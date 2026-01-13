@@ -22,10 +22,6 @@ source_file: Khaman Dhokla IP.html
 
 # Khaman Dhokla IP
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1¼cup besan chickpea flour
 - 2 tablespoon Semolina (Sooji/Rava) fine
@@ -47,6 +43,9 @@ source_file: Khaman Dhokla IP.html
 - ¼cup Water
 - 1 teaspoon Sugar
 - ¼teaspoon Salt
+
+## Prep Steps
+- Grate/mince ginger
 
 ### Instructions
 1. Prepare Khaman Batter:

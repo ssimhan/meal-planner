@@ -20,10 +20,6 @@ source_file: Chocolate Chip Mini Muffins (Little Bites Copycat).html
 
 # Chocolate Chip Mini Muffins (Little Bites Copycat)
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - AD
 - 1cupall-purpose flour

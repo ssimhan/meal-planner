@@ -19,10 +19,6 @@ source_file: Protein Banana Bread.html
 
 # Protein Banana Bread
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - AD
 - 1cupwhole-milk plain Greek yogurt

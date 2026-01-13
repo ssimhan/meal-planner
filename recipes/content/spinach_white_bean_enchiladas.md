@@ -25,10 +25,6 @@ source_file: Spinach White Bean Enchiladas.html
 
 # Spinach White Bean Enchiladas
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 126-inch corn tortillas ($1.10)
 - 4ozpepper jack cheese ($1.00)
@@ -46,6 +42,11 @@ source_file: Spinach White Bean Enchiladas.html
 - 3/4cupwhole milk ($0.29)
 - 1/4tspsalt ($0.02)
 - 4ozpepper jack cheese ($1.00)
+
+## Prep Steps
+- Wash and chop greens
+- Chop peppers
+- Wash and chop herbs
 
 ### Instructions
 1. Toast the tortillas on each side in a dry skillet over medium-low heat until they are a slightly stiff and have browned just a bit on the edges. Stack them on a plate until ready to use. Toasting the tortillas increases the flavor and helps prevent them from cracking. Shred an 8oz. block of pepper jack cheese. Half will be used for the enchilada filling and half will be used for the sauce.

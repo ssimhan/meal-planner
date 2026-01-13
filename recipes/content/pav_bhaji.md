@@ -34,10 +34,6 @@ source_file: Pav Bhaji.html
 
 # Pav Bhaji
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2 medium Potatoes
 - 1.5 cups mixed vegetables: carrot, peas, beets, cauliflower
@@ -50,6 +46,15 @@ source_file: Pav Bhaji.html
 - Red chili powder
 - Pav bhaji masala
 - Salt
+
+## Prep Steps
+- Peel and cube potatoes
+- Chop carrots
+- Cut florets
+- Chop onions/shallots
+- Chop peppers
+- Mince garlic
+- Grate/mince ginger
 
 ### Instructions
 1. Pressure cook peeled, chopped potatoes and other chopped veggies together with little water, upto 3 whistles in pressure cooker.

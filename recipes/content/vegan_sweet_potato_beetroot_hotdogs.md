@@ -33,10 +33,6 @@ source_file: Vegan Sweet Potato Beetroot Hotdogs.html
 
 # Vegan Sweet Potato Beetroot Hotdogs
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - Avocado oil
 - 1/2 medium onion
@@ -58,6 +54,14 @@ source_file: Vegan Sweet Potato Beetroot Hotdogs.html
 - Coriander chutney
 - Lemon juice
 - Chaat masala
+
+## Prep Steps
+- Chop onions/shallots
+- Mince garlic
+- Grate/mince ginger
+- Peel and cube sweet potatoes
+- Chop carrots
+- Chop peppers
 
 ### Instructions
 1. PrepSteam and mash beets and sweet potatoes separately. No lumps!Dice tomatoes and onion. Keep aside some sliced onion.Boil 1 cup of carrots & peas

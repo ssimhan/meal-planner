@@ -27,10 +27,6 @@ source_file: Six-Bean Chili.html
 
 # Six-Bean Chili
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1largewhite onion, chopped
 - 2largecarrots, coarsely chopped
@@ -49,6 +45,10 @@ source_file: Six-Bean Chili.html
 - 2 teaspoons ground cumin
 - 2 teaspoons ground chipotle pepper
 - Chopped avocado, optional
+
+## Prep Steps
+- Chop onions/shallots
+- Chop peppers
 
 ### Instructions
 1. In a 6- or 7-qt. slow cooker, combine first 16 ingredients. Cook, covered, on low until vegetables are tender, 6-8 hours. If desired, serve with avocado.

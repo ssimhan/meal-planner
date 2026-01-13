@@ -28,10 +28,6 @@ source_file: Loaded Greek Chickpea Pasta Salad.html
 
 # Loaded Greek Chickpea Pasta Salad
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 8 ounce box of pasta
 - 1(15 ounce) can chickpeas
@@ -50,6 +46,11 @@ source_file: Loaded Greek Chickpea Pasta Salad.html
 - 1/4 teaspoon oregano
 - Salt
 - Black pepper
+
+## Prep Steps
+- Chop peppers
+- Slice cucumber
+- Wash and chop herbs
 
 ### Instructions
 1. Prep

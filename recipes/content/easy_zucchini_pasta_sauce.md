@@ -26,10 +26,6 @@ source_file: Easy Zucchini Pasta Sauce.html
 
 # Easy Zucchini Pasta Sauce
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - Parmesan cheese, lemon zest, and/or fresh black pepper (optional but recommended)
 - AD
@@ -40,6 +36,11 @@ source_file: Easy Zucchini Pasta Sauce.html
 - 2 tablespoons basil leaves (or parsley or spinach, optional)
 - 1 pound pasta
 - Parmesan cheese, lemon zest, and/or fresh black pepper (optional but recommended)
+
+## Prep Steps
+- Mince garlic
+- Wash and chop greens
+- Wash and chop herbs
 
 ### Instructions
 1. Below is an overview of the method for the recipe. Scroll down to the end of the post for the specifics. The main thing to know ahead of time is that you’ll want to reserve a little of the pasta cooking water before you drain the pasta. You’ll use that to help thin the zucchini sauce.

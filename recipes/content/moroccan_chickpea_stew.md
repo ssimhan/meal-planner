@@ -33,10 +33,6 @@ source_file: Moroccan Chickpea Stew.html
 
 # Moroccan Chickpea Stew
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2cupsdry quinoa
 - 1largeonion
@@ -59,6 +55,11 @@ source_file: Moroccan Chickpea Stew.html
 - Cilantro
 - lemon
 - 1cupGreek yogurt
+
+## Prep Steps
+- Grate/mince ginger
+- Chop peppers
+- Wash and chop herbs
 
 ### Instructions
 1. Make the quinoa using the stovetop method or Instant Pot method. When it’s done, sprinkle with a little kosher salt to taste.

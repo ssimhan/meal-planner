@@ -29,10 +29,6 @@ source_file: Favorite Toddler Smoothie (with Veggies!).html
 
 # Favorite Toddler Smoothie (with Veggies!)
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - Milk (I prefer non-dairy)
 - Fruit
@@ -45,6 +41,12 @@ source_file: Favorite Toddler Smoothie (with Veggies!).html
 - 1/2cupfresh or frozen fruit (such as blueberries, strawberries, mango, apple, or kiwi)
 - 1/2cupveggies (such as kale, spinach, raw fresh or frozen chopped cauliflower, raw fresh or frozen sliced zucchini, raw fresh or frozen sliced summer squash, roasted sweet potato, roasted butternut squash, steamed diced beets)
 - Optional add ins (pick 1-2: 1 teaspoon hemp seeds, chia seeds, or ground flaxseed 1 tablespoon nut butter 2 tablespoons avocado 1-2 teaspoons cocoa powder 1-2 teaspoons honey or maple syrup 1 tablespoon rolled oats)
+
+## Prep Steps
+- Chop zucchini
+- Peel/chop squash
+- Cut florets
+- Wash and chop greens
 
 ### Instructions
 1. Add the milk to the blender. (We prefer nondairy milks since they seem to have a slightly better consistency and less of a tendency to separate after blending.)

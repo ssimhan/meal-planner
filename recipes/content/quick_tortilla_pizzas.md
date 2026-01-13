@@ -21,16 +21,16 @@ source_file: Quick Tortilla Pizzas.html
 
 # Quick Tortilla Pizzas
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 4 tortillas (flour or whole wheat; fajita-size)
 - 1cuppizza sauce
 - 1cupshredded mozzarella cheese
 - ¼cup grated Parmesan cheese
 - 1cuppizza toppings (as desired such as pepperoni, olives, precooked broccoli, or thinly sliced mushrooms)
+
+## Prep Steps
+- Cut florets
+- Clean and slice mushrooms
 
 ### Instructions
 1. Here’s a peek at how to make this recipe so you know what to expect from the process. Scroll down to the end of this post for the specific amounts and the timing.

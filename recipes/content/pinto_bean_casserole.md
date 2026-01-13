@@ -33,10 +33,6 @@ source_file: Pinto Bean Casserole.html
 
 # Pinto Bean Casserole
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 red onion
 - 2 bell peppers
@@ -55,6 +51,12 @@ source_file: Pinto Bean Casserole.html
 - 1 medium avocado
 - Cilantro
 - Yogurt or sour cream, optional
+
+## Prep Steps
+- Chop onions/shallots
+- Chop peppers
+- Wash and chop greens
+- Wash and chop herbs
 
 ### Instructions
 1. Add onion, bell peppers, garlic and olive oil to a large pan over medium heat. Saute until onions are translucent, about 5-10 minutes.

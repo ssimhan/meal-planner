@@ -23,10 +23,6 @@ source_file: Esquites (Mexican Street Corn Salad).html
 
 # Esquites (Mexican Street Corn Salad)
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2 tablespoons unsalted butter or extra-virgin olive oil
 - 3½cups corn kernels (16 ounces frozen)
@@ -39,6 +35,10 @@ source_file: Esquites (Mexican Street Corn Salad).html
 - Pinch of cayenne pepper (optional, for extra heat)
 - ¼cup finely grated Cotija cheese**, plus more for sprinkling
 - ¼cup finely chopped cilantro
+
+## Prep Steps
+- Mince garlic
+- Wash and chop herbs
 
 ### Instructions
 1. Melt the butter in a large skillet, preferably cast iron, over medium heat.

@@ -29,10 +29,6 @@ source_file: Chana Masala (IP).html
 
 # Chana Masala (IP)
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1can chickpeas
 - Ghee
@@ -47,6 +43,12 @@ source_file: Chana Masala (IP).html
 - Turmeric
 - Garam masala
 - ½cup cilantro
+
+## Prep Steps
+- Chop onions/shallots
+- Grate/mince ginger
+- Mince garlic
+- Wash and chop herbs
 
 ### Instructions
 1. Chop 1 large onion and 2 tomatoes (or 1 can of diced tomatoes). Drain and rinse 2 cans of chickpeas.

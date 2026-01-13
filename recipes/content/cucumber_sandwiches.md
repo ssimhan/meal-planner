@@ -26,10 +26,6 @@ source_file: Cucumber Sandwiches.html
 
 # Cucumber Sandwiches
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 16 slices bread
 - 1 English cucumber
@@ -39,6 +35,11 @@ source_file: Cucumber Sandwiches.html
 - lemon juice
 - garlic
 - Salt and black pepper
+
+## Prep Steps
+- Slice cucumber
+- Wash and chop herbs
+- Mince garlic
 
 ### Instructions
 1. Peel the cucumber in stripes and cut into 1/8-inch thin slices using a mandolin or sharp knife. Place the slices on paper towels and sprinkle with coarse salt. Let rest for 15-30 minutes to extract moisture. Pat dry with clean paper towels.

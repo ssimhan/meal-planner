@@ -20,10 +20,6 @@ source_file: Salted Tahini Oatmeal Chocolate Chip Cookies.html
 
 # Salted Tahini Oatmeal Chocolate Chip Cookies
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 11/4 cups old fashioned oats
 - 1cupalmond flour

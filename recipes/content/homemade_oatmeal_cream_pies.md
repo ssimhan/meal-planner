@@ -20,10 +20,6 @@ source_file: Homemade Oatmeal Cream Pies.html
 
 # Homemade Oatmeal Cream Pies
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - For the Cookies:
 - 1cupunsalted butter, softened

@@ -76,7 +76,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Boil and mash potatoes (peel and quarter, steam in IP for 8 min)\n2. Fresh pan: saute oil, ginger, garlic, green chilies\n3. Add ketchup (3 tbsp), turmeric, red chili powder, coriander powder, cumin powder, garam masala\n4. Saute for 30 seconds\n5. Add ¼ cup water and stir thoroughly\n6. Cook for a minute\n7. Add frozen corn kernels (½ cup), mashed potatoes (1 cup), salt, amchur powder\n8. Mash and combine well\n9. Add fresh coriander and let cool\n10. Start rotimatic for chapathis\n11. Shape into patty form and grill on both sides (high heat with minimal oil, add breadcrumbs if the patty won’t hold shape easily)\n12. Make red sauce: curd, red chili powder, garlic juice, black salt\n13. Make green sauce: curd (½ cup), mint chutney (2 tbsp)\n14. Spread ghee on chapathi, add both sauces, chopped red onion and frankie masala\n15. Add patty with a couple drops of vinegar and roll up",
-    "prep_steps": null,
+    "prep_steps": [
+      "Mince garlic",
+      "Wash and chop herbs",
+      "Chop onions/shallots"
+    ],
     "source_url": null,
     "source_file": "aloo_corn_tikki_roll.md"
   },
@@ -117,7 +121,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Shred apples to get 1 1/2 cup for recipe, squeeze out extra moisture.Shred carrot to get 1/2 cup for recipe, squeeze out extra moisture.\n2. Preheat over to 350 degrees and prepare muffin tins\n3. In a large mixing bowl, combine dry ingredients. Mix in apples and carrots until well combined.\n4. In a small bowl, combine wet ingredients. Add wet ingredients to dry ingredients and mix to incorporate ingredients.\n5. Spoon into muffin tins. Bake for approximately 16 minutes or until atoothpick/knife inserted into the center comes out clean.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop carrots"
+    ],
     "source_url": null,
     "source_file": "apple_cinnamon_carrot_muffin.md"
   },
@@ -270,7 +276,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Pre-heat your oven to 425F.\n2. Poke a few holes in your sweet potato, wrap it in a slightly damp paper towel, and microwave on high for about 6-8 minutes. The paper towel trick keeps the potato moist\n3. While you wait, combine corn, diced or minced peppers, and diced or minced onion with your black beans, garlic powder, chili powder, cumin, cilantro, cayenne, and taco sauce/salsa.\n4. If you prefer very tender veggies, feel free to saute the vegetables first in a little butter or oil to tenderize.\n5. Your cayenne and red pepper flakes will control the spice-factor; adjust those to taste.\n6. I alternate between using my favorite flavorful red enchilada sauce, spicy taco sauce, and a natural, zesty salsa like Mrs. Renfros Green Salsa, all have produced delicious results!\n7. Once your sweet potato is cooked, fluff the inside with a fork and add the flesh [minus the skin] to the rest of your veggies and mix thoroughly.\n8. Add salt, pepper, and any additional seasoning to taste. I usually add a little extra sprinkle chili powder, cumin, and garlic!\n9. Next, working in small batches of maybe 3-4 tortillas, wrap corn tortillas in a damp paper towel and microwave on high for 30 seconds. Follow it up with an additional 30 seconds, if needed.\n10. The goal here is to steam the tortillas so they roll into perfect flautas without breaking or cracking =) This trick works like a charm!\n11. Immediately spray or rub one side each tortilla with oil and add \"line\" of veggie filling to the center of the \"dry side\" of each tortilla, about 1-inch thick.\n12. Top it off with a layer of cheese [as much or as little as you want! if you're using cream cheese as well you can mix it into the shredded cheese before topping] and roll the tortilla.\n13. Place on a wire baking/cooling rack and seal with a toothpick, if needed.\n14. Repeat these steps until you have a rack full of flautas.\n15. Give them one more teeny spritz of olive oil to get them extra crispy [no-frying! whoo!] and set the rack baking sheet lined with aluminum foil.\n16. The wire rack elevates the flautas and allows them to get nice and crispy on both sides. If you don't own a wire rack, simply place the flautas on aluminum foil after spraying and turn over halfway through cooking so both sides will get a chance to crisp up. Uber easy!\n17. Bake on the middle rack, at 425F, for 15 minutes.\n18. At the end, set to broil on HIGH for just under a minute to crisp the tortillas into a perfectly golden, crunchy shell.\n19. Pile high with any + all veggies you have on hand and serve with plain greek yogurt, salsa, and guacamole for dipping! You can even whip up a small bowl of jalapeno ranch for dunking too! If you have any fresh lime or cilantro both will make a tasty garnish!",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Chop onions/shallots",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "baked_black_bean_and_sweet_potato_flautas.md"
   },
@@ -309,7 +319,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Gather all ingredients.\n2. Preheat the oven to 400 degrees F (200 degrees C).\n3. Brush bread slices on both sides lightly with 1 tablespoon oil and place on large baking sheet. Toast bread until golden, about 5 to 10 minutes, turning halfway through.\n4. Meanwhile, toss together tomatoes, basil, Parmesan cheese, and garlic in a bowl.\n5. Mix in balsamic vinegar, 2 teaspoons olive oil, kosher salt, and pepper.\n6. Spoon tomato mixture onto toasted bread slices.\n7. Serve immediately and enjoy!",
-    "prep_steps": null,
+    "prep_steps": [
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "balsamic_bruschetta.md"
   },
@@ -383,7 +395,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Chop beans to appropriate size.\n2. Temper: oil, mustard seeds, urad dal, curry leaves.\n3. Add beans, sauté for 2 minutes in medium flame\n4. Add sambar powder, turmeric and salt.\n5. Sprinkle 3-4 tablespoon water and cook covered for 4-5 minutes.\n6. Lastly add the grated coconut and stir once, remove from fire.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots"
+    ],
     "source_url": null,
     "source_file": "beans_poriyal.md"
   },
@@ -468,7 +482,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Roast peanuts.\n2. Chop up veggies.\n3. Add spices and mix well.\n4. Add chutneys, lemon juice and cilantro. Mix well to distribute.\n5. Serve with puffed rice, sev and peanuts.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Slice cucumber",
+      "Chop onions/shallots",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "bhel_puri_chaat.md"
   },
@@ -519,7 +537,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. This recipe is for 4 adult lunch servings\n2. Prep:Rinse 1 cup toor dal and 2 cups rice well.\n3. Chop onions, tomatoes, carrots, beans, potatoes, and gather other ingredients.\n4. Cook:Set the Instant Pot to ‘Sauté’ mode. Add 2 tbsp ghee, then mustard seeds, cumin seeds, curry leaves, dried red chilies, and cashews. Sauté for 30 seconds.\n5. Add onions and tomatoes, sauté until soft.\n6. Then add all chopped vegetables. Mix in turmeric, salt, and 4 tbsp Bisi Bele Bath powder. Stir for 30 seconds.\n7. Add rinsed toor dal and rice, followed by 8 cups water and 2 tbsp tamarind pulp. Mix well.\n8. Cancel ‘Sauté’ mode, close the lid, and set Instant Pot to ‘Pressure Cook’ on HIGH for 10 minutes.\n9. Allow pressure to release naturally for 10 minutes, then manually release the remaining pressure.\n10. Open the lid, stir well, and adjust consistency by adding a little hot water if needed.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Chop carrots"
+    ],
     "source_url": null,
     "source_file": "bisi_bele_bath.md"
   },
@@ -601,7 +622,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Cook 1/2 cup quinoa\n2. In a small bowl, mix together olive oil, lime juice, cumin, cilantro and scallions.\n3. In a large bowl, mix together quinoa, black beans, tomato and bell peppers. Pour dressing over quinoa mixture and mix well.\n4. Add feta, salt and pepper if desired, to taste.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Wash and chop herbs",
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "black_bean_quinoa_salad.md"
   },
@@ -705,7 +729,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. In a microwave-safe bowl, mix oats, cauliflower, milk and dates.\n2. Microwave on high for approximately 6 minutes. Alternately, cook on stovetop, stirring frequently.\n3. Stir in blueberries and coconut oil before serving",
-    "prep_steps": null,
+    "prep_steps": [
+      "Cut florets"
+    ],
     "source_url": null,
     "source_file": "blueberry_date_oatmeal.md"
   },
@@ -748,7 +774,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Bring a large pot of water to a boil.Add the broccoli florets and cook for about 4 minutes, until tender.Use a slotted spoon to remove the broccoli and transfer it to a blender. Keep this water for the pasta.\n2. Add spinach, broth, milk, cheddar cheese, butter, salt, garlic powder.Blend until the mixture is smooth.\n3. In the same pot of boiling water used for the broccoli, add the pasta.Cook according to the package instructions until al dente.Drain the pasta and return it to the pot.\n4. Pour the broccoli cheese sauce over the cooked pasta.Stir well to ensure the pasta is thoroughly coated with the sauce.Top with grated Parmesan cheese and cracked black pepper, if desired.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Wash and chop greens",
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "broccoli_spinach_pasta_sauce.md"
   },
@@ -780,7 +809,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Here’s a look at how to make this easy butternut squash mac and cheese recipe. Scroll down to the bottom of the post for the full recipe, including the amounts and timing.\n2. Bring a large pot of water to a boil and cook the squash until tender. Transfer to a blender using a slotted spoon. (Leave the water in the pot since you will use it for the pasta!)\n3. Add the milk, butter, and cheese. Blend super smooth.\n4. Cook the pasta in the same pot of water. Drain it.\n5. Stir the sauce into the pasta and serve.\n6. Bring a large pot of water to a boil.\n7. Add the squash and cook for about 10 minutes or until soft when poked with a fork. Use a large slotted spoon to transfer the squash to a blender, draining off all of the liquid.\n8. Add the milk, cheese, and butter to the blender with the squash and puree until completely smooth.\n9. Meanwhile, bring the water back to a boil and cook the pasta according to package directions. Drain and return to the pot.\n10. Stir in the cheese sauce, season to taste with salt, and serve warm.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Peel/chop squash"
+    ],
     "source_url": null,
     "source_file": "butternut_squash_mac_and_cheese.md"
   },
@@ -847,7 +878,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Grate carrot and mash a ripe banana.\n2. Preheat oven 180c⁣\n3. In a prepared loaf tin, mix together the wet ingredients (banana, egg, peanut butter, maple syrup, carrot) and then the remaining ingredients. Mix well.⁣\n4. Bake for 20-25 minutes or until a toothpick comes out clean ⁣",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop carrots"
+    ],
     "source_url": null,
     "source_file": "carrot_cake_bars.md"
   },
@@ -883,7 +916,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Wash carrots, remove the outer skin, grate it and keep aside.\n2. Heat oil in a kadai, add mustard seeds, urad dal and let it splutter.\n3. Add curry leaves and fry for a min.\n4. Add green chillies and saute for 2mins.\n5. Now add onion, required salt and saute well till it is transparent.\n6. Then add grated carrots.\n7. Saute till it shrinks mins then sprinkle little water and cook covered till it turns soft and raw smell leaves. You can omit water and cook covered too.\n8. Once it becomes dry add coconut, give a quick stir and switch off.\n9. Switch off and serve Carrot Poriyal with sambar rice or any variety rice.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop carrots",
+      "Chop onions/shallots"
+    ],
     "source_url": null,
     "source_file": "carrot_poriyal.md"
   },
@@ -918,7 +954,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Put all ingredients into a medium pot and bring to a complete boil, then cover and simmer 15 minutes or until the cauliflower is fall-apart tender.\n2. Pulverize with either an immersion or regular blender.\n3. Serve over pasta, or spaghetti squash, rice, roasted vegetables, or whatever you wish.\n4. Makes about 2 cups, and it gets much thicker as it sits.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Cut florets"
+    ],
     "source_url": null,
     "source_file": "cauliflower_alfredo_sauce.md"
   },
@@ -958,7 +996,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Boil florets with a little salt in hot water.\n2. Drain when half done.\n3. Immerse in water with salt, turmeric, 1 tomato and cilantro\n4. While that boils, keep paruppu.\n5. Grind coconut, green chili, half tomato, cumin, cilantro into paste\n6. Add paruppu jelam and simmer for ten minutes.\n7. Add tadka with ghee, cumin and mustard seeds.\n8. Add lemon juice just before serving.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Cut florets",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "cauliflower_rasam.md"
   },
@@ -1005,7 +1046,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Chop 1 large onion and 2 tomatoes (or 1 can of diced tomatoes). Drain and rinse 2 cans of chickpeas.\n2. Turn on the Instant Pot and select the 'Sauté' function.\n3. Add 2 tablespoons of ghee and let it heat up.\n4. Add 1 teaspoon of cumin seeds and let them sizzle for a few seconds.\n5. Add the finely chopped onions to the Instant Pot and sauté until golden brown.\n6. Add the minced garlic, ginger, and green chilies (if using). Cook for 1-2 minutes until fragrant.\n7. Add the chopped tomatoes (or canned diced tomatoes) and cook until they become soft and the oil starts to separate from the mixture.\n8. Stir in the ground coriander, ground cumin, turmeric powder, paprika, and chili powder. Cook for another 2 minutes.\n9. Add the drained and rinsed chickpeas to the Instant Pot. Mix well to coat the chickpeas with the spice mixture.\n10. Add about 1 cup of water to the Instant Pot. Stir well.\n11. Secure the lid on the Instant Pot, making sure the valve is set to 'Sealing'.\n12. Select the 'Manual' or 'Pressure Cook' function and set the timer for 5 minutes.\n13. Once the cooking cycle is complete, let the pressure release naturally for 10 minutes, then carefully turn the valve to 'Venting' to release any remaining pressure.\n14. Open the Instant Pot and sprinkle 1 teaspoon of garam masala over the chana masala. Stir well and adjust salt to taste.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Grate/mince ginger",
+      "Mince garlic",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "chana_masala_ip.md"
   },
@@ -1045,7 +1091,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. PrepWash the Spinach Leaves and place on a tea towel or paper towel to remove the extra water.Chop spinach. Make egg substitute. Grate cheddar cheese.\n2. CookPreheat your oven on 180'C/350'F and grease a Muffin Pan with Oil or Butter.\n3. In a large bowl, beat the Eggs then add the Sour Cream, Olive Oil, Full Cream Milk and Minced Garlic. Stir until combined.\n4. Stir in the Grated Cheddar Cheese.\n5. Add the Plain Flour, Baking Powder, Salt, Pepper, Ground Cumin (see note 2). Whisk until combined.\n6. Add the finely chopped Spinach and fold in with a spatula.\n7. Optional: sprinkle some extra grated Cheddar over the muffins for more cheesiness!\n8. Pour the muffin batter into a Muffin pan and bake for 15 to 20 minutes.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Wash and chop greens"
+    ],
     "source_url": null,
     "source_file": "cheddar_and_spinach_muffins.md"
   },
@@ -1086,7 +1135,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Grate cheddar cheese. Heat water for broth.\n2. Chop tomatoes and measure out. Make egg substitute.\n3. Preheat oven to 350F\n4. In a bowl soak the quinoa in water. Chop onion, tomatoes, basil. Grate the cheddar.\n5. Heat oil, over medium heat, in a pan and gently sauté the onions and garlic until the onions become translucent. Around 5 mins.\n6. Using a fine-mesh sieve, drain and thoroughly rinse the quinoa.\n7. To the onions and garlic, add the tomatoes, stock, quinoa and stir. Bring to the boil, reduce the heat to low, cover and allow to simmer for 15 mins.\n8. Turn the heat off and leave the quinoa to sit covered for a further 5 mins.\n9. Stir in the cheddar cheese & basil.\n10. Allow to cool and then stir in the beaten egg.\n11. Form heaped tablespoon sized balls.\n12. Bake in the oven for 25 mins or until golden.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "cheese_and_tomato_quinoa_balls.md"
   },
@@ -1175,7 +1227,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Set a pan on a medium flame and add oil, garlic, onion, mixed bell pepper, corn, paneer, sweet chilli sauce, salt to taste, black pepper for seasoning, oregano and red chilli flakes\n2. Mix well and cook for some time\n3. In a fresh pan, add some oil, tortilla, veggie mixture and mozzarella.\n4. Place an another tortilla over it and cook from both the sides as shown in the video\n5. Cut it using pizza cutter and serve with mayo dip",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "cheesy_veggie_quesadilla.md"
   },
@@ -1208,7 +1263,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Saute onion until caramelized.Turn off heat and add chopped cilantroOnce cooled, add batter and mix.Add more batter because you'll want a lot more.\n2. Add oil to kuzhiAdd battercover for 2 minutes on mediumflip over using spoonscover and cook again for 1 minute\n3. Scoop out and enjoy",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "chef_s_paniyaram.md"
   },
@@ -1243,7 +1301,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. In a large bowl, combine the olive oil, balsamic vinegar, agave, garlic, salt, and pepper.\n2. Add the tomatoes and the oregano and toss to combine. Taste and adjust seasonings as needed.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Mince garlic"
+    ],
     "source_url": null,
     "source_file": "cherry_tomato_salad.md"
   },
@@ -1343,7 +1403,14 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Grate carrotDice onion, bell pepper, cucumber, tomatoChop and toast peanuts\n2. Place chickpeas, onion, bell pepper, cucumber, tomato, carrot, red chilli, coriander and mint in a large bowl. Toss and mix well.\n3. Prepare the dressing by mixing olive oil, sriracha, lemon juice, garlic, cumin powder, chaat masala, tamarind paste, salt.\n4. When ready to serve, add the dressing to the salad in the bowl. Toss and mix well to coat everything evenly with the dressing.\n5. Top with peanuts and extra cilantro",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Chop peppers",
+      "Slice cucumber",
+      "Chop carrots",
+      "Wash and chop herbs",
+      "Mince garlic"
+    ],
     "source_url": null,
     "source_file": "chickpea_chaat_salad.md"
   },
@@ -1488,7 +1555,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Preheat the oven to 350 degrees. Grease the muffin tin.\n2. Place all ingredients into a blender and blend until very smooth.\n3. Fill muffin cups about ½ full using about ¼ cup batter in each. Top with chocolate chips, if using.\n4. Bake 20 minutes for regular muffins and 12 for mini muffins.\n5. Let cool for 5-10 minutes in the pan, run a knife around the edges, and carefully transfer to a wire rack to cool.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop zucchini"
+    ],
     "source_url": null,
     "source_file": "chocolate_protein_muffins_with_veggies.md"
   },
@@ -1560,7 +1629,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. In a food processor, place the yogurt, mayo, lime juice, garlic, salt, and onion powder. Process until creamy.\n2. Add the cilantro and pulse until the sauce is smooth but green flecks are still visible. Season to taste.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "cilantro_lime_crema.md"
   },
@@ -1619,7 +1690,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Preheat the oven to 400 degrees F.\n2. Cook the corn in microwave.\n3. Dice bell peppers, serranos, scallions.\n4. Melt 1 tbsp oil and 2 tablespoon of the butter in a large heavy skillet over medium-high heat and add the diced serranos/jalapenos and let splutter for a few seconds then add the red and green peppers.\n5. Add pinch of salt and cook, stirring occasionally, on medium to low heat until the peppers are softened (about 7-8 minutes).\n6. Prep the oven safe dish and aluminum foil.\n7. Add the corn, garlic, red chili, cumin powder, oregano and stir to incorporate well. Cook for about 10 minutes, stirring occasionally to let the corn mix with the spices and soften a bit. Add Black beans, cilantro, siracha, stir and remove from heat. Add mayonnaise (or sour cream substitute), milk, and shredded cheese and mix well.\n8. Transfer to oven safe baking dish, cover with foil and let bake for 20 minutes on the middle rack until you see the edges of the dip bubbling.\n9. Remove from oven, top with scallions and serve hot with tortilla chips! If you want to get a golden brown crust on top - add an additional layer of shredded cheese on top and broil on low for a few minutes until the cheese has browned.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Mince garlic"
+    ],
     "source_url": null,
     "source_file": "corn_black_bean_dip_tcl.md"
   },
@@ -1669,7 +1743,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. In a small bowl, mix together the dressing ingredients.\n2. Cook corn in microwave.\n3. Add all of the salad ingredients to a large bowl and drizzle the dressing on top.\n4. Enjoy! Serve plain or as a dip for tortilla chips. Optionally, refrigerate 10 - 15 minutes before serving to let the flavors marinate.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Chop peppers",
+      "Wash and chop herbs",
+      "Marinate proteins (ahead of time)"
+    ],
     "source_url": null,
     "source_file": "cowboy_caviar_salad.md"
   },
@@ -1734,7 +1813,13 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Cook the pasta according to the directions on the package, adding a generous tablespoon or so of kosher salt to the water as it cooks. Just before the noodles are done cooking, add the broccoli to the pot. Let the broccoli boil for about 30 seconds and then drain everything into a large colander. Rinse well with cold water.\n2. Stir together the mayonnaise, vinegar, salt, pepper, and sugar in a large mixing bowl. Add the cooked pasta and broccoli to the bowl and stir well to coat. Add the cucumber, pepper, olives, and onions and stir again. Taste and adjust seasonings, if needed. Cover and refrigerate until ready to serve. Stir again just before serving. Enjoy!",
-    "prep_steps": null,
+    "prep_steps": [
+      "Cut florets",
+      "Slice cucumber",
+      "Chop peppers",
+      "Chop onions/shallots",
+      "Chop scallions"
+    ],
     "source_url": null,
     "source_file": "creamy_macaroni_pasta_salad.md"
   },
@@ -1787,7 +1872,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Peel and cube the sweet potatoes.Seed and chop the poblano.\n2. Preheat the oven to 425° F.\n3. Place the sweet potatoes on a baking sheet and toss with olive oil, chili powder, paprika, cumin, garlic powder, red pepper flakes, oregano, and salt.\n4. Add the poblano and toss to combine.\n5. Arrange in an even layer.\n6. Bake 35 to 40 minutes, until the potatoes are tender and beginning to char on the edges.\n7. Remove from the oven and stir in the black beans.\n8. Meanwhile, make the crema.\n9. Combine all ingredients in a glass jar and shake or stir until creamy.\n10. Line the taco shells up on a sheet pan or in a 9×13 inch baking dish.\n11. Transfer to the oven and bake 5 minutes. Evenly divide the sweet potatoes among each taco shell and top with cheese.\n12. Bake 10 minutes, until the cheese has melted.\n13. Mix the cilantro and jalapeño in a small bowl. Serve the tacos topped with crema, avocado, and the spicy cilantro. Enjoy!",
-    "prep_steps": null,
+    "prep_steps": [
+      "Peel and cube sweet potatoes",
+      "Chop peppers",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "crispy_chipotle_sweet_potato_tacos_with_lime_crema.md"
   },
@@ -1843,7 +1932,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Slice and toast bagel.\n2. Spread both sides with cream cheese.\n3. Top on side with cucumber slices.\n4. Sprinkle with salt and pepper.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "cucumber_cream_cheese_bagel.md"
   },
@@ -1884,7 +1975,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Peel the cucumber in stripes and cut into 1/8-inch thin slices using a mandolin or sharp knife. Place the slices on paper towels and sprinkle with coarse salt. Let rest for 15-30 minutes to extract moisture. Pat dry with clean paper towels.\n2. In the meantime, make the spread. In a medium bowl, using a handheld mixer, blend together the softened cream cheese, mayo, dill, chives, lemon juice, garlic powder, and salt.\n3. Spread one side of each slice of bread with the herbed cream cheese.\n4. Layer cucumber slices over half of the bread slices. Season with fresh cracked black pepper, to taste. Top with remaining bread slices, cream cheese mixture down. (At this point, you'll have 8 full sandwiches.)\n5. Using a sharp Chef's knife, cut each sandwich into quarters, pushing through the bread down to the bottom. So you have 32 tea sandwiches.\n6. Serve right away and enjoy!\n7. To Make Ahead“One day before, the sandwiches were made and cut and layered with damp doubled paper towels in a fish bin (or on a sheet pan, and then saran wrapped) and refrigerated.”",
-    "prep_steps": null,
+    "prep_steps": [
+      "Slice cucumber",
+      "Wash and chop herbs",
+      "Mince garlic"
+    ],
     "source_url": null,
     "source_file": "cucumber_sandwiches.md"
   },
@@ -1928,7 +2023,13 @@
       "cabbage"
     ],
     "instructions": "1. Preheat oven to 425°F.\n2. Cook the quinoa. Dice all the cucumbers.\n3. In a large bowl toss cauliflower with olive oil, desired spices (cumin, coriander, etc) and salt. Spread onto a baking sheet in a single layer and bake on center rack for 40 minutes.\n4. While the cauliflower is cooking prepare the salad dressing by combining yogurt, tahini, cucumber, oil, lemon juice, garlic, salt in a blender and blending until smooth.\n5. In a large bowl toss together cooked quinoa, red cabbage and arugula and divide between 4 bowls.\n6. Top each bowl with fresh cilantro, cucumbers, golden raisins and roasted cauliflower.\n7. Drizzle with yogurt tahini dressing and enjoy!",
-    "prep_steps": null,
+    "prep_steps": [
+      "Slice cucumber",
+      "Mince garlic",
+      "Cut florets",
+      "Wash and chop herbs",
+      "Shred/chop cabbage"
+    ],
     "source_url": null,
     "source_file": "curried_cauliflower_quinoa_salad.md"
   },
@@ -2050,7 +2151,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. In a large pot over medium high heat add the oil. Once the oil is hot add the cumin seeds and let them splutter for a few seconds.\n2. Add the diced onions and cook on medium heat for about 10 minutes until the onions are golden. I like to add a pinch of salt to the onions to help them cook faster.\n3. Now add the garlic, ginger, and all the spices except for Kasuri methi, red bell peppers, green bell peppers and mix well. Stir this for about 2 minutes so everything has a chance to mix well and then add 1/2 cup of water , mix well and place a lid on the pot. Reduce heat to low and let this cook covered for about 10 minutes.\n4. Remove the lid and give everything a good mix and now add the cubed paneer, corn, cilantro, kasuri methi and salt. Stir and taste for salt- adjust as needed. Place a lid on the pot and let it cook for an additional 5 minutes!\n5. Serve hot with paratha and or rice!",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Mince garlic",
+      "Grate/mince ginger",
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "dry_paneer_masala.md"
   },
@@ -2157,7 +2263,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Below is a preview of how to make this recipe so you know what to expect from the process. Scroll down to the end of the post for the full recipe, including the amounts and the timing.\n2. Drain the chickpeas (I save the liquid for an egg replacer to use in baking). Rinse with cold water (this removes some of the sodium).\n3. Add to a shallow dish or bowl with the rest of the ingredients except the olive oil.\n4. Mash with a potato masher or fork until very smooth.\n5. Form into round, flat patties using 1 tablespoon batter in each. Add olive oil to a pan or skillet over medium heat and cook the fritters until golden brown.\n6. Drain the chickpeas (I save the liquid to use as an egg replacer in baking). Rinse with cold water (this removes some of the sodium).\n7. Add to a shallow dish with the flour, Parmesan, cumin, garlic powder, salt, and 2 tablespoons water.\n8. Mash with a potato masher until very smooth and uniform, adding another 2-4 tablespoons of water as needed.\n9. Form into round, flat patties using 1 tablespoon batter in each. Patties should be about ½ inch thick.\n10. Add olive oil to a pan over medium heat and cook the fritters for 2-3 minutes on each side or until golden brown.\n11. Place onto a paper towel to drain, if desired, and serve warm with desired dips.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Slice cucumber"
+    ],
     "source_url": null,
     "source_file": "easy_chickpea_fritters.md"
   },
@@ -2220,7 +2328,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. AD\n2. Add the berries and carrots to a blender.\n3. Puree smooth.\n4. Add the berry mixture to a small pot set over low heat. Bring to a simmer.\n5. Dissolve the gelatin. Whisk into the fruit mixture. Add to the mold and set.\n6. AD\n7. Add the berries, carrots, and water or juice to a blender. Puree smooth.\n8. Add the berry mixture to a small pot set over low heat. Add the honey or maple syrup. Bring to a simmer.\n9. (Plan to do this step and the next one quickly.) Add the gelatin to a bowl with ⅓ cup cold water. Stir well to completely dissolve the gelatin to ensure the fruit snacks are lump-free.\n10. Working quickly, whisk the gelatin mixture into the simmering fruit mixture to thoroughly combine. Whisk constantly for a minute or two as the mixture starts to thicken. Turn off the heat.\n11. (Alternatively, you can sprinkle the gelatin right over the simmering fruit and whisk vigorously to combine. Omit the water if you do that. Know you may have some small clumps of gelatin.)\n12. Portion out into a silicone gummy bear mold (or other silicone mold) set on a small baking tray (which is more stable than the mold on its own). Refrigerate for at least an hour and up to overnight to set up.\n13. Remove from the mold to serve.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop carrots"
+    ],
     "source_url": null,
     "source_file": "easy_fruit_snacks_gummies.md"
   },
@@ -2269,7 +2379,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Here’s a look at the easy process involved in making this granola bar recipe. Scroll down to the bottom of this post for the full recipe.\n2. Add ingredients to a food processor, choosing your flavor. Grind until the mixture starts to hold together.\n3. Pour the batter onto a parchment-lined baking sheet and press flat.\n4. Score the batter with a knife, which makes them easy to break into pieces once they’re baked.\n5. Bake, let cool, and enjoy.\n6. CAN I MAKE THESE WITHOUT CHIA SEEDS?\n7. Sure! See the variation at the bottom that calls for omitting them and slightly increasing the nut butter. This keeps a good amount of healthy fats to ensure that the bars hold together and that the kids get a nicely balanced snack.\n8. CAN I MAKE THESE GLUTEN-FREE GRANOLA BARS?\n9. These bars are naturally egg-free and dairy-free. They’re also easy to make gluten-free by choosing gluten-free oats and a gluten-free flour blend.\n10. HOW LONG DO THESE HEALTHY GRANOLA BARS LAST?\n11. I store our homemade granola bars in the fridge (because I like them cold) in an airtight container and serve them up until we run out.\n12. In the fridge in an airtight container, they’ll stay fresh for about two weeks.\n13. At room temperature in an airtight container, they’ll last about 1 week.\n14. In the freezer, you can place cooled bars in a sealed zip top freezer bag for up to 3 months. Thaw overnight in the fridge before serving.\n15. CAN I FREEZE GRANOLA BARS?\n16. Yes, this granola bar recipe freezes really well. Simply let them cool and place into a zip top freezer bag. Freeze for up to 3 months. Thaw in the fridge or at room temperature, or directly in a lunchbox.\n17. Flavor Variations\n18. I’m so happy that a reader suggested this because it works so well to use a fruit or veggie puree instead of water in the original recipe! I’ve tried making Applesauce Granola Bars, Banana Granola Bars, Butternut Squash, Sweet Potato, and Pumpkin Granola Bars.\n19. Look in the Notes at the bottom of the recipe for the info.\n20. Best Tips for Success\n21. For kids under one, you can substitute brown rice syrup for the honey. You can also try using applesauce.\n22. You can make them in the basic flavor, or banana, apple, sweet potato, butternut squash, or pumpkin.\n23. To make these without coconut, omit and use additional oats.\n24. To make these without chia seeds, omit and increase the nut butter to ¼ cup.\n25. To make this without a food processor, use quick or instant oats and stir everything together. (Or grind the oats and coconut in a blender, then stir the ingredients together in a bowl)\n26. Add chocolate chips to this recipe by pressing a few into the top of the rolled out batter just before baking.\n27. Use room temperature honey and nut or seed butter to make the batter come together easily, or warm them briefly.\n28. Wet your fingers or use a piece of parchment to press the batter down if it’s sticking to your hands.\n29. You may also like No-Bake Granola Bars, Breakfast Bars, my Easy Oatmeal Bars, and my 3-Ingredient Cereal Bars.\n30. Preheat the oven to 325 degrees F and line a baking sheet with parchment paper or a Silpat. Warm the honey and peanut butter for about 15 seconds if not stored at room temperature.\n31. Place the oats and coconut into the bowl of a food processor and blitz to grind into a coarse texture (similar to quick oats).\n32. Add the remaining ingredients, including the peanut butter and honey, and blend well.\n33. (You can also grind the oats or use instant oats, then mix everything together in a bowl.)\n34. Add ¼ cup water and blend until batter comes together like thick cookie dough. You should be able to press the batter together between your fingers and have it stick together. If it doesn't, add a bit more water.\n35. Place batter onto the center of the prepared baking sheet and use your hands to press thin, about ¼-½-inch thick and about 8x8-inches big. I measure roughly using an 8x8-inch baking pan. (You can also roll out the dough—just cover it with a piece of parchment paper first to make sure it's easy to do.) Use a knife to lightly score lines for squares in whatever size you like.\n36. Bake for 18-20 minutes, remove from oven, and let cool completely on the pan.\n37. Break into squares and serve.\n38. Store in an airtight container for up to 2 weeks in the fridge or a week at room temperature. To freeze, place cooled bars in a sealed zip top freezer bag for up to 3 months. Thaw overnight in the fridge before serving.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Peel/chop squash"
+    ],
     "source_url": null,
     "source_file": "easy_homemade_granola_bars.md"
   },
@@ -2311,7 +2423,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. AD\n2. Preheat the oven and line a pan with parchment paper. Add the ingredients to a bowl.\n3. Stir together gently, trying not to smash the berries.\n4. Press into the prepared pan, pressing evenly to the edges.\n5. Bake and remove from the oven. Let cool completely before slicing.\n6. AD\n7. Preheat the oven to 375 degrees F. Line an 8×8-inch pan with parchment paper so it overhangs on two sides so the bars are easy to lift out once baked and cooled.\n8. Mix together all of the ingredients in a medium bowl except the blueberries. (Add the egg if using.) Stir in the blueberries gently.\n9. Press into the prepared pan so the batter is even and pressed to the edges.\n10. Bake for 24-26 minutes or until the edges are lightly golden brown and set.\n11. Cool fully. (Really, please let it sit until it's cool to the touch! You can pop it into the fridge to speed this up if you'd like. It may crumble a bit if you slice when still warm.)\n12. Slice into bars and serve or store. I typically cut into 16 small squares, but you can cut them larger if desired.\n13. You can use honey instead of maple syrup.\n14. I prefer the texture of carrots that are grated at home on a box grater as they are finer than those you can buy at the store.\n15. Fresh blueberries work best in this recipe (frozen ones can cause the batter to seize up and be hard to press into the pan).\n16. Cool fully before slicing to prevent the bars from crumbling when slicing.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop carrots"
+    ],
     "source_url": null,
     "source_file": "easy_oatmeal_bars_with_blueberry_and_carrot.md"
   },
@@ -2415,7 +2529,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Below is an overview of the method for the recipe. Scroll down to the end of the post for the specifics. The main thing to know ahead of time is that you’ll want to reserve a little of the pasta cooking water before you drain the pasta. You’ll use that to help thin the zucchini sauce.\n2. AD\n3. Cook the pasta, reserving a little of the pasta cooking water. Meanwhile, Slice your zucchini and mince the garlic.\n4. Sautee until cooked through and lightly golden brown.\n5. Add to a blender with the remaining sauce ingredients, including a little bit of reserved cooking water.\n6. Blend smooth.\n7. How to Store\n8. Store any remaining sauce in airtight containers in the fridge for up to 5 days. Or freeze in an ice cube tray overnight, transfer to a freezer bag, remove as much air as you can and freeze for up to 6 months.\n9. Thaw 1-2 cubes overnight in the fridge in a container or at room temperature for about an hour and add to servings of pasta for easy meals.\n10. Best Tips for Success\n11. Trade in shallot or onion for the garlic if you like.\n12. Use yellow summer squash if desired.\n13. Add a few basil, spinach, or parsley leaves to enhance the green color.\n14. Use any type of pasta you like, including regular, whole-wheat, or a bean-based pasta (which would be an easy way to add more iron to this meal).\n15. If the kids don’t love sauce on their pasta, you can offer a small amount of the sauce with buttered pasta as shown above.\n16. Reserve a little of the pasta cooking water to help thin the sauce as you blend it up.\n17. Top with extra Parmesan, lemon, and black pepper as you like.\n18. AD\n19. Cook the pasta according to the package directions. Before draining, remove and reserve one cup of the pasta cooking water. Drain and set aside.\n20. Meanwhile, cut the ends off of the zucchini and discard. Slice the zucchini about ¼-inch thick.\n21. Add the olive oil to a medium skillet over medium heat. When warm, add the garlic. Toss to coat with the oil. Cook for 2 minutes, or until fragrant.\n22. Add the zucchini and stir to coat with the oil. Cover and cook for 10-12 minutes, turning once or twice, or until the zucchini is very soft when poked with a fork. Remove from heat and let cool slightly for a few minutes.\n23. Transfer the zucchini to a blender, adding the beans and optional herb or spinach. (That additional makes this a brighter green color.) Blend, starting slowly and working up to high. Add the pasta cooking water, ¼-cup at a time, to make a smooth sauce.\n24. Add ½ of the sauce to the pasta and stir to combine. Add as much additional sauce as you like or store the remaining sauce for future use. Serve with Parmesan, lemon zest, and/or pepper as desired.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Mince garlic",
+      "Wash and chop greens",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "easy_zucchini_pasta_sauce.md"
   },
@@ -2522,7 +2640,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Melt the butter in a large skillet, preferably cast iron, over medium heat.\n2. Once melted, add the corn and the salt (if using frozen corn, no need to defrost first). Cook, stirring just every minute or so, until the corn is warmed through and turning golden on the edges, about 5 to 8 minutes (turn the heat down to low if the corn starts jumping out of the pan).\n3. Add the garlic and cook until fragrant, about 30 seconds, then remove the skillet from the heat.\n4. Let the corn cool for a few minutes, then transfer it to a medium mixing bowl.\n5. Add the remaining ingredients to the bowl (the mayonnaise, optional jalapeño, lime juice, chili powder, optional cayenne, cheese and cilantro). Stir to combine.\n6. Season to taste with additional salt, if needed.\n7. To serve, divide the mixture between small cups and garnish individual servings with a wedge of lime, perhaps a sprinkle of additional cheese and chili powder. Leftovers keep well, refrigerated, for about 4 days.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Mince garlic",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "esquites_mexican_street_corn_salad.md"
   },
@@ -2585,7 +2706,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. AD\n2. Gather the ingredients and any optional add-ins.\n3. Blend, starting on low and working up to high.\n4. Serve. You can also store it in the fridge and serve within 24 hours.\n5. AD\n6. Add all ingredients, including any add-ins, to a blender.\n7. Blend until very smooth, stopping to scrape down the sides of the bowl as needed.\n8. Serve or store in an airtight container or a reusable Squeasy Gear pouch, with the lid snapped, for up to 24 hours in the fridge.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Peel/chop squash",
+      "Cut florets"
+    ],
     "source_url": null,
     "source_file": "favorite_mango_smoothie.md"
   },
@@ -2618,7 +2742,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Prep:Preheat the oven to 400°F.\n2. Grease a muffin tin, making sure to coat the top edges of each cup (cheese may spill over).\n3. Stretch the pizza dough into an 11x16-inch rectangle on a piece of parchment paper (this will prevent sticking). If the dough is too tough to stretch, let it rest for 5 minutes and try again.\n4. Chop the spinach if it's not pre-chopped.\n5. Cook:Spread the Toppings: Spread pizza sauce over the dough. Sprinkle on the spinach, mozzarella, and Parmesan evenly.\n6. Roll the Dough: Starting on one long side, roll the dough up into a log, using the parchment paper to help you roll.\n7. Slice: Cut the rolled dough into 12 even slices using a serrated knife. To make it easier, start cutting in the center, then work on cutting each half evenly.\n8. Bake: Place each slice into the greased muffin tin. Bake for 22-26 minutes, or until the dough is baked through, the cheese is melted, and the tops are golden brown.\n9. Cool: Let the rolls cool in the muffin tin for 3-5 minutes to let the cheese firm up. Use a knife to loosen any stuck cheese before transferring them to a wire rack or serving plate.\n10. Storage:Fridge: Store in an airtight container in the fridge for up to 3 days.Freezer: Freeze in a zip-lock bag for up to 3 months. To reheat, microwave frozen rolls for 30-60 seconds or until warm.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Wash and chop greens"
+    ],
     "source_url": null,
     "source_file": "favorite_pizza_rolls_with_spinach_and_cheese.md"
   },
@@ -2664,7 +2790,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Add the milk to the blender. (We prefer nondairy milks since they seem to have a slightly better consistency and less of a tendency to separate after blending.)\n2. Add the fruit and veggie.\n3. Add any optional ingredients.\n4. Blend the smoothie really well to ensure that it has a very creamy texture.\n5. Serve it in a reusable pouch, a small open cup, or in a sippy cup depending on what your kid likes best.\n6. AD\n7. Add chosen ingredients to a blender.\n8. Blend until very smooth, stopping to scrape down the sides of the bowl and adding more liquid if needed.\n9. Serve immediately.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop zucchini",
+      "Peel/chop squash",
+      "Cut florets",
+      "Wash and chop greens"
+    ],
     "source_url": null,
     "source_file": "favorite_toddler_smoothie_with_veggies.md"
   },
@@ -2698,7 +2829,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Here’s a look at how to make this kids drink. (I should add that I love it for myself, too!) Scroll down to the end of this post for the full information.\n2. Choose your flavor and gather your ingredients.\n3. Add all ingredients to a blender.\n4. Blend well, starting on low speed and working up to high. If your blender came with a stick, use that to help move the mixture around as needed. If the mixture is having a hard time blending, add 2 tablespoons milk.\n5. Serve or store in an airtight container for up to 3 days.\n6. AD\n7. Add the ingredients to the blender.\n8. Blend, starting on low and working up to high to blend very smooth.\n9. (If your blender came with a stick, use it to help get the mixture moving if needed. If the mixture is ever challenging to blend, add 2 tablespoons milk.)\n10. Sweeten to taste as desired using the honey or maple syrup.\n11. Serve or store for a future meal.\n12. Banana-Cauliflower: Use 1 cup sliced very ripe banana and ¼ cup raw fresh or frozen cauliflower.\n13. Use whole milk Greek yogurt for the creamiest texture. Regular yogurt will work, though it will be a little less creamy.\n14. Blend the ingredients, taste, then sweeten with honey (for kids over age 1) or maple syrup to taste. Sweetness can vary considerably in fruit.\n15. Use fresh or frozen fruit. If you use frozen fruit and the mixture is a little difficult to blend, add 2 tablespoons milk.\n16. Add 1 tablespoon hemp seeds for additional healthy fats and protein, if desired.\n17. Dairy-free: Use nondairy yogurt or kefir. This also works with lactose-free options.\n18. Serve in a reusable pouch, a Smoothie Cup, or a small open cup as you like.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop carrots",
+      "Wash and chop greens"
+    ],
     "source_url": null,
     "source_file": "favorite_yogurt_drinks.md"
   },
@@ -2771,7 +2905,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. With a base recipe that bakes up perfectly fluffy and just-sweet-enough muffins, and 6 options to add flavors from fruit, veggies, spices, and chocolate chips, this Yogurt Muffin recipe is as versatile as it is delicious!\n2. Preheat the oven to 375 degrees F. Grease a 12-cup standard muffin pan with nonstick spray.\n3. In a medium bowl, stir together the flours, baking powder, baking soda, and salt.\n4. In another bowl, stir together the yogurt, maple syrup, butter, eggs, and vanilla.\n5. Gently stir the yogurt mixture into the flour mixture. (Expect the batter to be thick.)\n6. Add your desired add-in. (You can also add 1 tablespoon of any add-in to each muffin cup, using ¼ cup batter, to make a batch with a few different flavors. Or you can bake them plain.) Stir gently to combine.\n7. Divide batter among the prepared muffin tin, using about ¼ cup batter in each cup.\n8. Bake for 16-18 minutes, or until the edges are lightly golden brown and a cake tester inserted into the center comes out clean. Remove from oven, then transfer muffins to a wire rack to cool fully.\n9. Top with butter, nut butter, or jam as desired.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop carrots"
+    ],
     "source_url": null,
     "source_file": "favorite_yogurt_muffins.md"
   },
@@ -2829,7 +2965,10 @@
       "mushrooms"
     ],
     "instructions": "1. Line two small baking sheets with foil or parchment paper (or do one sheet at a time, preparing the second batch the second day).\n2. Open the bagels and line them up on the baking sheets with cut sides facing up.\n3. Spread about 1 Tbsp pizza sauce over the surface of each muffin, then top with about 2 Tbsp shredded mozzarella.\n4. Chop the salad bar vegetables into very small pieces, then divide them evenly among the pizzas. Press down lightly on top of each pizza to help compact the toppings and keep them in place as they freeze. Cover the baking sheets with plastic wrap and freeze for about 8 hours, or until the pizzas are solid.\n5. Once the pizzas are frozen solid, carefully transfer them to a gallon sized freezer bag for long term storage (you may need two bags). For the best results, the pizzas should be cooked and eaten within 3 months.\n6. To bake the pizzas, take out the number you wish to bake, place them on a baking sheet, and let them partially thaw as you preheat the oven to 400ºF (about 7 minutes). Once the oven is fully preheated, bake the pizzas for about 15 minutes, or until the edges are golden brown and the cheese is melted. Baking time will vary depending on your oven and the amount of toppings on the pizzas.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Clean and slice mushrooms"
+    ],
     "source_url": null,
     "source_file": "freezer_ready_mini_pizzas.md"
   },
@@ -2974,7 +3113,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. In a large pan, warm 2 tablespoons extra virgin olive oil over medium heat. Add the garlic and cook briefly, tossing regularly, until just golden.\n2. Add the cannellini beans and ½ cup water. Season with kosher salt, black pepper, and the spices. Add the tomatoes. Cook, stirring occasionally until warmed through (about 10 minutes)\n3. Stir in the parsley, cheese, and lemon juice.\n4. AD\n5. Finish with a generous drizzle of extra virgin olive oil. Serve immediately with pita or your favorite crusty bread.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Mince garlic",
+      "Chop peppers",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "garlic_parmesan_white_beans.md"
   },
@@ -3012,7 +3155,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. In a pan/ kadai, add 1 tablespoon urad dal, 6 red chilli and roast in medium flame until slightly golden.\n2. Now add ginger, tamarind and roast well for 2 minutes or until dal turns deep golden.\n3. Remove in a plate for cooling. Transfer the ingredients to a mixer along with salt and jaggery.\n4. Add ¼ cup water and grind smoothly or it can also be slightly coarse.\n5. Heat a pan/ kadai, with a teaspoon of oil. Splutter ¼ teaspoon mustard, add curry leaves.\n6. Transfer to chutney bowl and mix well.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Grate/mince ginger"
+    ],
     "source_url": null,
     "source_file": "ginger_chutney_allam_chutney.md"
   },
@@ -3043,7 +3188,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Cut a circle in each slice of bread, so it has a large hole in it.\n2. Over medium heat, heat greased skillet.\n3. Put bread on the skillet and crack an egg into the hole. Break yolk, if desired.\n4. Once the egg is mostly cooked, flip bread and cook through.\n5. Serve with the circle as a piece of plain bread or toast.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "granny_eggs.md"
   },
@@ -3126,7 +3273,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Thinly slice the spinach, red onion and olives. Chop the fresh oregano (if using).\n2. For each quesadilla, place a tortilla on a plate and evenly spread with ¼ of the spinach, red onion, olives, mozzarella cheese, feta cheese, and oregano. Sprinkle with a few red pepper flakes (if using).\n3. Heat a large non-stick skillet* over medium heat for a few minutes. Place the loaded tortilla on the griddle and place another tortilla on top. Cook until browned on the bottom, then flip and cook until browned on the other side, a few minutes per side.\n4. Remove the tortilla and cut into wedges with a pizza cutter. If making several quesadillas at once, keep them warm in a 300°F oven.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Wash and chop greens",
+      "Chop onions/shallots",
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "greek_quesadillas.md"
   },
@@ -3202,7 +3353,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Cut the avocados, score and mash in the bowl.\n2. Sprinkle with salt and lime (or lemon) juice.\n3. Add the chopped onion, cilantro, black pepper.\n4. If making a few hours ahead, place plastic wrap on the surface of the guacamole and press down to cover it to prevent air reaching it. (The oxygen in the air causes oxidation which will turn the guacamole brown.)\n5. Refrigerate leftover guacamole up to 3 days.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "guacamole.md"
   },
@@ -3330,7 +3484,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Preheat the oven to 425 degrees and put a quarter sheet pan (9x13 inches) in the oven.\n2. In a large saute pan heat the olive oil over medium heat. Add the onion and saute a few minutes until starting to turn tender. Add the tomato and cook another couple of minutes until they start to break. Add the spinach and cook just until it starts to wilt. Generously sprinkle with salt, pepper, and garlic powder.\n3. While that's cooking whisk together the eggs, milk, ricotta and italliann seasoning. Then salt and pepper the mixture. I used ½ teaspon of each.\n4. Remove the sheet pan from the oven and spray with cooking spray. Pour the egg mixture into the pan and carefully spoon the veggie mixture on top. Sprinkle with the feta cheese.\n5. Bake for 10-12 minutes or until the eggs are cooked.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Wash and chop greens",
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "healthy_vegetable_sheet_pan_frittata.md"
   },
@@ -3378,7 +3536,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Heat a skillet over medium heat and add olive oil, asafoetida, Italian seasoning, chilli flakes and paprika. Sauté for 1 minute. Then add sun-dried tomatoes, oregano and olives. Sauté for 2 minutes. Add balsamic vinegar and tomato paste and cook for additional 2 minutes.\n2. Add coconut milk and nutritional yeast and mix until well combined. Pour in butter beans and sauté for another 2-3 minutes. Taste and adjust the salt as desired.\n3. In a food processor combine cottage cheese and feta until completely smooth. If desired without feta, simply whip the cottage cheese until a smooth consistency.\n4. To assemble: On a slice of toast, spread desired amount of whipped cottage cheese, layer butter beans on top, sprinkle with parsley and optional chilli crisp. Enjoy!",
-    "prep_steps": null,
+    "prep_steps": [
+      "Wash and chop herbs",
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "high_protein_marry_me_breakfast_toast.md"
   },
@@ -3547,7 +3708,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. **Prep:**Cook 1/2 cup of toor dal.\n2. Chop carrot, potato, tomato, onion.\n3. Soak tamarind: Take a small lemon-sized piece of tamarind and soak it in ¼ cup warm water for about 10 minutes. Then squeeze and strain to get the juice.\n4. Cook:Take the chopped carrot, potato, and onion with 1 cup water.Boil until vegetables are soft and cooked through.\n5. Add the chopped tomato to the cooked vegetables and cook for 2 minutes.\n6. Add the mashed dal to the pot.\n7. Stir in 1½ tablespoons sambar powder.\n8. Add the tamarind extract and salt to taste.\n9. Let everything simmer together for about 5 minutes.\n10. Make the tempering (tadka):\n11. In a small pan, heat 2 teaspoons oil.\n12. Add 1 teaspoon mustard seeds and let them pop.\n13. Add a pinch of asafoetida and 1 dried red chili, broken in half.\n14. Let it sizzle for a few seconds, then turn off the heat.\n15. Pour the tempering into the simmering sambar.\n16. Mix well and let it simmer 2 more minutes.\n17. Add cilantro for garnish.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop carrots",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "hotel_sambar.md"
   },
@@ -3581,7 +3745,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Here’s a look at making this coconut rice so you know what to expect from the process. Scroll down to see the full recipe at the bottom of the post.\n2. AD\n3. Place the rice into a medium bowl and fill with water. Swirl and pour off the cloudy liquid. Repeat a few more times until the water is mostly clear.\n4. Add the coconut oil to a medium pot placed over medium heat. Grate the ginger, if using, with a fine microplane into the warm oil. Stir and cook for about a minute. Stir in the rice to coat.\n5. Add water and bring to a simmer. Cook until the water is almost all absorbed.\n6. Stir in the coconut milk. Cook until the liquid is absorbed and the rice is soft. Remove from heat and cover. Let sit and stir in the shredded coconut, if using. (I recommend you use it!) Serve warm.\n7. AD\n8. Place the rice into a medium bowl and fill with water. Swirl and pour off the cloudy liquid. Repeat a few more times until the water is mostly clear.\n9. Add the coconut oil to a medium pot placed over medium heat. Grate the ginger, if using, with a fine microplane into the warm oil. Stir and cook for about a minute. Stir in the rice to coat.\n10. Add 4 cups water and bring to a simmer. Cook for about 10 minutes or until the water is almost all absorbed, stirring once or twice. Stir in the coconut milk and bring back to a simmer. Cook for an additional 5 minutes or until the liquid is absorbed and the rice is soft, stirring a few times.\n11. Remove from heat and cover. Let sit for at least 5 minutes. Stir in the shredded coconut, maple syrup, cinnamon, and/or turmeric if using. Serve warm.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Grate/mince ginger"
+    ],
     "source_url": null,
     "source_file": "how_to_make_coconut_rice.md"
   },
@@ -3690,7 +3856,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Dice the onion, bell pepper and spinach.\n2. Set your IP to saute mode and add two tablespoons of oil. Once the oil is hot, add the serrano chilis, oregano and garlic and let splutter for a few moments.\n3. Add the onions and peppers and continue to cook for 5 minutes.\n4. Prepare the broth (4 cups) + 1 extra cup of water.\n5. Once the onions and peppers have softened, add in the rao's sauce, spinach, vegetable broth, 1 cup water, scallions, cilantro, and parsley.\n6. Stir well for a few minutes until all the ingredients are incorporated.\n7. Add in the pasta (4-5 cups)\n8. Hit cancel on the IP and switch it to Pressure Cook on High Mode. Cut the cooking time on the box in half for the pressure cook time (box said 6 minutes to al dente- so I cooked the pasta for 3 minutes).\n9. After it cooks, immediately do a quick release.\n10. The consistency should be soupy.\n11. If it is too thick- add water in one cup increments until you reach the desired consistency.\n12. If your pasta is undercooked- just set it on saute mode and let it simmer until the pasta cooks.\n13. Add in the mozzarella. No additional salt needed.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Mince garlic",
+      "Chop peppers",
+      "Chop onions/shallots",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "instant_pot_lasagna_soup.md"
   },
@@ -3742,7 +3913,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Turn the Instant Pot on saute mode and add 2 tbsp of oil. Once the oil is hot, add the green chilis and white parts of the scallions. Let them splutter for about 30 seconds or so and then add the diced onions.\n2. Saute the onions for about 2-3 minutes until they are slightly soft. Hit cancel to turn the IP off and then immediately add the rinsed rice, salt, garlic, taco seasoning, chili powder, and cumin powder. Stir for about 2 minutes until garlic is fragrant but not browned.\n3. Add the broth, and use a spatula to scrape up and browned bits of spices stuck to the pot (be sure to do this well so you don't get a BURN notice on your IP. Once you've added the broth, stir well.\n4. Next, add the salsa into the IP but do not mix it it in, just place it in the center right over the rice and do not touch it.\n5. Place your lid on the IP and set the IP to High Pressure Cook Mode and set the timer for 4 minutes. Once the IP beeps (and the pressure cooking phase is complete) quick release after 10 minutes.\n6. Open the IP and use a fork to fluff and mix the rice very gently. Mixing the rice too vigourously at this stage will break the rice up and make it mushy. Let the rice sit for about 5 minutes. Next add in the pinto beans, corn and remaining green parts of the scallions. Taste for salt and adjust as needed.\n7. Serve as a side, topped with shredded lettuce, pico de gallo and a dollop of sour cream.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Chop scallions"
+    ],
     "source_url": null,
     "source_file": "instant_pot_mexican_rice_beans.md"
   },
@@ -3790,7 +3964,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Start the instant pot in sauté mode and heat the oil in it. Add cumin seeds, green chili, curry leaves, garlic and asafoetida.\n2. After the garlic turns light brown, add the chopped onions and cook for 2 minutes until the onions turn golden brown.\n3. Add tomato and spices and cook for another 2 minutes.\n4. Add the washed dal and water. Stir it all up.\n5. Close the lid with vent in sealing position.\n6. Change the instant pot setting to manual or pressure cook mode at high pressure for for 5 mins. After the instant pot beeps, let the pressure release naturally for 5 minutes, then release the pressure manually (5 minute NPR).\n7. Using tongs, carefully take out the bowl of basmati rice. Then take out the trivet.\n8. Garnish with cilantro and stir. Optionally, sprinkle the juice of half a lemon. Dal tadka is ready to be served.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Chop onions/shallots",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "ip_dal_tadka.md"
   },
@@ -3846,7 +4024,13 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Start the pressure cooker in sauté mode and let it heat. Add oil and cumin seeds. Sauté for 30 seconds.\n2. When the cumin seeds change color, add green chili, onions, ginger and garlic. Sauté for 3 minutes until the onions become golden brown while stirring frequently.\n3. Add tomato and spices. Stir and sauté for another 2 minutes.\n4. For regular dal, use 3 cups of water. Reduce to 2.5 for thicker dal. Add the lentils, water and stir well.\n5. (For pot-in-pot rice) Place the trivet. In a bowl, add all ingredients for basmati rice and place it on top of the trivet. Close the lid with vent in sealing position.\n6. Press cancel and close lid with vent in sealing position. Change the instant pot setting to manual or pressure cook mode at high pressure for 5 mins.\n7. After the instant pot beeps, let the pressure release naturally for 5 minutes, then release the pressure manually (5 minute NPR).\n8. Open the pot. Add the lime juice and stir the dal.\n9. Garnish with cilantro. Serve dal with roti, naan or rice.\n10. For stovetop pressure cooker, cook for 1 whistles (about 5 minutes) and let the pressure release naturally.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Chop onions/shallots",
+      "Grate/mince ginger",
+      "Mince garlic",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "ip_masoor_dal_red_lentils.md"
   },
@@ -3928,7 +4112,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Prep:Dice 1 cup yellow onion.Dice 1 cup green bell pepper.Finely dice ½ a jalapeño.Mince 3 cloves garlic.Wash ⅓ cup quinoa.Rinse and drain 1 can black beans (about 1.25 cups).\n2. Cook\n3. Add all the ingredients to the Instant Pot in this order:Diced onion, bell pepper, jalapeño, and garlic.\n4. Washed quinoa, 1 can fire-roasted diced tomatoes (14.5 oz), 1 cup frozen corn, and the rinsed black beans.\n5. Add ¾ tablespoon chili powder, ½ tablespoon paprika, 1 teaspoon ground cumin, and 1 teaspoon salt (adjust later to taste).\n6. Pour in 2 cups vegetable broth.\n7. Pressure Cook: Close the lid and set the vent to sealing. Cook on high pressure for 6 minutes.\n8. Release Pressure: Once done, allow the pressure to release naturally (this might take 10-15 minutes). Open the lid and taste the chili. Adjust the salt if necessary.\n9. Serve: Garnish with chopped cilantro. Add any optional toppings you like:\n10. Shredded cheddarAvocado, lemon wedges, or diced red onionSour cream or greek yogurtServe with tortilla chips\n11. Refrigerate: Store in an airtight container for up to 4 days.Freeze: Portion into small containers and freeze. Reheat in the microwave or on the stove when ready to eat.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Chop peppers",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "ip_quinoa_chili.md"
   },
@@ -3970,7 +4158,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. (optional) Switch on the saute mode on your Instant pot and add the moong dal to it. Roast it until nice and fragrant for a couple of minutes. Remove it.\n2. Add the moong dal, rice to a bowl or strainer and wash them well.\n3. Start instant pot in sauté mode and heat ghee in it. Add cumin seeds, black peppercorns, asafoetida, curry leaves, and cashews.\n4. Saute till the cashews are lightly roasted. Take out half of the tempering and reserve for later. Add green chili and ginger.\n5. When the ginger turns golden brown, add rice and moong dal. Saute for 2-3 minutes.\n6. Add water and salt. Close lid with vent in sealing position.\n7. Change the instant pot setting to rice mode, which defaults to low pressure cooking for 12 minutes.\n8. When the instant pot beeps, let the pressure release naturally for 10 minutes, then manually release the remaining pressure (10 minute NPR).\n9. Open the instant pot, and serve pongal. Top with reserved tempering with roasted cashews. Enjoy hot with sambar and chutney!",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Grate/mince ginger"
+    ],
     "source_url": null,
     "source_file": "ip_ven_pongal.md"
   },
@@ -4058,7 +4249,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Prepare Khaman Batter:\n2. Mix in all of the ingredients, except the Eno fruit salt – gram flour, semolina, turmeric, salt, sugar, green chili, ginger, lime juice, oil and water. Stir to combine well and let the batter sit for 15 minutes.\n3. While the batter is resting, boil 2 cups water in the pressure cooker on sauté mode. Also, grease the steel pan in which you will make the khaman with oil. I used one container from the stackable steel containers for the instant pot.\n4. After 15 minutes, add Eno to the batter and stir it gently in one direction. The batter will become frothy and increase in volume. Do not over stir.\n5. Quickly transfer the batter to the greased steel container and place the container on a trivet. It is important to start cooking quickly after adding Eno to get soft and fluffy Khaman.\n6. Steaming in Instant Pot\n7. Then place the trivet along with the pan in the instant pot. Set to Steam mode for 15 mins in venting mode. The instant pot timer does not work in venting mode, hence you will need to set an external timer.\n8. After the cooking time is done, let the khaman sit for 5 minutes. Then open the lid of the instant pot and take out the khaman using tongs.\n9. Let it cool for 5 more minutes, so it is easy to remove. Insert a knife or toothpick to check it is cooked. The knife should come out almost clean. If not, you will need to steam for 2-3 more minutes.\n10. Run a knife around the edges of the khaman. Place a plate on top of the container and turn it upside down. This will help to get the khaman out of the container easily.\n11. Prepare Tempering\n12. While the khaman is steaming in the instant pot, heart oil in a pan on stovetop on high heat.\n13. Then add the mustard seeds and let them sizzle. Now add the curry leaves. Let them sauté for about 30 seconds. Add the sesame seeds and turn off heat.\n14. Now add water, sugar, salt and stir well.\n15. Cut the khaman into small pieces. Spread the tempering over it.\n16. Garnish with chopped cilantro and serve with green mint chutney.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Grate/mince ginger"
+    ],
     "source_url": null,
     "source_file": "khaman_dhokla_ip.md"
   },
@@ -4103,7 +4296,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. To start with, wash and soak chana overnight.\n2. Next day, drain water and add just enough water to immerse the chana completely.\n3. Then, add salt and asafoetida and pressure cook for 5 whistles.\n4. Roast and grind:Chana dal, coriander seeds, pepper, red chili, little oil\n5. Add cumin and asafoetida lastly as it will burn.\n6. Roast until chana dal turns golden in colour and aroma wafts. Cool down and powder.\n7. Temper:Oil, mustard seeds, urad dal, curry leaves\n8. Drain the cooked chana and add to the temper pot. Add the powdered masala and grated coconut.\n9. Mix well for 2 minutes in medium flame.\n10. Quick option: You can make this same without the powder too. Just temper with 2 red chillies.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "kondakadalai_kala_channa_masala_sundal.md"
   },
@@ -4197,7 +4392,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Prep\n2. Dice bell peppers and cucumber.\n3. Halve cherry tomatoes.\n4. Chop kalamata olives\n5. CookPrepare all vegetables and place them in a large bowl with the feta, chickpeas and parsley.\n6. Cook pasta according to package directions. Drain and add to the bowl.\n7. Add all dressing ingredients to a small bowl and whisk until combined.  This includes olive oil, wine vinegar, garlic, dijon mustard, maple syrup, oregano, salt and pepper.\n8. Pour dressing over pasta salad and mix all ingredients together until it’s combined.\n9. Pasta salad can be served immediately or refrigerated up to 3 days.\n10. If turning into Mason jar salad, layer asdressing, pasta, veggies, chickpeas, feta.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Slice cucumber",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "loaded_greek_chickpea_pasta_salad.md"
   },
@@ -4319,7 +4518,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Add masoor dal & moong dal to a pot or pressure cooker. Wash it a few times until the water runs clear.\n2. Next add chopped tomatoes, water and green chili.\n3. Pressure cook for 1 to 2 whistles on a medium heat. If cooking in a pot, bring the water to a rolling boil, reduce the heat and cook until soft, adding more hot water if needed. Skim off any froth that rises to the top.\n4. Once the pressure drops, open the cooker.\n5. Mash the dal to suit your liking. You can make it smooth or keep it coarse for a texture. If needed you can pour 2 to 3 tbsp hot water to bring it to a consistency.\n6. **Temper/ Tadka**Heat ghee (or oil or butter) in a small pan, on a medium heat.\n7. Add mustard seeds, cumin seeds, dried red chilies and chopped garlic.\n8. Saute until the garlic turns slightly golden. Turn off the heat and add hing, chili powder, turmeric & garam masala.\n9. Quickly pour this off to the dal. (If you want you may set aside half of the tempering along with red chili to garnish later.)\n10. Time to add salt and crushed kasuri methi if using. Mix and simmer for 2 mins. Taste test and add more salt if required.\n11. Squeeze in some lemon & garnish with chopped coriander leaves before serving. Masoor dal is ready to serve with roti or rice.\n12. **Instant Pot Masoor Dal**Press saute button on the Instant pot and pour oil to the inner pot.\n13. Add mustard, cumin, broken red chilies and garlic.\n14. When they splutter add tomatoes along with salt, chilli powder, hing, garam masala (optional) and turmeric.\n15. Saute for 1 min. Next add dal, green chilli and 2 cups water.\n16. Stir well and deglaze to release any bits of food stuck. Secure the Instant pot with lid. Set the steam release handle to sealing.\n17. Optional :You can cook basmati rice together by placing the rice bowl on a long legged trivet.\n18. Press pressure cook button and set the timer for 7 mins.\n19. Wait for the pressure to release naturally. When the pin drops, open the IP.\n20. Add kasuri methi and stir well. Taste test and add more salt or garam masala if required. If the dal is runny, cook on saute mode for a few minutes. If it is too thick pour little hot water and saute for a minute.\n21. Squeeze lemon juice and garnish with chopped coriander leaves. Serve masoor dal with rice.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Mince garlic",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "masoor_dal.md"
   },
@@ -4371,7 +4573,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. **Prep:**Roughly chop onion and tomatoes.Cube paneerCook the frozen peas in the microwave.\n2. CookHeat oil, ginger, garlic. Add onions and sauté until golden brown.\n3. Add 4 tomatoes, 2 tbsp cashew, and saute until the tomato turn soft and mushy.\n4. Cool completely, and transfer to a mixer jar.\n5. Grind to smooth paste without adding water.\n6. In the pan, heat 2 tbsp oil. add 1 tsp ghee, 1 tsp cumin, and 2 chilli. Saute until the spices turn aromatic.\n7. Keeping the flame on low, add ½ tsp turmeric, 1 tsp red chilli powder, ½ tsp coriander powder, ½ tsp cumin powder, and ½ tsp garam masala.\n8. Saute until the spices turn aromatic.\n9. Add prepared gravy and cook until the oil separates from the gravy base.\n10. Add 3 cup water and 1 tsp salt.\n11. Add 1½ cups peas and paneer cubes.\n12. Cover and cook for 5 minutes.\n13. Add 2 tbsp cream, 1 tsp kasuri methi, and 2 tbsp coriander.\n14. Serve with roti or rice.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "mattar_paneer_sabji.md"
   },
@@ -4450,7 +4655,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. In a large bowl, mix quinoa, beans, cucumbers, tomatoes, olives, feta and scallion.\n2. In a small bowl, combine lemon juice, olive oil, salt and pepper together.\n3. Pour dressing over salad and mix gently.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop scallions",
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "mediterranean_quinoa_salad.md"
   },
@@ -4503,7 +4711,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. PrepDice bell pepper, onion, scallionsCook corn\n2. Mix black beans, pinto beans, bell pepper, taco seasoning, corn, scallions, cumin powder, red chili powder, taco sauce, salsa, cilantro.\n3. If serving immediately, add onion and cheese.\n4. Serve with chutney and chips",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Chop onions/shallots",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "mexican_papdi_chaat.md"
   },
@@ -4543,7 +4755,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Lay one tortilla flat and spread with a thin layer of spreadable cheese.\n2. Next top with ~1/3 cup refried beans and spread flat. Continue layering with 1/4 avocado, 1/4 cup onion, 1/4 cup tomato or salsa, and 1/4 cup cilantro.\n3. Use your hands to flatten all the ingredients down so it’s easier to roll. Then tightly roll from one end to the other and place seam side down on a cutting board. If any ingredients fall out of the tortilla when rolling, it’s OK! It’s a hefty pinwheel, so just scrape it aside and move along.\n4. Starting in the center of the tortilla, use your hands to form and tighten the roll, moving outward toward the edges. This will help the fillings form together and make slicing easier.\n5. Use a serrated knife (blunt-edge knives may smash the pinwheel), and slice into 1/2-inch slices – about 8-10.\n6. Repeat the process with second tortilla and remaining ingredients. You should have ~20 pinwheels (amount as original recipe is written // adjust if altering batch size).\n7. Serve immediately, or cover and refrigerate for up to 2-3 days.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "mexican_pinwheels.md"
   },
@@ -4587,7 +4802,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. PrepRoughly chop the cilantro.Grate the cheese.Leave frozen corn out at room temp to defrost a bit.\n2. Make\n3. Saute the onions in the oil and butter.\n4. After onions have started to caramelize, add the rice, garlic, and jalapeño. Stir occasionally until the rice is translucent (1 - 2 min).\n5. Add broth, taco seasoning, spices and set the instant pot to high pressure for 10 minutes.\n6. Heat up the entire packet of chipotle corn with sauce pellets in pan on stove.\n7. Manually release the pressure when done. Add the corn, cheese and half the cilantro. Stir to combine.\n8. Top with cilantro to eat.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Mince garlic",
+      "Wash and chop herbs",
+      "Chop onions/shallots"
+    ],
     "source_url": null,
     "source_file": "mexican_risotto_ip.md"
   },
@@ -4638,7 +4857,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Quick Soak Sabudana\n2. Heat 2-3 cups of water until it is boiling hot. It’s convenient to do this in a hot water kettle or right on the stove.\n3. Rinse the sabudana thoroughly (wash about 2-3 times until you get clear liquid). Drain the liquid and place in a deep bowl.\n4. Pour 1.5 cups of the hot water on top of the sabudana and let it sit for 30 minutes.\n5. After 30 minutes, press a few of the sabudana between your fingers- they should be soft.\n6. Drain the sabudana , rinse with cold water and transfer the sabudana to a wide colander or spread out in a large pan until the sabudana is completely dry (about 15-20 minutes).\n7. Directions\n8. In a large pot, heat the oil over medium high heat. Once the oil is hot, add the cumin seeds and scallion whites and stir.\n9. Next add the bell peppers, turmeric, chili powder, taco seasoning and cook on low heat until the bell peppers are soft.\n10. Once the peppers are soft, add the garlic and salt.\n11. Add the sabudana, cilantro, lime juice, green scallions and mix until everything is well combined.I like my sabudana a little sticky and more soft so I cook it for an additional 5-6 minutes until I get that texture.\n12. Remove from heat, top off cheese, a dollop of sour cream and enjoy!!",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Chop scallions"
+    ],
     "source_url": null,
     "source_file": "mexican_sabudana_khichdi.md"
   },
@@ -4683,7 +4905,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Prep:\n2. Cook pasta in salted water until al dente. Drain and rinse with cold water.\n3. Mince garlic, jalapeño, and chop cilantro and scallions (reserve some for garnish).\n4. Crumble cotija cheese (reserve some for garnish).\n5. Cook:\n6. Heat olive oil in a skillet, add corn in a single layer, season with salt and pepper, and cook undisturbed for 5 minutes until charred.\n7. Add garlic, cook for 1–2 more minutes, and cool.\n8. Blend sour cream, mayonnaise, chipotle peppers, lime juice, and zest to make the dressing. Season with salt and pepper.\n9. Assemble:\n10. Combine pasta, charred corn, jalapeño, cilantro, scallions, and cotija cheese in a large bowl.\n11. Toss with the dressing and adjust seasoning if needed.\n12. Garnish with reserved cilantro, scallions, and cotija cheese. Serve or refrigerate.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "mexican_street_corn_pasta_salad.md"
   },
@@ -4720,7 +4944,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Pre heat oven to 180c / 350F / Gas 4\n2. Melt the butter in a frying pan and fry the onion, over a medium/low heat for two minutes, add the bell pepper and continue to saute one minute. Finally, add the spinach and fry for a further minute.\n3. Whisk the eggs and cream together and then stir through the cheese.\n4. Grease a 12 hole muffin tray or fill with greased silicon cases.\n5. Add the vegetable mixture to the base of each muffin section.\n6. Pour the egg mixture into each muffin section.\n7. Bake for 25 mins, until set and golden.\n8. Allow to cool slightly before removing from tin / case.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "mini_crustless_quiches.md"
   },
@@ -4757,7 +4983,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Preheat the oven to 350 F and grease 12 mini muffin cups with nonstick spray very well.\n2. Stir together all ingredients in a medium bowl.\n3. Spoon into muffin cups, filling about to the brim.\n4. Bake for 18-20 minutes or until firm to the touch and golden brown around the edges.\n5. Let cool for about 5 minutes in the pan before serving to allow them to firm up a bit. Use a paring knife around the edges to help remove them if needed Serve warm or at room temperature.\n6. You can also pack these egg and cheese mini muffins in a packed daycare lunch or school lunch.\n7. Chop them up over salads for your own lunch.\n8. Try mozzarella instead of cheddar.\n9. Try ricotta instead of cottage cheese.\n10. Double the recipe and bake a whole pan of 24 mini muffins at once.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop carrots",
+      "Peel/chop squash",
+      "Cut florets",
+      "Wash and chop greens"
+    ],
     "source_url": null,
     "source_file": "mini_egg_muffins_with_cheese_and_veggies.md"
   },
@@ -4822,7 +5053,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Add moong dal to a medium bowl. Rinse the moong dal and soak for 3+ hours (ideally overnight).\n2. If desired, chop onion, grate carrot and paneer.\n3. Drain the water. Transfer dal to a blender. Add about ⅔ cup water. Blend to make a smooth batter.\n4. Transfer the batter to a bowl. Add green chili, ginger, onion, carrot, cilantro, salt, turmeric and red chili powder. Mix well, and add 1-2 tablespoons more water if needed. Make sure the batter is not too thick or too runny, it should have a pouring consistency.\n5. Make chilla like you would make dosa, adding grated paneer when semi-solid.\n6. Serve right way with chutney or tomato ketchup, and a cup of chai!",
-    "prep_steps": null,
+    "prep_steps": [
+      "Grate/mince ginger",
+      "Chop onions/shallots",
+      "Chop carrots",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "moong_dal_chilla.md"
   },
@@ -4881,7 +5117,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Make the quinoa using the stovetop method or Instant Pot method. When it’s done, sprinkle with a little kosher salt to taste.\n2. Dice the onion and mince the garlic. Chop the sweet potatoes into bite-sized pieces.\n3. In a large pot, heat the olive oil. Sauté the onion for about 5 minutes. Add the minced garlic and sauté about 1 minute.\n4. Stir in the paprika, cumin, coriander, turmeric, ginger, cinnamon, kosher salt, black pepper, andcayenne pepper. Stir about 30 seconds, then add diced tomatoes and broth.\n5. Bring to a boil, then add sweet potatoes and drained and rinsed chickpeas. Simmer 25 to 30 minutes until the potatoes are tender. Stir in the spinach in the last 2 minutes.\n6. Serve over the quinoa, garnished with chopped cilantro, fresh squeezed lemon juice, and a dollop of Greek yogurt.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Grate/mince ginger",
+      "Chop peppers",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "moroccan_chickpea_stew.md"
   },
@@ -4957,7 +5197,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Chop onion, peppers.\n2. 1 cup quinoa is 3 kid servings. Make double if the adults are also eating\n3. Heat a large skillet or pot over medium high heat and add oil.\n4. Add cumin to the pan and let splutter. Add jalapeños and cook for about 1 minute.\n5. Add onions, peppers, garlic and taco seasoning to the pan and saute until onions and peppers are slightly softened after 8 minutes\n6. Add quinoa, enchilada sauce and bring to a boil. Reduce heat to low, cover lid and let cook for about 15 minutes. Check in between and stir if necessary (add splash of water if needed).\n7. Once the quinoa has cooked, add in the scallions, cheese, sour cream and serve immediately while hot!",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Chop scallions"
+    ],
     "source_url": null,
     "source_file": "one_pan_enchilada_quinoa.md"
   },
@@ -4998,7 +5241,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. The quantities in this are for 4-5 adult servings. Plan for two dinners or cut in half.\n2. Chop onion, carrots and broccoli before turning on IP.\n3. Turn the Instant Pot onto saute mode and add oil and butter. Once the butter is melted, add the diced onions and carrots and stir until slightly softened (about 3-4 minutes).\n4. Heat 1L+ water for broth.\n5. Add the garlic, cumin powder, salt, and quinoa and stir for 2-3 minutes until everything is well combined.\n6. Add the broth, mix again and then place the broccoli florets directly on top of the mixture (without mixing them in).\n7. Switch the Instant Pot to High Pressure mode and set timer for 1 minute. Quick Release after 5 minutes. Total time should be roughly 10 minutes\n8. Open the pot, switch the IP to saute mode and add in the milk. Stir and cook for an additional 3-4 minutes so the quinoa slightly thickens. Add cheese and stir until well combined. Taste for salt and add extra if needed. (The quinoa will thicken as it sits for a few minutes)\n9. If you want to make this spicy, add a few dashes of crushed red chili flakes or sriracha.\n10. Serve hot and enjoy! Store refrigerated for up to 3-4 days.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots"
+    ],
     "source_url": null,
     "source_file": "one_pot_broccoli_cheddar_quinoa.md"
   },
@@ -5048,7 +5293,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. **For the Black Bean Tacos:**Preheat oven to 450F. Line a baking sheet pan with parchment paper.\n2. In a skillet over medium high heat, add the olive oil to heat up for 1 minute.\n3. Add the minced garlic, onion, and jalapeño peppers. Sauce for 1 minute, until fragrant.\n4. Add the drained black beans and tomato paste. Stir to combine.\n5. Add 1 cup water, stir to combine, and bring to a boil. Reduce heat to a simmer.\n6. Using a fork, lightly smash the black beans. Add more water as necessary to keep the black beans moist but not liquid-y.\n7. Add the taco seasoning, lime juice, and salt and black pepper to taste.\n8. Evenly distribute and spread over the tortillas. Place on the prepared baking pan.\n9. Brush each tortilla with olive oil.\n10. Bake for 8-10 minutes, until lightly golden brown, flip the tortillas over and bake another 8-10 minutes. Enjoy warm!\n11. **For the Cilantro Yogurt Sauce:**Blend all ingredients together in a food processor or high speed blender until smooth and creamy. Serve immediately or store in an airtight container in the fridge up to 4 days.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Wash and chop herbs",
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "oven_baked_crispy_black_bean_tacos.md"
   },
@@ -5088,7 +5337,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Heat heavy bottom pan, add oil, splutter mustard, followed by urad dal, asafoetida, red chilli and curry leaves.\n2. Add ginger, coriander leaves and give it a fry.\n3. In goes cooked green gram, drain water if any. Toss well.\n4. Lastly top with grated coconut and mix. Cook for a minute and switch off the flame.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Grate/mince ginger"
+    ],
     "source_url": null,
     "source_file": "pachai_payaru_moong_dal_sundal.md"
   },
@@ -5165,7 +5416,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. PrepCut the onion, bell pepper, tomato.Cube the paneer\n2. CookPrep the ice cold water in a bowl to the side.\n3. Heat up water in a large pot until it comes to rolling boil.\n4. Turn off the flame and drop in the spinach.\n5. Let it sit in the hot water for 2 minutes or until the leaves are blanched well.\n6. After the 2 minutes are up, drop the palak leaves into ice-cold water. This helps to retain bright green colour.\n7. Now transfer the blanched palak into the mixie.\n8. Add 2 cloves garlic, ginger, 3 green chilies.\n9. Blend to smooth puree without adding any water, and keep aside.\n10. In a large kadai, heat 2 tbsp oil, 1 tsp butter, 1 dried red chilli, 1 tsp cumin powder and 1 bay leaf. Saute on low flame until the spices turn aromatic.\n11. Add 1 onion, 1 tsp ginger garlic paste and saute until onions turn golden brown.\n12. Still on low, add turmeric, red chilli powder, coriander powder and salt. Saute until the spices turn aromatic.\n13. Add the bell pepper and sauté until the capsicum shrinks slightly.\n14. Add 1 tomato and cook until the tomato turns soft and mushy.\n15. Add in prepared palak puree and cook for 5-10 minutes\n16. Mix cream/milk and crumbed paneer. Sauce the cubed paneer with spices as desired.\n17. Add 1 cup water to the spinach puree and adjust the consistency as required.\n18. Add the milk/paneer into the mix and stir well making sure the consistency is appropriate.\n19. Add cubed paneer and simmer for 2 minutes.\n20. Add ½ tsp garam masala and 1 tsp kasuri methi\n21. Enjoy with chapati or rice.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Grate/mince ginger",
+      "Chop onions/shallots",
+      "Mince garlic",
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "palak_paneer_spinach.md"
   },
@@ -5215,7 +5471,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Wash the lentils with water and keep aside. Finely dice onion and tomato. Set water in kettle for boiling.\n2. Start the instant pot in sauté mode and heat the ghee/oil in it.\n3. Add cumin, red chilies, green chili and asafoetida. Allow them to cook for 30 seconds while stirring constantly.\n4. Then add diced onion and grated ginger. Sauté until onions are translucent for about 3 minutes.\n5. Now add tomatoes and sauté for 3 minutes until tomatoes are soft and mushy. Add all the spices and give it a stir.\n6. Add washed lentils and 4 cups water. Press CANCEL and close the instant pot lid with vent in sealing position.\n7. Press MANUAL or PRESSURE COOK mode for 8 minutes and let the pressure release naturally (NPR)\n8. Open the lid, add garam masala and lime juice.\n9. Garnish with cilantro and serve. Enjoy!\n10. Stovetop Method\n11. Follow the same steps as above to cook the dal in a stovetop pressure cooker. Pressure cook for 3-4 whistles until the dal is cooked and soft. Then let the pressure release naturally. Stir in garam masala and lime juice. Garnish with cilantro and serve!",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Grate/mince ginger",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "panchmel_dal.md"
   },
@@ -5253,7 +5513,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Mix all and keep aside for 10 minutes, add a spoon or two water if needed\n2. Cut 2 large capsicum into little thick slices\n3. Take a non stick or a cast iron pan, spread oil once heats, layer the rings fill with uttapam batter properly\n4. Let cook in low medium flame until browns, flip and cook the other side as well. It should brown properly\n5. Enjoy with ketchup or chutney",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots"
+    ],
     "source_url": null,
     "source_file": "paneeer_corn_utthapam.md"
   },
@@ -5360,7 +5622,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Soak handful or two of cashews in small stainless steel bowl\n2. Peel and quarter all veggies (can also use minimal carrot)\n3. Boil water for pasta (1L+)\n4. Place 2 cups water in IP pot with trivet on top\n5. Balance the veggies on top of trivet and nut bowl on top of that\n6. Set IP on manual for 5 minutes (double check online)\n7. Cook pasta while IP is working\n8. Quick release IP once done\n9. Blend all veggies and nuts\n10. Add salt, cumin powder, pepper and other spices as needed to make it tasty\n11. Mix sauce with pasta and serve",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots"
+    ],
     "source_url": null,
     "source_file": "pasta_with_veggie_sauce.md"
   },
@@ -5410,7 +5674,15 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Pressure cook peeled, chopped potatoes and other chopped veggies together with little water, upto 3 whistles in pressure cooker.\n2. Heat a broad pan with butter, fry onion until translucent.\n3. After that add ginger garlic paste, fry till raw smell of the ginger garlic paste goes off.\n4. Following it, add tomatoes, salt, pav Bhaji masala and red chilli powder.\n5. Fry till tomatoes turns soft and mushy.\n6. Then add the capsicum and fry for a minute.\n7. Then add all the veggies, mash well.\n8. Simmer for 5 to 7 minutes and mash with a ladle so that all the veggies get mixed well. Switch off stove.\n9. Finally add butter, lemon juice if desired. Bhaji is ready now to serve with pav.\n10. Garnish with finely chopped onion,coriander leaves and squeeze lemon as needed and spread the bhaji in between a well golden roasted buns/Pav/bread and enjoy hot!",
-    "prep_steps": null,
+    "prep_steps": [
+      "Peel and cube potatoes",
+      "Chop carrots",
+      "Cut florets",
+      "Chop onions/shallots",
+      "Chop peppers",
+      "Mince garlic",
+      "Grate/mince ginger"
+    ],
     "source_url": null,
     "source_file": "pav_bhaji.md"
   },
@@ -5447,7 +5719,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Dry roast peanuts in low flame to ensure even roasting.\n2. Once its is crisp, transfer to a plate for cooling and roast channa and urad dal with a teaspoon of oil.\n3. Lastly add green chillies and fry.\n4. Cool everything.\n5. Remove the skin of the peanuts completely.\n6. Place in the mixer and grind with ginger (if desired), salt and water. Grind smoothly.\n7. Adjust water consistency to make it runny.\n8. Temper: oil, mustard seeds, urad dal, curry leaf.\n9. Mix well.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Mince garlic"
+    ],
     "source_url": null,
     "source_file": "peanut_chutney.md"
   },
@@ -5484,7 +5758,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Rinse well a few times until the water runs clear.\n2. Pour fresh water and soak in enough water for about 4 to 6 hours. If using rice soak it along with dal. I don’t use rice most of the times.\n3. Once the green gram is soaked, rinse them well.\n4. Blend with ginger, salt, green chilies, cumin seeds.\n5. Chop onions. Sauté with ghee, cumin, green chilies until slightly brown\n6. When making the peasrattu, sprinkle fried onions on topping\n7. To make the next one, ensure the pan is not very hot. If it is too hot, reduce the flame or turn off the stove for a while and then make the next one.\n8. If you are unable to spread the batter on the tawa it means the batter is very thick. Add back to the blender with little water and blend again. Adding water directly to the batter most times doesn’t yield me good ones.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Grate/mince ginger",
+      "Chop onions/shallots"
+    ],
     "source_url": null,
     "source_file": "pesarattu.md"
   },
@@ -5548,7 +5825,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Thinly slice the onions (it's helpful to use a mandoline), and divide the onions between 2 (16-ounce) jars or 3 (10-ounce) jars. Place the garlic and peppercorns in each jar, if using\n2. Heat the vinegar, water, sugar, and salt in a medium saucepan over medium heat. Stir until the sugar and salt dissolve, about 1 minute. Let cool and pour over the onions. Set aside to cool to room temperature, then store the onions in the fridge.\n3. Your pickled onions will be ready to eat once they're bright pink and tender - about 1 hour for very thinly sliced onions, or overnight for thicker sliced onions. They will keep in the fridge for up to 2 weeks.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Mince garlic"
+    ],
     "source_url": null,
     "source_file": "pickled_red_onions.md"
   },
@@ -5603,7 +5883,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Add onion, bell peppers, garlic and olive oil to a large pan over medium heat. Saute until onions are translucent, about 5-10 minutes.\n2. Add pinto beans, diced tomatoes, corn, baby spinach and all spices (chili powder through black pepper). Saute another 10-15 minutes until everything is cooked through. Stir in quinoa.\n3. Squeeze lime juice on top and stir to combine. Serve warm, topped with avocado, cilantro and greek yogurt.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Chop peppers",
+      "Wash and chop greens",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "pinto_bean_casserole.md"
   },
@@ -5646,7 +5931,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. AD\n2. Stir together the wet ingredients in a large bowl.\n3. Fold in the dry ingredients, reserving some of the pepperoni.\n4. Portion out into a greased muffin tin and top with pepperoni.\n5. Bake and serve or store.\n6. AD\n7. Preheat the oven to 375 degrees F and grease a standard muffin tin well with nonstick spray.\n8. Add the milk, carrot, cheeses, butter, pepperoni (reserving the 2 tablespoons), and egg to a medium bowl. Stir together.\n9. Stir in the flours, baking powder, baking soda, pizza seasoning, and salt.\n10. Divide batter among the prepared muffin tin, using a heaping ¼ cup in each. Top each with pepperoni.\n11. Bake for 18-20 minutes or until lightly golden brown around the edges and a cake tester inserted into the center comes out clean. (There may be some melted cheese on it, though!)\n12. Let cool in the pan for 2-5 minutes, then transfer to a wire rack to cool completely. You may need to use a paring knife around the edges of the muffins to help remove them from the pan.\n13. Serve slightly warm.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop carrots"
+    ],
     "source_url": null,
     "source_file": "pizza_muffins_with_veggies.md"
   },
@@ -5686,7 +5973,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Roasting the Poblano Peppers\n2. Set your oven to a High Broil setting.\n3. Brush the poblano peppers lightly with oil and broil on the top most rack, turning the peppers every 4-6 minutes or until all sides are charred and blackened.\n4. Once the peppers are charred on each side remove them into a heat safe bowl or baking dish and cover tightly to sweat the peppers for about 5 minutes.\n5. Uncover the peppers and peel off as much of the charred skin and the seeds as you can .\n6. Discard the charred skin and seeds, roughly chop the peppers and set aside.\n7. Make the Sauce\n8. In a heavy bottom pot heat the butter and garlic over medium heat and add the flour.\n9. Make a roux by constantly stirring the butter & flour mixture until it has a nutty fragrance and is golden in color, about 3 minutes.\n10. Slowly whisk in the chicken broth in small amounts until the mixture is thick and bubbly.\n11. Once you have added all of the broth, add the sour cream, poblano peppers, cilantro, cumin & salt. Stir until smooth and all ingredients are incorporated.\n12. Take the pot off the stove and using an electric hand blender, blend the sauce until it is smooth and creamy. If you do not have an electric hand blender, work in batches and blend the cooled sauce in a regular blender carefully.\n13. Add queso fresco to the sauce and set aside.\n14. To assemble the enchiladas:\n15. Heat a skillet on medium low, add 1 tsp of oil and add two or three flour tortillas to the pan depending on how big your pan is.\n16. Working quickly, add about ¼ cup shredded chicken in the middle of the tortilla, top with a handful of the monterey jack cheese and seal the enchilada closed.\n17. Lightly brown the wrapped enchiladas until they are golden brown on both sides. Remove from pan and place them in a an oven proof baking dish.\n18. Continue to do this for the rest of the chicken & tortillas.\n19. Place all of the enchiladas in an oven proof baking dish and poor the sauce generously over the top.\n20. Bake for 15 minutes on 375 degrees or until hot and bubbly!\n21. Garnish with sliced green onion, tomatoes, & queso fresco !",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Mince garlic"
+    ],
     "source_url": null,
     "source_file": "poblano_cream_enchilada_sauce.md"
   },
@@ -5756,7 +6046,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Mix ingredients together. For the plain version this will just be milk and oats, for the flavoured versions it will include all the other ingredients.\n2. Allow the mixture to sit for a couple of minutes, until mushy.\n3. Press the mixture into a small, flat-bottomed microwavable dish. Use the back of a spoon to do this until the mixture is flat.\n4. Microwave for 2 mins on high. The cooked mixture will be soft but you should be able to cut through it.\n5. Cut the fingers while still hot and serve once cooled.\n6. STORAGE INSTRUCTIONS\n7. Store in airtight container in fridge for 1-2 days and in freezer for up to one month.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop carrots"
+    ],
     "source_url": null,
     "source_file": "porridge_fingers.md"
   },
@@ -5970,7 +6262,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Make the filling: Mince the garlic. In a medium skillet, heat the olive oil over medium heat. Add the garlic and sauté for about 30 seconds until fragrant but not yet browned (or skip this step and use garlic powder instead). Heat the refried beans, cumin and kosher salt until warmed, about 3 minutes. Taste and adjust flavors as desired.\n2. Prep the veggies: Chop the lettuce. Dice the bell pepper. Prep the other toppings as desired. (If using pickled red onions, it’s easiest to make them in advance.)\n3. Warm the tortillas: Warm and char the tortillas by placing them on an open gas flame on medium for a few seconds per side, flipping with tongs, until they are slightly blackened and warm. (See How to Warm Tortillas.)\n4. Serve: Place the refried beans in the tortillas, then top with toppings and enjoy.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Chop onions/shallots",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "quick_refried_bean_tacos.md"
   },
@@ -6003,7 +6299,10 @@
       "mushrooms"
     ],
     "instructions": "1. Here’s a peek at how to make this recipe so you know what to expect from the process. Scroll down to the end of this post for the specific amounts and the timing.\n2. Preheat the oven and line baking sheets with parchment paper for easy cleanup. Place the tortillas onto baking sheets. Top with pizza sauce, mozzarella, Parmesan, and any desired toppings.\n3. Bake until warmed through and the cheese is just golden brown. Serve warm, slicing into wedges so it’s easy to eat.\n4. How to Store\n5. Store leftovers in an airtight container in the refrigerator for up to 5 days. Reheat on a plate in the microwave for 30 seconds or heat through in a 375-degree-F oven.\n6. Best Tips for Success\n7. Use any type of tortilla you prefer. I usually use fajita-size whole wheat or regular flour ones, but the method is versatile.\n8. Use dairy-free cheese as needed.\n9. Serve with simple sides such as fruit, applesauce, salad, or roasted broccoli.\n10. Fold the pizza in half to serve like a pizza quesadilla.\n11. Preheat the oven to 400 degrees F.\n12. Place the tortillas onto 2 rimmed baking sheets. Top each with pizza sauce, spreading just to the edges, and the mozzarella, Parmesan, and any desired toppings.\n13. Bake for 8-10 minutes, or until warmed through and the cheese is just golden brown.\n14. Serve warm, slicing up into wedges.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Cut florets",
+      "Clean and slice mushrooms"
+    ],
     "source_url": null,
     "source_file": "quick_tortilla_pizzas.md"
   },
@@ -6047,7 +6346,13 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Cook the quinoa (or use Instant Pot quinoa OR if you have cooked quinoa, skip to Step 2).\n2. Cool the quinoa by spreading it into a single layer on a baking sheet and freeze for 5 to 10 minutes. If making in advance, refrigerate the quinoa until serving.\n3. Slice the green onions; reserve the dark green portions for a garnish.\n4. Dice the onion and carrots.\n5. In a very large skillet, heat the oil over medium high heat. Add the onion and white and light green portions of the green onions and sauté until translucent, about 3 minutes, then add the carrots and sauté for 3 minutes. Add the garlic and ginger and sauté for 2 minutes.\n6. Add the quinoa and salt and stir to combine.\n7. Make a well in the quinoa, exposing the pan, and crack the eggs into the pan.\n8. Scramble the eggs and cook for several minutes until they are soft, then stir them into the quinoa (resist the urge to stir them into the quinoa until they are cooked). Add the baby greens and continue to stir until they are fully wilted, about 1 to 2 minutes. Turn off the heat, stir in the soy sauce and green onion tops and mix. Taste and add additional salt as desired (we added an additional ¼ teaspoon as our soy sauce was low sodium).\n9. If desired, drizzle with sriracha and/or additional soy sauce. Serving suggestion: serve with Easy Edamame for a filling meal.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Chop scallions",
+      "Chop carrots",
+      "Grate/mince ginger",
+      "Wash and chop greens"
+    ],
     "source_url": null,
     "source_file": "quinoa_fried_rice.md"
   },
@@ -6095,7 +6400,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. pressure cook vatana, potato, turmeric, salt and water for 5 whistles.\n2. Chop one onion and two tomatoes.\n3. now in a large kadai heat 3 tsp oil and saute 1 onion, 1 tsp ginger garlic paste and 1 chilli.\n4. also saute 1 tomato until it turns soft and mushy.\n5. furthermore add ¼ tsp turmeric, ½ tsp chilli powder, ½ tsp coriander powder, ¼ tsp cumin powder, ¼ tsp garam masala and ¼ tsp salt.\n6. saute on low flame until the oil is released from sides.\n7. now add boiled peas and mix well.\n8. boil for 5 minutes or until the spices is absorbed.\n9. mash the peas and potato slightly, to thicken the consistency.\n10. Top with cilantro",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Mince garlic",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "ragda_patty.md"
   },
@@ -6144,7 +6453,12 @@
       "cabbage"
     ],
     "instructions": "1. Saute chopped veggies in oil2. Add beans, chili powder, cumin and salt3. Add water to cover4. Bring to a boil and cook uncovered until water reduces. Mixture should be thick and well combined5. Service with tortillas and optional rainbow toppings",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Chop peppers",
+      "Shred/chop cabbage",
+      "Chop carrots"
+    ],
     "source_url": null,
     "source_file": "rainbow_tacos.md"
   },
@@ -6222,7 +6536,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Start the instant pot in Saute (More) mode and let it heat until it displays HOT. Add oil, cumin seeds and green chili.\n2. Add onions, ginger and garlic. Stir and saute for about 3 minutes.\n3. Add tomatoes and spices to the instant pot. Stir and saute for 2 more minutes.\n4. Drain the old soaking water from the soaked beans and discard. Add the beans and the water (for cooking) to the instant pot. Stir it all up.\n5. Close the lid with vent in sealing position. Change the setting to \"Bean/Chili\" mode. This will set the timer to 30 minutes at high pressure cooking. Once the instant pot beeps, let the pressure release naturally and then open the lid. If using canned beans, use 6 min instead of 30 and reduce water to 1 cup.\n6. Add lime juice and cilantro and stir the rajma.\n7. Serve on top of chips with cheese, greek yogurt/sour cream, lettuce, tomatoes, salsa as toppings.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Grate/mince ginger",
+      "Mince garlic",
+      "Chop onions/shallots",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "rajma_nachos.md"
   },
@@ -6267,7 +6586,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Rinse ½ cup toor dal until the water runs clear.\n2. Chop 2 medium tomatoes.\n3. In a pressure cooker, add the rinsed dal, chopped tomatoes, 1½ cups water, 1 tsp tamarind concentrate, slit green chilies, 1 tsp jaggery, 1 tsp rasam powder, and salt.\n4. Close the lid and cook on medium heat for 3 to 4 whistles.\n5. Let the pressure release naturally. Open the lid and gently mash the dal and tomatoes.\n6. In a small pan, heat 1 tsp ghee. Add mustard seeds and let them splutter.\n7. Add cumin seeds, dried red chili, a pinch of hing, and curry leaves. Sauté for a few seconds until fragrant.\n8. Pour the tempering into the rasam. Stir to combine.\n9. Garnish with chopped coriander leaves.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "rasam_recipe.md"
   },
@@ -6307,7 +6628,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Chop 1 medium tomato.\n2. Crush 2 garlic cloves.\n3. Peel and dice 1 medium beetroot into small cubes.\n4. Cook 1 cup rice and keep it ready (preferably slightly mushy, like for rasam rice).\n5. In a pot, mix 1 tsp tamarind concentrate with 3 cups water.\n6. Add chopped tomato, crushed garlic, 1/4 tsp turmeric powder, 1 tsp black pepper, 1 tsp cumin seeds, 1/2 tsp rasam powder, and salt.\n7. Let it simmer on medium heat for 10–12 minutes until tomatoes soften and flavors blend. Don't boil too hard—rasam should be light.\n8. In a small pan, heat 1 tsp ghee or oil.\n9. Add 1 tsp mustard seeds. When they splutter, add 1/2 tsp cumin seeds, 1 red chilli, pinch of hing, and curry leaves.\n10. Pour this tempering into the simmering rasam. Turn off heat.\n11. Heat 1 tsp oil in a pan.\n12. Add diced beetroot and sauté on medium heat for 5–6 minutes.\n13. Sprinkle 1/4 tsp turmeric powder, 1/2 tsp red chilli powder, and salt.\n14. Stir and cook until beetroot is tender (about 6–8 more minutes, adding a splash of water if needed).\n15. In a bowl or plate, mix cooked rice with hot rasam.\n16. Top or serve it with the sautéed beetroot kai on the side or mixed in.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Mince garlic"
+    ],
     "source_url": null,
     "source_file": "rasam_rice_with_beetroot_kai.md"
   },
@@ -6347,7 +6670,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Chop 1 medium tomato.\n2. Crush 2 garlic cloves.\n3. Cut 1/2 head of broccoli into small florets.\n4. Cook 1 cup rice and keep it ready (preferably slightly mushy, like for rasam rice).\n5. In a pot, mix 1 tsp tamarind concentrate with 3 cups water.\n6. Add chopped tomato, crushed garlic, 1/4 tsp turmeric powder, 1 tsp black pepper, 1 tsp cumin seeds, 1/2 tsp rasam powder, and salt.\n7. Let it simmer on medium heat for 10–12 minutes until tomatoes soften and flavors blend. Don't boil too hard—rasam should be light.\n8. In a small pan, heat 1 tsp ghee or oil.\n9. Add 1 tsp mustard seeds. When they splutter, add 1/2 tsp cumin seeds, 1 red chilli, pinch of hing, and curry leaves.\n10. Pour this tempering into the simmering rasam. Turn off heat.\n11. Heat 1 tsp oil in a pan.\n12. Add broccoli florets and sauté on medium heat for 4–5 minutes.\n13. Sprinkle 1/4 tsp turmeric powder, 1/2 tsp red chilli powder, and salt.\n14. Stir and cook until broccoli is tender but not mushy (about 3–4 more minutes).\n15. In a bowl or plate, mix cooked rice with hot rasam.\n16. Top or serve it with the sautéed broccoli kai on the side or mixed in.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Mince garlic"
+    ],
     "source_url": null,
     "source_file": "rasam_rice_with_broccoli_kai.md"
   },
@@ -6387,7 +6712,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Chop 1 medium tomato.\n2. Crush 2 garlic cloves.\n3. Peel and dice 2 medium carrots into small cubes.\n4. Cook 1 cup rice and keep it ready (preferably slightly mushy, like for rasam rice).\n5. In a pot, mix 1 tsp tamarind concentrate with 3 cups water.\n6. Add chopped tomato, crushed garlic, 1/4 tsp turmeric powder, 1 tsp black pepper, 1 tsp cumin seeds, 1/2 tsp rasam powder, and salt.\n7. Let it simmer on medium heat for 10–12 minutes until tomatoes soften and flavors blend. Don't boil too hard—rasam should be light.\n8. In a small pan, heat 1 tsp ghee or oil.\n9. Add 1 tsp mustard seeds. When they splutter, add 1/2 tsp cumin seeds, 1 red chilli, pinch of hing, and curry leaves.\n10. Pour this tempering into the simmering rasam. Turn off heat.\n11. Heat 1 tsp oil in a pan.\n12. Add diced carrots and sauté on medium heat for 4–5 minutes.\n13. Sprinkle 1/4 tsp turmeric powder, 1/2 tsp red chilli powder, and salt.\n14. Stir and cook until carrots are tender (about 5–6 more minutes).\n15. In a bowl or plate, mix cooked rice with hot rasam.\n16. Top or serve it with the sautéed carrot kai on the side or mixed in.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Mince garlic"
+    ],
     "source_url": null,
     "source_file": "rasam_rice_with_carrot_kai.md"
   },
@@ -6434,7 +6761,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Heat olive oil\n2. Add shallot, bell pepper, corn, chili powder, cumin and a pinch each of salt and black pepper.\n3. Cook, stirring every so often, for 3 to 5 minutes or until tender crisp. Stir in garlic.\n4. To assemble each burrito, layer refried beans in the centre of the tortilla (about ⅓ cup per burrito), about ¼ cup of cooked rice on top, ½ of pepper mixture, a few slices of avocado and about 2 tablespoons of crumbled cheese per burrito.\n5. To fold the burritos: For each one, bring one side of the tortilla up over the ingredients (covering them), fold in each side, then begin to tightly roll the burrito (keeping everything tucked in as you roll, so it's compact). Alternatively, you can fold the burrito your favourite way. Serve and enjoy! This burrito is delicious served with your favourite chips and salsa (or enjoy the burrito as is).\n6. Optional (but delicious): Wipe out the frying pan and lightly grease with vegetable oil. Place over medium heat. Add burritos to the pan and warm for about 2 minutes per side.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "refried_bean_burrito.md"
   },
@@ -6478,7 +6808,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Bring a large saucepan of water to a boil, seasoned with about 1 tablespoon kosher salt.\n2. Make the gnocchi sauce: Peel the garlic. In a blender or food processor, process all ingredients until smooth. Taste and add additional seasonings if desired.\n3. Once the water is boiling, add the gnocchi and boil until they float, about 2 to 3 minutes.\n4. Meanwhile, line a colander with spinach leaves. When the gnocchi are done, pour them into the colander with the spinach so that the boiling water wilts the spinach. Then pour the cooked gnocchi and spinach back into the pot and stir to a few times to evenly distribute the spinach.\n5. Add 1 cup of the romesco sauce to the pot and stir. (Reserve and refrigerate the remaining 1 ½ cups for up to 1 week.)\n6. For vegan, top with fresh ground black pepper. For vegetarian, top with black pepper and feta crumbles. If desired, add a drizzle of olive oil.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Mince garlic",
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "romesco_gnocchi.md"
   },
@@ -6520,7 +6853,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Prep:Preheat your oven to 180°C (356°F).\n2. Place the halved red peppers, tomatoes on baking tray\n3. Drizzle with olive oil and sprinkle with salt and pepper.\n4. Bake for about 25 minutes.\n5. CookBlend the veggies and 8 garlic cloves.\n6. Add tofu, a splash of olive oil, a handful of fresh parsley, 3 tablespoons of nutritional yeast, 1/3 cup of raw almonds, and the juice of one lemon.\n7. Season again with a bit of salt and pepper to taste.\n8. Add vegetable broth to help blend everything to a smooth consistency. You can adjust the amount to make the sauce as thick or thin as you like.\n9. Use the sauce with cooked chickpeas, drizzled over yogurt, mixed with broccoli pesto, or as a creamy pasta sauce.\n10. For a gourmet touch, sprinkle toasted almond flakes and vegan parmesan on top before serving.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Press/cube tofu",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "romesco_pasta_sauce.md"
   },
@@ -6598,7 +6935,7 @@
     "avoid_contains": [],
     "instructions": "For the Sambar Rice:\nWash ¾ cup toor dal and pressure cook it with 2 cups water and ¼ tsp turmeric for 3–4 whistles until soft.\nWash 1 cup rice and cook it separately with 2–2½ cups water until soft (slightly mushy is okay for sambar rice).\nSlice 1 medium onion and chop 1 medium tomato.\nCut 1–2 drumsticks (murungakkai) into 2-inch pieces.\nSambar Rice:\nIn a large pan, heat 2 tsp oil or ghee. Add ½ tsp mustard seeds. Once they splutter, add a pinch of hing and a few curry leaves.\nAdd the sliced onion and sauté for 2–3 minutes until slightly soft.\nAdd the chopped tomato and 1 chopped green chili (if using). Cook until the tomato turns soft.\nAdd the drumstick pieces and about 1 cup water. Let it cook for 7–10 minutes until drumsticks are soft.\nStir in 1½ tbsp sambar powder, 1 tsp tamarind concentrate, and salt. Cook for 2 more minutes.\nAdd the mashed toor dal and cooked rice. Mix well. Adjust water if needed to get a soft, semi-liquid consistency.\nLet it simmer for 5 more minutes. Taste and adjust salt or tamarind.\nTurn off heat and drizzle ghee on top if you like.",
     "prep_steps": [
-      "Chop onions"
+      "Chop onions/shallots"
     ],
     "source_url": null,
     "source_file": "sambar_rice.md"
@@ -6647,7 +6984,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Peel, boil and dice potatoes.\n2. In a non stick skillet add 2 tbsp oil over medium high heat.\n3. Once the oil is hot add mustard seeds, cumin seeds, hing and let the seeds crackle.\n4. Add the diced onions and cook until onions are translucent and golden around the edges.\n5. Lower the heat slightly and add the grated garlic, turmeric powder, chili powder, coriander cumin powder, garam masala powder and mix well.\n6. Add the potatoes, salt, and continue to stir and combine all ingredients gently until everything is evenly incorporated\n7. Using the back of a spoon or a potato masher, gently smash the potatoes if they are too large and continue to stir.\n8. Remove from heat.\n9. Assembly:\n10. In a medium size skillet melt over medium heat, add 1/2 tablespoon of butter until it is foamy and melted.\n11. Lay two slices of bread down on the pan and spread one of the slices with roughly 1 tablespoon of cilantro chutney and the other slice with about 1 tablespoon of apple butter chutney.\n12. Add a slice of cheese or handful of shredded cheese on top of the cilantro chutney, then top with about 1/3 cup of the potato mixture, using the back of a spoon to press it down, and then place the remaining slice of bread (apple butter chutney side down) on top. Use a spatula to gently press the sandwich down and continue to cook until both sides are golden. To help the cheese melt, cover the pan with a melting dome. Repeat with remaining ingredients and add butter as needed to the pan.\n13. Top the potato mixture with a few spoonfuls of the sweet chutney and top with another slice of cheese.\n14. Serve the sandwiches hot, and enjoy!",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots"
+    ],
     "source_url": null,
     "source_file": "samosa_grilled_cheese.md"
   },
@@ -6726,7 +7065,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Preheat oven to 375 degrees F and line 2 baking sheets with parchment paper.\n2. Place the tortillas on a baking sheet. They can overlap a little. Spread 1 tablespoon of pumpkin puree on half of each tortilla. (You'll leave one half empty so you can fold it over to make a half-moon shape.)\n3. Top puree with ¼ cup beans, ¼ cheese, and a sprinkle of cumin.\n4. Bake for 5- 7 minutes or until heated through and melty. Fold the empty side of the tortilla over and press down. Flip over and bake for an additional 2-3 minutes and remove from the oven.\n5. Cut with kitchen shears and serve with desired dippings.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "sheet_pan_black_bean_quesadillas.md"
   },
@@ -6814,7 +7155,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Preheat oven to 400.\n2. Whisk together 1 cup coconut milk, 2 tablespoons green curry paste, and 4 cloves sliced garlic.\n3. On a foil-lined baking sheet, arrange chopped cauliflower and chopped sweet potato. Scatter over 1/2 cup basmati rice.\n4. Pour over the coconut milk mixture, then whisk 2 tablespoons peanut butter with 1 cup boiling water, and pour over. Cover with foil and bake for 35 minutes. Remove foil, add kale, salt, and pepper, then reseal and bake for 5 more minutes.\n5. Remove from oven and let sit for 3 minutes. Serve with fresh cilantro, chopped peanuts, and lime.\n6. Make on a sheet pan to serve 4. To serve 2, halve the recipe and make in a skillet.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Cut florets",
+      "Chop onions/shallots",
+      "Wash and chop greens",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "sheet_pan_coconut_vegetable_curry.md"
   },
@@ -6850,7 +7196,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Place the onion and garlic in a food processor, and pulse until very finely minced, stopping periodically to scrape down the sides of the bowl with a rubber spatula to ensure even chopping. Set aside.\n2. Set a large Dutch oven or similar pot over medium-low heat. When the pot is warm, add oil, onion purée, 2 tablespoons berbere and a large pinch of salt. Stir to combine, then cover pot, and let aromatics cook gently while you prepare tomatoes.\n3. Place tomatoes in the food processor, and pulse until puréed. Add to onion mixture, and increase heat to high. When mixture boils, reduce heat to low, and whisk in chickpea flour. The mixture will be quite thick, like peanut butter. While stirring, slowly pour in 2 cups water in a thin stream to loosen the mixture. Keep stirring until the mixture becomes smooth and integrated.\n4. Increase heat to medium-high to bring shiro to a boil, then reduce heat to low, and simmer for about 5 minutes to cook off the raw taste of the chickpea flour and integrate all the flavors. Stir in the jalapeños and season to taste with salt.\n5. Serve immediately. (Leftovers can be stored in an airtight container in the refrigerator for up to a few days. Store unused berbere in a cool, dark place for up to 3 months.)",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Mince garlic"
+    ],
     "source_url": null,
     "source_file": "shiro_wot_ground_chickpea_stew.md"
   },
@@ -6893,7 +7242,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. In a 3-qt. slow cooker, combine the first 7 ingredients. Cook, covered, on low 4-5 hours or until carrots are tender, adding spinach and tomatoes during the last 10 minutes of cooking. Stir in cilantro and parsley.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Mince garlic",
+      "Wash and chop greens",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "simple_vegetarian_slow_cooked_beans.md"
   },
@@ -6943,7 +7296,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. In a 6- or 7-qt. slow cooker, combine first 16 ingredients. Cook, covered, on low until vegetables are tender, 6-8 hours. If desired, serve with avocado.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "six_bean_chili.md"
   },
@@ -7094,7 +7450,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. PrepChop spinach roughly\n2. CookPreheat the oven to 375 degrees and grease a mini muffin tin.\n3. Add the eggs to a medium bowl.Add spinach and rest of ingredients to the bowl with the eggs and stir.Use italian seasoning or garlic powder in place of cumin for flavor variety.\n4. Divide among the prepared mini muffin tin, using about 1 tablespoon batter in each cup.\n5. Bake for 14-16 minutes or until the edges are golden brown and the tops are firm.\n6. Place the muffin tin on a wire rack and let muffins cool in the tin for 5-10 minutes.\n7. As they cool, they will start to pull away from the sides of the pan slightly. Use a paring knife around the edges to gently loosen and remove the muffins from the pan.\n8. Serve warm or at room temperature. Serve with fruit and crackers, toast, muffin or salad.\n9. You can store these in an airtight container in the fridge for up to 5 days or in the freezer for up to 6 months.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Wash and chop greens"
+    ],
     "source_url": null,
     "source_file": "so_good_spinach_egg_muffins.md"
   },
@@ -7200,7 +7558,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Meal Prep InstructionsLabel your gallon-sized freezer bag. Make sure to include name, instructions, and a use-by date (I recommend 90 days after prep date).Add all of the ingredients (except for the coconut milk, and broth) to a freezer bag. Stir gently to combine.Remove air, seal, and freeze.\n2. Instant Pot InstructionsThaw the freezer meal overnight in the fridge.From thawed, add the coconut milk, and broth, stir to combine and then pressure cook on high for 10 minutes, then natural release for 10 minutes. Add salt as desired.\n3. Use an immersion blender inside of the Instant Pot, or transfer 1/2 of the soup to a blender and blend until smooth. Return to Instant Pot.\n4. Tip: Garnish with sliced jalapeno, freshly chopped tomatoes, and your favorite hot sauce.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Mince garlic",
+      "Chop onions/shallots"
+    ],
     "source_url": null,
     "source_file": "southwest_corn_chowder_freezer_meal_prep.md"
   },
@@ -7259,7 +7621,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. **Prep**Dice bell pepper, red onion, cilantro, scallionsCut cherry tomatoes, avocado\n2. CookDrain and rinse black beans\n3. Cook corn\n4. In a small mixing bowl, whisk together the mayonnaise, sour cream, chipotle peppers, minced cilantro, garlic powder, onion powder, chives, parsley, oregano, and lime juice. Set aside.\n5. Cook the rotini according to the package instructions. Then, drain, rinse with cold water, and allow to dry for about 5 minutes.\n6. In a large bowl, combine the cooked pasta, black beans, corn, bell pepper, red onion, grape tomatoes, avocado, and chopped cilantro.\n7. Pour in the chipotle dressing, and stir to fully coat the salad ingredients.\n8. Add salt and pepper to taste.\n9. Cover and place in the refrigerator, and chill for at least 1 hour before serving.\n10. Garnish with sliced scallions.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Wash and chop herbs",
+      "Chop peppers",
+      "Chop onions/shallots",
+      "Chop scallions"
+    ],
     "source_url": null,
     "source_file": "southwest_pasta_salad.md"
   },
@@ -7302,7 +7669,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Prep:Roughly chop 2 cups of fresh spinach.\n2. Combine the chopped spinach with 1 cup of crumbled feta cheese, 1/4 cup of finely chopped onions, 1 minced garlic clove, and a pinch of salt and pepper. Mix well.\n3. Cut 2-3 whole wheat pitas in half, creating pockets.\n4. CookCarefully spoon the spinach and feta mixture into each pita pocket, being careful not to overfill.\n5. In a large skillet or grill pan over medium heat, add a little olive oil. Cook the stuffed pitas for 2-3 minutes on each side, until the outsides are golden and the filling is warmed through.\n6. Greek Salad Prep:Dice 1 cucumber, 2 tomatoes, and 1/4 of a red onion. Place them in a bowl.\n7. Add 1/4 cup of kalamata olives and 1/4 cup of crumbled feta cheese to the vegetables.\n8. In a small bowl, whisk together 2 tablespoons of olive oil, 1 tablespoon of lemon juice, 1 teaspoon of dried oregano, and a pinch of salt and pepper.\n9. Combine and serve",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Mince garlic",
+      "Slice cucumber"
+    ],
     "source_url": null,
     "source_file": "spinach_and_feta_stuffed_pita_with_a_side_of_greek_salad.md"
   },
@@ -7339,7 +7710,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Soak almonds to remove the skin.\n2. In food processor, process the garlic and shallot. Once these are minced, add the almonds.\n3. Next add the spinach, cilantro and sherry vinegar and continue to process until smooth.\n4. Slowly add the olive oil until a thick pesto is formed, then salt to taste.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Wash and chop greens",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "spinach_cilantro_pesto.md"
   },
@@ -7378,7 +7752,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Cut and saute spinach until wilted. Squeeze out any remaining water.\n2. Take puff pastry out to thaw on counter.\n3. Mix spinach, feta, onion, oil, dill and garlic in a medium bowl. Season to taste with salt and pepper. In a small bowl, beat 1 egg to blend; fold into spinach mixture.\n4. Preheat oven to 400°.\n5. Roll out pastry on lightly floured surface.\n6. Cut out large squares and place one in each muffin cup, pressing into bottom and up sides and leaving corners pointing up.\n7. Divide filling among cups. Fold pastry over filling, pressing corners together to meet in center.\n8. Beat second egg to blend in a small bowl. Brush pastry with egg wash (this will give the pastry a nice sheen). Alternatively use oil or butter here instead.\n9. Bake until pastry is golden brown and puffed, about 25 minutes.\n10. Let them cool on counter for 10 minutes before serving.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Wash and chop herbs",
+      "Mince garlic"
+    ],
     "source_url": null,
     "source_file": "spinach_puffs.md"
   },
@@ -7426,7 +7804,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Toast the tortillas on each side in a dry skillet over medium-low heat until they are a slightly stiff and have browned just a bit on the edges. Stack them on a plate until ready to use. Toasting the tortillas increases the flavor and helps prevent them from cracking. Shred an 8oz. block of pepper jack cheese. Half will be used for the enchilada filling and half will be used for the sauce.\n2. Defrost the frozen spinach in a microwave or take it out of the freezer before beginning to allow it time to defrost naturally. Squeeze as much moisture out of the thawed spinach as possible. Place the spinach in a large bowl. Rinse and drain the white beans, then add them to the bowl with the spinach. Also add 4oz. of the shredded cheese, garlic powder, cumin, salt, and a little freshly cracked pepper. Stir until the mixture is evenly combined.\n3. Preheat the oven to 350ºF. Begin preparing the pepper jack sauce by adding the butter and minced garlic to a small sauce pot. Sauté the garlic in the butter for one minute over medium heat. Add the milk and cream cheese to the pot. Stir and heat until the cream cheese has fully melted into the milk and the mixture has thickened slightly. Season with salt. Begin adding the remaining shredded pepper jack, a handful at a time, and stirring it in until fully melted before adding more. Once all the cheese has been melted into the sauce, turn the heat off and allow it to cool slightly.\n4. Coat the inside of a casserole dish with non-stick spray. Begin filling the toasted tortillas with the spinach and white bean mixture and rolling them closed. Line up the filled tortillas in the casserole dish, seam sides facing down. Choose a casserole dish that fits 12 of the rolled enchiladas snugly to help keep them from unrolling.\n5. Once the tortillas are filled and in the casserole dish, pour the pepper jack sauce over top. Bake the enchiladas in the preheated oven for 35-40 minutes, or until the edges of the tortillas are brown and the pepper jack sauce is thick and browned on the edges. Sprinkle chopped cilantro over top, if desired.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Wash and chop greens",
+      "Chop peppers",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "spinach_white_bean_enchiladas.md"
   },
@@ -7480,7 +7862,15 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Check the infographic here: https://www.cooksmarts.com/articles/guide-to-stir-frying/\n2. Choose a protein (1 pound)Tofu: cubed, extra firmSeiten: choppedTempeh: chopped\n3. Choose aromatics (1 tablespoon)Garlic, shallots, green onions, ginger\n4. Prep vegetables (4 cups)Onions - thinly slicedBell peppers - slicedCarrots - thinly slicedBroccoli - chopped and microwaved with damp paper towel for 2 minutesBaby spinachFrozen peas, edamame or cornSugar snap peas, trimmed and left wholeBean sproutsMushrooms - slicedGreen beans - trimmedBaby corn - drained and rinsed\n5. Make the sauceOptions listed in infographic: https://www.cooksmarts.com/articles/guide-to-stir-frying/\n6. Make the stir fryHeat a wok over medium high heat.\n7. Once hot, add 2 tbsp sesame oil and protein and let sit for 4 minutes before tossing to coat in oil.\n8. Saute until tofu is golden, remove from pan and set aside.\n9. Wipe wok with paper towel if needed, return to medium-high heat.\n10. Add cooking oil and aromatics (garlic, shallots, green onion, ginger).\n11. Once you can smell them, add veggies to heated oil with sprinkle of salt.\n12. Stir fry for 10 minutes until tender but still crunchy. If pan ever looks too dry, add splash of water or broth\n13. Add protein back to wok, push all ingredients to sides forming a hole int he middle.\n14. Place sauce in the hole, wait for it to bubble and darken before tossing everything through and making sure ll the ingredients are coated.\n15. Cook until all ingredients are tender, then remove from heat.\n16. Garnish with lemon juice, salt, cilantro, basil, green onion, cashews or peanuts.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Mince garlic",
+      "Chop onions/shallots",
+      "Chop scallions",
+      "Grate/mince ginger",
+      "Chop peppers",
+      "Cut florets",
+      "Wash and chop greens"
+    ],
     "source_url": null,
     "source_file": "stir_fry.md"
   },
@@ -7579,7 +7969,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Add all of the ingredients for the salad to a large bowl.\n2. In a small bowl or jar, mix together the dressing ingredients.\n3. Drizzle the dressing over the salad and toss. Start by using half of the dressing and then add more depending on personal preference.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Slice cucumber",
+      "Wash and chop greens",
+      "Mince garlic"
+    ],
     "source_url": null,
     "source_file": "strawberry_spinach_feta_salad.md"
   },
@@ -7665,7 +8060,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Heat oil in pan over medium / high heat. Reduce heat and gently fry the onion until softened (approx. 5 mins). Add the garlic and ginger and fry for a further min.\n2. Add the vinegar, soy sauce, tomato paste, pineapple juice, water and quinoa and then stir to combine.\n3. Bring to a boil, reduce the heat to low, cover and allow to simmer for 15 mins, until the liquid has been absorbed.\n4. Turn the heat off, fluff with a fork, replace lid and leave the quinoa to sit for a further 5 mins.\n5. Stir in the chopped pineapple and serve",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Mince garlic",
+      "Grate/mince ginger"
+    ],
     "source_url": null,
     "source_file": "sweet_and_sour_quinoa.md"
   },
@@ -7704,7 +8103,7 @@
     "avoid_contains": [],
     "instructions": "Prep:\nPeel and chop 1 sweet potato into small cubes.\nBoil or steam the cubes until soft (about 10–15 minutes), then mash well.\nIf using frozen corn, rinse under warm water to thaw.\nRinse and drain 1/2 cup canned black beans if using.\nOptional: Finely chop 1 small onion or capsicum if adding.\n🔥 Cook:\nMake the filling:\nIn a bowl, mix the mashed sweet potato, corn, black beans, cumin powder, red chili powder, and salt.\nAdd any optional veggies or herbs now.\nMix until well combined.\nAssemble the quesadillas:\nPlace one tortilla on a plate or board.\nSpread 2–3 tablespoons of the filling on half of the tortilla.\nSprinkle some grated cheese over the filling.\nFold the tortilla in half to close.\nCook the quesadillas:\nHeat a pan on medium heat. Add a few drops of oil or ghee.\nPlace the folded quesadilla in the pan. Cook for 2–3 minutes on each side, until golden brown and the cheese melts.\nRepeat with the rest.\nServe:\nCut into wedges and serve hot with chutney, salsa, or curd.",
     "prep_steps": [
-      "Chop onions"
+      "Chop onions/shallots"
     ],
     "source_url": null,
     "source_file": "sweet_potato_black_bean_quesadilla.md"
@@ -7785,7 +8184,15 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Original recipe makes 3 servings\n2. PrepPreheat oven to 200°C.\n3. Chop cauliflower and season with cumin, coriander, turmeric, salt and pepper.\n4. Dice sweet potatoes and season with cumin, paprika, coriander, cinnamon.\n5. Cross score butternut squash.\n6. Put all of them into the oven for 30-35 minutes until they're well roasted (golden color).\n7. Combine tofu with marinade ingredients (olive oil, nutritional yeast, curry powder, garlic powder, salt, lemon juice) and refrigerate.\n8. After removing vegetables from oven, bake marinated tofu on the same tray for 10-15 minutes until slightly charred.\n9. Allow squash to cool.  Then combine with cashews, silken tofu, nutritional yeast, lemon juice, salt, black pepper, with a little water into creamy sauce.\n10. CookToast cumin and coriander seeds, then grind.\n11. Fry in oil, add onions and salt, cooking until softened.\n12. Add ginger, garlic, chili.\n13. Add tomatoes and another pinch of salt. Cook until dark red.\n14. Add chickpeas and vegetable stock, bring to a boil then simmer for 10 minutes.\n15. Mix most of the roasted vegetables into the chickpea mixture, reserving some for garnish.\n16. Add in tofu and serve with bread.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Peel/chop squash",
+      "Chop peppers",
+      "Press/cube tofu",
+      "Chop onions/shallots",
+      "Grate/mince ginger",
+      "Mince garlic",
+      "Marinate proteins (ahead of time)"
+    ],
     "source_url": null,
     "source_file": "sweet_potato_tofu_chickpea_curry.md"
   },
@@ -7851,7 +8258,15 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Original recipe makes 3 servings\n2. PrepPreheat oven to 450\n3. Chop cauliflower and season with cumin, coriander, turmeric, salt and pepper.\n4. Dice sweet potatoes and season with cumin, paprika, coriander, cinnamon.\n5. Cross score butternut squash.\n6. Put all of them into the oven for 30-35 minutes until they're well roasted (golden color).\n7. Combine tofu with marinade ingredients (olive oil, nutritional yeast, curry powder, garlic powder, salt, lemon juice) and refrigerate.\n8. After removing vegetables from oven, bake marinated tofu on the same tray for 10-15 minutes until slightly charred.\n9. Allow squash to cool.  Then combine with cashews, silken tofu, nutritional yeast, lemon juice, salt, black pepper, with a little water into creamy sauce.\n10. CookToast cumin and coriander seeds, then grind.\n11. Fry in oil, add onions and salt, cooking until softened.\n12. Add ginger, garlic, chili.\n13. Add tomatoes and another pinch of salt. Cook until dark red.\n14. Add chickpeas and vegetable stock, bring to a boil then simmer for 10 minutes.\n15. Mix most of the roasted vegetables into the chickpea mixture, reserving some for garnish.\n16. Add in tofu and serve with bread.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Press/cube tofu",
+      "Peel/chop squash",
+      "Chop peppers",
+      "Chop onions/shallots",
+      "Grate/mince ginger",
+      "Mince garlic",
+      "Marinate proteins (ahead of time)"
+    ],
     "source_url": null,
     "source_file": "sweet_potato_tofu_chickpea_curry_make_sauce_ahead.md"
   },
@@ -7900,7 +8315,14 @@
       "cabbage"
     ],
     "instructions": "1. Cook the sweet potatoes.\n2. Make the slaw: Thinly slice the red cabbage, enough for 3 cups. Thinly slice the peppers. Thinly slice the green onion. Chop the cilantro. In a large bowl, mix together the cabbage, peppers, green onion and cilantro with the lime juice and kosher salt.\n3. Make the Thai peanut butter sauce: In a small bowl, whisk together the peanut butter, soy sauce, lime juice, maple syrup, and water. Taste and add a bit of kosher salt if desired (this depends on the salt content of the peanut butter).\n4. Serve: Slice the sweet potatoes in half and top them with the slaw. Drizzle with the Thai peanut butter sauce and sprinkle with chopped peanuts.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Peel and cube sweet potatoes",
+      "Shred/chop cabbage",
+      "Chop peppers",
+      "Chop onions/shallots",
+      "Chop scallions",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "sweet_potatoes_with_thai_peanut_butter_sauce.md"
   },
@@ -7939,7 +8361,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Preheat the oven to 375 degrees F and grease a muffin tin well with nonstick spray.\n2. Place all ingredients into a blender except the flour and chocolate chips, if using.\n3. Blend until very smooth, stopping to scrape down the sides of the bowls as needed. You want the greens to be very finely blended in so the batter is green, as if you were making a smoothie.\n4. Pulse in the flour just to combine, or stir it in gently.\n5. Pour batter into the prepared muffin tin, filling each cup about ¾ cup full. Sprinkle with chocolate chips if using.\n6. Bake for 18-20 minutes or until firm to the touch and lightly browned around the edges. (You can also check to see if a cake tester inserted into the center comes out cleanly.)\n7. Remove from the oven and use a paring knife, if needed, to transfer to a wire rack to cool.\n8. Serve slightly warm, at room temp, or chilled.\n9. You can store the muffins in an airtight container in the fridge for 3-5 days and eat cold or slightly warmed. Or store in a zip top bag in the freezer for up to 3 months. Thaw overnight in the fridge or at room temperature.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Wash and chop greens"
+    ],
     "source_url": null,
     "source_file": "sweet_spinach_muffins_with_banana.md"
   },
@@ -7989,7 +8413,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Set corn to cook in microwave.\n2. Dice peppers and onion.\n3. Set up rotimatic if using. Adults need 3-4, kids need 2-3.\n4. Heat a large wide skillet over medium high heat. Add oil. Once oil is hot add the cumin seeds and let splutter for about 10-15 seconds.\n5. Add the sliced peppers and onions and sauté until slightly softened (about 4-5 minutes)\n6. Drain the cooked corn and let it cool.\n7. Add garlic, dry seasonings, and salt to the pan - reduce heat to low so the spices do not burn.\n8. Add corn, cilantro and stir well. Taste test for spice and salt levels. Remove from heat.\n9. Mix cream cheese and Sriracha sauce.\n10. In a large pan heat up a little bit of oil and add one tortilla spread with a layer of the cream cheese mixture.\n11. Top with cheese, a few spoonfuls of the veggie filling, additional cheese and fold the tortilla over.\n12. Press in panini/sandwich maker for 1 minute. Remove from heat, cut and serve hot!",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Chop onions/shallots"
+    ],
     "source_url": null,
     "source_file": "tandoori_veggie_quesadillas.md"
   },
@@ -8025,7 +8452,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Place the vinegar, oil, sugar, salt, and a few grinds of pepper in a large bowl and whisk to combine. Thinly slice the cucumbers crosswise. Place them in the bowl, add the chives, and toss to combine.\n2. Cover and refrigerate for at least 30 minutes or overnight to allow the flavors to meld. Taste and season with salt and pepper as needed before serving.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "tangy_cucumber_salad.md"
   },
@@ -8065,7 +8494,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Preheat oven to 450°F. Place naan directly on the oven grate and pre-bake 3 to 4 minutes per side until crisp.\n2. Meanwhile, in a medium bowl, combine Muir Glen crushed fire-roasted tomatoes with red curry paste, Sriracha, and a few pinches of kosher salt.\n3. Thinly slice the red pepper. Thinly slice the green onions.\n4. When the naan is ready, spread each with the tomato mixture, then top with mozzarella cheese, vegetables, cashews, and a sprinkle of kosher salt. Bake for 5 minutes, until the cheese is melted.\n5. Meanwhile, chop the cilantro. Remove the pizza from the oven and garnish with a few cilantro leaves. Slice and serve immediately.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Chop onions/shallots",
+      "Chop scallions",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "thai_curry_pizza_with_naan_bread.md"
   },
@@ -8109,7 +8543,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Meal Prep Instructions:Label your gallon-sized freezer bag with the name, instructions, and a use-by date (recommended 90 days after prep date).Add all ingredients (except for the maple syrup and fresh kale/spinach) to the freezer bag.Stir gently to combine the ingredients.Remove air, seal the bag, and freeze.Cooking Instructions:\n2. Instant Pot Instructions:\n3. Thaw the freezer meal overnight in the fridge.From thawed, stir to combine and then pressure cook on high for 3 minutes. Use the Quick-release function after cooking.Open the Instant Pot and add the maple syrup and fresh kale or spinach. Stir to combine.Add salt and freshly cracked black pepper to taste.\n4. Serving Tips:Serve with fresh greens, toast, or sliced tomatoes with chives.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Press/cube tofu",
+      "Chop onions/shallots",
+      "Mince garlic"
+    ],
     "source_url": null,
     "source_file": "tofu_scramble_freezer_meal_prep.md"
   },
@@ -8181,7 +8619,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Prep:Chop 1 small onion and 1 medium tomato.\n2. If using tamarind instead of concentrate, soak and extract juice.\n3. Soak 1 cup rice for 20 minutes, then drain.\n4. Mix 1 teaspoon rice flour in 2 tablespoons water and keep aside (if using).\n5. Cook:Heat 1 tablespoon oil in a pressure cooker. Add 1 teaspoon mustard seeds and let them splutter.\n6. Add 1 teaspoon chana dal, 1 teaspoon urad dal, 1 dried red chili (broken), and a few curry leaves. Fry until the dals turn golden.\n7. Add the chopped onion and sauté until soft and slightly golden.\n8. Add the chopped tomato and cook until it turns soft and mushy.\n9. Add 1½ teaspoons sambar powder, ¼ teaspoon turmeric powder, and salt to taste. Stir well.\n10. Add the tamarind concentrate mixed with 2 cups water (or your tamarind extract). Let it boil.\n11. Add the soaked and drained rice. Mix well.\n12. Add 2 tablespoons grated coconut, 2 tablespoons chopped coriander leaves, and 2 tablespoons chopped mint leaves (if using).\n13. Close the pressure cooker lid and cook for 2 whistles on medium heat. Then turn off the heat and let the pressure release naturally.\n14. Once the pressure has released, open the lid and add ½ teaspoon jaggery or sugar to balance the tanginess. Mix gently.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "tomato_rice.md"
   },
@@ -8222,7 +8662,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Put a large pot of water on to boil.\n2. Meanwhile, whisk broth and flour in a small bowl. Heat oil in a large skillet over medium heat. Add garlic and cook, stirring, until just beginning to brown, 1 to 2 minutes. Add the broth mixture to the pan, bring to a boil and cook, stirring occasionally, until the sauce is thick enough to coat the back of a spoon, about 3 minutes. Remove from the heat and stir in cheese, tarragon (or dill or chives) and salt.\n3. Add vegetables and tortellini to the boiling water; return the water to a simmer and cook until the vegetables and tortellini are tender, 3 to 5 minutes. Drain; add to the pan with the sauce and stir to coat.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Wash and chop herbs",
+      "Chop carrots",
+      "Cut florets"
+    ],
     "source_url": null,
     "source_file": "tortellini_primavera.md"
   },
@@ -8292,7 +8736,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Night before: freeze the block of tofu until completely frozen. This changes the texture.\n2. When ready to cook, thaw the tofu completely, then take it out of the package and drain it.\n3. Press the tofu for 10-15 minutes to get any excess liquid out while you preheat the oven to 400 degrees F.\n4. Break the block of tofu into small pieces. The texture will be firm and meaty now so it will break apart into pieces easily.\n5. Put the tofu into a large mixing bowl. Then sprinkle with cornstarch onto the tofu and toss to coat.\n6. Now drizzle with the olive oil and toss so all of the tofu is wet with oil.\n7. Then sprinkle with the lemon pepper and toss to coat. If your lemon pepper seasoning already has salt then you can skip it. If it doesn't have salt, add a few pinches to the bowl with the tofu.\n8. Next, add the garlic to the bowl and toss one more time.\n9. Place the tofu on a sheet pan, lined with parchment paper or sprayed with non-stick spray.\n10. Bake for 10 minutes, flip the tofu and bake for another 10-15 minutes or until brown and crunchy.\n11. Serve with any sides you want: steam broccoli, pasta, quinoa, etc.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Press/cube tofu",
+      "Chop peppers",
+      "Mince garlic",
+      "Cut florets"
+    ],
     "source_url": null,
     "source_file": "vegan_lemon_pepper_tofu.md"
   },
@@ -8336,7 +8785,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Pad Thai Sauce\n2. Add the sugar to a light-colored saucepan or skillet. Heat over medium heat for 2-3 minutes, or until sugar has melted. Do not stir. Keep heating until the sugar gets a golden brown color and turns into caramel.\n3. As soon as the sugar has caramelized, deglaze with the 2 tablespoons of water. Be careful as it will spit. Next, add the vegan fish sauce, sweet chili sauce, soy sauce, tamarind juice, and toasted rice powder if using. Let simmer for 1 minute, or until the caramel has melted. Transfer the sauce to a small bowl and set aside.\n4. Pad Thai\n5. Bring a large pot of water to a boil. Once boiling, cook the rice noodles according to the package instructions.\n6. In the meantime, heat the oil in a skillet or wok over medium heat. Once hot, add the minced garlic and shallot, and cook for 2-3 minutes, or until fragrant.\n7. Add the scrambled tofu and cook for another minute. At this point you can add a pinch of turmeric to give the tofu a yellow color, and a pinch of kala namak salt for an eggy taste.\n8. Add the drained cooked noodles, bean sprouts, Chinese chives, and the sauce. Cook for 2-3 minute, stirring regularly to coat the noodles with the sauce.\n9. Remove from heat, top with crushed peanuts, a squeeze of lime, and serve immediately. This Pad Thai will keep for up to 3 days in the refrigerator.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Mince garlic",
+      "Chop onions/shallots",
+      "Press/cube tofu",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "vegan_pad_thai.md"
   },
@@ -8388,7 +8842,14 @@
     ],
     "avoid_contains": [],
     "instructions": "1. PrepPress tofu thoroughly BEFORE cutting into cubes.\n2. Mix amino/soy sauce, 2 tablespoons sriracha and lime juice together. Soak the cut tofu cubes in this marinade, cover and refrigerate for an hour.\n3. Dice onions. Can also add bell pepper, broccoli, snow peas, carrot, or baby corn.\n4. CookPlace all your rice noodles in a wide mixing bowl.\n5. Bring 4 cups of water to boil.\n6. Pour the boiling water over the rice noodles until they are completely submerged.\n7. Stir to loosen the noodles every few minutes so they don't stick together.\n8. When they are completely limp, give them a taste to see if they're cooked through.\n9. Depending on thickness, the flat rice noodles might take upwards of ten minutes.\n10. Pay attention and test the noodles frequently because they'll become mushy if they overcook.\n11. The noodles are being stir-fried for the drunken noodles, so you want to under-cook them a bit.\n12. They will absorb more moisture and cook the rest once in the stir fry. If your noodles are perfectly cooked to start, they will turn to mush in the stir fry.\n13. Once the noodles are tender, drain them and run them under COLD water to stop the cooking.\n14. Whisk Drunken Noodle sauce ingredients together (rice vinegar, broth, aminos/soy sauce, maple syrup, sriracha).\n15. Pour sauce over noodles and let sit while you cook the tofu.\n16. Heat wok to medium-high.\n17. Add tofu and sauce, and sear tofu.\n18. Put to the side.\n19. Add veggies and garlic, and cook until translucent.\n20. Add rice noodles, sauce and tofu back in.\n21. Add 3/4 cup basil, reserving 1/4 cup for garnish.\n22. Add noodles mixture to a bowl.\n23. Sprinkle with extra basil.Serve with a wedge of lime and Sriracha",
-    "prep_steps": null,
+    "prep_steps": [
+      "Press/cube tofu",
+      "Chop onions/shallots",
+      "Cut florets",
+      "Chop peppers",
+      "Chop carrots",
+      "Marinate proteins (ahead of time)"
+    ],
     "source_url": null,
     "source_file": "vegan_spicy_thai_drunken_noodles_with_seared_tofu.md"
   },
@@ -8446,7 +8907,14 @@
     ],
     "avoid_contains": [],
     "instructions": "1. PrepSteam and mash beets and sweet potatoes separately. No lumps!Dice tomatoes and onion. Keep aside some sliced onion.Boil 1 cup of carrots & peas\n2. CookSauté onions for 8 minutes then add ginger garlic paste.\n3. Add the spices (salt, pepper, red chili flakes, coriander powder, cumin powder, garam masala, kitchen king) and cook for 1 minutes\n4. Add in the carrots & peas and chopped tomatoes and cook for about 3 minutes.\n5. Add the mashed beetroot and cook it well for about 4-6 mins till it releases water.\n6. Add 2 tbsp of flour and mix it. Cook well for about 3-4 minutes so that the flour cooks. You do not want raw flour taste.\n7. Add the mashed sweet potato to the mixture and stir it in well.\n8. Keep cooking on medium flame till the water in the mixture cooks off. The mixture should start holding its shape and doesn’t break apart. This can take 6-10 mins.\n9. Let the mixture cool and then shape it to a hot dog shape with wet hands or gloves so it doesn’t stick to you.\n10. Roll the shaped hot dogs in the panko/breadcrumbs.\n11. Mix sliced onion with dry garlic powder, lemon sauce, and Chaat masala.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Mince garlic",
+      "Grate/mince ginger",
+      "Peel and cube sweet potatoes",
+      "Chop carrots",
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "vegan_sweet_potato_beetroot_hotdogs.md"
   },
@@ -8509,7 +8977,14 @@
       "cabbage"
     ],
     "instructions": "1. To Drain the Tofu\n2. Wrap 1 package extra firm tofu with a paper towel and place it on a tray/plate. Put another tray/plate on top of the tofu and press it down with a heavy object for roughly 30 minutes to 1 hour. (I pressed for 2 hours this time; my single tofu block weighed 400 g before pressing and 355 g after.) If you‘re in a hurry, you can microwave the tofu without plastic wrap for 1½ minutes (at 1000 watts) and drain the water.\n3. To Mix the Seasonings\n4. While you're waiting for the tofu to drain, mix the seasonings. In a small bowl, add 2 Tbsp soy sauce, 2 tsp toasted sesame oil, 1 Tbsp miso, 1 tsp Diamond Crystal kosher salt, and ⅛ tsp white pepper powder.\n5. Whisk it all together and set aside.\n6. To Make the Filling\n7. Discard the tough core of 2–3 leaves cabbage (green). Cut the leaves into julienned pieces.\n8. Mince the julienned cabbage into small pieces. Tip: It‘s usually easier to tuck smaller pieces in the gyoza wrapper rather than chunkier pieces.\n9. Repeat with ⅛ head red cabbage: Discard the tough core of the red cabbage leaves and cut the leaves into julienned pieces. Then, mince into small pieces.\n10. Put the minced green and red cabbage in a bowl and add 1 tsp Diamond Crystal kosher salt. Rub the salt into the cabbage with your hands and set aside until it releases its liquid.\n11. Cut 2 inches carrot into slabs, then sticks, and mince them.\n12. Mince ½ onion finely: Lay the onion flat side down on the cutting board. With the knife tip pointing toward the root end, make ⅛-inch vertical slices to within ½ inch of the root end. Then, with the knife edge toward the root end, make ⅛-inch horizontal slices, again keeping the root intact. Finally, make perpendicular cuts down through the vertical slices you made.\n13. Cut 2 green onions/scallions into white and green parts. Save the green part for garnish. Mince the white part into small pieces for the filling.\n14. Cut off and discard the root end of 4 king oyster mushrooms (eringi). Cut the mushrooms into sticks and then mince them.\n15. Discard the stems of 2 shiitake mushrooms. Cut the mushroom caps into strips, and then mince them.\n16. To a large bowl, add the onion, two kinds of mushrooms, carrots, and white part of the green onions. Then, mince or press 1 clove garlic (I use my garlic press here) and add it to the bowl.\n17. Peel and grate the ginger (I use a ceramic grater ). Measure 1 tsp ginger (grated, with juice) and add it to the filling ingredients.\n18. Squeeze and discard the liquid from the cabbage. Add the cabbage to the bowl with the other ingredients.\n19. Remove the paper towel and slice the tofu into thin slabs roughly ⅛ inch (3 mm) thickness (pencil width).\n20. Next, cut the tofu slabs into sticks, and then cut the sticks into cubes.\n21. Add the tofu cubes and the seasonings mixture to the bowl. Mix it all together. Once the ingredients are well coated with the seasonings, add 2 Tbsp potato starch or cornstarch and mix thoroughly. If the filling seems watery, add more potato starch to absorb any extra moisture.\n22. To Fold the Gyoza\n23. Prepare a tray or plate with parchment paper and sprinkle some potato starch (cornstarch). This will prevent the gyoza from sticking to the paper. Gather 80 gyoza wrappers and prepare a small bowl of water.\n24. Take a wrapper and place it in the palm of your non-dominant hand. Use a teaspoon to scoop a small amount of filling and put it in the center of the wrapper. Dip one finger in the bowl of water and draw a circle around the outer ¼ inch (6 mm) of the wrapper with your wet finger until it’s moistened all around.\n25. Here, I show you how to fold the gyoza with the pleats leaning toward the center. Fold the wrapper in half over the filling and pinch it in the center with your fingers, but don’t seal it yet. Using the thumb and index finger of your right hand, start making a pleat about every ¼ inch (6 mm) on the top part of the wrapper from the center toward the right side, making 3–4 pleats.\n26. As you fold each pleat, press the folded pleat tightly against the back part of the wrapper using your other thumb and index finger. Make 3–4 pleats.\n27. Continue with the left side of the gyoza. Making 3–4 pleats with your left hand, starting in the center and moving toward the left side.\n28. Press the pleats tightly, making sure there are no air pockets. Shape the gyoza to look pretty. Repeat folding the remaining wrappers. Tip: See my Gyoza recipe for an alternative folding method where the pleats all lean toward one side.\n29. To Freeze Uncooked (optional)\n30. This recipe may make more gyoza than you wish to serve now. If you want to store some uncooked gyoza to cook later (optional), now is the time to freeze them. Before the filling starts to release moisture and make the wrappers soggy, cover the gyoza with plastic wrap and “flash freeze” them in the freezer until solid (or at least frozen on the outside). Make sure to lay out the gyoza in a single layer on a sheet pan or plate. Once the gyoza are solid, pack them in an airtight bag. Because you flash froze them, the gyoza won’t stick to each other in the bag. You can store the gyoza in the freezer for up to a month. When you‘re ready to use the gyoza, do not defrost them. Place the frozen gyoza in your frying pan and steam them for an extra 1–2 minutes.\n31. To Cook the Gyoza\n32. To cook the gyoza that you just folded, heat a large nonstick frying pan over medium heat. When the pan is hot, add 1 Tbsp neutral oil. Then, place the gyoza in a single layer, flat side down and without touching each other, in a circular pattern (or place them in two rows). You will need to cook the gyoza in batches. As you can see from the photo, my large frying pan can fit about 12–13 pieces per batch.\n33. Cook until the bottoms of the gyoza turn golden brown, about 3 minutes. Next, add ¼ cup water to the pan.\n34. Immediately cover with a lid and steam the gyoza for about 3 minutes or until most of the water evaporates. Tip: If you‘re cooking frozen gyoza, steam them for an extra 1–2 minutes.\n35. Remove the lid to evaporate any remaining water. Drizzle 1 tsp toasted sesame oil around the gyoza in the frying pan. Cook, uncovered, until the bottom of the gyoza are golden brown and crisp.\n36. To Serve:\n37. Transfer the cooked gyoza to a plate. Repeat the process to cook the other batches. Serve the Vegetable Gyoza with a small bowl of dipping sauce for each person. To make the dipping sauce, combine 1 Tbsp rice vinegar (unseasoned), 1 Tbsp soy sauce, and ⅛ tsp la-yu (Japanese chili oil) in each dipping bowl and mix it all together.\n38. Cut the green part of a green onion for garnish, if you‘d like.\n39. To Store:\n40. You can keep the leftovers in an airtight container and store in the refrigerator for up to 3 days or in the freezer for a month.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Press/cube tofu",
+      "Shred/chop cabbage",
+      "Chop carrots",
+      "Chop onions/shallots",
+      "Chop scallions",
+      "Clean and slice mushrooms"
+    ],
     "source_url": null,
     "source_file": "vegetable_gyoza.md"
   },
@@ -8558,7 +9033,13 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Preheat oven to 400 degrees F. Spray a 9 x 13-inch baking dish with cooking spray and set aside.\n2. Dice zucchini, bell pepper, onion and spinach.\n3. In a large skillet or Dutch oven, heat oil over medium-high heat. Sauté veggies and garlic.\n4. Use a separate bowl to stir together egg, parsley, basil, ricotta cheese, 1 ¼ cups mozzarella, and ¼ cup Parmesan.\n5. When the vegetables are done cooking, stir the marinara sauce into the skillet.\n6. Spread ¼ of the marinara-vegetable sauce mixture in a thin layer in the bottom of the prepared baking dish.\n7. Create layer of no-boil lasagna noodles, ⅓ of the ricotta mixture, and another ¼ of the sauce mixture.\n8. Repeat layers two more times. Finish with remaining 1 cup of mozzarella and ¼ cup of Parmesan cheese on top. Cover with aluminum foil.\n9. Bake for 35 minutes.\n10. Remove foil, and bake for another 5-10 minutes (until cheese on top is browned).\n11. Let stand for about 10 minutes before slicing and serving.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop zucchini",
+      "Chop peppers",
+      "Chop onions/shallots",
+      "Mince garlic",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "vegetable_lasagna.md"
   },
@@ -8620,7 +9101,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Make cilantro lime riceInstant Pot: 1 cup rice, 1 1/4 water, 1 tsp olive oil, salt\n2. High pressure for 3 minutes, natural pressure release for 10 minutes. Total time should be roughly 20 minutes\n3. Combine chopped cilantro, lime juice, and some more oil. Fluff rice with fork and toss the mix together.\n4. Burrito BowlPreheat the oven to 400°F.\n5. Chop cauliflower, bell peppers, onion. Drain black beans.\n6. In a large bowl toss cauliflower, onion, and bell peppers with the taco seasoning, olive oil and lime juice then spread out on a large (rimmed) baking sheet.\n7. Place on the center rack and bake for 30 minutes or until the cauliflower is tender with crispy edges.\n8. While the vegetables are cooking prepare avocado crema by blending avocado, garlic, sour cream, salt, lime juice, cilantro until smooth. Also chop the lettuce.\n9. In a small skillet combine black beans and salsa over medium heat and cook for 5 minutes, until warmed through.\n10. Serve the roasted taco vegetables over cilantro rice, with the beans, lettuce and avocado crema.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Cut florets",
+      "Chop peppers",
+      "Wash and chop herbs",
+      "Mince garlic"
+    ],
     "source_url": null,
     "source_file": "vegetarian_burrito_bowl_with_avocado_crema.md"
   },
@@ -8676,7 +9162,12 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Dice yellow onion, sweet potatoes, red bell peppers.\n2. Once the oil is hot, add the onion and cook until beginning to soften, about 3 minutes.\n3. Add the sweet potatoes, bell pepper, garlic, chili powder, chipotle chili powder, cumin, and kosher salt.\n4. Cook for 1 to 2 minutes, until the garlic is fragrant.\n5. Add 2.5 cups of the vegetable broth and the quinoa.\n6. Pour the tomato sauce on top (do not stir again).\n7. Cover and seal the Instant Pot. Cook on manual (HIGH) pressure for 8 minutes. Immediately release the pressure. Carefully open the Instant Pot.\n8. Turn the Instant Pot to OFF. Stir in the black beans, kidney beans, and sugar. Place the lid back on top and let stand 10 minutes to thicken. Uncover. Taste and adjust seasoning as desired. Serve hot, with any and all the toppings!\n9. Vegetarian chili is good in the refrigerator for 5 days and in the freezer for 3 months. Let the leftovers cool completely, and store them in an airtight container.\n10. Can serve with salad, cornbread or roasted veggies",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Peel and cube sweet potatoes",
+      "Chop peppers",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "vegetarian_chili.md"
   },
@@ -8723,7 +9214,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Preheat the oven to 350 degrees F.\n2. In a large skillet heat the 2 Tablespoons olive oil over medium high heat. Add the bell pepper and onion and sauté until the onion is soft. Add the black beans, fire roasted tomatoes and diced chiles and cook for another 2 minutes. Remove from the heat and set aside.\n3. Spray a 9 x 13 inch dish with non-stick cooking spray. Place tortillas on a large plate or cutting board. Using a spoon place 2-3 spoonfuls of the black bean mixture into the center of the tortilla, a sprinkle of cheese and a drizzle of enchilada sauce and roll it until closed. Place seem side down in the dish. Continue to do all of the tortillas laying them side by side.\n4. Drizzle the remaining enchilada sauce on top of the enchiladas followed by the cheese. Bake for 20 minutes, or until the cheese is melted and the enchiladas are heated through.\n5. Remove from the oven and garnish with fresh cilantro, sour cream and avocado.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop peppers",
+      "Chop onions/shallots",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "vegetarian_enchiladas.md"
   },
@@ -8776,7 +9271,11 @@
     ],
     "avoid_contains": [],
     "instructions": "1. PrepPeel and dice the onion. Dice the green pepper. Peel and mince the garlic. Drain and rinse the beans.\n2. In a large pot or Dutch oven, heat 2 tablespoons olive oil and sauté the onion until translucent, about 5 minutes.\n3. Add the green pepper and the garlic and sauté for 2 minutes.\n4. Stir in the oregano and the cumin for 1 minute.\n5. Add the tomatoes, beans, corn, adobo sauce, broth, and kosher salt.\n6. Bring to a boil, then simmer for 10 minutes.\n7. Prep the garnishes: Slice the radishes. Slice the lime into wedges.\n8. Serve: To serve, ladle the soup into bowls and allow to cool to warm. Garnish with the tortilla strips, radishes, torn cilantro leaves, hot sauce, and plenty of lime juice.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop onions/shallots",
+      "Chop peppers",
+      "Mince garlic"
+    ],
     "source_url": null,
     "source_file": "vegetarian_tortilla_soup.md"
   },
@@ -8821,7 +9320,13 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Gather your ingredients.\n2. Cook the veggies in olive oil until soft, then add the tomatoes and simmer until the veggies are soft.\n3. Puree or leave chunky, depending on how your family likes their pasta sauce.\n4. Serve with a pound of your favorite pasta.\n5. How long can I store this marinara sauce recipe?\n6. You can make a big batch of this on the weekend and store it in the fridge until you are ready to use it during the week, which is what I like to do when I’m on top of my meal planning. (That only happens sometimes!) It will last up to 5 days in an airtight container like a quart-size Mason jar.\n7. You can also let it cool and store it in a freezer safe container in the freezer for at least 3 months. Let it thaw overnight in the fridge or use the defrost feature on your microwave to thaw more quickly.\n8. Heat the oil in a medium skillet over medium heat. Add the vegetables, stir, and cover. Cook for 10 minute or until mostly soft.\n9. Remove lid and stir in the tomatoes. Bring to a simmer, reduce heat to medium low and place the lid so it’s mostly covering the pot but not a tight seal. This will let some steam escape but will protect your cooktop from splatters. Simmer for 20-25 minutes or until everything is soft.\n10. Puree with an immersion blender or in a regular blender. Season to taste with additional salt as needed.\n11. Serve with 1 pound of cooked pasta and Parmesan cheese, if desired.\n12. Brown ½ pound ground beef or mild Italian sausage in Step 1 after you warm the oil. Proceed as directed.\n13. To do this in a Slow Cooker:\n14. Double all ingredient amounts and add to the slow cooker. Cook on LOW for 6-8 hours or until everything is softened. Finish as directed in Step 3.\n15. To make this into Pizza Sauce: Simmer the sauce for about 30-45 minutes longer on low, stirring occasionally, or until very thick. Add 1 teaspoon pizza seasoning.\n16. Use veggies with colors like white, yellow, orange, and red that will blend together into a classic looking tomato sauce when combined with the canned tomatoes.\n17. Double the recipe to make more and freeze the second half of the batch for a future week.\n18. Use the same volume of diced fresh tomatoes, just simmer longer to allow the extra liquid to evaporate.\n19. Serve with a pound of whichever kind of pasta your family prefers.\n20. Add some protein to the pasta and sauce by adding canned white beans or chickpeas, warmed frozen peas, diced cooked chicken breast, meatballs, or even lentils.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop carrots",
+      "Chop celery",
+      "Chop peppers",
+      "Peel/chop squash",
+      "Cut florets"
+    ],
     "source_url": null,
     "source_file": "veggie_marinara_sauce.md"
   },
@@ -8918,7 +9423,9 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Prep:Finely chop 1 small onion and 1 green chili (if using).\n2. Measure 1 cup rava and 2½ cups water.\n3. Keep your frozen veggies ready (no need to thaw).\n4. Cook:Heat a pan on medium heat. Add 1 cup rava and dry roast it for 3–4 minutes until it gives off a light nutty smell. Stir continuously so it doesn’t brown. Set aside.\n5. In the same or another pan, heat 1 tablespoon oil or ghee. Add 1 teaspoon mustard seeds. Let them pop.\n6. Add 1 teaspoon urad dal (if using), 1 chopped green chili, and a few curry leaves. Fry for a few seconds.\n7. Add the chopped onion. Sauté until soft and slightly golden.\n8. Add ¾ to 1 cup frozen mixed veggies straight into the pan. Cook for 2–3 minutes until they begin to soften.\n9. Pour in 2½ cups water and add salt to taste. Bring it to a gentle boil.\n10. Reduce the heat to low. Slowly add the roasted rava while stirring continuously to avoid lumps.\n11. Stir until the water is absorbed and the upma thickens (about 3–5 minutes). Cover and let it sit for 2 minutes.\n12. Mix in chopped coriander, grated coconut, and a splash of lemon juice if you like.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop carrots"
+    ],
     "source_url": null,
     "source_file": "veggie_upma.md"
   },
@@ -8962,7 +9469,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Shred carrot and chop cucumber.\n2. Spread hummus over tortilla.\n3. Add edamame, spinach, avocado, carrot, cucumber, and any other desired vegetables.\n4. Sprinkle with freshly ground black pepper, to taste.\n5. Drizzle with a tiny bit of olive oil. Roll up your wrap and enjoy!\n6. *I love using regular hummus or roasted red pepper!\n7. **Other vegetable ideas: tomato, radish, corn, lettuce, cabbage, red bell pepper, zucchini, alfalfa sprouts etc.",
-    "prep_steps": null,
+    "prep_steps": [
+      "Slice cucumber",
+      "Chop peppers"
+    ],
     "source_url": null,
     "source_file": "veggie_wrap.md"
   },
@@ -9117,7 +9627,10 @@
     ],
     "avoid_contains": [],
     "instructions": "1. Shred the Zucchini and add salt to it and leave it for 10 minutes\n2. Drain and squeeze the water out of the Zucchini\n3. Add chopped cilantro and shredded paneer\n4. Add red chili powder, turmeric powder, amchur powder and salt only if needed\n5. Add the rice flour and mix it well to form a thick batter (the longer the batter sits you may need more rice flour)\n6. Grease the waffle maker with oil\n7. Spread the batter on the waffle maker and cook for 10 minutes\n8. Flip it mid way and cook on the other side\n9. Garnish with chopped cilantro and serve it along with Dill and Pepper Dip",
-    "prep_steps": null,
+    "prep_steps": [
+      "Chop zucchini",
+      "Wash and chop herbs"
+    ],
     "source_url": null,
     "source_file": "zucchini_and_paneer_waffles.md"
   }

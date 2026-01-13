@@ -20,15 +20,14 @@ source_file: Granny Eggs.html
 
 # Granny Eggs
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - French, country or whole wheat bread
 - 1 egg for each slice of bread
 - 1tbspbutter
 - Salt and pepper
+
+## Prep Steps
+- Chop peppers
 
 ### Instructions
 1. Cut a circle in each slice of bread, so it has a large hole in it.

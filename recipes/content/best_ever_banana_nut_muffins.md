@@ -19,10 +19,6 @@ source_file: Best Ever Banana Nut Muffins.html
 
 # Best Ever Banana Nut Muffins
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 3largeripe bananas
 - 3/4cupwhite sugar

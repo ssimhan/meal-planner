@@ -21,16 +21,15 @@ source_file: Porridge Fingers.html
 
 # Porridge Fingers
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 3tbspoats
 - 2tbspmilk
 - 1tbspapplesauce
 - 1tbspgrated apple or carrot
 - ½tsp Ground Cinnamon
+
+## Prep Steps
+- Chop carrots
 
 ### Instructions
 1. Mix ingredients together. For the plain version this will just be milk and oats, for the flavoured versions it will include all the other ingredients.

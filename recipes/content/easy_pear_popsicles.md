@@ -19,10 +19,6 @@ source_file: Easy Pear Popsicles.html
 
 # Easy Pear Popsicles
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - RELATED RECIPES
 - BABY FOOD

@@ -27,10 +27,6 @@ source_file: One Pan Enchilada Quinoa.html
 
 # One Pan Enchilada Quinoa
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 20ozenchilada sauce
 - 1cupquinoa
@@ -44,6 +40,10 @@ source_file: One Pan Enchilada Quinoa.html
 - Oil
 - Sour cream
 - 1/4cupshredded mexican cheese
+
+## Prep Steps
+- Chop peppers
+- Chop scallions
 
 ### Instructions
 1. Chop onion, peppers.

@@ -20,10 +20,6 @@ source_file: Easy Pancake Muffins (Favorite Pancake Bites).html
 
 # Easy Pancake Muffins (Favorite Pancake Bites)
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - US Customary Metric
 - 1cupwhole-wheat flour (or all purpose)

@@ -26,10 +26,6 @@ source_file: Curried Cauliflower Quinoa Salad.html
 
 # Curried Cauliflower Quinoa Salad
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1/2cupGreek yogurt
 - 1 medium cucumber
@@ -43,6 +39,13 @@ source_file: Curried Cauliflower Quinoa Salad.html
 - 2cupquinoa
 - 2cupred cabbage
 - 4cuparugula
+
+## Prep Steps
+- Slice cucumber
+- Mince garlic
+- Cut florets
+- Wash and chop herbs
+- Shred/chop cabbage
 
 ### Instructions
 1. Preheat oven to 425°F.

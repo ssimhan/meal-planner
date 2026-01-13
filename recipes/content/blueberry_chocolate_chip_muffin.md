@@ -24,10 +24,6 @@ source_file: Blueberry Chocolate Chip Muffin.html
 
 # Blueberry Chocolate Chip Muffin
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cupwheat flour
 - 1/2cupbuckwheat flour

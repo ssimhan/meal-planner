@@ -30,10 +30,6 @@ source_file: Cowboy Caviar Salad.html
 
 # Cowboy Caviar Salad
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2 roma tomatoes, seeded and diced
 - 1(15 ounce) can black beans, drained and rinsed
@@ -49,6 +45,12 @@ source_file: Cowboy Caviar Salad.html
 - 1 lime, juiced
 - ½teaspoon salt
 - ¼teaspoon garlic powder
+
+## Prep Steps
+- Chop onions/shallots
+- Chop peppers
+- Wash and chop herbs
+- Marinate proteins (ahead of time)
 
 ### Instructions
 1. In a small bowl, mix together the dressing ingredients.

@@ -25,10 +25,6 @@ source_file: Rasam Recipe.html
 
 # Rasam Recipe
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2 medium tomatoes
 - ½cup toor dal
@@ -45,6 +41,9 @@ source_file: Rasam Recipe.html
 - Hing
 - Curry leaves
 - Cilantro
+
+## Prep Steps
+- Wash and chop herbs
 
 ### Instructions
 1. Rinse ½ cup toor dal until the water runs clear.

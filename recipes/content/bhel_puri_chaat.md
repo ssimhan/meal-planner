@@ -26,10 +26,6 @@ source_file: Bhel Puri Chaat.html
 
 # Bhel Puri Chaat
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 medium potato
 - 1 medium Cucumber
@@ -46,6 +42,11 @@ source_file: Bhel Puri Chaat.html
 - 1tsplemon juice
 - 2tbspsev
 - Cilantro
+
+## Prep Steps
+- Slice cucumber
+- Chop onions/shallots
+- Wash and chop herbs
 
 ### Instructions
 1. Roast peanuts.

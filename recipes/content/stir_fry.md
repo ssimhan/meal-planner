@@ -30,10 +30,6 @@ source_file: Stir Fry.html
 
 # Stir Fry
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 16oztofu
 - Garlic
@@ -54,6 +50,15 @@ source_file: Stir Fry.html
 - Bean sprouts (optional)
 - Baby corn (optional)
 - Sugar snap peas (optional)
+
+## Prep Steps
+- Mince garlic
+- Chop onions/shallots
+- Chop scallions
+- Grate/mince ginger
+- Chop peppers
+- Cut florets
+- Wash and chop greens
 
 ### Instructions
 1. Check the infographic here: https://www.cooksmarts.com/articles/guide-to-stir-frying/

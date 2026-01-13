@@ -25,10 +25,6 @@ source_file: Mexican Street Corn Pasta Salad.html
 
 # Mexican Street Corn Pasta Salad
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2cupssmall pasta
 - Olive oil
@@ -44,6 +40,9 @@ source_file: Mexican Street Corn Pasta Salad.html
 - 1/3cupfresh lime juice
 - Salt
 - Black pepper
+
+## Prep Steps
+- Chop peppers
 
 ### Instructions
 1. Prep:

@@ -30,10 +30,6 @@ source_file: Chickpea Chaat Salad.html
 
 # Chickpea Chaat Salad
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1canchickpeas
 - 1 onion, red
@@ -52,6 +48,14 @@ source_file: Chickpea Chaat Salad.html
 - Tamarind paste
 - Salt
 - Peanuts
+
+## Prep Steps
+- Chop onions/shallots
+- Chop peppers
+- Slice cucumber
+- Chop carrots
+- Wash and chop herbs
+- Mince garlic
 
 ### Instructions
 1. Grate carrotDice onion, bell pepper, cucumber, tomatoChop and toast peanuts

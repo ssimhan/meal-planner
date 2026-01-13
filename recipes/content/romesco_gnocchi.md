@@ -25,10 +25,6 @@ source_file: Romesco Gnocchi.html
 
 # Romesco Gnocchi
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cuproasted almonds
 - 2 garlic cloves
@@ -44,6 +40,10 @@ source_file: Romesco Gnocchi.html
 - ¼cup feta cheese crumbles, optional
 - Kosher salt
 - Pepper
+
+## Prep Steps
+- Mince garlic
+- Chop peppers
 
 ### Instructions
 1. Bring a large saucepan of water to a boil, seasoned with about 1 tablespoon kosher salt.

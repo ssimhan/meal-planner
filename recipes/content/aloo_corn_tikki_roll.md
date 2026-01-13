@@ -27,10 +27,6 @@ source_file: Aloo Corn Tikki Roll.html
 
 # Aloo Corn Tikki Roll
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2tbspavocado oil
 - 1tbspginger garlic paste
@@ -53,6 +49,11 @@ source_file: Aloo Corn Tikki Roll.html
 - 1tbspFrankie masala
 - 1tspvingar for topping
 - Breadcrumbs (optional)
+
+## Prep Steps
+- Mince garlic
+- Wash and chop herbs
+- Chop onions/shallots
 
 ### Instructions
 1. Boil and mash potatoes (peel and quarter, steam in IP for 8 min)

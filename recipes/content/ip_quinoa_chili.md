@@ -32,10 +32,6 @@ source_file: IP Quinoa Chili.html
 
 # IP Quinoa Chili
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 medium onion
 - 1 bell pepper, green
@@ -52,6 +48,11 @@ source_file: IP Quinoa Chili.html
 - Cilantro
 - Lemon wedges
 - Sour cream
+
+## Prep Steps
+- Chop onions/shallots
+- Chop peppers
+- Wash and chop herbs
 
 ### Instructions
 1. Prep:Dice 1 cup yellow onion.Dice 1 cup green bell pepper.Finely dice ½ a jalapeño.Mince 3 cloves garlic.Wash ⅓ cup quinoa.Rinse and drain 1 can black beans (about 1.25 cups).

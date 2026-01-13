@@ -24,10 +24,6 @@ source_file: HIGH PROTEIN ‘MARRY ME’ BREAKFAST TOAST.html
 
 # HIGH PROTEIN ‘MARRY ME’ BREAKFAST TOAST
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2tspolive oil
 - 1tspItalian seasoning
@@ -47,6 +43,10 @@ source_file: HIGH PROTEIN ‘MARRY ME’ BREAKFAST TOAST.html
 - Salt and pepper to taste (I didn’t add salt as my sun-dried tomatoes were salty!)
 - 500gcottage cheese (can use vegan cottage cheese alternative)
 - ⅓cup feta cheese - optional
+
+## Prep Steps
+- Wash and chop herbs
+- Chop peppers
 
 ### Instructions
 1. Heat a skillet over medium heat and add olive oil, asafoetida, Italian seasoning, chilli flakes and paprika. Sauté for 1 minute. Then add sun-dried tomatoes, oregano and olives. Sauté for 2 minutes. Add balsamic vinegar and tomato paste and cook for additional 2 minutes.

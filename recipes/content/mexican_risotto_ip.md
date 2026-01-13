@@ -27,10 +27,6 @@ source_file: Mexican Risotto (IP).html
 
 # Mexican Risotto (IP)
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2cupsarborio rice
 - Garlic
@@ -43,6 +39,11 @@ source_file: Mexican Risotto (IP).html
 - 1/2cupmonterey jack cheese
 - Oil
 - Butter
+
+## Prep Steps
+- Mince garlic
+- Wash and chop herbs
+- Chop onions/shallots
 
 ### Instructions
 1. PrepRoughly chop the cilantro.Grate the cheese.Leave frozen corn out at room temp to defrost a bit.

@@ -21,10 +21,6 @@ source_file: Kondakadalai Kala Channa Masala Sundal.html
 
 # Kondakadalai Kala Channa Masala Sundal
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cupkala chana
 - Salt
@@ -43,6 +39,9 @@ source_file: Kondakadalai Kala Channa Masala Sundal.html
 - ½teaspoon Mustard
 - 2 teaspoon Urad dal - 2 tsp
 - 8 Curry leaves
+
+## Prep Steps
+- Chop peppers
 
 ### Instructions
 1. To start with, wash and soak chana overnight.

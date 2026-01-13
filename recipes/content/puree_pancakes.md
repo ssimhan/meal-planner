@@ -19,10 +19,6 @@ source_file: Puree Pancakes.html
 
 # Puree Pancakes
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 11/4 cups white wheat flour
 - 11/2 teaspoons baking powder

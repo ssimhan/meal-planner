@@ -20,7 +20,7 @@ effort_level: normal
 - Optional: finely chopped onion, capsicum, green chili, or coriander leaves
 
 ## Prep Steps
-- Chop onions
+- Chop onions/shallots
 
 ## Instructions
 Prep:

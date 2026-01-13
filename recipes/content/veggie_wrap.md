@@ -29,10 +29,6 @@ source_file: Veggie Wrap.html
 
 # Veggie Wrap
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 4 flour tortillas
 - 2/3cuphummus
@@ -43,6 +39,10 @@ source_file: Veggie Wrap.html
 - 1 medium cucumber
 - Other veggie ideas: chopped tomato, corn, lettuce, beets, bell peppers
 - Salt & pepper
+
+## Prep Steps
+- Slice cucumber
+- Chop peppers
 
 ### Instructions
 1. Shred carrot and chop cucumber.

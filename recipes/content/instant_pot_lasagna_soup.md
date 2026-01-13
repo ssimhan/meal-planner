@@ -29,10 +29,6 @@ source_file: Instant Pot Lasagna Soup.html
 
 # Instant Pot Lasagna Soup
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 24 oz. Rao's Marinara Sauce
 - 24 oz. Rao's Arrabbiata Sauce
@@ -47,6 +43,12 @@ source_file: Instant Pot Lasagna Soup.html
 - 4cupsvegetable broth
 - 1cupwater
 - 1cupmozzarella cheese, shredded
+
+## Prep Steps
+- Mince garlic
+- Chop peppers
+- Chop onions/shallots
+- Wash and chop herbs
 
 ### Instructions
 1. Dice the onion, bell pepper and spinach.

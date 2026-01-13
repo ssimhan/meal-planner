@@ -24,10 +24,6 @@ source_file: Pasta with Veggie Sauce.html
 
 # Pasta with Veggie Sauce
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 beetroot
 - 1 medium potato
@@ -36,6 +32,9 @@ source_file: Pasta with Veggie Sauce.html
 - Salt
 - Cumin powder
 - Pasta, penne
+
+## Prep Steps
+- Chop onions/shallots
 
 ### Instructions
 1. Soak handful or two of cashews in small stainless steel bowl

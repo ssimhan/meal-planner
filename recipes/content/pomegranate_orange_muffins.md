@@ -18,10 +18,6 @@ source_file: Pomegranate Orange Muffins.html
 
 # Pomegranate Orange Muffins
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cuprolled oats
 - 1/2cupapple/orange juice

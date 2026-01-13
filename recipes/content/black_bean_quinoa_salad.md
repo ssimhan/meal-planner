@@ -28,10 +28,6 @@ source_file: Black Bean Quinoa Salad.html
 
 # Black Bean Quinoa Salad
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1/2cupquinoa
 - 2 Tablespoons olive oil
@@ -44,6 +40,10 @@ source_file: Black Bean Quinoa Salad.html
 - 1 green bell pepper
 - Salt and black pepper
 - 1⁄2 cup Feta cheese (optional)
+
+## Prep Steps
+- Wash and chop herbs
+- Chop peppers
 
 ### Instructions
 1. Cook 1/2 cup quinoa

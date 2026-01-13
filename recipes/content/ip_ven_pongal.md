@@ -23,10 +23,6 @@ source_file: IP Ven Pongal.html
 
 # IP Ven Pongal
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cupsona masoori rice
 - ½cup moong dal
@@ -40,6 +36,10 @@ source_file: IP Ven Pongal.html
 - 2 teaspoon ginger
 - 5cupsWater
 - 1.5 teaspoon Salt
+
+## Prep Steps
+- Chop peppers
+- Grate/mince ginger
 
 ### Instructions
 1. (optional) Switch on the saute mode on your Instant pot and add the moong dal to it. Roast it until nice and fragrant for a couple of minutes. Remove it.

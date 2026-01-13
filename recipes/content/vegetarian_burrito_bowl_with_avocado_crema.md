@@ -29,10 +29,6 @@ source_file: Vegetarian Burrito Bowl with Avocado Crema.html
 
 # Vegetarian Burrito Bowl with Avocado Crema
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 head of cauliflower
 - 1 green bell pepper
@@ -60,6 +56,12 @@ source_file: Vegetarian Burrito Bowl with Avocado Crema.html
 - 1/4cupcilantro
 - 3tspvegetable oil
 - 3tbsplime juice
+
+## Prep Steps
+- Cut florets
+- Chop peppers
+- Wash and chop herbs
+- Mince garlic
 
 ### Instructions
 1. Make cilantro lime riceInstant Pot: 1 cup rice, 1 1/4 water, 1 tsp olive oil, salt

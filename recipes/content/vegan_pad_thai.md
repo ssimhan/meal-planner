@@ -24,10 +24,6 @@ source_file: Vegan Pad Thai.html
 
 # Vegan Pad Thai
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 3 tablespoon sugar
 - 2 tablespoon water
@@ -43,6 +39,12 @@ source_file: Vegan Pad Thai.html
 - 6-8 stalks Chinese chives cut into 2-inch long strips
 - ¼cup roasted peanuts slightly crushed
 - for topping: cilantro, lime juice
+
+## Prep Steps
+- Mince garlic
+- Chop onions/shallots
+- Press/cube tofu
+- Wash and chop herbs
 
 ### Instructions
 1. Pad Thai Sauce

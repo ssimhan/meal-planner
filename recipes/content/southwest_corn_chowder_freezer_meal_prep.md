@@ -23,10 +23,6 @@ source_file: Southwest Corn Chowder (Freezer Meal Prep).html
 
 # Southwest Corn Chowder (Freezer Meal Prep)
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 bell pepper, red
 - 1 bag corn
@@ -40,6 +36,11 @@ source_file: Southwest Corn Chowder (Freezer Meal Prep).html
 - 3cupbroth
 - Salt
 - Pepper
+
+## Prep Steps
+- Chop peppers
+- Mince garlic
+- Chop onions/shallots
 
 ### Instructions
 1. Meal Prep InstructionsLabel your gallon-sized freezer bag. Make sure to include name, instructions, and a use-by date (I recommend 90 days after prep date).Add all of the ingredients (except for the coconut milk, and broth) to a freezer bag. Stir gently to combine.Remove air, seal, and freeze.

@@ -27,10 +27,6 @@ source_file: Quinoa Fried Rice.html
 
 # Quinoa Fried Rice
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1½cups uncooked SimplyNature Organic Quinoa, or 5 cups cooked day old quinoa
 - 4 green onions
@@ -45,6 +41,13 @@ source_file: Quinoa Fried Rice.html
 - 4 tablespoons Fusia Soy Sauce or liquid aminos
 - Fusia Sriracha, for serving
 - Edamame, for serving
+
+## Prep Steps
+- Chop onions/shallots
+- Chop scallions
+- Chop carrots
+- Grate/mince ginger
+- Wash and chop greens
 
 ### Instructions
 1. Cook the quinoa (or use Instant Pot quinoa OR if you have cooked quinoa, skip to Step 2).

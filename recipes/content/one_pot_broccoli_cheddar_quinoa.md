@@ -23,10 +23,6 @@ source_file: One Pot Broccoli Cheddar Quinoa.html
 
 # One Pot Broccoli Cheddar Quinoa
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 medium onion
 - 1cupcarrot, shredded (5-6 whole)
@@ -40,6 +36,9 @@ source_file: One Pot Broccoli Cheddar Quinoa.html
 - 1 cup1 milk
 - 1cupcheddar, shredded
 - salt to taste
+
+## Prep Steps
+- Chop onions/shallots
 
 ### Instructions
 1. The quantities in this are for 4-5 adult servings. Plan for two dinners or cut in half.

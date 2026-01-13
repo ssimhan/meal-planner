@@ -23,10 +23,6 @@ source_file: Sweet and Sour Quinoa.html
 
 # Sweet and Sour Quinoa
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 tablespoon Oil
 - 1 Red Onion ,finely chopped
@@ -39,6 +35,11 @@ source_file: Sweet and Sour Quinoa.html
 - ½cup Water
 - ½cup Quinoa
 - 1 Egg (optional)
+
+## Prep Steps
+- Chop onions/shallots
+- Mince garlic
+- Grate/mince ginger
 
 ### Instructions
 1. Heat oil in pan over medium / high heat. Reduce heat and gently fry the onion until softened (approx. 5 mins). Add the garlic and ginger and fry for a further min.

@@ -21,10 +21,6 @@ source_file: Freezer Ready Mini Pizzas.html
 
 # Freezer Ready Mini Pizzas
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - Bagels
 - Pizza sauce
@@ -32,6 +28,10 @@ source_file: Freezer Ready Mini Pizzas.html
 - 1 bell pepper, green
 - Sliced olives
 - Mushrooms
+
+## Prep Steps
+- Chop peppers
+- Clean and slice mushrooms
 
 ### Instructions
 1. Line two small baking sheets with foil or parchment paper (or do one sheet at a time, preparing the second batch the second day).

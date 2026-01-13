@@ -25,10 +25,6 @@ source_file: Romesco Pasta Sauce.html
 
 # Romesco Pasta Sauce
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 3 red peppers
 - 2 medium tomatoes
@@ -42,6 +38,11 @@ source_file: Romesco Pasta Sauce.html
 - Lemon juice
 - Salt
 - Pepper
+
+## Prep Steps
+- Chop peppers
+- Press/cube tofu
+- Wash and chop herbs
 
 ### Instructions
 1. Prep:Preheat your oven to 180°C (356°F).

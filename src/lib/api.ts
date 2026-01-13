@@ -48,7 +48,7 @@ async function handleResponse<T>(res: Response, fallbackMessage: string): Promis
 /**
  * Standard headers with Auth
  */
-async function getAuthHeaders(includeJson: boolean = true) {
+export async function getAuthHeaders(includeJson: boolean = true) {
     const supabase = createClient();
     const { data: { session } } = await supabase.auth.getSession();
     const headers: Record<string, string> = {
@@ -293,6 +293,24 @@ export async function captureRecipe(data: CaptureRecipeRequest): Promise<Capture
         body: JSON.stringify(data),
     });
     return handleResponse<CaptureRecipeResponse>(res, 'Failed to capture recipe');
+}
+
+export async function ignoreRecipe(name: string): Promise<any> {
+    const res = await fetch('/api/recipes/ignore', {
+        method: 'POST',
+        headers: await getAuthHeaders(),
+        body: JSON.stringify({ name }),
+    });
+    return handleResponse<any>(res, 'Failed to ignore recipe');
+}
+
+export async function savePreference(ingredient: string, brand: string): Promise<any> {
+    const res = await fetch('/api/settings/preference', {
+        method: 'POST',
+        headers: await getAuthHeaders(),
+        body: JSON.stringify({ ingredient, brand }),
+    });
+    return handleResponse<any>(res, 'Failed to save preference');
 }
 
 // Re-export types for convenience

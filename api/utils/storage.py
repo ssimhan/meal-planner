@@ -1,6 +1,8 @@
 import os
 from flask import request
 from supabase import create_client
+from pathlib import Path
+import yaml
 
 # Load local environment variables if they exist
 try:
@@ -352,7 +354,18 @@ class StorageEngine:
             seen = set()
             
             # Common non-recipe keywords to ignore
-            ignore = {'leftovers', 'skipped', 'outside_meal', 'same', 'none', 'yes', 'no', 'true', 'false'}
+            ignore = {
+                'leftovers', 'skipped', 'outside_meal', 'same', 'none', 'yes', 'no', 'true', 'false',
+                'freezer meal', 'ate out', 'make at home', 'takeout', 'delivery', 'restaurant'
+            }
+            
+            # Load ignored recipes from file
+            ignored_path = Path('data/ignored.yml')
+            if ignored_path.exists():
+                with open(ignored_path, 'r') as f:
+                    saved_ignores = yaml.safe_load(f) or []
+                    for i in saved_ignores:
+                        ignore.add(i.lower())
 
             for week in weeks:
                 # Check dinners
@@ -403,3 +416,62 @@ class StorageEngine:
         except Exception as e:
             print(f"Error saving recipe {recipe_id}: {e}")
             raise e
+
+    @staticmethod
+    def ignore_recipe(name):
+        """Add a recipe name to the ignored list."""
+        try:
+            ignored_path = Path('data/ignored.yml')
+            existing = []
+            if ignored_path.exists():
+                with open(ignored_path, 'r') as f:
+                    existing = yaml.safe_load(f) or []
+            
+            if name not in existing:
+                existing.append(name)
+                
+                # Sort for tidiness
+                existing.sort()
+                
+                with open(ignored_path, 'w', encoding='utf-8') as f:
+                    yaml.dump(existing, f)
+                    
+            return True
+        except Exception as e:
+            print(f"Error ignoring recipe {name}: {e}")
+            return False
+
+    @staticmethod
+    def get_preferences():
+        """Load user ingredient preferences."""
+        try:
+            pref_path = Path('data/preferences.yml')
+            if pref_path.exists():
+                with open(pref_path, 'r') as f:
+                    return yaml.safe_load(f) or {}
+            return {}
+        except Exception as e:
+            print(f"Error loading preferences: {e}")
+            return {}
+
+    @staticmethod
+    def save_preference(ingredient, brand_or_note):
+        """Save a user preference for an ingredient."""
+        try:
+            pref_path = Path('data/preferences.yml')
+            current = {}
+            if pref_path.exists():
+                with open(pref_path, 'r') as f:
+                    current = yaml.safe_load(f) or {}
+            
+            # Simple Key-Value for now: "Milk" -> "Oatly"
+            # Normalize key
+            key = ingredient.lower().strip()
+            current[key] = brand_or_note
+            
+            with open(pref_path, 'w', encoding='utf-8') as f:
+                yaml.dump(current, f)
+            return True
+        except Exception as e:
+            print(f"Error saving preference: {e}")
+            return False

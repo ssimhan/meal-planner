@@ -20,10 +20,6 @@ source_file: Mango Yogurt.html
 
 # Mango Yogurt
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cupfresh or frozen mango
 - 1/2cupMango Puree

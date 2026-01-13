@@ -21,10 +21,6 @@ source_file: Cheddar and Spinach Muffins.html
 
 # Cheddar and Spinach Muffins
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2 Eggs
 - 1/3cupSour Cream
@@ -38,6 +34,10 @@ source_file: Cheddar and Spinach Muffins.html
 - Pepper
 - 1/2tspcumin powder
 - 11/2 cup spinach
+
+## Prep Steps
+- Chop peppers
+- Wash and chop greens
 
 ### Instructions
 1. PrepWash the Spinach Leaves and place on a tea towel or paper towel to remove the extra water.Chop spinach. Make egg substitute. Grate cheddar cheese.

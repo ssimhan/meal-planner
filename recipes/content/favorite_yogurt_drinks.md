@@ -23,16 +23,16 @@ source_file: Favorite Yogurt Drinks.html
 
 # Favorite Yogurt Drinks
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - AD
 - 1cupwhole-milk plain Greek yogurt
 - 1cupfruit (such as fresh or frozen strawberries, banana, diced mango, blueberries, or pear)
 - 1/4cupvegetable (optional, such as fresh spinach, Carrot Puree, Sweet Potato Puree)
 - 1 teaspoon honey or maple syrup (optional)
+
+## Prep Steps
+- Chop carrots
+- Wash and chop greens
 
 ### Instructions
 1. Here’s a look at how to make this kids drink. (I should add that I love it for myself, too!) Scroll down to the end of this post for the full information.

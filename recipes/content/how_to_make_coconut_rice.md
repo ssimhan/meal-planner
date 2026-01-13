@@ -21,10 +21,6 @@ source_file: How to Make Coconut Rice.html
 
 # How to Make Coconut Rice
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - AD
 - 2cupsjasmine rice
@@ -33,6 +29,9 @@ source_file: How to Make Coconut Rice.html
 - 14.5 ounce can light coconut milk
 - 1/4-1/2 cup shredded unsweetened coconut (optional)
 - 1 tablespoon maple syrup, ½ teaspoon cinnamon, and/or ½ teaspoon turmeric (optional)
+
+## Prep Steps
+- Grate/mince ginger
 
 ### Instructions
 1. Here’s a look at making this coconut rice so you know what to expect from the process. Scroll down to see the full recipe at the bottom of the post.

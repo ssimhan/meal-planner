@@ -99,6 +99,42 @@ def import_recipe():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@recipes_bp.route("/api/recipes/ignore", methods=["POST"])
+@require_auth
+def ignore_recipe_route():
+    try:
+        data = request.json or {}
+        name = data.get('name')
+        if not name:
+            return jsonify({"status": "error", "message": "Name is required"}), 400
+            
+        success = StorageEngine.ignore_recipe(name)
+        if success:
+             return jsonify({"status": "success", "message": f"Ignored {name}"})
+        else:
+             return jsonify({"status": "error", "message": "Failed to ignore recipe"}), 500
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@recipes_bp.route("/api/settings/preference", methods=["POST"])
+@require_auth
+def save_preference_route():
+    try:
+        data = request.json or {}
+        ingredient = data.get('ingredient')
+        brand = data.get('brand') # or 'note'
+        
+        if not ingredient:
+            return jsonify({"status": "error", "message": "Ingredient is required"}), 400
+            
+        success = StorageEngine.save_preference(ingredient, brand)
+        if success:
+             return jsonify({"status": "success", "message": f"Saved preference for {ingredient}"})
+        else:
+             return jsonify({"status": "error", "message": "Failed to save preference"}), 500
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 @recipes_bp.route("/api/recipes/capture", methods=["POST"])
 @require_auth
 def capture_recipe():
@@ -106,6 +142,7 @@ def capture_recipe():
         data = request.json or {}
         meal_name = data.get('name')
         mode = data.get('mode') # 'url' or 'manual'
+        is_snack_only = data.get('is_snack_only', False)
         
         if not meal_name:
             return jsonify({"status": "error", "message": "Meal name is required"}), 400
@@ -121,11 +158,14 @@ def capture_recipe():
             return jsonify({"status": "error", "message": f"Recipe '{meal_name}' already exists"}), 400
 
         markdown_content = ""
+        categories = ["snack"] if is_snack_only else []
+        
         metadata = {
             "name": meal_name,
             "cuisine": "unknown",
-            "meal_type": "dinner",
-            "effort_level": "normal"
+            "meal_type": "snack" if is_snack_only else "dinner", 
+            "effort_level": "normal",
+            "categories": categories
         }
 
         if mode == 'manual':
@@ -135,11 +175,13 @@ def capture_recipe():
             # Format as list if newline separated
             ing_list = [i.strip() for i in ingredients.split('\n') if i.strip()]
             
+            markdown_categories = f"\ncategories: {categories}" if categories else ""
+            
             markdown_content = f"""---
 name: {meal_name}
 cuisine: unknown
-meal_type: dinner
-effort_level: normal
+meal_type: {"snack" if is_snack_only else "dinner"}
+effort_level: normal{markdown_categories}
 ---
 
 # {meal_name}
@@ -166,9 +208,11 @@ effort_level: normal
             
             md_path = Path(f'recipes/content/{recipe_id}.md')
             if not md_path.exists():
+                markdown_categories = f"\ncategories: {categories}" if categories else ""
                 markdown_content = f"""---
 name: {meal_name}
 source_url: {url}
+meal_type: {"snack" if is_snack_only else "dinner"}{markdown_categories}
 ---
 
 # {meal_name}

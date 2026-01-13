@@ -25,10 +25,6 @@ source_file: Easy Homemade Granola Bars.html
 
 # Easy Homemade Granola Bars
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - Rolled oats
 - Shredded unsweetened coconut
@@ -48,6 +44,9 @@ source_file: Easy Homemade Granola Bars.html
 - ⅛teaspoon salt
 - 2 tablespoons chia seeds
 - ¼cup water (or ¼ cup mashed ripe banana, pumpkin puree, applesauce, butternut squash puree, OR sweet potato puree)
+
+## Prep Steps
+- Peel/chop squash
 
 ### Instructions
 1. Here’s a look at the easy process involved in making this granola bar recipe. Scroll down to the bottom of this post for the full recipe.

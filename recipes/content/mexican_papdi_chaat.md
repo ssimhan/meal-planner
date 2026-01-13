@@ -29,10 +29,6 @@ source_file: Mexican Papdi Chaat.html
 
 # Mexican Papdi Chaat
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 15ozcan black beans
 - 15ozcan pinto beans
@@ -51,6 +47,11 @@ source_file: Mexican Papdi Chaat.html
 - Cilantro chutney
 - Tamarind chutney
 - Chips or sev
+
+## Prep Steps
+- Chop peppers
+- Chop onions/shallots
+- Wash and chop herbs
 
 ### Instructions
 1. PrepDice bell pepper, onion, scallionsCook corn

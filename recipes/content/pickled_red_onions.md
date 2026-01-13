@@ -22,10 +22,6 @@ source_file: Pickled Red Onions.html
 
 # Pickled Red Onions
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2smallred onions
 - 2cupswhite vinegar
@@ -35,6 +31,10 @@ source_file: Pickled Red Onions.html
 - optional
 - 2 garlic cloves
 - 1 teaspoon mixed peppercorns
+
+## Prep Steps
+- Chop onions/shallots
+- Mince garlic
 
 ### Instructions
 1. Thinly slice the onions (it's helpful to use a mandoline), and divide the onions between 2 (16-ounce) jars or 3 (10-ounce) jars. Place the garlic and peppercorns in each jar, if using

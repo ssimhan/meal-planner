@@ -21,10 +21,6 @@ source_file: Favorite Mango Smoothie.html
 
 # Favorite Mango Smoothie
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - AD
 - 1cupfrozen mango
@@ -33,6 +29,10 @@ source_file: Favorite Mango Smoothie.html
 - Optional veggies: ½ cup raw cauliflower florets or sliced summer squash
 - Optional seeds: 1 teaspoon hemp or ground flaxseed
 - Optional sweetener: 1 teaspoon honey or maple syrup
+
+## Prep Steps
+- Peel/chop squash
+- Cut florets
 
 ### Instructions
 1. AD

@@ -29,10 +29,6 @@ source_file: Corn & Black Bean Dip TCL.html
 
 # Corn & Black Bean Dip TCL
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2 tablespoons butter
 - 1tbspoil
@@ -57,6 +53,10 @@ source_file: Corn & Black Bean Dip TCL.html
 - 1/4cupscallions
 - 15 ounce can black beans
 - Aluminum foil
+
+## Prep Steps
+- Chop peppers
+- Mince garlic
 
 ### Instructions
 1. Preheat the oven to 400 degrees F.

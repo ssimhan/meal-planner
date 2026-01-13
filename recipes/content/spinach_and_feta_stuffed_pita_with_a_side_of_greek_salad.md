@@ -28,10 +28,6 @@ source_file: Spinach and Feta Stuffed Pita with a Side of Greek Salad.html
 
 # Spinach and Feta Stuffed Pita with a Side of Greek Salad
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2cupsspinach
 - Feta cheese
@@ -43,6 +39,11 @@ source_file: Spinach and Feta Stuffed Pita with a Side of Greek Salad.html
 - Kalamata olives
 - Lemon juice
 - Dried oregano
+
+## Prep Steps
+- Chop onions/shallots
+- Mince garlic
+- Slice cucumber
 
 ### Instructions
 1. Prep:Roughly chop 2 cups of fresh spinach.

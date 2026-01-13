@@ -28,10 +28,6 @@ source_file: Bisi Bele Bath.html
 
 # Bisi Bele Bath
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cuptoor dal
 - 2cupsrice
@@ -52,6 +48,10 @@ source_file: Bisi Bele Bath.html
 - Curry leaves
 - 4 dried red chilies
 - 2tbspcashews
+
+## Prep Steps
+- Chop onions/shallots
+- Chop carrots
 
 ### Instructions
 1. This recipe is for 4 adult lunch servings

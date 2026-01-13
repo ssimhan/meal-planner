@@ -22,10 +22,6 @@ source_file: Carrot Poriyal.html
 
 # Carrot Poriyal
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 3 medium carrots
 - 1 medium onion
@@ -35,6 +31,10 @@ source_file: Carrot Poriyal.html
 - Urad dal
 - 3 curry leaves
 - 1 green chili
+
+## Prep Steps
+- Chop carrots
+- Chop onions/shallots
 
 ### Instructions
 1. Wash carrots, remove the outer skin, grate it and keep aside.

@@ -32,10 +32,6 @@ source_file: Vegetarian Chili.html
 
 # Vegetarian Chili
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 tablespoon olive oil
 - 1 medium onion
@@ -56,6 +52,12 @@ source_file: Vegetarian Chili.html
 - Shredded cheese
 - Crushed tortilla chips
 - Greek yogurt
+
+## Prep Steps
+- Chop onions/shallots
+- Peel and cube sweet potatoes
+- Chop peppers
+- Wash and chop herbs
 
 ### Instructions
 1. Dice yellow onion, sweet potatoes, red bell peppers.

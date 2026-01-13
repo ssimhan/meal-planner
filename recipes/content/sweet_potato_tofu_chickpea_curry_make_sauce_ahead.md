@@ -34,10 +34,6 @@ source_file: Sweet Potato, Tofu & Chickpea Curry (Make Sauce Ahead).html
 
 # Sweet Potato, Tofu & Chickpea Curry (Make Sauce Ahead)
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 10ozfirm tofu
 - 10ozsilken tofu
@@ -66,6 +62,15 @@ source_file: Sweet Potato, Tofu & Chickpea Curry (Make Sauce Ahead).html
 - 3 medium tomatoes
 - 1cupchickpeas
 - 2cupsbroth
+
+## Prep Steps
+- Press/cube tofu
+- Peel/chop squash
+- Chop peppers
+- Chop onions/shallots
+- Grate/mince ginger
+- Mince garlic
+- Marinate proteins (ahead of time)
 
 ### Instructions
 1. Original recipe makes 3 servings

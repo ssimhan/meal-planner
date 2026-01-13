@@ -29,10 +29,6 @@ source_file: Vegan Spicy Thai Drunken Noodles with Seared Tofu.html
 
 # Vegan Spicy Thai Drunken Noodles with Seared Tofu
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 Package Wide Rice Noodle
 - 1 package extra firm tofu
@@ -50,6 +46,14 @@ source_file: Vegan Spicy Thai Drunken Noodles with Seared Tofu.html
 - Snow peas (optional)
 - Carrot (optional)
 - Baby corn (optional)
+
+## Prep Steps
+- Press/cube tofu
+- Chop onions/shallots
+- Cut florets
+- Chop peppers
+- Chop carrots
+- Marinate proteins (ahead of time)
 
 ### Instructions
 1. PrepPress tofu thoroughly BEFORE cutting into cubes.

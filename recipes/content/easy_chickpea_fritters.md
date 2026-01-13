@@ -22,10 +22,6 @@ source_file: Easy Chickpea Fritters.html
 
 # Easy Chickpea Fritters
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - US Customary Metric
 - 14.5- ounce can chickpeas (rinsed and drained; sometimes called garbanzo beans)
@@ -37,6 +33,9 @@ source_file: Easy Chickpea Fritters.html
 - 2 tablespoons water
 - 2 tablespoons olive oil
 - Cucumber-yogurt sauce, tzatziki, or hummus for serving
+
+## Prep Steps
+- Slice cucumber
 
 ### Instructions
 1. Below is a preview of how to make this recipe so you know what to expect from the process. Scroll down to the end of the post for the full recipe, including the amounts and the timing.

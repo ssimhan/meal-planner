@@ -24,10 +24,6 @@ source_file: Cheesy Veggie Quesadilla.html
 
 # Cheesy Veggie Quesadilla
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1tbspoil
 - 1tbspgarlic
@@ -43,6 +39,10 @@ source_file: Cheesy Veggie Quesadilla.html
 - 1tbspOil
 - Tortillas
 - 8ozmozzarella cheese
+
+## Prep Steps
+- Chop onions/shallots
+- Chop peppers
 
 ### Instructions
 1. Set a pan on a medium flame and add oil, garlic, onion, mixed bell pepper, corn, paneer, sweet chilli sauce, salt to taste, black pepper for seasoning, oregano and red chilli flakes

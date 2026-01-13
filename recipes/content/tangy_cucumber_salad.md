@@ -22,10 +22,6 @@ source_file: Tangy Cucumber Salad.html
 
 # Tangy Cucumber Salad
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1/4cupapple cider vinegar
 - 2 tablespoons olive oil
@@ -34,6 +30,9 @@ source_file: Tangy Cucumber Salad.html
 - Freshly ground black pepper
 - 2 pounds cucumbers (about 4 medium)
 - 2 tablespoons finely chopped fresh chives
+
+## Prep Steps
+- Wash and chop herbs
 
 ### Instructions
 1. Place the vinegar, oil, sugar, salt, and a few grinds of pepper in a large bowl and whisk to combine. Thinly slice the cucumbers crosswise. Place them in the bowl, add the chives, and toss to combine.

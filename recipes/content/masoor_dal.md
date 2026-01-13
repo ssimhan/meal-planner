@@ -26,10 +26,6 @@ source_file: Masoor Dal.html
 
 # Masoor Dal
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - ½cup masoor dal
 - 2 tablespoons moong dal
@@ -49,6 +45,10 @@ source_file: Masoor Dal.html
 - Kasoori methi
 - Cilantro
 - Lemon juice
+
+## Prep Steps
+- Mince garlic
+- Wash and chop herbs
 
 ### Instructions
 1. Add masoor dal & moong dal to a pot or pressure cooker. Wash it a few times until the water runs clear.

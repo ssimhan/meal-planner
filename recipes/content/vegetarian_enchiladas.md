@@ -28,10 +28,6 @@ source_file: Vegetarian Enchiladas.html
 
 # Vegetarian Enchiladas
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 2 Tablespoons olive oil
 - 1 red bell pepper, chopped
@@ -46,6 +42,11 @@ source_file: Vegetarian Enchiladas.html
 - Avocado, optional
 - Sour Cream, optional
 - Salsa, optional
+
+## Prep Steps
+- Chop peppers
+- Chop onions/shallots
+- Wash and chop herbs
 
 ### Instructions
 1. Preheat the oven to 350 degrees F.

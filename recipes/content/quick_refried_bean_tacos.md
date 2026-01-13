@@ -26,10 +26,6 @@ source_file: Quick Refried Bean Tacos.html
 
 # Quick Refried Bean Tacos
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - ½tablespoon olive oil
 - 215-ounce cans refried beans
@@ -43,6 +39,11 @@ source_file: Quick Refried Bean Tacos.html
 - Cilantro
 - 8 tortillas
 - Optional: Shredded cheese, feta or queso fresco, sour cream,
+
+## Prep Steps
+- Chop peppers
+- Chop onions/shallots
+- Wash and chop herbs
 
 ### Instructions
 1. Make the filling: Mince the garlic. In a medium skillet, heat the olive oil over medium heat. Add the garlic and sauté for about 30 seconds until fragrant but not yet browned (or skip this step and use garlic powder instead). Heat the refried beans, cumin and kosher salt until warmed, about 3 minutes. Taste and adjust flavors as desired.

@@ -21,10 +21,6 @@ source_file: Paneeer & Corn Utthapam.html
 
 # Paneeer & Corn Utthapam
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1/2cupRava
 - 1/4cupcurd
@@ -37,6 +33,9 @@ source_file: Paneeer & Corn Utthapam.html
 - 1/4cupboiled corn
 - 1/2 medium onion chopped
 - 1tbspcoriander leaves
+
+## Prep Steps
+- Chop onions/shallots
 
 ### Instructions
 1. Mix all and keep aside for 10 minutes, add a spoon or two water if needed

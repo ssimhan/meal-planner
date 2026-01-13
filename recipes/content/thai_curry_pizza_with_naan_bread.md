@@ -25,10 +25,6 @@ source_file: Thai Curry Pizza with Naan Bread.html
 
 # Thai Curry Pizza with Naan Bread
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 4piecesnaan bread
 - 15 ounces Muir Glen crushed fire-roasted tomatoes
@@ -40,6 +36,12 @@ source_file: Thai Curry Pizza with Naan Bread.html
 - ¼cup cashews
 - 1 handful fresh cilantro
 - Kosher salt
+
+## Prep Steps
+- Chop peppers
+- Chop onions/shallots
+- Chop scallions
+- Wash and chop herbs
 
 ### Instructions
 1. Preheat oven to 450°F. Place naan directly on the oven grate and pre-bake 3 to 4 minutes per side until crisp.

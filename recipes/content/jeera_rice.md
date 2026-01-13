@@ -20,10 +20,6 @@ source_file: Jeera Rice.html
 
 # Jeera Rice
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - using cooked basmati rice (way 1):
 - ½cup basmati rice

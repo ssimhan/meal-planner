@@ -26,10 +26,6 @@ source_file: Veggie Upma.html
 
 # Veggie Upma
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1cuprava (semolina/sooji)
 - 1 tablespoon oil or ghee
@@ -41,6 +37,9 @@ source_file: Veggie Upma.html
 - ¾ to 1 cup frozen mixed vegetables (like carrot, beans, peas, corn – no need to thaw)
 - 2½cups water
 - Salt to taste
+
+## Prep Steps
+- Chop carrots
 
 ### Instructions
 1. Prep:Finely chop 1 small onion and 1 green chili (if using).

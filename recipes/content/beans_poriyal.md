@@ -22,10 +22,6 @@ source_file: Beans Poriyal.html
 
 # Beans Poriyal
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 20 Beans
 - 1 medium Onion
@@ -38,6 +34,9 @@ source_file: Beans Poriyal.html
 - Mustard seeds
 - Urad dal
 - Curry leaves
+
+## Prep Steps
+- Chop onions/shallots
 
 ### Instructions
 1. Chop beans to appropriate size.

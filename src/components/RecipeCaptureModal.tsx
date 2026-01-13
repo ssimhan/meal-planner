@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useToast } from '@/context/ToastContext';
-import { captureRecipe } from '@/lib/api';
+import { captureRecipe, savePreference } from '@/lib/api';
 
 interface RecipeCaptureModalProps {
     isOpen: boolean;
@@ -17,6 +17,13 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
     const [url, setUrl] = useState('');
     const [ingredients, setIngredients] = useState('');
     const [instructions, setInstructions] = useState('');
+    const [isSnackOnly, setIsSnackOnly] = useState(false);
+
+    // Preference State
+    const [prefIngredient, setPrefIngredient] = useState('');
+    const [prefBrand, setPrefBrand] = useState('');
+    const [showPrefs, setShowPrefs] = useState(false);
+
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     if (!isOpen) return null;
@@ -31,15 +38,29 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
                 mode,
                 url: mode === 'url' ? url : undefined,
                 ingredients: mode === 'manual' ? ingredients : undefined,
-                instructions: mode === 'manual' ? instructions : undefined
+                instructions: mode === 'manual' ? instructions : undefined,
+                is_snack_only: isSnackOnly
             });
 
             showToast(`Successfully added ${mealName}!`, 'success');
-            onSuccess();
+            onClose();
+            if (onSuccess) onSuccess();
         } catch (error: any) {
             showToast(error.message, 'error');
         } finally {
             setIsSubmitting(false);
+        }
+    };
+
+    const handleAddPreference = async () => {
+        if (!prefIngredient || !prefBrand) return;
+        try {
+            await savePreference(prefIngredient, prefBrand);
+            showToast(`Saved preference: ${prefIngredient} -> ${prefBrand}`, 'success');
+            setPrefIngredient('');
+            setPrefBrand('');
+        } catch (error: any) {
+            showToast(error.message, 'error');
         }
     };
 
@@ -63,22 +84,79 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-8 flex-1 overflow-y-auto space-y-8 bg-[var(--bg-primary)]">
-                    {/* Mode Toggle */}
-                    <div className="flex p-1.5 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-sm">
-                        <button
-                            type="button"
-                            onClick={() => setMode('url')}
-                            className={`flex-1 py-3 text-sm font-black uppercase tracking-widest transition-all ${mode === 'url' ? 'bg-[var(--accent-green)] text-white shadow-md' : 'text-[var(--text-muted)] hover:text-[var(--accent-green)]'}`}
-                        >
-                            Website URL
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setMode('manual')}
-                            className={`flex-1 py-3 text-sm font-black uppercase tracking-widest transition-all ${mode === 'manual' ? 'bg-[var(--accent-green)] text-white shadow-md' : 'text-[var(--text-muted)] hover:text-[var(--accent-green)]'}`}
-                        >
-                            Manual Entry
-                        </button>
+                    {/* Mode Toggle & Snack Option */}
+                    <div className="flex flex-col gap-4">
+                        <div className="flex p-1.5 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-sm">
+                            <button
+                                type="button"
+                                onClick={() => setMode('url')}
+                                className={`flex-1 py-3 text-sm font-black uppercase tracking-widest transition-all ${mode === 'url' ? 'bg-[var(--accent-green)] text-white shadow-md' : 'text-[var(--text-muted)] hover:text-[var(--accent-green)]'}`}
+                            >
+                                Website URL
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setMode('manual')}
+                                className={`flex-1 py-3 text-sm font-black uppercase tracking-widest transition-all ${mode === 'manual' ? 'bg-[var(--accent-green)] text-white shadow-md' : 'text-[var(--text-muted)] hover:text-[var(--accent-green)]'}`}
+                            >
+                                Manual Entry
+                            </button>
+                        </div>
+
+                        {/* Preferences Section */}
+                        <div className="border-t border-[var(--border-subtle)] pt-4 mt-4">
+                            <button
+                                type="button"
+                                onClick={() => setShowPrefs(!showPrefs)}
+                                className="text-sm font-bold text-[var(--accent-gold)] hover:text-[var(--accent-terracotta)] flex items-center gap-2 mb-2"
+                            >
+                                {showPrefs ? '▼' : '▶'} Add Ingredient Preference (Optional)
+                            </button>
+
+                            {showPrefs && (
+                                <div className="bg-[var(--bg-secondary)] p-3 rounded space-y-3 animate-in fade-in zoom-in-95 duration-200">
+                                    <p className="text-xs text-[var(--text-muted)]">
+                                        Standardize ingredients for your shopping list (e.g., "Milk" → "Oatly").
+                                    </p>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <input
+                                            type="text"
+                                            placeholder="Ingredient (e.g. Milk)"
+                                            value={prefIngredient}
+                                            onChange={(e) => setPrefIngredient(e.target.value)}
+                                            className="w-full p-2 bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded text-sm focus:border-[var(--accent-gold)] outline-none"
+                                        />
+                                        <input
+                                            type="text"
+                                            placeholder="Brand/Type (e.g. Oatly)"
+                                            value={prefBrand}
+                                            onChange={(e) => setPrefBrand(e.target.value)}
+                                            className="w-full p-2 bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded text-sm focus:border-[var(--accent-gold)] outline-none"
+                                        />
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={handleAddPreference}
+                                        disabled={!prefIngredient || !prefBrand}
+                                        className="w-full py-1 bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-gold)] text-[var(--text-secondary)] text-xs font-bold uppercase tracking-wider rounded disabled:opacity-50"
+                                    >
+                                        Save Preference
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
+                        <label className="flex items-center gap-2 cursor-pointer group w-fit">
+                            <input
+                                type="checkbox"
+                                checked={isSnackOnly}
+                                onChange={(e) => setIsSnackOnly(e.target.checked)}
+                                className="w-4 h-4 text-[var(--accent-sage)] rounded focus:ring-[var(--accent-green)]"
+                            />
+                            <span className="text-sm font-medium text-[var(--text-muted)] group-hover:text-[var(--accent-green)] transition-colors">
+                                This is a <span className="font-bold">Snack Only</span> item
+                            </span>
+                        </label>
                     </div>
 
                     {mode === 'url' ? (

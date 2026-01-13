@@ -21,10 +21,6 @@ source_file: Easy French Toast Sticks.html
 
 # Easy French Toast Sticks
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 4 slices wheat bread
 - 2 eggs

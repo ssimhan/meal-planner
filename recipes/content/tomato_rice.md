@@ -24,10 +24,6 @@ source_file: Tomato Rice.html
 
 # Tomato Rice
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1 tablespoon oil (preferably sesame or any cooking oil)
 - 1 teaspoon mustard seeds
@@ -48,6 +44,9 @@ source_file: Tomato Rice.html
 - 2 tablespoons grated coconut (optional)
 - 2 tablespoons chopped coriander leaves
 - 2 tablespoons chopped mint leaves (optional)​
+
+## Prep Steps
+- Wash and chop herbs
 
 ### Instructions
 1. Prep:Chop 1 small onion and 1 medium tomato.

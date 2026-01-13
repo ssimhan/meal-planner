@@ -25,10 +25,6 @@ source_file: Dry Paneer Masala.html
 
 # Dry Paneer Masala
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - For the Paneer:
 - 3tbspoil
@@ -48,6 +44,12 @@ source_file: Dry Paneer Masala.html
 - 12ozpaneer cubed
 - 1/2cupwater
 - 3/4cupcorn
+
+## Prep Steps
+- Chop onions/shallots
+- Mince garlic
+- Grate/mince ginger
+- Chop peppers
 
 ### Instructions
 1. In a large pot over medium high heat add the oil. Once the oil is hot add the cumin seeds and let them splutter for a few seconds.

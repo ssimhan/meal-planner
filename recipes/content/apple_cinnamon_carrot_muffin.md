@@ -23,10 +23,6 @@ source_file: Apple Cinnamon Carrot Muffin.html
 
 # Apple Cinnamon Carrot Muffin
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 13/4 cup flour, wheat
 - 11/2 tsp baking powder
@@ -40,6 +36,9 @@ source_file: Apple Cinnamon Carrot Muffin.html
 - 1/2cuphoney or agave
 - 1/2cupavocado oil
 - 1tspvanilla
+
+## Prep Steps
+- Chop carrots
 
 ### Instructions
 1. Shred apples to get 1 1/2 cup for recipe, squeeze out extra moisture.Shred carrot to get 1/2 cup for recipe, squeeze out extra moisture.

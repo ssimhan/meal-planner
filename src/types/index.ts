@@ -360,6 +360,7 @@ export interface CaptureRecipeRequest {
   url?: string;
   ingredients?: string;
   instructions?: string;
+  is_snack_only?: boolean;
 }
 
 export interface CaptureRecipeResponse {

@@ -24,10 +24,6 @@ source_file: Spinach-Cilantro Pesto.html
 
 # Spinach-Cilantro Pesto
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1clovegarlic
 - 1/3cupalmonds
@@ -36,6 +32,10 @@ source_file: Spinach-Cilantro Pesto.html
 - 2tbspsherry vinegar
 - 1/2cupolive oil
 - 1tspsalt
+
+## Prep Steps
+- Wash and chop greens
+- Wash and chop herbs
 
 ### Instructions
 1. Soak almonds to remove the skin.

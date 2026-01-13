@@ -27,10 +27,6 @@ source_file: Palak Paneer Spinach.html
 
 # Palak Paneer Spinach
 
-### Prep Steps
-
-<!-- List prep tasks here -->
-
 ### Ingredients
 - 1bunchspinach
 - 2clovesgarlic
@@ -54,6 +50,12 @@ source_file: Palak Paneer Spinach.html
 - 250 grams paneer
 - Garam masala
 - Kasuri methi
+
+## Prep Steps
+- Grate/mince ginger
+- Chop onions/shallots
+- Mince garlic
+- Chop peppers
 
 ### Instructions
 1. PrepCut the onion, bell pepper, tomato.Cube the paneer

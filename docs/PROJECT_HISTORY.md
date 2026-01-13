@@ -656,3 +656,23 @@ The best tools are the ones you actually use. This system works because it reduc
 - Phase 23 defined for specific bug fixes (logic gaps) and advanced features (personalization).
 
 **Learning:** Prototyping in a single HTML file is an incredibly fast way to validate UX/UI changes before committing to complex React/Next.js refactors.
+
+### Phase 22: UX Redesign & Feature Parity (2026-01-13) ✅ Complete
+
+**Goal:** Implement the new "Earth Tones" high-fidelity UX, ensuring all existing functionality is preserved.
+
+**Block 1: Frontend Architecture (Completed)**
+- **Feature:** Full visual redesign using "Earth Tones" palette (Sage, Terracotta, Beige).
+- **Layout:** Replaced simple header navigation with a responsive `AppLayout` featuring a sidebar (desktop) and bottom menu (mobile).
+- **Theme:** Implemented comprehensive Light/Dark mode via `ThemeContext` and Tailwind variables.
+- **Pages:** Ported Dashboard, Plan, Recipes, Inventory, and Week View to the new layout structure.
+
+**Block 2: Feature Parity (Completed)**
+- **Verification:** Systematically verified that core functionalities work within the new UI:
+  - **Confirm for Today:** Dashboard header action working.
+  - **Flexible Logging:** New modal options (Leftovers, Ate Out) integrated into new card styles.
+  - **Inventory Quick Add:** "Quick Add" bar migrated to new Inventory page header.
+  - **Wizard Flow:** Complex multi-step wizard successfully wrapped in new layout without logic breakage.
+  - **Build Stability:** Restored missing backend script (`log_execution.py`) and fixed test imports to ensure CI/CD reliability.
+
+**Learning:** "Feature Parity" is not just about looks; it's about detailed interaction testing. Migrating a complex wizard into a new layout requires careful checking of state persistence and hook ordering.

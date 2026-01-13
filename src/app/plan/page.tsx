@@ -11,9 +11,13 @@ import {
     generateDraft,
     getShoppingList,
     finalizePlan,
-    createWeek
+    createWeek,
+    getRecipes,
+    saveWizardState,
+    getWizardState
 } from '@/lib/api';
 import Skeleton from '@/components/Skeleton';
+import ReplacementModal from '@/components/ReplacementModal';
 import { useToast } from '@/context/ToastContext';
 
 type ReviewDay = {
@@ -56,6 +60,11 @@ function PlanningWizardContent() {
     const searchParams = useSearchParams();
     const { showToast } = useToast();
     const [loading, setLoading] = useState(true);
+    const loadedState = React.useRef(false);
+
+    const toTitleCase = (str: string) => {
+        return str.replace(/\b\w/g, l => l.toUpperCase());
+    };
 
     // Step State
     const [reviews, setReviews] = useState<ReviewDay[]>([]);
@@ -74,10 +83,15 @@ function PlanningWizardContent() {
 
     // Draft State
     const [draftPlan, setDraftPlan] = useState<any>(null);
+    const [selections, setSelections] = useState<{ day: string, recipe_id: string }[]>([]);
+    const [isReplacing, setIsReplacing] = useState<string | null>(null);
+    const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
 
     // Shopping List State
     const [shoppingList, setShoppingList] = useState<string[]>([]);
     const [purchasedItems, setPurchasedItems] = useState<string[]>([]);
+    const [customShoppingItems, setCustomShoppingItems] = useState<string[]>([]);
+    const [newShoppingItem, setNewShoppingItem] = useState('');
 
     // Inventory Handlers
     const handleAddItem = (category: string, subType?: 'meal' | 'ingredient') => {
@@ -232,11 +246,21 @@ function PlanningWizardContent() {
 
     const handleUpdateDinner = (day: string, field: keyof ReviewDay['dinner'], value: any) => {
         setReviews(prevReviews =>
-            prevReviews.map(reviewDay =>
-                reviewDay.day === day
-                    ? { ...reviewDay, dinner: { ...reviewDay.dinner, [field]: value } }
-                    : reviewDay
-            )
+            prevReviews.map(reviewDay => {
+                if (reviewDay.day !== day) return reviewDay;
+
+                const updatedDinner = { ...reviewDay.dinner, [field]: value };
+
+                // Auto-fill leftover note if turning on leftovers and note is empty
+                if (field === 'leftovers' && value === true && !updatedDinner.leftovers_note) {
+                    const mealName = updatedDinner.planned_recipe_name || updatedDinner.actual_meal || 'Meal';
+                    updatedDinner.leftovers_note = `Leftover ${mealName}`;
+                    // Default qty is already handled by default state or UI default, but we can ensure it
+                    if (!updatedDinner.leftovers_qty) updatedDinner.leftovers_qty = 1;
+                }
+
+                return { ...reviewDay, dinner: updatedDinner };
+            })
         );
     };
 
@@ -346,7 +370,7 @@ function PlanningWizardContent() {
             const fetchDraft = async () => {
                 setLoading(true);
                 try {
-                    const res = await generateDraft(planningWeek, []);
+                    const res = await generateDraft(planningWeek, selections);
                     setDraftPlan(res.plan_data);
                 } catch (e) {
                     console.error(e);
@@ -357,23 +381,133 @@ function PlanningWizardContent() {
             };
             fetchDraft();
         }
-    }, [step, draftPlan, planningWeek]);
+    }, [step, draftPlan, planningWeek, selections]);
+
+    // Save state on step change or major data update
+    useEffect(() => {
+        if (!planningWeek) return;
+
+        // Simple debounce for auto-saving
+        const timer = setTimeout(() => {
+            saveWizardState(planningWeek, {
+                step,
+                reviews,
+                // We don't save full inventory as it's large and re-fetchable, 
+                // but we SHOULD save inputs/pending changes if we want true fidelity.
+                // For now, simpler is better.
+                pendingChanges,
+                selections,
+                // Do NOT save draftPlan (too big). We re-fetch it if needed.
+                // We save 'selections' which allows regenerating the draft.
+                shoppingList,
+                purchasedItems,
+                customShoppingItems
+            });
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, [step, reviews, pendingChanges, selections, shoppingList, planningWeek]);
+
+    // Restore state
+    useEffect(() => {
+        if (!planningWeek || loadedState.current) return;
+
+        const restoreState = async () => {
+            try {
+                const res = await getWizardState(planningWeek);
+                if (res.state) {
+                    console.log("Restoring wizard state:", res.state);
+                    if (res.state.step) setStep(res.state.step);
+                    if (res.state.reviews) setReviews(res.state.reviews);
+                    if (res.state.pendingChanges) setPendingChanges(res.state.pendingChanges);
+                    if (res.state.selections) setSelections(res.state.selections);
+                    if (res.state.shoppingList) setShoppingList(res.state.shoppingList);
+                    if (res.state.purchasedItems) setPurchasedItems(res.state.purchasedItems);
+                    if (res.state.customShoppingItems) setCustomShoppingItems(res.state.customShoppingItems);
+                }
+            } catch (e) {
+                console.error("Failed to restore state", e);
+            } finally {
+                loadedState.current = true;
+            }
+        };
+        restoreState();
+    }, [planningWeek]);
+
+
+    // Load recipes on mount
+    useEffect(() => {
+        async function loadRecipes() {
+            try {
+                const data = await getRecipes();
+                setRecipes(data.recipes.map((r: any) => ({ id: r.id, name: r.name })));
+            } catch (e) {
+                console.error("Failed to load recipes", e);
+            }
+        }
+        loadRecipes();
+    }, []);
+
+    const handleReplacementConfirm = async (newMeal: string) => {
+        if (!isReplacing || !planningWeek) return;
+
+        // Find recipe ID if possible, otherwise use name as ID (or handle manual entry)
+        // ideally we map name back to ID. 
+        const recipe = recipes.find(r => r.name === newMeal);
+        const recipeId = recipe ? recipe.id : newMeal;
+
+        const newSelections = [
+            ...selections.filter(s => s.day !== isReplacing),
+            { day: isReplacing, recipe_id: recipeId }
+        ];
+
+        setSelections(newSelections);
+        setIsReplacing(null);
+        setLoading(true); // Show skeleton while regenerating
+
+        try {
+            const res = await generateDraft(planningWeek, newSelections);
+            setDraftPlan(res.plan_data);
+            showToast('Plan updated!', 'success');
+        } catch (e) {
+            showToast('Failed to update plan', 'error');
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // ... (UI Sections) ...
 
     // STEP 5: SMART GROCERY LIST UI
     if (step === 'groceries') {
         const stepNum = '5 of 6';
+        const allItems = [...new Set([...shoppingList, ...customShoppingItems])];
+
+        const togglePurchased = (item: string) => {
+            setPurchasedItems(prev =>
+                prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item]
+            );
+        };
+
+        const handleAddCustomItem = () => {
+            if (!newShoppingItem.trim()) return;
+            setCustomShoppingItems(prev => [...prev, toTitleCase(newShoppingItem.trim())]);
+            setNewShoppingItem('');
+        };
 
         return (
-            <main className="container mx-auto max-w-3xl px-4 py-12">
+            <main className="container mx-auto max-w-3xl px-4 py-12 text-black">
                 <header className="mb-8 flex justify-between items-center">
                     <div>
                         <div className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-2">Step {stepNum}</div>
                         <h1 className="text-3xl">Shopping List</h1>
                         <p className="text-[var(--text-muted)] mt-2">
-                            Based on your plan for {planningWeek}.
+                            Check items as you shop. We'll add them to your inventory.
                         </p>
+                    </div>
+                    <div>
+                        <button onClick={() => setStep('draft')} className="btn-secondary">← Back</button>
                     </div>
                 </header>
 
@@ -381,16 +515,37 @@ function PlanningWizardContent() {
                     {loading ? (
                         <Skeleton className="h-48 w-full" />
                     ) : (
-                        <div className="space-y-4">
-                            {shoppingList.length > 0 ? (
-                                <ul className="list-disc pl-5 space-y-2">
-                                    {shoppingList.map((item, i) => (
-                                        <li key={i} className="text-lg">{item}</li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p className="text-[var(--text-muted)]">No items needed! (Or list failed to load)</p>
-                            )}
+                        <div className="space-y-6">
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    placeholder="Add custom item (e.g. Milk, Apples)..."
+                                    value={newShoppingItem}
+                                    onChange={(e) => setNewShoppingItem(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleAddCustomItem()}
+                                    className="flex-1 p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg"
+                                />
+                                <button onClick={handleAddCustomItem} className="btn-secondary px-6">Add</button>
+                            </div>
+
+                            <ul className="space-y-3">
+                                {allItems.length > 0 ? (
+                                    allItems.map((item, i) => {
+                                        const isPurchased = purchasedItems.includes(item);
+                                        return (
+                                            <li key={i} className={`flex items-center gap-4 p-4 rounded-lg border transition-all cursor-pointer ${isPurchased ? 'bg-green-50 border-[var(--accent-sage)] opacity-80' : 'bg-[var(--bg-secondary)] border-[var(--border-subtle)]'}`}
+                                                onClick={() => togglePurchased(item)}>
+                                                <div className={`w-6 h-6 rounded flex items-center justify-center border-2 ${isPurchased ? 'bg-[var(--accent-sage)] border-[var(--accent-sage)]' : 'border-[var(--text-muted)]'}`}>
+                                                    {isPurchased && <span className="text-white">✓</span>}
+                                                </div>
+                                                <span className={`text-lg ${isPurchased ? 'line-through text-[var(--text-muted)]' : ''}`}>{item}</span>
+                                            </li>
+                                        );
+                                    })
+                                ) : (
+                                    <p className="text-center py-8 text-[var(--text-muted)] italic">No items needed! Use the input above to add extras.</p>
+                                )}
+                            </ul>
                         </div>
                     )}
                 </div>
@@ -400,8 +555,20 @@ function PlanningWizardContent() {
                         onClick={async () => {
                             setSubmitting(true);
                             try {
+                                // 1. Sync purchased items to inventory (Best guess category: fridge or pantry)
+                                // We'll just put them in fridge for now as that's most common for weekly shopping
+                                if (purchasedItems.length > 0) {
+                                    const changes = purchasedItems.map(item => ({
+                                        category: 'fridge',
+                                        item,
+                                        operation: 'add' as const
+                                    }));
+                                    await bulkUpdateInventory(changes);
+                                }
+
+                                // 2. Finalize
                                 await finalizePlan(planningWeek!);
-                                showToast('Plan finalized!', 'success');
+                                showToast('Plan finalized and inventory updated!', 'success');
                                 router.push('/');
                             } catch (e) {
                                 showToast('Failed to finalize plan', 'error');
@@ -465,17 +632,39 @@ function PlanningWizardContent() {
                         <div className="grid gap-4">
                             {['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map(day => {
                                 const dinner = draftPlan.dinners?.find((d: any) => d.day === day);
+                                const isSelected = selections.some(s => s.day === day);
+
                                 return (
-                                    <div key={day} className="card flex items-center justify-between">
+                                    <div key={day} className={`card flex items-center justify-between ${isSelected ? 'border-[var(--accent-sage)] bg-green-50' : ''}`}>
                                         <div className="flex items-center gap-4">
                                             <span className="font-mono uppercase text-[var(--accent-sage)] w-12">{day}</span>
-                                            <span className="text-lg font-bold">{dinner?.recipe_id?.replace(/_/g, ' ') || 'No Meal'}</span>
+                                            <div>
+                                                <span className="text-lg font-bold block">{dinner?.recipe_id?.replace(/_/g, ' ') || 'No Meal'}</span>
+                                                {isSelected && <span className="text-xs text-[var(--accent-sage)] font-bold uppercase tracking-wider">Manual Selection</span>}
+                                            </div>
                                         </div>
+                                        <button
+                                            onClick={() => setIsReplacing(day)}
+                                            className="text-[var(--text-muted)] hover:text-[var(--accent-sage)] p-2 rounded-full hover:bg-[var(--bg-secondary)]"
+                                            title="Edit Meal"
+                                        >
+                                            ✏️
+                                        </button>
                                     </div>
                                 );
                             })}
                         </div>
                     </div>
+                )}
+
+                {isReplacing && (
+                    <ReplacementModal
+                        day={isReplacing}
+                        currentMeal={draftPlan?.dinners?.find((d: any) => d.day === isReplacing)?.recipe_id || ''}
+                        recipes={recipes}
+                        onConfirm={(newMeal) => handleReplacementConfirm(newMeal)}
+                        onCancel={() => setIsReplacing(null)}
+                    />
                 )}
             </main>
         );
@@ -513,7 +702,7 @@ function PlanningWizardContent() {
                                 // Initialize the week
                                 await createWeek(planningWeek!);
                                 // Fetch the draft
-                                const res = await generateDraft(planningWeek!, []);
+                                const res = await generateDraft(planningWeek!, selections);
                                 setDraftPlan(res.plan_data);
                                 setStep('draft');
                             } catch (e) {

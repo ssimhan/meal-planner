@@ -94,6 +94,7 @@ export interface WeekData {
   daily_feedback?: {
     [day: string]: DailyFeedback;
   };
+  wizard_state?: any; // Contains transient wizard progress
 }
 
 export interface DailyFeedback {

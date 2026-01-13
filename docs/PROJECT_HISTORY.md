@@ -551,4 +551,27 @@ The best tools are the ones you actually use. This system works because it reduc
     - **Draft Loading:** Fixed `planningWeek` initialization logic to correctly target the upcoming Monday.
     - **Inventory Safety:** Added robust null-checks to prevent wizard crashes on empty inventory states.
 - **Workflow:** Verified full end-to-end flow from "Start Fresh" -> "Active Plan".
+    - **Editable Tentative Plan:** Added pencil icon and modal to "Draft" step (Step 4) for immediate corrections without restarting.
+    - **Low-Friction Leftovers:** "Did you have leftovers?" now auto-fills item name and backend intelligently aggregates batches.
+
+**Block 2: Pause Capability (Draft Mode) (Completed)**
+- **Feature:** Wizard state is now persisted to the `meal_plans` table (`wizard_state` JSON field).
+- **UX:** Refreshing the page or navigating away no longer loses progress.
+- **Auto-Resume:** Returning to `/plan` automatically restores the user to the correct step with all inputs (reviews, inventory draft, selections) intact.
+
+**Block 3: Nightly Confirmation (Completed)**
+- **Feature:** Dashboard now detects if it's after 6 PM and meals aren't logged.
+- **UX:** Persistent banner prompts for review, simplifying the daily "did we actually eat this?" check.
+
+**Block 4: Interactive Shopping List & Inventory Sync (Completed)**
+- **Feature:** Wizard Step 5 is now an interactive checklist.
+- **Integration:** Items checked off are automatically added back to the `fridge` inventory upon finalizing the plan. 
+- **UX:** Supports adding custom items (milk, eggs) directly to the grocery list within the wizard.
+
+**Hardening Phase: Bug & Fix Requirement Gathering (2026-01-12) ✅**
+- **Artifact:** Compiled a comprehensive "Bug & Fix List" covering Recipe Ingestion, Main Page UX, Inventory IA, and Global Behavior.
+- **Goal:** Standardize data normalization, ensure prep step persistence, and overhaul the Inventory interface.
+- **Impact:** Shifted focus back to Phase 17 (Stability) and defined Phase 19/21 for better closure and UX.
+
+
 

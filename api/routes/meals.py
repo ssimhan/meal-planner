@@ -640,14 +640,60 @@ def update_plan_with_actuals():
 
         plan_url = f"/plans/{week_str}-weekly-plan.html"
 
-        return jsonify({
-            "status": "success",
-            "message": f"Successfully updated plan for week {week_str} with actual data",
-            "week_of": week_str,
-            "plan_url": plan_url
-        })
+        return jsonify({"status": "success", "message": f"Successfully updated plan for week {week_str} with actual data", "week_of": week_str, "plan_url": plan_url})
 
     except Exception as e:
         import traceback
         traceback.print_exc()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@meals_bp.route("/api/wizard/state", methods=["POST"])
+@require_auth
+def save_wizard_state():
+    try:
+        data = request.json or {}
+        week_of = data.get('week_of')
+        wizard_state = data.get('state', {})
+        
+        if not week_of:
+            return jsonify({"status": "error", "message": "week_of required"}), 400
+
+        h_id = storage.get_household_id()
+        
+        # 1. Fetch existing plan
+        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).single().execute()
+        
+        current_plan_data = {}
+        if res.data:
+            current_plan_data = res.data['plan_data'] or {}
+            
+        # 2. Merge Wizard State
+        current_plan_data['wizard_state'] = wizard_state
+        
+        # 3. Save
+        storage.StorageEngine.update_meal_plan(week_of, plan_data=current_plan_data)
+        
+        return jsonify({"status": "success", "message": "Wizard state saved"})
+        
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@meals_bp.route("/api/wizard/state", methods=["GET"])
+@require_auth
+def get_wizard_state():
+    try:
+        week_of = request.args.get('week_of')
+        if not week_of:
+            return jsonify({"status": "error", "message": "week_of required"}), 400
+            
+        h_id = storage.get_household_id()
+        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).single().execute()
+        
+        if not res.data:
+             return jsonify({"status": "success", "state": None})
+             
+        plan_data = res.data.get('plan_data') or {}
+        return jsonify({"status": "success", "state": plan_data.get('wizard_state')})
+        
+    except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500

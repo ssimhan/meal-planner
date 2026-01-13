@@ -153,7 +153,7 @@ def _get_current_status(skip_sync=False, week_override=None):
             if not today_lunch and (cover_kids_lunch or cover_adult_lunch):
                  today_lunch = {"recipe_name": "Leftovers or Simple Lunch", "prep_style": "quick_fresh"}
 
-        if history_week and 'daily_feedback' in history_week:
+        if today_lunch and history_week and 'daily_feedback' in history_week:
             day_feedback = history_week['daily_feedback'].get(current_day, {})
             for key in ['kids_lunch', 'kids_lunch_made', 'adult_lunch', 'adult_lunch_made']:
                 if key in day_feedback:

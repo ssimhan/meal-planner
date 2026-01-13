@@ -140,26 +140,24 @@ Declining energy model: Monday (high) → Friday (zero prep)
     - ✅ Ensure all existing "Wizard" functionality flows correctly in the new UI
     - ✅ Full testing of all features with new layout
 
-### Phase 23: Bugs, Personalization & Advanced Replanning
-**Goal:** Fix known UX/Logic issues and add layer of personalization.
-- **Block 1: Logic & UX Fixes.**
-    - **Main Page:** Fix Prep steps not syncing with final recipes.
-    - **Week View:** 
-        - Swap meal: Add options for "Eat Out", "Pick Leftovers", "Freezer Meal", "Select Recipe".
-        - Change "Cancel" to "Done Editing".
-        - Fix "Replace with Inventory" missing submit button.
-    - **Recipe Index:** 
-        - Remove "Make at home" option entirely.
-        - Plan meals for Mon-Fri only; leave Sat/Sun as "TBD".
-    - **Recipe Selector:** 
-        - Suggest snacks based on inventory.
-        - Show "Leftover Meals" card; suggest using them before fresh meals.
-    - **Data Integrity:** Fix "4 weeks of data" bug (should be 3: Dec 29, Jan 5, Jan 12).
-- **Block 2: Personalization.**
-    - **People Profiles:** Track likes/dislikes/cuisines per family member.
-    - Weigh recommendations based on profiles.
-- **Block 3: Advanced Replanning.**
-    - **Replan with Notes:** Free-form text input that adjusts the schedule (e.g., "Grandma visiting, need soft food").
+### Phase 23: Experience Refinement & Personalization
+**Goal:** Polish the UX to match the "Earth Tones" prototype and add personalization features.
+
+- **Block 1: Dashboard & Plan UX.**
+    - **Dashboard Visuals:** match `ux_redesign_prototype.html` (Brain dump area, Timeline view, visual hierarchy).
+    - **Prep Tasks:** Implement accordion/collapsible logic grouping tasks/ingredients by recipe on the main page.
+    - **Active Plan Access:** If a plan is active, the Plan tab should open it directly (bypass Wizard start screen).
+- **Block 2: Inventory & Recipes.**
+    - **Recipe Browser:** Implement Filter Chips (Cuisine, Effort, Tags) as per prototype.
+    - **Inventory Grouping:** Organize items within Fridge/Pantry tabs into logical sub-groups (e.g., Produce, Dairy, Grains) for better scanning.
+- **Block 3: Shopping Experience.**
+    - **Quick Add:** "Brain Dump" style input for rapidly adding multiple items.
+    - **Store Management:** Add tagging for specific stores (Costco, Trader Joe's, Indian Grocery).
+    - **Custom Stores:** Allow users to define/add their own store names.
+- **Block 4: Settings & Personalization.**
+    - **Settings UI:** Move configuration from `config.yml` to the UI (People Profiles, Store Lists, Dietary Preferences).
+    - **Advanced Replanning:** Implement "Replan with Notes" (LLM-based adjustment).
+    - **Data Integrity:** Fix known date bugs (4-week view).
 
 ### Phase 24: User Authentication (The "Family Gate")
 **Goal:** Secure the application for single-household access via Supabase.

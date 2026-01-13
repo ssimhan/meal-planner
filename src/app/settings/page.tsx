@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import AppLayout from '@/components/AppLayout';
 import { useTheme } from '@/context/ThemeContext';
-import { getSettings, saveSettings } from '@/lib/api';
+import { getSettings, saveSettings, deleteWeek, getStatus } from '@/lib/api';
 import { useToast } from '@/context/ToastContext';
 import Skeleton from '@/components/Skeleton';
 
@@ -196,8 +196,8 @@ export default function SettingsPage() {
                         updateConfig(['schedule', 'office_days'], next);
                       }}
                       className={`px-3 py-1 rounded-full text-xs font-bold border ${(config.schedule?.office_days || []).includes(day)
-                          ? 'bg-[var(--accent-primary)] text-white border-[var(--accent-primary)]'
-                          : 'bg-[var(--bg-secondary)] border-[var(--border-subtle)] text-[var(--text-muted)]'
+                        ? 'bg-[var(--accent-primary)] text-white border-[var(--accent-primary)]'
+                        : 'bg-[var(--bg-secondary)] border-[var(--border-subtle)] text-[var(--text-muted)]'
                         }`}
                     >
                       {day.toUpperCase()}
@@ -220,8 +220,8 @@ export default function SettingsPage() {
                         updateConfig(['schedule', 'busy_days'], next);
                       }}
                       className={`px-3 py-1 rounded-full text-xs font-bold border ${(config.schedule?.busy_days || []).includes(day)
-                          ? 'bg-[var(--accent-terracotta)] text-white border-[var(--accent-terracotta)]'
-                          : 'bg-[var(--bg-secondary)] border-[var(--border-subtle)] text-[var(--text-muted)]'
+                        ? 'bg-[var(--accent-terracotta)] text-white border-[var(--accent-terracotta)]'
+                        : 'bg-[var(--bg-secondary)] border-[var(--border-subtle)] text-[var(--text-muted)]'
                         }`}
                     >
                       {day.toUpperCase()}
@@ -254,6 +254,44 @@ export default function SettingsPage() {
                     <li key={d}><span className="uppercase font-bold text-[10px] w-8 inline-block">{d}</span> {s}</li>
                   ))}
                 </ul>
+              </div>
+            </div>
+          </section>
+
+          {/* 6. Developer Tools (Testing) */}
+          <section className="card border-red-100 bg-red-50/10">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-red-700">
+              <span>🛠️</span> Developer Tools
+            </h3>
+            <p className="text-sm text-red-600 mb-6">
+              Use these tools to reset data for testing. <strong>Warning: This cannot be undone.</strong>
+            </p>
+
+            <div className="p-4 bg-white border border-red-100 rounded-xl space-y-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                  <h4 className="font-bold text-sm">Reset Current Week</h4>
+                  <p className="text-xs text-[var(--text-muted)]">Deletes the active meal plan so you can restart the Planning Wizard.</p>
+                </div>
+                <button
+                  onClick={async () => {
+                    if (confirm('Are you sure you want to delete the current week\'s plan? This will let you restart the planning wizard.')) {
+                      try {
+                        const status = await getStatus();
+                        if (status.week_of) {
+                          await deleteWeek(status.week_of);
+                          showToast('Week deleted. Redirecting to home...', 'success');
+                          setTimeout(() => window.location.href = '/', 1500);
+                        }
+                      } catch (err) {
+                        showToast('Failed to reset week', 'error');
+                      }
+                    }
+                  }}
+                  className="px-4 py-2 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700 transition-colors shadow-sm"
+                >
+                  Clear Current Plan
+                </button>
               </div>
             </div>
           </section>

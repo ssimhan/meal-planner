@@ -97,48 +97,56 @@ export default function AppLayout({ children }: AppLayoutProps) {
   };
 
   return (
-    <div className="flex h-screen w-full overflow-hidden">
+    <div className="flex h-screen w-full overflow-hidden bg-[var(--bg-body)]">
       {/* Sidebar */}
-      <nav className="w-64 bg-[var(--bg-sidebar)] border-r border-[var(--border-color)] flex flex-col gap-8 p-4 pt-8 z-10">
+      <nav className="w-72 bg-[var(--bg-sidebar)]/80 backdrop-blur-xl border-r border-[var(--border-subtle)] flex flex-col gap-10 p-6 pt-10 z-20 shadow-2xl relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
+
         {/* Brand */}
-        <div className="flex items-center gap-3 px-4">
-          <div className="w-8 h-8 bg-[var(--accent-primary)] rounded-full flex items-center justify-center text-[var(--bg-body)] font-bold">
+        <div className="flex items-center gap-4 px-2 relative">
+          <div className="w-10 h-10 bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-sage)] rounded-2xl flex items-center justify-center text-white font-black shadow-lg shadow-[var(--accent-primary)]/20 rotate-3">
             M
           </div>
-          <span className="text-xl font-bold text-[var(--text-main)] tracking-tight">MealPlanner</span>
+          <span className="text-2xl font-black text-[var(--text-main)] tracking-tight">MealPlanner</span>
         </div>
 
         {/* Navigation Links */}
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2 relative">
           {navItems.map((item) => {
             const isActive = pathname === item.path;
             return (
               <button
                 key={item.id}
                 onClick={() => handleNavigation(item.path)}
-                className={`flex items-center gap-4 px-4 py-3.5 rounded-lg font-medium transition-all ${isActive
-                  ? 'bg-[var(--nav-active-bg)] text-[var(--nav-active-text)] font-semibold'
-                  : 'text-[var(--text-muted)] hover:bg-[var(--nav-hover)] hover:text-[var(--text-main)]'
+                className={`flex items-center gap-4 px-4 py-4 rounded-2xl font-semibold transition-all group ${isActive
+                  ? 'bg-white text-[var(--nav-active-text)] shadow-sm border border-[var(--border-subtle)]'
+                  : 'text-[var(--text-muted)] hover:bg-white/50 hover:text-[var(--text-main)]'
                   }`}
               >
-                {item.icon}
-                {item.label}
+                <span className={`transition-transform group-hover:scale-110 ${isActive ? 'text-[var(--accent-primary)]' : ''}`}>
+                  {item.icon}
+                </span>
+                <span className="tracking-tight">{item.label}</span>
               </button>
             );
           })}
         </div>
 
         {/* Footer */}
-        <div className="mt-auto border-t border-[var(--border-color)] pt-6">
-          <div className="px-4 opacity-60 text-xs text-[var(--text-muted)]">
-            Logged in as User
+        <div className="mt-auto border-t border-[var(--border-subtle)] pt-8 relative">
+          <div className="px-4 py-3 bg-white/40 rounded-2xl border border-white/50 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-[var(--bg-sidebar)] border border-white flex items-center justify-center text-xs">👤</div>
+            <div className="flex flex-col">
+              <span className="text-xs font-bold text-[var(--text-main)]">Demo User</span>
+              <span className="text-[10px] text-[var(--text-muted)] uppercase font-mono">Family Pro</span>
+            </div>
           </div>
         </div>
       </nav>
 
       {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto bg-[var(--bg-body)]">
-        <div className="p-10">
+      <main className="flex-1 overflow-y-auto relative">
+        <div className="p-8 lg:p-12 relative z-10">
           {/* Header with Theme Toggle */}
           <div className="flex justify-end mb-6">
             <button

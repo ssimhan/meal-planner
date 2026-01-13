@@ -1,0 +1,12 @@
+{
+  "stores": [
+    "Costco",
+    "Trader Joe's",
+    "Safeway",
+    "Indian Store",
+    "Other"
+  ],
+  "map": {
+    "apple": "Trader Joe's"
+  }
+}

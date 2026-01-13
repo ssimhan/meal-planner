@@ -148,9 +148,11 @@ Declining energy model: Monday (high) → Friday (zero prep)
     - ✅ **Dashboard Visuals:** match `ux_redesign_prototype.html` (Brain dump area, Timeline view, visual hierarchy).
     - ✅ **Prep Tasks:** Implement accordion/collapsible logic grouping tasks/ingredients by recipe on the main page.
     - ✅ **Active Plan Access:** If a plan is active, the Plan tab should open it directly (bypass Wizard start screen).
+    - ✅ **Decision Tree Modal:** Overhauled "Options" modal into a full Log Status decision tree with Reschedule tab.
 - **Block 2: Inventory & Recipes.** ✅ Complete
     - ✅ **Recipe Browser:** Implement Filter Chips (Cuisine, Effort, Tags) as per prototype.
     - ✅ **Inventory Grouping:** Organize items within Fridge/Pantry tabs into logical sub-groups (e.g., Produce, Dairy, Grains) for better scanning.
+    - ✅ **Ate Out Leftovers:** Dynamic "capture leftovers" logic in logging modal.
 - **Block 3: Shopping Experience.** ✅ Complete
     - ✅ **Quick Add:** "Brain Dump" style input for rapidly adding multiple items.
     - ✅ **Store Management:** Add tagging for specific stores (Costco, Trader Joe's, Indian Grocery).
@@ -160,6 +162,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
     - ✅ **Advanced Replanning:** Implement "Replan with Notes" (Keyword/Smart filtering logic).
     - ✅ **Data Integrity:** Fix known date bugs (4-week view).
     - ✅ **Resilience:** Internalized error handling for Supabase edge cases (`PGRST116`).
+    - ✅ **Build Safety:** Fixed JSX parsing errors in wizard guidance.
 
 ### Phase 24: User Authentication (The "Family Gate")
 **Goal:** Secure the application for single-household access via Supabase.

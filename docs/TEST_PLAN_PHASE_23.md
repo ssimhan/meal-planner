@@ -37,7 +37,15 @@ This plan outlines the verification steps for Phase 23, divided into functional 
 - **Prep Accordion:** Click recipe headers in the prep list. Verify chevrons rotate smoothly and lists expand with clean transitions.
 - **Timeline:** Verify the dot-and-line "Timeline View" on the dashboard renders correctly without layout shifts.
 
-### 3. Mobile Responsiveness
+### 3. Change Plan Decision Tree
+- **Action:** Click "Options" on a dinner card in the Timeline.
+- **Verification:**
+    - Modal should be centered and high-contrast glassmorphism.
+    - Swapping to "Reschedule" tab shows the 7-day grid.
+    - Selecting "No" under "Did you make it?" → "Ate Out" → Toggling "Capture leftovers" should show an input for the dish name.
+    - Saving should close the modal and show a success toast.
+
+### 4. Mobile Responsiveness
 - **Shopping List:** Test on a mobile device. Verify "Store Tags" are easy to tap.
 - **Settings:** Ensure the settings sections (Appearance, Profiles, Schedule) stack correctly on small screens.
 

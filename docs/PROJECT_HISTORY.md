@@ -682,12 +682,15 @@ The best tools are the ones you actually use. This system works because it reduc
 
 **Block 1: Dashboard & Plan UX (Completed)**
 - **Dashboard Visuals:** Realized the "Timeline View" for chronological meal tracking and added the "Brain Dump" area for quick notes.
+- **Timeline Options Modal:** Overhauled the dinner "Options" modal into a full **Decision Tree** workflow. Added "Log Status" vs "Reschedule" tabs.
+- **Decision Tree Logic:** Implemented "Did you make it?" (Yes -> Feedback/Leftovers, No -> Alternatives like freezer/leftovers/ate out).
 - **Prep Accordion:** Implemented collapsible list grouping prep tasks by recipe, reducing visual clutter on the main page.
 - **Direct Plan Access:** Added client-side routing to `plan/page.tsx` that automatically redirects to the active plan if the week is already generated, bypassing unnecessary wizard starts.
 
 **Block 2: Inventory & Recipes (Completed)**
 - **Recipe Browser:** Integrated filter chips (Cuisine, Effort, Tags) as client-side state filters for instant feedback.
 - **Inventory Grouping:** Added frontend classification logic to group items into categories (Produce, Dairy, etc.) within Fridge/Pantry tabs.
+- **Ate Out Leftovers:** Integrated "Ate Out" logging with inventory. Users can now capture restaurant leftovers directly into the fridge inventory from the logging modal.
 - **Recipe Scaling:** Added dynamic 0.5x, 1x, and 2x scaling buttons to the recipe detail page using regex-based ingredient parsing.
 
 **Block 4: Settings & Personalization (Completed)**
@@ -695,6 +698,9 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Smart Replanning:** (MVP) Implemented "Special Requests" in the replan workflow. Users can now enter notes like "No chicken" or "Want soup", which triggers a keyword-based filter/boost logic in the allocation engine.
 - **Supabase Resilience:** Standardized backend routes to handle missing database records (`PGRST116`) gracefully, ensuring the UI doesn't crash on uninitialized weeks.
 
-**Bug Fix:** Resolved the "4 weeks of data" date bug by strictly filtering out future unselectable weeks in the wizard.
+**Bug Fixes:**
+- **Date Bug:** Resolved the "4 weeks of data" date bug by strictly filtering out future unselectable weeks in the wizard.
+- **Positioning Bug:** Fixed modal positioning by moving global modals (DinnerOptionsModal, PendingRecipesModal) out of the header to the root layout.
+- **Parsing Bug:** Fixed JSX parsing error in `ReplanWorkflowModal` caused by unescaped `<` characters in the "PRO TIP" section.
 
-**Learning:** Keyword-based "Smart Filtering" is a high-value MVP that provides 80% of the benefit of an LLM with 0% of the latency or cost. Resilience in data-fetching (`.execute()` vs `.single()`) is critical for "Draft Mode" where plan records might not exist yet.
+**Learning:** Keyword-based "Smart Filtering" is a high-value MVP that provides 80% of the benefit of an LLM with 0% of the latency or cost. Resilience in data-fetching (`.execute()` vs `.single()`) is critical for "Draft Mode" where plan records might not exist yet. Moving modals to the root prevents "Z-index wars" with animated parent elements.

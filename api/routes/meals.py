@@ -379,6 +379,8 @@ def log_meal():
         adult_lunch_needs_fix = data.get('adult_lunch_needs_fix')
         dinner_needs_fix = data.get('dinner_needs_fix')
         request_recipe = data.get('request_recipe', False)
+        outside_leftover_name = data.get('outside_leftover_name')
+        outside_leftover_qty = data.get('outside_leftover_qty')
 
         if not week_str or not day:
              return jsonify({"status": "error", "message": "Week and day required"}), 400
@@ -508,6 +510,10 @@ def log_meal():
             if freezer_meal and target_dinner.get('made') == 'freezer_backup':
                 target_dinner['freezer_used'] = {'meal': freezer_meal, 'frozen_date': 'Unknown'}
                 storage.StorageEngine.update_inventory_item('freezer_backup', freezer_meal, delete=True)
+
+            if outside_leftover_name:
+                qty = outside_leftover_qty or 1
+                storage.StorageEngine.update_inventory_item('fridge', f"Leftover {outside_leftover_name}", updates={'quantity': qty, 'unit': 'serving', 'type': 'meal'})
 
             log_execution.calculate_adherence(history_week)
 
@@ -724,5 +730,21 @@ def get_wizard_state():
         plan_data = res.data[0].get('plan_data') or {}
         return jsonify({"status": "success", "state": plan_data.get('wizard_state')})
         
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+@meals_bp.route("/api/delete-week", methods=["POST"])
+@require_auth
+def delete_week():
+    try:
+        data = request.json or {}
+        week_of = data.get('week_of')
+        if not week_of:
+            return jsonify({"status": "error", "message": "week_of required"}), 400
+            
+        h_id = storage.get_household_id()
+        storage.supabase.table("meal_plans").delete().eq("household_id", h_id).eq("week_of", week_of).execute()
+        
+        invalidate_cache()
+        return jsonify({"status": "success", "message": f"Deleted week {week_of}"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500

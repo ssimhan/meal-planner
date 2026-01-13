@@ -265,11 +265,21 @@ export default function ReplanWorkflowModal({
                                 Any specific requests for the remaining meals? (e.g. "No chicken", "I want soup", "Use up the broccoli")
                             </p>
 
+                            <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
+                                <p className="text-xs text-blue-700 font-bold mb-1">PRO TIP: Try these requests</p>
+                                <ul className="text-[10px] text-blue-600 space-y-1 list-disc ml-4">
+                                    <li>"No chicken for the rest of the week"</li>
+                                    <li>"I want more vegetarian options"</li>
+                                    <li>"Priority: Use up the spinach and broccoli"</li>
+                                    <li>"Make Wednesday a quick &lt; 20 min meal"</li>
+                                </ul>
+                            </div>
+
                             <textarea
                                 value={notes}
                                 onChange={(e) => setNotes(e.target.value)}
-                                placeholder="Enter your preferences here..."
-                                className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--accent-sage)] focus:border-transparent"
+                                placeholder='Try: "No chicken" or "I want soup"...'
+                                className="w-full h-24 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--accent-sage)] focus:border-transparent text-sm"
                             />
 
                             <button

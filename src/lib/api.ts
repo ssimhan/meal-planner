@@ -376,3 +376,11 @@ export async function saveSettings(settings: any) {
     });
     return handleResponse<any>(res, 'Failed to save settings');
 }
+export async function deleteWeek(week_of: string): Promise<any> {
+    const res = await fetch('/api/delete-week', {
+        method: 'POST',
+        headers: await getAuthHeaders(),
+        body: JSON.stringify({ week_of }),
+    });
+    return handleResponse<any>(res, 'Failed to delete week');
+}

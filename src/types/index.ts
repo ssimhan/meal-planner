@@ -291,6 +291,9 @@ export interface LogMealData {
   request_recipe?: boolean;
   // Prep completion tracking
   prep_completed?: string[];
+  // Outside meal leftovers
+  outside_leftover_name?: string;
+  outside_leftover_qty?: number;
 }
 
 export interface LogMealResponse extends WorkflowStatus {

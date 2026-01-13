@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Planner - Earth Tones</title>
+    <style>
+        :root {
+            /* Light Theme (Default) - Earth Tones */
+            --bg-body: #fdfbf7;
+            /* Warm off-white */
+            --bg-sidebar: #f0eadd;
+            /* Soft beige */
+            --bg-card: #ffffff;
+            --text-main: #2c241b;
+            /* Dark espresso brown */
+            --text-muted: #6e645a;
+            /* Muted earthy brown */
+            --accent-primary: #5c7f67;
+            /* Sage green */
+            --accent-hover: #4a6652;
+            --accent-secondary: #c98e6e;
+            /* Terracotta */
+            --border-color: #e6e0d4;
+            --shadow: rgba(44, 36, 27, 0.05);
+            --glass-bg: rgba(255, 255, 255, 0.8);
+
+            --nav-hover: rgba(92, 127, 103, 0.1);
+            --nav-active-bg: #e6e0d4;
+            --nav-active-text: #2c241b;
+
+            --stock-good: #5c7f67;
+            --stock-med: #d4a373;
+            --stock-low: #bc6c25;
+
+            --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme - Deep Forest / Earth */
+            --bg-body: #1c1917;
+            /* Very dark warm grey/brown */
+            --bg-sidebar: #292524;
+            /* Dark earth */
+            --bg-card: #2e2a27;
+            /* Slightly lighter earth */
+            --text-main: #e7e5e4;
+            /* Warm light grey */
+            --text-muted: #a8a29e;
+            --accent-primary: #8eb29c;
+            /* Lighter sage for contrast */
+            --accent-hover: #a3c4b0;
+            --accent-secondary: #d6b39a;
+            /* Muted terracotta */
+            --border-color: #44403c;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --glass-bg: rgba(46, 42, 39, 0.8);
+
+            --nav-hover: rgba(142, 178, 156, 0.1);
+            --nav-active-bg: #44403c;
+            --nav-active-text: #e7e5e4;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            outline: none;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: var(--font-family);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Scaffolding */
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            z-index: 10;
+        }
+
+        .brand {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0 1rem;
+            letter-spacing: -0.03em;
+        }
+
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-body);
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.875rem 1rem;
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: var(--nav-hover);
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            background: var(--nav-active-bg);
+            color: var(--nav-active-text);
+            font-weight: 600;
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-body);
+        }
+
+        .tab-content {
+            display: none;
+            height: 100%;
+            overflow-y: auto;
+            padding: 2.5rem 3rem;
+            animation: fadeIn 0.3s ease-out;
+            position: relative;
+            /* Context for modal */
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Common Components */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            color: var(--text-main);
+        }
+
+        p {
+            color: var(--text-muted);
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-sidebar);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -3px var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px var(--shadow);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: #ffffff;
+        }
+
+        [data-theme="dark"] .btn-primary {
+            color: #1c1917;
+        }
+
+        /* Dark text on light sage */
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-sidebar);
+        }
+
+        /* Inputs */
+        .input-text,
+        .textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-body);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-family: var(--font-family);
+        }
+
+        /* Dashboard Specifics */
+        .stat-card {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .prep-counter {
+            width: 24px;
+            height: 24px;
+            background: var(--accent-secondary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* Brain Dump Area */
+        .brain-dump-area {
+            background: var(--bg-sidebar);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Meal Rows */
+        .meal-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .meal-row:last-child {
+            border-bottom: none;
+        }
+
+        /* Week Grid */
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.75rem;
+        }
+
+        .day-column {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 0.75rem;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .day-header {
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            letter-spacing: 0.05em;
+        }
+
+        .meal-card {
+            background: var(--bg-sidebar);
+            padding: 0.6rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            position: relative;
+            group: hover;
+        }
+
+        .meal-actions {
+            display: none;
+            position: absolute;
+            top: 2px;
+            right: 2px;
+        }
+
+        .meal-card:hover .meal-actions {
+            display: block;
+        }
+
+        .action-icon {
+            cursor: pointer;
+            padding: 2px;
+            background: var(--bg-card);
+            border-radius: 4px;
+            color: var(--text-muted);
+        }
+
+        .action-icon:hover {
+            color: var(--accent-secondary);
+        }
+
+        /* Tags */
+        .tag {
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--bg-sidebar);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            display: inline-block;
+        }
+
+        .tag.accent {
+            background: var(--accent-secondary);
+            color: #fff;
+            border: none;
+        }
+
+        /* Recipes Filter */
+        .filter-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .filter-chip {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .filter-chip.active {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        /* Inventory */
+        .inventory-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .inventory-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+
+        .inventory-item:hover {
+            transform: translateX(4px);
+        }
+
+        .stock-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.75rem;
+        }
+
+        /* Modal Mockup */
+        .modal-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            width: 500px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">M</div>
+                MealPlanner
+            </div>
+
+            <div class="nav-links">
+                <div class="nav-item active" onclick="switchTab('dashboard', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    Dashboard
+                </div>
+                <div class="nav-item" onclick="switchTab('plan', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    Meal Plan
+                </div>
+                <div class="nav-item" onclick="switchTab('recipes', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    Recipes
+                </div>
+                <div class="nav-item" onclick="switchTab('inventory', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Inventory
+                </div>
+                <div class="nav-item" onclick="switchTab('shop', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    Shop
+                </div>
+                <div class="nav-item" onclick="switchTab('settings', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path
+                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                        </path>
+                    </svg>
+                    Settings
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div style="padding: 0 1rem; opacity: 0.6; font-size: 0.75rem;">
+                    Logged in as Sandhya
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <header class="header">
+                    <div>
+                        <h1>Kitchen Dashboard</h1>
+                        <p>Tuesday, October 24th</p>
+                    </div>
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
+                        <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            style="width:20px;height:20px;">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                </header>
+
+                <div class="card-grid">
+                    <div class="card stat-card">
+                        <span class="stat-label">Dinner Tonight</span>
+                        <span class="stat-value">Roasted Veggie Bowl</span>
+                        <div style="margin-top: 5px;"><span class="tag accent">Vegetarian</span></div>
+                    </div>
+                    <div class="card stat-card">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span class="stat-label">Prep Tasks</span>
+                            <div class="prep-counter">3</div>
+                        </div>
+                        <span class="stat-value" style="font-size: 1.5rem;">To-Do Today</span>
+                        <ul
+                            style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px; list-style-position: inside;">
+                            <li>Chop peppers</li>
+                            <li>Defrost chicken</li>
+                            <li>Soak lentils</li>
+                        </ul>
+                    </div>
+                    <div class="card stat-card">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span class="stat-label">Quick Actions</span>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button class="btn btn-sm btn-secondary">Log Lunch</button>
+                            <button class="btn btn-sm btn-secondary">Log Dinner</button>
+                            <button class="btn btn-sm btn-secondary">Add Snack</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="brain-dump-area">
+                    <h3 style="margin-bottom: 0.5rem;">Brain Dump</h3>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" class="input-text" placeholder="Add ingredients, meal ideas, or notes...">
+                        <button class="btn btn-primary">+</button>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h3 style="margin-bottom: 1rem;">Timeline</h3>
+                    <div class="card">
+                        <div class="meal-row">
+                            <div>
+                                <div style="font-weight: 600; font-size: 0.9rem;">Lunch</div>
+                                <div style="color: var(--text-muted); font-size: 0.9rem;">Leftover Lentil Soup</div>
+                            </div>
+                            <span class="tag" style="background: var(--stock-good); color: white;">Done</span>
+                        </div>
+                        <div class="meal-row">
+                            <div>
+                                <div style="font-weight: 600; font-size: 0.9rem;">Dinner - 6:30 PM</div>
+                                <div style="color: var(--text-muted); font-size: 0.9rem;">Roasted Veggie Bowl with
+                                    Quinoa</div>
+                            </div>
+                            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Start
+                                Prep</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meal Plan Tab -->
+            <div id="plan" class="tab-content">
+                <header class="header">
+                    <h1>Weekly Plan</h1>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-secondary" onclick="toggleReplanModal()">Replan Week</button>
+                        <button class="btn btn-primary">Publish</button>
+                    </div>
+                </header>
+
+                <!-- Replan Logic Modal -->
+                <div id="replan-modal" class="modal-overlay" onclick="if(event.target === this) toggleReplanModal()">
+                    <div class="modal">
+                        <h2 style="margin-bottom: 1rem;">Replan with Notes</h2>
+                        <p style="margin-bottom: 1rem; font-size: 0.9rem;">Tell us what's changing. We'll adjust the
+                            schedule for you.</p>
+                        <textarea class="textarea" rows="4"
+                            placeholder="e.g. Grandma visiting on Tuesday, need a soft texture meal. Replacing Friday dinner with takeout."></textarea>
+                        <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.5rem;">
+                            <button class="btn btn-secondary" onclick="toggleReplanModal()">Cancel</button>
+                            <button class="btn btn-primary" onclick="toggleReplanModal()">Regenerate Plan</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="week-grid">
+                    <!-- Monday -->
+                    <div class="day-column">
+                        <div class="day-header">MON</div>
+                        <div class="meal-card">
+                            <strong>L:</strong> Cobb Salad
+                            <div class="meal-actions">
+                                <span class="action-icon" title="Swap">⇄</span>
+                            </div>
+                        </div>
+                        <div class="meal-card">
+                            <strong>D:</strong> Pasta Bake
+                            <div class="meal-actions">
+                                <span class="action-icon" title="Swap">⇄</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Tuesday -->
+                    <div class="day-column" style="border-color: var(--accent-primary); background: var(--nav-hover);">
+                        <div class="day-header">TUE</div>
+                        <div class="meal-card">
+                            <strong>L:</strong> Lentils
+                            <div class="meal-actions">
+                                <span class="action-icon" title="Swap">⇄</span>
+                            </div>
+                        </div>
+                        <div class="meal-card">
+                            <strong>D:</strong> Veggie Bowl
+                            <br><span class="tag" style="margin-top:4px;">Prep</span>
+                            <div class="meal-actions">
+                                <span class="action-icon" title="Swap">⇄</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Wednesday -->
+                    <div class="day-column">
+                        <div class="day-header">WED</div>
+                        <div class="meal-card">
+                            <strong>L:</strong> Sandwich
+                        </div>
+                        <div class="meal-card">
+                            <strong>D:</strong> Pizza Night
+                            <div class="meal-actions">
+                                <span class="action-icon" title="Swap">⇄</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Thursday -->
+                    <div class="day-column">
+                        <div class="day-header">THU</div>
+                        <div class="meal-card">
+                            <strong>L:</strong> Soup
+                        </div>
+                        <div class="meal-card">
+                            <strong>D:</strong> Tacos
+                            <div class="meal-actions">
+                                <span class="action-icon" title="Swap">⇄</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Friday -->
+                    <div class="day-column">
+                        <div class="day-header">FRI</div>
+                        <div class="meal-card">
+                            <strong>L:</strong> Salad
+                        </div>
+                        <div class="meal-card">
+                            <strong>D:</strong> Eat Out
+                            <div class="meal-actions">
+                                <span class="action-icon" title="Swap">⇄</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Saturday -->
+                    <div class="day-column">
+                        <div class="day-header">SAT</div>
+                        <div class="meal-card">
+                            <strong>L:</strong> Brunch
+                        </div>
+                        <div class="meal-card">
+                            <strong>D:</strong> Risotto
+                            <br><span class="tag" style="margin-top:4px;">Complex</span>
+                            <div class="meal-actions">
+                                <span class="action-icon" title="Swap">⇄</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Sunday -->
+                    <div class="day-column">
+                        <div class="day-header">SUN</div>
+                        <div class="meal-card">
+                            <strong>L:</strong> Leftovers
+                        </div>
+                        <div class="meal-card">
+                            <strong>D:</strong> Roast
+                            <div class="meal-actions">
+                                <span class="action-icon" title="Swap">⇄</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recipes Tab -->
+            <div id="recipes" class="tab-content">
+                <header class="header" style="margin-bottom: 1rem;">
+                    <h1>Recipe Collection</h1>
+                    <button class="btn btn-primary">+ New Recipe</button>
+                </header>
+
+                <div class="filter-bar">
+                    <div class="filter-chip active">All</div>
+                    <div class="filter-chip">Vegetarian</div>
+                    <div class="filter-chip">Italian</div>
+                    <div class="filter-chip">Mexican</div>
+                    <div class="filter-chip">Asian</div>
+                    <div class="filter-chip">Under 30m</div>
+                    <div class="filter-chip">Slow cooker</div>
+                </div>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <div
+                            style="height: 120px; background: #d6b39a; border-radius: 8px; margin-bottom: 1rem; opacity: 0.3;">
+                        </div>
+                        <h3>Harvest Bowl</h3>
+                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">A healthy mix of grains and roasted roots.
+                        </p>
+                        <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                            <span class="tag">Vegan</span>
+                            <span class="tag">GF</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div
+                            style="height: 120px; background: #8eb29c; border-radius: 8px; margin-bottom: 1rem; opacity: 0.3;">
+                        </div>
+                        <h3>Mushroom Risotto</h3>
+                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">Creamy italian rice dish with porcini.</p>
+                        <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                            <span class="tag">Italian</span>
+                            <span class="tag">Dinner</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div
+                            style="height: 120px; background: #bc6c25; border-radius: 8px; margin-bottom: 1rem; opacity: 0.3;">
+                        </div>
+                        <h3>Spicy Lentil Soup</h3>
+                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">Warm comfort food for cold nights.</p>
+                        <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                            <span class="tag">Soup</span>
+                            <span class="tag">Easy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Tab -->
+            <div id="inventory" class="tab-content">
+                <header class="header">
+                    <h1>Pantry & Fridge</h1>
+                    <button class="btn btn-secondary">Filter</button>
+                </header>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h3 style="margin-bottom: 1rem; color: var(--accent-primary);">Fresh Produce</h3>
+                        <div class="inventory-list">
+                            <div class="inventory-item">
+                                <span><span class="stock-dot"
+                                        style="background: var(--stock-good);"></span>Spinach</span>
+                                <span class="tag">Fresh</span>
+                            </div>
+                            <div class="inventory-item">
+                                <span><span class="stock-dot"
+                                        style="background: var(--stock-med);"></span>Carrots</span>
+                                <span class="tag">3 left</span>
+                            </div>
+                            <div class="inventory-item">
+                                <span><span class="stock-dot"
+                                        style="background: var(--stock-low);"></span>Tomatoes</span>
+                                <span class="tag">Use Soon</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom: 1rem; color: var(--accent-secondary);">Dry Goods</h3>
+                        <div class="inventory-list">
+                            <div class="inventory-item">
+                                <span><span class="stock-dot"
+                                        style="background: var(--stock-good);"></span>Quinoa</span>
+                                <span class="tag">1 kg</span>
+                            </div>
+                            <div class="inventory-item">
+                                <span><span class="stock-dot"
+                                        style="background: var(--stock-good);"></span>Lentils</span>
+                                <span class="tag">2 bags</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shop Tab -->
+            <div id="shop" class="tab-content">
+                <header class="header">
+                    <h1>Shopping List</h1>
+                    <button class="btn btn-primary">Add Items</button>
+                </header>
+
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Whole Foods</h3>
+                    <div class="meal-row">
+                        <label style="display: flex; align-items: center; gap: 1rem; cursor: pointer;">
+                            <input type="checkbox">
+                            <span>Almond Milk</span>
+                        </label>
+                    </div>
+                    <div class="meal-row">
+                        <label style="display: flex; align-items: center; gap: 1rem; cursor: pointer;">
+                            <input type="checkbox">
+                            <span>Sourdough Bread</span>
+                        </label>
+                    </div>
+                    <div class="meal-row">
+                        <label style="display: flex; align-items: center; gap: 1rem; cursor: pointer;">
+                            <input type="checkbox">
+                            <span>Avocados (4)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-content">
+                <header class="header">
+                    <h1>Settings</h1>
+                </header>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h3 style="margin-bottom: 1.5rem;">People Profiles</h3>
+                        <div class="meal-row">
+                            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                                <div
+                                    style="width: 30px; height: 30px; background: var(--accent-secondary); border-radius: 50%;">
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Sandhya</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">Vegetarian, Loves Spicy
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="action-icon">✎</span>
+                        </div>
+                        <div class="meal-row">
+                            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                                <div
+                                    style="width: 30px; height: 30px; background: var(--accent-primary); border-radius: 50%;">
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Partner</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">No Mushrooms</div>
+                                </div>
+                            </div>
+                            <span class="action-icon">✎</span>
+                        </div>
+                        <button class="btn btn-sm btn-secondary" style="margin-top: 1rem; width: 100%;">+ Add
+                            Person</button>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="margin-bottom: 1.5rem;">App Preferences</h3>
+                        <div class="meal-row">
+                            <span>Theme</span>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-sm btn-secondary" onclick="setTheme('light')">Light</button>
+                                <button class="btn btn-sm btn-secondary" onclick="setTheme('dark')">Dark</button>
+                            </div>
+                        </div>
+                        <div class="meal-row">
+                            <span>Start of Week</span>
+                            <span class="tag">Monday</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        function switchTab(tabId, navElement) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            navElement.classList.add('active');
+        }
+
+        function toggleReplanModal() {
+            document.getElementById('replan-modal').classList.toggle('open');
+        }
+
+        const themeIcon = document.getElementById('theme-icon');
+        const sunPath = "M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z";
+        const moonPath = "M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z";
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            setTheme(next);
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            // Update icon path
+            const path = theme === 'dark' ? sunPath : moonPath; // If dark, show sun to switch to light
+
+            // Allow for simple icon switch visualization
+            if (theme === 'dark') {
+                // Sun icon for switching back to light
+                themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+            } else {
+                // Moon icon
+                themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+            }
+        }
+    </script>
+</body>
+
+</html>

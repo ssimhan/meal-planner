@@ -114,8 +114,45 @@ Declining energy model: Monday (high) → Friday (zero prep)
 - **Block 3: Ingredient Deduplication.**
     - Merge identical ingredients regardless of unit (e.g., "2 cups milk" + "1 liter milk" -> one "milk" entry).
 
-### Phase 22: User Authentication (The "Family Gate")
-**Goal:** Secure the application for single-household access.
+### Phase 22: UX Redesign & Feature Parity
+**Goal:** Implement the new "Earth Tones" high-fidelity UX, ensuring all existing functionality is preserved.
+- **Block 1: Frontend Architecture.**
+    - Implement new layout (Sidebar + 6 Tabs).
+    - Port `Dashboard` logic to new design.
+    - Port `Meal Plan` logic to new design (Week Grid).
+    - Port `Recipes` logic (Grid View + Filters).
+    - Port `Inventory` logic (Fridge/Pantry lists).
+    - Port `Shopping List` logic.
+    - Implement `Settings` tab.
+- **Block 2: Feature Parity.**
+    - Ensure "Confirm for Today" works in new Dashboard.
+    - Ensure "Flexible Logging" works.
+    - Ensure Inventory "Quick Add" works.
+    - Ensure all existing "Wizard" functionality flows correctly in the new UI.
+
+### Phase 23: Bugs, Personalization & Advanced Replanning
+**Goal:** Fix known UX/Logic issues and add layer of personalization.
+- **Block 1: Logic & UX Fixes.**
+    - **Main Page:** Fix Prep steps not syncing with final recipes.
+    - **Week View:** 
+        - Swap meal: Add options for "Eat Out", "Pick Leftovers", "Freezer Meal", "Select Recipe".
+        - Change "Cancel" to "Done Editing".
+        - Fix "Replace with Inventory" missing submit button.
+    - **Recipe Index:** 
+        - Remove "Make at home" option entirely.
+        - Plan meals for Mon-Fri only; leave Sat/Sun as "TBD".
+    - **Recipe Selector:** 
+        - Suggest snacks based on inventory.
+        - Show "Leftover Meals" card; suggest using them before fresh meals.
+    - **Data Integrity:** Fix "4 weeks of data" bug (should be 3: Dec 29, Jan 5, Jan 12).
+- **Block 2: Personalization.**
+    - **People Profiles:** Track likes/dislikes/cuisines per family member.
+    - Weigh recommendations based on profiles.
+- **Block 3: Advanced Replanning.**
+    - **Replan with Notes:** Free-form text input that adjusts the schedule (e.g., "Grandma visiting, need soft food").
+
+### Phase 24: User Authentication (The "Family Gate")
+**Goal:** Secure the application for single-household access via Supabase.
 - **Block 1: Supabase Auth.** Infrastructure & RLS Policies.
 - **Block 2: Login Page.**
 

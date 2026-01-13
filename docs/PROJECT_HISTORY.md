@@ -632,3 +632,27 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Feature:** Backend deduplication.
 - **Logic:** Adding an item that already exists now increments the quantity of the existing entry (merging them) rather than creating a duplicate row.
 - **Cleanup:** Ran a database scrubber to merge all 100% duplicate entries, leaving a clean slate for the new logic.
+
+### Phase 22 Preliminary: UX Redesign Prototype (2026-01-13)
+
+**Goal:** Create a high-fidelity prototype for a complete UI/UX overhaul.
+
+**Rationale:** The current app is functional but "stilted" and lacks aesthetic appeal. The user requested a "premium," modern interface with glassmorphism, smooth animations, and an "Earth Tone" palette.
+
+**Built:**
+- **Single-File Prototype:** Created `ux_redesign_prototype.html` containing the entire new frontend vision.
+- **Design System:**
+    - **Palette:** Earth tones (Sage Green, Terracotta, Warm Beige, Espresso) + Light/Dark mode support.
+    - **Layout:** Sidebar navigation + 6 Tabs (Dashboard, Meal Plan, Recipes, Inventory, Shop, Settings).
+    - **Interaction:** Javascript-based tab switching, hover effects, modal logic.
+- **New Features Prototyped:**
+    - **Brain Dump:** Quick-add input for ingredients/ideas on the dashboard.
+    - **Recipe Filters:** Chip-based filtering (Vegetarian, Italian, etc.).
+    - **Advanced Replanning:** Modal for "Replan with Notes" (natural language intent).
+    - **People Profiles:** Settings section for family dietary preferences.
+
+**Roadmap Restructure:**
+- Realigned `IMPLEMENTATION.md` to prioritize the UX implementation (Phase 22) and push Authentication to Phase 24.
+- Phase 23 defined for specific bug fixes (logic gaps) and advanced features (personalization).
+
+**Learning:** Prototyping in a single HTML file is an incredibly fast way to validate UX/UI changes before committing to complex React/Next.js refactors.

@@ -656,27 +656,6 @@ function DashboardContent() {
         </div>
       </footer>
 
-      {/* Dev Tools (Quick Reset) */}
-      <div className="mt-8 p-4 bg-red-950/10 border border-red-900/20 rounded text-center opacity-50 hover:opacity-100 transition-opacity">
-        <p className="text-xs font-mono uppercase text-red-900/60 mb-2">Dev Tools</p>
-        <button
-          onClick={async () => {
-            try {
-              if (!confirm('Reset "Test Mystery Curry" test data?')) return;
-              const { getAuthHeaders } = await import('@/lib/api');
-              await fetch('/api/test/reset/pending_recipe', {
-                method: 'POST',
-                headers: await getAuthHeaders()
-              });
-              alert('Reset complete! Refreshing...');
-              window.location.reload();
-            } catch (e) { alert(e); }
-          }}
-          className="px-3 py-1 bg-red-900/10 hover:bg-red-900/20 text-red-900 rounded text-xs font-bold"
-        >
-          Reset "Test Mystery Curry"
-        </button>
-      </div>
     </main >
   );
 }

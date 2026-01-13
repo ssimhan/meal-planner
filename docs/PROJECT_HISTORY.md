@@ -585,9 +585,14 @@ The best tools are the ones you actually use. This system works because it reduc
     - **Heuristic Prep Generation:** Built a script that automatically suggests prep tasks (e.g., "Chop onions", "Mince garlic") by analyzing recipe text during ingestion.
     - Synchronized new recipes to Supabase immediately upon capture.
 
-**Block 2: Mid-Week Adjustments (Completed)**
-- **Feature:** Added a "Replan Rest of Week" button to the dashboard Quick Actions.
-- **Logic:** Enabled the `replan` engine to run on-demand for the active week, shifting unmade or skipped meals to future days while respecting current inventory levels.
-- **UX:** Provides an "escape hatch" for when the original plan becomes unrealistic due to life events, without needing to restart the entire week.
+**Block 2: Index Intelligence & Hygiene (Completed)**
+- **Audit:** Automated index audit found 0 duplicates across 235 recipes.
+- **Prep Standardization:** Overhauled `generate_prep_steps.py` with improved heuristics and forced a standardization pass across the entire index (145 recipes updated).
+- **Auto-Generation:** New recipes now get prep steps automatically.
 
-**Learning:** Automated "loop closure" reduces the maintenance burden of the system. By detecting missing recipes at the point of logging, the system builds its own knowledge base organically rather than requiring a dedicated "data entry" phase.
+**Block 3: Flexible Logging & Adjustments (Completed)**
+- **Feature:** Added native support for logging "Leftovers" and "Ate Out" (Restaurant) meals, ensuring accurate adherence metrics (adhered=False but accounted for).
+- **Feature:** Implemented "Change Plan" modal directly on the dashboard dinner card.
+- **UX:** Users can now move today's dinner to another day with one click, swapping meals if necessary, handling the common "too tired today, will cook Friday" scenario.
+
+**Learning:** Automated "loop closure" is critical. By detecting missing recipes (`pending_recipes`) and allowing easy mid-week pivots ("Change Plan"), the system minimizes friction and prevents "abandonment due to rigidity."

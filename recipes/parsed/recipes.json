@@ -4233,6 +4233,48 @@
     "source_file": "mango_yogurt.md"
   },
   {
+    "id": "masala_puri",
+    "name": "Masala Puri",
+    "categories": [],
+    "cuisine": "indian",
+    "meal_type": "unknown",
+    "effort_level": "normal",
+    "no_chop_compatible": false,
+    "prep_time_minutes": null,
+    "cook_time_minutes": null,
+    "appliances": [
+      "stovetop"
+    ],
+    "ingredients": [],
+    "main_veg": [],
+    "avoid_contains": [],
+    "instructions": null,
+    "prep_steps": null,
+    "source_url": "https://www.indianhealthyrecipes.com/masala-puri-chaat/",
+    "source_file": "masala_puri.md"
+  },
+  {
+    "id": "masala_puri_recipe__bangalore_street_style",
+    "name": "Masala Puri Recipe (Bangalore Street Style)",
+    "categories": [],
+    "cuisine": "indian",
+    "meal_type": "dinner",
+    "effort_level": "normal",
+    "no_chop_compatible": false,
+    "prep_time_minutes": null,
+    "cook_time_minutes": null,
+    "appliances": [
+      "instant_pot"
+    ],
+    "ingredients": [],
+    "main_veg": [],
+    "avoid_contains": [],
+    "instructions": null,
+    "prep_steps": null,
+    "source_url": "https://www.indianhealthyrecipes.com/masala-puri-chaat/",
+    "source_file": "masala_puri_recipe__bangalore_street_style.md"
+  },
+  {
     "id": "masoor_dal",
     "name": "Masoor Dal",
     "categories": [
@@ -6519,6 +6561,49 @@
     "source_file": "salted_tahini_oatmeal_chocolate_chip_cookies.md"
   },
   {
+    "id": "sambar_rice",
+    "name": "Sambar Rice",
+    "categories": [],
+    "cuisine": "indian",
+    "meal_type": "dinner",
+    "effort_level": "normal",
+    "no_chop_compatible": false,
+    "prep_time_minutes": null,
+    "cook_time_minutes": null,
+    "appliances": [
+      "stovetop"
+    ],
+    "ingredients": [
+      "¾ cup toor dal (split pigeon peas)",
+      "1 cup rice",
+      "1–2 murungakkai (drumsticks)",
+      "1 medium onion",
+      "1 medium tomato",
+      "1 green chili (optional, for slight heat)",
+      "1½ tbsp sambar powder",
+      "1 tsp tamarind concentrate",
+      "¼ tsp turmeric powder",
+      "Salt to taste",
+      "2 tsp oil or ghee",
+      "½ tsp mustard seeds",
+      "A pinch of hing (asafoetida)",
+      "Few curry leaves (optional)",
+      "Water as needed (about 4–5 cups total)"
+    ],
+    "main_veg": [
+      "onion",
+      "peas",
+      "tomato"
+    ],
+    "avoid_contains": [],
+    "instructions": "For the Sambar Rice:\nWash ¾ cup toor dal and pressure cook it with 2 cups water and ¼ tsp turmeric for 3–4 whistles until soft.\nWash 1 cup rice and cook it separately with 2–2½ cups water until soft (slightly mushy is okay for sambar rice).\nSlice 1 medium onion and chop 1 medium tomato.\nCut 1–2 drumsticks (murungakkai) into 2-inch pieces.\nSambar Rice:\nIn a large pan, heat 2 tsp oil or ghee. Add ½ tsp mustard seeds. Once they splutter, add a pinch of hing and a few curry leaves.\nAdd the sliced onion and sauté for 2–3 minutes until slightly soft.\nAdd the chopped tomato and 1 chopped green chili (if using). Cook until the tomato turns soft.\nAdd the drumstick pieces and about 1 cup water. Let it cook for 7–10 minutes until drumsticks are soft.\nStir in 1½ tbsp sambar powder, 1 tsp tamarind concentrate, and salt. Cook for 2 more minutes.\nAdd the mashed toor dal and cooked rice. Mix well. Adjust water if needed to get a soft, semi-liquid consistency.\nLet it simmer for 5 more minutes. Taste and adjust salt or tamarind.\nTurn off heat and drizzle ghee on top if you like.",
+    "prep_steps": [
+      "Chop onions"
+    ],
+    "source_url": null,
+    "source_file": "sambar_rice.md"
+  },
+  {
     "id": "samosa_grilled_cheese",
     "name": "Samosa Grilled Cheese",
     "categories": [
@@ -7583,6 +7668,46 @@
     "prep_steps": null,
     "source_url": null,
     "source_file": "sweet_and_sour_quinoa.md"
+  },
+  {
+    "id": "sweet_potato_black_bean_quesadilla",
+    "name": "Sweet Potato Black Bean Quesadilla",
+    "categories": [],
+    "cuisine": "mexican",
+    "meal_type": "dinner",
+    "effort_level": "normal",
+    "no_chop_compatible": false,
+    "prep_time_minutes": null,
+    "cook_time_minutes": null,
+    "appliances": [
+      "stovetop"
+    ],
+    "ingredients": [
+      "1 large sweet potato",
+      "1/2 cup frozen corn (or canned corn, drained)",
+      "1/2 cup cooked black beans (or canned, rinsed and drained)",
+      "1/2 cup grated cheese (like mozzarella or cheddar)",
+      "1/2 teaspoon cumin powder",
+      "1/2 teaspoon red chili powder (adjust to taste)",
+      "Salt to taste",
+      "4 medium flour tortillas",
+      "1 tablespoon oil or ghee (for cooking)",
+      "Optional: finely chopped onion, capsicum, green chili, or coriander leaves"
+    ],
+    "main_veg": [
+      "beans",
+      "corn",
+      "onion",
+      "potato",
+      "sweet potato"
+    ],
+    "avoid_contains": [],
+    "instructions": "Prep:\nPeel and chop 1 sweet potato into small cubes.\nBoil or steam the cubes until soft (about 10–15 minutes), then mash well.\nIf using frozen corn, rinse under warm water to thaw.\nRinse and drain 1/2 cup canned black beans if using.\nOptional: Finely chop 1 small onion or capsicum if adding.\n🔥 Cook:\nMake the filling:\nIn a bowl, mix the mashed sweet potato, corn, black beans, cumin powder, red chili powder, and salt.\nAdd any optional veggies or herbs now.\nMix until well combined.\nAssemble the quesadillas:\nPlace one tortilla on a plate or board.\nSpread 2–3 tablespoons of the filling on half of the tortilla.\nSprinkle some grated cheese over the filling.\nFold the tortilla in half to close.\nCook the quesadillas:\nHeat a pan on medium heat. Add a few drops of oil or ghee.\nPlace the folded quesadilla in the pan. Cook for 2–3 minutes on each side, until golden brown and the cheese melts.\nRepeat with the rest.\nServe:\nCut into wedges and serve hot with chutney, salsa, or curd.",
+    "prep_steps": [
+      "Chop onions"
+    ],
+    "source_url": null,
+    "source_file": "sweet_potato_black_bean_quesadilla.md"
   },
   {
     "id": "sweet_potato_tofu_chickpea_curry",

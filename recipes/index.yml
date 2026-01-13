@@ -1823,6 +1823,32 @@
   source:
     type: markdown
     file: recipes/content/mango_yogurt.md
+- id: masala_puri
+  name: Masala Puri
+  cuisine: indian
+  meal_type: unknown
+  effort_level: normal
+  no_chop_compatible: false
+  appliances:
+  - stovetop
+  main_veg: []
+  avoid_contains: []
+  source:
+    type: markdown
+    file: recipes/content/masala_puri.md
+- id: masala_puri_recipe__bangalore_street_style
+  name: Masala Puri Recipe (Bangalore Street Style)
+  cuisine: indian
+  meal_type: dinner
+  effort_level: normal
+  no_chop_compatible: false
+  appliances:
+  - instant_pot
+  main_veg: []
+  avoid_contains: []
+  source:
+    type: markdown
+    file: recipes/content/masala_puri_recipe__bangalore_street_style.md
 - id: masoor_dal
   name: Masoor Dal
   cuisine: indian
@@ -2781,6 +2807,22 @@
   source:
     type: markdown
     file: recipes/content/salted_tahini_oatmeal_chocolate_chip_cookies.md
+- id: sambar_rice
+  name: Sambar Rice
+  cuisine: indian
+  meal_type: dinner
+  effort_level: normal
+  no_chop_compatible: false
+  appliances:
+  - stovetop
+  main_veg:
+  - onion
+  - peas
+  - tomato
+  avoid_contains: []
+  source:
+    type: markdown
+    file: recipes/content/sambar_rice.md
 - id: samosa_grilled_cheese
   name: Samosa Grilled Cheese
   cuisine: indian
@@ -3254,6 +3296,24 @@
   source:
     type: markdown
     file: recipes/content/sweet_and_sour_quinoa.md
+- id: sweet_potato_black_bean_quesadilla
+  name: Sweet Potato Black Bean Quesadilla
+  cuisine: mexican
+  meal_type: dinner
+  effort_level: normal
+  no_chop_compatible: false
+  appliances:
+  - stovetop
+  main_veg:
+  - beans
+  - corn
+  - onion
+  - potato
+  - sweet potato
+  avoid_contains: []
+  source:
+    type: markdown
+    file: recipes/content/sweet_potato_black_bean_quesadilla.md
 - id: sweet_potato_tofu_chickpea_curry
   name: Sweet Potato, Tofu & Chickpea Curry
   cuisine: indian

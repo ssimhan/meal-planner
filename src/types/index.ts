@@ -352,6 +352,22 @@ export interface SwapMealsResponse {
   message: string;
 }
 
+// Recipe Capture Types
+
+export interface CaptureRecipeRequest {
+  name: string;
+  mode: 'url' | 'manual';
+  url?: string;
+  ingredients?: string;
+  instructions?: string;
+}
+
+export interface CaptureRecipeResponse {
+  status: string;
+  message: string;
+  recipe_id: string;
+}
+
 // Error Response Type
 
 export interface ApiError {

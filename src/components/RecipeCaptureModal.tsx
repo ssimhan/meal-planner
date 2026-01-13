@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useToast } from '@/context/ToastContext';
+import { captureRecipe } from '@/lib/api';
 
 interface RecipeCaptureModalProps {
     isOpen: boolean;
@@ -25,24 +26,13 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
         setIsSubmitting(true);
 
         try {
-            const payload = {
+            await captureRecipe({
                 name: mealName,
                 mode,
                 url: mode === 'url' ? url : undefined,
                 ingredients: mode === 'manual' ? ingredients : undefined,
                 instructions: mode === 'manual' ? instructions : undefined
-            };
-
-            const response = await fetch('/api/recipes/capture', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
             });
-
-            if (!response.ok) {
-                const err = await response.json();
-                throw new Error(err.message || 'Failed to capture recipe');
-            }
 
             showToast(`Successfully added ${mealName}!`, 'success');
             onSuccess();

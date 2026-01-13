@@ -15,6 +15,8 @@ import type {
     ImportRecipeResponse,
     ReplanResponse,
     SwapMealsResponse,
+    CaptureRecipeRequest,
+    CaptureRecipeResponse,
     Analytics,
 } from '@/types';
 
@@ -282,6 +284,15 @@ export async function getWizardState(week_of: string): Promise<any> {
         headers: await getAuthHeaders(false),
     });
     return handleResponse<any>(res, 'Failed to fetch wizard state');
+}
+
+export async function captureRecipe(data: CaptureRecipeRequest): Promise<CaptureRecipeResponse> {
+    const res = await fetch('/api/recipes/capture', {
+        method: 'POST',
+        headers: await getAuthHeaders(),
+        body: JSON.stringify(data),
+    });
+    return handleResponse<CaptureRecipeResponse>(res, 'Failed to capture recipe');
 }
 
 // Re-export types for convenience

@@ -86,6 +86,8 @@ Declining energy model: Monday (high) → Friday (zero prep)
     - **Chunk 1: Ingredient Normalization.** Standardize canonical forms (e.g., "tomato" vs "tomatoe"). Ask for confirmation on conflicts and record perm-fix in plan.
     - **Chunk 2: Prep Step Standardization.** Ensure consistently structured prep steps across all recipes using templates where possible.
     - **Chunk 3: One-time Auto-Generation.** First time a recipe is finalized in a plan, generate and save missing prep steps to the recipe file (only changes if recipe is edited).
+    - **Chunk 4: Ingredient Preferences.** Implement system to store and apply ingredient preferences (canonical names/brands). Needs easy entry for new preferences as they are thought of.
+    - **Chunk 5: Index Audit & Deduplication.** Parse through entire index to review metadata, remove duplicates, and ensure all recipes follow the latest standards.
 - **Block 4: Main Page & Prep Logic.**
     - **Chunk 1: Default Week.** Main page should always load the current calendar week by default.
     - **Chunk 2: Prep Ordering.** Prep tasks should be sorted chronologically based on their associated meals.
@@ -109,10 +111,15 @@ Declining energy model: Monday (high) → Friday (zero prep)
 ### Phase 19: Loop Closure & Adjustments
 **Goal:** Close the loop between execution and planning.
 - **Block 1: New Recipe Capture Flow.**
-    - **Chunk 1: Detection.** Detect "Actual Meals" logged that are not in the index.
-    - **Chunk 2: Banner & Capture.** Show banner on main page prompting for Recipe Link (URL) or Manual Input (Ingredients + Instructions).
-    - **Chunk 3: Ingestion logic.** Apply normalization and generate/save prep steps immediately upon capture.
+    - **Chunk 2: Banner & Capture.** Show banner on main page.
+        - *UX Enhancement:* Replace list with a number badge/counter that opens a modal with the list of recipes to add.
+    - **Chunk 3: Ingestion logic.** Apply normalization and generate/save prep steps immediately upon capture. Ensure standardization of ingredient preferences on entry.
+    - **Chunk 4: Option to Discard.** Allow user to dismiss/discard a "new recipe detected" notification.
+    - **Chunk 5: Snack Categorization.** Ability to tag specific recipes/items as "Snacks Only" during entry.
 - **Block 2: Mid-Week Adjustments.** Enable dynamic replanning for the current active week.
+    - *Enhancement:* Allow selection of specific meals/slots that should be replanned vs kept.
+- **Block 3: Expanded Meal Logging.**
+    - Options: Fresh Meal (Planned), Fresh Meal (Not Planned), Ate Out, Freezer Meal, Leftovers.
 
 ### Phase 20: User Authentication (The "Family Gate")
 **Goal:** Secure the application for single-household access.

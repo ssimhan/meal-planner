@@ -45,6 +45,30 @@ def import_recipe(url):
         
         if parse_result.returncode == 0:
             print("Successfully updated recipe index!")
+            
+            # 4. Create Markdown stub in recipes/content if it doesn't exist
+            md_dir = Path('recipes/content')
+            md_dir.mkdir(parents=True, exist_ok=True)
+            md_path = md_dir / f"{sanitize_filename(title).lower()}.md"
+            
+            if not md_path.exists():
+                md_content = f"""---
+name: {title}
+source_url: {url}
+cuisine: unknown
+meal_type: dinner
+---
+
+# {title}
+
+Recipe imported from: {url}
+
+*Note: This is an automatically generated stub. Please review ingredients and instructions in the raw HTML if needed.*
+"""
+                with open(md_path, 'w', encoding='utf-8') as f:
+                    f.write(md_content)
+                print(f"Created Markdown stub: {md_path}")
+            
             return True
         else:
             print(f"Error parsing recipe: {parse_result.stderr}")

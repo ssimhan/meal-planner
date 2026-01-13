@@ -61,7 +61,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ## Development Status
 
-**Current State:** Phase 17 In Progress.
+**Current State:** Phase 19 In Progress.
 
 **Completed Phases:**
 - **1-9:** Foundation (recipe parsing, CLI, energy-based prep, HTML plans)
@@ -71,6 +71,8 @@ Declining energy model: Monday (high) → Friday (zero prep)
 - **14:** Data Layer Redesign (Plan vs Actual separation)
 - **15:** Database Migration (Supabase integration)
 - **16:** Smart Weekly Planning Workflow (End-to-End)
+- **17:** Core Stability & Data Hygiene (Blocks 1, 2, 4)
+- **18:** Enhanced Planning Workflow (Wizard 2.0)
 
 ---
 

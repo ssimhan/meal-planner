@@ -11,6 +11,7 @@ import FeedbackButtons from '@/components/FeedbackButtons';
 import DinnerLogging from '@/components/DinnerLogging';
 import PrepTaskList from '@/components/PrepTaskList';
 import NightlyCheckinBanner from '@/components/NightlyCheckinBanner';
+import RecipeCaptureBanner from '@/components/RecipeCaptureBanner';
 import { useToast } from '@/context/ToastContext';
 import { logout } from './login/actions';
 
@@ -182,13 +183,24 @@ function DashboardContent() {
 
     try {
       setUi(prev => ({ ...prev, actionLoading: true }));
-      const result = await generatePlan(status.week_of);
+      await generatePlan(status.week_of);
       showToast(`Plan generated successfully for week of ${status.week_of}!`, 'success');
-
-      // Refresh status
-      await fetchStatus();
+      await fetchStatus(false, selectedWeek || undefined);
     } catch (err: any) {
       showToast(err.message || 'Failed to generate plan', 'error');
+    } finally {
+      setUi(prev => ({ ...prev, actionLoading: false }));
+    }
+  }
+
+  async function handleReplan() {
+    try {
+      setUi(prev => ({ ...prev, actionLoading: true }));
+      await replan();
+      showToast('Plan adjusted for the rest of the week!', 'success');
+      await fetchStatus(false, selectedWeek || undefined);
+    } catch (err: any) {
+      showToast(err.message || 'Failed to replan', 'error');
     } finally {
       setUi(prev => ({ ...prev, actionLoading: false }));
     }
@@ -313,6 +325,7 @@ function DashboardContent() {
       <header className="mb-12">
         <h1 className="text-5xl mb-4">Sandhya's Meal Planner</h1>
         {status && <NightlyCheckinBanner status={status} />}
+        {status && <RecipeCaptureBanner status={status} onRefresh={() => fetchStatus(false, selectedWeek || undefined)} />}
       </header>
 
       <div className="grid gap-8 md:grid-cols-2">
@@ -386,6 +399,17 @@ function DashboardContent() {
               >
                 <span>{ui.actionLoading ? 'Generating...' : 'Generate Weekly Plan'}</span>
                 <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+              </button>
+            )}
+
+            {(status?.state === 'active' || status?.state === 'waiting_for_checkin') && (
+              <button
+                onClick={handleReplan}
+                disabled={ui.actionLoading}
+                className="btn-primary w-full text-left flex justify-between items-center group disabled:opacity-50"
+              >
+                <span>{ui.actionLoading ? 'Replanning...' : 'Replan Rest of Week'}</span>
+                <span className="opacity-0 group-hover:opacity-100 transition-opacity">🔄</span>
               </button>
             )}
 

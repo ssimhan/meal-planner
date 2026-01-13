@@ -331,3 +331,58 @@ class StorageEngine:
                     print(f"Archived expired week: {week_of}")
         except Exception as e:
             print(f"Error in archive_expired_weeks: {e}")
+
+    @staticmethod
+    def get_pending_recipes():
+        """Detect 'Actual Meals' logged that are not in the recipe index."""
+        if not supabase: return []
+        h_id = get_household_id()
+        
+        try:
+            # 1. Get all recipes
+            recipes_res = supabase.table("recipes").select("id, name").eq("household_id", h_id).execute()
+            recipe_ids = {r['id'] for r in recipes_res.data}
+            recipe_names = {r['name'].lower() for r in recipes_res.data}
+            
+            # 2. Get history (all weeks)
+            res = supabase.table("meal_plans").select("history_data").eq("household_id", h_id).execute()
+            weeks = [row['history_data'] for row in res.data if row.get('history_data')]
+            
+            pending = []
+            seen = set()
+            
+            # Common non-recipe keywords to ignore
+            ignore = {'leftovers', 'skipped', 'outside_meal', 'same', 'none', 'yes', 'no', 'true', 'false'}
+
+            for week in weeks:
+                # Check dinners
+                for dinner in week.get('dinners', []):
+                    actual = dinner.get('actual_meal')
+                    if actual and isinstance(actual, str):
+                        actual_clean = actual.strip()
+                        if actual_clean.lower() in ignore: continue
+                        
+                        actual_id = actual_clean.lower().replace(' ', '_')
+                        if actual_id not in recipe_ids and actual_clean.lower() not in recipe_names:
+                            if actual_clean not in seen:
+                                pending.append(actual_clean)
+                                seen.add(actual_clean)
+                                
+                # Check lunches/snacks in daily_feedback
+                df = week.get('daily_feedback', {})
+                for day, feedback in df.items():
+                    for key in ['kids_lunch_made', 'adult_lunch_made', 'school_snack_made', 'home_snack_made']:
+                        actual = feedback.get(key)
+                        if actual and isinstance(actual, str):
+                            actual_clean = actual.strip()
+                            if actual_clean.lower() in ignore: continue
+                            
+                            actual_id = actual_clean.lower().replace(' ', '_')
+                            if actual_id not in recipe_ids and actual_clean.lower() not in recipe_names:
+                                if actual_clean not in seen:
+                                    pending.append(actual_clean)
+                                    seen.add(actual_clean)
+            return pending
+        except Exception as e:
+            print(f"Error in get_pending_recipes: {e}")
+            return []

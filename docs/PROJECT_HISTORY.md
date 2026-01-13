@@ -573,5 +573,21 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Goal:** Standardize data normalization, ensure prep step persistence, and overhaul the Inventory interface.
 - **Impact:** Shifted focus back to Phase 17 (Stability) and defined Phase 19/21 for better closure and UX.
 
+### Phase 19: Loop Closure & Adjustments (2026-01-13) ✅ Complete
+**Goal:** Close the loop between execution and planning by enabling new recipe capture and mid-week plan adjustments.
 
+**Block 1: New Recipe Capture Flow (Completed)**
+- **Detection:** Added backend logic to scan historical logs for meals that are not in the recipe index. These are flagged as `pending_recipes`.
+- **UI:** Implemented a non-intrusive "New Recipes Detected" banner on the dashboard that appears only when unindexed meals are found.
+- **Capture:** Created a modal allowing users to capture recipes via a URL or manual entry (Ingredients + Instructions).
+- **Ingestion:** 
+    - Automated the creation of Markdown recipe files with YAML frontmatter.
+    - **Heuristic Prep Generation:** Built a script that automatically suggests prep tasks (e.g., "Chop onions", "Mince garlic") by analyzing recipe text during ingestion.
+    - Synchronized new recipes to Supabase immediately upon capture.
 
+**Block 2: Mid-Week Adjustments (Completed)**
+- **Feature:** Added a "Replan Rest of Week" button to the dashboard Quick Actions.
+- **Logic:** Enabled the `replan` engine to run on-demand for the active week, shifting unmade or skipped meals to future days while respecting current inventory levels.
+- **UX:** Provides an "escape hatch" for when the original plan becomes unrealistic due to life events, without needing to restart the entire week.
+
+**Learning:** Automated "loop closure" reduces the maintenance burden of the system. By detecting missing recipes at the point of logging, the system builds its own knowledge base organically rather than requiring a dedicated "data entry" phase.

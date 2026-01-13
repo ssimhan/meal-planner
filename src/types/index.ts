@@ -29,6 +29,7 @@ export interface WorkflowStatus {
     week_of: string;
     status: string;
   };
+  pending_recipes?: string[];
 }
 
 export interface AvailableWeek {

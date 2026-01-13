@@ -252,7 +252,8 @@ def _get_current_status(skip_sync=False, week_override=None):
             "next_week": None,
             "week_data": data,
             "available_weeks": [],
-            "slots": resolved_slots
+            "slots": resolved_slots,
+            "pending_recipes": storage.StorageEngine.get_pending_recipes()
         }
 
         # Check for next week

@@ -98,3 +98,113 @@ def import_recipe():
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+@recipes_bp.route("/api/recipes/capture", methods=["POST"])
+@require_auth
+def capture_recipe():
+    try:
+        data = request.json or {}
+        meal_name = data.get('name')
+        mode = data.get('mode') # 'url' or 'manual'
+        
+        if not meal_name:
+            return jsonify({"status": "error", "message": "Meal name is required"}), 400
+            
+        recipe_id = meal_name.lower().replace(' ', '_')
+        
+        # Check if already exists in DB
+        h_id = StorageEngine.get_household_id()
+        existing = StorageEngine.get_recipe_details(recipe_id)
+        if existing:
+            return jsonify({"status": "error", "message": f"Recipe '{meal_name}' already exists"}), 400
+
+        markdown_content = ""
+        metadata = {
+            "name": meal_name,
+            "cuisine": "unknown",
+            "meal_type": "dinner",
+            "effort_level": "normal"
+        }
+
+        if mode == 'manual':
+            ingredients = data.get('ingredients', '')
+            instructions = data.get('instructions', '')
+            
+            # Format as list if newline separated
+            ing_list = [i.strip() for i in ingredients.split('\n') if i.strip()]
+            
+            markdown_content = f"""---
+name: {meal_name}
+cuisine: unknown
+meal_type: dinner
+effort_level: normal
+---
+
+# {meal_name}
+
+## Ingredients
+"""
+            for ing in ing_list:
+                markdown_content += f"- {ing}\n"
+                
+            markdown_content += f"\n## Instructions\n{instructions}\n"
+            
+        elif mode == 'url':
+            url = data.get('url')
+            if not url:
+                return jsonify({"status": "error", "message": "URL is required"}), 400
+            
+            # For URL mode, we'll use the existing import_recipe logic to start
+            # But we want to return a better result.
+            import subprocess
+            cmd = [sys.executable, "scripts/import_recipe.py", url]
+            subprocess.run(cmd, capture_output=True, text=True, cwd=os.getcwd())
+            
+            # import_recipe.py currently saves to recipes/raw_html and runs parse_recipes.py
+            # If parse_recipes.py doesn't find a corresponding .md in content/, it won't do much.
+            # So for now, URL capture might be limited unless we improve import_recipe.py.
+            # Let's provide a placeholder MD if it's missing.
+            
+            md_path = Path(f'recipes/content/{recipe_id}.md')
+            if not md_path.exists():
+                markdown_content = f"""---
+name: {meal_name}
+source_url: {url}
+---
+
+# {meal_name}
+
+Added from URL: {url}
+"""
+            else:
+                # Already created by some other process?
+                pass
+
+        # Save MD to disk if we generated content
+        if markdown_content:
+            md_path = Path(f'recipes/content/{recipe_id}.md')
+            md_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(md_path, 'w', encoding='utf-8') as f:
+                f.write(markdown_content)
+
+        # Run prep step generation
+        md_file_path = Path(f'recipes/content/{recipe_id}.md')
+        if md_file_path.exists():
+            subprocess.run([sys.executable, "scripts/generate_prep_steps.py", str(md_file_path)], capture_output=True)
+
+        # Run parser and migration to sync to DB
+        subprocess.run([sys.executable, "scripts/parse_recipes.py"], capture_output=True)
+        subprocess.run([sys.executable, "scripts/migrate_to_db.py"], capture_output=True)
+        
+        invalidate_cache('recipes')
+        
+        return jsonify({
+            "status": "success",
+            "message": f"Successfully captured recipe for {meal_name}",
+            "recipe_id": recipe_id
+        })
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": str(e)}), 500

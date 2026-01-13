@@ -1,43 +1,93 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* Earth Tones Theme - Light Mode (Default) */
 :root {
-  --bg-primary: #fef9f3;
-  --bg-secondary: #f0e6d2;
+  --bg-body: #fdfbf7;
+  --bg-sidebar: #f0eadd;
   --bg-card: #ffffff;
-  --accent-green: #2d6a4f;
-  --accent-gold: #d4a574;
-  --accent-terracotta: #c1666b;
-  --accent-sage: #6a8e7f;
-  --text-primary: #2b2d42;
-  --text-muted: #6c757d;
-  --border-subtle: rgba(109, 122, 95, 0.2);
+  --text-main: #2c241b;
+  --text-muted: #6e645a;
+  --accent-primary: #5c7f67;
+  --accent-hover: #4a6652;
+  --accent-secondary: #c98e6e;
+  --border-color: #e6e0d4;
+  --shadow: rgba(44, 36, 27, 0.05);
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --nav-hover: rgba(92, 127, 103, 0.1);
+  --nav-active-bg: #e6e0d4;
+  --nav-active-text: #2c241b;
+  --stock-good: #5c7f67;
+  --stock-med: #d4a373;
+  --stock-low: #bc6c25;
+}
+
+/* Earth Tones Theme - Dark Mode */
+[data-theme="dark"] {
+  --bg-body: #1c1917;
+  --bg-sidebar: #292524;
+  --bg-card: #2e2a27;
+  --text-main: #e7e5e4;
+  --text-muted: #a8a29e;
+  --accent-primary: #8eb29c;
+  --accent-hover: #a3c4b0;
+  --accent-secondary: #d6b39a;
+  --border-color: #44403c;
+  --shadow: rgba(0, 0, 0, 0.3);
+  --glass-bg: rgba(46, 42, 39, 0.8);
+  --nav-hover: rgba(142, 178, 156, 0.1);
+  --nav-active-bg: #44403c;
+  --nav-active-text: #e7e5e4;
 }
 
 @layer base {
+  * {
+    @apply transition-colors duration-300 ease-in-out;
+  }
+
   body {
-    @apply bg-[var(--bg-primary)] text-[var(--text-primary)] antialiased;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.03"/></svg>');
+    @apply bg-[var(--bg-body)] text-[var(--text-main)] antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    overflow: hidden;
   }
 
   h1,
   h2,
   h3 {
-    @apply font-serif font-black tracking-tight;
-    color: var(--accent-green);
+    @apply font-sans font-bold tracking-tight;
+    color: var(--text-main);
   }
 }
 
 @layer components {
   .card {
-    @apply bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-sm shadow-sm p-6;
+    @apply bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl shadow-sm p-6;
+    box-shadow: 0 4px 6px -3px var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .card:hover {
+    @apply -translate-y-1;
+    box-shadow: 0 10px 15px -3px var(--shadow);
   }
 
   .btn-primary {
-    @apply bg-[var(--accent-green)] text-white px-6 py-2 rounded-sm font-medium hover:opacity-90 transition-opacity;
+    @apply bg-[var(--accent-primary)] text-white px-6 py-3 rounded-lg font-semibold transition-all;
+  }
+
+  [data-theme="dark"] .btn-primary {
+    @apply text-[#1c1917];
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-hover);
   }
 
   .btn-secondary {
-    @apply bg-[var(--accent-gold)] text-[var(--text-primary)] px-6 py-2 rounded-sm font-medium hover:opacity-90 transition-opacity;
+    @apply bg-transparent text-[var(--text-main)] px-6 py-3 rounded-lg font-semibold border border-[var(--border-color)] transition-all;
+  }
+
+  .btn-secondary:hover {
+    @apply bg-[var(--bg-sidebar)];
   }
 }

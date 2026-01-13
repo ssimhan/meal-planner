@@ -114,21 +114,21 @@ Declining energy model: Monday (high) → Friday (zero prep)
 - **Block 3: Ingredient Deduplication.**
     - Merge identical ingredients regardless of unit (e.g., "2 cups milk" + "1 liter milk" -> one "milk" entry).
 
-### Phase 22: UX Redesign & Feature Parity
+### Phase 22: UX Redesign & Feature Parity 🚧 In Progress
 **Goal:** Implement the new "Earth Tones" high-fidelity UX, ensuring all existing functionality is preserved.
-- **Block 1: Frontend Architecture.**
-    - Implement new layout (Sidebar + 6 Tabs).
-    - Port `Dashboard` logic to new design.
-    - Port `Meal Plan` logic to new design (Week Grid).
-    - Port `Recipes` logic (Grid View + Filters).
-    - Port `Inventory` logic (Fridge/Pantry lists).
-    - Port `Shopping List` logic.
-    - Implement `Settings` tab.
-- **Block 2: Feature Parity.**
-    - Ensure "Confirm for Today" works in new Dashboard.
-    - Ensure "Flexible Logging" works.
-    - Ensure Inventory "Quick Add" works.
-    - Ensure all existing "Wizard" functionality flows correctly in the new UI.
+- **Block 1: Frontend Architecture.** ✅ Complete
+    - ✅ Implement new layout (Sidebar + 6 Tabs)
+    - ✅ Create Earth Tones theme with light/dark mode
+    - ✅ Wrap all existing pages (Dashboard, Meal Plan, Recipes, Inventory, Week View) with new AppLayout
+    - ✅ Create placeholder Shopping List page
+    - ✅ Create placeholder Settings page
+    - 🔜 Refine individual page layouts to match prototype design
+- **Block 2: Feature Parity.** 🔜 Pending
+    - Ensure "Confirm for Today" works in new Dashboard
+    - Ensure "Flexible Logging" works
+    - Ensure Inventory "Quick Add" works
+    - Ensure all existing "Wizard" functionality flows correctly in the new UI
+    - Full testing of all features with new layout
 
 ### Phase 23: Bugs, Personalization & Advanced Replanning
 **Goal:** Fix known UX/Logic issues and add layer of personalization.

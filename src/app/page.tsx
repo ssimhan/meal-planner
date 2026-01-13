@@ -5,6 +5,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getStatus, generatePlan, createWeek, confirmVeg, logMeal, getRecipes, replan, WorkflowStatus } from '@/lib/api';
 import type { RecipeListItem } from '@/types';
+import AppLayout from '@/components/AppLayout';
 import Skeleton from '@/components/Skeleton';
 import Card from '@/components/Card';
 import FeedbackButtons from '@/components/FeedbackButtons';
@@ -313,38 +314,41 @@ function DashboardContent() {
 
   if (loading && !status) {
     return (
-      <main className="container mx-auto max-w-4xl px-4 py-12">
-        <header className="mb-12">
-          <Skeleton className="h-12 w-3/4 mb-4" />
-        </header>
-        <div className="grid gap-8 md:grid-cols-2">
-          <section className="card">
-            <Skeleton className="h-4 w-1/4 mb-4" />
-            <div className="space-y-4">
-              <Skeleton className="h-8 w-1/2" />
-              <Skeleton className="h-8 w-1/3" />
-            </div>
-          </section>
-          <section className="card">
-            <Skeleton className="h-4 w-1/4 mb-4" />
-            <div className="space-y-4">
-              <Skeleton className="h-10 w-full" />
-              <Skeleton className="h-10 w-full" />
-            </div>
-          </section>
-          <section className="card md:col-span-2">
-            <Skeleton className="h-4 w-1/4 mb-4" />
-            <div className="grid grid-cols-5 gap-3">
-              {[1, 2, 3, 4, 5].map(i => <Skeleton key={i} className="h-16 w-full" />)}
-            </div>
-          </section>
+      <AppLayout>
+        <div className="container mx-auto max-w-4xl">
+          <header className="mb-12">
+            <Skeleton className="h-12 w-3/4 mb-4" />
+          </header>
+          <div className="grid gap-8 md:grid-cols-2">
+            <section className="card">
+              <Skeleton className="h-4 w-1/4 mb-4" />
+              <div className="space-y-4">
+                <Skeleton className="h-8 w-1/2" />
+                <Skeleton className="h-8 w-1/3" />
+              </div>
+            </section>
+            <section className="card">
+              <Skeleton className="h-4 w-1/4 mb-4" />
+              <div className="space-y-4">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+            </section>
+            <section className="card md:col-span-2">
+              <Skeleton className="h-4 w-1/4 mb-4" />
+              <div className="grid grid-cols-5 gap-3">
+                {[1, 2, 3, 4, 5].map(i => <Skeleton key={i} className="h-16 w-full" />)}
+              </div>
+            </section>
+          </div>
         </div>
-      </main>
+      </AppLayout>
     );
   }
 
   return (
-    <main className="container mx-auto max-w-4xl px-4 py-12">
+    <AppLayout>
+      <div className="container mx-auto max-w-4xl">
       <header className="mb-12 relative">
         <div className="flex justify-between items-start mb-4">
           <h1 className="text-5xl">Sandhya's Meal Planner</h1>
@@ -682,7 +686,8 @@ function DashboardContent() {
         </div>
       </footer>
 
-    </main >
+      </div>
+    </AppLayout>
   );
 }
 

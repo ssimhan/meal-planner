@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { getInventory, addItemToInventory, bulkAddItemsToInventory, deleteItemFromInventory, updateInventoryItem, moveInventoryItem } from '@/lib/api';
+import AppLayout from '@/components/AppLayout';
 import Link from 'next/link';
 import { useToast } from '@/context/ToastContext';
 import InventoryItemRow from '@/components/InventoryItemRow';
@@ -178,10 +179,15 @@ export default function InventoryPage() {
     // If not searching, we can split them back out for standard view
     const viewItems = searchQuery ? filteredItems : null; // If null, use standard view
 
-    if (loading) return <div className="p-8 font-mono animate-pulse">LOADING INVENTORY...</div>;
+    if (loading) return (
+        <AppLayout>
+            <div className="font-mono animate-pulse">LOADING INVENTORY...</div>
+        </AppLayout>
+    );
 
     return (
-        <main className="container mx-auto max-w-4xl px-4 py-8 pb-32">
+        <AppLayout>
+            <div className="container mx-auto max-w-4xl pb-32">
             <header className="mb-8">
                 <Link href="/" className="text-sm text-[var(--accent-green)] hover:underline mb-4 inline-block font-mono">← Dashboard</Link>
                 <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4">
@@ -396,6 +402,7 @@ export default function InventoryPage() {
                 loading={updating}
             />
 
-        </main>
+            </div>
+        </AppLayout>
     );
 }

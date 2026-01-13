@@ -16,6 +16,7 @@ import {
     saveWizardState,
     getWizardState
 } from '@/lib/api';
+import AppLayout from '@/components/AppLayout';
 import Skeleton from '@/components/Skeleton';
 import ReplacementModal from '@/components/ReplacementModal';
 import { useToast } from '@/context/ToastContext';
@@ -1121,8 +1122,10 @@ function PlanningWizardContent() {
 
 export default function PlanningWizard() {
     return (
-        <React.Suspense fallback={<Skeleton className="h-64 w-full" />}>
-            <PlanningWizardContent />
-        </React.Suspense>
+        <AppLayout>
+            <React.Suspense fallback={<Skeleton className="h-64 w-full" />}>
+                <PlanningWizardContent />
+            </React.Suspense>
+        </AppLayout>
     );
 }

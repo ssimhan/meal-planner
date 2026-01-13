@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getStatus, getRecipes, WorkflowStatus, replan, swapMeals, logMeal } from '@/lib/api';
+import AppLayout from '@/components/AppLayout';
 import { useToast } from '@/context/ToastContext';
 import MealCorrectionInput from '@/components/MealCorrectionInput';
 import SwapConfirmationModal from '@/components/SwapConfirmationModal';
@@ -1047,12 +1048,14 @@ function WeekViewContent() {
 
 export default function WeekView() {
   return (
-    <Suspense fallback={
-      <div className="flex items-center justify-center min-h-screen text-[var(--bg-primary)]">
-        <p className="text-[var(--text-muted)] font-mono animate-pulse">LOADING WEEK VIEW...</p>
-      </div>
-    }>
-      <WeekViewContent />
-    </Suspense>
+    <AppLayout>
+      <Suspense fallback={
+        <div className="flex items-center justify-center">
+          <p className="text-[var(--text-muted)] font-mono animate-pulse">LOADING WEEK VIEW...</p>
+        </div>
+      }>
+        <WeekViewContent />
+      </Suspense>
+    </AppLayout>
   );
 }

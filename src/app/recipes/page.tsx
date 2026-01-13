@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getRecipes } from '@/lib/api';
+import AppLayout from '@/components/AppLayout';
 import Link from 'next/link';
 
 export default function RecipesPage() {
@@ -29,10 +30,15 @@ export default function RecipesPage() {
         r.template?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (loading) return <div className="p-8 font-mono animate-pulse">LOADING RECIPES...</div>;
+    if (loading) return (
+        <AppLayout>
+            <div className="font-mono animate-pulse">LOADING RECIPES...</div>
+        </AppLayout>
+    );
 
     return (
-        <main className="container mx-auto max-w-4xl px-4 py-12">
+        <AppLayout>
+            <div className="container mx-auto max-w-4xl">
             <header className="mb-12 flex justify-between items-end">
                 <div>
                     <Link href="/" className="text-[var(--accent-green)] hover:underline mb-4 inline-block font-mono">← Dashboard</Link>
@@ -74,6 +80,7 @@ export default function RecipesPage() {
                     ))}
                 </div>
             )}
-        </main>
+            </div>
+        </AppLayout>
     );
 }

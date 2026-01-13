@@ -26,6 +26,7 @@ from api.routes.meals import meals_bp
 from api.routes.inventory import inventory_bp
 from api.routes.recipes import recipes_bp
 from api.routes.reviews import reviews_bp
+from api.routes.groceries import groceries_bp
 
 # Register Blueprints
 app.register_blueprint(status_bp)
@@ -33,6 +34,7 @@ app.register_blueprint(meals_bp)
 app.register_blueprint(inventory_bp)
 app.register_blueprint(recipes_bp)
 app.register_blueprint(reviews_bp)
+app.register_blueprint(groceries_bp)
 
 
 

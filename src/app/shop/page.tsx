@@ -1,16 +1,41 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import AppLayout from '@/components/AppLayout';
-import { getStatus, getShoppingList, addItemToInventory } from '@/lib/api';
+import {
+  getStatus,
+  getShoppingList,
+  addItemToInventory,
+  getStores,
+  addStore,
+  mapItemToStore,
+  addShoppingListExtras,
+  removeShoppingListExtra
+} from '@/lib/api';
 import { useToast } from '@/context/ToastContext';
 import Skeleton from '@/components/Skeleton';
 
+interface ShoppingItem {
+  item: string;
+  store: string;
+}
+
 export default function ShopPage() {
   const [loading, setLoading] = useState(true);
-  const [shoppingList, setShoppingList] = useState<string[]>([]);
+  const [fullList, setFullList] = useState<ShoppingItem[]>([]);
   const [weekOf, setWeekOf] = useState<string | null>(null);
-  const [addingItem, setAddingItem] = useState<string | null>(null);
+
+  // Store Data
+  const [stores, setStores] = useState<string[]>(['Other']);
+
+  // Quick Add State
+  const [quickAddText, setQuickAddText] = useState('');
+  const [isAdding, setIsAdding] = useState(false);
+
+  // Store Management State
+  const [showAddStore, setShowAddStore] = useState(false);
+  const [newStoreName, setNewStoreName] = useState('');
+
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -20,103 +45,207 @@ export default function ShopPage() {
   async function loadData() {
     try {
       setLoading(true);
-      const status = await getStatus();
-      if (status?.week_of) {
-        setWeekOf(status.week_of);
-        const listData = await getShoppingList(status.week_of);
-        setShoppingList(listData.shopping_list || []);
+
+      const [statusRes, storesRes] = await Promise.all([
+        getStatus(),
+        getStores()
+      ]);
+
+      if (storesRes.stores) {
+        setStores(storesRes.stores);
+      }
+
+      if (statusRes?.week_of) {
+        setWeekOf(statusRes.week_of);
+        const listData = await getShoppingList(statusRes.week_of);
+        // Backend now returns {item, store}[] (validated by backend changes)
+        setFullList(listData.shopping_list || []);
       }
     } catch (err: any) {
       console.error(err);
-      showToast('Failed to load shopping list', 'error');
+      showToast('Failed to load data', 'error');
     } finally {
       setLoading(false);
     }
   }
 
-  async function handleItemCheck(item: string) {
+  // Group items by store
+  const groupedItems = useMemo(() => {
+    const groups: Record<string, ShoppingItem[]> = {};
+    stores.forEach(s => groups[s] = []);
+    groups['Other'] = []; // Ensure Other exists
+
+    fullList.forEach(obj => {
+      const store = obj.store || 'Other';
+      if (!groups[store]) groups[store] = [];
+      groups[store].push(obj);
+    });
+
+    return groups;
+  }, [fullList, stores]);
+
+  async function handleQuickAdd() {
+    if (!quickAddText.trim() || !weekOf) return;
+    setIsAdding(true);
     try {
-      setAddingItem(item);
-      // Assume it goes to fridge by default, or we could guess based on item type
-      // For now, let's default to 'fridge' as it's the safest 'bought' location
-      await addItemToInventory('fridge', item);
-      
-      showToast(`Added ${item} to fridge!`, 'success');
-      
-      // Remove from local list immediately (optimistic UI)
-      setShoppingList(prev => prev.filter(i => i !== item));
-      
-      // Background refresh to ensure sync
-      if (weekOf) {
-        const listData = await getShoppingList(weekOf);
-        setShoppingList(listData.shopping_list || []);
-      }
-    } catch (err: any) {
-      showToast('Failed to update inventory', 'error');
+      const items = quickAddText.split(/[\n,]/).map(s => s.trim()).filter(Boolean);
+      if (items.length === 0) return;
+
+      await addShoppingListExtras(weekOf, items);
+      showToast(`Added ${items.length} items`, 'success');
+      setQuickAddText('');
+
+      // Refresh
+      const listData = await getShoppingList(weekOf);
+      setFullList(listData.shopping_list || []);
+
+    } catch (err) {
+      showToast('Failed to add items', 'error');
     } finally {
-      setAddingItem(null);
+      setIsAdding(false);
     }
   }
 
-  if (loading) {
-    return (
-      <AppLayout>
-        <div className="container mx-auto max-w-2xl animate-pulse">
-            <h1 className="text-4xl font-bold mb-8">Shopping List</h1>
-            <Skeleton className="h-12 w-full mb-4" />
-            <Skeleton className="h-12 w-full mb-4" />
-            <Skeleton className="h-12 w-full mb-4" />
-        </div>
-      </AppLayout>
-    );
+  async function handleAddStore() {
+    if (!newStoreName.trim()) return;
+    try {
+      const res = await addStore(newStoreName);
+      if (res.stores) setStores(res.stores);
+      setNewStoreName('');
+      setShowAddStore(false);
+      showToast('Store added', 'success');
+    } catch (err) {
+      showToast('Failed to add store', 'error');
+    }
   }
+
+  async function handleStoreChange(item: string, newStore: string) {
+    try {
+      await mapItemToStore(item, newStore);
+      showToast(`Moved ${item} to ${newStore}`, 'success');
+      // Optimistic update
+      setFullList(prev => prev.map(i => i.item === item ? { ...i, store: newStore } : i));
+    } catch (err) {
+      showToast('Failed to map item', 'error');
+    }
+  }
+
+  async function handleCheck(itemObj: ShoppingItem) {
+    try {
+      await addItemToInventory('fridge', itemObj.item);
+      showToast(`Bought ${itemObj.item}`, 'success');
+      setFullList(prev => prev.filter(i => i.item !== itemObj.item));
+
+      if (weekOf) {
+        await removeShoppingListExtra(weekOf, itemObj.item);
+      }
+    } catch (err) {
+      showToast('Failed to check item', 'error');
+    }
+  }
+
+  if (loading) return <AppLayout><div className="p-8"><Skeleton className="h-12 w-96" /></div></AppLayout>;
+
+  // Get active stores (stores + any that appear in groups but not in stores list, though ideally they should match)
+  const allStoreKeys = Array.from(new Set([...stores, ...Object.keys(groupedItems)]));
 
   return (
     <AppLayout>
-      <div className="container mx-auto max-w-2xl">
-        <h1 className="text-4xl font-bold mb-2">Shopping List</h1>
-        <p className="text-[var(--text-muted)] mb-8">
-          {weekOf ? `Items needed for week of ${weekOf}` : 'No active meal plan found.'}
-        </p>
+      <div className="container mx-auto max-w-3xl pb-24">
+        <header className="mb-8 flex justify-between items-end">
+          <div>
+            <h1 className="text-4xl font-bold mb-2">Shopping List</h1>
+            <p className="text-[var(--text-muted)]">Week of {weekOf}</p>
+          </div>
+          <button
+            onClick={() => setShowAddStore(!showAddStore)}
+            className="text-sm text-[var(--accent-sage)] hover:underline"
+          >
+            {showAddStore ? 'Cancel' : 'Manage Stores'}
+          </button>
+        </header>
 
-        {shoppingList.length > 0 ? (
-          <div className="card">
-            <h3 className="text-lg font-semibold mb-4 flex justify-between items-center">
-                <span>To Buy ({shoppingList.length})</span>
-                <span className="text-xs font-normal text-[var(--text-muted)]">Check to add to inventory</span>
-            </h3>
-
-            <div className="space-y-1">
-              {shoppingList.map((item) => (
-                <label 
-                    key={item} 
-                    className={`flex items-center gap-4 p-4 border-b border-[var(--border-color)] cursor-pointer hover:bg-[var(--bg-sidebar)] rounded transition-all ${addingItem === item ? 'opacity-50' : ''}`}
-                >
-                  <input 
-                    type="checkbox" 
-                    className="w-5 h-5 accent-[var(--accent-primary)]"
-                    checked={false} // Always unchecked because checking it removes it
-                    disabled={addingItem === item}
-                    onChange={() => handleItemCheck(item)}
-                  />
-                  <span className={addingItem === item ? 'line-through text-[var(--text-muted)]' : ''}>
-                    {item}
-                  </span>
-                  {addingItem === item && <span className="text-xs text-[var(--text-muted)] ml-auto">Adding...</span>}
-                </label>
+        {showAddStore && (
+          <div className="card mb-6 bg-[var(--bg-secondary)]">
+            <h3 className="font-bold mb-2">Add New Store</h3>
+            <div className="flex gap-2">
+              <input
+                className="input flex-1"
+                placeholder="Store Name (e.g. Costco)"
+                value={newStoreName}
+                onChange={(e) => setNewStoreName(e.target.value)}
+              />
+              <button className="btn-primary" onClick={handleAddStore}>Add</button>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {stores.map(s => (
+                <span key={s} className="px-2 py-1 bg-white rounded border border-[var(--border-subtle)] text-xs">
+                  {s}
+                </span>
               ))}
             </div>
           </div>
+        )}
+
+        <div className="card mb-8">
+          <h3 className="text-sm font-bold uppercase text-[var(--text-muted)] tracking-widest mb-2">Quick Add</h3>
+          <div className="flex flex-col gap-2">
+            <textarea
+              className="input min-h-[80px]"
+              placeholder="Paste items (e.g. Milk, Eggs, Bread)..."
+              value={quickAddText}
+              onChange={(e) => setQuickAddText(e.target.value)}
+            />
+            <div className="flex justify-end">
+              <button
+                className="btn-primary"
+                onClick={handleQuickAdd}
+                disabled={isAdding || !quickAddText.trim()}
+              >
+                {isAdding ? 'Adding...' : 'Add Items'}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {fullList.length === 0 ? (
+          <div className="text-center py-12 text-[var(--text-muted)]">
+            <p>All clear! Nothing to buy.</p>
+          </div>
         ) : (
-             <div className="card p-12 text-center">
-                <div className="text-6xl mb-4">🛒</div>
-                <h3 className="text-xl font-bold mb-2">All Clear!</h3>
-                <p className="text-[var(--text-muted)]">
-                    {weekOf 
-                        ? "You have all the ingredients needed for this week's plan." 
-                        : "Start a meal plan to generate a shopping list."}
-                </p>
-             </div>
+          <div className="space-y-8">
+            {allStoreKeys.map(storeName => {
+              const items = groupedItems[storeName] || [];
+              if (items.length === 0) return null;
+
+              return (
+                <div key={storeName} className="card">
+                  <h3 className="text-lg font-bold mb-4 pb-2 border-b border-[var(--border-subtle)] text-[var(--accent-primary)]">
+                    {storeName} <span className="text-sm font-normal text-[var(--text-muted)]">({items.length})</span>
+                  </h3>
+                  <div className="space-y-1">
+                    {items.map((obj, idx) => (
+                      <div key={`${obj.item}-${idx}`} className="flex items-center gap-3 p-3 border-b border-[var(--border-subtle)] hover:bg-[var(--bg-sidebar)] transition-colors group last:border-0 can-hover">
+                        <input
+                          type="checkbox"
+                          className="w-5 h-5 accent-[var(--accent-primary)] cursor-pointer"
+                          onChange={() => handleCheck(obj)}
+                        />
+                        <span className="flex-1 font-medium">{obj.item}</span>
+                        <select
+                          className="text-xs bg-transparent text-[var(--text-muted)] border-none focus:ring-0 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+                          value={obj.store}
+                          onChange={(e) => handleStoreChange(obj.item, e.target.value)}
+                        >
+                          {stores.map(s => <option key={s} value={s}>{s}</option>)}
+                        </select>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
     </AppLayout>

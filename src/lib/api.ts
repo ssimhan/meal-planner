@@ -315,3 +315,35 @@ export async function savePreference(ingredient: string, brand: string): Promise
 
 // Re-export types for convenience
 export type { WorkflowStatus, LogMealData } from '@/types';
+// Groceries & Stores
+export async function getStores() {
+    return fetchAPI('/api/groceries/stores');
+}
+
+export async function addStore(name: string) {
+    return fetchAPI('/api/groceries/stores', {
+        method: 'POST',
+        body: JSON.stringify({ name }),
+    });
+}
+
+export async function mapItemToStore(item: string, store: string) {
+    return fetchAPI('/api/groceries/map', {
+        method: 'POST',
+        body: JSON.stringify({ item, store }),
+    });
+}
+
+export async function addShoppingListExtras(weekOf: string, items: string[]) {
+    return fetchAPI('/api/plan/shopping-list/add', {
+        method: 'POST',
+        body: JSON.stringify({ week_of: weekOf, items }),
+    });
+}
+
+export async function removeShoppingListExtra(weekOf: string, item: string) {
+    return fetchAPI('/api/plan/shopping-list/remove-extra', {
+        method: 'POST',
+        body: JSON.stringify({ week_of: weekOf, item }),
+    });
+}

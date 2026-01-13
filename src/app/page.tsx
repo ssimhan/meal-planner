@@ -498,11 +498,11 @@ function DashboardContent() {
 
             {/* 3. System & Actions */}
             <StatCard label="System & Actions">
-              <div className="mb-3">
+              <div className="mb-1">
                 <select
                   value={status?.week_of}
                   onChange={(e) => setSelectedWeek(e.target.value)}
-                  className="w-full bg-white/50 backdrop-blur-sm text-sm border border-[var(--border-color)] rounded-lg p-2 font-semibold shadow-inner"
+                  className="w-full bg-[var(--bg-secondary)] text-sm border border-[var(--border-color)] rounded-lg p-2 font-semibold shadow-sm focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent outline-none"
                 >
                   {status?.available_weeks?.map(w => (
                     <option key={w.week_of} value={w.week_of} disabled={!w.is_selectable}>
@@ -510,18 +510,6 @@ function DashboardContent() {
                     </option>
                   ))}
                 </select>
-              </div>
-              <div className="flex flex-col gap-2">
-                {(status?.state === 'active' || status?.state === 'waiting_for_checkin') && (
-                  <Link href="/week-view" className="text-xs font-bold hover:text-[var(--accent-primary)] transition-colors flex items-center justify-between group">
-                    <span className="flex items-center gap-2">📅 Full Week Plan</span>
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-                  </Link>
-                )}
-                <Link href="/inventory" className="text-xs font-bold hover:text-[var(--accent-primary)] transition-colors flex items-center justify-between group">
-                  <span className="flex items-center gap-2">🛒 Update Inventory</span>
-                  <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-                </Link>
               </div>
             </StatCard>
           </div>

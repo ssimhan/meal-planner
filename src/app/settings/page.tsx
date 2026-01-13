@@ -113,19 +113,57 @@ export default function SettingsPage() {
             </div>
           </section>
 
-          {/* 2. Kid Profiles */}
+          {/* 2. People & Schedules */}
           <section className="card">
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <span>👥</span> Kid Profiles
+              <span>👥</span> People & Schedules
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {Object.entries(config.kid_profiles || {}).map(([name, profile]: [string, any]) => (
-                <div key={name} className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)]">
-                  <div className="flex justify-between items-start mb-3">
-                    <div className="font-bold text-lg">{name}</div>
-                    {/* Deleting profiles implies complex object manipulation, maybe next phase */}
+
+            {/* Adults */}
+            <div className="mb-8">
+              <h4 className="text-sm font-bold uppercase text-[var(--text-muted)] tracking-wider mb-3">Adults</h4>
+              <div className="space-y-4">
+                {Object.entries(config.adult_profiles || { "Adult 1": {} }).map(([name, profile]: [string, any]) => (
+                  <div key={name} className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)]">
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="font-bold text-lg">{name}</div>
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold uppercase text-[var(--text-muted)] mb-2 block">Office Days (In Person)</label>
+                      <div className="flex flex-wrap gap-2">
+                        {['mon', 'tue', 'wed', 'thu', 'fri'].map(day => (
+                          <button
+                            key={`${name}-office-${day}`}
+                            onClick={() => {
+                              const current = profile.office_days || [];
+                              const next = current.includes(day)
+                                ? current.filter((d: string) => d !== day)
+                                : [...current, day];
+                              updateConfig(['adult_profiles', name, 'office_days'], next);
+                            }}
+                            className={`px-3 py-1 rounded-full text-xs font-bold border ${(profile.office_days || []).includes(day)
+                              ? 'bg-[var(--accent-primary)] text-white border-[var(--accent-primary)]'
+                              : 'bg-[var(--bg-primary)] border-[var(--border-subtle)] text-[var(--text-muted)]'
+                              }`}
+                          >
+                            {day.toUpperCase()}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <div className="space-y-3">
+                ))}
+                {/* Simple Add Adult Logic could go here later */}
+              </div>
+            </div>
+
+            {/* Kids */}
+            <div>
+              <h4 className="text-sm font-bold uppercase text-[var(--text-muted)] tracking-wider mb-3">Kids</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {Object.entries(config.kid_profiles || {}).map(([name, profile]: [string, any]) => (
+                  <div key={name} className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)]">
+                    <div className="font-bold text-lg mb-2">{name}</div>
                     <div>
                       <label className="text-xs font-bold uppercase text-[var(--text-muted)]">Avoid Ingredients</label>
                       <textarea
@@ -133,81 +171,112 @@ export default function SettingsPage() {
                         rows={2}
                         value={(profile.avoid_ingredients || []).join(', ')}
                         onChange={(e) => {
-                          const val = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
+                          const val = e.target.value.split(',').map((s: string) => s.trim()).filter(Boolean);
                           updateConfig(['kid_profiles', name, 'avoid_ingredients'], val);
                         }}
                         placeholder="nuts, dairy, etc."
                       />
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 p-4 text-center border border-dashed border-[var(--border-subtle)] rounded text-[var(--text-muted)] text-sm">
-              Add Profile functionality coming soon.
+                ))}
+              </div>
             </div>
           </section>
 
-          {/* 3. Global Preferences */}
+          {/* 3. Planning Scope */}
           <section className="card">
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <span>🥗</span> Dietary Preferences
+              <span>🎯</span> Planning Scope
             </h3>
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
+            <p className="text-sm text-[var(--text-muted)] mb-4">Select which meals you want to track and plan for.</p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Dinner */}
+              <label className="flex items-center gap-3 p-3 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)] cursor-pointer hover:border-[var(--accent-sage)] transition-colors">
                 <input
                   type="checkbox"
-                  checked={config.preferences?.vegetarian || false}
-                  onChange={(e) => updateConfig(['preferences', 'vegetarian'], e.target.checked)}
+                  checked={config.meals_covered?.dinner ?? true} // Default true
+                  onChange={(e) => updateConfig(['meals_covered', 'dinner'], e.target.checked)}
                   className="w-5 h-5 accent-[var(--accent-sage)]"
                 />
-                <span className="font-medium">Vegetarian Household</span>
-              </div>
+                <span className="font-bold">Dinner</span>
+              </label>
 
-              <div>
-                <label className="text-sm font-bold mb-1 block">Global Avoid List</label>
-                <textarea
-                  className="input w-full"
-                  value={(config.preferences?.avoid_ingredients || []).join(', ')}
-                  onChange={(e) => updateConfig(['preferences', 'avoid_ingredients'], e.target.value.split(',').map((s: string) => s.trim()).filter(Boolean))}
-                  placeholder="eggplant, mushrooms..."
+              {/* Kids Lunch */}
+              <label className="flex items-center gap-3 p-3 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)] cursor-pointer hover:border-[var(--accent-sage)] transition-colors">
+                <input
+                  type="checkbox"
+                  checked={config.meals_covered?.kids_lunch ?? true}
+                  onChange={(e) => updateConfig(['meals_covered', 'kids_lunch'], e.target.checked)}
+                  className="w-5 h-5 accent-[var(--accent-sage)]"
                 />
-              </div>
+                <span className="font-bold">Kids Lunch</span>
+              </label>
+
+              {/* Adult Lunch */}
+              <label className="flex items-center gap-3 p-3 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)] cursor-pointer hover:border-[var(--accent-sage)] transition-colors">
+                <input
+                  type="checkbox"
+                  checked={config.meals_covered?.adult_lunch ?? true}
+                  onChange={(e) => updateConfig(['meals_covered', 'adult_lunch'], e.target.checked)}
+                  className="w-5 h-5 accent-[var(--accent-sage)]"
+                />
+                <span className="font-bold">Adult Lunch</span>
+              </label>
+
+              {/* School Snack */}
+              <label className="flex items-center gap-3 p-3 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)] cursor-pointer hover:border-[var(--accent-sage)] transition-colors">
+                <input
+                  type="checkbox"
+                  checked={config.meals_covered?.school_snack ?? true}
+                  onChange={(e) => updateConfig(['meals_covered', 'school_snack'], e.target.checked)}
+                  className="w-5 h-5 accent-[var(--accent-sage)]"
+                />
+                <span className="font-bold">School Snack</span>
+              </label>
+
+              {/* Home Snack */}
+              <label className="flex items-center gap-3 p-3 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)] cursor-pointer hover:border-[var(--accent-sage)] transition-colors">
+                <input
+                  type="checkbox"
+                  checked={config.meals_covered?.home_snack ?? true}
+                  onChange={(e) => updateConfig(['meals_covered', 'home_snack'], e.target.checked)}
+                  className="w-5 h-5 accent-[var(--accent-sage)]"
+                />
+                <span className="font-bold">Home Snack</span>
+              </label>
             </div>
           </section>
 
-          {/* 4. Schedule */}
+          {/* 4. Global Preferences & Prep */}
           <section className="card">
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <span>📅</span> Typical Schedule
+              <span>⚙️</span> Preferences & Prep
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <div className="space-y-6">
+              {/* Prep Time */}
               <div>
-                <label className="text-sm font-bold mb-2 block">Office Days (In Person)</label>
-                <div className="flex flex-wrap gap-2">
-                  {['mon', 'tue', 'wed', 'thu', 'fri'].map(day => (
+                <label className="text-sm font-bold mb-2 block">Preferred Prep Time</label>
+                <div className="flex bg-[var(--bg-secondary)] p-1 rounded-lg border border-[var(--border-subtle)] inline-flex">
+                  {['morning', 'afternoon', 'evening'].map(slot => (
                     <button
-                      key={`office-${day}`}
-                      onClick={() => {
-                        const current = config.schedule?.office_days || [];
-                        const next = current.includes(day)
-                          ? current.filter((d: string) => d !== day)
-                          : [...current, day];
-                        updateConfig(['schedule', 'office_days'], next);
-                      }}
-                      className={`px-3 py-1 rounded-full text-xs font-bold border ${(config.schedule?.office_days || []).includes(day)
-                        ? 'bg-[var(--accent-primary)] text-white border-[var(--accent-primary)]'
-                        : 'bg-[var(--bg-secondary)] border-[var(--border-subtle)] text-[var(--text-muted)]'
+                      key={slot}
+                      onClick={() => updateConfig(['prep_preferences', 'default_time_slot'], slot)}
+                      className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${(config.prep_preferences?.default_time_slot || 'morning') === slot
+                          ? 'bg-[var(--accent-sage)] text-white shadow-sm'
+                          : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
                         }`}
                     >
-                      {day.toUpperCase()}
+                      {slot.charAt(0).toUpperCase() + slot.slice(1)}
                     </button>
                   ))}
                 </div>
               </div>
 
+              {/* Busy Days */}
               <div>
-                <label className="text-sm font-bold mb-2 block">Busy Evenings (Quick Prep)</label>
+                <label className="text-sm font-bold mb-2 block">Busy Evenings (Quick Prep Optimized)</label>
                 <div className="flex flex-wrap gap-2">
                   {['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map(day => (
                     <button
@@ -227,6 +296,29 @@ export default function SettingsPage() {
                       {day.toUpperCase()}
                     </button>
                   ))}
+                </div>
+              </div>
+
+              {/* Dietary */}
+              <div className="pt-4 border-t border-[var(--border-subtle)]">
+                <div className="flex items-center gap-3 mb-4">
+                  <input
+                    type="checkbox"
+                    checked={config.preferences?.vegetarian || false}
+                    onChange={(e) => updateConfig(['preferences', 'vegetarian'], e.target.checked)}
+                    className="w-5 h-5 accent-[var(--accent-sage)]"
+                  />
+                  <span className="font-medium">Vegetarian Household</span>
+                </div>
+
+                <div>
+                  <label className="text-sm font-bold mb-1 block">Global Avoid List</label>
+                  <textarea
+                    className="input w-full"
+                    value={(config.preferences?.avoid_ingredients || []).join(', ')}
+                    onChange={(e) => updateConfig(['preferences', 'avoid_ingredients'], e.target.value.split(',').map((s: string) => s.trim()).filter(Boolean))}
+                    placeholder="eggplant, mushrooms..."
+                  />
                 </div>
               </div>
             </div>

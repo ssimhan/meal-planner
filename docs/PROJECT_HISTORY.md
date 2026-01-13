@@ -704,3 +704,16 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Parsing Bug:** Fixed JSX parsing error in `ReplanWorkflowModal` caused by unescaped `<` characters in the "PRO TIP" section.
 
 **Learning:** Keyword-based "Smart Filtering" is a high-value MVP that provides 80% of the benefit of an LLM with 0% of the latency or cost. Resilience in data-fetching (`.execute()` vs `.single()`) is critical for "Draft Mode" where plan records might not exist yet. Moving modals to the root prevents "Z-index wars" with animated parent elements.
+
+### Phase 23.5: Household Configuration (2026-01-13) ✅ Complete
+**Goal:** Enhance the "Single Household" configurability before multi-user support.
+
+**Block 1: UI Polish (Completed)**
+- **Dark Mode:** Refined glassmorphism variables (`--glass-bg`) in `globals.css` ensuring legibility across themes.
+- **Dashboard:** Simplified the "System & Actions" card and refined "Week at a Glance" badges.
+- **Prep Visibility:** Updated `status.py` to filter Prep Tasks, showing only Today's + Overdue tasks.
+
+**Block 2: Settings Schema (Completed)**
+- **Adult Profiles:** Added management for Adult profiles, including "Office Days" tracking.
+- **Meal Scope:** Added toggles to `SettingsPage.tsx` allowing users to disable planning for specific meal types (Dinner, Lunch, Snacks).
+- **Backend Logic:** Updated `actions.py` (Generator) and `status.py` (Dashboard) to strictly respect "Meal Scope" toggles—disabled meals are excluded from generation and live view.

@@ -127,9 +127,9 @@ function WeekViewContent() {
 
     const emojis = ['❤️', '👍', '😐', '👎', '❌'];
     const emojiMatch = feedback && emojis.find(e => feedback.includes(e));
-    if (emojiMatch) return <span className="text-xs bg-gray-100 px-2 py-0.5 rounded border border-gray-200">{emojiMatch}</span>;
+    if (emojiMatch) return <span className="text-xs bg-gray-100 px-2 py-0.5 rounded border border-gray-200 shadow-sm">{emojiMatch}</span>;
 
-    if (made === true) return <span className="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 uppercase tracking-wide">CONFIRMED</span>;
+    if (made === true) return <span className="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 uppercase tracking-wide shadow-sm">CONFIRMED</span>;
 
     return null;
   };
@@ -752,7 +752,7 @@ function WeekViewContent() {
                   const needsFix = dinner?.needs_fix;
 
                   return (
-                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)]`}>
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${dinner?.made === true ? 'bg-[var(--accent-sage)]/5 shadow-inner' : ''}`}>
                       <div className="flex items-start gap-2">
                         <SelectionCheckbox
                           day={day}

@@ -164,6 +164,18 @@ Declining energy model: Monday (high) → Friday (zero prep)
     - ✅ **Resilience:** Internalized error handling for Supabase edge cases (`PGRST116`).
     - ✅ **Build Safety:** Fixed JSX parsing errors in wizard guidance.
 
+### Phase 23.5: Household Configuration & UI Polish ✅ Complete
+**Goal:** Finalize household customization and visual stability before multi-user rollout.
+- **Block 1: UI Polish & Bug Fixes.** ✅ Complete
+    - ✅ Fix Dark Mode contrast/legibility (glassmorphism variable updates).
+    - ✅ Simplify Dashboard "System" card (removed clutter).
+    - ✅ Refine Prep Task visibility (Today/Overdue only).
+    - ✅ Week View visual cues (shadows/badges for completed days).
+- **Block 2: Household Schema.** ✅ Complete
+    - ✅ Add Adult Profiles (with Office Days).
+    - ✅ Configure "Included Meals" (toggles for Dinner/Lunch/Snack planning).
+    - ✅ Configure "Prep Time" preferences (Morning vs Evening slots).
+
 ### Phase 24: User Authentication (The "Family Gate")
 **Goal:** Secure the application for single-household access via Supabase.
 - **Block 1: Supabase Auth.** Infrastructure & RLS Policies.

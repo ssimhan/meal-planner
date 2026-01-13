@@ -46,6 +46,7 @@ def create_new_week(week_str, history_dict=None, recipes_list=None, config_dict=
         'workflow': {'status': 'intake_complete', 'created_at': datetime.now().isoformat(), 'updated_at': datetime.now().isoformat()},
         'schedule': config.get('schedule', {}),
         'preferences': config.get('preferences', {}),
+        'meals_covered': config.get('meals_covered', {}),
         'farmers_market': {'status': 'proposed', 'proposed_veg': proposed_veg + staples, 'confirmed_veg': []}
     }
 
@@ -67,6 +68,14 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
     print("="*60)
     
     week_of = data['week_of']
+    meals_covered = data.get('meals_covered', {})
+    # Defaults (True if not specified)
+    cover_dinner = meals_covered.get('dinner', True)
+    cover_kids_lunch = meals_covered.get('kids_lunch', True)
+    cover_adult_lunch = meals_covered.get('adult_lunch', True)
+    cover_school_snack = meals_covered.get('school_snack', True)
+    cover_home_snack = meals_covered.get('home_snack', True)
+
     history_path = get_actual_path('data/history.yml')
     
     if recipes_list:
@@ -85,18 +94,26 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
     filtered = filter_recipes(recipes, data, recent_recipes)
     
     current_week_history = next((w for w in history.get('weeks', []) if w.get('week_of') == week_of), None)
-    selected_dinners = select_dinners(filtered, data, current_week_history, recipes)
+    
+    selected_dinners = {}
+    if cover_dinner:
+        selected_dinners = select_dinners(filtered, data, current_week_history, recipes)
     
     lunch_selector = LunchSelector(recipes=recipes)
     days = ['mon', 'tue', 'wed', 'thu', 'fri']
     dinner_plan_list = [{'recipe_id': r.get('id'), 'recipe_name': r.get('name'), 'day': d, 'vegetables': r.get('main_veg', [])} for d, r in selected_dinners.items() if d in days]
     
-    selected_lunches = lunch_selector.select_weekly_lunches(dinner_plan=dinner_plan_list, week_of=week_of)
+    selected_lunches = {}
+    if cover_kids_lunch or cover_adult_lunch:
+        # Note: LunchSelector currently generates for both. We might need to split it or filter results.
+        # For now, we generate if EITHER is needed, and frontend will hide/show? 
+        # Or we suppress the output data. 
+        selected_lunches = lunch_selector.select_weekly_lunches(dinner_plan=dinner_plan_list, week_of=week_of)
     
     for d in ['sat', 'sun']:
-        if d not in selected_dinners:
+        if cover_dinner and d not in selected_dinners:
             selected_dinners[d] = {'name': 'Make at home', 'id': 'make_at_home', 'cuisine': 'various', 'meal_type': 'weekend_meal', 'main_veg': []}
-        if d not in selected_lunches:
+        if (cover_kids_lunch or cover_adult_lunch) and d not in selected_lunches:
             selected_lunches[d] = LunchSuggestion(recipe_id=f'weekend_lunch_{d}', recipe_name='Make at home', kid_friendly=True, prep_style='fresh', prep_components=[], storage_days=0, prep_day=d, assembly_notes='Weekend flexibility', reuses_ingredients=[], default_option=None, kid_profiles=None)
             
     # Populate data with generated plan for frontend/DB
@@ -112,17 +129,19 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
         for d, r in selected_dinners.items() if isinstance(r, dict)
     ]
     
-    data['lunches'] = {
-        d: {
-            'recipe_id': getattr(l, 'recipe_id', None) if not isinstance(l, dict) else l.get('recipe_id'),
-            'recipe_name': getattr(l, 'recipe_name', 'Unknown') if not isinstance(l, dict) else l.get('recipe_name'),
-            'kid_friendly': getattr(l, 'kid_friendly', True) if not isinstance(l, dict) else l.get('kid_friendly'),
-            'prep_style': getattr(l, 'prep_style', 'fresh') if not isinstance(l, dict) else l.get('prep_style'),
-            'prep_components': getattr(l, 'prep_components', []) if not isinstance(l, dict) else l.get('prep_components'),
-            'assembly_notes': getattr(l, 'assembly_notes', '') if not isinstance(l, dict) else l.get('assembly_notes')
+    data['lunches'] = {}
+    if cover_kids_lunch: # Logic simplification: if we persist it, it shows up.
+        data['lunches'] = {
+            d: {
+                'recipe_id': getattr(l, 'recipe_id', None) if not isinstance(l, dict) else l.get('recipe_id'),
+                'recipe_name': getattr(l, 'recipe_name', 'Unknown') if not isinstance(l, dict) else l.get('recipe_name'),
+                'kid_friendly': getattr(l, 'kid_friendly', True) if not isinstance(l, dict) else l.get('kid_friendly'),
+                'prep_style': getattr(l, 'prep_style', 'fresh') if not isinstance(l, dict) else l.get('prep_style'),
+                'prep_components': getattr(l, 'prep_components', []) if not isinstance(l, dict) else l.get('prep_components'),
+                'assembly_notes': getattr(l, 'assembly_notes', '') if not isinstance(l, dict) else l.get('assembly_notes')
+            }
+            for d, l in selected_lunches.items()
         }
-        for d, l in selected_lunches.items()
-    }
     
     # Simple snack generation for the plan
     default_snacks = {
@@ -132,13 +151,16 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
         'thu': 'Grapes',
         'fri': 'Crackers with hummus'
     }
-    data['snacks'] = {
-        d: {
-            'school_snack': default_snacks.get(d, 'Fruit'),
-            'home_snack': default_snacks.get(d, 'Fruit')
+    
+    data['snacks'] = {}
+    if cover_school_snack or cover_home_snack:
+        data['snacks'] = {
+            d: {
+                'school_snack': default_snacks.get(d, 'Fruit') if cover_school_snack else None,
+                'home_snack': default_snacks.get(d, 'Fruit') if cover_home_snack else None
+            }
+            for d in ['mon', 'tue', 'wed', 'thu', 'fri']
         }
-        for d in ['mon', 'tue', 'wed', 'thu', 'fri']
-    }
 
     # NEW: Extract structured prep tasks and save to persistence
     from .html_generator import extract_prep_tasks_for_db

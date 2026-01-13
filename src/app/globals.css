@@ -74,7 +74,7 @@
 
 @layer components {
   .glass {
-    @apply bg-white/70 backdrop-blur-md border border-white/40 shadow-xl;
+    @apply bg-[var(--glass-bg)] backdrop-blur-md border border-[var(--border-color)] shadow-xl;
   }
 
   .card {

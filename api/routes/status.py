@@ -103,9 +103,17 @@ def _get_current_status(skip_sync=False, week_override=None):
         'fri': 'Crackers with hummus'
     })
 
+    # Load meals_covered from config
+    meals_covered = config.get('meals_covered', {})
+    cover_dinner = meals_covered.get('dinner', True)
+    cover_kids_lunch = meals_covered.get('kids_lunch', True)
+    cover_adult_lunch = meals_covered.get('adult_lunch', True)
+    cover_school_snack = meals_covered.get('school_snack', True)
+    cover_home_snack = meals_covered.get('home_snack', True)
+
     today_snacks = {
-        "school": snack_by_day.get(current_day, snack_fallbacks.get("school", "Fruit")),
-        "home": snack_fallbacks.get("home", "Cucumber or Crackers")
+        "school": snack_by_day.get(current_day, snack_fallbacks.get("school", "Fruit")) if cover_school_snack else None,
+        "home": snack_fallbacks.get("home", "Cucumber or Crackers") if cover_home_snack else None
     }
 
     history_week = active_plan.get('history_data') if active_plan else None
@@ -115,9 +123,9 @@ def _get_current_status(skip_sync=False, week_override=None):
         if history_week and 'daily_feedback' in history_week:
             day_feedback = history_week['daily_feedback'].get(current_day, {})
             # Map daily_feedback fields to today_snacks structure
-            if 'school_snack' in day_feedback:
+            if 'school_snack' in day_feedback and cover_school_snack:
                 today_snacks['school'] = day_feedback['school_snack']
-            if 'home_snack' in day_feedback:
+            if 'home_snack' in day_feedback and cover_home_snack:
                 today_snacks['home'] = day_feedback['home_snack']
             if 'school_snack_made' in day_feedback:
                 today_snacks['school_snack_made'] = day_feedback['school_snack_made']
@@ -128,20 +136,22 @@ def _get_current_status(skip_sync=False, week_override=None):
             if 'home_snack_needs_fix' in day_feedback:
                 today_snacks['home_snack_needs_fix'] = day_feedback['home_snack_needs_fix']
         
-        dinners = (history_week.get('dinners') if history_week else None) or (data.get('dinners') if data else []) or []
-        for dinner in dinners:
-            if dinner.get('day') == current_day:
-                today_dinner = dinner
-                break
+        if cover_dinner:
+            dinners = (history_week.get('dinners') if history_week else None) or (data.get('dinners') if data else []) or []
+            for dinner in dinners:
+                if dinner.get('day') == current_day:
+                    today_dinner = dinner
+                    break
         
-        history_lunches = history_week.get('lunches', {}) if history_week else {}
-        if current_day in history_lunches:
-            today_lunch = history_lunches[current_day]
-        elif data and 'selected_lunches' in data:
-            today_lunch = data['selected_lunches'].get(current_day)
+        if cover_kids_lunch or cover_adult_lunch:
+            history_lunches = history_week.get('lunches', {}) if history_week else {}
+            if current_day in history_lunches:
+                today_lunch = history_lunches[current_day]
+            elif data and 'selected_lunches' in data:
+                today_lunch = data['selected_lunches'].get(current_day)
 
-        if not today_lunch:
-             today_lunch = {"recipe_name": "Leftovers or Simple Lunch", "prep_style": "quick_fresh"}
+            if not today_lunch and (cover_kids_lunch or cover_adult_lunch):
+                 today_lunch = {"recipe_name": "Leftovers or Simple Lunch", "prep_style": "quick_fresh"}
 
         if history_week and 'daily_feedback' in history_week:
             day_feedback = history_week['daily_feedback'].get(current_day, {})
@@ -245,7 +255,15 @@ def _get_current_status(skip_sync=False, week_override=None):
                 "dinner": today_dinner,
                 "lunch": today_lunch,
                 "snacks": today_snacks,
-                "prep_tasks": history_week.get('prep_tasks', []) if history_week else [],
+                "snacks": today_snacks,
+                "prep_tasks": [
+                    t for t in (history_week.get('prep_tasks', []) if history_week else [])
+                    if t.get('day') == current_day or (
+                        t.get('day') in ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] and
+                        ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].index(t.get('day')) < ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].index(current_day) and
+                        t.get('status') != 'complete'
+                    )
+                ],
                 "prep_completed": completed_prep_today
             },
             "next_week_planned": False,

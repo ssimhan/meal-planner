@@ -1,6 +1,6 @@
 # Meal Planner Implementation Guide
 
-**Last Updated:** 2026-01-12
+**Last Updated:** 2026-01-13
 **Live Site:** [meal-planner-eta-seven.vercel.app](https://meal-planner-eta-seven.vercel.app/)
 
 ---
@@ -140,11 +140,29 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ## Known Bugs (Active)
 
-| Bug | Description | Status |
-|-----|-------------|--------|
-| Plan Draft Error | `/api/plan/draft` returns 500: `'selections' is not defined` | ✅ Fixed |
+All known bugs have been consolidated into the phase roadmap above. Recent fixes:
+
+| Bug | Phase | Status |
+|-----|-------|--------|
+| Plan Draft Error (`'selections' is not defined`) | 26 | ✅ Fixed |
+| Shopping List Rendering (object as React child) | 26 | ✅ Fixed |
 
 ---
+
+## Previously Fixed (Phases 23-23.5)
+
+| Area | Bug | Fix |
+|------|-----|-----|
+| UI | Dark Mode contrast/legibility | Glassmorphism variable updates |
+| UI | Dashboard "System" card clutter | Simplified layout |
+| UI | Prep Task visibility | Show Today/Overdue only |
+| UI | Week View visual cues | Shadows/badges for completed days |
+| UI | JSX parsing errors in wizard | Fixed malformed JSX |
+| Week View | Missing meal plan data | Backend resolution logic |
+| Week View | "Save Changes" failure | History data integrity fix |
+| Data | Date bugs (4-week view) | Fixed date calculations |
+| Data | Supabase `PGRST116` edge cases | Internalized error handling |
+| Settings | "Meal Defaults" read-only | Made section editable |
 
 ## Previously Completed (Recent)
 

@@ -75,8 +75,9 @@ def generate_draft_route():
     try:
         data = request.json or {}
         week_of = data.get('week_of')
-        locked_days = data.get('locked_days', []) # ['mon', ' tue']
-        selections = data.get('selections', [])  # Manual recipe selections [{day, recipe_id}]
+        locked_days = data.get('locked_days', [])
+        selections = data.get('selections', [])
+        leftover_assignments = data.get('leftovers', [])
         
         h_id = storage.get_household_id()
         
@@ -87,14 +88,11 @@ def generate_draft_route():
         
         active_plan = res.data[0]
         plan_data = active_plan['plan_data']
-        history_week = active_plan['history_data'] or {'week_of': week_of, 'dinners': []}
+        history_week = active_plan['history_data'] or {'week_of': week_of, 'dinners': [], 'lunches': {}, 'snacks': {}}
         
         # 1b. Selective Replanning: Clear unlocked days from history
-        # If locked_days is provided (even if empty list), we assume this is a regeneration request
-        # and we should clear anything NOT locked.
         if 'locked_days' in data:
             current_dinners = history_week.get('dinners', [])
-            # Keep only dinners that are in locked_days
             history_week['dinners'] = [d for d in current_dinners if d.get('day') in locked_days]
 
         # 2. Apply manual selections to history_week
@@ -121,13 +119,40 @@ def generate_draft_route():
                     'recipe_id': recipe_id
                 })
 
+        # Apply explicit leftover assignments
+        for assignment in leftover_assignments:
+            day = assignment.get('day', '').lower()[:3]
+            slot = assignment.get('slot', '').lower()
+            item = assignment.get('item', '')
+            if not day or not item: continue
+
+            recipe_id = f"leftover:{item}"
+            
+            if slot == 'dinner':
+                found = False
+                for dinner in history_week.get('dinners', []):
+                    if dinner.get('day') == day:
+                        dinner['recipe_id'] = recipe_id
+                        found = True
+                        break
+                if not found:
+                    history_week.setdefault('dinners', []).append({'day': day, 'recipe_id': recipe_id})
+            elif slot == 'lunch':
+                history_week.setdefault('lunches', {})
+                history_week['lunches'][day] = {
+                    'recipe_id': recipe_id,
+                    'recipe_name': item,
+                    'prep_style': 'leftovers'
+                }
+
         # 3. Fetch all contexts for generation
         history = storage.StorageEngine.get_history()
         # Ensure the current history week in the full history object is also updated
         updated_any = False
         for w in history.get('weeks', []):
             if w.get('week_of') == week_of:
-                w['dinners'] = history_week['dinners']
+                w['dinners'] = history_week.get('dinners', [])
+                w['lunches'] = history_week.get('lunches', {})
                 updated_any = True
                 break
         if not updated_any:

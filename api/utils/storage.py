@@ -173,7 +173,7 @@ class StorageEngine:
                 "quantity": quantity,
                 "unit": unit,
                 "metadata": updates or {}
-            }).execute()
+            }, on_conflict="household_id, category, item").execute()
         except Exception as e:
             print(f"Error updating inventory item {item_name}: {e}")
     @staticmethod

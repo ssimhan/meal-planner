@@ -123,10 +123,13 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
     any_lunch_needed = any(is_covered('kids_lunch', d) or is_covered('adult_lunch', d) for d in days)
     
     if any_lunch_needed:
-        # Note: LunchSelector currently generates for both. We might need to split it or filter results.
-        # For now, we generate if EITHER is needed, and frontend will hide/show? 
-        # Or we suppress the output data. 
-        selected_lunches = lunch_selector.select_weekly_lunches(dinner_plan=dinner_plan_list, week_of=week_of)
+        # Pass existing lunches from current_week_history if they exist
+        existing_lunches = current_week_history.get('lunches', {}) if current_week_history else {}
+        selected_lunches = lunch_selector.select_weekly_lunches(
+            dinner_plan=dinner_plan_list, 
+            week_of=week_of,
+            current_lunches=existing_lunches
+        )
         # Filter selected lunches to remove days logic - wait, selected_lunches returns a dict of days
         # We keep the object for now, Status API handles visibility based on config 
         pass

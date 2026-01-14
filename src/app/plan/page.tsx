@@ -91,6 +91,46 @@ function PlanningWizardContent() {
         return str.replace(/\b\w/g, l => l.toUpperCase());
     };
 
+    // Wizard Steps Configuration
+    const WIZARD_STEPS = [
+        { id: 'review_meals', label: 'Meals', icon: '🍽️' },
+        { id: 'review_snacks', label: 'Snacks', icon: '🍎' },
+        { id: 'inventory', label: 'Inventory', icon: '🥦' },
+        { id: 'leftovers', label: 'Leftovers', icon: '🍱' },
+        { id: 'suggestions', label: 'Generate', icon: '🧑‍🍳' },
+        { id: 'draft', label: 'Plan', icon: '📋' },
+        { id: 'groceries', label: 'Shop', icon: '🛒' },
+    ];
+
+    // Progress Breadcrumb Component
+    const WizardProgress = ({ currentStep }: { currentStep: string }) => {
+        const currentIndex = WIZARD_STEPS.findIndex(s => s.id === currentStep);
+        return (
+            <div className="flex items-center justify-center gap-1 mb-8 flex-wrap">
+                {WIZARD_STEPS.map((s, idx) => {
+                    const isActive = s.id === currentStep;
+                    const isCompleted = idx < currentIndex;
+                    return (
+                        <div key={s.id} className="flex items-center">
+                            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-all ${isActive
+                                ? 'bg-[var(--accent-sage)] text-white font-bold shadow-md'
+                                : isCompleted
+                                    ? 'bg-[var(--bg-secondary)] text-[var(--accent-sage)]'
+                                    : 'text-[var(--text-muted)]'
+                                }`}>
+                                <span>{s.icon}</span>
+                                <span className="hidden sm:inline">{s.label}</span>
+                            </div>
+                            {idx < WIZARD_STEPS.length - 1 && (
+                                <span className={`mx-1 ${isCompleted ? 'text-[var(--accent-sage)]' : 'text-[var(--text-muted)]'}`}>→</span>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    };
+
     // Step State
     const [reviews, setReviews] = useState<ReviewDay[]>([]);
     const [reviewWeek, setReviewWeek] = useState<string | null>(null);
@@ -99,7 +139,7 @@ function PlanningWizardContent() {
     const [pendingChanges, setPendingChanges] = useState<{ category: string, item: string, quantity: number, type?: 'meal' | 'ingredient', operation: 'add' | 'remove' }[]>([]);
     const [newItemInputs, setNewItemInputs] = useState<Record<string, { name: string, qty: number, type?: 'meal' | 'ingredient' }>>({});
     const [submitting, setSubmitting] = useState(false);
-    const [step, setStep] = useState<'review_dinners' | 'review_snacks' | 'inventory' | 'suggestions' | 'draft' | 'groceries'>('review_dinners');
+    const [step, setStep] = useState<'review_meals' | 'review_snacks' | 'inventory' | 'leftovers' | 'suggestions' | 'draft' | 'groceries'>('review_meals');
 
     // Suggestions State
     const [suggestions, setSuggestions] = useState<any[]>([]);
@@ -109,6 +149,7 @@ function PlanningWizardContent() {
     // Draft State
     const [draftPlan, setDraftPlan] = useState<any>(null);
     const [selections, setSelections] = useState<{ day: string, recipe_id: string }[]>([]);
+    const [leftoverAssignments, setLeftoverAssignments] = useState<{ day: string, slot: 'lunch' | 'dinner', item: string }[]>([]);
     const [lockedDays, setLockedDays] = useState<string[]>([]);
     const [isReplacing, setIsReplacing] = useState<string | null>(null);
     const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
@@ -146,9 +187,9 @@ function PlanningWizardContent() {
     };
 
     // Handle Step Transitions
-    const goToReviewDinners = async () => {
+    const goToReviewMeals = async () => {
         // Prepare data if needed
-        setStep('review_dinners');
+        setStep('review_meals');
     };
 
     const goToReviewSnacks = async () => {
@@ -168,7 +209,8 @@ function PlanningWizardContent() {
 
     const loadInventory = async () => {
         try {
-            const data = await getInventory();
+            const response = await getInventory();
+            const data: any = response.inventory || response;
             // Ensure all items have quantity and type for fridge
             const processedInventory: InventoryState = {
                 fridge: (data.fridge || []).map((item: any) => ({
@@ -241,7 +283,7 @@ function PlanningWizardContent() {
                 await loadInventory(); // Reload inventory to reflect changes
             }
             // Always proceed to next step
-            setStep('suggestions');
+            setStep('leftovers');
         } catch (error) {
             showToast('Failed to update inventory.', 'error');
             console.error('Failed to update inventory:', error);
@@ -369,7 +411,7 @@ function PlanningWizardContent() {
                     setReviews(uiReviews);
                     setReviewWeek(data.week_of);
                     setPlanningWeek(weekParam || data.next_week_of);
-                    setStep('review_dinners');
+                    setStep('review_meals');
                 } else {
                     // No review returned (e.g. no existing week), proceed to inventory
                     await loadInventory();
@@ -396,7 +438,7 @@ function PlanningWizardContent() {
             const fetchDraft = async () => {
                 setLoading(true);
                 try {
-                    const res = await generateDraft(planningWeek, selections);
+                    const res = await generateDraft(planningWeek, selections, [], leftoverAssignments);
                     setDraftPlan(res.plan_data);
                 } catch (e) {
                     console.error(e);
@@ -509,9 +551,8 @@ function PlanningWizardContent() {
 
     // ... (UI Sections) ...
 
-    // STEP 5: SMART GROCERY LIST UI
+    // STEP 6: SMART GROCERY LIST UI
     if (step === 'groceries') {
-        const stepNum = '5 of 6';
         // Normalize shoppingList items to strings for display
         const shoppingListStrings = shoppingList.map(item =>
             typeof item === 'string' ? item : item.item
@@ -547,17 +588,21 @@ function PlanningWizardContent() {
         });
 
         return (
-            <main className="container mx-auto max-w-3xl px-4 py-12 text-black">
-                <header className="mb-8 flex justify-between items-center">
-                    <div>
-                        <div className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-2">Step {stepNum}</div>
-                        <h1 className="text-3xl">Shopping List</h1>
-                        <p className="text-[var(--text-muted)] mt-2">
-                            Check items as you shop. We'll add them to your inventory.
-                        </p>
-                    </div>
-                    <div>
-                        <button onClick={() => setStep('draft')} className="btn-secondary">← Back</button>
+            <main className="container mx-auto max-w-3xl px-4 py-12">
+                <WizardProgress currentStep={step} />
+
+                <header className="mb-8">
+                    <div className="flex justify-between items-start mb-4">
+                        <div>
+                            <div className="inline-block px-3 py-1 rounded-full bg-[var(--accent-terracotta)] bg-opacity-20 text-[var(--accent-terracotta)] text-sm font-bold mb-2">
+                                🛒 Step 7 of 7
+                            </div>
+                            <h1 className="text-3xl font-bold">Shopping List</h1>
+                            <p className="text-[var(--text-muted)] mt-2">
+                                Check items as you shop. We'll add them to your inventory when you finalize.
+                            </p>
+                        </div>
+                        <button onClick={() => setStep('draft')} className="btn-secondary whitespace-nowrap">← Back</button>
                     </div>
                 </header>
 
@@ -641,37 +686,41 @@ function PlanningWizardContent() {
         );
     }
 
-    // STEP 4: TENTATIVE PLAN UI
+    // STEP 5: TENTATIVE PLAN UI
     if (step === 'draft') {
-        const stepNum = '4 of 6';
-
         return (
             <main className="container mx-auto max-w-5xl px-4 py-12">
-                <header className="mb-8 flex justify-between items-center">
-                    <div>
-                        <div className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-2">Step {stepNum}</div>
-                        <h1 className="text-3xl">Tentative Plan</h1>
-                        <p className="text-[var(--text-muted)] mt-2">
-                            Review the proposed meal plan for {planningWeek}.
-                        </p>
-                    </div>
-                    <div className="flex gap-4">
-                        <button onClick={() => setStep('suggestions')} className="btn-secondary">← Back</button>
-                        <button
-                            onClick={async () => {
-                                setStep('groceries');
-                                // Pre-fetch shopping list
-                                try {
-                                    const res = await getShoppingList(planningWeek!);
-                                    setShoppingList(res.shopping_list);
-                                } catch (e) {
-                                    console.error(e);
-                                }
-                            }}
-                            className="btn-primary"
-                        >
-                            Looks Good →
-                        </button>
+                <WizardProgress currentStep={step} />
+
+                <header className="mb-8">
+                    <div className="flex justify-between items-start mb-4">
+                        <div>
+                            <div className="inline-block px-3 py-1 rounded-full bg-[var(--accent-sage)] bg-opacity-20 text-[var(--accent-sage)] text-sm font-bold mb-2">
+                                📋 Step 6 of 7
+                            </div>
+                            <h1 className="text-3xl font-bold">Review Your Plan</h1>
+                            <p className="text-[var(--text-muted)] mt-2">
+                                Here's the proposed meal plan for {planningWeek}. Lock days you like, edit any you don't.
+                            </p>
+                        </div>
+                        <div className="flex gap-2">
+                            <button onClick={() => setStep('suggestions')} className="btn-secondary whitespace-nowrap">← Back</button>
+                            <button
+                                onClick={async () => {
+                                    setStep('groceries');
+                                    // Pre-fetch shopping list
+                                    try {
+                                        const res = await getShoppingList(planningWeek!);
+                                        setShoppingList(res.shopping_list);
+                                    } catch (e) {
+                                        console.error(e);
+                                    }
+                                }}
+                                className="btn-primary whitespace-nowrap"
+                            >
+                                Looks Good →
+                            </button>
+                        </div>
                     </div>
                 </header>
 
@@ -757,22 +806,26 @@ function PlanningWizardContent() {
         );
     }
 
-    // STEP 3: WASTE NOT SUGGESTIONS
+    // STEP 4: GENERATE PLAN
     if (step === 'suggestions') {
-        const stepNum = '3 of 6';
-
         return (
             <main className="container mx-auto max-w-3xl px-4 py-12">
-                <header className="mb-8 flex justify-between items-center">
-                    <div>
-                        <div className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-2">Step {stepNum}</div>
-                        <h1 className="text-3xl">Meal Suggestions</h1>
-                        <p className="text-[var(--text-muted)] mt-2">
-                            Let's generate a plan based on your inventory.
-                        </p>
-                    </div>
-                    <div>
-                        <button onClick={() => setStep('inventory')} className="btn-secondary">← Back</button>
+                <WizardProgress currentStep={step} />
+
+                <header className="mb-8">
+                    <div className="flex justify-between items-start mb-4">
+                        <div>
+                            <div className="inline-block px-3 py-1 rounded-full bg-[var(--accent-gold)] bg-opacity-20 text-[var(--accent-gold)] text-sm font-bold mb-2">
+                                🧑‍🍳 Step 5 of 7
+                            </div>
+                            <h1 className="text-3xl font-bold">Generate Your Plan</h1>
+                            <p className="text-[var(--text-muted)] mt-2">
+                                Let's create a balanced meal plan based on your inventory.
+                            </p>
+                        </div>
+                        <button onClick={() => setStep('inventory')} className="btn-secondary whitespace-nowrap">
+                            ← Back
+                        </button>
                     </div>
                 </header>
 
@@ -789,7 +842,7 @@ function PlanningWizardContent() {
                                 // Initialize the week
                                 await createWeek(planningWeek!);
                                 // Fetch the draft
-                                const res = await generateDraft(planningWeek!, selections);
+                                const res = await generateDraft(planningWeek!, selections, [], leftoverAssignments);
                                 setDraftPlan(res.plan_data);
                                 setStep('draft');
                             } catch (e) {
@@ -808,25 +861,171 @@ function PlanningWizardContent() {
             </main>
         );
     }
+    // STEP 4: USE UP LEFTOVERS UI
+    if (step === 'leftovers') {
+        const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+        const dayNames = { mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri', sat: 'Sat', sun: 'Sun' };
 
-    // STEP 2: INVENTORY UI
+        // Get leftover meals from inventory
+        const leftoverMeals = (inventory?.fridge || [])
+            .filter((item: any) =>
+                (item.type === 'meal' || (typeof item.item === 'string' && item.item.toLowerCase().includes('meal'))) &&
+                item.quantity > 0
+            )
+            .map((item: any) => ({ item: item.item, quantity: item.quantity }));
+
+        const handleAddAssignment = (item: string) => {
+            setLeftoverAssignments([...leftoverAssignments, { day: 'mon', slot: 'lunch', item }]);
+        };
+
+        const handleRemoveAssignment = (index: number) => {
+            setLeftoverAssignments(leftoverAssignments.filter((_, i) => i !== index));
+        };
+
+        const handleUpdateAssignment = (index: number, field: string, value: string) => {
+            const newAssignments = [...leftoverAssignments];
+            (newAssignments[index] as any)[field] = value;
+            setLeftoverAssignments(newAssignments);
+        };
+
+        return (
+            <main className="container mx-auto max-w-4xl px-4 py-12">
+                <WizardProgress currentStep={step} />
+
+                <header className="mb-8">
+                    <div className="flex justify-between items-start mb-4">
+                        <div>
+                            <div className="inline-block px-3 py-1 rounded-full bg-[var(--accent-terracotta)] bg-opacity-20 text-[var(--accent-terracotta)] text-sm font-bold mb-2">
+                                🍱 Step 4 of 7
+                            </div>
+                            <h1 className="text-3xl font-bold">Use Up Leftovers</h1>
+                            <p className="text-[var(--text-muted)] mt-2">
+                                Book your available leftovers into specific slots for next week.
+                            </p>
+                        </div>
+                        <div className="flex gap-2">
+                            <button onClick={() => setStep('inventory')} className="btn-secondary">
+                                ← Inventory
+                            </button>
+                            <button onClick={() => setStep('suggestions')} className="btn-primary">
+                                Next: Generate →
+                            </button>
+                        </div>
+                    </div>
+                </header>
+
+                <div className="grid md:grid-cols-3 gap-8">
+                    {/* Leftover Library */}
+                    <div className="md:col-span-1">
+                        <div className="card sticky top-24">
+                            <h3 className="text-sm font-bold uppercase tracking-widest text-[var(--text-muted)] mb-4 pb-2 border-b border-[var(--border-subtle)]">Available Leftovers</h3>
+                            {leftoverMeals.length === 0 ? (
+                                <p className="text-sm text-[var(--text-muted)] italic">No leftovers found in your fridge.</p>
+                            ) : (
+                                <ul className="space-y-3">
+                                    {leftoverMeals.map((meal, idx) => (
+                                        <li key={idx} className="flex justify-between items-center bg-[var(--bg-secondary)] p-3 rounded-lg border border-[var(--border-subtle)]">
+                                            <div className="flex flex-col">
+                                                <span className="font-bold text-sm">{meal.item}</span>
+                                                <span className="text-[10px] text-[var(--accent-sage)] font-bold">{meal.quantity} servings left</span>
+                                            </div>
+                                            <button
+                                                onClick={() => handleAddAssignment(meal.item)}
+                                                className="w-8 h-8 rounded-full bg-[var(--bg-primary)] border border-[var(--border-subtle)] flex items-center justify-center hover:bg-[var(--accent-sage)] hover:text-white transition-colors"
+                                            >
+                                                +
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Assignments */}
+                    <div className="md:col-span-2 space-y-4">
+                        <h3 className="text-sm font-bold uppercase tracking-widest text-[var(--text-muted)] mb-4">Your Plan Assignments</h3>
+
+                        {leftoverAssignments.length === 0 ? (
+                            <div className="p-12 border-2 border-dashed border-[var(--border-subtle)] rounded-xl flex flex-col items-center justify-center text-[var(--text-muted)]">
+                                <span className="text-4xl mb-2">📅</span>
+                                <p>Click the + button on a leftover to assign it.</p>
+                            </div>
+                        ) : (
+                            <div className="space-y-3">
+                                {leftoverAssignments.map((assignment, idx) => (
+                                    <div key={idx} className="flex gap-3 items-center bg-[var(--bg-primary)] p-4 rounded-xl border border-[var(--border-subtle)] shadow-sm animate-in slide-in-from-right-2">
+                                        <div className="flex-grow">
+                                            <span className="text-xs uppercase font-bold text-[var(--accent-terracotta)] block mb-1">Eating {assignment.item} on...</span>
+                                            <div className="flex gap-2">
+                                                <select
+                                                    value={assignment.day}
+                                                    onChange={(e) => handleUpdateAssignment(idx, 'day', e.target.value)}
+                                                    className="p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm font-bold uppercase"
+                                                >
+                                                    {days.map(d => <option key={d} value={d}>{(dayNames as any)[d]}</option>)}
+                                                </select>
+                                                <select
+                                                    value={assignment.slot}
+                                                    onChange={(e) => handleUpdateAssignment(idx, 'slot', e.target.value as any)}
+                                                    className="p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm font-bold uppercase"
+                                                >
+                                                    <option value="lunch">Lunch</option>
+                                                    <option value="dinner">Dinner</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => handleRemoveAssignment(idx)}
+                                            className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)] p-2"
+                                        >
+                                            <span className="text-xl">×</span>
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {leftoverAssignments.length > 0 && (
+                            <p className="text-xs text-[var(--text-muted)] italic text-center mt-4">
+                                These will be pre-filled in your draft meal plan.
+                            </p>
+                        )}
+                    </div>
+                </div>
+
+                <div className="flex justify-end mt-12 mb-8">
+                    <button onClick={() => setStep('suggestions')} className="btn-primary shadow-xl scale-110 px-10 py-4">
+                        Next: Generate Draft →
+                    </button>
+                </div>
+            </main>
+        );
+    }
+
+    // STEP 3: INVENTORY UI
     if (step === 'inventory') {
-        const stepNum = '2 of 6';
         return (
             <main className="container mx-auto max-w-5xl px-4 py-12">
-                <header className="mb-8 flex justify-between items-center">
-                    <div>
-                        <div className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-2">Step {stepNum}</div>
-                        <h1 className="text-3xl">Update Inventory</h1>
-                        <p className="text-[var(--text-muted)] mt-1">Planning for week of: <strong>{planningWeek}</strong></p>
-                    </div>
-                    <div className="flex gap-4">
-                        <button onClick={() => setStep('review_snacks')} className="btn-secondary">
-                            ← Back
-                        </button>
-                        <button onClick={handleSaveInventory} disabled={submitting} className="btn-primary">
-                            {submitting ? 'Saving...' : 'Save & Continue →'}
-                        </button>
+                <WizardProgress currentStep={step} />
+
+                <header className="mb-8">
+                    <div className="flex justify-between items-start mb-4">
+                        <div>
+                            <div className="inline-block px-3 py-1 rounded-full bg-[var(--accent-sage)] bg-opacity-20 text-[var(--accent-sage)] text-sm font-bold mb-2">
+                                🥦 Step 3 of 7
+                            </div>
+                            <h1 className="text-3xl font-bold">Update Inventory</h1>
+                            <p className="text-[var(--text-muted)] mt-1">Planning for week of: <strong>{planningWeek}</strong></p>
+                        </div>
+                        <div className="flex gap-2">
+                            <button onClick={() => setStep('review_snacks')} className="btn-secondary whitespace-nowrap">
+                                ← Back
+                            </button>
+                            <button onClick={handleSaveInventory} disabled={submitting} className="btn-primary whitespace-nowrap">
+                                {submitting ? 'Saving...' : 'Continue →'}
+                            </button>
+                        </div>
                     </div>
                 </header>
 
@@ -956,65 +1155,75 @@ function PlanningWizardContent() {
         );
     }
 
-    // STEP 1: REVIEW SNACKS UI
+    // STEP 2: REVIEW SNACKS UI
     if (step === 'review_snacks') {
         const dayNames = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
 
         return (
             <main className="container mx-auto max-w-3xl px-4 py-12">
-                <header className="mb-8 flex justify-between items-center">
-                    <div>
-                        <div className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-2">Step 1 of 6</div>
-                        <h1 className="text-3xl">Review Snacks & Lunches</h1>
-                        <p className="text-[var(--text-muted)] mt-2">
-                            Log what was actually eaten for snacks and lunches.
-                        </p>
-                    </div>
-                    <div className="flex gap-4">
-                        <button onClick={() => setStep('review_dinners')} className="btn-secondary">← Back to Dinners</button>
-                        <button onClick={handleSubmitReview} disabled={submitting} className="btn-primary">
-                            {submitting ? 'Submitting...' : 'Confirm & Continue →'}
-                        </button>
+                <WizardProgress currentStep={step} />
+
+                <header className="mb-8">
+                    <div className="flex justify-between items-start mb-4">
+                        <div>
+                            <div className="inline-block px-3 py-1 rounded-full bg-[var(--accent-sage)] bg-opacity-20 text-[var(--accent-sage)] text-sm font-bold mb-2">
+                                🍎 Step 2 of 7
+                            </div>
+                            <h1 className="text-3xl font-bold">Review Snacks</h1>
+                            <p className="text-[var(--text-muted)] mt-2">
+                                Log what snacks were actually eaten last week.
+                            </p>
+                        </div>
+                        <div className="flex gap-2">
+                            <button onClick={() => setStep('review_meals')} className="btn-secondary whitespace-nowrap">
+                                ← Meals
+                            </button>
+                            <button onClick={handleSubmitReview} disabled={submitting} className="btn-primary whitespace-nowrap">
+                                {submitting ? 'Saving...' : 'Continue →'}
+                            </button>
+                        </div>
                     </div>
                 </header>
 
                 <div className="space-y-6">
-                    <div className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)] mb-8">
-                        <p className="text-sm text-[var(--accent-sage)] font-mono uppercase tracking-widest">Tip</p>
-                        <p className="text-[var(--text-muted)] italic">Review your snacks and lunches. If something was different from the plan, update it here!</p>
-                    </div>
-
                     {reviews.map((day) => (
                         <div key={day.day} className="card">
-                            <span className="font-mono text-xs uppercase text-[var(--accent-sage)] tracking-widest">{(dayNames as any)[day.day]}</span>
-                            <div className="grid md:grid-cols-2 gap-6 mt-4">
-                                {[
-                                    { key: 'school_snack', label: '🍎 School Snack', planned: day.planned_snacks.school_snack },
-                                    { key: 'home_snack', label: '🥨 Home Snack', planned: day.planned_snacks.home_snack },
-                                    { key: 'kids_lunch', label: '🍱 Kids Lunch', planned: day.planned_snacks.kids_lunch },
-                                    { key: 'adult_lunch', label: '🥗 Adult Lunch', planned: 'Leftovers/Manual' },
-                                ].map((item) => (
-                                    <div key={item.key}>
-                                        <label className="text-xs uppercase tracking-widest text-[var(--text-muted)] block mb-1">{item.label}</label>
-                                        <input
-                                            type="text"
-                                            value={(day.snacks as any)[item.key] || ''}
-                                            onChange={(e) => handleUpdateSnack(day.day, item.key as any, e.target.value)}
-                                            placeholder={item.planned || 'Not logged'}
-                                            className="w-full p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
-                                        />
-                                    </div>
-                                ))}
+                            <div className="flex justify-between items-center border-b border-[var(--border-subtle)] pb-2 mb-4">
+                                <span className="font-mono text-sm uppercase text-[var(--accent-sage)] tracking-widest">{(dayNames as any)[day.day]}</span>
+                            </div>
+
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="text-xs uppercase tracking-widest text-[var(--text-muted)] block mb-1">🏫 School Snack</label>
+                                    <input
+                                        type="text"
+                                        value={day.snacks.school_snack || ''}
+                                        onChange={(e) => handleUpdateSnack(day.day, 'school_snack', e.target.value)}
+                                        placeholder={day.planned_snacks.school_snack || 'Not logged'}
+                                        className="w-full p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs uppercase tracking-widest text-[var(--text-muted)] block mb-1">🏠 Home Snack</label>
+                                    <input
+                                        type="text"
+                                        value={day.snacks.home_snack || ''}
+                                        onChange={(e) => handleUpdateSnack(day.day, 'home_snack', e.target.value)}
+                                        placeholder={day.planned_snacks.home_snack || 'Not logged'}
+                                        className="w-full p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
+                                    />
+                                </div>
                             </div>
                         </div>
                     ))}
                 </div>
 
-                <div className="flex justify-end mt-12 mb-8 sticky bottom-4">
+                <div className="flex justify-between mt-12 mb-8 items-center px-4 py-6 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-subtle)]">
+                    <p className="text-sm text-[var(--text-muted)] italic">Great! Now let's check your inventory.</p>
                     <button
                         onClick={handleSubmitReview}
                         disabled={submitting}
-                        className="btn-primary shadow-xl scale-110"
+                        className="btn-primary shadow-lg scale-110 px-8"
                     >
                         {submitting ? 'Updating...' : 'Confirm & Continue →'}
                     </button>
@@ -1023,142 +1232,155 @@ function PlanningWizardContent() {
         );
     }
 
-    // STEP 0: REVIEW DINNERS UI
-    if (step === 'review_dinners') {
+    // STEP 1: REVIEW DINNERS UI
+    // STEP 1: REVIEW MEALS UI
+    if (step === 'review_meals') {
         const dayNames = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
 
         return (
             <main className="container mx-auto max-w-3xl px-4 py-12">
-                <header className="mb-8 flex justify-between items-center">
-                    <div>
-                        <div className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-2">Step 0 of 6</div>
-                        <h1 className="text-3xl">Review Dinners</h1>
-                        <p className="text-[var(--text-muted)] mt-2">
-                            Let's confirm what happened last week ({reviewWeek}).
-                        </p>
-                    </div>
-                    <div className="flex gap-4">
-                        <button onClick={() => setStep('review_snacks')} className="btn-primary">Next: Review Snacks →</button>
+                <WizardProgress currentStep={step} />
+
+                <header className="mb-8">
+                    <div className="flex justify-between items-start mb-4">
+                        <div>
+                            <div className="inline-block px-3 py-1 rounded-full bg-[var(--accent-terracotta)] bg-opacity-20 text-[var(--accent-terracotta)] text-sm font-bold mb-2">
+                                🍽️ Step 1 of 7
+                            </div>
+                            <h1 className="text-3xl font-bold">Review Last Week's Meals</h1>
+                            <p className="text-[var(--text-muted)] mt-2">
+                                Confirm what you actually ate for dinners and lunches.
+                            </p>
+                        </div>
+                        <button onClick={() => setStep('review_snacks')} className="btn-primary whitespace-nowrap">
+                            Next: Snacks →
+                        </button>
                     </div>
                 </header>
 
-                <div className="space-y-8">
+                <div className="space-y-6">
                     {reviews.map((day) => (
-                        <div key={day.day} className="card relative overflow-hidden">
-                            {/* ... (Existing Dinner Card Content) ... */}
-                            {/* Copy existing inner content for dinner logging */}
-                            <div className="absolute top-0 left-0 w-1 h-full bg-[var(--accent-sage)] opacity-50" />
-                            <div className="mb-4">
-                                <span className="font-mono text-xs uppercase text-[var(--accent-sage)] tracking-widest">{(dayNames as any)[day.day]}</span>
-                                <h3 className="text-2xl font-bold">{day.dinner.planned_recipe_name || 'No Meal Planned'}</h3>
+                        <div key={day.day} className="card overflow-visible">
+                            <div className="flex justify-between items-center border-b border-[var(--border-subtle)] pb-2 mb-4">
+                                <span className="font-mono text-sm uppercase text-[var(--accent-sage)] tracking-widest">{(dayNames as any)[day.day]}</span>
                             </div>
 
                             <div className="space-y-6">
-                                {/* Question 1: Did you make it? */}
-                                <div>
-                                    <p className="text-lg mb-3">Did you make this?</p>
-                                    <div className="flex gap-3">
-                                        <button
-                                            onClick={() => handleUpdateDinner(day.day, 'made', true)}
-                                            className={`px-6 py-2 rounded-full border transition-all ${day.dinner.made === true ? 'bg-[var(--accent-green)] text-black border-[var(--accent-green)]' : 'border-[var(--border-subtle)] hover:bg-[var(--bg-secondary)]'}`}
-                                        >
-                                            Yes
-                                        </button>
-                                        <button
-                                            onClick={() => handleUpdateDinner(day.day, 'made', false)}
-                                            className={`px-6 py-2 rounded-full border transition-all ${day.dinner.made === false ? 'bg-[var(--accent-terracotta)] text-white border-[var(--accent-terracotta)]' : 'border-[var(--border-subtle)] hover:bg-[var(--bg-secondary)]'}`}
-                                        >
-                                            No
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Conditional Follow-ups */}
-                                {day.dinner.made === true && (
-                                    <div className="animate-in fade-in slide-in-from-top-2">
-                                        <p className="text-lg mb-3">Are there leftovers?</p>
-                                        <div className="flex gap-3 mb-4">
+                                {/* Dinner Review */}
+                                <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
+                                    <div className="flex justify-between items-start mb-3">
+                                        <div>
+                                            <label className="text-xs uppercase tracking-widest text-[var(--text-muted)] block mb-1">Dinner</label>
+                                            <h3 className="text-lg font-bold">{day.dinner.planned_recipe_name || 'No dinner planned'}</h3>
+                                        </div>
+                                        <div className="flex bg-[var(--bg-primary)] rounded p-1 border border-[var(--border-subtle)]">
                                             <button
-                                                onClick={() => handleUpdateDinner(day.day, 'leftovers', true)}
-                                                className={`px-6 py-2 rounded-full border transition-all ${day.dinner.leftovers === true ? 'bg-[var(--accent-gold)] text-black border-[var(--accent-gold)]' : 'border-[var(--border-subtle)] hover:bg-[var(--bg-secondary)]'}`}
+                                                onClick={() => handleUpdateDinner(day.day, 'made', true)}
+                                                className={`px-3 py-1 rounded text-xs font-bold transition-all ${day.dinner.made === true ? 'bg-[var(--accent-sage)] text-white shadow-sm' : 'text-[var(--text-muted)] hover:bg-[var(--bg-secondary)]'}`}
                                             >
-                                                Yes
+                                                Made It
                                             </button>
                                             <button
-                                                onClick={() => handleUpdateDinner(day.day, 'leftovers', false)}
-                                                className={`px-6 py-2 rounded-full border transition-all ${day.dinner.leftovers === false ? 'bg-[var(--bg-secondary)] border-[var(--border-subtle)]' : 'border-[var(--border-subtle)] hover:bg-[var(--bg-secondary)]'}`}
+                                                onClick={() => handleUpdateDinner(day.day, 'made', false)}
+                                                className={`px-3 py-1 rounded text-xs font-bold transition-all ${day.dinner.made === false ? 'bg-[var(--accent-terracotta)] text-white shadow-sm' : 'text-[var(--text-muted)] hover:bg-[var(--bg-secondary)]'}`}
                                             >
-                                                No
+                                                Skipped
                                             </button>
                                         </div>
-                                        {day.dinner.leftovers && (
-                                            <div className="animate-in fade-in zoom-in-95 space-y-4">
-                                                <div>
-                                                    <label className="text-xs text-[var(--text-muted)] uppercase tracking-wider block mb-1">Leftover Note</label>
-                                                    <input
-                                                        type="text"
-                                                        value={day.dinner.leftovers_note}
-                                                        onChange={(e) => handleUpdateDinner(day.day, 'leftovers_note', e.target.value)}
-                                                        className="w-full p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg text-lg"
-                                                        placeholder="e.g. Leftover Curry"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="text-xs text-[var(--text-muted)] uppercase tracking-wider block mb-1">Quantity (servings)</label>
-                                                    <input
-                                                        type="number"
-                                                        min="1"
-                                                        value={day.dinner.leftovers_qty || 1}
-                                                        onChange={(e) => handleUpdateDinner(day.day, 'leftovers_qty', parseInt(e.target.value) || 1)}
-                                                        className="w-full p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg text-lg"
-                                                    />
-                                                </div>
-                                            </div>
-                                        )}
                                     </div>
-                                )}
 
-                                {day.dinner.made === false && (
-                                    <div className="animate-in fade-in slide-in-from-top-2 space-y-4">
-                                        <div>
-                                            <p className="text-lg mb-3">What did you make instead?</p>
+                                    {day.dinner.made === false && (
+                                        <div className="mt-3 animate-in fade-in slide-in-from-top-2">
+                                            <label className="text-xs uppercase tracking-widest text-[var(--text-muted)] block mb-1">What did you eat instead?</label>
                                             <input
                                                 type="text"
-                                                value={day.dinner.instead_meal}
+                                                value={day.dinner.instead_meal || day.dinner.actual_meal || ''}
                                                 onChange={(e) => handleUpdateDinner(day.day, 'instead_meal', e.target.value)}
-                                                className="w-full p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg text-lg"
-                                                placeholder="e.g. Takeout Pizza"
+                                                placeholder="e.g. Takeout, Leftovers..."
+                                                className="w-full p-2 bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded text-sm focus:ring-1 focus:ring-[var(--accent-terracotta)]"
                                             />
                                         </div>
-                                        {day.dinner.instead_meal && (
-                                            <div>
-                                                <p className="text-lg mb-3">Were there leftovers for this?</p>
-                                                <div className="flex gap-3">
+                                    )}
+
+                                    {/* Leftovers Input - Now always visible if made */}
+                                    {day.dinner.made !== null && (
+                                        <div className="mt-4 pt-4 border-t border-[var(--border-subtle)] flex items-center gap-4">
+                                            <div className="flex-shrink-0">
+                                                <label className="text-xs uppercase tracking-widest text-[var(--text-muted)] block mb-1">Leftover Servings</label>
+                                                <div className="flex items-center gap-2">
                                                     <button
-                                                        onClick={() => handleUpdateDinner(day.day, 'leftovers', true)}
-                                                        className={`px-6 py-2 rounded-full border transition-all ${day.dinner.leftovers === true ? 'bg-[var(--accent-gold)] text-black border-[var(--accent-gold)]' : 'border-[var(--border-subtle)] hover:bg-[var(--bg-secondary)]'}`}
-                                                    >
-                                                        Yes
-                                                    </button>
+                                                        onClick={() => handleUpdateDinner(day.day, 'leftovers_qty', Math.max(0, (day.dinner.leftovers_qty || 0) - 1))}
+                                                        className="w-8 h-8 rounded-full bg-[var(--bg-primary)] border border-[var(--border-subtle)] flex items-center justify-center hover:bg-[var(--bg-secondary)]"
+                                                    >-</button>
+                                                    <input
+                                                        type="number"
+                                                        value={day.dinner.leftovers_qty || 0}
+                                                        onChange={(e) => {
+                                                            const val = parseInt(e.target.value) || 0;
+                                                            handleUpdateDinner(day.day, 'leftovers_qty', val);
+                                                            handleUpdateDinner(day.day, 'leftovers', val > 0);
+                                                        }}
+                                                        className="w-12 text-center bg-transparent font-bold"
+                                                    />
                                                     <button
-                                                        onClick={() => handleUpdateDinner(day.day, 'leftovers', false)}
-                                                        className={`px-6 py-2 rounded-full border transition-all ${day.dinner.leftovers === false ? 'bg-[var(--bg-secondary)] border-[var(--border-subtle)]' : 'border-[var(--border-subtle)] hover:bg-[var(--bg-secondary)]'}`}
-                                                    >
-                                                        No
-                                                    </button>
+                                                        onClick={() => {
+                                                            const newVal = (day.dinner.leftovers_qty || 0) + 1;
+                                                            handleUpdateDinner(day.day, 'leftovers_qty', newVal);
+                                                            handleUpdateDinner(day.day, 'leftovers', true);
+                                                        }}
+                                                        className="w-8 h-8 rounded-full bg-[var(--bg-primary)] border border-[var(--border-subtle)] flex items-center justify-center hover:bg-[var(--bg-secondary)]"
+                                                    >+</button>
                                                 </div>
                                             </div>
-                                        )}
+
+                                            {(day.dinner.leftovers_qty || 0) > 0 && (
+                                                <div className="flex-grow animate-in fade-in slide-in-from-left-2">
+                                                    <label className="text-xs uppercase tracking-widest text-[var(--text-muted)] block mb-1">Leftover Label</label>
+                                                    <input
+                                                        type="text"
+                                                        value={day.dinner.leftovers_note || ''}
+                                                        onChange={(e) => handleUpdateDinner(day.day, 'leftovers_note', e.target.value)}
+                                                        placeholder="e.g. Chicken Tikka"
+                                                        className="w-full p-2 bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded text-sm"
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Lunch Reviews */}
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    <div className="p-3 bg-[var(--bg-secondary)] bg-opacity-50 rounded-lg border border-[var(--border-subtle)]">
+                                        <label className="text-[10px] uppercase font-bold tracking-widest text-[var(--accent-terracotta)] block mb-1">🍱 Kids Lunch</label>
+                                        <input
+                                            type="text"
+                                            value={day.snacks.kids_lunch || ''}
+                                            onChange={(e) => handleUpdateSnack(day.day, 'kids_lunch', e.target.value)}
+                                            placeholder={day.planned_snacks.kids_lunch || 'Planned Lunch'}
+                                            className="w-full p-2 bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded text-xs"
+                                        />
                                     </div>
-                                )}
+                                    <div className="p-3 bg-[var(--bg-secondary)] bg-opacity-50 rounded-lg border border-[var(--border-subtle)]">
+                                        <label className="text-[10px] uppercase font-bold tracking-widest text-[var(--accent-terracotta)] block mb-1">🥗 Adult Lunch</label>
+                                        <input
+                                            type="text"
+                                            value={day.snacks.adult_lunch || ''}
+                                            onChange={(e) => handleUpdateSnack(day.day, 'adult_lunch', e.target.value)}
+                                            placeholder="Leftovers/Manual"
+                                            className="w-full p-2 bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded text-xs"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     ))}
                 </div>
 
-                <div className="flex justify-end mt-12 mb-8 sticky bottom-4">
-                    <button onClick={() => setStep('review_snacks')} className="btn-primary shadow-xl scale-110">
-                        Next: Review Snacks →
+                <div className="flex justify-between mt-12 mb-8 items-center px-4 py-6 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-subtle)]">
+                    <p className="text-sm text-[var(--text-muted)] italic">Great! Reviewing meals helps us track your fridge inventory.</p>
+                    <button onClick={() => setStep('review_snacks')} className="btn-primary shadow-lg scale-110 px-8">
+                        Next: Snacks →
                     </button>
                 </div>
             </main>

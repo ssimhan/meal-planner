@@ -160,6 +160,10 @@ def _get_current_status(skip_sync=False, week_override=None):
                  today_lunch = {"recipe_name": "Leftovers or Simple Lunch", "prep_style": "quick_fresh"}
 
         if today_lunch and history_week and 'daily_feedback' in history_week:
+            # Robustness: ensure today_lunch is a dict before assignment
+            if isinstance(today_lunch, str):
+                today_lunch = {"recipe_name": today_lunch}
+            
             day_feedback = history_week['daily_feedback'].get(current_day, {})
             for key in ['kids_lunch', 'kids_lunch_made', 'adult_lunch', 'adult_lunch_made']:
                 if key in day_feedback:
@@ -265,6 +269,7 @@ def _get_current_status(skip_sync=False, week_override=None):
                     t for t in (history_week.get('prep_tasks', []) if history_week else [])
                     if t.get('day') == current_day or (
                         t.get('day') in ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] and
+                        current_day in ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] and
                         ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].index(t.get('day')) < ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].index(current_day) and
                         t.get('status') != 'complete'
                     )

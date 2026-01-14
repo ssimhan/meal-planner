@@ -121,16 +121,18 @@ def bulk_add_inventory():
             db_category = category
             updates = {'quantity': quantity, 'unit': unit}
             
+            # Preserve type and other metadata if sent
+            for key in ['type', 'is_leftover', 'notes']:
+                if key in entry:
+                    updates[key] = entry[key]
+            
             if category == 'meals':
                 db_category = 'freezer_backup'
                 updates['frozen_date'] = datetime.now().strftime('%Y-%m-%d')
             elif category == 'fridge':
-                updates['added'] = datetime.now().strftime('%Y-%m-%d')
+                if 'added' not in updates:
+                    updates['added'] = datetime.now().strftime('%Y-%m-%d')
                 
-            # TODO: Add deduplication here too for full correctness, 
-            # but standard 'upsert' acts as overwrite for bulk operations usually.
-            # Leaving as overwrite for now to allow explicit setting of quantities.
-            
             StorageEngine.update_inventory_item(db_category, item, updates)
             
         invalidate_cache('inventory')
@@ -165,10 +167,18 @@ def bulk_update_inventory():
                 StorageEngine.update_inventory_item(db_category, item, delete=True)
             elif op == 'add':
                 updates = {}
+                # Preserve type and other metadata if sent
+                for key in ['type', 'is_leftover', 'notes', 'quantity', 'unit']:
+                    if key in change:
+                        updates[key] = change[key]
+                
                 if category == 'fridge':
-                    updates = {'added': datetime.now().strftime('%Y-%m-%d')}
+                    if 'added' not in updates:
+                        updates['added'] = datetime.now().strftime('%Y-%m-%d')
                 elif category == 'meals':
-                    updates = {'quantity': 4, 'frozen_date': datetime.now().strftime('%Y-%m-%d')}
+                    if 'quantity' not in updates: updates['quantity'] = 4
+                    updates['frozen_date'] = datetime.now().strftime('%Y-%m-%d')
+                
                 StorageEngine.update_inventory_item(db_category, item, updates=updates)
 
         invalidate_cache('inventory')

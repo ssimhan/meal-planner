@@ -90,11 +90,11 @@ Declining energy model: Monday (high) → Friday (zero prep)
 ### Phase 26: Wizard UX Improvements
 **Goal:** Streamline the weekly planning wizard for better usability.
 - **Block 1: Meal Type Separation (~2 hrs)**
-  - [ ] Separate pages for dinners in wizard
-  - [ ] Separate pages for snacks in wizard
+  - [x] Separate pages for dinners in wizard
+  - [x] Separate pages for snacks in wizard
 - **Block 2: Leftovers Enhancement (~2 hrs)**
-  - [ ] Leftovers quantity input (number of servings, not yes/no)
-  - [ ] "Use Up Leftovers" page with day assignment
+  - [x] Leftovers quantity input (number of servings, not yes/no)
+  - [x] "Use Up Leftovers" page with day assignment
 - **Block 3: Inventory Organization (~2 hrs)**
   - [ ] Separate sections for meals vs. veggies
   - [ ] Add freezer inventory option in wizard
@@ -138,14 +138,11 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ---
 
-## Known Bugs (Active)
-
-All known bugs have been consolidated into the phase roadmap above. Recent fixes:
-
-| Bug | Phase | Status |
-|-----|-------|--------|
-| Plan Draft Error (`'selections' is not defined`) | 26 | ✅ Fixed |
-| Shopping List Rendering (object as React child) | 26 | ✅ Fixed |
+| Area | Bug | Phase | Status |
+|------|-----|-------|--------|
+| Plan | Draft Error (`'selections' is not defined`) | 26 | ✅ Fixed |
+| Plan | Shopping List Rendering (object as React child) | 26 | ✅ Fixed |
+| Plan | Leftovers Sync Failure (Misclassified as Ingredients) | 26 | 🔴 Active |
 
 ---
 

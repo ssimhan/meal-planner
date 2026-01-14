@@ -179,8 +179,12 @@ def submit_review():
             if dinner_rev.get('leftovers'):
                 note = dinner_rev.get('leftovers_note')
                 qty = dinner_rev.get('leftovers_qty', 1)
-                if note:
-                    leftovers_to_add.append({'item': note, 'quantity': qty})
+                
+                # Fallback to planned recipe name if no note provided
+                if not note:
+                    note = dinner_rev.get('planned_recipe_name') or f"Leftover {day.capitalize()}"
+                
+                leftovers_to_add.append({'item': note, 'quantity': qty})
             
             # --- Snacks/Lunch Logic ---
             snacks_rev = rev.get('snacks', {})

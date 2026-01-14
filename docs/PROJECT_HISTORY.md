@@ -740,3 +740,16 @@ The best tools are the ones you actually use. This system works because it reduc
 **Build Status:** `npm run build` exits 0. ESLint prints a non-blocking warning about module resolution (to be addressed in incremental refactoring).
 
 **Next Steps:** Incremental type hardening starting with `src/types/index.ts` and `src/lib/api.ts`, one file per commit, verifying build after each change.
+### Phase 26: Wizard UX Improvements (2026-01-14) 🔄
+**Goal:** Streamline the weekly planning wizard for better usability.
+
+**Built:**
+- **Block 1: Meal Type Separation:** Successfully separated dinners and snacks into dedicated wizard steps. Added a `WizardProgress` breadcrumb component for better navigation.
+- **Block 2: Leftovers Enhancement:** Implemented a new "Use Up Leftovers" step where users can assign multiple leftovers to specific meal slots (Lunch/Dinner) on different days.
+- **Improved UI:** Applied "Earth Tones" styling to all wizard steps, ensuring consistent visuals and improved readability.
+- **Backend Integration:** Updated the meal selection and lunch generation logic to respect pre-assigned leftovers.
+
+**Current Blocker:**
+- **Leftovers Sync Bug:** Despite multiple fixes, leftovers submitted in the review step are still intermittently failing to appear in the assignment step or are being misclassified as "ingredients" in the inventory. This appears to be a metadata persistence issue during bulk upserts in Supabase.
+
+**Learning:** Managing state across a 7-step wizard with real-time backend synchronization requires extremely robust data validation and clear naming conventions to prevent field-mismatch bugs.

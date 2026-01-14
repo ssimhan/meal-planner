@@ -270,6 +270,9 @@ def select_dinners(filtered_recipes, inputs, current_week_history=None, all_reci
             if day in days:
                 if recipe_id == 'freezer_meal':
                     selected[day] = {'id': 'freezer_meal', 'name': 'Freezer Backup Meal', 'main_veg': [], 'meal_type': 'freezer', 'cuisine': 'various'}
+                elif recipe_id and recipe_id.startswith('leftover:'):
+                    meal_name = recipe_id.split(':', 1)[1]
+                    selected[day] = {'id': recipe_id, 'name': meal_name, 'main_veg': [], 'meal_type': 'leftover', 'cuisine': 'various'}
                 elif all_recipes:
                     recipe = next((r for r in all_recipes if r.get('id') == recipe_id), None)
                     if recipe:

@@ -102,26 +102,46 @@ class LunchSelector:
     def select_weekly_lunches(
         self,
         dinner_plan: List[Dict[str, Any]],
-        week_of: str
+        week_of: str,
+        current_lunches: Dict[str, Any] = None
     ) -> Dict[str, LunchSuggestion]:
         """
         Select lunches for the entire week based on dinner plan.
 
         Args:
             dinner_plan: List of dinner recipes with their scheduled days
-                Each item: {recipe_id, recipe_name, day, vegetables, ...}
             week_of: ISO date string (YYYY-MM-DD) for start of week
-
-        Returns:
-            Dictionary mapping day -> LunchSuggestion
+            current_lunches: Optional dictionary of already assigned lunches
         """
         weekly_lunches = {}
+        current_lunches = current_lunches or {}
 
         # Extract all ingredients used in dinners this week
         dinner_ingredients = self._extract_dinner_ingredients(dinner_plan)
 
         # Select lunches for each day
         for day in ['mon', 'tue', 'wed', 'thu', 'fri']:
+            # If we already have a lunch (e.g. assigned leftover), respect it
+            if day in current_lunches and current_lunches[day]:
+                l = current_lunches[day]
+                # Convert dict to LunchSuggestion if needed
+                if isinstance(l, dict):
+                    weekly_lunches[day] = LunchSuggestion(
+                        recipe_id=l.get('recipe_id'),
+                        recipe_name=l.get('recipe_name', 'Unknown'),
+                        kid_friendly=l.get('kid_friendly', True),
+                        prep_style=l.get('prep_style', 'leftovers'),
+                        prep_components=l.get('prep_components', []),
+                        storage_days=l.get('storage_days', 0),
+                        prep_day=l.get('prep_day', day),
+                        assembly_notes=l.get('assembly_notes', 'Assigned from wizard'),
+                        reuses_ingredients=l.get('reuses_ingredients', []),
+                        kid_profiles=l.get('kid_profiles')
+                    )
+                else:
+                    weekly_lunches[day] = l
+                continue
+
             suggestion = self._select_daily_lunch(
                 day=day,
                 dinner_ingredients=dinner_ingredients,

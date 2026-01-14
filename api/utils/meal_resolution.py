@@ -135,9 +135,11 @@ def resolve_week(plan_data, history_data):
         p_lunch_raw = p_lunches.get(day)
         p_item_kl = None
         if p_lunch_raw:
+            # Robustness: handle legacy string lunch plans
+            recipe_name = p_lunch_raw.get('recipe_name') if isinstance(p_lunch_raw, dict) else str(p_lunch_raw)
             p_item_kl = {
                 'day': day, 
-                'recipe_id': p_lunch_raw.get('recipe_name'), 
+                'recipe_id': recipe_name, 
                 'meal_type': 'kids_lunch'
             }
             

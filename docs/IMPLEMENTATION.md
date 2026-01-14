@@ -64,8 +64,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ## Development Status
 
-**Current State:** Phase 24 (User Authentication) Next.
-
+**Current State:** Stable Phase 23.5 Baseline (`stable-phase-23-5` tag). Incremental refactoring in progress.
 
 **Completed Phases:**
 - **1-9:** Foundation (recipe parsing, CLI, energy-based prep, HTML plans)
@@ -80,6 +79,9 @@ Declining energy model: Monday (high) → Friday (zero prep)
 - **19:** Recipe Ecosystem & UX Polish
 - **20:** Advanced Planning Control (Selective Replanning, Confirm Today)
 - **21:** Inventory UI/UX Overhaul (Visuals, Move Logic, Dedup)
+- **22:** UX Redesign & Feature Parity (Earth Tones theme)
+- **23:** Experience Refinement & Personalization
+- **23.5:** Household Configuration & UI Polish
 
 ---
 

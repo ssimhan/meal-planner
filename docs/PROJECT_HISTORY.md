@@ -723,3 +723,20 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Log Integrity:** Fixed a critical bug in `log_meal` where new history entries defaulted to unplanned_meal, causing adherence mismatches.
 - **Inventory:** Added visual grouping (icons/colors) and prioritized Leftovers in the Inventory tab.
 - **Settings:** Enabled full editing of "Meal Defaults" and dynamic removal of Adult profiles.
+
+### Stabilization: Phase 23.5 Baseline (2026-01-13) ✅ Complete
+**Goal:** Establish a clean, stable baseline for future refactoring work.
+
+**Context:** During Phase 24/25 development (Authentication & Collaboration), the codebase accumulated complexity and ESLint/TypeScript issues. Decision made to revert to Phase 23.5 as the stable foundation.
+
+**Actions Taken:**
+1. **Codebase Revert:** Created `refactor/from-phase-23-5` branch from commit `389df37a`.
+2. **Baseline Fixes:**
+   - Fixed syntax error in `src/app/settings/page.tsx` (duplicate map closing `))}`).
+   - Added missing `slots` property to `WorkflowStatus` interface in `src/types/index.ts`.
+3. **Tag Created:** `stable-phase-23-5` at commit `dca091b`.
+4. **Backup Preserved:** `backup/phase-25-before-revert` branch contains Phase 24/25 work for future reference.
+
+**Build Status:** `npm run build` exits 0. ESLint prints a non-blocking warning about module resolution (to be addressed in incremental refactoring).
+
+**Next Steps:** Incremental type hardening starting with `src/types/index.ts` and `src/lib/api.ts`, one file per commit, verifying build after each change.

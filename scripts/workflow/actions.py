@@ -132,9 +132,9 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
         pass
     
     for d in ['sat', 'sun']:
-        if cover_dinner and d not in selected_dinners:
+        if is_covered('dinner', d) and d not in selected_dinners:
             selected_dinners[d] = {'name': 'Make at home', 'id': 'make_at_home', 'cuisine': 'various', 'meal_type': 'weekend_meal', 'main_veg': []}
-        if (cover_kids_lunch or cover_adult_lunch) and d not in selected_lunches:
+        if (is_covered('kids_lunch', d) or is_covered('adult_lunch', d)) and d not in selected_lunches:
             selected_lunches[d] = LunchSuggestion(recipe_id=f'weekend_lunch_{d}', recipe_name='Make at home', kid_friendly=True, prep_style='fresh', prep_components=[], storage_days=0, prep_day=d, assembly_notes='Weekend flexibility', reuses_ingredients=[], default_option=None, kid_profiles=None)
             
     # Populate data with generated plan for frontend/DB
@@ -151,7 +151,8 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
     ]
     
     data['lunches'] = {}
-    if cover_kids_lunch: # Logic simplification: if we persist it, it shows up.
+    # Populate lunches if any day needs kids or adult lunch
+    if any_lunch_needed:
         data['lunches'] = {
             d: {
                 'recipe_id': getattr(l, 'recipe_id', None) if not isinstance(l, dict) else l.get('recipe_id'),

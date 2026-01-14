@@ -82,19 +82,67 @@ Declining energy model: Monday (high) → Friday (zero prep)
 - **22:** UX Redesign & Feature Parity (Earth Tones theme)
 - **23:** Experience Refinement & Personalization
 - **23.5:** Household Configuration & UI Polish
-
+- 24 and 25 - original attempt at google oauth and multi-household features. Ended up having big errors and was rolled back. 
 ---
 
 ## Implementation Roadmap (Ideal Order)
 
-### Phase 22: UX Redesign & Feature Parity
-**Goal:** Implement the new "Earth Tones" high-fidelity UX, ensuring all existing functionality is preserved.
+### Phase 26: Wizard UX Improvements
+**Goal:** Streamline the weekly planning wizard for better usability.
+- **Block 1: Meal Type Separation (~2 hrs)**
+  - [ ] Separate pages for dinners in wizard
+  - [ ] Separate pages for snacks in wizard
+- **Block 2: Leftovers Enhancement (~2 hrs)**
+  - [ ] Leftovers quantity input (number of servings, not yes/no)
+  - [ ] "Use Up Leftovers" page with day assignment
+- **Block 3: Inventory Organization (~2 hrs)**
+  - [ ] Separate sections for meals vs. veggies
+  - [ ] Add freezer inventory option in wizard
+  - [ ] Quantity specification (servings for meals, count for produce)
+- **Block 4: Workflow Pause (~2 hrs)**
+  - [ ] Pause state infrastructure (localStorage/Supabase)
+  - [ ] Resume UI with banner/modal
 
-### Phase 23: Bugs, Personalization & Advanced Replanning
-**Goal:** Fix known UX/Logic issues and add layer of personalization.
+### Phase 27: Daily Confirmation & Recipe Polish
+**Goal:** Add proactive confirmations and standardize recipe data.
+- **Block 1: Confirmation Banner (~2-3 hrs)**
+  - [ ] Backend 6 PM trigger logic
+  - [ ] Frontend banner component
+  - [ ] Integration and testing
+- **Block 2: Recipe Index Standardization (~2 hrs)**
+  - [ ] Define tag/cuisine taxonomy
+  - [ ] Batch update recipes
 
-### Phase 24: User Authentication (The "Family Gate")
-**Goal:** Transition from single-user system to secure, multi-tenant application via Supabase Auth + RLS.
+### Phase 28: User Authentication (The "Family Gate")
+**Goal:** Secure the application for single-household access via Supabase.
+- **Block 1: Infrastructure & Schema (~3 hrs)**
+  - [ ] Supabase Auth setup
+  - [ ] RLS Policies
+- **Block 2: Login Page & Flow (~3 hrs)**
+  - [ ] Login/Signup UI
+  - [ ] Session management
+- **Block 3: Cleanup & Polish (~2-4 hrs)**
+  - [ ] Legacy cleanup (archive local data/*.yml)
+  - [ ] Auth caching optimization
+  - [ ] Empty states and onboarding
+
+### Phase 29: Analytics & Future Features
+**Goal:** Lower-priority enhancements for power users.
+- **Block 1: Member Management (~2 hrs)**
+  - [ ] View household members in Settings
+  - [ ] Invite flow (Join Code or Email)
+- **Block 2: Future Ideas**
+  - [ ] Freezer ingredients tracking
+  - [ ] Advanced analytics
+  - [ ] Nutrition estimation
+
+---
+
+## Known Bugs (Active)
+
+| Bug | Description | Status |
+|-----|-------------|--------|
+| Plan Draft Error | `/api/plan/draft` returns 500: `'selections' is not defined` | ✅ Fixed |
 
 ---
 
@@ -196,10 +244,5 @@ Declining energy model: Monday (high) → Friday (zero prep)
 - **Block 2: Login Page.**
 
 ---
-
-**Other Ideas:**
-- Freezer ingredients tracking
-- Advanced analytics
-- Nutrition estimation
 
 See [PROJECT_HISTORY.md](PROJECT_HISTORY.md) for detailed development timeline.

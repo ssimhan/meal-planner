@@ -76,6 +76,7 @@ def generate_draft_route():
         data = request.json or {}
         week_of = data.get('week_of')
         locked_days = data.get('locked_days', []) # ['mon', ' tue']
+        selections = data.get('selections', [])  # Manual recipe selections [{day, recipe_id}]
         
         h_id = storage.get_household_id()
         

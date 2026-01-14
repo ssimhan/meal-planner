@@ -30,6 +30,7 @@ export interface WorkflowStatus {
     status: string;
   };
   pending_recipes?: string[];
+  slots?: { [key: string]: any };
 }
 
 export interface AvailableWeek {

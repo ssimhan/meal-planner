@@ -172,7 +172,6 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 ))}
-                ))}
                 {/* Dynamic Add Adult */}
                 <button
                   onClick={() => {

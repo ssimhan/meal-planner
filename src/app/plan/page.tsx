@@ -114,7 +114,7 @@ function PlanningWizardContent() {
     const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
 
     // Shopping List State
-    const [shoppingList, setShoppingList] = useState<string[]>([]);
+    const [shoppingList, setShoppingList] = useState<{ item: string; store: string }[]>([]);
     const [purchasedItems, setPurchasedItems] = useState<string[]>([]);
     const [customShoppingItems, setCustomShoppingItems] = useState<string[]>([]);
     const [newShoppingItem, setNewShoppingItem] = useState('');
@@ -512,11 +512,15 @@ function PlanningWizardContent() {
     // STEP 5: SMART GROCERY LIST UI
     if (step === 'groceries') {
         const stepNum = '5 of 6';
-        const allItems = [...new Set([...shoppingList, ...customShoppingItems])];
+        // Normalize shoppingList items to strings for display
+        const shoppingListStrings = shoppingList.map(item =>
+            typeof item === 'string' ? item : item.item
+        );
+        const allItems = [...new Set([...shoppingListStrings, ...customShoppingItems])];
 
-        const togglePurchased = (item: string) => {
+        const togglePurchased = (itemName: string) => {
             setPurchasedItems(prev =>
-                prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item]
+                prev.includes(itemName) ? prev.filter(i => i !== itemName) : [...prev, itemName]
             );
         };
 
@@ -525,6 +529,22 @@ function PlanningWizardContent() {
             setCustomShoppingItems(prev => [...prev, toTitleCase(newShoppingItem.trim())]);
             setNewShoppingItem('');
         };
+
+        // Group items by store for better display
+        const getStore = (itemName: string): string => {
+            const found = shoppingList.find(i =>
+                (typeof i === 'string' ? i : i.item) === itemName
+            );
+            return found && typeof found === 'object' ? found.store : 'Other';
+        };
+
+        // Group by store
+        const itemsByStore: Record<string, string[]> = {};
+        allItems.forEach(itemName => {
+            const store = getStore(itemName);
+            if (!itemsByStore[store]) itemsByStore[store] = [];
+            itemsByStore[store].push(itemName);
+        });
 
         return (
             <main className="container mx-auto max-w-3xl px-4 py-12 text-black">
@@ -558,24 +578,29 @@ function PlanningWizardContent() {
                                 <button onClick={handleAddCustomItem} className="btn-secondary px-6">Add</button>
                             </div>
 
-                            <ul className="space-y-3">
-                                {allItems.length > 0 ? (
-                                    allItems.map((item, i) => {
-                                        const isPurchased = purchasedItems.includes(item);
-                                        return (
-                                            <li key={i} className={`flex items-center gap-4 p-4 rounded-lg border transition-all cursor-pointer ${isPurchased ? 'bg-green-50 border-[var(--accent-sage)] opacity-80' : 'bg-[var(--bg-secondary)] border-[var(--border-subtle)]'}`}
-                                                onClick={() => togglePurchased(item)}>
-                                                <div className={`w-6 h-6 rounded flex items-center justify-center border-2 ${isPurchased ? 'bg-[var(--accent-sage)] border-[var(--accent-sage)]' : 'border-[var(--text-muted)]'}`}>
-                                                    {isPurchased && <span className="text-white">✓</span>}
-                                                </div>
-                                                <span className={`text-lg ${isPurchased ? 'line-through text-[var(--text-muted)]' : ''}`}>{item}</span>
-                                            </li>
-                                        );
-                                    })
-                                ) : (
-                                    <p className="text-center py-8 text-[var(--text-muted)] italic">No items needed! Use the input above to add extras.</p>
-                                )}
-                            </ul>
+                            {Object.entries(itemsByStore).length > 0 ? (
+                                Object.entries(itemsByStore).map(([store, items]) => (
+                                    <div key={store}>
+                                        <h3 className="text-sm font-bold uppercase text-[var(--accent-sage)] mb-2">{store}</h3>
+                                        <ul className="space-y-3">
+                                            {items.map((itemName, i) => {
+                                                const isPurchased = purchasedItems.includes(itemName);
+                                                return (
+                                                    <li key={i} className={`flex items-center gap-4 p-4 rounded-lg border transition-all cursor-pointer ${isPurchased ? 'bg-green-50 border-[var(--accent-sage)] opacity-80' : 'bg-[var(--bg-secondary)] border-[var(--border-subtle)]'}`}
+                                                        onClick={() => togglePurchased(itemName)}>
+                                                        <div className={`w-6 h-6 rounded flex items-center justify-center border-2 ${isPurchased ? 'bg-[var(--accent-sage)] border-[var(--accent-sage)]' : 'border-[var(--text-muted)]'}`}>
+                                                            {isPurchased && <span className="text-white">✓</span>}
+                                                        </div>
+                                                        <span className={`text-lg ${isPurchased ? 'line-through text-[var(--text-muted)]' : ''}`}>{itemName}</span>
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-center py-8 text-[var(--text-muted)] italic">No items needed! Use the input above to add extras.</p>
+                            )}
                         </div>
                     )}
                 </div>

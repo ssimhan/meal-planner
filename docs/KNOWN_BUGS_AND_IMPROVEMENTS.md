@@ -48,6 +48,7 @@ These bugs were documented and fixed in Phase 23 / 23.5:
 
 #### Plan Generation
 - ✅ **Plan Draft Error** - `/api/plan/draft` returns 500 error: `'selections' is not defined` when generating a plan in wizard (Fixed: missing variable extraction)
+- ✅ **Shopping List Rendering Error** - Shopping list step threw "Objects are not valid as React child" error because API returns `{item, store}` objects but UI expected strings (Fixed: normalized items and added store grouping)
 
 ### Priority: Medium
 

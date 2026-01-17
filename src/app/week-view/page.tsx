@@ -312,7 +312,7 @@ function WeekViewContent() {
             >
               ← Back to Week View
             </button>
-            <h1 className="text-3xl font-bold text-[var(--text-primary)]">Fixing {selectedItems.length} Meals</h1>
+            <h1 className="text-3xl font-bold text-[var(--text-primary)]">Editing {selectedItems.length} Meals</h1>
             <p className="text-[var(--text-muted)]">Update the details below to correct the meal logs.</p>
           </header>
 
@@ -433,13 +433,13 @@ function WeekViewContent() {
               >
                 {viewState.editMode ? (
                   <>
-                    <span>✕</span>
-                    <span className="hidden sm:inline">Cancel</span>
+                    <span>✓</span>
+                    <span className="hidden sm:inline">Done</span>
                   </>
                 ) : (
                   <>
                     <span>✎</span>
-                    <span className="hidden sm:inline">Mark for Fix</span>
+                    <span className="hidden sm:inline">Edit</span>
                   </>
                 )}
               </button>
@@ -470,7 +470,7 @@ function WeekViewContent() {
                   onClick={() => setViewState(prev => ({ ...prev, isFixing: true }))}
                   className="bg-[var(--accent-sage)] text-white px-6 py-2 rounded-full text-sm font-bold hover:scale-105 transition-transform"
                 >
-                  Fix Now
+                  Edit Now
                 </button>
               </div>
             </div>

@@ -262,6 +262,16 @@ export default function MealLogFlow({
                                 {isModal && <span className="text-xl">🔄</span>}
                                 Something Else
                             </button>
+                            {leftoverInventory.filter(i => i.type === 'meal').length > 0 && (
+                                <button
+                                    onClick={() => setStep('leftover_select')}
+                                    disabled={loading}
+                                    className={`${isModal ? 'w-full py-4 text-base' : 'px-4 py-2 text-[10px]'} bg-purple-50 border border-purple-100 text-purple-700 font-black uppercase tracking-widest rounded-2xl hover:bg-purple-100 transition-all flex items-center justify-center gap-3 active:scale-[0.98]`}
+                                >
+                                    {isModal && <span className="text-xl">🍱</span>}
+                                    Ate Leftovers
+                                </button>
+                            )}
                             {isModal && (
                                 <button
                                     onClick={() => handleLog({ made: false })}
@@ -301,20 +311,22 @@ export default function MealLogFlow({
                     ))}
                 </div>
 
-                <div className="flex flex-col gap-2 mt-2">
-                    <label className="text-[10px] font-black uppercase tracking-wider text-[var(--text-muted)] ml-1">Leftovers Created?</label>
-                    <div className="grid grid-cols-4 gap-2">
-                        {['None', '1 Serving', '2 Servings', 'Batch'].map(qty => (
-                            <button
-                                key={qty}
-                                onClick={() => setLeftoverServings(qty)}
-                                className={`py-3 text-[10px] font-bold rounded-xl transition-all ${leftoverServings === qty ? 'bg-[var(--accent-primary)] text-white' : 'bg-black/5 text-[var(--text-muted)] hover:bg-white'}`}
-                            >
-                                {qty.split(' ')[0]}
-                            </button>
-                        ))}
+                {logType === 'dinner' && (
+                    <div className="flex flex-col gap-2 mt-4 p-4 bg-purple-50/50 border border-purple-100 rounded-2xl">
+                        <label className="text-[10px] font-black uppercase tracking-wider text-purple-700 ml-1">Leftovers Created?</label>
+                        <div className="grid grid-cols-4 gap-2">
+                            {['None', '1 Serving', '2 Servings', 'Batch'].map(qty => (
+                                <button
+                                    key={qty}
+                                    onClick={() => setLeftoverServings(qty)}
+                                    className={`py-3 text-[10px] font-bold rounded-xl transition-all ${leftoverServings === qty ? 'bg-purple-600 text-white shadow-md' : 'bg-white/50 text-purple-600/60 hover:bg-white'}`}
+                                >
+                                    {qty.split(' ')[0]}
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                )}
 
                 <button
                     onClick={submitMade}
@@ -336,18 +348,18 @@ export default function MealLogFlow({
                     <p className="text-sm text-[var(--text-muted)]">We'll update your inventory for you.</p>
                 </div>
 
-                <div className={`grid ${logType === 'dinner' ? 'grid-cols-2' : 'grid-cols-1'} gap-3`}>
+                <div className={`grid ${logType === 'dinner' || leftoverInventory.filter(i => i.type === 'meal').length > 0 ? 'grid-cols-2' : 'grid-cols-1'} gap-3`}>
                     {logType === 'dinner' && (
-                        <>
-                            <button onClick={() => setStep('freezer_select')} className="p-4 bg-white/50 border border-[var(--border-subtle)] rounded-2xl hover:bg-white transition-all flex flex-col items-center gap-2 group active:scale-95">
-                                <span className="text-2xl group-hover:scale-110 transition-transform">🧊</span>
-                                <span className="text-[10px] font-black uppercase tracking-tighter">Freezer Meal</span>
-                            </button>
-                            <button onClick={() => setStep('leftover_select')} className="p-4 bg-white/50 border border-[var(--border-subtle)] rounded-2xl hover:bg-white transition-all flex flex-col items-center gap-2 group active:scale-95">
-                                <span className="text-2xl group-hover:scale-110 transition-transform">🍱</span>
-                                <span className="text-[10px] font-black uppercase tracking-tighter">Leftovers</span>
-                            </button>
-                        </>
+                        <button onClick={() => setStep('freezer_select')} className="p-4 bg-white/50 border border-[var(--border-subtle)] rounded-2xl hover:bg-white transition-all flex flex-col items-center gap-2 group active:scale-95">
+                            <span className="text-2xl group-hover:scale-110 transition-transform">🧊</span>
+                            <span className="text-[10px] font-black uppercase tracking-tighter">Freezer Meal</span>
+                        </button>
+                    )}
+                    {leftoverInventory.filter(i => i.type === 'meal').length > 0 && (
+                        <button onClick={() => setStep('leftover_select')} className="p-4 bg-white/50 border border-[var(--border-subtle)] rounded-2xl hover:bg-white transition-all flex flex-col items-center gap-2 group active:scale-95">
+                            <span className="text-2xl group-hover:scale-110 transition-transform">🍱</span>
+                            <span className="text-[10px] font-black uppercase tracking-tighter">Leftovers</span>
+                        </button>
                     )}
                     <button onClick={() => setStep('ate_out_details')} className="p-4 bg-white/50 border border-[var(--border-subtle)] rounded-2xl hover:bg-white transition-all flex flex-col items-center gap-2 group active:scale-95">
                         <span className="text-2xl group-hover:scale-110 transition-transform">🍽️</span>

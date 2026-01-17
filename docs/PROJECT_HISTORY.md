@@ -755,7 +755,7 @@ The best tools are the ones you actually use. This system works because it reduc
 **Block 3: Prep Workflow & Data Integrity (2026-01-16) ✅ COMPLETE**
 - **Bulk Prep Task Completion:** Added `/api/prep/bulk-check` and frontend "Check All" (✅) UI for efficient task management.
 - **Duplication Bug Fix:** Resolved critical issue where in-place list modification in `LunchSelector` caused doubling of ingredient tasks.
-- **Dashboard & Replan Consolidation:** Fixed Stat Card counters and display logic. Refactored `ReplanWorkflowModal` to use the standardized `MealLogFlow` UI, refined `Week View` visuals (bucket-based color coding matching summary buckets), and added automated **Weekly Summary Statistics** for better adherence tracking.
+- **Dashboard & Replan Consolidation:** Fixed Stat Card counters and display logic. Refactored `ReplanWorkflowModal` to use the standardized `MealLogFlow` UI with **enhanced leftovers handling** (top-level selection for all meal types and prominent dinner prompts), refined `Week View` visuals (bucket-based color coding), and added automated **Weekly Summary Statistics**.
 - **Data Cleanup:** Successfully deduplicated 27 tasks from current active week data via repair script.
 
 **Learning:** "Bulk" actions significantly reduce friction. Defensive programming (copying lists with `list()`) is essential when multiple modules analyze the same source data.

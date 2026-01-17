@@ -87,6 +87,9 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ## Implementation Roadmap (Ideal Order)
 
+> [!IMPORTANT]
+> **Priority Check:** Before starting new features or moving to the next phase, please go through all the bugs listed in the bug tables and on each page. Ensure existing functionality is stable and verified before proceeding with the implementation plan.
+
 ### Phase 26: Wizard UX Improvements
 **Goal:** Streamline the weekly planning wizard for better usability.
 - **Block 1: Meal Type Separation (~2 hrs)**

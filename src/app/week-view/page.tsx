@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { getStatus, getRecipes, WorkflowStatus, replan, swapMeals, logMeal } from '@/lib/api';
+import { getStatus, getRecipes, WorkflowStatus, replan, swapMeals, logMeal, getInventory } from '@/lib/api';
+import { InventoryItem } from '@/types';
 import AppLayout from '@/components/AppLayout';
 import { useToast } from '@/context/ToastContext';
 import MealCorrectionInput from '@/components/MealCorrectionInput';
@@ -56,6 +57,7 @@ function WeekViewContent() {
       type: 'dinner'
     }
   });
+  const [leftoverInventory, setLeftoverInventory] = useState<InventoryItem[]>([]);
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -87,6 +89,20 @@ function WeekViewContent() {
       }
     }
     loadRecipes();
+  }, []);
+
+  useEffect(() => {
+    async function fetchInventory() {
+      try {
+        const data = await getInventory();
+        if (data.inventory?.fridge) {
+          setLeftoverInventory(data.inventory.fridge);
+        }
+      } catch (err) {
+        console.error('Failed to fetch inventory:', err);
+      }
+    }
+    fetchInventory();
   }, []);
 
   if (loading) {
@@ -481,6 +497,7 @@ function WeekViewContent() {
               day={viewState.replacementModal.day}
               currentMeal={viewState.replacementModal.currentMeal}
               recipes={recipes}
+              leftoverInventory={leftoverInventory}
               onConfirm={handleReplacementConfirm}
               onCancel={() => setViewState(prev => ({ ...prev, replacementModal: { isOpen: false, day: '', currentMeal: '', type: 'dinner' } }))}
             />

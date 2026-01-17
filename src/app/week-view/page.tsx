@@ -141,6 +141,16 @@ function WeekViewContent() {
     };
   };
 
+  const stats = Object.values(status?.slots || {}).reduce((acc, slot: any) => {
+    const made = slot.actual?.made;
+    if (made === true) acc.followed++;
+    else if (made === 'outside_meal') acc.ateOut++;
+    else if (made === false) acc.skipped++;
+    else if (made === 'freezer_backup') acc.backup++;
+    else if (made === 'leftovers') acc.leftovers++;
+    return acc;
+  }, { followed: 0, ateOut: 0, skipped: 0, backup: 0, leftovers: 0 });
+
   const getDisplayName = (planned: string, actual?: string) => {
     if (!actual) return planned;
     const isEmoji = ['❤️', '👍', '😐', '👎', '❌'].some(emoji => actual.includes(emoji));
@@ -1137,6 +1147,35 @@ function WeekViewContent() {
             </tbody>
           </table>
         </div>
+
+        {/* Weekly Stats Summary */}
+        <section className="mt-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+          <div className="card p-4 bg-green-50/50 border-green-100 flex flex-col items-center text-center">
+            <span className="text-2xl mb-1">✅</span>
+            <span className="text-2xl font-black text-green-700">{stats.followed}</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-green-600/70">Followed Plan</span>
+          </div>
+          <div className="card p-4 bg-amber-50/50 border-amber-100 flex flex-col items-center text-center">
+            <span className="text-2xl mb-1">🍽️</span>
+            <span className="text-2xl font-black text-amber-700">{stats.ateOut}</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-amber-600/70">Ate Out</span>
+          </div>
+          <div className="card p-4 bg-red-50/50 border-red-100 flex flex-col items-center text-center">
+            <span className="text-2xl mb-1">🏃‍♂️</span>
+            <span className="text-2xl font-black text-red-700">{stats.skipped}</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-red-600/70">Skipped</span>
+          </div>
+          <div className="card p-4 bg-blue-50/50 border-blue-100 flex flex-col items-center text-center">
+            <span className="text-2xl mb-1">🧊</span>
+            <span className="text-2xl font-black text-blue-700">{stats.backup}</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-blue-600/70">Backup Used</span>
+          </div>
+          <div className="card p-4 bg-purple-50/50 border-purple-100 flex flex-col items-center text-center">
+            <span className="text-2xl mb-1">🥗</span>
+            <span className="text-2xl font-black text-purple-700">{stats.leftovers}</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-purple-600/70">Leftovers</span>
+          </div>
+        </section>
       </div>
     </div>
   );

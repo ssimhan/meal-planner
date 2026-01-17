@@ -150,7 +150,7 @@ function WeekViewContent() {
 
   const getFeedbackBadge = (feedback?: string, made?: boolean | string, needsFix?: boolean) => {
     if (needsFix) return <span className="text-xs text-red-600 font-bold px-2 py-0.5 bg-red-50 rounded border border-red-200">Needs Fix</span>;
-    if (made === false) return <span className="text-xs text-red-600 font-medium px-2 py-0.5 bg-red-50 rounded">✗ Skipped</span>;
+    if (made === false) return <span className="text-xs text-red-600 font-medium px-2 py-0.5 bg-red-50 rounded">Skipped</span>;
 
     const emojis = ['❤️', '👍', '😐', '👎', '❌'];
     const emojiMatch = feedback && emojis.find(e => feedback.includes(e));

@@ -552,7 +552,7 @@ function WeekViewContent() {
                     {dayNames[idx]}
                   </h3>
                   {isToday && (
-                    <span className="text-[10px] font-mono tracking-widest px-2 py-0.5 bg-[var(--accent-sage)] text-white rounded shadow-sm">
+                    <span className="text-[10px] font-black tracking-widest px-3 py-1 bg-[var(--accent-sage)] text-white rounded-full shadow-md animate-pulse">
                       TODAY
                     </span>
                   )}
@@ -571,7 +571,7 @@ function WeekViewContent() {
                       toggleSelection={toggleSelection}
                     />
                     <div
-                      className={`flex-1 ${viewState.isSwapMode ? 'cursor-pointer p-2 rounded border-2 transition-all user-select-none' : ''} ${viewState.swapSelection.includes(day)
+                      className={`flex-1 min-h-[44px] ${viewState.isSwapMode ? 'cursor-pointer p-2 rounded border-2 transition-all user-select-none' : ''} ${viewState.swapSelection.includes(day)
                         ? 'border-[var(--accent-sage)] bg-green-50 shadow-md transform scale-[1.02]'
                         : viewState.isSwapMode
                           ? 'border-dashed border-gray-300 hover:border-[var(--accent-sage)] hover:bg-gray-50'
@@ -593,7 +593,7 @@ function WeekViewContent() {
                       )}
                       {!viewState.isSwapMode && viewState.editMode && (
                         <button
-                          className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-2 flex items-center gap-1"
+                          className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-3 flex items-center gap-1 min-h-[32px] px-2 -ml-2 rounded-md hover:bg-gray-100 transition-colors"
                           onClick={(e) => {
                             e.stopPropagation();
                             setViewState(prev => ({
@@ -606,14 +606,15 @@ function WeekViewContent() {
                             }));
                           }}
                         >
-                          <span>🔄</span> Replace
+                          <span className="text-xs">🔄</span>
+                          <span className="font-bold uppercase tracking-wider">Replace</span>
                         </button>
                       )}
                     </div>
                   </div>
 
                   {/* Kids Lunch */}
-                  <div className={`flex items-start p-1.5 rounded-lg border transition-all ${getSlotBg(kidsLunchSlot)}`}>
+                  <div className={`flex items-start p-3 rounded-lg border transition-all ${getSlotBg(kidsLunchSlot)}`}>
                     <SelectionCheckbox
                       day={day}
                       type="kids_lunch"
@@ -633,7 +634,7 @@ function WeekViewContent() {
                       </p>
                       {!viewState.isSwapMode && viewState.editMode && (
                         <button
-                          className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-1 flex items-center gap-1"
+                          className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-2 flex items-center gap-1 min-h-[32px] px-2 -ml-2 rounded-md hover:bg-gray-100 transition-colors"
                           onClick={(e) => {
                             e.stopPropagation();
                             if (viewState.editMode) {
@@ -648,14 +649,15 @@ function WeekViewContent() {
                             }
                           }}
                         >
-                          <span>🔄</span> Replace
+                          <span className="text-xs">🔄</span>
+                          <span className="font-bold uppercase tracking-wider">Replace</span>
                         </button>
                       )}
                     </div>
                   </div>
 
                   {/* School Snack */}
-                  <div className={`flex items-start p-1.5 rounded-lg border transition-all ${getSlotBg(schoolSnackSlot)}`}>
+                  <div className={`flex items-start p-3 rounded-lg border transition-all ${getSlotBg(schoolSnackSlot)}`}>
                     <SelectionCheckbox
                       day={day}
                       type="school_snack"
@@ -675,7 +677,7 @@ function WeekViewContent() {
                       </p>
                       {!viewState.isSwapMode && viewState.editMode && (
                         <button
-                          className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-1 flex items-center gap-1"
+                          className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-2 flex items-center gap-1 min-h-[32px] px-2 -ml-2 rounded-md hover:bg-gray-100 transition-colors"
                           onClick={(e) => {
                             e.stopPropagation();
                             setViewState(prev => ({
@@ -688,14 +690,15 @@ function WeekViewContent() {
                             }));
                           }}
                         >
-                          <span>🔄</span> Replace
+                          <span className="text-xs">🔄</span>
+                          <span className="font-bold uppercase tracking-wider">Replace</span>
                         </button>
                       )}
                     </div>
                   </div>
 
                   {/* Home Snack */}
-                  <div className={`flex items-start p-1.5 rounded-lg border transition-all ${getSlotBg(homeSnackSlot)}`}>
+                  <div className={`flex items-start p-3 rounded-lg border transition-all ${getSlotBg(homeSnackSlot)}`}>
                     <SelectionCheckbox
                       day={day}
                       type="home_snack"
@@ -715,7 +718,7 @@ function WeekViewContent() {
                       </p>
                       {!viewState.isSwapMode && viewState.editMode && (
                         <button
-                          className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-1 flex items-center gap-1"
+                          className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-2 flex items-center gap-1 min-h-[32px] px-2 -ml-2 rounded-md hover:bg-gray-100 transition-colors"
                           onClick={(e) => {
                             e.stopPropagation();
                             setViewState(prev => ({
@@ -728,14 +731,15 @@ function WeekViewContent() {
                             }));
                           }}
                         >
-                          <span>🔄</span> Replace
+                          <span className="text-xs">🔄</span>
+                          <span className="font-bold uppercase tracking-wider">Replace</span>
                         </button>
                       )}
                     </div>
                   </div>
 
                   {/* Adult Lunch */}
-                  <div className={`flex items-start p-1.5 rounded-lg border transition-all ${getSlotBg(adultLunchSlot)}`}>
+                  <div className={`flex items-start p-3 rounded-lg border transition-all ${getSlotBg(adultLunchSlot)}`}>
                     <SelectionCheckbox
                       day={day}
                       type="adult_lunch"
@@ -755,7 +759,7 @@ function WeekViewContent() {
                       </p>
                       {!viewState.isSwapMode && viewState.editMode && (
                         <button
-                          className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-1 flex items-center gap-1"
+                          className="text-[10px] text-gray-400 hover:text-[var(--accent-sage)] mt-2 flex items-center gap-1 min-h-[32px] px-2 -ml-2 rounded-md hover:bg-gray-100 transition-colors"
                           onClick={(e) => {
                             e.stopPropagation();
                             setViewState(prev => ({
@@ -768,7 +772,8 @@ function WeekViewContent() {
                             }));
                           }}
                         >
-                          <span>🔄</span> Replace
+                          <span className="text-xs">🔄</span>
+                          <span className="font-bold uppercase tracking-wider">Replace</span>
                         </button>
                       )}
                     </div>
@@ -781,10 +786,20 @@ function WeekViewContent() {
 
         {/* Desktop: Table view */}
         <div className="hidden md:block overflow-x-auto card p-0 overflow-hidden shadow-lg border-none">
-          <table className="w-full border-collapse">
+          <table className="w-full border-collapse table-fixed">
+            <colgroup>
+              <col className="w-[140px]" />
+              <col className="w-[12%]" />
+              <col className="w-[12%]" />
+              <col className="w-[12%]" />
+              <col className="w-[12%]" />
+              <col className="w-[12%]" />
+              <col className="w-[14%]" />
+              <col className="w-[14%]" />
+            </colgroup>
             <thead>
               <tr className="bg-[var(--bg-secondary)] border-b border-[var(--border-subtle)]">
-                <th className="p-4 text-left font-mono text-[10px] uppercase tracking-widest text-[var(--text-muted)] bg-white w-40">
+                <th className="p-4 text-left font-mono text-[10px] uppercase tracking-widest text-[var(--text-muted)] bg-white border-b border-[var(--border-subtle)]">
                   Meal Type
                 </th>
                 {dayNames.map((dayName, idx) => {
@@ -864,7 +879,9 @@ function WeekViewContent() {
                                   onClick={(e) => viewState.isSwapMode && e.preventDefault()}
                                   className={viewState.isSwapMode ? '' : "hover:text-[var(--accent-sage)] hover:underline"}
                                 >
-                                  {getMealName(dinnerSlot)}
+                                  <span className="line-clamp-2" title={getMealName(dinnerSlot)}>
+                                    {getMealName(dinnerSlot)}
+                                  </span>
                                 </Link>
                               ) : (
                                 getMealName(dinnerSlot)
@@ -940,7 +957,7 @@ function WeekViewContent() {
                         />
                         <div className="flex-1">
                           <div className="flex justify-between items-start gap-2">
-                            <span className="text-gray-600 italic">
+                            <span className="text-gray-600 italic line-clamp-2" title={getMealName(kidsLunchSlot, 'Leftovers')}>
                               {getMealName(kidsLunchSlot, 'Leftovers')}
                             </span>
                             {getFeedbackBadge(kidsLunchSlot?.actual?.actual_meal, kidsLunchSlot?.actual?.made, kidsLunchSlot?.actual?.needs_fix)}
@@ -1015,7 +1032,7 @@ function WeekViewContent() {
                           />
                           <div className="flex-1">
                             <div className="flex justify-between items-start gap-2">
-                              <span className="text-gray-600 font-mono text-xs">
+                              <span className="text-gray-600 font-mono text-xs line-clamp-2" title={getMealName(schoolSnackSlot, 'TBD')}>
                                 {getMealName(schoolSnackSlot, 'TBD')}
                               </span>
                               {getFeedbackBadge(schoolSnackSlot?.actual?.actual_meal, schoolSnackSlot?.actual?.made, schoolSnackSlot?.actual?.needs_fix)}
@@ -1093,7 +1110,7 @@ function WeekViewContent() {
                           />
                           <div className="flex-1">
                             <div className="flex justify-between items-start gap-2">
-                              <span className="text-gray-600 font-mono text-xs">
+                              <span className="text-gray-600 font-mono text-xs line-clamp-2" title={getMealName(homeSnackSlot, 'TBD')}>
                                 {getMealName(homeSnackSlot, 'TBD')}
                               </span>
                               {getFeedbackBadge(homeSnackSlot?.actual?.actual_meal, homeSnackSlot?.actual?.made, homeSnackSlot?.actual?.needs_fix)}
@@ -1169,7 +1186,7 @@ function WeekViewContent() {
                         />
                         <div className="flex-1">
                           <div className="flex justify-between items-start gap-2">
-                            <span className="text-gray-500 italic text-xs">
+                            <span className="text-gray-500 italic text-xs line-clamp-2" title={getMealName(adultLunchSlot, 'Leftovers')}>
                               {getMealName(adultLunchSlot, 'Leftovers')}
                             </span>
                             {getFeedbackBadge(adultLunchSlot?.actual?.actual_meal, adultLunchSlot?.actual?.made, adultLunchSlot?.actual?.needs_fix)}

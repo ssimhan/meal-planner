@@ -517,8 +517,10 @@ function WeekViewContent() {
 
             const getSlotBg = (slot: any) => {
               const made = slot?.actual?.made;
-              const isConfirmed = made === true || made === 'freezer_backup' || made === 'outside_meal';
-              if (isConfirmed) return 'bg-green-50 border-green-100 shadow-sm';
+              if (made === true) return 'bg-green-50 border-green-100 shadow-sm';
+              if (made === 'outside_meal') return 'bg-amber-50 border-amber-100 shadow-sm';
+              if (made === 'freezer_backup') return 'bg-blue-50 border-blue-100 shadow-sm';
+              if (made === 'leftovers') return 'bg-purple-50 border-purple-100 shadow-sm';
               if (made === false || (isPast && made === undefined)) return 'bg-red-50 border-red-100 shadow-sm';
               return 'bg-white border-transparent';
             };
@@ -800,15 +802,23 @@ function WeekViewContent() {
 
                   const dinnerSlot = getSlot(day, 'dinner');
                   const made = dinnerSlot?.actual?.made;
-                  const isConfirmed = made === true || made === 'freezer_backup' || made === 'outside_meal';
-                  const isSkippedOrPastUnconfirmed = made === false || (isPast && made === undefined);
+
+                  const getBgColor = (m: any) => {
+                    if (m === true) return 'bg-green-50 border-l-[var(--accent-sage)]';
+                    if (m === 'outside_meal') return 'bg-amber-50 border-l-amber-400';
+                    if (m === 'freezer_backup') return 'bg-blue-50 border-l-blue-400';
+                    if (m === 'leftovers') return 'bg-purple-50 border-l-purple-400';
+                    if (m === false || (isPast && m === undefined)) return 'bg-red-50 border-l-red-300';
+                    return 'hover:bg-gray-50';
+                  };
+
+                  const bgColorClass = getBgColor(made);
+                  const isColored = bgColorClass !== 'hover:bg-gray-50';
 
                   return (
-                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] transition-all duration-300 ${isConfirmed
-                      ? 'bg-green-50 shadow-[inset_0_2px_4px_rgba(0,128,0,0.05)] border-l-[3px] border-l-[var(--accent-sage)]'
-                      : isSkippedOrPastUnconfirmed
-                        ? 'bg-red-50 border-l-[3px] border-l-red-300'
-                        : 'hover:bg-gray-50'
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] transition-all duration-300 ${isColored
+                      ? `${bgColorClass} shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] border-l-[3px]`
+                      : bgColorClass
                       }`}>
                       <div className="flex items-start gap-2">
                         <SelectionCheckbox
@@ -884,15 +894,22 @@ function WeekViewContent() {
 
                   const kidsLunchSlot = getSlot(day, 'kids_lunch');
                   const made = kidsLunchSlot?.actual?.made;
-                  const isConfirmed = made === true || made === 'freezer_backup' || made === 'outside_meal';
-                  const isSkippedOrPastUnconfirmed = made === false || (isPast && made === undefined);
+
+                  const getBgColor = (m: any) => {
+                    if (m === true) return 'bg-green-50';
+                    if (m === 'outside_meal') return 'bg-amber-50';
+                    if (m === 'freezer_backup') return 'bg-blue-50';
+                    if (m === 'leftovers') return 'bg-purple-50';
+                    if (m === false || (isPast && m === undefined)) return 'bg-red-50';
+                    return '';
+                  };
+
+                  const bgColorClass = getBgColor(made);
 
                   return (
-                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${isConfirmed
-                      ? 'bg-green-50 shadow-[inset_0_1px_2px_rgba(0,128,0,0.05)]'
-                      : isSkippedOrPastUnconfirmed
-                        ? 'bg-red-50'
-                        : ''
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${bgColorClass !== ''
+                      ? `${bgColorClass} shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]`
+                      : ''
                       }`}>
                       <div className="flex items-start gap-2">
                         <SelectionCheckbox
@@ -951,15 +968,22 @@ function WeekViewContent() {
                   const schoolSnackSlot = getSlot(day, 'school_snack');
                   const isWeekend = day === 'sat' || day === 'sun';
                   const made = schoolSnackSlot?.actual?.made;
-                  const isConfirmed = made === true || made === 'freezer_backup' || made === 'outside_meal';
-                  const isSkippedOrPastUnconfirmed = made === false || (isPast && made === undefined);
+
+                  const getBgColor = (m: any) => {
+                    if (m === true) return 'bg-green-50';
+                    if (m === 'outside_meal') return 'bg-amber-50';
+                    if (m === 'freezer_backup') return 'bg-blue-50';
+                    if (m === 'leftovers') return 'bg-purple-50';
+                    if (!isWeekend && (m === false || (isPast && m === undefined))) return 'bg-red-50';
+                    return '';
+                  };
+
+                  const bgColorClass = getBgColor(made);
 
                   return (
-                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${isConfirmed
-                      ? 'bg-green-50 shadow-[inset_0_1px_2px_rgba(0,128,0,0.05)]'
-                      : !isWeekend && isSkippedOrPastUnconfirmed
-                        ? 'bg-red-50'
-                        : ''
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${bgColorClass !== ''
+                      ? `${bgColorClass} shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]`
+                      : ''
                       }`}>
                       {!isWeekend ? (
                         <div className="flex items-start gap-2">
@@ -1022,15 +1046,22 @@ function WeekViewContent() {
                   const homeSnackSlot = getSlot(day, 'home_snack');
                   const isWeekend = day === 'sat' || day === 'sun';
                   const made = homeSnackSlot?.actual?.made;
-                  const isConfirmed = made === true || made === 'freezer_backup' || made === 'outside_meal';
-                  const isSkippedOrPastUnconfirmed = made === false || (isPast && made === undefined);
+
+                  const getBgColor = (m: any) => {
+                    if (m === true) return 'bg-green-50';
+                    if (m === 'outside_meal') return 'bg-amber-50';
+                    if (m === 'freezer_backup') return 'bg-blue-50';
+                    if (m === 'leftovers') return 'bg-purple-50';
+                    if (!isWeekend && (m === false || (isPast && m === undefined))) return 'bg-red-50';
+                    return '';
+                  };
+
+                  const bgColorClass = getBgColor(made);
 
                   return (
-                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${isConfirmed
-                      ? 'bg-green-50 shadow-[inset_0_1px_2px_rgba(0,128,0,0.05)]'
-                      : !isWeekend && isSkippedOrPastUnconfirmed
-                        ? 'bg-red-50'
-                        : ''
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${bgColorClass !== ''
+                      ? `${bgColorClass} shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]`
+                      : ''
                       }`}>
                       {!isWeekend ? (
                         <div className="flex items-start gap-2">
@@ -1092,15 +1123,22 @@ function WeekViewContent() {
 
                   const adultLunchSlot = getSlot(day, 'adult_lunch');
                   const made = adultLunchSlot?.actual?.made;
-                  const isConfirmed = made === true || made === 'freezer_backup' || made === 'outside_meal';
-                  const isSkippedOrPastUnconfirmed = made === false || (isPast && made === undefined);
+
+                  const getBgColor = (m: any) => {
+                    if (m === true) return 'bg-green-50';
+                    if (m === 'outside_meal') return 'bg-amber-50';
+                    if (m === 'freezer_backup') return 'bg-blue-50';
+                    if (m === 'leftovers') return 'bg-purple-50';
+                    if (m === false || (isPast && m === undefined)) return 'bg-red-50';
+                    return '';
+                  };
+
+                  const bgColorClass = getBgColor(made);
 
                   return (
-                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${isConfirmed
-                      ? 'bg-green-50 shadow-[inset_0_1px_2px_rgba(0,128,0,0.05)]'
-                      : isSkippedOrPastUnconfirmed
-                        ? 'bg-red-50'
-                        : ''
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${bgColorClass !== ''
+                      ? `${bgColorClass} shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]`
+                      : ''
                       }`}>
                       <div className="flex items-start gap-2">
                         <SelectionCheckbox

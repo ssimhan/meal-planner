@@ -749,7 +749,10 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Improved UI:** Applied "Earth Tones" styling to all wizard steps, ensuring consistent visuals and improved readability.
 - **Backend Integration:** Updated the meal selection and lunch generation logic to respect pre-assigned leftovers.
 
-**Current Blocker:**
-- **Leftovers Sync Bug:** Despite multiple fixes, leftovers submitted in the review step are still intermittently failing to appear in the assignment step or are being misclassified as "ingredients" in the inventory. This appears to be a metadata persistence issue during bulk upserts in Supabase.
+**Block 3: Prep Workflow & Data Integrity (2026-01-16) ✅ COMPLETE**
+- **Bulk Prep Task Completion:** Added `/api/prep/bulk-check` and frontend "Check All" (✅) UI for efficient task management.
+- **Duplication Bug Fix:** Resolved critical issue where in-place list modification in `LunchSelector` caused doubling of ingredient tasks.
+- **Dashboard Sync:** Fixed Stat Card counters and display logic to ensure Dashboard, Stat Cards, and Workflow lists remain perfectly synchronized with logged reality.
+- **Data Cleanup:** Successfully deduplicated 27 tasks from current active week data via repair script.
 
-**Learning:** Managing state across a 7-step wizard with real-time backend synchronization requires extremely robust data validation and clear naming conventions to prevent field-mismatch bugs.
+**Learning:** "Bulk" actions significantly reduce friction. Defensive programming (copying lists with `list()`) is essential when multiple modules analyze the same source data.

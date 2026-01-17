@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import FeedbackButtons from '../FeedbackButtons';
+import MealLogFlow from '../MealLogFlow';
 
 interface TimelineItemProps {
     type?: 'school_snack' | 'home_snack' | 'kids_lunch' | 'adult_lunch' | 'dinner';
@@ -10,16 +11,19 @@ interface TimelineItemProps {
     icon?: string;
     action?: React.ReactNode;
     feedbackProps?: any; // To pass through to FeedbackButtons
+    logFlowProps?: any; // To pass through to MealLogFlow
+    onAction?: () => void;
 }
 
-function TimelineItem({ type, time, title, description, status, icon, action, feedbackProps }: TimelineItemProps) {
+function TimelineItem({ type, time, title, description, status, icon, action, feedbackProps, logFlowProps, onAction }: TimelineItemProps) {
     const [isHovered, setIsHovered] = useState(false);
 
     return (
         <div
-            className="group flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 border-b border-[var(--border-color)] last:border-0 relative"
+            className={`group flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 border-b border-[var(--border-color)] last:border-0 relative ${onAction ? 'cursor-pointer hover:bg-black/5' : ''}`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onClick={() => onAction?.()}
         >
             <div className="flex gap-4 items-start">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl shadow-inner ${status === 'done' ? 'bg-[var(--accent-primary)]/10' : 'bg-[var(--bg-sidebar)]'}`}>
@@ -48,9 +52,16 @@ function TimelineItem({ type, time, title, description, status, icon, action, fe
                 )}
 
                 {/* Feedback Loop on Hover or if Pending */}
-                {(isHovered || !status) && feedbackProps && (
+                {isHovered && feedbackProps && !logFlowProps && (
                     <div className="fade-in">
                         <FeedbackButtons {...feedbackProps} hideLabel={true} />
+                    </div>
+                )}
+
+                {/* Meal Log Flow (Detailed) - Only render inline if not explicitly a modal type */}
+                {logFlowProps && !logFlowProps.isModal && (
+                    <div className="fade-in" onClick={e => e.stopPropagation()}>
+                        <MealLogFlow {...logFlowProps} />
                     </div>
                 )}
 

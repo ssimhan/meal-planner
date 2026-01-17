@@ -166,16 +166,18 @@ class LunchSelector:
         for dinner in dinner_plan:
             day = dinner['day']
             # Get vegetables from dinner
-            vegetables = dinner.get('vegetables', [])
+            vegetables = list(dinner.get('vegetables', [])) # Copy!
 
             # Look up recipe to get additional ingredients
             recipe = self._find_recipe_by_id(dinner['recipe_id'])
             if recipe:
                 # Extract common pantry items that might be reused
                 main_veg = recipe.get('main_veg', [])
-                vegetables.extend(main_veg)
+                for v in main_veg:
+                    if v not in vegetables:
+                        vegetables.append(v)
 
-            ingredients_by_day[day] = list(set(vegetables))  # Deduplicate
+            ingredients_by_day[day] = vegetables
 
         return ingredients_by_day
 
@@ -460,12 +462,23 @@ class LunchSelector:
 
     def _create_default_suggestion(self, day: str) -> LunchSuggestion:
         """Create default suggestion when no recipes match."""
-        # Rotate through defaults based on day
-        day_order = ['mon', 'tue', 'wed', 'thu', 'fri']
-        day_idx = day_order.index(day)
-        default_idx = day_idx % len(self.defaults['kids'])
+        import random
+        # 1. Try to find a random safe lunch-suitable recipe first
+        safe_lunch_recipes = [r for r in self.lunch_recipes if self._is_safe(r)]
+        if safe_lunch_recipes:
+            selected_recipe = random.choice(safe_lunch_recipes)
+            return self._create_suggestion({'recipe': selected_recipe, 'overlap_ingredients': []}, day, [])
 
-        default_option = self.defaults['kids'][default_idx]
+        # 2. Fall back to config defaults if available
+        kids_defaults = self.defaults.get('kids', [])
+        if kids_defaults:
+            # Rotate through defaults based on day
+            day_order = ['mon', 'tue', 'wed', 'thu', 'fri']
+            day_idx = day_order.index(day) if day in day_order else 0
+            default_idx = day_idx % len(kids_defaults)
+            default_option = kids_defaults[default_idx]
+        else:
+            default_option = "Simple Lunch"
 
         return LunchSuggestion(
             recipe_id=f'default_{day}',
@@ -480,6 +493,16 @@ class LunchSelector:
             default_option=default_option,
             kid_profiles={name: default_option for name in self.kid_profiles} if self.kid_profiles else None
         )
+
+    def _is_safe(self, recipe: Dict[str, Any]) -> bool:
+        """Check if recipe is safe for all kids."""
+        if not self.kid_profiles: return True
+        recipe_contains = set(recipe.get('avoid_contains', []))
+        for profile in self.kid_profiles.values():
+            avoid = set(profile.get('avoid_ingredients', []))
+            if avoid.intersection(recipe_contains):
+                return False
+        return True
 
     def _determine_prep_day(self, lunch_day: str, prep_style: str) -> str:
         """

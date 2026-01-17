@@ -205,7 +205,6 @@ export async function getAnalytics(): Promise<Analytics> {
     });
     return handleResponse<Analytics>(res, 'Failed to fetch analytics');
 }
-
 export async function checkPrepTask(week: string, taskId: string, status: 'complete' | 'pending'): Promise<{ status: string }> {
     const res = await fetch('/api/check-prep', {
         method: 'POST',
@@ -213,6 +212,15 @@ export async function checkPrepTask(week: string, taskId: string, status: 'compl
         body: JSON.stringify({ week, task_id: taskId, status }),
     });
     return handleResponse<{ status: string }>(res, 'Failed to update prep task');
+}
+
+export async function bulkCheckPrepTasks(week: string, taskIds: string[], status: 'complete' | 'pending'): Promise<{ status: string }> {
+    const res = await fetch('/api/prep/bulk-check', {
+        method: 'POST',
+        headers: await getAuthHeaders(),
+        body: JSON.stringify({ week, task_ids: taskIds, status }),
+    });
+    return handleResponse<{ status: string }>(res, 'Failed to update prep tasks');
 }
 
 export async function getSuggestions(): Promise<any> {

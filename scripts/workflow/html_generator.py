@@ -246,25 +246,29 @@ def generate_weekday_tabs(inputs, selected_dinners, selected_lunches, week_histo
         html.append(f'            </div>')
         if day_key in selected_lunches:
             html.append(generate_lunch_html(selected_lunches[day_key], day_name))
-        html.extend(generate_snack_section(day_key, late_class_days))
+        html.extend(generate_snack_section(day_key, late_class_days, inputs=inputs))
         if day_key in selected_dinners:
             html.extend(generate_dinner_section(selected_dinners[day_key], day_key, busy_days))
         html.extend(generate_prep_section(day_key, day_name, selected_dinners, selected_lunches, week_history))
         html.append('        </div>')
     return html
 
-def generate_snack_section(day_key, late_class_days):
+def generate_snack_section(day_key, late_class_days, inputs=None):
     """Generate snack section for a day."""
     html = []
-    default_snacks = {
-        'mon': 'Apple slices with peanut butter',
-        'tue': 'Cheese and crackers',
-        'wed': 'Cucumber rounds with cream cheese',
-        'thu': 'Grapes',
-        'fri': 'Crackers with hummus'
-    }
+    
+    # Use snacks from inputs if available
+    day_snacks = (inputs or {}).get('snacks', {}).get(day_key, {})
+    school_snack = day_snacks.get('school_snack')
+    home_snack = day_snacks.get('home_snack')
+    
+    if not school_snack and not home_snack:
+        return []
+
     is_late_class = day_key in late_class_days
+    
     def make_school_safe(snack_name):
+        if not snack_name: return "", False
         safety_map = {'peanut butter': 'Sunbutter', 'almond butter': 'Sunbutter', 'cashew': 'seeds', 'walnut': 'seeds', 'pecan': 'seeds', 'almond': 'seeds', 'nut': 'seed'}
         safe_name = snack_name
         changed = False
@@ -273,14 +277,16 @@ def generate_snack_section(day_key, late_class_days):
                 safe_name = re.sub(re.escape(restricted), sub, safe_name, flags=re.IGNORECASE)
                 changed = True
         return safe_name, changed
+
     html.append('            <div class="snacks">')
-    original_snack = default_snacks.get(day_key, "Simple snack")
-    safe_snack, changed = make_school_safe(original_snack)
-    html.append(f'                <h4>🏫 School Snack</h4>')
-    html.append(f'                <p style="font-size: var(--text-sm); margin-top: 4px;">{safe_snack}</p>')
-    if changed:
+    if school_snack:
+        safe_snack, changed = make_school_safe(school_snack)
+        html.append(f'                <h4>🏫 School Snack</h4>')
+        html.append(f'                <p style="font-size: var(--text-sm); margin-top: 4px;">{safe_snack}</p>')
+    
+    if home_snack:
         html.append(f'                <h4 style="margin-top: 12px; color: var(--text-default);">🏠 Home Snack</h4>')
-        html.append(f'                <p style="font-size: var(--text-sm); margin-top: 4px;">{original_snack} (Nuts OK)</p>')
+        html.append(f'                <p style="font-size: var(--text-sm); margin-top: 4px;">{home_snack}</p>')
     html.append('            </div>')
     if is_late_class:
         html.append('            <div class="heavy-snack">')
@@ -359,7 +365,12 @@ def generate_granular_prep_tasks(selected_dinners, selected_lunches, day_keys, t
             else:
                 # Fallback to auto-generation based on main_veg
                 main_vegs = recipe.get('main_veg', [])
-                for veg in main_vegs:
+                unique_vegs = []
+                for v in main_vegs:
+                    if v not in unique_vegs:
+                        unique_vegs.append(v)
+                        
+                for veg in unique_vegs:
                     veg_clean = veg.replace('_', ' ')
                     task = f"Chop {veg_clean} for {day_name} {recipe_name}"
                     if not fuzzy_match_prep_task(task, completed_tasks): 
@@ -368,7 +379,11 @@ def generate_granular_prep_tasks(selected_dinners, selected_lunches, day_keys, t
     for day_key in day_keys:
         if day_key in selected_lunches:
             lunch = selected_lunches[day_key]
-            for component in lunch.prep_components:
+            unique_components = []
+            for c in lunch.prep_components:
+                if c not in unique_components:
+                    unique_components.append(c)
+            for component in unique_components:
                 component_clean = component.replace('_', ' ')
                 day_name = day_key.capitalize()
                 task = f"Prep {component_clean} for {day_name} lunch"
@@ -432,7 +447,12 @@ def extract_prep_tasks_for_db(selected_dinners, selected_lunches):
             else:
                 # Fallback: Main Veg
                 main_vegs = recipe.get('main_veg', [])
-                for idx, veg in enumerate(main_vegs):
+                unique_vegs = []
+                for v in main_vegs:
+                    if v not in unique_vegs:
+                        unique_vegs.append(v)
+                        
+                for idx, veg in enumerate(unique_vegs):
                     veg_clean = veg.replace('_', ' ')
                     task_id = f"dinner_{day}_{recipe_id}_veg_{idx}"
                     structured_tasks.append({
@@ -454,7 +474,12 @@ def extract_prep_tasks_for_db(selected_dinners, selected_lunches):
             recipe_name = getattr(lunch, 'recipe_name', 'Lunch')
             recipe_id = getattr(lunch, 'recipe_id', f'lunch_{day}')
 
-            for component in prep_components:
+            unique_components = []
+            for c in prep_components:
+                if c not in unique_components:
+                    unique_components.append(c)
+
+            for component in unique_components:
                 component_clean = component.replace('_', ' ')
                 task_id = f"lunch_{day}_{component_clean.replace(' ', '_').lower()}"
                 
@@ -625,13 +650,17 @@ def generate_groceries_tab(inputs, selected_dinners, selected_lunches):
     html.append('        <div id="groceries" class="tab-content">')
     html.append('            <h2>🛒 Comprehensive Shopping List</h2>')
     produce, dairy, grains, shelf, canned, frozen, misc = [], [], [], [], [], [], []
-    default_snacks = {'mon': 'Apple slices with peanut butter', 'tue': 'Cheese and crackers', 'wed': 'Cucumber rounds with cream cheese', 'thu': 'Grapes', 'fri': 'Crackers with hummus'}
+    
+    # 1. Collect Snacks from Inputs
     snack_items = []
-    for snack in default_snacks.values():
-        parts = re.split(r' with | and |, ', snack, flags=re.IGNORECASE)
-        for part in parts:
-            clean_part = part.strip().lower().replace('slices', '').replace('rounds', '').strip()
-            if clean_part: snack_items.append(clean_part)
+    snacks_data = (inputs or {}).get('snacks', {})
+    for day in snacks_data.values():
+        for snack_name in day.values(): # school_snack, home_snack
+            if snack_name:
+                parts = re.split(r' with | and |, ', snack_name, flags=re.IGNORECASE)
+                for part in parts:
+                    clean_part = part.strip().lower().replace('slices', '').replace('rounds', '').strip()
+                    if clean_part: snack_items.append(clean_part)
     def categorize_ingredient(item, target_lists):
         c = item.lower().replace('_', ' ')
         if any(k in c for k in ['peanut butter', 'almond butter', 'cracker', 'pretzel', 'popcorn', 'pitted dates', 'nut', 'trail mix', 'granola', 'rice cake']): target_lists['shelf'].append(c)

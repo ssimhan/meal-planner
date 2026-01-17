@@ -114,7 +114,7 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
     
     lunch_selector = LunchSelector(recipes=recipes)
     days = ['mon', 'tue', 'wed', 'thu', 'fri']
-    dinner_plan_list = [{'recipe_id': r.get('id'), 'recipe_name': r.get('name'), 'day': d, 'vegetables': r.get('main_veg', [])} for d, r in selected_dinners.items() if d in days]
+    dinner_plan_list = [{'recipe_id': r.get('id'), 'recipe_name': r.get('name'), 'day': d, 'vegetables': list(r.get('main_veg', []))} for d, r in selected_dinners.items() if d in days]
     
     selected_lunches = {}
     selected_lunches = {}
@@ -146,7 +146,7 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
             'day': d, 
             'recipe_id': r.get('id'), 
             'recipe_name': r.get('name'), 
-            'vegetables': r.get('main_veg', []),
+            'vegetables': list(r.get('main_veg', [])),
             'cuisine': r.get('cuisine'),
             'meal_type': r.get('meal_type')
         } 
@@ -168,24 +168,15 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
             for d, l in selected_lunches.items()
         }
     
-    # Simple snack generation for the plan
-    default_snacks = {
-        'mon': 'Apple slices with Sunbutter',
-        'tue': 'Cheese and crackers',
-        'wed': 'Cucumber rounds with cream cheese',
-        'thu': 'Grapes',
-        'fri': 'Crackers with hummus'
-    }
-    
-    data['snacks'] = {}
-    # Generate snacks for all days, filtered by coverage
-    data['snacks'] = {
-        d: {
-            'school_snack': default_snacks.get(d, 'Fruit') if is_covered('school_snack', d) else None,
-            'home_snack': default_snacks.get(d, 'Fruit') if is_covered('home_snack', d) else None
-        }
-        for d in ['mon', 'tue', 'wed', 'thu', 'fri']
-    }
+    # Snack generation: use SnackSelector for automated planning from recipes
+    try:
+        from scripts.snack_selector import SnackSelector
+        selector = SnackSelector(recipes=recipes, kid_profiles=config.get('kid_profiles', {}))
+        days_needing_snacks = [d for d in ['mon', 'tue', 'wed', 'thu', 'fri'] if is_covered('school_snack', d) or is_covered('home_snack', d)]
+        data['snacks'] = selector.select_weekly_snacks(days_needing_snacks)
+    except Exception as e:
+        print(f"Warning: Snack selection failed: {e}")
+        data['snacks'] = {}
 
     # NEW: Extract structured prep tasks and save to persistence
     from .html_generator import extract_prep_tasks_for_db

@@ -102,6 +102,10 @@ Declining energy model: Monday (high) → Friday (zero prep)
 - **Block 4: Workflow Pause (~2 hrs)**
   - [ ] Pause state infrastructure (localStorage/Supabase)
   - [ ] Resume UI with banner/modal
+- **Block 5: Prep Workflow & Data Integrity (~2 hrs) ✅ Complete**
+  - [x] Bulk Prep Task Completion (Backend + UI)
+  - [x] Prep task duplication bug fix (defensive copying)
+  - [x] Dashboard sync (Counter & "Dinner Tonight" logic)
 
 ### Phase 27: Daily Confirmation & Recipe Polish
 **Goal:** Add proactive confirmations and standardize recipe data.
@@ -142,7 +146,9 @@ Declining energy model: Monday (high) → Friday (zero prep)
 |------|-----|-------|--------|
 | Plan | Draft Error (`'selections' is not defined`) | 26 | ✅ Fixed |
 | Plan | Shopping List Rendering (object as React child) | 26 | ✅ Fixed |
-| Plan | Leftovers Sync Failure (Misclassified as Ingredients) | 26 | 🔴 Active |
+| Plan | Leftovers Sync Failure (Misclassified as Ingredients) | 26 | ✅ Fixed |
+| Prep | Task Duplication (In-place list modification) | 26 | ✅ Fixed |
+| Dash | Prep Counter / Dinner Display out of sync | 26 | ✅ Fixed |
 
 ---
 

@@ -156,6 +156,7 @@ export interface InventoryItem {
   item: string;
   quantity?: number;
   unit?: string;
+  type?: 'meal' | 'ingredient';
   added?: string;
 }
 
@@ -295,6 +296,7 @@ export interface LogMealData {
   // Outside meal leftovers
   outside_leftover_name?: string;
   outside_leftover_qty?: number;
+  leftovers_created?: string;
 }
 
 export interface LogMealResponse extends WorkflowStatus {

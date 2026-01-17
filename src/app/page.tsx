@@ -3,21 +3,20 @@
 import Link from 'next/link';
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { getStatus, generatePlan, createWeek, confirmVeg, logMeal, getRecipes, replan, WorkflowStatus } from '@/lib/api';
-import type { RecipeListItem } from '@/types';
+import { getStatus, getInventory, generatePlan, createWeek, confirmVeg, logMeal, getRecipes, replan, WorkflowStatus } from '@/lib/api';
+import type { RecipeListItem, WorkflowStatus as WorkflowStatusType, InventoryResponse } from '@/types';
 import AppLayout from '@/components/AppLayout';
 import Skeleton from '@/components/Skeleton';
 import Card from '@/components/Card';
 import FeedbackButtons from '@/components/FeedbackButtons';
-import DinnerLogging from '@/components/DinnerLogging';
 import PrepTaskList from '@/components/PrepTaskList';
 import NightlyCheckinBanner from '@/components/NightlyCheckinBanner';
 import PendingRecipesIndicator from '@/components/PendingRecipesIndicator';
 import PendingRecipesListModal from '@/components/PendingRecipesListModal';
-import DinnerOptionsModal from '@/components/DinnerOptionsModal';
 import BrainDump from '@/components/dashboard/BrainDump';
 import StatCard from '@/components/dashboard/StatCard';
 import TimelineView from '@/components/dashboard/TimelineView';
+import MealLogFlow from '@/components/MealLogFlow';
 import { useToast } from '@/context/ToastContext';
 import { logout } from './login/actions';
 
@@ -49,6 +48,7 @@ function DashboardContent() {
   const weekParam = searchParams.get('week');
 
   const [status, setStatus] = useState<WorkflowStatus | null>(null);
+  const [inventory, setInventory] = useState<InventoryResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [ui, setUi] = useState({
     actionLoading: false,
@@ -60,7 +60,8 @@ function DashboardContent() {
   const [recipes, setRecipes] = useState<RecipeListItem[]>([]);
   const [selectedWeek, setSelectedWeek] = useState<string | null>(weekParam);
   const [pendingModalOpen, setPendingModalOpen] = useState(false);
-  const [optionsModalOpen, setOptionsModalOpen] = useState(false);
+  const [loggingModalOpen, setLoggingModalOpen] = useState(false);
+  const [loggingModalData, setLoggingModalData] = useState<any>(null);
 
   // Synchronize state with URL param
   useEffect(() => {
@@ -103,8 +104,13 @@ function DashboardContent() {
   async function fetchStatus(isInitial = false, week?: string) {
     try {
       if (isInitial) setLoading(true);
-      const data = await getStatus(week);
+      const [data, inventoryData] = await Promise.all([
+        getStatus(week),
+        getInventory()
+      ]);
       setStatus(data);
+      setInventory(inventoryData);
+
       // Initialize completed prep from backend
       if (data.today?.prep_completed) {
         setCompletedPrep(data.today.prep_completed);
@@ -214,47 +220,10 @@ function DashboardContent() {
     }
   }
 
-  async function handleLogDay(
-    made: boolean | string,
-    feedback?: string,
-    freezerMeal?: string,
-    actualMeal?: string,
-    needsFix?: boolean,
-    requestRecipe?: boolean
-  ) {
-    if (!status?.week_of || !status?.current_day) return;
-
-    try {
-      setUi(prev => ({ ...prev, logLoading: true }));
-      const updatedStatus = await logMeal({
-        week: status.week_of,
-        day: status.current_day,
-        made: made,
-        kids_feedback: feedback,
-        freezer_meal: freezerMeal,
-        actual_meal: actualMeal,
-        dinner_needs_fix: needsFix,
-        request_recipe: requestRecipe
-      });
-      showToast(`Logged status for today (${status.current_day})!`, 'success');
-      // Update status directly with the fresh data from the backend
-      setStatus(updatedStatus);
-
-      // RESET dinner states upon successful log
-      setDinnerState({
-        showAlternatives: false,
-        selectedAlternative: null,
-        otherMealText: '',
-        selectedFreezerMeal: '',
-        isEditing: false,
-        editInput: ''
-      });
-    } catch (err: any) {
-      showToast(err.message || 'Failed to log meal', 'error');
-    } finally {
-      setUi(prev => ({ ...prev, logLoading: false }));
-    }
-  }
+  const handleOpenLoggingModal = (data: any) => {
+    setLoggingModalData(data);
+    setLoggingModalOpen(true);
+  };
 
   async function handleLogFeedback(
     feedbackType: 'school_snack' | 'home_snack' | 'kids_lunch' | 'adult_lunch',
@@ -280,7 +249,6 @@ function DashboardContent() {
       });
 
       showToast(`Logged ${feedbackType.replace(/_/g, ' ')} feedback!`, 'success');
-      // Update status directly with the fresh data
       setStatus(updatedStatus);
     } catch (err: any) {
       showToast(err.message || 'Failed to log feedback', 'error');
@@ -352,12 +320,39 @@ function DashboardContent() {
   // Construct Timeline Data
   const timelineItems: any[] = [];
   if (status?.today) {
+    const commonLogSuccess = () => {
+      fetchStatus(false, selectedWeek || undefined);
+      setLoggingModalOpen(false);
+    };
+
+    const commonLogClose = () => setLoggingModalOpen(false);
+
+    // Helper for generating logging props
+    const getLogProps = (type: string, name: string, initial: any) => ({
+      weekOf: status.week_of,
+      day: status.current_day,
+      mealName: name,
+      logType: type,
+      initialStatus: initial,
+      freezerInventory: status.week_data?.freezer_inventory || [],
+      leftoverInventory: inventory?.fridge || [],
+      recipes: recipes,
+      onSuccess: commonLogSuccess,
+      onClose: commonLogClose,
+      isModal: true
+    });
+
+    const isLoggingEnabled = status.state === 'active' || status.state === 'waiting_for_checkin';
+
     // School Snack
+    const schoolSnackProps = getLogProps('school_snack', status.today_snacks?.school || "Fruit", status.today_snacks);
     timelineItems.push({
       title: "School Snack",
       icon: "🎒",
       description: getDisplayName(status.today_snacks?.school || "Fruit", status.today_snacks?.school_snack_feedback),
       status: status.today_snacks?.school_snack_made !== undefined ? (status.today_snacks?.school_snack_made ? 'done' : 'skipped') : undefined,
+      logFlowProps: isLoggingEnabled ? schoolSnackProps : undefined,
+      onAction: () => isLoggingEnabled && handleOpenLoggingModal(schoolSnackProps),
       feedbackProps: {
         feedbackType: "school_snack",
         currentFeedback: status.today_snacks?.school_snack_feedback,
@@ -370,11 +365,14 @@ function DashboardContent() {
     });
 
     // Kids Lunch
+    const kidsLunchProps = getLogProps('kids_lunch', status.today_lunch?.recipe_name || "Leftovers", status.today_lunch);
     timelineItems.push({
       title: "Kids Lunch",
       icon: "🥪",
       description: getDisplayName(status.today_lunch?.recipe_name || "Leftovers", status.today_lunch?.kids_lunch_feedback),
       status: status.today_lunch?.kids_lunch_made !== undefined ? (status.today_lunch?.kids_lunch_made ? 'done' : 'skipped') : undefined,
+      logFlowProps: isLoggingEnabled ? kidsLunchProps : undefined,
+      onAction: () => isLoggingEnabled && handleOpenLoggingModal(kidsLunchProps),
       feedbackProps: {
         feedbackType: "kids_lunch",
         currentFeedback: status.today_lunch?.kids_lunch_feedback,
@@ -387,11 +385,14 @@ function DashboardContent() {
     });
 
     // Adult Lunch
+    const adultLunchProps = getLogProps('adult_lunch', "Leftovers", status.today_lunch);
     timelineItems.push({
       title: "Adult Lunch",
       icon: "☕",
       description: getDisplayName("Leftovers", status.today_lunch?.adult_lunch_feedback),
       status: status.today_lunch?.adult_lunch_made !== undefined ? (status.today_lunch?.adult_lunch_made ? 'done' : 'skipped') : undefined,
+      logFlowProps: isLoggingEnabled ? adultLunchProps : undefined,
+      onAction: () => isLoggingEnabled && handleOpenLoggingModal(adultLunchProps),
       feedbackProps: {
         feedbackType: "adult_lunch",
         currentFeedback: status.today_lunch?.adult_lunch_feedback,
@@ -404,11 +405,14 @@ function DashboardContent() {
     });
 
     // Home Snack
+    const homeSnackProps = getLogProps('home_snack', status.today_snacks?.home || "Cucumber", status.today_snacks);
     timelineItems.push({
       title: "Home Snack",
       icon: "🏠",
       description: getDisplayName(status.today_snacks?.home || "Cucumber", status.today_snacks?.home_snack_feedback),
       status: status.today_snacks?.home_snack_made !== undefined ? (status.today_snacks?.home_snack_made ? 'done' : 'skipped') : undefined,
+      logFlowProps: isLoggingEnabled ? homeSnackProps : undefined,
+      onAction: () => isLoggingEnabled && handleOpenLoggingModal(homeSnackProps),
       feedbackProps: {
         feedbackType: "home_snack",
         currentFeedback: status.today_snacks?.home_snack_feedback,
@@ -425,20 +429,15 @@ function DashboardContent() {
       status.today_dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Nothing planned',
       status.today_dinner?.actual_meal
     );
+    const dinnerProps = getLogProps('dinner', status.today_dinner?.recipe_id?.replace(/_/g, ' ') || 'Dinner', status.today_dinner);
     timelineItems.push({
       title: "Dinner",
       time: "6:30 PM",
       description: dinnerName,
       icon: "🍽️",
       status: status.today_dinner?.made !== undefined ? (status.today_dinner.made === true ? 'done' : 'skipped') : undefined,
-      action: (status.state === 'active' && status.today_dinner?.made === undefined) ? (
-        <button
-          onClick={() => setOptionsModalOpen(true)}
-          className="btn-secondary text-xs py-1.5 px-4 shadow-sm"
-        >
-          Options
-        </button>
-      ) : undefined
+      logFlowProps: isLoggingEnabled ? dinnerProps : undefined,
+      onAction: () => isLoggingEnabled && handleOpenLoggingModal(dinnerProps)
     });
   }
 
@@ -471,7 +470,10 @@ function DashboardContent() {
             {/* 1. Dinner Card */}
             <StatCard label="Dinner Tonight" className="relative group transition-all duration-500 hover:ring-2 hover:ring-[var(--accent-primary)]/20">
               <div className="text-xl font-bold text-[var(--text-primary)] mb-2 line-clamp-2">
-                {status?.today_dinner?.recipe_id ? status.today_dinner.recipe_id.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) : 'Nothing planned'}
+                {status?.today_dinner?.recipe_id ? getDisplayName(
+                  status.today_dinner.recipe_id.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
+                  status.today_dinner.actual_meal
+                ) : 'Nothing planned'}
               </div>
               {status?.today_dinner && (
                 <span className="inline-block text-[10px] px-2 py-1 rounded-full bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 text-[var(--accent-primary)] font-bold">
@@ -482,18 +484,25 @@ function DashboardContent() {
 
             {/* 2. Prep Tasks */}
             <StatCard label="Prep Tasks">
-              <div className="flex justify-between items-baseline mb-2">
-                <span className="text-4xl font-black text-[var(--text-primary)]">
-                  {status?.today?.prep_tasks ? status.today.prep_tasks.length : 0}
-                </span>
-                <span className="text-[10px] text-[var(--text-muted)] font-mono uppercase tracking-tighter">To-Do Today</span>
-              </div>
-              <ul className="text-xs text-[var(--text-muted)] space-y-1">
-                {status?.today?.prep_tasks?.slice(0, 3).map((task: any, i: number) => (
-                  <li key={i} className="truncate">• {task.task}</li>
-                ))}
-                {(status?.today?.prep_tasks?.length || 0) > 3 && <li>...</li>}
-              </ul>
+              {(() => {
+                const pendingTasks = (status?.today?.prep_tasks || []).filter((t: any) => t.status !== 'complete');
+                return (
+                  <>
+                    <div className="flex justify-between items-baseline mb-2">
+                      <span className="text-4xl font-black text-[var(--text-primary)]">
+                        {pendingTasks.length}
+                      </span>
+                      <span className="text-[10px] text-[var(--text-muted)] font-mono uppercase tracking-tighter">To-Do Today</span>
+                    </div>
+                    <ul className="text-xs text-[var(--text-muted)] space-y-1">
+                      {pendingTasks.slice(0, 3).map((task: any, i: number) => (
+                        <li key={i} className="truncate">• {task.task}</li>
+                      ))}
+                      {pendingTasks.length > 3 && <li>...</li>}
+                    </ul>
+                  </>
+                );
+              })()}
             </StatCard>
 
             {/* 3. System & Actions */}
@@ -521,7 +530,9 @@ function DashboardContent() {
 
           {/* Timeline View (Primary Interaction Area) */}
           {(status?.state === 'active' || status?.state === 'waiting_for_checkin') && (
-            <TimelineView items={timelineItems} />
+            <div id="today-schedule">
+              <TimelineView items={timelineItems} />
+            </div>
           )}
 
           {/* Persistent Prep Tasks */}
@@ -604,18 +615,13 @@ function DashboardContent() {
           />
         )}
 
-        {status && status.current_day && (status.state === 'active' || status.state === 'waiting_for_checkin') && status.week_of && (
-          <DinnerOptionsModal
-            isOpen={optionsModalOpen}
-            onClose={() => setOptionsModalOpen(false)}
-            currentDay={status.current_day}
-            currentMealName={status.today_dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()) || 'Dinner'}
-            weekOf={status.week_of}
-            days={['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']}
-            onSuccess={() => fetchStatus(false, selectedWeek || undefined)}
-            status={status}
+        {(loggingModalOpen && loggingModalData) && (
+          <MealLogFlow
+            {...loggingModalData}
+            recipes={recipes}
           />
         )}
+
       </div>
     </AppLayout>
   );

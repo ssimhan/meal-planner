@@ -25,29 +25,12 @@ kid_profiles:
       - nuts
 
 lunch_defaults:
-  kids:
-    - PBJ on whole wheat
-    - Egg sandwich or scrambled egg sandwich
-    - Toad-in-a-hole (egg cooked in bread)
-    - Ravioli with brown butter or simple tomato sauce
-    - Chapati or dosa rolls with fruit
-    - Veggie burrito or pizza roll
-    - Quesadilla with cheese and beans
-  adult:
-    - Leftovers from previous night's dinner (preferred)
-    - Grain bowl: prepped grain + roasted vegetables + protein
-    - Salad with dinner components
+  kids: []
+  adult: []
 
 snack_defaults:
-  by_day:
-    mon: Apple slices with peanut butter
-    tue: Cheese and crackers
-    wed: Cucumber rounds with cream cheese
-    thu: Grapes
-    fri: Crackers with hummus
-  fallback:
-    school: Fruit or Cheese sticks
-    home: Cucumber or Crackers
+  by_day: {}
+  fallback: {}
 
 workflows:
   daily_check_in_time: "0 4 * * *" # 8pm PST

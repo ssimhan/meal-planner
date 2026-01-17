@@ -89,19 +89,10 @@ def _get_current_status(skip_sync=False, week_override=None):
     today_lunch = None
     prep_tasks = []
 
-    # Load snack defaults from config.yml
+    # Load snack defaults from config
     snack_config = config.get('snack_defaults', {})
-    snack_fallbacks = snack_config.get('fallback', {
-        "school": "Fruit or Cheese sticks",
-        "home": "Cucumber or Crackers"
-    })
-    snack_by_day = snack_config.get('by_day', {
-        'mon': 'Apple slices with peanut butter',
-        'tue': 'Cheese and crackers',
-        'wed': 'Cucumber rounds with cream cheese',
-        'thu': 'Grapes',
-        'fri': 'Crackers with hummus'
-    })
+    snack_fallbacks = snack_config.get('fallback', {})
+    snack_by_day = snack_config.get('by_day', {})
 
     # Load meals_covered from config
     meals_covered = config.get('meals_covered', {})
@@ -118,8 +109,8 @@ def _get_current_status(skip_sync=False, week_override=None):
         return True
 
     today_snacks = {
-        "school": snack_by_day.get(current_day, snack_fallbacks.get("school", "Fruit")) if is_covered('school_snack', current_day) else None,
-        "home": snack_fallbacks.get("home", "Cucumber or Crackers") if is_covered('home_snack', current_day) else None
+        "school": snack_by_day.get(current_day, snack_fallbacks.get("school")) if is_covered('school_snack', current_day) else None,
+        "home": snack_fallbacks.get("home") if is_covered('home_snack', current_day) else None
     }
 
     history_week = active_plan.get('history_data') if active_plan else None
@@ -157,7 +148,7 @@ def _get_current_status(skip_sync=False, week_override=None):
                 today_lunch = data['selected_lunches'].get(current_day)
 
             if not today_lunch and (is_covered('kids_lunch', current_day) or is_covered('adult_lunch', current_day)):
-                 today_lunch = {"recipe_name": "Leftovers or Simple Lunch", "prep_style": "quick_fresh"}
+                 today_lunch = None # No hardcoded default here
 
         if today_lunch and history_week and 'daily_feedback' in history_week:
             # Robustness: ensure today_lunch is a dict before assignment
@@ -307,12 +298,16 @@ def _get_current_status(skip_sync=False, week_override=None):
         return jsonify(res_dict)
     except Exception as e:
         import traceback
-        print(f"CRITICAL ERROR in _get_current_status: {e}")
+        print(f"CRITICAL ERROR in _get_current_status [{request.method} {request.url}]: {e}")
         traceback.print_exc()
         return jsonify({
             "status": "error",
             "message": str(e),
-            "traceback": traceback.format_exc()
+            "traceback": traceback.format_exc(),
+            "context": {
+                "method": request.method,
+                "url": request.url
+            }
         }), 500
 
 @status_bp.route("/api/status")

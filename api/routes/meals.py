@@ -549,6 +549,16 @@ def log_meal():
                 qty = outside_leftover_qty or 1
                 storage.StorageEngine.update_inventory_item('fridge', f"Leftover {outside_leftover_name}", updates={'quantity': qty, 'unit': 'serving', 'type': 'meal'})
 
+            if data.get('leftovers_created') and data.get('leftovers_created') != 'None':
+                qty_str = data.get('leftovers_created')
+                qty = 1
+                if '1' in qty_str: qty = 1
+                elif '2' in qty_str: qty = 2
+                elif 'Batch' in qty_str: qty = 4
+                
+                meal_name = target_dinner.get('recipe_id', 'Unknown').replace('_', ' ').title()
+                storage.StorageEngine.update_inventory_item('fridge', f"Leftover {meal_name}", updates={'quantity': qty, 'unit': 'serving', 'type': 'meal'})
+
             log_execution.calculate_adherence(history_week)
 
             # Handle "Add as Recipe" request
@@ -668,6 +678,45 @@ def check_prep_task():
         invalidate_cache('history')
         
         return jsonify({"status": "success", "updated_task_id": task_id})
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@meals_bp.route("/api/prep/bulk-check", methods=["POST"])
+@require_auth
+def bulk_check_prep_tasks():
+    try:
+        data = request.json or {}
+        week_str = data.get('week')
+        task_ids = data.get('task_ids', [])
+        status = data.get('status', 'complete')
+        
+        if not week_str:
+            return jsonify({"status": "error", "message": "Week required"}), 400
+        if not task_ids:
+            return jsonify({"status": "error", "message": "Task IDs required"}), 400
+            
+        h_id = storage.get_household_id()
+        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).execute()
+        if not res.data or len(res.data) == 0:
+            return jsonify({"status": "error", "message": "Meal plan not found"}), 404
+            
+        history_week = res.data[0]['history_data']
+        
+        updated_count = 0
+        if 'prep_tasks' in history_week:
+            for t in history_week['prep_tasks']:
+                if t.get('id') in task_ids:
+                    t['status'] = status
+                    updated_count += 1
+        
+        if updated_count == 0:
+             return jsonify({"status": "error", "message": "No tasks found to update"}), 404
+             
+        storage.StorageEngine.update_meal_plan(week_str, history_data=history_week)
+        invalidate_cache('history')
+        
+        return jsonify({"status": "success", "updated_count": updated_count})
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500

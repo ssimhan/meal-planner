@@ -202,6 +202,12 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
             else:
                 selected_dinners_objs[day] = {'id': r_id, 'name': r_id.replace('_', ' ').title()}
 
+    # Regenerate prep tasks
+    from .html_generator import extract_prep_tasks_for_db
+    new_prep_tasks = extract_prep_tasks_for_db(selected_dinners_objs, selected_lunches)
+    data['prep_tasks'] = new_prep_tasks
+    week_entry['prep_tasks'] = new_prep_tasks
+
     plan_content = generate_html_plan(
         data, 
         history, 

@@ -667,7 +667,10 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Theme:** Implemented comprehensive Light/Dark mode via `ThemeContext` and Tailwind variables.
 - **Pages:** Ported Dashboard, Plan, Recipes, Inventory, and Week View to the new layout structure.
 
+
 **Block 2: Feature Parity (Completed)**
+
+## Verification
 - **Verification:** Systematically verified that core functionalities work within the new UI:
   - **Confirm for Today:** Dashboard header action working.
   - **Flexible Logging:** New modal options (Leftovers, Ate Out) integrated into new card styles.
@@ -752,7 +755,7 @@ The best tools are the ones you actually use. This system works because it reduc
 **Block 3: Prep Workflow & Data Integrity (2026-01-16) ✅ COMPLETE**
 - **Bulk Prep Task Completion:** Added `/api/prep/bulk-check` and frontend "Check All" (✅) UI for efficient task management.
 - **Duplication Bug Fix:** Resolved critical issue where in-place list modification in `LunchSelector` caused doubling of ingredient tasks.
-- **Dashboard Sync:** Fixed Stat Card counters and display logic to ensure Dashboard, Stat Cards, and Workflow lists remain perfectly synchronized with logged reality.
+- **Dashboard & Replan Consolidation:** Fixed Stat Card counters and display logic. Refactored `ReplanWorkflowModal` to use the standardized `MealLogFlow` UI, providing a unified logging experience across the app.
 - **Data Cleanup:** Successfully deduplicated 27 tasks from current active week data via repair script.
 
 **Learning:** "Bulk" actions significantly reduce friction. Defensive programming (copying lists with `list()`) is essential when multiple modules analyze the same source data.

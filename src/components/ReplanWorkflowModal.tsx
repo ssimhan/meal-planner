@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { logMeal, addItemToInventory, replan, WorkflowStatus, getInventory } from '@/lib/api';
-import MealCorrectionInput from './MealCorrectionInput';
+import MealLogFlow from './MealLogFlow';
+import { FreezerMeal, InventoryItem } from '@/types';
 
 interface ReplanWorkflowModalProps {
     status: WorkflowStatus;
@@ -24,6 +25,8 @@ export default function ReplanWorkflowModal({
 
     // Inventory state
     const [inventory, setInventory] = useState<any>(null);
+    const [freezerMeals, setFreezerMeals] = useState<FreezerMeal[]>([]);
+    const [leftoverItems, setLeftoverItems] = useState<InventoryItem[]>([]);
     const [newItem, setNewItem] = useState('');
     const [newItemCategory, setNewItemCategory] = useState('fridge');
 
@@ -60,16 +63,21 @@ export default function ReplanWorkflowModal({
     }, []); // Only on mount
 
     useEffect(() => {
-        if (step === 'inventory') {
-            loadInventory();
-        }
-    }, [step]);
+        // We always need inventory for MealLogFlow "Something Else" options
+        loadInventory();
+    }, []);
 
     const loadInventory = async () => {
         try {
             setLoading(true);
             const data = await getInventory();
             setInventory(data.inventory);
+
+            // Extract typed versions for MealLogFlow
+            if (data.inventory) {
+                setFreezerMeals(data.inventory.freezer?.backups || []);
+                setLeftoverItems(data.inventory.fridge || []);
+            }
         } catch (e) {
             console.error(e);
         } finally {
@@ -81,28 +89,7 @@ export default function ReplanWorkflowModal({
     const currentDinner = status.week_data?.dinners?.find((d: any) => d.day === currentDay);
     const dinnerName = currentDinner?.recipe_id?.replace(/_/g, ' ') || 'Unplanned';
 
-    const handleMealConfirm = async (made: boolean | string, actual?: string) => {
-        setLoading(true);
-        try {
-            await logMeal({
-                week: status.week_of,
-                day: currentDay,
-                made: made,
-                actual_meal: actual,
-                dinner_needs_fix: false
-            });
 
-            if (currentDayIndex < pastDays.length - 1) {
-                setCurrentDayIndex(prev => prev + 1);
-            } else {
-                setStep('inventory');
-            }
-        } catch (e) {
-            alert('Failed to save meal status');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleAddItem = async () => {
         if (!newItem.trim()) return;
@@ -157,48 +144,40 @@ export default function ReplanWorkflowModal({
                 <div className="p-6 overflow-y-auto flex-1">
                     {step === 'confirm_meals' && (
                         <div className="space-y-6">
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-gray-500 font-medium">
                                 Before replanning, we need to know what you actually ate so we can track leftover ingredients.
                             </p>
 
-                            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                                <h3 className="text-sm font-mono uppercase text-gray-400 mb-1">{currentDay?.toUpperCase()} DINNER</h3>
-                                <p className="text-xl font-bold mb-4">{dinnerName}</p>
-
-                                <div className="space-y-3">
-                                    <button
-                                        onClick={() => handleMealConfirm(true)}
-                                        disabled={loading}
-                                        className="w-full py-3 bg-[var(--accent-sage)] text-white rounded hover:opacity-90 flex items-center justify-center gap-2"
-                                    >
-                                        <span>✓</span> Made as Planned
-                                    </button>
-
-                                    <button
-                                        onClick={() => handleMealConfirm(false)}
-                                        disabled={loading}
-                                        className="w-full py-3 border border-gray-300 rounded hover:bg-gray-50 text-gray-600"
-                                    >
-                                        ✗ Skipped / Did Not Make
-                                    </button>
-
-                                    <div className="pt-4 border-t border-gray-200">
-                                        <p className="text-xs text-center text-gray-400 mb-2">- OR -</p>
-                                        <MealCorrectionInput
-                                            recipes={recipes}
-                                            placeholder="I made something else..."
-                                            onSave={(val) => handleMealConfirm(true, val)}
-                                            onCancel={() => { }}
-                                        />
-                                    </div>
+                            <div className="p-1 bg-gray-50 rounded-[24px] border border-gray-100 shadow-inner">
+                                <div className="p-4 flex justify-between items-center border-b border-gray-100">
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--accent-sage)]">{currentDay?.toUpperCase()} DINNER</h3>
                                 </div>
+                                <MealLogFlow
+                                    weekOf={status.week_of}
+                                    day={currentDay}
+                                    mealName={dinnerName}
+                                    initialStatus={currentDinner}
+                                    freezerInventory={freezerMeals}
+                                    leftoverInventory={leftoverItems}
+                                    onSuccess={() => {
+                                        if (currentDayIndex < pastDays.length - 1) {
+                                            setCurrentDayIndex(prev => prev + 1);
+                                        } else {
+                                            setStep('inventory');
+                                        }
+                                    }}
+                                    isModal={false}
+                                    compact={false}
+                                    logType="dinner"
+                                    recipes={recipes}
+                                />
                             </div>
 
-                            <div className="flex justify-center gap-1">
+                            <div className="flex justify-center gap-1.5 pt-2">
                                 {pastDays.map((d, i) => (
                                     <div
                                         key={d}
-                                        className={`h-1.5 w-6 rounded-full ${i === currentDayIndex ? 'bg-[var(--accent-sage)]' : i < currentDayIndex ? 'bg-green-200' : 'bg-gray-100'}`}
+                                        className={`h-1.5 w-6 rounded-full transition-all duration-500 ${i === currentDayIndex ? 'bg-[var(--accent-sage)] scale-x-125 shadow-sm' : i < currentDayIndex ? 'bg-[var(--accent-sage)]/30' : 'bg-gray-100'}`}
                                     />
                                 ))}
                             </div>

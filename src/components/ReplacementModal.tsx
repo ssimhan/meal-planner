@@ -21,7 +21,7 @@ interface ReplacementModalProps {
     day: string;
     recipes: { id: string; name: string }[];
     leftoverInventory?: InventoryItem[];
-    onConfirm: (newMeal: string, requestRecipe?: boolean) => void;
+    onConfirm: (newMeal: string, requestRecipe?: boolean, madeStatus?: boolean | string) => void;
     onCancel: () => void;
 }
 
@@ -63,7 +63,7 @@ export default function ReplacementModal({ currentMeal, day, recipes, leftoverIn
                     </p>
                     <MealCorrectionInput
                         recipes={recipes}
-                        onSave={onConfirm}
+                        onSave={(meal, req) => onConfirm(meal, req, true)}
                         onCancel={onCancel}
                         placeholder="What are you making instead?"
                         existingValue=""
@@ -87,7 +87,7 @@ export default function ReplacementModal({ currentMeal, day, recipes, leftoverIn
                     {meals.map((item, idx) => (
                         <button
                             key={idx}
-                            onClick={() => onConfirm(item.item)}
+                            onClick={() => onConfirm(item.item, false, 'leftovers')}
                             className="w-full text-left p-4 rounded-xl border border-purple-100 bg-white hover:bg-purple-50 hover:border-purple-200 transition-all group flex justify-between items-center shadow-sm"
                         >
                             <div className="flex items-center gap-3">
@@ -141,7 +141,7 @@ export default function ReplacementModal({ currentMeal, day, recipes, leftoverIn
                 {items.map((item, idx) => (
                     <button
                         key={idx}
-                        onClick={() => onConfirm(item.name)}
+                        onClick={() => onConfirm(item.name, false, activeTab === 'freezer' ? 'freezer_backup' : true)}
                         className={`w-full text-left p-3 rounded-lg border border-gray-200 hover:bg-${colorTheme === 'blue' ? 'blue' : 'green'}-50 hover:border-${colorTheme === 'blue' ? 'blue' : 'green'}-200 transition-all group flex justify-between items-center`}
                     >
                         <div>

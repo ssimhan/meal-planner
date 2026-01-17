@@ -264,7 +264,7 @@ function WeekViewContent() {
     }
   };
 
-  const handleReplacementConfirm = async (newMeal: string, requestRecipe: boolean = false) => {
+  const handleReplacementConfirm = async (newMeal: string, requestRecipe: boolean = false, madeStatus: boolean | string = true) => {
     const { day, type } = viewState.replacementModal;
     if (!day || !status?.week_data?.week_of) return;
 
@@ -277,11 +277,11 @@ function WeekViewContent() {
     if (type === 'dinner') {
       payload.actual_meal = newMeal;
       payload.dinner_needs_fix = false;
-      payload.made = true; // Keep 'made' for dinner for backward compatibility
+      payload.made = madeStatus;
     } else {
       payload[`${type}_feedback`] = newMeal;
       payload[`${type}_needs_fix`] = false;
-      payload[`${type}_made`] = true;
+      payload[`${type}_made`] = madeStatus;
     }
 
     try {

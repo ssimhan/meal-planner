@@ -756,6 +756,7 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Bulk Prep Task Completion:** Added `/api/prep/bulk-check` and frontend "Check All" (✅) UI for efficient task management.
 - **Duplication Bug Fix:** Resolved critical issue where in-place list modification in `LunchSelector` caused doubling of ingredient tasks.
 - **Dashboard & Replan Consolidation:** Fixed Stat Card counters and display logic. Refactored `ReplanWorkflowModal` and `ReplacementModal` to use the standardized `MealLogFlow` logic with **enhanced leftovers handling** (top-level selection, dedicated leftovers tabs, and prominent dinner prompts), refined `Week View` visuals (bucket-based color coding), and added automated **Weekly Summary Statistics**.
-- **Data Cleanup:** Successfully deduplicated 27 tasks from current active week data via repair script.
+- **Layout & UX Stabilization:** Optimized the `Week View` for responsive use by implementing a fixed-width desktop grid (using `table-fixed` and `colgroup`), adding `line-clamp` for meal name wrapping, and enhancing mobile interactions with increased tap targets, consistent card padding, and a pulse-animated "TODAY" marker.
+- **Data & Fixes:** Deduplicated 27 tasks from current active week data and resolved a critical bug in `ReplacementModal` where freezer/leftover selections were not correctly color-coding in the main view.
 
 **Learning:** "Bulk" actions significantly reduce friction. Defensive programming (copying lists with `list()`) is essential when multiple modules analyze the same source data.

@@ -1,6 +1,6 @@
 # Meal Planner Implementation Guide
 
-**Last Updated:** 2026-01-13
+**Last Updated:** 2026-01-17
 **Live Site:** [meal-planner-eta-seven.vercel.app](https://meal-planner-eta-seven.vercel.app/)
 
 ---
@@ -109,6 +109,10 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [x] Bulk Prep Task Completion (Backend + UI)
   - [x] Prep task duplication bug fix (defensive copying)
   - [x] Dashboard sync (Counter & "Dinner Tonight" logic)
+- **Block 6: Layout & UX Stabilization (~2 hrs) ✅ Complete**
+  - [x] Responsive Week View (Fixed Grid + Line Clamping)
+  - [x] Mobile UX Polish (Tap targets + Pulse indicators)
+  - [x] Replacement Modal Freezer/Leftover Color Fix
 
 ### Phase 27: Daily Confirmation & Recipe Polish
 **Goal:** Add proactive confirmations and standardize recipe data.

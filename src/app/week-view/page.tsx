@@ -500,6 +500,7 @@ function WeekViewContent() {
             const homeSnackSlot = getSlot(day, 'home_snack');
             const adultLunchSlot = getSlot(day, 'adult_lunch');
 
+            const isToday = status?.current_day === day;
             const todayIndex = days.indexOf(status?.current_day || '');
             const dayIndex = days.indexOf(day);
             const isPast = dayIndex < todayIndex;

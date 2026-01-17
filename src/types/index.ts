@@ -203,6 +203,9 @@ export interface RecipeListItem {
   name: string;
   cuisine?: string;
   meal_type?: string;
+  effort_level?: string;
+  no_chop_compatible?: boolean;
+  tags?: string[];
 }
 
 export interface RecipesResponse {

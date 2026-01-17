@@ -16,6 +16,8 @@ def get_recipes():
         recipes = StorageEngine.get_recipes()
         return jsonify({"status": "success", "recipes": recipes})
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @recipes_bp.route("/api/recipes/<recipe_id>")
@@ -265,8 +267,43 @@ Added from URL: {url}
             "message": f"Successfully captured recipe for {meal_name}",
             "recipe_id": recipe_id
         })
-
     except Exception as e:
-        import traceback
-        traceback.print_exc()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@recipes_bp.route("/api/recipes/<recipe_id>", methods=["PATCH"])
+@require_auth
+def update_recipe_metadata(recipe_id):
+    try:
+        data = request.json or {}
+        
+        # 1. Fetch current details
+        existing = StorageEngine.get_recipe_details(recipe_id)
+        if not existing:
+            return jsonify({"status": "error", "message": "Recipe not found"}), 404
+            
+        current_metadata = existing['recipe']
+        current_content = existing['markdown']
+        
+        # 2. Merge metadata
+        # Remove fields that are directly on the table (id, name) from the metadata blob if present
+        updates = {k: v for k, v in data.items() if k not in ['id', 'name']}
+        new_metadata = {**current_metadata, **updates}
+        
+        # Clean up name/id from metadata as they are top-level columns
+        new_metadata.pop('name', None)
+        new_metadata.pop('id', None)
+        
+        # 3. Save back
+        StorageEngine.save_recipe(
+            recipe_id, 
+            data.get('name', current_metadata.get('name')), 
+            new_metadata, 
+            current_content
+        )
+        
+        invalidate_cache('recipes')
+        
+        return jsonify({"status": "success", "message": f"Updated metadata for {recipe_id}"})
+    except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500

@@ -304,6 +304,15 @@ export async function captureRecipe(data: CaptureRecipeRequest): Promise<Capture
     return handleResponse<CaptureRecipeResponse>(res, 'Failed to capture recipe');
 }
 
+export async function updateRecipeMetadata(recipeId: string, updates: any): Promise<any> {
+    const res = await fetch(`/api/recipes/${recipeId}`, {
+        method: 'PATCH',
+        headers: await getAuthHeaders(),
+        body: JSON.stringify(updates),
+    });
+    return handleResponse<any>(res, 'Failed to update recipe metadata');
+}
+
 export async function ignoreRecipe(name: string): Promise<any> {
     const res = await fetch('/api/recipes/ignore', {
         method: 'POST',

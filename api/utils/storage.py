@@ -82,6 +82,9 @@ class StorageEngine:
         h_id = get_household_id()
         try:
             res = supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id).execute()
+            if not res or not hasattr(res, 'data') or res.data is None:
+                return []
+                
             # Transformation to include id and name from the columns, plus categories/cuisine from metadata
             return [
                 {
@@ -90,11 +93,14 @@ class StorageEngine:
                     "cuisine": (r.get('metadata') or {}).get('cuisine', 'unknown'),
                     "meal_type": (r.get('metadata') or {}).get('meal_type', 'unknown'),
                     "effort_level": (r.get('metadata') or {}).get('effort_level', 'normal'),
-                    "no_chop_compatible": (r.get('metadata') or {}).get('no_chop_compatible', False)
+                    "no_chop_compatible": (r.get('metadata') or {}).get('no_chop_compatible', False),
+                    "tags": (r.get('metadata') or {}).get('tags', [])
                 } for r in res.data
             ]
         except Exception as e:
             print(f"Error fetching recipes: {e}")
+            import traceback
+            traceback.print_exc()
             return []
 
     @staticmethod

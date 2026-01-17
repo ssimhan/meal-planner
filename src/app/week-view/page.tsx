@@ -151,14 +151,10 @@ function WeekViewContent() {
   const getFeedbackBadge = (feedback?: string, made?: boolean | string, needsFix?: boolean) => {
     if (needsFix) return <span className="text-xs text-red-600 font-bold px-2 py-0.5 bg-red-50 rounded border border-red-200">Needs Fix</span>;
     if (made === false) return <span className="text-xs text-red-600 font-medium px-2 py-0.5 bg-red-50 rounded">✗ Skipped</span>;
-    if (made === 'freezer_backup') return <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200 uppercase tracking-wide">🧊 FREEZER</span>;
-    if (made === 'outside_meal') return <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 uppercase tracking-wide">🍽️ OUTSIDE</span>;
 
     const emojis = ['❤️', '👍', '😐', '👎', '❌'];
     const emojiMatch = feedback && emojis.find(e => feedback.includes(e));
     if (emojiMatch) return <span className="text-xs bg-gray-100 px-2 py-0.5 rounded border border-gray-200 shadow-sm">{emojiMatch}</span>;
-
-    if (made === true) return <span className="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 uppercase tracking-wide shadow-sm">CONFIRMED</span>;
 
     return null;
   };
@@ -504,7 +500,17 @@ function WeekViewContent() {
             const homeSnackSlot = getSlot(day, 'home_snack');
             const adultLunchSlot = getSlot(day, 'adult_lunch');
 
-            const isToday = status?.current_day === day;
+            const todayIndex = days.indexOf(status?.current_day || '');
+            const dayIndex = days.indexOf(day);
+            const isPast = dayIndex < todayIndex;
+
+            const getSlotBg = (slot: any) => {
+              const made = slot?.actual?.made;
+              const isConfirmed = made === true || made === 'freezer_backup' || made === 'outside_meal';
+              if (isConfirmed) return 'bg-green-50 border-green-100 shadow-sm';
+              if (made === false || (isPast && made === undefined)) return 'bg-red-50 border-red-100 shadow-sm';
+              return 'bg-white border-transparent';
+            };
 
             return (
               <div
@@ -524,7 +530,7 @@ function WeekViewContent() {
 
                 <div className="space-y-4">
                   {/* Dinner */}
-                  <div className={`flex items-start p-2 rounded-lg transition-all ${dinnerSlot?.actual?.made === true ? 'bg-green-50/50 shadow-sm border border-green-100' : ''}`}>
+                  <div className={`flex items-start p-2 rounded-lg border transition-all ${getSlotBg(dinnerSlot)}`}>
                     <SelectionCheckbox
                       day={day}
                       type="dinner"
@@ -577,7 +583,7 @@ function WeekViewContent() {
                   </div>
 
                   {/* Kids Lunch */}
-                  <div className={`flex items-start p-1.5 rounded-lg ${kidsLunchSlot?.actual?.made === true ? 'bg-gray-50/80' : ''}`}>
+                  <div className={`flex items-start p-1.5 rounded-lg border transition-all ${getSlotBg(kidsLunchSlot)}`}>
                     <SelectionCheckbox
                       day={day}
                       type="kids_lunch"
@@ -619,7 +625,7 @@ function WeekViewContent() {
                   </div>
 
                   {/* School Snack */}
-                  <div className="flex items-start">
+                  <div className={`flex items-start p-1.5 rounded-lg border transition-all ${getSlotBg(schoolSnackSlot)}`}>
                     <SelectionCheckbox
                       day={day}
                       type="school_snack"
@@ -659,7 +665,7 @@ function WeekViewContent() {
                   </div>
 
                   {/* Home Snack */}
-                  <div className="flex items-start">
+                  <div className={`flex items-start p-1.5 rounded-lg border transition-all ${getSlotBg(homeSnackSlot)}`}>
                     <SelectionCheckbox
                       day={day}
                       type="home_snack"
@@ -699,7 +705,7 @@ function WeekViewContent() {
                   </div>
 
                   {/* Adult Lunch */}
-                  <div className="flex items-start">
+                  <div className={`flex items-start p-1.5 rounded-lg border transition-all ${getSlotBg(adultLunchSlot)}`}>
                     <SelectionCheckbox
                       day={day}
                       type="adult_lunch"
@@ -777,12 +783,20 @@ function WeekViewContent() {
                   <span>Dinner</span>
                 </td>
                 {days.map((day) => {
+                  const todayIndex = days.indexOf(status?.current_day || '');
+                  const dayIndex = days.indexOf(day);
+                  const isPast = dayIndex < todayIndex;
+
                   const dinnerSlot = getSlot(day, 'dinner');
-                  const made = dinnerSlot?.actual?.made === true;
+                  const made = dinnerSlot?.actual?.made;
+                  const isConfirmed = made === true || made === 'freezer_backup' || made === 'outside_meal';
+                  const isSkippedOrPastUnconfirmed = made === false || (isPast && made === undefined);
 
                   return (
-                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] transition-all duration-300 ${made
-                        ? 'bg-[var(--accent-sage)]/10 shadow-[inset_0_2px_4px_rgba(0,128,0,0.1)] border-l-[3px] border-l-[var(--accent-sage)]'
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] transition-all duration-300 ${isConfirmed
+                      ? 'bg-green-50 shadow-[inset_0_2px_4px_rgba(0,128,0,0.05)] border-l-[3px] border-l-[var(--accent-sage)]'
+                      : isSkippedOrPastUnconfirmed
+                        ? 'bg-red-50 border-l-[3px] border-l-red-300'
                         : 'hover:bg-gray-50'
                       }`}>
                       <div className="flex items-start gap-2">
@@ -853,11 +867,21 @@ function WeekViewContent() {
                   <span>Kids Lunch</span>
                 </td>
                 {days.map((day) => {
+                  const todayIndex = days.indexOf(status?.current_day || '');
+                  const dayIndex = days.indexOf(day);
+                  const isPast = dayIndex < todayIndex;
+
                   const kidsLunchSlot = getSlot(day, 'kids_lunch');
-                  const made = kidsLunchSlot?.actual?.made === true;
+                  const made = kidsLunchSlot?.actual?.made;
+                  const isConfirmed = made === true || made === 'freezer_backup' || made === 'outside_meal';
+                  const isSkippedOrPastUnconfirmed = made === false || (isPast && made === undefined);
 
                   return (
-                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${made ? 'bg-gray-50 shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)]' : ''
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${isConfirmed
+                      ? 'bg-green-50 shadow-[inset_0_1px_2px_rgba(0,128,0,0.05)]'
+                      : isSkippedOrPastUnconfirmed
+                        ? 'bg-red-50'
+                        : ''
                       }`}>
                       <div className="flex items-start gap-2">
                         <SelectionCheckbox
@@ -909,12 +933,22 @@ function WeekViewContent() {
                   <span>School Snack</span>
                 </td>
                 {days.map((day) => {
+                  const todayIndex = days.indexOf(status?.current_day || '');
+                  const dayIndex = days.indexOf(day);
+                  const isPast = dayIndex < todayIndex;
+
                   const schoolSnackSlot = getSlot(day, 'school_snack');
                   const isWeekend = day === 'sat' || day === 'sun';
-                  const made = schoolSnackSlot?.actual?.made === true;
+                  const made = schoolSnackSlot?.actual?.made;
+                  const isConfirmed = made === true || made === 'freezer_backup' || made === 'outside_meal';
+                  const isSkippedOrPastUnconfirmed = made === false || (isPast && made === undefined);
 
                   return (
-                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${made ? 'bg-gray-50 shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)]' : ''
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${isConfirmed
+                      ? 'bg-green-50 shadow-[inset_0_1px_2px_rgba(0,128,0,0.05)]'
+                      : !isWeekend && isSkippedOrPastUnconfirmed
+                        ? 'bg-red-50'
+                        : ''
                       }`}>
                       {!isWeekend ? (
                         <div className="flex items-start gap-2">
@@ -970,12 +1004,22 @@ function WeekViewContent() {
                   <span>Home Snack</span>
                 </td>
                 {days.map((day) => {
+                  const todayIndex = days.indexOf(status?.current_day || '');
+                  const dayIndex = days.indexOf(day);
+                  const isPast = dayIndex < todayIndex;
+
                   const homeSnackSlot = getSlot(day, 'home_snack');
                   const isWeekend = day === 'sat' || day === 'sun';
-                  const made = homeSnackSlot?.actual?.made === true;
+                  const made = homeSnackSlot?.actual?.made;
+                  const isConfirmed = made === true || made === 'freezer_backup' || made === 'outside_meal';
+                  const isSkippedOrPastUnconfirmed = made === false || (isPast && made === undefined);
 
                   return (
-                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${made ? 'bg-gray-50 shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)]' : ''
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${isConfirmed
+                      ? 'bg-green-50 shadow-[inset_0_1px_2px_rgba(0,128,0,0.05)]'
+                      : !isWeekend && isSkippedOrPastUnconfirmed
+                        ? 'bg-red-50'
+                        : ''
                       }`}>
                       {!isWeekend ? (
                         <div className="flex items-start gap-2">
@@ -1031,11 +1075,21 @@ function WeekViewContent() {
                   <span>Adult Lunch</span>
                 </td>
                 {days.map((day) => {
+                  const todayIndex = days.indexOf(status?.current_day || '');
+                  const dayIndex = days.indexOf(day);
+                  const isPast = dayIndex < todayIndex;
+
                   const adultLunchSlot = getSlot(day, 'adult_lunch');
-                  const made = adultLunchSlot?.actual?.made === true;
+                  const made = adultLunchSlot?.actual?.made;
+                  const isConfirmed = made === true || made === 'freezer_backup' || made === 'outside_meal';
+                  const isSkippedOrPastUnconfirmed = made === false || (isPast && made === undefined);
 
                   return (
-                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${made ? 'bg-gray-50 shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)]' : ''
+                    <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] ${isConfirmed
+                      ? 'bg-green-50 shadow-[inset_0_1px_2px_rgba(0,128,0,0.05)]'
+                      : isSkippedOrPastUnconfirmed
+                        ? 'bg-red-50'
+                        : ''
                       }`}>
                       <div className="flex items-start gap-2">
                         <SelectionCheckbox

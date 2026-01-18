@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { getRecipes, updateRecipeMetadata, deleteRecipe, updateRecipeContent } from '@/lib/api';
+import { getRecipes, updateRecipeMetadata, deleteRecipe, updateRecipeContent, searchRecipes } from '@/lib/api';
 import AppLayout from '@/components/AppLayout';
 import Link from 'next/link';
 import { RecipeListItem } from '@/types';
@@ -43,7 +43,7 @@ export default function RecipesPage() {
 
     const filteredRecipes = recipes.filter(r => {
         const matchesSearch = r.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            r.template?.toLowerCase().includes(searchTerm.toLowerCase());
+            r.meal_type?.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCuisine = filterCuisine === 'all' || r.cuisine === filterCuisine;
         const matchesEffort = filterEffort === 'all' || r.effort_level === filterEffort;
         const matchesTag = filterTag === 'all' || (r.tags && r.tags.includes(filterTag));
@@ -130,7 +130,7 @@ export default function RecipesPage() {
                 <section className="mb-8 space-y-4">
                     <input
                         type="text"
-                        placeholder="Search recipes or templates..."
+                        placeholder="Search recipes or meal types..."
                         className="w-full p-4 border border-[var(--border-subtle)] rounded-lg bg-[var(--bg-secondary)] focus:ring-2 focus:ring-[var(--accent-sage)] focus:border-transparent outline-none transition-all"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -255,7 +255,7 @@ function RecipeCard({ recipe }: { recipe: any }) {
                 <div>
                     <h3 className="text-xl mb-1 group-hover:text-[var(--accent-sage)] transition-colors">{recipe.name}</h3>
                     <div className="flex gap-2 text-sm text-[var(--text-muted)] font-mono uppercase tracking-widest items-center">
-                        <span>{recipe.template}</span>
+                        <span>{recipe.meal_type}</span>
                         {recipe.cuisine && <span className="opacity-50">• {recipe.cuisine}</span>}
                     </div>
                     {/* Render Tags */}

@@ -54,7 +54,7 @@ export default function StepByStepCooking({ recipe, onClose }: StepByStepCooking
             hover: 'hover:bg-rose-50',
             light: 'bg-rose-50/50'
         }
-    }[currentPhase.color as keyof typeof colorClasses] || {
+    }[currentPhase.color as 'emerald' | 'amber' | 'rose'] || {
         bg: 'bg-gray-50',
         text: 'text-gray-700',
         border: 'border-gray-100',
@@ -127,7 +127,7 @@ export default function StepByStepCooking({ recipe, onClose }: StepByStepCooking
                             <React.Fragment key={p.id}>
                                 <div
                                     className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-sm transition-all duration-500 ${idx === currentPhaseIndex ? `${colorClasses.accent} text-white scale-110 shadow-xl rotate-3` :
-                                            idx < currentPhaseIndex ? 'bg-gray-800 text-white' : 'bg-gray-50 text-gray-300'
+                                        idx < currentPhaseIndex ? 'bg-gray-800 text-white' : 'bg-gray-50 text-gray-300'
                                         }`}
                                 >
                                     <p.icon size={20} />
@@ -156,8 +156,8 @@ export default function StepByStepCooking({ recipe, onClose }: StepByStepCooking
                                     key={idx}
                                     onClick={() => handleToggleStep(idx)}
                                     className={`group p-6 rounded-3xl border-2 transition-all duration-300 cursor-pointer flex items-start gap-5 overflow-hidden relative ${completedSteps.has(idx)
-                                            ? `${colorClasses.light} border-${currentPhase.color}-200 opacity-50 scale-[0.97]`
-                                            : `bg-white border-transparent shadow-[0_4px_20px_-5px_var(--shadow)] ${colorClasses.hover} hover:border-${currentPhase.color}-100 hover:-translate-y-1 active:scale-[0.98]`
+                                        ? `${colorClasses.light} border-${currentPhase.color}-200 opacity-50 scale-[0.97]`
+                                        : `bg-white border-transparent shadow-[0_4px_20px_-5px_var(--shadow)] ${colorClasses.hover} hover:border-${currentPhase.color}-100 hover:-translate-y-1 active:scale-[0.98]`
                                         }`}
                                 >
                                     {/* Animated background decoration */}

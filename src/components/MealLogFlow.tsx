@@ -403,7 +403,7 @@ export default function MealLogFlow({
                                 className={`w-full p-4 text-left text-sm rounded-2xl transition-all border ${selectedFreezerMeal === item.meal ? 'bg-[var(--accent-primary)] text-white border-[var(--accent-primary)] shadow-md' : 'bg-white/50 border-transparent hover:bg-white hover:border-[var(--border-subtle)]'}`}
                             >
                                 <div className="font-bold">{item.meal}</div>
-                                <div className={`text-[10px] uppercase tracking-tighter ${selectedFreezerMeal === item.meal ? 'text-white/80' : 'text-[var(--text-muted)]'}`}>{item.quantity} {item.unit || 'portions'}</div>
+                                <div className={`text-[10px] uppercase tracking-tighter ${selectedFreezerMeal === item.meal ? 'text-white/80' : 'text-[var(--text-muted)]'}`}>{item.servings || 0} portions</div>
                             </button>
                         ))
                     ) : (

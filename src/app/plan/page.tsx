@@ -246,11 +246,15 @@ function PlanningWizardContent() {
             setNewItemInputs({
                 fridge: { name: '', qty: 1, type: 'meal' },
                 pantry: { name: '', qty: 1 },
-                spice_rack: { name: '', qty: 1 }
+                spice_rack: { name: '', qty: 1 },
+                meals: { name: '', qty: 4 },
+                frozen_ingredient: { name: '', qty: 1 }
             });
+            return processedInventory;
         } catch (error) {
             showToast('Failed to load inventory.', 'error');
             console.error('Failed to load inventory:', error);
+            throw error;
         }
     };
 
@@ -278,22 +282,32 @@ function PlanningWizardContent() {
 
             if (updates.length > 0) {
                 await bulkUpdateInventory(updates);
-                showToast('Inventory updated successfully!', 'success');
                 setPendingChanges([]); // Clear pending changes after successful update
+                setLoading(true); // Ensure loading state is active while we refresh
                 await loadInventory(); // Reload inventory to reflect changes
             }
-            // Always proceed to next step
+            showToast('Inventory updated!', 'success');
             setStep('leftovers');
         } catch (error) {
             showToast('Failed to update inventory.', 'error');
             console.error('Failed to update inventory:', error);
         } finally {
             setSubmitting(false);
+            setLoading(false);
         }
     };
 
     const getDisplayList = (category: string) => {
-        const currentItems = inventory ? (inventory as any)[category] : [];
+        let currentItems: any[] = [];
+        if (inventory) {
+            if (category === 'meals') {
+                currentItems = inventory.freezer.backups.map(b => ({ item: b.meal, quantity: b.servings }));
+            } else if (category === 'frozen_ingredient') {
+                currentItems = inventory.freezer.ingredients;
+            } else {
+                currentItems = (inventory as any)[category] || [];
+            }
+        }
         const addedItems = pendingChanges.filter(c => c.category === category && c.operation === 'add');
         const removedItems = pendingChanges.filter(c => c.category === category && c.operation === 'remove').map(c => c.item);
 
@@ -470,12 +484,13 @@ function PlanningWizardContent() {
                 shoppingList,
                 purchasedItems,
                 customShoppingItems,
-                lockedDays
+                lockedDays,
+                leftoverAssignments
             });
         }, 1000);
 
         return () => clearTimeout(timer);
-    }, [step, reviews, pendingChanges, selections, shoppingList, planningWeek]);
+    }, [step, reviews, pendingChanges, selections, shoppingList, planningWeek, leftoverAssignments]);
 
     // Restore state
     useEffect(() => {
@@ -496,6 +511,7 @@ function PlanningWizardContent() {
                     if (res.state.purchasedItems) setPurchasedItems(res.state.purchasedItems);
                     if (res.state.customShoppingItems) setCustomShoppingItems(res.state.customShoppingItems);
                     if (res.state.lockedDays) setLockedDays(res.state.lockedDays);
+                    if (res.state.leftoverAssignments) setLeftoverAssignments(res.state.leftoverAssignments);
                 }
             } catch (e) {
                 console.error("Failed to restore state", e);
@@ -677,7 +693,7 @@ function PlanningWizardContent() {
                             }
                         }}
                         disabled={submitting}
-                        className="btn-primary shadow-xl scale-110"
+                        className="btn-premium shadow-xl scale-110"
                     >
                         {submitting ? 'Finalizing...' : 'Finalize Plan 🎉'}
                     </button>
@@ -716,7 +732,7 @@ function PlanningWizardContent() {
                                         console.error(e);
                                     }
                                 }}
-                                className="btn-primary whitespace-nowrap"
+                                className="btn-premium whitespace-nowrap"
                             >
                                 Looks Good →
                             </button>
@@ -919,7 +935,13 @@ function PlanningWizardContent() {
                     <div className="md:col-span-1">
                         <div className="card sticky top-24">
                             <h3 className="text-sm font-bold uppercase tracking-widest text-[var(--text-muted)] mb-4 pb-2 border-b border-[var(--border-subtle)]">Available Leftovers</h3>
-                            {leftoverMeals.length === 0 ? (
+                            {loading ? (
+                                <div className="space-y-3">
+                                    <Skeleton className="h-14 w-full" />
+                                    <Skeleton className="h-14 w-full" />
+                                    <Skeleton className="h-14 w-full" />
+                                </div>
+                            ) : leftoverMeals.length === 0 ? (
                                 <p className="text-sm text-[var(--text-muted)] italic">No leftovers found in your fridge.</p>
                             ) : (
                                 <ul className="space-y-3">
@@ -1046,15 +1068,18 @@ function PlanningWizardContent() {
                                         onKeyDown={e => e.key === 'Enter' && handleAddItem('fridge', 'meal')}
                                         className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
                                     />
-                                    <input
-                                        type="number"
-                                        placeholder="#"
-                                        min="1"
-                                        className="w-16 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
-                                        value={newItemInputs['fridge']?.type === 'meal' ? (newItemInputs['fridge']?.qty || 1) : 1}
-                                        onChange={e => setNewItemInputs(prev => ({ ...prev, 'fridge': { ...prev['fridge'], qty: parseInt(e.target.value) || 1, type: 'meal' } }))}
-                                    />
-                                    <button onClick={() => handleAddItem('fridge', 'meal')} className="btn-secondary px-3">+</button>
+                                    <div className="flex flex-col">
+                                        <label className="text-[8px] uppercase font-bold text-[var(--text-muted)] ml-1">Srv</label>
+                                        <input
+                                            type="number"
+                                            placeholder="#"
+                                            min="1"
+                                            className="w-12 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm font-bold"
+                                            value={newItemInputs['fridge']?.type === 'meal' ? (newItemInputs['fridge']?.qty || 1) : 1}
+                                            onChange={e => setNewItemInputs(prev => ({ ...prev, 'fridge': { ...prev['fridge'], qty: parseInt(e.target.value) || 1, type: 'meal' } }))}
+                                        />
+                                    </div>
+                                    <button onClick={() => handleAddItem('fridge', 'meal')} className="btn-secondary self-end px-3 py-2">+</button>
                                 </div>
                                 <ul className="space-y-2">
                                     {getDisplayList('fridge').filter((i: any) => i.type === 'meal' || (typeof i === 'string' && i.toLowerCase().includes('meal'))).map((item: any, idx: number) => {
@@ -1083,15 +1108,18 @@ function PlanningWizardContent() {
                                         onKeyDown={e => e.key === 'Enter' && handleAddItem('fridge', 'ingredient')}
                                         className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
                                     />
-                                    <input
-                                        type="number"
-                                        placeholder="#"
-                                        min="1"
-                                        className="w-16 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
-                                        value={newItemInputs['fridge']?.type === 'ingredient' ? (newItemInputs['fridge']?.qty || 1) : 1}
-                                        onChange={e => setNewItemInputs(prev => ({ ...prev, 'fridge': { ...prev['fridge'], qty: parseInt(e.target.value) || 1, type: 'ingredient' } }))}
-                                    />
-                                    <button onClick={() => handleAddItem('fridge', 'ingredient')} className="btn-secondary px-3">+</button>
+                                    <div className="flex flex-col">
+                                        <label className="text-[8px] uppercase font-bold text-[var(--text-muted)] ml-1">Qty</label>
+                                        <input
+                                            type="number"
+                                            placeholder="#"
+                                            min="1"
+                                            className="w-12 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm font-bold"
+                                            value={newItemInputs['fridge']?.type === 'ingredient' ? (newItemInputs['fridge']?.qty || 1) : 1}
+                                            onChange={e => setNewItemInputs(prev => ({ ...prev, 'fridge': { ...prev['fridge'], qty: parseInt(e.target.value) || 1, type: 'ingredient' } }))}
+                                        />
+                                    </div>
+                                    <button onClick={() => handleAddItem('fridge', 'ingredient')} className="btn-secondary self-end px-3 py-2">+</button>
                                 </div>
                                 <ul className="space-y-2">
                                     {getDisplayList('fridge').filter((i: any) => i.type !== 'meal' && !(typeof i === 'string' && i.toLowerCase().includes('meal'))).map((item: any, idx: number) => {
@@ -1110,7 +1138,81 @@ function PlanningWizardContent() {
                         </div>
                     </div>
 
-                    {/* Pantry & Spices handled simpler for now (Chunk 2 focusing on fridge split) */}
+                    {/* Freezer Section */}
+                    <div className="card lg:col-span-1">
+                        <h3 className="text-xl mb-4 border-b border-[var(--border-subtle)] pb-2">❄️ Freezer</h3>
+                        <div className="space-y-6">
+                            {/* Freezer Meals */}
+                            <div>
+                                <h4 className="text-sm font-bold uppercase text-[var(--accent-sage)] mb-2">Backups / Meals</h4>
+                                <div className="flex gap-2 mb-4">
+                                    <input
+                                        type="text"
+                                        placeholder="Meal..."
+                                        value={newItemInputs['meals']?.name || ''}
+                                        onChange={e => setNewItemInputs(prev => ({ ...prev, 'meals': { ...prev['meals'], name: e.target.value, type: 'meal' } }))}
+                                        onKeyDown={e => e.key === 'Enter' && handleAddItem('meals', 'meal')}
+                                        className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
+                                    />
+                                    <div className="flex flex-col">
+                                        <label className="text-[8px] uppercase font-bold text-[var(--text-muted)] ml-1">Srv</label>
+                                        <input
+                                            type="number"
+                                            placeholder="#"
+                                            min="1"
+                                            className="w-12 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm font-bold"
+                                            value={newItemInputs['meals']?.qty || 4}
+                                            onChange={e => setNewItemInputs(prev => ({ ...prev, 'meals': { ...prev['meals'], qty: parseInt(e.target.value) || 1 } }))}
+                                        />
+                                    </div>
+                                    <button onClick={() => handleAddItem('meals', 'meal')} className="btn-secondary self-end px-3 py-2">+</button>
+                                </div>
+                                <ul className="space-y-2 max-h-40 overflow-y-auto pr-1">
+                                    {getDisplayList('meals').map((item: any, idx: number) => {
+                                        const name = typeof item === 'string' ? item : item.item;
+                                        const qty = typeof item === 'object' ? item.quantity : 1;
+                                        const isNew = pendingChanges.some(c => c.category === 'meals' && c.item === name && c.operation === 'add');
+                                        return (
+                                            <li key={`freezer-meal-${name}-${idx}`} className={`flex justify-between items-center text-sm p-2 rounded ${isNew ? 'bg-[var(--bg-secondary)] border-l-2 border-[var(--accent-sage)] shadow-sm' : 'bg-[var(--bg-secondary)]/30'}`}>
+                                                <span>{name} <span className="text-xs text-[var(--text-muted)]">({qty} srv)</span></span>
+                                                <button onClick={() => handleRemoveItem('meals', name)} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)]">×</button>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+
+                            {/* Freezer Ingredients */}
+                            <div>
+                                <h4 className="text-sm font-bold uppercase text-[var(--accent-gold)] mb-2">Frozen Ingredients</h4>
+                                <div className="flex gap-2 mb-4">
+                                    <input
+                                        type="text"
+                                        placeholder="Item..."
+                                        value={newItemInputs['frozen_ingredient']?.name || ''}
+                                        onChange={e => setNewItemInputs(prev => ({ ...prev, 'frozen_ingredient': { ...prev['frozen_ingredient'], name: e.target.value, type: 'ingredient' } }))}
+                                        onKeyDown={e => e.key === 'Enter' && handleAddItem('frozen_ingredient', 'ingredient')}
+                                        className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
+                                    />
+                                    <button onClick={() => handleAddItem('frozen_ingredient', 'ingredient')} className="btn-secondary px-3">+</button>
+                                </div>
+                                <ul className="space-y-2 max-h-32 overflow-y-auto pr-1">
+                                    {getDisplayList('frozen_ingredient').map((item: any, idx: number) => {
+                                        const name = typeof item === 'string' ? item : item.item;
+                                        const isNew = pendingChanges.some(c => c.category === 'frozen_ingredient' && c.item === name && c.operation === 'add');
+                                        return (
+                                            <li key={`freezer-ing-${name}-${idx}`} className={`flex justify-between items-center text-sm p-2 rounded ${isNew ? 'bg-[var(--bg-secondary)] border-l-2 border-[var(--accent-gold)] shadow-sm' : 'bg-[var(--bg-secondary)]/30'}`}>
+                                                <span>{name}</span>
+                                                <button onClick={() => handleRemoveItem('frozen_ingredient', name)} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)]">×</button>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Pantry & Spices handled simpler */}
                     {['pantry', 'spice_rack'].map(catId => (
                         <div key={catId} className="card">
                             <h3 className="text-xl mb-4 border-b border-[var(--border-subtle)] pb-2">{catId === 'pantry' ? '🥫 Pantry' : '🧂 Spices'}</h3>
@@ -1124,16 +1226,19 @@ function PlanningWizardContent() {
                                     className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
                                 />
                                 {catId === 'pantry' && (
-                                    <input
-                                        type="number"
-                                        placeholder="#"
-                                        min="1"
-                                        className="w-16 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
-                                        value={newItemInputs[catId]?.qty || 1}
-                                        onChange={e => setNewItemInputs(prev => ({ ...prev, [catId]: { ...prev[catId], qty: parseInt(e.target.value) || 1 } }))}
-                                    />
+                                    <div className="flex flex-col">
+                                        <label className="text-[8px] uppercase font-bold text-[var(--text-muted)] ml-1">Qty</label>
+                                        <input
+                                            type="number"
+                                            placeholder="#"
+                                            min="1"
+                                            className="w-12 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm font-bold"
+                                            value={newItemInputs[catId]?.qty || 1}
+                                            onChange={e => setNewItemInputs(prev => ({ ...prev, [catId]: { ...prev[catId], qty: parseInt(e.target.value) || 1 } }))}
+                                        />
+                                    </div>
                                 )}
-                                <button onClick={() => handleAddItem(catId)} className="btn-secondary px-3">+</button>
+                                <button onClick={() => handleAddItem(catId)} className="btn-secondary self-end px-3 py-2">+</button>
                             </div>
                             <ul className="space-y-2 max-h-60 overflow-y-auto pr-2">
                                 {getDisplayList(catId).map((item: any, idx: number) => {
@@ -1141,7 +1246,7 @@ function PlanningWizardContent() {
                                     const qty = typeof item === 'object' ? item.quantity : 1;
                                     const isNew = pendingChanges.some(c => c.category === catId && c.item === name && c.operation === 'add');
                                     return (
-                                        <li key={`${catId}-${name}-${idx}`} className={`flex justify-between items-center text-sm p-2 rounded ${isNew ? 'bg-[var(--bg-secondary)] border-l-2 border-[var(--accent-sage)]' : ''}`}>
+                                        <li key={`${catId}-${name}-${idx}`} className={`flex justify-between items-center text-sm p-2 rounded ${isNew ? 'bg-[var(--bg-secondary)] border-l-2 border-[var(--accent-sage)] shadow-sm' : 'bg-[var(--bg-secondary)]/30'}`}>
                                             <span>{name} {catId === 'pantry' && <span className="text-xs text-[var(--text-muted)]">({qty})</span>}</span>
                                             <button onClick={() => handleRemoveItem(catId, name)} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)]">×</button>
                                         </li>

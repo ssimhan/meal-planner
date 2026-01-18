@@ -3,14 +3,15 @@
 import Link from 'next/link';
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { getStatus, getRecipes, WorkflowStatus, replan, swapMeals, logMeal, getInventory } from '@/lib/api';
+import { getStatus, getRecipes, WorkflowStatus, replan, swapMeals, logMeal, getInventory, getRecipeContent } from '@/lib/api';
 import { InventoryItem } from '@/types';
 import AppLayout from '@/components/AppLayout';
 import { useToast } from '@/context/ToastContext';
 import MealCorrectionInput from '@/components/MealCorrectionInput';
-import SwapConfirmationModal from '@/components/SwapConfirmationModal';
 import ReplacementModal from '@/components/ReplacementModal';
 import ReplanWorkflowModal from '@/components/ReplanWorkflowModal';
+import StepByStepCooking from '@/components/StepByStepCooking';
+import { ChefHat } from 'lucide-react';
 
 interface SelectionCheckboxProps {
   day: string;
@@ -58,6 +59,8 @@ function WeekViewContent() {
     }
   });
   const [leftoverInventory, setLeftoverInventory] = useState<InventoryItem[]>([]);
+  const [focusModeOpen, setFocusModeOpen] = useState(false);
+  const [focusRecipe, setFocusRecipe] = useState<any>(null);
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -104,6 +107,30 @@ function WeekViewContent() {
     }
     fetchInventory();
   }, []);
+
+  const handleOpenFocusMode = async (recipeId: string, recipeName: string) => {
+    try {
+      showToast('Loading recipe details...', 'info');
+      const content = await getRecipeContent(recipeId);
+
+      // Normalize instructions
+      let instructions = content.instructions;
+      if (typeof instructions === 'string') {
+        instructions = instructions.split('\n').filter((l: string) => l.trim().length > 0);
+      }
+
+      setFocusRecipe({
+        name: content.name || recipeName,
+        ingredients: content.ingredients || [],
+        prepSteps: [],
+        instructions: instructions || []
+      });
+      setFocusModeOpen(true);
+    } catch (err) {
+      showToast('Failed to load recipe details.', 'error');
+      console.error(err);
+    }
+  };
 
   if (loading) {
     return (
@@ -518,6 +545,13 @@ function WeekViewContent() {
           />
         )}
 
+        {focusModeOpen && focusRecipe && (
+          <StepByStepCooking
+            recipe={focusRecipe}
+            onClose={() => setFocusModeOpen(false)}
+          />
+        )}
+
         {/* Mobile: Card view */}
         <div className="md:hidden space-y-4">
           {days.map((day, idx) => {
@@ -534,12 +568,12 @@ function WeekViewContent() {
 
             const getSlotBg = (slot: any) => {
               const made = slot?.actual?.made;
-              if (made === true) return 'bg-green-50 border-green-100 shadow-sm';
-              if (made === 'outside_meal') return 'bg-amber-50 border-amber-100 shadow-sm';
-              if (made === 'freezer_backup') return 'bg-blue-50 border-blue-100 shadow-sm';
-              if (made === 'leftovers') return 'bg-purple-50 border-purple-100 shadow-sm';
-              if (made === false || (isPast && made === undefined)) return 'bg-red-50 border-red-100 shadow-sm';
-              return 'bg-white border-transparent';
+              if (made === true) return 'bg-[var(--status-followed)] text-[var(--status-followed-text)] border-[var(--status-followed-text)]/20 shadow-sm';
+              if (made === 'outside_meal') return 'bg-[var(--status-ate-out)] text-[var(--status-ate-out-text)] border-[var(--status-ate-out-text)]/20 shadow-sm';
+              if (made === 'freezer_backup') return 'bg-[var(--status-backup)] text-[var(--status-backup-text)] border-[var(--status-backup-text)]/20 shadow-sm';
+              if (made === 'leftovers') return 'bg-[var(--status-leftovers)] text-[var(--status-leftovers-text)] border-[var(--status-leftovers-text)]/20 shadow-sm';
+              if (made === false || (isPast && made === undefined)) return 'bg-[var(--status-skipped)] text-[var(--status-skipped-text)] border-[var(--status-skipped-text)]/20 shadow-sm';
+              return 'bg-[var(--bg-card)] border-transparent';
             };
 
             return (
@@ -799,7 +833,7 @@ function WeekViewContent() {
             </colgroup>
             <thead>
               <tr className="bg-[var(--bg-secondary)] border-b border-[var(--border-subtle)]">
-                <th className="p-4 text-left font-mono text-[10px] uppercase tracking-widest text-[var(--text-muted)] bg-white border-b border-[var(--border-subtle)]">
+                <th className="p-4 text-left font-mono text-[10px] uppercase tracking-widest text-[var(--text-muted)] bg-[var(--bg-card)] border-b border-[var(--border-subtle)]">
                   Meal Type
                 </th>
                 {dayNames.map((dayName, idx) => {
@@ -822,7 +856,7 @@ function WeekViewContent() {
             </thead>
             <tbody>
               {/* Dinner Row */}
-              <tr className="hover:bg-gray-50 transition-colors">
+              <tr className="hover:bg-[var(--bg-secondary)] transition-colors">
                 <td className="p-4 font-bold text-[var(--text-primary)] border-b border-[var(--border-subtle)] flex items-center gap-2">
                   <span className="text-lg">🍽️</span>
                   <span>Dinner</span>
@@ -836,16 +870,16 @@ function WeekViewContent() {
                   const made = dinnerSlot?.actual?.made;
 
                   const getBgColor = (m: any) => {
-                    if (m === true) return 'bg-green-50 border-l-[var(--accent-sage)]';
-                    if (m === 'outside_meal') return 'bg-amber-50 border-l-amber-400';
-                    if (m === 'freezer_backup') return 'bg-blue-50 border-l-blue-400';
-                    if (m === 'leftovers') return 'bg-purple-50 border-l-purple-400';
-                    if (m === false || (isPast && m === undefined)) return 'bg-red-50 border-l-red-300';
-                    return 'hover:bg-gray-50';
+                    if (m === true) return 'bg-[var(--status-followed)] text-[var(--status-followed-text)] border-l-[var(--status-followed-text)]';
+                    if (m === 'outside_meal') return 'bg-[var(--status-ate-out)] text-[var(--status-ate-out-text)] border-l-[var(--status-ate-out-text)]';
+                    if (m === 'freezer_backup') return 'bg-[var(--status-backup)] text-[var(--status-backup-text)] border-l-[var(--status-backup-text)]';
+                    if (m === 'leftovers') return 'bg-[var(--status-leftovers)] text-[var(--status-leftovers-text)] border-l-[var(--status-leftovers-text)]';
+                    if (m === false || (isPast && m === undefined)) return 'bg-[var(--status-skipped)] text-[var(--status-skipped-text)] border-l-[var(--status-skipped-text)]';
+                    return 'hover:bg-[var(--bg-secondary)]';
                   };
 
                   const bgColorClass = getBgColor(made);
-                  const isColored = bgColorClass !== 'hover:bg-gray-50';
+                  const isColored = bgColorClass !== 'hover:bg-[var(--bg-secondary)]';
 
                   return (
                     <td key={day} className={`p-4 text-sm border-b border-l border-[var(--border-subtle)] transition-all duration-300 ${isColored
@@ -886,6 +920,15 @@ function WeekViewContent() {
                               ) : (
                                 getMealName(dinnerSlot)
                               )}
+                              {dinnerSlot?.resolved?.recipe_id && !viewState.editMode && (
+                                <button
+                                  onClick={() => handleOpenFocusMode(dinnerSlot.resolved!.recipe_id, getMealName(dinnerSlot))}
+                                  className="ml-2 inline-flex items-center justify-center p-1 rounded-full bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-white transition-all transform hover:scale-110 active:scale-95"
+                                  title="Start Focus Mode"
+                                >
+                                  <ChefHat size={12} />
+                                </button>
+                              )}
                             </span>
                             {getFeedbackBadge(dinnerSlot?.actual?.kids_feedback || dinnerSlot?.actual?.feedback, dinnerSlot?.actual?.made, dinnerSlot?.actual?.needs_fix)}
                           </div>
@@ -916,7 +959,7 @@ function WeekViewContent() {
               </tr>
 
               {/* Kids Lunch Row */}
-              <tr className="hover:bg-gray-50 transition-colors">
+              <tr className="hover:bg-[var(--bg-secondary)] transition-colors">
                 <td className="p-4 font-bold text-[var(--text-primary)] border-b border-[var(--border-subtle)]">
                   <span className="mr-2">🥪</span>
                   <span>Kids Lunch</span>
@@ -930,11 +973,11 @@ function WeekViewContent() {
                   const made = kidsLunchSlot?.actual?.made;
 
                   const getBgColor = (m: any) => {
-                    if (m === true) return 'bg-green-50';
-                    if (m === 'outside_meal') return 'bg-amber-50';
-                    if (m === 'freezer_backup') return 'bg-blue-50';
-                    if (m === 'leftovers') return 'bg-purple-50';
-                    if (m === false || (isPast && m === undefined)) return 'bg-red-50';
+                    if (m === true) return 'bg-[var(--status-followed)] text-[var(--status-followed-text)]';
+                    if (m === 'outside_meal') return 'bg-[var(--status-ate-out)] text-[var(--status-ate-out-text)]';
+                    if (m === 'freezer_backup') return 'bg-[var(--status-backup)] text-[var(--status-backup-text)]';
+                    if (m === 'leftovers') return 'bg-[var(--status-leftovers)] text-[var(--status-leftovers-text)]';
+                    if (m === false || (isPast && m === undefined)) return 'bg-[var(--status-skipped)] text-[var(--status-skipped-text)]';
                     return '';
                   };
 
@@ -957,9 +1000,21 @@ function WeekViewContent() {
                         />
                         <div className="flex-1">
                           <div className="flex justify-between items-start gap-2">
-                            <span className="text-gray-600 italic line-clamp-2" title={getMealName(kidsLunchSlot, 'Leftovers')}>
+                            <span className="text-[var(--text-muted)] italic line-clamp-2" title={getMealName(kidsLunchSlot, 'Leftovers')}>
                               {getMealName(kidsLunchSlot, 'Leftovers')}
                             </span>
+                            {kidsLunchSlot?.resolved?.recipe_id && !viewState.editMode && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleOpenFocusMode(kidsLunchSlot.resolved!.recipe_id!, getMealName(kidsLunchSlot));
+                                }}
+                                className="inline-flex items-center justify-center p-1 rounded-full bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-white transition-all transform hover:scale-110 active:scale-95"
+                                title="Start Focus Mode"
+                              >
+                                <ChefHat size={12} />
+                              </button>
+                            )}
                             {getFeedbackBadge(kidsLunchSlot?.actual?.actual_meal, kidsLunchSlot?.actual?.made, kidsLunchSlot?.actual?.needs_fix)}
                           </div>
                           {!viewState.isSwapMode && viewState.editMode && (
@@ -989,7 +1044,7 @@ function WeekViewContent() {
               </tr>
 
               {/* School Snack Row */}
-              <tr className="hover:bg-gray-50 transition-colors">
+              <tr className="hover:bg-[var(--bg-secondary)] transition-colors">
                 <td className="p-4 font-bold text-[var(--text-primary)] border-b border-[var(--border-subtle)]">
                   <span className="mr-2">🎒</span>
                   <span>School Snack</span>
@@ -1004,11 +1059,11 @@ function WeekViewContent() {
                   const made = schoolSnackSlot?.actual?.made;
 
                   const getBgColor = (m: any) => {
-                    if (m === true) return 'bg-green-50';
-                    if (m === 'outside_meal') return 'bg-amber-50';
-                    if (m === 'freezer_backup') return 'bg-blue-50';
-                    if (m === 'leftovers') return 'bg-purple-50';
-                    if (!isWeekend && (m === false || (isPast && m === undefined))) return 'bg-red-50';
+                    if (m === true) return 'bg-[var(--status-followed)] text-[var(--status-followed-text)]';
+                    if (m === 'outside_meal') return 'bg-[var(--status-ate-out)] text-[var(--status-ate-out-text)]';
+                    if (m === 'freezer_backup') return 'bg-[var(--status-backup)] text-[var(--status-backup-text)]';
+                    if (m === 'leftovers') return 'bg-[var(--status-leftovers)] text-[var(--status-leftovers-text)]';
+                    if (!isWeekend && (m === false || (isPast && m === undefined))) return 'bg-[var(--status-skipped)] text-[var(--status-skipped-text)]';
                     return '';
                   };
 
@@ -1032,7 +1087,7 @@ function WeekViewContent() {
                           />
                           <div className="flex-1">
                             <div className="flex justify-between items-start gap-2">
-                              <span className="text-gray-600 font-mono text-xs line-clamp-2" title={getMealName(schoolSnackSlot, 'TBD')}>
+                              <span className="text-[var(--text-muted)] font-mono text-xs line-clamp-2" title={getMealName(schoolSnackSlot, 'TBD')}>
                                 {getMealName(schoolSnackSlot, 'TBD')}
                               </span>
                               {getFeedbackBadge(schoolSnackSlot?.actual?.actual_meal, schoolSnackSlot?.actual?.made, schoolSnackSlot?.actual?.needs_fix)}
@@ -1067,7 +1122,7 @@ function WeekViewContent() {
               </tr>
 
               {/* Home Snack Row */}
-              <tr className="hover:bg-gray-50 transition-colors">
+              <tr className="hover:bg-[var(--bg-secondary)] transition-colors">
                 <td className="p-4 font-bold text-[var(--text-primary)] border-b border-[var(--border-subtle)]">
                   <span className="mr-2">🏠</span>
                   <span>Home Snack</span>
@@ -1082,11 +1137,11 @@ function WeekViewContent() {
                   const made = homeSnackSlot?.actual?.made;
 
                   const getBgColor = (m: any) => {
-                    if (m === true) return 'bg-green-50';
-                    if (m === 'outside_meal') return 'bg-amber-50';
-                    if (m === 'freezer_backup') return 'bg-blue-50';
-                    if (m === 'leftovers') return 'bg-purple-50';
-                    if (!isWeekend && (m === false || (isPast && m === undefined))) return 'bg-red-50';
+                    if (m === true) return 'bg-[var(--status-followed)] text-[var(--status-followed-text)]';
+                    if (m === 'outside_meal') return 'bg-[var(--status-ate-out)] text-[var(--status-ate-out-text)]';
+                    if (m === 'freezer_backup') return 'bg-[var(--status-backup)] text-[var(--status-backup-text)]';
+                    if (m === 'leftovers') return 'bg-[var(--status-leftovers)] text-[var(--status-leftovers-text)]';
+                    if (!isWeekend && (m === false || (isPast && m === undefined))) return 'bg-[var(--status-skipped)] text-[var(--status-skipped-text)]';
                     return '';
                   };
 
@@ -1110,7 +1165,7 @@ function WeekViewContent() {
                           />
                           <div className="flex-1">
                             <div className="flex justify-between items-start gap-2">
-                              <span className="text-gray-600 font-mono text-xs line-clamp-2" title={getMealName(homeSnackSlot, 'TBD')}>
+                              <span className="text-[var(--text-muted)] font-mono text-xs line-clamp-2" title={getMealName(homeSnackSlot, 'TBD')}>
                                 {getMealName(homeSnackSlot, 'TBD')}
                               </span>
                               {getFeedbackBadge(homeSnackSlot?.actual?.actual_meal, homeSnackSlot?.actual?.made, homeSnackSlot?.actual?.needs_fix)}
@@ -1145,7 +1200,7 @@ function WeekViewContent() {
               </tr>
 
               {/* Adult Lunch Row */}
-              <tr className="hover:bg-gray-50 transition-colors">
+              <tr className="hover:bg-[var(--bg-secondary)] transition-colors">
                 <td className="p-4 font-bold text-[var(--text-primary)] border-b border-[var(--border-subtle)]">
                   <span className="mr-2">☕</span>
                   <span>Adult Lunch</span>
@@ -1159,11 +1214,11 @@ function WeekViewContent() {
                   const made = adultLunchSlot?.actual?.made;
 
                   const getBgColor = (m: any) => {
-                    if (m === true) return 'bg-green-50';
-                    if (m === 'outside_meal') return 'bg-amber-50';
-                    if (m === 'freezer_backup') return 'bg-blue-50';
-                    if (m === 'leftovers') return 'bg-purple-50';
-                    if (m === false || (isPast && m === undefined)) return 'bg-red-50';
+                    if (m === true) return 'bg-[var(--status-followed)] text-[var(--status-followed-text)]';
+                    if (m === 'outside_meal') return 'bg-[var(--status-ate-out)] text-[var(--status-ate-out-text)]';
+                    if (m === 'freezer_backup') return 'bg-[var(--status-backup)] text-[var(--status-backup-text)]';
+                    if (m === 'leftovers') return 'bg-[var(--status-leftovers)] text-[var(--status-leftovers-text)]';
+                    if (m === false || (isPast && m === undefined)) return 'bg-[var(--status-skipped)] text-[var(--status-skipped-text)]';
                     return '';
                   };
 
@@ -1186,7 +1241,7 @@ function WeekViewContent() {
                         />
                         <div className="flex-1">
                           <div className="flex justify-between items-start gap-2">
-                            <span className="text-gray-500 italic text-xs line-clamp-2" title={getMealName(adultLunchSlot, 'Leftovers')}>
+                            <span className="text-[var(--text-muted)] italic text-xs line-clamp-2" title={getMealName(adultLunchSlot, 'Leftovers')}>
                               {getMealName(adultLunchSlot, 'Leftovers')}
                             </span>
                             {getFeedbackBadge(adultLunchSlot?.actual?.actual_meal, adultLunchSlot?.actual?.made, adultLunchSlot?.actual?.needs_fix)}
@@ -1222,30 +1277,30 @@ function WeekViewContent() {
 
         {/* Weekly Stats Summary */}
         <section className="mt-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-          <div className="card p-4 bg-green-50/50 border-green-100 flex flex-col items-center text-center">
+          <div className="card p-4 bg-[var(--status-followed)] border-[var(--status-followed-text)]/20 flex flex-col items-center text-center shadow-md">
             <span className="text-2xl mb-1">✅</span>
-            <span className="text-2xl font-black text-green-700">{stats.followed}</span>
-            <span className="text-[10px] font-black uppercase tracking-widest text-green-600/70">Followed Plan</span>
+            <span className="text-2xl font-black text-[var(--status-followed-text)]">{stats.followed}</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-[var(--status-followed-text)] opacity-70">Followed Plan</span>
           </div>
-          <div className="card p-4 bg-amber-50/50 border-amber-100 flex flex-col items-center text-center">
+          <div className="card p-4 bg-[var(--status-ate-out)] border-[var(--status-ate-out-text)]/20 flex flex-col items-center text-center shadow-md">
             <span className="text-2xl mb-1">🍽️</span>
-            <span className="text-2xl font-black text-amber-700">{stats.ateOut}</span>
-            <span className="text-[10px] font-black uppercase tracking-widest text-amber-600/70">Ate Out</span>
+            <span className="text-2xl font-black text-[var(--status-ate-out-text)]">{stats.ateOut}</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-[var(--status-ate-out-text)] opacity-70">Ate Out</span>
           </div>
-          <div className="card p-4 bg-red-50/50 border-red-100 flex flex-col items-center text-center">
+          <div className="card p-4 bg-[var(--status-skipped)] border-[var(--status-skipped-text)]/20 flex flex-col items-center text-center shadow-md">
             <span className="text-2xl mb-1">🏃‍♂️</span>
-            <span className="text-2xl font-black text-red-700">{stats.skipped}</span>
-            <span className="text-[10px] font-black uppercase tracking-widest text-red-600/70">Skipped</span>
+            <span className="text-2xl font-black text-[var(--status-skipped-text)]">{stats.skipped}</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-[var(--status-skipped-text)] opacity-70">Skipped</span>
           </div>
-          <div className="card p-4 bg-blue-50/50 border-blue-100 flex flex-col items-center text-center">
+          <div className="card p-4 bg-[var(--status-backup)] border-[var(--status-backup-text)]/20 flex flex-col items-center text-center shadow-md">
             <span className="text-2xl mb-1">🧊</span>
-            <span className="text-2xl font-black text-blue-700">{stats.backup}</span>
-            <span className="text-[10px] font-black uppercase tracking-widest text-blue-600/70">Backup Used</span>
+            <span className="text-2xl font-black text-[var(--status-backup-text)]">{stats.backup}</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-[var(--status-backup-text)] opacity-70">Backup Used</span>
           </div>
-          <div className="card p-4 bg-purple-50/50 border-purple-100 flex flex-col items-center text-center">
+          <div className="card p-4 bg-[var(--status-leftovers)] border-[var(--status-leftovers-text)]/20 flex flex-col items-center text-center shadow-md">
             <span className="text-2xl mb-1">🥗</span>
-            <span className="text-2xl font-black text-purple-700">{stats.leftovers}</span>
-            <span className="text-[10px] font-black uppercase tracking-widest text-purple-600/70">Leftovers</span>
+            <span className="text-2xl font-black text-[var(--status-leftovers-text)]">{stats.leftovers}</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-[var(--status-leftovers-text)] opacity-70">Leftovers</span>
           </div>
         </section>
       </div>

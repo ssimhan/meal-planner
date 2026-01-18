@@ -52,3 +52,5 @@ instructions: 'Preheat the oven to 375 degrees F (190 degrees C)
   inserted into the center comes out clean, about 25 minutes. Remove from the oven
   and cool for 10 minutes in the pan before removing to a wire rack to cool completely.'
 no_chop_compatible: false
+tags:
+- oven

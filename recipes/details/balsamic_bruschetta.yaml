@@ -53,3 +53,5 @@ instructions: 'Gather all ingredients.
 
   Serve immediately and enjoy!'
 no_chop_compatible: false
+tags:
+- oven

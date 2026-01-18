@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { getStatus, getInventory, generatePlan, createWeek, confirmVeg, logMeal, getRecipes, replan, WorkflowStatus } from '@/lib/api';
+import { getStatus, getInventory, generatePlan, createWeek, confirmVeg, logMeal, getRecipes, replan, WorkflowStatus, getRecipeContent } from '@/lib/api';
 import type { RecipeListItem, WorkflowStatus as WorkflowStatusType, InventoryResponse } from '@/types';
 import AppLayout from '@/components/AppLayout';
 import Skeleton from '@/components/Skeleton';
@@ -11,14 +11,16 @@ import Card from '@/components/Card';
 import FeedbackButtons from '@/components/FeedbackButtons';
 import PrepTaskList from '@/components/PrepTaskList';
 import NightlyCheckinBanner from '@/components/NightlyCheckinBanner';
+import ResumePlanningBanner from '@/components/ResumePlanningBanner';
 import PendingRecipesIndicator from '@/components/PendingRecipesIndicator';
 import PendingRecipesListModal from '@/components/PendingRecipesListModal';
 import BrainDump from '@/components/dashboard/BrainDump';
 import StatCard from '@/components/dashboard/StatCard';
 import TimelineView from '@/components/dashboard/TimelineView';
-import MealLogFlow from '@/components/MealLogFlow';
 import { useToast } from '@/context/ToastContext';
 import { logout } from './login/actions';
+import StepByStepCooking from '@/components/StepByStepCooking';
+import { ChefHat } from 'lucide-react';
 
 function DraftPlanSummary({ wizardState }: { wizardState: any }) {
   if (!wizardState?.selections || wizardState.selections.length === 0) return null;
@@ -62,6 +64,8 @@ function DashboardContent() {
   const [pendingModalOpen, setPendingModalOpen] = useState(false);
   const [loggingModalOpen, setLoggingModalOpen] = useState(false);
   const [loggingModalData, setLoggingModalData] = useState<any>(null);
+  const [focusModeOpen, setFocusModeOpen] = useState(false);
+  const [focusRecipe, setFocusRecipe] = useState<any>(null);
 
   // Synchronize state with URL param
   useEffect(() => {
@@ -276,6 +280,32 @@ function DashboardContent() {
     }
   }
 
+  const handleOpenFocusMode = async (recipeId: string, recipeName: string) => {
+    try {
+      setUi(prev => ({ ...prev, actionLoading: true }));
+      const content = await getRecipeContent(recipeId);
+
+      // Normalize instructions if they are a single string
+      let instructions = content.instructions;
+      if (typeof instructions === 'string') {
+        instructions = instructions.split('\n').filter((l: string) => l.trim().length > 0);
+      }
+
+      setFocusRecipe({
+        name: content.name || recipeName,
+        ingredients: content.ingredients || [],
+        prepSteps: [], // Could be extracted if available
+        instructions: instructions || []
+      });
+      setFocusModeOpen(true);
+    } catch (err) {
+      showToast('Failed to load recipe details.', 'error');
+      console.error(err);
+    } finally {
+      setUi(prev => ({ ...prev, actionLoading: false }));
+    }
+  };
+
   const getDisplayName = (planned: string, actual?: string) => {
     if (!actual) return planned;
     const isEmoji = ['❤️', '👍', '😐', '👎', '❌'].some(emoji => actual.includes(emoji));
@@ -373,6 +403,7 @@ function DashboardContent() {
       status: status.today_lunch?.kids_lunch_made !== undefined ? (status.today_lunch?.kids_lunch_made ? 'done' : 'skipped') : undefined,
       logFlowProps: isLoggingEnabled ? kidsLunchProps : undefined,
       onAction: () => isLoggingEnabled && handleOpenLoggingModal(kidsLunchProps),
+      onFocus: status.today_lunch?.recipe_id ? () => handleOpenFocusMode(status.today_lunch!.recipe_id!, status.today_lunch!.recipe_name || "Kids Lunch") : undefined,
       feedbackProps: {
         feedbackType: "kids_lunch",
         currentFeedback: status.today_lunch?.kids_lunch_feedback,
@@ -437,7 +468,8 @@ function DashboardContent() {
       icon: "🍽️",
       status: status.today_dinner?.made !== undefined ? (status.today_dinner.made === true ? 'done' : 'skipped') : undefined,
       logFlowProps: isLoggingEnabled ? dinnerProps : undefined,
-      onAction: () => isLoggingEnabled && handleOpenLoggingModal(dinnerProps)
+      onAction: () => isLoggingEnabled && handleOpenLoggingModal(dinnerProps),
+      onFocus: status.today_dinner?.recipe_id ? () => handleOpenFocusMode(status.today_dinner!.recipe_id, status.today_dinner!.recipe_id.replace(/_/g, ' ')) : undefined
     });
   }
 
@@ -459,6 +491,7 @@ function DashboardContent() {
             )}
           </div>
           {status && <NightlyCheckinBanner status={status} />}
+          {status && <ResumePlanningBanner status={status} />}
 
 
         </header>
@@ -469,11 +502,22 @@ function DashboardContent() {
 
             {/* 1. Dinner Card */}
             <StatCard label="Dinner Tonight" className="relative group transition-all duration-500 hover:ring-2 hover:ring-[var(--accent-primary)]/20">
-              <div className="text-xl font-bold text-[var(--text-primary)] mb-2 line-clamp-2">
-                {status?.today_dinner?.recipe_id ? getDisplayName(
-                  status.today_dinner.recipe_id.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
-                  status.today_dinner.actual_meal
-                ) : 'Nothing planned'}
+              <div className="flex justify-between items-start mb-2">
+                <div className="text-xl font-bold text-[var(--text-primary)] line-clamp-2 pr-2">
+                  {status?.today_dinner?.recipe_id ? getDisplayName(
+                    status.today_dinner.recipe_id.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
+                    status.today_dinner.actual_meal
+                  ) : 'Nothing planned'}
+                </div>
+                {status?.today_dinner?.recipe_id && (
+                  <button
+                    onClick={() => status?.today_dinner?.recipe_id && handleOpenFocusMode(status.today_dinner.recipe_id, status.today_dinner.recipe_id.replace(/_/g, ' '))}
+                    className="p-2 rounded-full bg-[var(--accent-primary)] text-white shadow-lg shadow-[var(--accent-primary)]/20 hover:scale-110 active:scale-95 transition-all"
+                    title="Start Focus Mode"
+                  >
+                    <ChefHat size={16} />
+                  </button>
+                )}
               </div>
               {status?.today_dinner && (
                 <span className="inline-block text-[10px] px-2 py-1 rounded-full bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 text-[var(--accent-primary)] font-bold">
@@ -515,7 +559,7 @@ function DashboardContent() {
                 >
                   {status?.available_weeks?.map(w => (
                     <option key={w.week_of} value={w.week_of} disabled={!w.is_selectable}>
-                      {w.week_of} {w.status === 'archived' ? '(Archived)' : ''}
+                      {w.week_of} {w.status === 'archived' ? '(Archived)' : w.status === 'planning' ? '(In Progress)' : w.status === 'active' ? '(Active)' : ''}
                     </option>
                   ))}
                 </select>
@@ -552,30 +596,6 @@ function DashboardContent() {
                 <p className="text-sm text-[var(--text-muted)] italic">No prep tasks found for this week.</p>
               )}
             </div>
-          )}
-
-          {/* Next Steps / Farmers Market Prompt */}
-          {!(status?.state === 'active' || status?.state === 'waiting_for_checkin') && status?.state !== 'archived' && (
-            <section className="card md:col-span-2">
-              <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--text-muted)] mb-4">
-                {status?.state === 'awaiting_farmers_market' || status?.state === 'ready_to_plan' ? 'Action Required' : 'Next Steps'}
-              </h2>
-              <div className={`p-4 bg-[var(--bg-secondary)] border-l-4 ${status?.state === 'awaiting_farmers_market' || status?.state === 'ready_to_plan' ? 'border-[var(--accent-sage)]' : 'border-[var(--accent-terracotta)]'}`}>
-                {status?.state === 'ready_to_plan' ? (
-                  <div>
-                    <p>✓ Your planning steps are underway. <Link href={`/plan?week=${status.week_of}`} className="text-[var(--accent-sage)] underline font-bold">Return to the Wizard</Link> to generate your week plan!</p>
-                    {status.week_data?.wizard_state && <DraftPlanSummary wizardState={status.week_data.wizard_state} />}
-                  </div>
-                ) : status?.state === 'awaiting_farmers_market' ? (
-                  <div>
-                    <p>Time to start your week! Use the <Link href={`/plan?week=${status.week_of}`} className="text-[var(--accent-sage)] underline font-bold">Planning Wizard</Link> to review history, check inventory, and log your market veggies.</p>
-                    {status.week_data?.wizard_state && <DraftPlanSummary wizardState={status.week_data.wizard_state} />}
-                  </div>
-                ) : (
-                  <p>Start a new week to begin the planning process.</p>
-                )}
-              </div>
-            </section>
           )}
 
           {/* Archived Message */}
@@ -619,6 +639,13 @@ function DashboardContent() {
           <MealLogFlow
             {...loggingModalData}
             recipes={recipes}
+          />
+        )}
+
+        {focusModeOpen && focusRecipe && (
+          <StepByStepCooking
+            recipe={focusRecipe}
+            onClose={() => setFocusModeOpen(false)}
           />
         )}
 

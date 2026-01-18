@@ -62,3 +62,6 @@ instructions: 'Cook the sweet potatoes.
   Serve: Slice the sweet potatoes in half and top them with the slaw. Drizzle with
   the Thai peanut butter sauce and sprinkle with chopped peanuts.'
 no_chop_compatible: false
+tags:
+- asian
+- stovetop

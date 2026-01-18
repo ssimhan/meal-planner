@@ -6,6 +6,18 @@ from api.utils.storage import supabase
 def require_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
+        # Support for disabling auth in local development
+        if os.environ.get('DISABLE_AUTH') == 'true':
+            print("AUTH DISABLED: Providing mock user context")
+            request.household_id = os.environ.get('DEFAULT_HOUSEHOLD_ID', "00000000-0000-0000-0000-000000000001")
+            class MockUser:
+                id = "00000000-0000-0000-0000-000000000000"
+                email = "local@example.com"
+            request.user = MockUser()
+            return f(*args, **kwargs)
+        
+        print(f"AUTH CHECK: Checking headers for {request.path}")
+
         if not supabase:
             # Fallback for when SUPABASE is not configured yet
             # In production, this should always be configured

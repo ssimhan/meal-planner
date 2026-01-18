@@ -83,3 +83,6 @@ instructions: 'The quantities in this are for 4-5 adult servings. Plan for two d
 
   Serve hot and enjoy! Store refrigerated for up to 3-4 days.'
 no_chop_compatible: false
+tags:
+- dinner
+- instant_pot

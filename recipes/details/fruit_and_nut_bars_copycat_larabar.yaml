@@ -75,3 +75,5 @@ instructions: 'Below is an overview of this recipe so you know what to expect. S
 
   Wrap in plastic wrap and store in a bag or store unwrapped bars in an airtight container.'
 no_chop_compatible: false
+tags:
+- instant_pot

@@ -25,29 +25,81 @@
   --stock-good: #5c7f67;
   --stock-med: #d4a373;
   --stock-low: #bc6c25;
+
+  /* Status Colors (Light) */
+  --status-followed: #E8F5E9;
+  --status-followed-text: #2E7D32;
+  --status-ate-out: #FFF8E1;
+  --status-ate-out-text: #F57F17;
+  --status-backup: #E3F2FD;
+  --status-backup-text: #1565C0;
+  --status-skipped: #FFEBEE;
+  --status-skipped-text: #C62828;
+  --status-leftovers: #F3E5F5;
+  --status-leftovers-text: #6A1B9A;
+
+  /* Category Colors (Light) - Toned down versions of the above */
+  --cat-produce: #E8F5E9;
+  --cat-produce-text: #2E7D32;
+  --cat-leftovers: #F3E5F5;
+  --cat-leftovers-text: #6A1B9A;
+  --cat-meat: #FFEBEE;
+  --cat-meat-text: #C62828;
+  --cat-dairy: #E3F2FD;
+  --cat-dairy-text: #1565C0;
+  --cat-grains: #FFF8E1;
+  --cat-grains-text: #F57F17;
+  --cat-pantry: #f4f1ea;
+  --cat-pantry-text: #6e645a;
 }
 
 /* Earth Tones Theme - Dark Mode */
 [data-theme="dark"] {
-  --bg-body: #1c1917;
-  --bg-sidebar: #292524;
-  --bg-card: #2e2a27;
-  --text-main: #e7e5e4;
-  --text-muted: #a8a29e;
-  --accent-primary: #8eb29c;
-  --accent-sage: #8eb29c;
-  --accent-gold: #e2c08d;
-  --accent-terracotta: #d6b39a;
-  --accent-hover: #a3c4b0;
-  --accent-secondary: #d6b39a;
-  --border-color: #44403c;
-  --border-subtle: #3a3633;
-  --shadow: rgba(0, 0, 0, 0.3);
-  --glass-bg: rgba(46, 42, 39, 0.8);
-  --bg-secondary: #24211e;
-  --nav-hover: rgba(142, 178, 156, 0.1);
-  --nav-active-bg: #44403c;
-  --nav-active-text: #e7e5e4;
+  --bg-body: #14110E;
+  --bg-sidebar: #1E1A16;
+  --bg-card: #1E1A16;
+  --text-main: #EDE8E2;
+  --text-muted: #A89F94;
+  --accent-primary: #6F8F75;
+  --accent-sage: #6F8F75;
+  --accent-gold: #C78F3A;
+  --accent-terracotta: #B86A45;
+  --accent-hover: #86A98C;
+  --accent-secondary: #B86A45;
+  --border-color: #2F2924;
+  --border-subtle: #2F2924;
+  --shadow: rgba(0, 0, 0, 0.4);
+  --glass-bg: rgba(30, 26, 22, 0.85);
+  --bg-secondary: #26221E;
+  --nav-hover: rgba(111, 143, 117, 0.08);
+  --nav-active-bg: #2F2924;
+  --nav-active-text: #EDE8E2;
+
+  /* Status Colors (Dark) */
+  --status-followed: #4F8A65;
+  --status-followed-text: #EDE8E2;
+  --status-ate-out: #D4A84A;
+  --status-ate-out-text: #14110E;
+  --status-backup: #4E6F7D;
+  --status-backup-text: #EDE8E2;
+  --status-skipped: #8C3F3F;
+  --status-skipped-text: #EDE8E2;
+  --status-leftovers: #6E5F7A;
+  --status-leftovers-text: #EDE8E2;
+
+  /* Category Colors (Dark) - Deep tones provided by user */
+  --cat-produce: #4F8A65;
+  --cat-produce-text: #EDE8E2;
+  --cat-leftovers: #6E5F7A;
+  --cat-leftovers-text: #EDE8E2;
+  --cat-meat: #8C3F3F;
+  --cat-meat-text: #EDE8E2;
+  --cat-dairy: #4E6F7D;
+  --cat-dairy-text: #EDE8E2;
+  --cat-grains: #D4A84A;
+  --cat-grains-text: #14110E;
+  --cat-pantry: #2F2924;
+  --cat-pantry-text: #A89F94;
 }
 
 @layer base {
@@ -103,6 +155,35 @@
 
   .btn-secondary:hover {
     @apply bg-[var(--bg-sidebar)] border-[var(--text-muted)]/30;
+  }
+
+  .btn-premium {
+    position: relative;
+    padding: 0.75rem 1.5rem;
+    color: white;
+    background-color: var(--accent-sage);
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 14px 0 rgba(92, 127, 103, 0.39);
+    /* Transition handled by base styles, but ensuring properties */
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+
+  .btn-premium:hover {
+    box-shadow: 0 6px 20px rgba(92, 127, 103, 0.23);
+    filter: brightness(1.1);
+    transform: scale(1.05);
+  }
+
+  .btn-premium:active {
+    transform: scale(0.95);
   }
 
   /* Animations */

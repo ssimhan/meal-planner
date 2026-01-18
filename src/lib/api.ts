@@ -25,6 +25,11 @@ import type {
  */
 async function handleResponse<T>(res: Response, fallbackMessage: string): Promise<T> {
     if (res.status === 401) {
+        // Support for disabling auth in local development
+        if (process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true') {
+            console.warn('Auth disabled: Ignoring 401 error');
+            return res.json();
+        }
         // Redirect to login if unauthorized
         if (typeof window !== 'undefined') {
             window.location.href = '/login?error=Session expired. Please login again.';

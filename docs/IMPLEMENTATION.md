@@ -124,41 +124,48 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [x] Ingredient standardization (category sorting + spice quantity stripping)
   - [x] Deterministic rewrite & CI check mode
 
-### Phase 28: General Workflow and Frontend Clean up
+### Phase 28: General Workflow and Frontend Clean up ✅ Complete
 **Goal:** Standardize the visual system, fix inventory/shopping friction, and polish workflow persistence.
 > **Note:** I will be adding other bugs and workflow edits.
 
-- **Block 1: Global Visual Polish & Coherence (~3 hrs)**
-  - [ ] **Dark Mode:** Improve legibility and contrast across all card components (currently too dark/low contrast).
-  - [ ] **Unified Styling:** Standardize buttons, use of color, animations, and shadows for consistency.
-  - [ ] **Premium Buttons:** Update meal plan page buttons to match the new high-fidelity "Review" button styling from the recipe index.
+- **Block 1: Global Visual Polish & Coherence (~3 hrs) ✅ Complete**
+  - [x] **Dark Mode:** Improve legibility and contrast across all card components (currently too dark/low contrast).
+  - [x] **Unified Styling:** Standardize buttons, use of color, animations, and shadows for consistency.
+  - [x] **Premium Buttons:** Update meal plan page buttons to match the new high-fidelity "Review" button styling from the recipe index.
 
-- **Block 2: Inventory & Shopping Stability (~4 hrs)**
-  - [ ] **Shop Page:** Fix broken store categorization.
-  - [ ] **Alphabetical Ordering:** Sort all inventory lists alphabetically.
-  - [ ] **Deduplication:** Automatically consolidate items when duplicates are found.
-  - [ ] **Move Logic:** Implement ability to move items from "General" to specific categories.
-  - [ ] **Immediate Sync:** Ensure added items appear immediately in the correct category (Leftovers, Freezer, Fridge, etc.).
+- **Block 2: Inventory & Shopping Stability (~4 hrs) ✅ Complete**
+  - [x] **Shop Page:** Fix broken store categorization.
+  - [x] **Alphabetical Ordering:** Sort all inventory lists alphabetically.
+  - [x] **Deduplication:** Automatically consolidate items when duplicates are found.
+  - [x] **Move Logic:** Implement ability to move items from "General" to specific categories.
+  - [x] **Immediate Sync:** Ensure added items appear immediately in the correct category (Leftovers, Freezer, Fridge, etc.).
 
-- **Block 3: Recipe Experience & Data Cleanup (~4 hrs)**
-  - [ ] **Focus Mode Integration:** Link `StepByStepCooking` component from the Dashboard and Meal Plan pages where relevant.
-  - [ ] **Tag Migration:** Convert legacy notes (e.g., "instant pot", "stovetop", source names) into the standardized tag system.
-  - [ ] **Pending Recipe Workflow:** Implement logic to push recipes mentioned in Brain Dump/Quick Add to the Recipe Index for batch processing.
+- **Block 3: Recipe Experience & Data Cleanup (~4 hrs) ✅ Complete**
+  - [x] **Focus Mode Integration:** Link `StepByStepCooking` component from the Dashboard and Meal Plan pages where relevant.
+  - [x] **Tag Migration:** Convert legacy notes (e.g., "instant pot", "stovetop", source names) into the standardized tag system.
+  - [x] **Pending Recipe Workflow:** Implement logic to push recipes mentioned in Brain Dump/Quick Add to the Recipe Index for batch processing.
 
-- **Block 4: Advanced Planning Persistence (~3 hrs)**
-  - [ ] **Infrastructure:** Pause state infrastructure (localStorage/Supabase).
-  - [ ] **Resume UI:** Resume planning UI with banner/modal triggered on login/refresh.
-  - [ ] **Wizard Inventory Upgrades:** 
-    - [ ] Separate sections for meals vs. veggies in wizard inventory.
-    - [ ] Add freezer inventory option directly in wizard.
-    - [ ] Specific quantity inputs (servings for meals, count for produce).
+- **Block 4: Advanced Planning Persistence (~3 hrs) ✅ Complete**
+  - [x] **Infrastructure:** Pause state infrastructure (localStorage/Supabase).
+  - [x] **Resume UI:** Resume planning UI with banner/modal triggered on login/refresh.
+  - [x] **Wizard Inventory Upgrades:** 
+    - [x] Separate sections for meals vs. veggies in wizard inventory.
+    - [x] Add freezer inventory option directly in wizard.
+    - [x] Specific quantity inputs (servings for meals, count for produce).
 
-- **Block 5: Brain Dump & Household Communication (~3 hrs)**
+- **Block 6: Global Theme Refactor (~2 hrs) ✅ Complete**
+  - [x] **Audit:** Review codebase for hardcoded hex values and Tailwind color utility classes.
+  - [x] **Refactor:** Replace hardcoded colors with `globals.css` theme variables to ensure dark mode consistency.
+  - [x] **Verify:** Test key screens (Dashboard, Inventory, Meal Plan) in both light and dark modes.
+
+### Phase 29: Household Communication & Persistence
+**Goal:** Enhance multi-user coordination and note-taking.
+- **Block 1: Brain Dump & Household Communication (~3 hrs)**
   - [ ] **Persistence:** Define storage and API for Brain Dump notes (Supabase `household_notes` or similar).
   - [ ] **Dashboard Integration:** Display persistent Brain Dump notes on the dashboard for multi-adult coordination.
   - [ ] **Note Management:** Implement full CRUD (View, Edit, Clear) for Brain Dump notes.
 
-### Phase 29: User Authentication (The "Family Gate")
+### Phase 30: User Authentication (The "Family Gate")
 **Goal:** Secure the application for single-household access via Supabase.
 - **Block 1: Infrastructure & Schema (~3 hrs)**
   - [ ] Supabase Auth setup
@@ -171,7 +178,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [ ] Auth caching optimization
   - [ ] Empty states and onboarding
 
-### Phase 30: Analytics & Future Features
+### Phase 31: Analytics & Future Features
 **Goal:** Lower-priority enhancements for power users.
 - **Block 1: Member Management (~2 hrs)**
   - [ ] View household members in Settings
@@ -302,10 +309,6 @@ Declining energy model: Monday (high) → Friday (zero prep)
     - ✅ **Meal Scope Granularity:** Customize "Included Meals" (Dinner/Lunch/Snack) per day of the week.
     - ✅ **Prep Time Granularity:** Select specific prep time slots (Morning, Afternoon, Before Dinner, After Dinner) per day of the week.
 
-### Phase 24: User Authentication (The "Family Gate")
-**Goal:** Secure the application for single-household access via Supabase.
-- **Block 1: Supabase Auth.** Infrastructure & RLS Policies.
-- **Block 2: Login Page.**
 
 ---
 

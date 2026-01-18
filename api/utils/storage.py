@@ -180,6 +180,26 @@ class StorageEngine:
                 "unit": unit,
                 "metadata": updates or {}
             }, on_conflict="household_id, category, item").execute()
+
+            # PENDING RECIPE WORKFLOW: If this is a freezer meal, ensure it exists in the recipe index
+            if category == 'freezer_backup' and not delete:
+                import re
+                recipe_id = re.sub(r'[^a-zA-Z0-9]', '_', item_name.lower()).strip('_')
+                
+                # Check if recipe exists
+                existing_recipe = StorageEngine.get_recipe_details(recipe_id)
+                if not existing_recipe:
+                    print(f"Auto-capturing new meal as recipe: {item_name}")
+                    # Create skeleton recipe
+                    metadata = {
+                        "name": item_name,
+                        "cuisine": "unknown",
+                        "meal_type": "dinner", # Assume dinner for freezer backups
+                        "effort_level": "normal",
+                        "tags": ["missing ingredients", "missing instructions"]
+                    }
+                    StorageEngine.save_recipe(recipe_id, item_name, metadata, f"# {item_name}\n\nRecipe captured from freezer inventory. Please add ingredients and instructions.")
+                    
         except Exception as e:
             print(f"Error updating inventory item {item_name}: {e}")
     @staticmethod

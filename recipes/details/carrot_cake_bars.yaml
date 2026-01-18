@@ -43,3 +43,8 @@ instructions: 'Grate carrot and mash a ripe banana.
 
   Bake for 20-25 minutes or until a toothpick comes out clean ⁣'
 no_chop_compatible: false
+tags:
+- dessert
+- instant_pot
+- oven
+- weekend only

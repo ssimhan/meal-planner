@@ -27,10 +27,14 @@ export async function updateSession(request: NextRequest) {
         }
     )
 
-    // refreshing the auth token
     const {
         data: { user },
     } = await supabase.auth.getUser()
+
+    // Support for disabling auth in local development
+    if (process.env.DISABLE_AUTH === 'true') {
+        return supabaseResponse
+    }
 
     if (
         !user &&

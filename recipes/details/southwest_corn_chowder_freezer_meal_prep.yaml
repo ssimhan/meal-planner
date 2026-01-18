@@ -59,3 +59,5 @@ instructions: 'Meal Prep InstructionsLabel your gallon-sized freezer bag. Make s
   Tip: Garnish with sliced jalapeno, freshly chopped tomatoes, and your favorite hot
   sauce.'
 no_chop_compatible: false
+tags:
+- instant_pot

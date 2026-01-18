@@ -60,3 +60,5 @@ instructions: 'Meal Prep Instructions:Label your gallon-sized freezer bag with t
 
   Serving Tips:Serve with fresh greens, toast, or sliced tomatoes with chives.'
 no_chop_compatible: false
+tags:
+- instant_pot

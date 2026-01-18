@@ -142,9 +142,8 @@ export default function MealCorrectionInput({
                 key={recipe.id}
                 type="button"
                 onClick={() => handleSelectRecipe(recipe.name)}
-                className={`w-full text-left px-3 py-2 hover:bg-sage/10 ${
-                  index === highlightedIndex ? 'bg-sage/20' : ''
-                }`}
+                className={`w-full text-left px-3 py-2 hover:bg-sage/10 ${index === highlightedIndex ? 'bg-sage/20' : ''
+                  }`}
               >
                 {recipe.name}
               </button>
@@ -172,14 +171,14 @@ export default function MealCorrectionInput({
           type="button"
           onClick={handleSave}
           disabled={!inputValue.trim()}
-          className="flex-1 px-4 py-2 text-sm font-medium bg-[#5a7a5a] text-white rounded-md hover:bg-[#4a6a4a] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex-1 px-4 py-2 text-sm font-medium bg-[var(--accent-primary)] text-white rounded-md hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           Save Changes
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 px-4 py-2 text-sm font-medium bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
+          className="flex-1 px-4 py-2 text-sm font-medium bg-[var(--bg-secondary)] text-[var(--text-main)] border border-[var(--border-subtle)] rounded-md hover:bg-[var(--bg-card)] transition-colors"
         >
           Cancel
         </button>

@@ -50,7 +50,17 @@ class GroceryMapper:
         data = cls.load()
         mapping = data.get('map', {})
         # Normalize simple case
-        return mapping.get(item_name.lower(), 'Other')
+        key = item_name.lower()
+        if key in mapping: return mapping[key]
+
+        # Partial match fallback (if key is part of map key or map key part of key?)
+        # For safety, let's only do "if map key in item_name"
+        # e.g. map has "milk", item is "organic milk" -> return Store
+        for m_key, m_store in mapping.items():
+            if m_key in key:
+                return m_store
+        
+        return 'Other'
 
     @classmethod
     def set_item_store(cls, item_name, store_name):

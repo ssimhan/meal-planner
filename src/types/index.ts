@@ -196,6 +196,7 @@ export interface Recipe {
   appliances?: string[];
   ingredients?: string[];
   instructions?: string;
+  tags?: string[];
 }
 
 export interface RecipeListItem {

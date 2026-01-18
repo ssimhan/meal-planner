@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import FeedbackButtons from '../FeedbackButtons';
 import MealLogFlow from '../MealLogFlow';
+import { ChefHat } from 'lucide-react';
 
 interface TimelineItemProps {
     type?: 'school_snack' | 'home_snack' | 'kids_lunch' | 'adult_lunch' | 'dinner';
@@ -13,14 +14,15 @@ interface TimelineItemProps {
     feedbackProps?: any; // To pass through to FeedbackButtons
     logFlowProps?: any; // To pass through to MealLogFlow
     onAction?: () => void;
+    onFocus?: () => void;
 }
 
-function TimelineItem({ type, time, title, description, status, icon, action, feedbackProps, logFlowProps, onAction }: TimelineItemProps) {
+function TimelineItem({ type, time, title, description, status, icon, action, feedbackProps, logFlowProps, onAction, onFocus }: TimelineItemProps) {
     const [isHovered, setIsHovered] = useState(false);
 
     return (
         <div
-            className={`group flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 border-b border-[var(--border-color)] last:border-0 relative ${onAction ? 'cursor-pointer hover:bg-black/5' : ''}`}
+            className={`group flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 border-b border-[var(--border-color)] last:border-0 relative ${onAction ? 'cursor-pointer hover:bg-[var(--bg-secondary)]/50' : ''}`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             onClick={() => onAction?.()}
@@ -29,15 +31,27 @@ function TimelineItem({ type, time, title, description, status, icon, action, fe
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl shadow-inner ${status === 'done' ? 'bg-[var(--accent-primary)]/10' : 'bg-[var(--bg-sidebar)]'}`}>
                     {icon || '🍽️'}
                 </div>
-                <div>
+                <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                         <span className="font-bold text-sm uppercase tracking-tight text-[var(--text-muted)]">
                             {title}
                         </span>
                         {time && <span className="text-[var(--text-muted)] text-[10px] bg-[var(--bg-sidebar)] px-2 py-0.5 rounded-full">{time}</span>}
                     </div>
-                    <div className="text-lg font-semibold text-[var(--text-main)] group-hover:text-[var(--accent-primary)] transition-colors">
-                        {description}
+                    <div className="text-lg font-semibold text-[var(--text-main)] group-hover:text-[var(--accent-primary)] transition-colors flex items-center gap-2">
+                        <span className="truncate">{description}</span>
+                        {onFocus && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onFocus();
+                                }}
+                                className="p-1.5 rounded-full bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-white transition-all scale-0 group-hover:scale-100"
+                                title="Start Focus Mode"
+                            >
+                                <ChefHat size={14} />
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>

@@ -90,3 +90,5 @@ instructions: 'AD
   degrees F and bake for 55-60 minutes. Towards the end of baking, if the bread is
   browning a lot on top, cover with foil and continue baking.'
 no_chop_compatible: false
+tags:
+- oven

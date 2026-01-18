@@ -124,17 +124,33 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [x] Ingredient standardization (category sorting + spice quantity stripping)
   - [x] Deterministic rewrite & CI check mode
 
-### Phase 28: Inventory & Planning Controls (Refined)
-**Goal:** Finalize the granular controls for inventory tracking and planning persistence.
+### Phase 28: General Workflow and Frontend Clean up
+**Goal:** Standardize the visual system, fix inventory/shopping friction, and polish workflow persistence.
 > **Note:** I will be adding other bugs and workflow edits.
 
-- **Block 1: Inventory Organization (~2 hrs)**
-  - [ ] Separate sections for meals vs. veggies
-  - [ ] Add freezer inventory option in wizard
-  - [ ] Quantity specification (servings for meals, count for produce)
-- **Block 2: Workflow Pause (~2 hrs)**
-  - [ ] Pause state infrastructure (localStorage/Supabase)
-  - [ ] Resume UI with banner/modal
+- **Block 1: Global Visual Polish & Coherence (~3 hrs)**
+  - [ ] **Dark Mode:** Improve legibility and contrast across all card components (currently too dark/low contrast).
+  - [ ] **Unified Styling:** Standardize buttons, use of color, animations, and shadows for consistency.
+  - [ ] **Premium Buttons:** Update meal plan page buttons to match the new high-fidelity "Review" button styling from the recipe index.
+
+- **Block 2: Inventory & Shopping Stability (~4 hrs)**
+  - [ ] **Shop Page:** Fix broken store categorization.
+  - [ ] **Alphabetical Ordering:** Sort all inventory lists alphabetically.
+  - [ ] **Deduplication:** Automatically consolidate items when duplicates are found.
+  - [ ] **Move Logic:** Implement ability to move items from "General" to specific categories.
+  - [ ] **Immediate Sync:** Ensure added items appear immediately in the correct category (Leftovers, Freezer, Fridge, etc.).
+
+- **Block 3: Recipe Experience & Data Cleanup (~3 hrs)**
+  - [ ] **Focus Mode Integration:** Link `StepByStepCooking` component from the Dashboard and Meal Plan pages where relevant.
+  - [ ] **Tag Migration:** Convert legacy notes (e.g., "instant pot", "stovetop", source names) into the standardized tag system.
+
+- **Block 4: Advanced Planning Persistence (~3 hrs)**
+  - [ ] **Infrastructure:** Pause state infrastructure (localStorage/Supabase).
+  - [ ] **Resume UI:** Resume planning UI with banner/modal triggered on login/refresh.
+  - [ ] **Wizard Inventory Upgrades:** 
+    - [ ] Separate sections for meals vs. veggies in wizard inventory.
+    - [ ] Add freezer inventory option directly in wizard.
+    - [ ] Specific quantity inputs (servings for meals, count for produce).
 
 ### Phase 29: User Authentication (The "Family Gate")
 **Goal:** Secure the application for single-household access via Supabase.

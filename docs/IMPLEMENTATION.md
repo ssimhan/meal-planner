@@ -140,9 +140,10 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [ ] **Move Logic:** Implement ability to move items from "General" to specific categories.
   - [ ] **Immediate Sync:** Ensure added items appear immediately in the correct category (Leftovers, Freezer, Fridge, etc.).
 
-- **Block 3: Recipe Experience & Data Cleanup (~3 hrs)**
+- **Block 3: Recipe Experience & Data Cleanup (~4 hrs)**
   - [ ] **Focus Mode Integration:** Link `StepByStepCooking` component from the Dashboard and Meal Plan pages where relevant.
   - [ ] **Tag Migration:** Convert legacy notes (e.g., "instant pot", "stovetop", source names) into the standardized tag system.
+  - [ ] **Pending Recipe Workflow:** Implement logic to push recipes mentioned in Brain Dump/Quick Add to the Recipe Index for batch processing.
 
 - **Block 4: Advanced Planning Persistence (~3 hrs)**
   - [ ] **Infrastructure:** Pause state infrastructure (localStorage/Supabase).
@@ -151,6 +152,11 @@ Declining energy model: Monday (high) → Friday (zero prep)
     - [ ] Separate sections for meals vs. veggies in wizard inventory.
     - [ ] Add freezer inventory option directly in wizard.
     - [ ] Specific quantity inputs (servings for meals, count for produce).
+
+- **Block 5: Brain Dump & Household Communication (~3 hrs)**
+  - [ ] **Persistence:** Define storage and API for Brain Dump notes (Supabase `household_notes` or similar).
+  - [ ] **Dashboard Integration:** Display persistent Brain Dump notes on the dashboard for multi-adult coordination.
+  - [ ] **Note Management:** Implement full CRUD (View, Edit, Clear) for Brain Dump notes.
 
 ### Phase 29: User Authentication (The "Family Gate")
 **Goal:** Secure the application for single-household access via Supabase.

@@ -213,12 +213,16 @@ function PlanningWizardContent() {
             const data: any = response.inventory || response;
             // Ensure all items have quantity and type for fridge
             const processedInventory: InventoryState = {
-                fridge: (data.fridge || []).map((item: any) => ({
-                    item: typeof item === 'string' ? item : item.item,
-                    quantity: typeof item === 'object' && item.quantity ? item.quantity : 1,
-                    unit: typeof item === 'object' && item.unit ? item.unit : 'unit',
-                    type: typeof item === 'object' && item.type ? item.type : (typeof item === 'string' && item.toLowerCase().includes('meal') ? 'meal' : 'ingredient')
-                })),
+                fridge: (data.fridge || []).map((item: any) => {
+                    const itemName = typeof item === 'string' ? item : item.item;
+                    const isMeal = typeof item === 'object' && item.type ? item.type === 'meal' : itemName.toLowerCase().includes('meal');
+                    return {
+                        item: itemName,
+                        quantity: typeof item === 'object' && item.quantity ? item.quantity : 1,
+                        unit: typeof item === 'object' && item.unit ? item.unit : 'unit',
+                        type: isMeal ? 'meal' : 'ingredient'
+                    };
+                }),
                 pantry: (data.pantry || []).map((item: any) => ({
                     item: typeof item === 'string' ? item : item.item,
                     quantity: typeof item === 'object' && item.quantity ? item.quantity : 1,
@@ -1082,7 +1086,10 @@ function PlanningWizardContent() {
                                     <button onClick={() => handleAddItem('fridge', 'meal')} className="btn-secondary self-end px-3 py-2">+</button>
                                 </div>
                                 <ul className="space-y-2">
-                                    {getDisplayList('fridge').filter((i: any) => i.type === 'meal' || (typeof i === 'string' && i.toLowerCase().includes('meal'))).map((item: any, idx: number) => {
+                                    {getDisplayList('fridge').filter((i: any) => {
+                                        const name = typeof i === 'string' ? i : i.item;
+                                        return i.type === 'meal' || name.toLowerCase().includes('meal');
+                                    }).map((item: any, idx: number) => {
                                         const name = typeof item === 'string' ? item : item.item;
                                         const qty = typeof item === 'object' ? item.quantity : 1;
                                         const isNew = pendingChanges.some(c => c.category === 'fridge' && c.item === name && c.operation === 'add');
@@ -1122,7 +1129,10 @@ function PlanningWizardContent() {
                                     <button onClick={() => handleAddItem('fridge', 'ingredient')} className="btn-secondary self-end px-3 py-2">+</button>
                                 </div>
                                 <ul className="space-y-2">
-                                    {getDisplayList('fridge').filter((i: any) => i.type !== 'meal' && !(typeof i === 'string' && i.toLowerCase().includes('meal'))).map((item: any, idx: number) => {
+                                    {getDisplayList('fridge').filter((i: any) => {
+                                        const name = typeof i === 'string' ? i : i.item;
+                                        return i.type !== 'meal' && !name.toLowerCase().includes('meal');
+                                    }).map((item: any, idx: number) => {
                                         const name = typeof item === 'string' ? item : item.item;
                                         const qty = typeof item === 'object' ? item.quantity : 1;
                                         const isNew = pendingChanges.some(c => c.category === 'fridge' && c.item === name && c.operation === 'add');

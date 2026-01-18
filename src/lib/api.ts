@@ -313,6 +313,45 @@ export async function updateRecipeMetadata(recipeId: string, updates: any): Prom
     return handleResponse<any>(res, 'Failed to update recipe metadata');
 }
 
+export async function deleteRecipe(recipeId: string): Promise<any> {
+    const res = await fetch(`/api/recipes/${recipeId}`, {
+        method: 'DELETE',
+        headers: await getAuthHeaders(),
+    });
+    return handleResponse<any>(res, 'Failed to delete recipe');
+}
+
+export async function searchRecipes(query: string): Promise<any> {
+    const res = await fetch(`/api/recipes/search?q=${encodeURIComponent(query)}`, {
+        headers: await getAuthHeaders(),
+    });
+    return handleResponse<any>(res, 'Failed to search recipes');
+}
+
+export async function getRecipeContent(recipeId: string): Promise<any> {
+    const res = await fetch(`/api/recipes/${recipeId}/content`, {
+        headers: await getAuthHeaders(false),
+    });
+    return handleResponse<any>(res, 'Failed to get recipe content');
+}
+
+export async function updateRecipeContent(
+    recipeId: string,
+    ingredients?: string[],
+    instructions?: string[],
+    name?: string,
+    cuisine?: string,
+    effort_level?: string,
+    tags?: string[]
+): Promise<any> {
+    const res = await fetch(`/api/recipes/${recipeId}/content`, {
+        method: 'PATCH',
+        headers: await getAuthHeaders(),
+        body: JSON.stringify({ ingredients, instructions, name, cuisine, effort_level, tags }),
+    });
+    return handleResponse<any>(res, 'Failed to update recipe content');
+}
+
 export async function ignoreRecipe(name: string): Promise<any> {
     const res = await fetch('/api/recipes/ignore', {
         method: 'POST',

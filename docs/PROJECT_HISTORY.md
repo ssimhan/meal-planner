@@ -760,3 +760,25 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Data & Fixes:** Deduplicated 27 tasks from current active week data and resolved a critical bug in `ReplacementModal` where freezer/leftover selections were not correctly color-coding in the main view.
 
 **Learning:** "Bulk" actions significantly reduce friction. Defensive programming (copying lists with `list()`) is essential when multiple modules analyze the same source data.
+
+### Phase 27: Recipe Index Refinement & Review Workflow (2026-01-17) ✅ Complete
+**Goal:** Clean up the recipe ecosystem and automate the quality control loop.
+
+**Block 1: Recipe Index Standardization (Completed)**
+- **Data Clean-up**: Standardized all 185 recipes with consistent cuisine and effort levels.
+- **Audit Tags**: Ran a full audit to identify "not meal" components and recipes with missing ingredients/instructions.
+- **Bulk Fixes**: Updated 36 recipes with missing content and 21 recipes with incorrect meal classification.
+
+**Block 2: Recipe Content Editor (Completed)**
+- **Modal Editor**: Built a high-fidelity modal for editing recipe name, tags (with '✕' removal), ingredients, and instructions.
+- **Local-First Save**: Implemented a two-stage save process:
+    - **Stage 1**: Save to local YAML files (`recipes/details/`) for immediate editing.
+    - **Stage 2**: Bulk sync metadata (name, tags, cuisine, effort) to Supabase.
+- **Resilience**: Fixed `.join()` crashes and missing YAML file errors by returning sensible defaults and creating files on-demand.
+
+**Block 3: Dynamic Review Button & Automation (Completed)**
+- **Active Review**: Replaced "Review Incomplete" link with a premium **Emerald Green Review Button** that glows when recipes need attention.
+- **Ghost State**: Button fades to a subtle outlined state when the index is clean, reducing visual clutter.
+- **Automated Capture**: New manual entries or URL imports now automatically receive audit tags (`not meal`, `missing ingredients`, `missing instructions`), ensuring they immediately drop into the review queue.
+
+**Learning**: Separating local file updates from database syncs provides a safe "staging" environment for edits. Automated quality tags prevent the index from deteriorating over time as new meals are added.

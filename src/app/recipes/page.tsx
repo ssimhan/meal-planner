@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { getRecipes, updateRecipeMetadata } from '@/lib/api';
+import { getRecipes, updateRecipeMetadata, deleteRecipe, searchRecipes } from '@/lib/api';
 import AppLayout from '@/components/AppLayout';
 import Link from 'next/link';
 import { RecipeListItem } from '@/types';
@@ -87,16 +87,42 @@ export default function RecipesPage() {
                         <Link href="/" className="text-[var(--accent-green)] hover:underline mb-4 inline-block font-mono">← Dashboard</Link>
                         <h1 className="text-5xl">Recipe Browser</h1>
                     </div>
-                    <div className="flex flex-col items-end gap-2">
-                        <div className="text-[var(--text-muted)] font-mono">{filteredRecipes.length} Recipes</div>
-                        {recipes.filter(r => !r.effort_level || r.cuisine === 'unknown' || !r.cuisine).length > 0 && (
-                            <button
-                                onClick={() => setIsReviewOpen(true)}
-                                className="text-xs font-bold uppercase tracking-widest px-3 py-1.5 bg-[var(--accent-sage)] text-white rounded-md hover:bg-opacity-90 transition-all shadow-sm"
-                            >
-                                Review Incomplete ({recipes.filter(r => !r.effort_level || r.cuisine === 'unknown' || !r.cuisine).length})
-                            </button>
-                        )}
+                    <div className="flex flex-col items-end gap-3">
+                        <div className="text-[var(--text-muted)] font-mono text-sm">{filteredRecipes.length} Recipes</div>
+                        {(() => {
+                            const needsReviewCount = recipes.filter(r => {
+                                const tags = r.tags || [];
+                                const hasAuditTags = tags.some(t =>
+                                    ['not meal', 'missing ingredients', 'missing instructions'].includes(t)
+                                );
+                                const noCuisine = !r.cuisine || r.cuisine === 'unknown';
+                                const noEffort = !r.effort_level;
+                                return hasAuditTags || noCuisine || noEffort;
+                            }).length;
+
+                            if (needsReviewCount > 0) {
+                                return (
+                                    <Link
+                                        href="/recipes/batch-edit"
+                                        className="relative group px-6 py-2.5 bg-emerald-600 text-white rounded-full font-bold text-sm transition-all hover:bg-emerald-700 hover:scale-105 active:scale-95 shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] flex items-center gap-2"
+                                    >
+                                        <span>Review</span>
+                                        <span className="bg-white text-emerald-600 rounded-full w-5 h-5 flex items-center justify-center text-[10px] shadow-inner">
+                                            {needsReviewCount}
+                                        </span>
+                                    </Link>
+                                );
+                            } else {
+                                return (
+                                    <Link
+                                        href="/recipes/batch-edit"
+                                        className="px-6 py-2.5 border border-gray-200 text-gray-400 rounded-full font-bold text-sm transition-all hover:border-gray-300 hover:text-gray-500 opacity-60"
+                                    >
+                                        Review
+                                    </Link>
+                                );
+                            }
+                        })()}
                     </div>
                 </header>
 
@@ -109,95 +135,65 @@ export default function RecipesPage() {
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
 
-                    {/* Filters Row */}
-                    <div className="flex flex-wrap gap-4 p-4 bg-white rounded-lg border border-[var(--border-subtle)]">
+                    {/* Filters Row - Compact */}
+                    <div className="flex flex-wrap items-center gap-2 p-3 bg-white rounded-lg border border-[var(--border-subtle)]">
+                        <select
+                            value={filterCuisine}
+                            onChange={(e) => setFilterCuisine(e.target.value)}
+                            className="text-xs p-2 rounded border border-[var(--border-subtle)] bg-[var(--bg-secondary)] min-w-[110px]"
+                        >
+                            {cuisines.map(c => (
+                                <option key={c} value={c}>{c === 'all' ? 'All Cuisines' : c}</option>
+                            ))}
+                        </select>
 
-                        {/* Cuisine Filter */}
-                        <div className="flex flex-col gap-1">
-                            <label className="text-xs uppercase font-bold text-[var(--text-muted)] tracking-wider">Cuisine</label>
-                            <select
-                                value={filterCuisine}
-                                onChange={(e) => setFilterCuisine(e.target.value)}
-                                className="text-sm p-2 rounded border border-[var(--border-subtle)] bg-[var(--bg-secondary)] min-w-[140px]"
-                            >
-                                {cuisines.map(c => (
-                                    <option key={c} value={c}>{c === 'all' ? 'All Cuisines' : c}</option>
-                                ))}
-                            </select>
-                        </div>
+                        <select
+                            value={filterEffort}
+                            onChange={(e) => setFilterEffort(e.target.value)}
+                            className="text-xs p-2 rounded border border-[var(--border-subtle)] bg-[var(--bg-secondary)] min-w-[100px]"
+                        >
+                            <option value="all">Any Effort</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
 
-                        {/* Effort Filter */}
-                        <div className="flex flex-col gap-1">
-                            <label className="text-xs uppercase font-bold text-[var(--text-muted)] tracking-wider">Effort</label>
-                            <select
-                                value={filterEffort}
-                                onChange={(e) => setFilterEffort(e.target.value)}
-                                className="text-sm p-2 rounded border border-[var(--border-subtle)] bg-[var(--bg-secondary)] min-w-[120px]"
-                            >
-                                <option value="all">Any Effort</option>
-                                <option value="high">High Effort</option>
-                                <option value="mild">Mild Effort</option>
-                                <option value="normal">Normal Effort</option>
-                                <option value="low">Low Effort</option>
-                            </select>
-                        </div>
+                        <select
+                            value={filterTag}
+                            onChange={(e) => setFilterTag(e.target.value)}
+                            className="text-xs p-2 rounded border border-[var(--border-subtle)] bg-[var(--bg-secondary)] min-w-[100px]"
+                        >
+                            <option value="all">All Tags</option>
+                            {tags.filter(t => t !== 'all').map(t => (
+                                <option key={String(t)} value={String(t)}>{String(t)}</option>
+                            ))}
+                        </select>
 
-                        {/* Tags Filter */}
-                        <div className="flex flex-col gap-1">
-                            <label className="text-xs uppercase font-bold text-[var(--text-muted)] tracking-wider">Tags</label>
-                            <select
-                                value={filterTag}
-                                onChange={(e) => setFilterTag(e.target.value)}
-                                className="text-sm p-2 rounded border border-[var(--border-subtle)] bg-[var(--bg-secondary)] min-w-[140px]"
-                            >
-                                <option value="all">All Tags</option>
-                                {/* Limit tags if too many? */}
-                                {tags.filter(t => t !== 'all').map(t => (
-                                    <option key={String(t)} value={String(t)}>{String(t)}</option>
-                                ))}
-                            </select>
-                        </div>
+                        <select
+                            value={groupBy}
+                            onChange={(e) => setGroupBy(e.target.value as any)}
+                            className="text-xs p-2 rounded border border-[var(--border-subtle)] bg-[var(--bg-secondary)] min-w-[100px]"
+                        >
+                            <option value="none">No Grouping</option>
+                            <option value="cuisine">By Cuisine</option>
+                            <option value="effort">By Effort</option>
+                        </select>
 
-                        {/* Clear Filters Button */}
                         {(filterCuisine !== 'all' || filterEffort !== 'all' || filterTag !== 'all') && (
-                            <div className="flex items-end">
-                                <button
-                                    onClick={() => {
-                                        setFilterCuisine('all');
-                                        setFilterEffort('all');
-                                        setFilterTag('all');
-                                    }}
-                                    className="text-sm text-[var(--accent-terracotta)] hover:underline font-bold px-4 py-2"
-                                >
-                                    Clear x
-                                </button>
-                            </div>
+                            <button
+                                onClick={() => {
+                                    setFilterCuisine('all');
+                                    setFilterEffort('all');
+                                    setFilterTag('all');
+                                }}
+                                className="text-xs text-[var(--accent-terracotta)] hover:underline font-bold px-2"
+                            >
+                                Clear ✕
+                            </button>
                         )}
                     </div>
                 </section>
 
-                {/* Grouping Toggle */}
-                <div className="mb-6 flex items-center gap-3">
-                    <span className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">Group by:</span>
-                    <div className="flex bg-[var(--bg-secondary)] p-1 rounded-lg border border-[var(--border-subtle)]">
-                        {[
-                            { id: 'none', label: 'None' },
-                            { id: 'cuisine', label: 'Cuisine' },
-                            { id: 'effort', label: 'Effort' }
-                        ].map(opt => (
-                            <button
-                                key={opt.id}
-                                onClick={() => setGroupBy(opt.id as any)}
-                                className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${groupBy === opt.id
-                                    ? 'bg-white shadow-sm text-[var(--accent-sage)]'
-                                    : 'text-[var(--text-muted)] hover:text-gray-900'
-                                    }`}
-                            >
-                                {opt.label}
-                            </button>
-                        ))}
-                    </div>
-                </div>
 
                 {error ? (
                     <div className="card text-red-700">{error}</div>
@@ -238,8 +234,11 @@ export default function RecipesPage() {
                     recipes={recipes.filter(r => !r.effort_level || r.cuisine === 'unknown' || !r.cuisine)}
                     onClose={() => {
                         setIsReviewOpen(false);
-                        // Refresh recipes
-                        getRecipes().then(data => setRecipes(Object.values(data.recipes)));
+                    }}
+                    onRefresh={async () => {
+                        // Refresh recipes after delete/rename
+                        const data = await getRecipes();
+                        setRecipes(data.recipes);
                     }}
                 />
             )}
@@ -286,21 +285,49 @@ function RecipeCard({ recipe }: { recipe: any }) {
     );
 }
 
-function RecipeReviewModal({ recipes, onClose }: { recipes: RecipeListItem[], onClose: () => void }) {
+function RecipeReviewModal({ recipes, onClose, onRefresh }: { recipes: RecipeListItem[], onClose: () => void, onRefresh?: () => void }) {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [name, setName] = useState('');
     const [cuisine, setCuisine] = useState('');
     const [effort, setEffort] = useState('');
     const [saving, setSaving] = useState(false);
+    const [similarRecipes, setSimilarRecipes] = useState<RecipeListItem[]>([]);
     const cuisineRef = useRef<HTMLInputElement>(null);
+    const nameRef = useRef<HTMLInputElement>(null);
 
     const recipe = recipes[currentIndex];
 
+    // Reset fields when changing recipe
     useEffect(() => {
         if (recipe) {
+            setName(recipe.name || '');
             setCuisine(recipe.cuisine === 'unknown' ? '' : (recipe.cuisine || ''));
             setEffort(recipe.effort_level || '');
+            setSimilarRecipes([]);
         }
     }, [currentIndex, recipe]);
+
+    // Check for similar recipes
+    useEffect(() => {
+        if (!name.trim() || name.length < 3 || (recipe && name === recipe.name)) {
+            setSimilarRecipes([]);
+            return;
+        }
+
+        const timer = setTimeout(async () => {
+            try {
+                const res = await searchRecipes(name);
+                if (res.status === 'success') {
+                    // Filter out current recipe from similar results
+                    setSimilarRecipes(res.matches.filter((m: any) => m.id !== recipe?.id));
+                }
+            } catch (err) {
+                console.error('Search failed:', err);
+            }
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [name, recipe]);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -313,12 +340,12 @@ function RecipeReviewModal({ recipes, onClose }: { recipes: RecipeListItem[], on
             if (e.key === '4') setEffort('high');
 
             // Save shortcut
-            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey || document.activeElement !== cuisineRef.current)) {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey || (document.activeElement !== cuisineRef.current && document.activeElement !== nameRef.current))) {
                 handleSave();
             }
 
             // Cuisine focus shortcut
-            if (e.key.toLowerCase() === 'c' && document.activeElement !== cuisineRef.current) {
+            if (e.key.toLowerCase() === 'c' && document.activeElement !== cuisineRef.current && document.activeElement !== nameRef.current) {
                 e.preventDefault();
                 cuisineRef.current?.focus();
             }
@@ -329,13 +356,14 @@ function RecipeReviewModal({ recipes, onClose }: { recipes: RecipeListItem[], on
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [currentIndex, cuisine, effort, saving, onClose, recipes.length]);
+    }, [currentIndex, cuisine, name, effort, saving, onClose, recipes.length]);
 
     async function handleSave() {
         if (!recipe || saving) return;
         setSaving(true);
         try {
             await updateRecipeMetadata(recipe.id, {
+                name: name.trim() || recipe.name,
                 cuisine: cuisine.trim().toLowerCase() || 'unknown',
                 effort_level: effort || 'normal'
             });
@@ -343,11 +371,31 @@ function RecipeReviewModal({ recipes, onClose }: { recipes: RecipeListItem[], on
             if (currentIndex < recipes.length - 1) {
                 setCurrentIndex(currentIndex + 1);
             } else {
+                if (onRefresh) onRefresh();
                 onClose();
             }
         } catch (err) {
             console.error('Failed to save changes:', err);
             alert('Failed to save changes');
+        } finally {
+            setSaving(false);
+        }
+    }
+
+    async function handleDelete() {
+        if (!recipe || !confirm(`Are you sure you want to delete "${recipe.name}"?`)) return;
+        setSaving(true);
+        try {
+            await deleteRecipe(recipe.id);
+            if (currentIndex < recipes.length - 1) {
+                setCurrentIndex(currentIndex + 1);
+            } else {
+                if (onRefresh) onRefresh();
+                onClose();
+            }
+        } catch (err) {
+            console.error('Failed to delete recipe:', err);
+            alert('Failed to delete recipe');
         } finally {
             setSaving(false);
         }
@@ -360,11 +408,18 @@ function RecipeReviewModal({ recipes, onClose }: { recipes: RecipeListItem[], on
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all animate-in fade-in zoom-in duration-200">
                 <div className="p-6">
                     <div className="flex justify-between items-start mb-6">
-                        <div>
+                        <div className="flex-1 mr-4">
                             <span className="text-[10px] font-bold text-[var(--accent-sage)] uppercase tracking-widest mb-1 block">
                                 Reviewing {currentIndex + 1} of {recipes.length}
                             </span>
-                            <h2 className="text-2xl font-bold text-gray-900">{recipe.name}</h2>
+                            <input
+                                ref={nameRef}
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className="text-2xl font-bold text-gray-900 border-none bg-transparent focus:ring-1 focus:ring-gray-200 rounded-lg w-full outline-none p-0"
+                                placeholder="Recipe Name"
+                            />
                         </div>
                         <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors p-1">
                             ✕
@@ -372,6 +427,25 @@ function RecipeReviewModal({ recipes, onClose }: { recipes: RecipeListItem[], on
                     </div>
 
                     <div className="space-y-6">
+                        {/* Similar Recipes Alert */}
+                        {similarRecipes.length > 0 && (
+                            <div className="bg-amber-50 border border-amber-100 p-3 rounded-xl animate-in slide-in-from-top-2 duration-300">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <div className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
+                                    <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider">
+                                        Potential Duplicates Found
+                                    </span>
+                                </div>
+                                <div className="space-y-1">
+                                    {similarRecipes.map(r => (
+                                        <div key={r.id} className="text-xs text-amber-700 font-medium">
+                                            • {r.name}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         {/* Cuisine Input */}
                         <div className="space-y-2">
                             <div className="flex justify-between items-center">
@@ -422,6 +496,14 @@ function RecipeReviewModal({ recipes, onClose }: { recipes: RecipeListItem[], on
                 </div>
 
                 <div className="bg-gray-50 p-4 flex gap-3">
+                    <button
+                        onClick={handleDelete}
+                        disabled={saving}
+                        className="bg-white text-rose-600 font-bold border-2 border-rose-50 px-4 rounded-xl hover:bg-rose-50 transition-colors disabled:opacity-50"
+                        title="Delete Recipe"
+                    >
+                        Delete
+                    </button>
                     <button
                         onClick={handleSave}
                         disabled={saving}

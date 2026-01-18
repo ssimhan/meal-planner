@@ -2,17 +2,20 @@ id: raisins
 name: Raisins
 categories:
 - School Snacks
-cuisine: unknown
+cuisine: snack
 meal_type: simple_snack
-effort_level: normal
+effort_level: low
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
-ingredients: []
+ingredients:
+- Raisins
 main_veg: []
 avoid_contains: []
-instructions: ''
+instructions:
+- Raisins
 source_url: null
 source_file: Raisins.html
+tags: []

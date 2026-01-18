@@ -1,10 +1,10 @@
 id: veggie_marinara_sauce
-name: Veggie Marinara Sauce
+name: Pasta with Veggie Marinara
 categories:
 - ''
 cuisine: italian
 meal_type: sauce_dip
-effort_level: normal
+effort_level: medium
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
@@ -21,6 +21,7 @@ ingredients:
 - 1/4 teaspoon pepper
 - 1 pound pasta optional
 - Parmesan cheese optional
+- 1 cup pasta
 main_veg:
 - bell pepper
 - butternut squash
@@ -33,7 +34,8 @@ main_veg:
 - sweet potato
 - tomato
 avoid_contains: []
-instructions: 'Gather your ingredients.
+instructions:
+- 'Gather your ingredients.
 
   Cook the veggies in olive oil until soft, then add the tomatoes and simmer until
   the veggies are soft.
@@ -92,3 +94,4 @@ instructions: 'Gather your ingredients.
   warmed frozen peas, diced cooked chicken breast, meatballs, or even lentils.'
 source_url: null
 source_file: Veggie Marinara Sauce.html
+tags: []

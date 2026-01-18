@@ -2,17 +2,20 @@ id: cubed_fried_tofu
 name: Cubed, fried tofu
 categories:
 - School Snacks
-cuisine: unknown
+cuisine: asian
 meal_type: side_dish
-effort_level: normal
+effort_level: medium
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
-ingredients: []
+ingredients:
+- Tofu
 main_veg: []
 avoid_contains: []
-instructions: ''
+instructions:
+- Cubed, fried tofu
 source_url: null
 source_file: Cubed, fried tofu.html
+tags: []

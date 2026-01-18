@@ -1,11 +1,11 @@
 id: corn_black_bean_dip_tcl
-name: Corn & Black Bean Dip TCL
+name: Corn & Black Bean Casserole
 categories:
 - Guest Apps
 - TCL
-cuisine: unknown
+cuisine: mexican
 meal_type: sauce_dip
-effort_level: normal
+effort_level: low
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
@@ -46,7 +46,8 @@ main_veg:
 - scallion
 - serrano
 avoid_contains: []
-instructions: 'Preheat the oven to 400 degrees F.
+instructions:
+- 'Preheat the oven to 400 degrees F.
 
   Cook the corn in microwave.
 
@@ -74,3 +75,4 @@ instructions: 'Preheat the oven to 400 degrees F.
   on top and broil on low for a few minutes until the cheese has browned.'
 source_url: null
 source_file: Corn & Black Bean Dip TCL.html
+tags: []

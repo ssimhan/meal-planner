@@ -2,17 +2,20 @@ id: string_cheese
 name: String cheese
 categories:
 - School Snacks
-cuisine: unknown
+cuisine: snack
 meal_type: simple_snack
-effort_level: normal
+effort_level: low
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
-ingredients: []
+ingredients:
+- string cheese
 main_veg: []
 avoid_contains: []
-instructions: ''
+instructions:
+- Send string cheese as snack
 source_url: null
 source_file: String cheese.html
+tags: []

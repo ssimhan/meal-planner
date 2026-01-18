@@ -2,17 +2,20 @@ id: cherry_tomatoes
 name: Cherry tomatoes
 categories:
 - School Snacks
-cuisine: unknown
+cuisine: snack
 meal_type: simple_snack
-effort_level: normal
+effort_level: low
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
-ingredients: []
+ingredients:
+- Cherry tomatoes
 main_veg: []
 avoid_contains: []
-instructions: ''
+instructions:
+- Cherry tomatoes
 source_url: null
 source_file: Cherry tomatoes.html
+tags: []

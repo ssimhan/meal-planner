@@ -83,6 +83,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
 - **23:** Experience Refinement & Personalization
 - **23.5:** Household Configuration & UI Polish
 - 24 and 25 - original attempt at google oauth and multi-household features. Ended up having big errors and was rolled back. 
+- **27:** Recipe Index Refinement & Review Workflow
 ---
 
 ## Implementation Roadmap (Ideal Order)
@@ -114,15 +115,17 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [x] Mobile UX Polish (Tap targets + Pulse indicators)
   - [x] Replacement Modal Freezer/Leftover Color Fix
 
-### Phase 27: Daily Confirmation & Recipe Polish
-**Goal:** Add proactive confirmations and standardize recipe data.
-- **Block 1: Confirmation Banner (~2-3 hrs)**
-  - [ ] Backend 6 PM trigger logic
-  - [ ] Frontend banner component
-  - [ ] Integration and testing
-- **Block 2: Recipe Index Standardization (~2 hrs)**
-  - [ ] Define tag/cuisine taxonomy
-  - [ ] Batch update recipes
+### Phase 27: Recipe Index Refinement & Review Workflow ✅ Complete
+**Goal:** Clean up the recipe ecosystem and automate the quality control loop.
+- **Block 1: Recipe Index Standardization ✅**
+  - [x] Define tag/cuisine taxonomy
+  - [x] Batch update recipes
+- **Block 2: Recipe Content Editor ✅**
+  - [x] Modal UI for editing metadata and content
+  - [x] Two-stage save (Local YAML -> Supabase Sync)
+- **Block 3: Dynamic Review Button ✅**
+  - [x] Emerald Green active state / Ghost faded state
+  - [x] Automated audit tags for new captures
 
 ### Phase 28: User Authentication (The "Family Gate")
 **Goal:** Secure the application for single-household access via Supabase.
@@ -156,6 +159,8 @@ Declining energy model: Monday (high) → Friday (zero prep)
 | Plan | Leftovers Sync Failure (Misclassified as Ingredients) | 26 | ✅ Fixed |
 | Prep | Task Duplication (In-place list modification) | 26 | ✅ Fixed |
 | Dash | Prep Counter / Dinner Display out of sync | 26 | ✅ Fixed |
+| Recipe | `.join()` Type Error in Content Modal | 27 | ✅ Fixed |
+| Recipe | Missing YAML file 404 in Editor | 27 | ✅ Fixed |
 
 ---
 

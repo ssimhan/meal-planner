@@ -20,6 +20,22 @@ def get_recipes():
         traceback.print_exc()
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@recipes_bp.route("/api/recipes/search")
+@require_auth
+def search_recipes():
+    try:
+        query = request.args.get('q', '').lower().strip()
+        if not query:
+            return jsonify({"status": "success", "recipes": []})
+            
+        recipes = StorageEngine.get_recipes()
+        # Simple string matching for similarity
+        matches = [r for r in recipes if query in r['name'].lower() or r['id'].lower().startswith(query)]
+        
+        return jsonify({"status": "success", "matches": matches[:10]})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 @recipes_bp.route("/api/recipes/<recipe_id>")
 @require_auth
 def get_recipe_details(recipe_id):
@@ -167,7 +183,8 @@ def capture_recipe():
             "cuisine": "unknown",
             "meal_type": "snack" if is_snack_only else "dinner", 
             "effort_level": "normal",
-            "categories": categories
+            "categories": categories,
+            "tags": ["not meal", "missing ingredients", "missing instructions"]
         }
 
         if mode == 'manual':
@@ -184,6 +201,7 @@ name: {meal_name}
 cuisine: unknown
 meal_type: {"snack" if is_snack_only else "dinner"}
 effort_level: normal{markdown_categories}
+tags: ["not meal", "missing ingredients", "missing instructions"]
 ---
 
 # {meal_name}
@@ -215,6 +233,7 @@ effort_level: normal{markdown_categories}
 name: {meal_name}
 source_url: {url}
 meal_type: {"snack" if is_snack_only else "dinner"}{markdown_categories}
+tags: ["not meal", "missing ingredients", "missing instructions"]
 ---
 
 # {meal_name}
@@ -305,5 +324,66 @@ def update_recipe_metadata(recipe_id):
         invalidate_cache('recipes')
         
         return jsonify({"status": "success", "message": f"Updated metadata for {recipe_id}"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@recipes_bp.route("/api/recipes/<recipe_id>", methods=["DELETE"])
+@require_auth
+def delete_recipe_route(recipe_id):
+    try:
+        StorageEngine.delete_recipe(recipe_id)
+        invalidate_cache('recipes')
+        return jsonify({"status": "success", "message": f"Deleted recipe {recipe_id}"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@recipes_bp.route("/api/recipes/<recipe_id>/content")
+@require_auth
+def get_recipe_content(recipe_id):
+    try:
+        content = StorageEngine.get_recipe_content(recipe_id)
+        
+        # Also get basic recipe info
+        details = StorageEngine.get_recipe_details(recipe_id)
+        recipe_info = details['recipe'] if details else {}
+        
+        return jsonify({
+            "status": "success",
+            "recipe": {
+                "id": recipe_id,
+                "name": recipe_info.get('name', ''),
+                "ingredients": content['ingredients'],
+                "instructions": content['instructions']
+            }
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@recipes_bp.route("/api/recipes/<recipe_id>/content", methods=["PATCH"])
+@require_auth
+def update_recipe_content(recipe_id):
+    try:
+        data = request.json or {}
+        ingredients = data.get('ingredients')
+        instructions = data.get('instructions')
+        name = data.get('name')
+        cuisine = data.get('cuisine')
+        effort_level = data.get('effort_level')
+        tags = data.get('tags')
+        
+        StorageEngine.update_recipe_content(
+            recipe_id, 
+            ingredients=ingredients, 
+            instructions=instructions,
+            name=name,
+            cuisine=cuisine,
+            effort_level=effort_level,
+            tags=tags
+        )
+        invalidate_cache('recipes')
+        
+        return jsonify({"status": "success", "message": f"Updated local content for {recipe_id}"})
+    except FileNotFoundError as e:
+        return jsonify({"status": "error", "message": str(e)}), 404
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500

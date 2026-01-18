@@ -411,6 +411,77 @@ class StorageEngine:
             return []
 
     @staticmethod
+    def delete_recipe(recipe_id):
+        """Delete a single recipe from the database."""
+        if not supabase: return
+        h_id = get_household_id()
+        try:
+            supabase.table("recipes").delete().eq("id", recipe_id).eq("household_id", h_id).execute()
+        except Exception as e:
+            print(f"Error deleting recipe {recipe_id}: {e}")
+            raise e
+
+    @staticmethod
+    def get_recipe_content(recipe_id):
+        """Get recipe content (ingredients, instructions) from YAML file."""
+        yaml_path = Path(f'recipes/details/{recipe_id}.yaml')
+        
+        if not yaml_path.exists():
+            # If YAML doesn't exist, return empty lists but don't fail
+            # This allows the editor to start fresh for newly captured recipes or missing files
+            return {
+                'ingredients': [],
+                'instructions': []
+            }
+        
+        try:
+            with open(yaml_path, 'r') as f:
+                data = yaml.safe_load(f) or {}
+            
+            return {
+                'ingredients': data.get('ingredients', []),
+                'instructions': data.get('instructions') or data.get('directions', [])
+            }
+        except Exception as e:
+            print(f"Error reading recipe content for {recipe_id}: {e}")
+            return {
+                'ingredients': [],
+                'instructions': []
+            }
+    
+    @staticmethod
+    def update_recipe_content(recipe_id, ingredients=None, instructions=None, name=None, cuisine=None, effort_level=None, tags=None):
+        """Update recipe YAML file with full metadata and content. Creates file if missing."""
+        yaml_path = Path(f'recipes/details/{recipe_id}.yaml')
+        
+        # Ensure directory exists
+        yaml_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        try:
+            # Read existing YAML if it exists
+            data = {}
+            if yaml_path.exists():
+                with open(yaml_path, 'r') as f:
+                    data = yaml.safe_load(f) or {}
+            
+            # Update fields if provided
+            if ingredients is not None: data['ingredients'] = ingredients
+            if instructions is not None: data['instructions'] = instructions
+            if name is not None: data['name'] = name
+            if cuisine is not None: data['cuisine'] = cuisine
+            if effort_level is not None: data['effort_level'] = effort_level
+            if tags is not None: data['tags'] = tags
+            
+            # Write back to file
+            with open(yaml_path, 'w', encoding='utf-8') as f:
+                yaml.dump(data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
+            
+            return True
+        except Exception as e:
+            print(f"Error updating recipe content for {recipe_id}: {e}")
+            raise e
+
+    @staticmethod
     def save_recipe(recipe_id, name, metadata, content):
         """Save a single recipe to the database."""
         if not supabase: return

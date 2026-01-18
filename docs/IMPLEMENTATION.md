@@ -99,18 +99,11 @@ Declining energy model: Monday (high) → Friday (zero prep)
 - **Block 2: Leftovers Enhancement (~2 hrs)**
   - [x] Leftovers quantity input (number of servings, not yes/no)
   - [x] "Use Up Leftovers" page with day assignment
-- **Block 3: Inventory Organization (~2 hrs)**
-  - [ ] Separate sections for meals vs. veggies
-  - [ ] Add freezer inventory option in wizard
-  - [ ] Quantity specification (servings for meals, count for produce)
-- **Block 4: Workflow Pause (~2 hrs)**
-  - [ ] Pause state infrastructure (localStorage/Supabase)
-  - [ ] Resume UI with banner/modal
-- **Block 5: Prep Workflow & Data Integrity (~2 hrs) ✅ Complete**
+- **Block 3: Prep Workflow & Data Integrity (~2 hrs) ✅ Complete**
   - [x] Bulk Prep Task Completion (Backend + UI)
   - [x] Prep task duplication bug fix (defensive copying)
   - [x] Dashboard sync (Counter & "Dinner Tonight" logic)
-- **Block 6: Layout & UX Stabilization (~2 hrs) ✅ Complete**
+- **Block 4: Layout & UX Stabilization (~2 hrs) ✅ Complete**
   - [x] Responsive Week View (Fixed Grid + Line Clamping)
   - [x] Mobile UX Polish (Tap targets + Pulse indicators)
   - [x] Replacement Modal Freezer/Leftover Color Fix
@@ -131,7 +124,19 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [x] Ingredient standardization (category sorting + spice quantity stripping)
   - [x] Deterministic rewrite & CI check mode
 
-### Phase 28: User Authentication (The "Family Gate")
+### Phase 28: Inventory & Planning Controls (Refined)
+**Goal:** Finalize the granular controls for inventory tracking and planning persistence.
+> **Note:** I will be adding other bugs and workflow edits.
+
+- **Block 1: Inventory Organization (~2 hrs)**
+  - [ ] Separate sections for meals vs. veggies
+  - [ ] Add freezer inventory option in wizard
+  - [ ] Quantity specification (servings for meals, count for produce)
+- **Block 2: Workflow Pause (~2 hrs)**
+  - [ ] Pause state infrastructure (localStorage/Supabase)
+  - [ ] Resume UI with banner/modal
+
+### Phase 29: User Authentication (The "Family Gate")
 **Goal:** Secure the application for single-household access via Supabase.
 - **Block 1: Infrastructure & Schema (~3 hrs)**
   - [ ] Supabase Auth setup
@@ -144,7 +149,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [ ] Auth caching optimization
   - [ ] Empty states and onboarding
 
-### Phase 29: Analytics & Future Features
+### Phase 30: Analytics & Future Features
 **Goal:** Lower-priority enhancements for power users.
 - **Block 1: Member Management (~2 hrs)**
   - [ ] View household members in Settings

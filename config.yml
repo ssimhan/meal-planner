@@ -25,8 +25,18 @@ kid_profiles:
       - nuts
 
 lunch_defaults:
-  kids: []
-  adult: []
+  kids:
+    - PBJ on whole wheat
+    - Egg sandwich or scrambled egg sandwich
+    - Toad-in-a-hole (egg cooked in bread)
+    - Ravioli with brown butter or simple tomato sauce
+    - Chapati or dosa rolls with fruit
+    - Veggie burrito or pizza roll
+    - Quesadilla with cheese and beans
+  adult:
+    - Leftovers from previous night's dinner (preferred)
+    - Grain bowl: prepped grain + roasted vegetables + protein
+    - Salad with dinner components
 
 snack_defaults:
   by_day: {}

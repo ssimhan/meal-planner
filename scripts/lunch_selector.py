@@ -443,8 +443,12 @@ class LunchSelector:
         # STANDARD LEFTOVERS: Adult only
         # Get default for kids (rotate through defaults)
         day_idx = day_order.index(day)
-        default_idx = day_idx % len(self.defaults['kids'])
-        kids_default = self.defaults['kids'][default_idx]
+        kids_defaults = self.defaults.get('kids', [])
+        if kids_defaults:
+            default_idx = day_idx % len(kids_defaults)
+            kids_default = kids_defaults[default_idx]
+        else:
+            kids_default = "Simple Lunch"
 
         return LunchSuggestion(
             recipe_id=f'leftovers_{day}',

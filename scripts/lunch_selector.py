@@ -102,20 +102,28 @@ class LunchSelector:
     def select_weekly_lunches(
         self,
         dinner_plan: List[Dict[str, Any]],
-        week_of: str,
-        current_lunches: Dict[str, Any] = None
+        week_of: str = None,
+        current_lunches: Dict[str, Any] = None,
+        exclude_defaults: List[str] = None
     ) -> Dict[str, LunchSuggestion]:
         """
-        Select lunches for the entire week based on dinner plan.
-
+        Select lunches for the week based on dinner plans and constraints.
+        
         Args:
-            dinner_plan: List of dinner recipes with their scheduled days
-            week_of: ISO date string (YYYY-MM-DD) for start of week
-            current_lunches: Optional dictionary of already assigned lunches
+            dinner_plan: List of selected dinner recipes with their metadata
+            week_of: The week we are planning for
+            current_lunches: Existing lunch selections to respect
+            exclude_defaults: List of default lunch names to skip
         """
         weekly_lunches = {}
         current_lunches = current_lunches or {}
-
+        exclude_defaults = exclude_defaults or []
+        
+        # Filter defaults if exclusions provided
+        if exclude_defaults:
+            self.defaults['kids'] = [d for d in self.defaults.get('kids', []) if d not in exclude_defaults]
+            self.defaults['adult'] = [d for d in self.defaults.get('adult', []) if d not in exclude_defaults]
+            
         # Extract all ingredients used in dinners this week
         dinner_ingredients = self._extract_dinner_ingredients(dinner_plan)
 
@@ -452,13 +460,13 @@ class LunchSelector:
 
         return LunchSuggestion(
             recipe_id=f'leftovers_{day}',
-            recipe_name=f"{kids_default} OR Adult: Leftovers from {dinner_name}",
+            recipe_name=f"{kids_default}",
             kid_friendly=True,
             prep_style='quick_fresh',
             prep_components=[],
             storage_days=1,
             prep_day=previous_day,
-            assembly_notes=f'Kids: {kids_default} (<10 mins) | Adult: Reheat {previous_day.capitalize()} dinner leftovers',
+            assembly_notes=f'Kids: {kids_default} (<10 mins)',
             reuses_ingredients=previous_dinner.get('vegetables', []),
             default_option=kids_default,
             kid_profiles={name: kids_default for name in self.kid_profiles} if self.kid_profiles else None

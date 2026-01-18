@@ -153,10 +153,11 @@ Declining energy model: Monday (high) → Friday (zero prep)
     - [x] Add freezer inventory option directly in wizard.
     - [x] Specific quantity inputs (servings for meals, count for produce).
 
-- **Block 6: Global Theme Refactor (~2 hrs) ✅ Complete**
-  - [x] **Audit:** Review codebase for hardcoded hex values and Tailwind color utility classes.
-  - [x] **Refactor:** Replace hardcoded colors with `globals.css` theme variables to ensure dark mode consistency.
-  - [x] **Verify:** Test key screens (Dashboard, Inventory, Meal Plan) in both light and dark modes.
+- **Block 7: Sequential Suggestion Flow & Context-Aware Lunches (~3 hrs) ✅ Complete**
+  - [x] **Sequential Progression:** Split "Plan Your Extras" into Lunch and Snack phases.
+  - [x] **Ingredient Ranking:** Backend scoring for lunches based on dinner ingredients.
+  - [x] **Leftover Integration:** Immediate sync of assigned leftovers into the lunch grid.
+  - [x] **Visual Feedback:** "Match ✨" badges for ingredient-efficient recipes.
 
 ### Phase 29: Household Communication & Persistence
 **Goal:** Enhance multi-user coordination and note-taking.

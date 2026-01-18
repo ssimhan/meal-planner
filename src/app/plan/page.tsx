@@ -15,7 +15,8 @@ import {
     getRecipes,
     saveWizardState,
     getWizardState,
-    getStatus
+    getStatus,
+    getSuggestOptions
 } from '@/lib/api';
 import AppLayout from '@/components/AppLayout';
 import Skeleton from '@/components/Skeleton';
@@ -140,19 +141,26 @@ function PlanningWizardContent() {
     const [newItemInputs, setNewItemInputs] = useState<Record<string, { name: string, qty: number, type?: 'meal' | 'ingredient' }>>({});
     const [submitting, setSubmitting] = useState(false);
     const [step, setStep] = useState<'review_meals' | 'review_snacks' | 'inventory' | 'leftovers' | 'suggestions' | 'draft' | 'groceries'>('review_meals');
+    const [suggestionPhase, setSuggestionPhase] = useState<'lunches' | 'snacks'>('lunches');
 
     // Suggestions State
     const [suggestions, setSuggestions] = useState<any[]>([]);
     const [selectedSuggestions, setSelectedSuggestions] = useState<string[]>([]);
-    const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
     // Draft State
     const [draftPlan, setDraftPlan] = useState<any>(null);
-    const [selections, setSelections] = useState<{ day: string, recipe_id: string }[]>([]);
+    const [selections, setSelections] = useState<{ day: string, slot: string, recipe_id: string, recipe_name: string }[]>([]);
+    const [suggestionOptions, setSuggestionOptions] = useState<{
+        snacks: { id: string, name: string }[],
+        lunch_recipes: { id: string, name: string }[],
+        lunch_defaults: { kids: string[], adult: string[] }
+    } | null>(null);
+    const [loadingSuggestions, setLoadingSuggestions] = useState(false);
     const [leftoverAssignments, setLeftoverAssignments] = useState<{ day: string, slot: 'lunch' | 'dinner', item: string }[]>([]);
     const [lockedDays, setLockedDays] = useState<string[]>([]);
     const [isReplacing, setIsReplacing] = useState<{ day: string, slot: string, currentMeal: string } | null>(null);
     const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
+    const [excludedDefaults, setExcludedDefaults] = useState<string[]>([]);
 
     // Shopping List State
     const [shoppingList, setShoppingList] = useState<{ item: string; store: string }[]>([]);
@@ -205,13 +213,11 @@ function PlanningWizardContent() {
         }
     };
 
-    // ... (rest of transitions) ...
-
+    // ... (rest of transitions)
     const loadInventory = async () => {
         try {
             const response = await getInventory();
             const data: any = response.inventory || response;
-            // Ensure all items have quantity and type for fridge
             const processedInventory: InventoryState = {
                 fridge: (data.fridge || []).map((item: any) => {
                     const itemName = typeof item === 'string' ? item : item.item;
@@ -247,20 +253,30 @@ function PlanningWizardContent() {
                 }))
             };
             setInventory(processedInventory);
-            setNewItemInputs({
-                fridge: { name: '', qty: 1, type: 'meal' },
-                pantry: { name: '', qty: 1 },
-                spice_rack: { name: '', qty: 1 },
-                meals: { name: '', qty: 4 },
-                frozen_ingredient: { name: '', qty: 1 }
-            });
-            return processedInventory;
-        } catch (error) {
-            showToast('Failed to load inventory.', 'error');
-            console.error('Failed to load inventory:', error);
-            throw error;
+            setNewItemInputs({});
+        } catch (e) {
+            showToast('Failed to load inventory', 'error');
         }
     };
+
+    const loadSuggestions = async () => {
+        setLoadingSuggestions(true);
+        try {
+            const data = await getSuggestOptions(selections, leftoverAssignments);
+            setSuggestionOptions(data);
+        } catch (e) {
+            console.error(e);
+            showToast('Failed to load suggestions', 'error');
+        } finally {
+            setLoadingSuggestions(false);
+        }
+    };
+
+    useEffect(() => {
+        if (step === 'suggestions') {
+            loadSuggestions();
+        }
+    }, [step]);
 
     const handleSaveInventory = async () => {
         setSubmitting(true);
@@ -560,7 +576,7 @@ function PlanningWizardContent() {
         setLoading(true);
 
         try {
-            const res = await generateDraft(planningWeek, newSelections, lockedDays, leftoverAssignments);
+            const res = await generateDraft(planningWeek, newSelections, lockedDays, leftoverAssignments, excludedDefaults);
             setDraftPlan(res.plan_data);
             showToast('Plan updated!', 'success');
         } catch (e) {
@@ -857,7 +873,7 @@ function PlanningWizardContent() {
                                     setLoading(true);
                                     try {
                                         // Pass lockedDays to regenerate everything else
-                                        const res = await generateDraft(planningWeek!, selections, lockedDays, leftoverAssignments);
+                                        const res = await generateDraft(planningWeek!, selections, lockedDays, leftoverAssignments, excludedDefaults);
                                         setDraftPlan(res.plan_data);
                                         showToast('Plan regenerated!', 'success');
                                     } catch (e) {
@@ -892,56 +908,316 @@ function PlanningWizardContent() {
 
     // STEP 4: GENERATE PLAN
     if (step === 'suggestions') {
+        const toggleSelection = (recipe: { id: string, name: string }, slot: string) => {
+            const days = ['mon', 'tue', 'wed', 'thu', 'fri'];
+            const alreadySelected = selections.find(s => (s as any).slot === slot && s.recipe_id === recipe.id);
+
+            if (alreadySelected) {
+                setSelections(prev => prev.filter(s => !((s as any).slot === slot && s.recipe_id === recipe.id)));
+            } else {
+                // Remove existing for this slot across all days
+                const baseSelections = selections.filter(s => (s as any).slot !== slot);
+                const newSelections = days.map(day => ({
+                    day,
+                    slot,
+                    recipe_id: recipe.id,
+                    recipe_name: recipe.name
+                }));
+                setSelections([...baseSelections, ...newSelections]);
+            }
+        };
+
+        const toggleDaySelection = (recipe: { id: string, name: string }, slot: string, day: string) => {
+            const alreadySelected = selections.find(s => s.day === day && (s as any).slot === slot && s.recipe_id === recipe.id);
+
+            if (alreadySelected) {
+                setSelections(prev => prev.filter(s => !(s.day === day && (s as any).slot === slot)));
+            } else {
+                const baseSelections = selections.filter(s => !(s.day === day && (s as any).slot === slot));
+                setSelections([...baseSelections, {
+                    day,
+                    slot,
+                    recipe_id: recipe.id,
+                    recipe_name: recipe.name
+                }]);
+            }
+        };
+
+        const isSlotSelected = (recipeId: string, slot: string, day?: string) => {
+            if (day) {
+                return selections.some(s => s.day === day && (s as any).slot === slot && s.recipe_id === recipeId);
+            }
+            return selections.some(s => (s as any).slot === slot && s.recipe_id === recipeId);
+        };
+
         return (
-            <main className="container mx-auto max-w-3xl px-4 py-12">
+            <main className="container mx-auto max-w-5xl px-4 py-12">
                 <WizardProgress currentStep={step} />
 
                 <header className="mb-8">
                     <div className="flex justify-between items-start mb-4">
                         <div>
                             <div className="inline-block px-3 py-1 rounded-full bg-[var(--accent-gold)] bg-opacity-20 text-[var(--accent-gold)] text-sm font-bold mb-2">
-                                🧑‍🍳 Step 5 of 7
+                                🍳 Step 5 of 7
                             </div>
-                            <h1 className="text-3xl font-bold">Generate Your Plan</h1>
+                            <h1 className="text-3xl font-bold">
+                                {suggestionPhase === 'lunches' ? 'Plan Your Lunches' : 'Plan Your Snacks'}
+                            </h1>
                             <p className="text-[var(--text-muted)] mt-2">
-                                Let's create a balanced meal plan based on your inventory.
+                                {suggestionPhase === 'lunches'
+                                    ? 'Pick what the kids (and you) will have for lunch this week.'
+                                    : 'Confirm school and home snacks to finish the plan.'
+                                }
                             </p>
                         </div>
-                        <button onClick={() => setStep('inventory')} className="btn-secondary whitespace-nowrap">
-                            ← Back
-                        </button>
+                        <div className="flex gap-2">
+                            {suggestionPhase === 'snacks' && (
+                                <button onClick={() => setSuggestionPhase('lunches')} className="btn-secondary">
+                                    ← Back to Lunches
+                                </button>
+                            )}
+                            <button
+                                onClick={() => {
+                                    if (suggestionPhase === 'snacks') setStep('leftovers');
+                                    else setStep('leftovers');
+                                }}
+                                className="btn-secondary whitespace-nowrap"
+                            >
+                                Cancel
+                            </button>
+                        </div>
                     </div>
                 </header>
 
-                <div className="card text-center py-12">
-                    <div className="mb-6 text-6xl">🧑‍🍳</div>
-                    <h3 className="text-2xl font-bold mb-4">Ready to build your plan?</h3>
-                    <p className="text-[var(--text-muted)] mb-8 max-w-md mx-auto">
-                        We'll use your inventory and history to suggest a balanced meal plan for the week of {planningWeek}.
-                    </p>
-                    <button
-                        onClick={async () => {
-                            setSubmitting(true);
-                            try {
-                                // Initialize the week
-                                await createWeek(planningWeek!);
-                                // Fetch the draft
-                                const res = await generateDraft(planningWeek!, selections, [], leftoverAssignments);
-                                setDraftPlan(res.plan_data);
-                                setStep('draft');
-                            } catch (e) {
-                                console.error(e);
-                                showToast('Failed to generate plan', 'error');
-                            } finally {
-                                setSubmitting(false);
-                            }
-                        }}
-                        disabled={submitting}
-                        className="btn-primary text-lg px-8 py-4 shadow-lg hover:scale-105 transition-transform"
-                    >
-                        {submitting ? 'Chef is thinking...' : 'Generate Plan ✨'}
-                    </button>
-                </div>
+                {loadingSuggestions || !suggestionOptions ? (
+                    <div className="space-y-8">
+                        <Skeleton className="h-64 w-full" />
+                        <Skeleton className="h-64 w-full" />
+                    </div>
+                ) : (
+                    <div className="space-y-12">
+                        {suggestionPhase === 'snacks' ? (
+                            /* Phase 3: Snacks Section */
+                            <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+                                    <span className="bg-amber-100 p-2 rounded-lg">🍿</span>
+                                    Confirmed Weekly Snacks
+                                </h2>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    {suggestionOptions.snacks.map(snack => {
+                                        const schoolSel = isSlotSelected(snack.id, 'school_snack');
+                                        const homeSel = isSlotSelected(snack.id, 'home_snack');
+                                        return (
+                                            <div key={snack.id} className={`card p-4 transition-all ${schoolSel || homeSel ? 'border-[var(--accent-gold)] bg-amber-50/50' : 'hover:border-amber-200'}`}>
+                                                <p className="font-bold text-sm mb-3 line-clamp-1">{snack.name}</p>
+                                                <div className="flex flex-col gap-2">
+                                                    <button
+                                                        onClick={() => toggleSelection(snack, 'school_snack')}
+                                                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${schoolSel ? 'bg-amber-500 text-white shadow-md' : 'bg-white border border-gray-200 text-gray-400'}`}
+                                                    >
+                                                        {schoolSel ? '✓ School' : '🏫 School'}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => toggleSelection(snack, 'home_snack')}
+                                                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${homeSel ? 'bg-amber-600 text-white shadow-md' : 'bg-white border border-gray-200 text-gray-400'}`}
+                                                    >
+                                                        {homeSel ? '✓ Home' : '🏠 Home'}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </section>
+                        ) : (
+                            /* Phase 2: Lunch Section */
+                            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-10">
+                                {/* Per-day grid */}
+                                <section>
+                                    <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+                                        <span className="bg-blue-100 p-2 rounded-lg">🗓️</span>
+                                        Daily Lunch Review
+                                    </h2>
+                                    <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                                        {['mon', 'tue', 'wed', 'thu', 'fri'].map(day => {
+                                            const leftFound = leftoverAssignments.find(l => l.day === day && l.slot === 'lunch');
+                                            const selection = selections.find(s => s.day === day && (s as any).slot === 'lunch');
+
+                                            return (
+                                                <div key={day} className={`p-4 rounded-2xl border-2 transition-all ${leftFound ? 'bg-green-50 border-green-200 opacity-90' : 'bg-white border-blue-50'}`}>
+                                                    <h3 className="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-3">{day}</h3>
+                                                    {leftFound ? (
+                                                        <div className="space-y-1">
+                                                            <span className="text-xs font-bold text-green-700 flex items-center gap-1">
+                                                                <span className="text-sm">🍱</span> Assigned Leftover
+                                                            </span>
+                                                            <p className="text-xs text-green-600 line-clamp-2">{leftFound.item}</p>
+                                                        </div>
+                                                    ) : selection ? (
+                                                        <div className="space-y-2">
+                                                            <p className="text-sm font-bold line-clamp-2">{selection.recipe_name}</p>
+                                                            <button
+                                                                onClick={() => setSelections(prev => prev.filter(s => !(s.day === day && (s as any).slot === 'lunch')))}
+                                                                className="text-[9px] font-black uppercase tracking-widest text-red-400 hover:text-red-600"
+                                                            >
+                                                                Clear Selection
+                                                            </button>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="py-4 text-center border-2 border-dashed border-blue-100 rounded-xl">
+                                                            <p className="text-[9px] font-black uppercase tracking-widest text-blue-300">Default or Pick Below</p>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </section>
+
+                                {/* Suggestions Grid */}
+                                <section>
+                                    <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+                                        <span className="bg-indigo-100 p-2 rounded-lg">🍽️</span>
+                                        Context-Aware Suggestions
+                                    </h2>
+                                    <p className="text-sm text-[var(--text-muted)] mb-6">These recipes reuse ingredients from your dinners this week.</p>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        {suggestionOptions.lunch_recipes.map((recipe: any) => {
+                                            const isSelected = isSlotSelected(recipe.id, 'lunch');
+                                            const hasOverlap = recipe.overlap_count > 0;
+
+                                            return (
+                                                <div
+                                                    key={recipe.id}
+                                                    className={`card p-4 transition-all ${isSelected ? 'border-blue-500 bg-blue-50/50' : 'hover:border-blue-300'}`}
+                                                >
+                                                    <div className="flex justify-between items-start mb-2">
+                                                        <p className="font-bold text-sm line-clamp-2">{recipe.name}</p>
+                                                        {hasOverlap && (
+                                                            <span className="bg-yellow-100 text-yellow-700 text-[8px] font-black uppercase px-2 py-0.5 rounded-full whitespace-nowrap">
+                                                                Match ✨
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    {hasOverlap && (
+                                                        <p className="text-[9px] text-yellow-600 mb-3 italic">
+                                                            Uses: {recipe.overlap_ingredients.join(', ')}
+                                                        </p>
+                                                    )}
+
+                                                    <div className="flex flex-wrap gap-1 mt-auto">
+                                                        <button
+                                                            onClick={() => toggleSelection(recipe, 'lunch')}
+                                                            className={`flex-1 px-2 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${isSelected ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'}`}
+                                                        >
+                                                            {isSelected ? '✓ All Days' : 'Pick for All'}
+                                                        </button>
+                                                        <div className="flex gap-1 w-full mt-1">
+                                                            {['mon', 'tue', 'wed', 'thu', 'fri'].map(d => (
+                                                                <button
+                                                                    key={d}
+                                                                    onClick={() => toggleDaySelection(recipe, 'lunch', d)}
+                                                                    disabled={leftoverAssignments.some(l => l.day === d && l.slot === 'lunch')}
+                                                                    className={`w-full py-1 rounded text-[8px] font-black uppercase transition-all ${isSlotSelected(recipe.id, 'lunch', d) ? 'bg-blue-400 text-white' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}
+                                                                >
+                                                                    {d[0]}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </section>
+                            </div>
+                        )}
+
+                        {/* Defaults Review */}
+                        <section className="bg-[var(--bg-secondary)] p-8 rounded-2xl border border-[var(--border-subtle)]">
+                            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                <span className="bg-purple-100 p-2 rounded-lg">📋</span>
+                                Standard Defaults
+                            </h2>
+                            <p className="text-[var(--text-muted)] text-sm mb-6">These will be used automatically when no specific lunch is chosen or leftover available.</p>
+
+                            <div className="grid md:grid-cols-2 gap-8">
+                                <div>
+                                    <h3 className="text-[10px] font-black uppercase tracking-widest text-purple-600 mb-4 px-2">Kid Defaults</h3>
+                                    <div className="space-y-2">
+                                        {suggestionOptions.lunch_defaults.kids.map(d => {
+                                            const isExcluded = excludedDefaults.includes(d);
+                                            return (
+                                                <button
+                                                    key={d}
+                                                    onClick={() => setExcludedDefaults(prev => isExcluded ? prev.filter(x => x !== d) : [...prev, d])}
+                                                    className={`flex items-center gap-3 w-full p-3 rounded-xl border transition-all ${isExcluded ? 'bg-gray-100 border-gray-200 opacity-50 grayscale' : 'bg-white border-purple-100 shadow-sm'}`}
+                                                >
+                                                    <span className="text-lg">{isExcluded ? '❌' : '🧒'}</span>
+                                                    <span className={`text-sm font-medium ${isExcluded ? 'line-through text-gray-400' : ''}`}>
+                                                        {typeof d === 'string' ? d : (d as any).name || JSON.stringify(d)}
+                                                    </span>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 className="text-[10px] font-black uppercase tracking-widest text-purple-600 mb-4 px-2">Adult Approach</h3>
+                                    <div className="space-y-2">
+                                        {suggestionOptions.lunch_defaults.adult.map(d => {
+                                            const isExcluded = excludedDefaults.includes(d);
+                                            return (
+                                                <button
+                                                    key={d}
+                                                    onClick={() => setExcludedDefaults(prev => isExcluded ? prev.filter(x => x !== d) : [...prev, d])}
+                                                    className={`flex items-center gap-3 w-full p-3 rounded-xl border transition-all ${isExcluded ? 'bg-gray-100 border-gray-200 opacity-50 grayscale' : 'bg-white border-purple-100 shadow-sm'}`}
+                                                >
+                                                    <span className="text-lg">{isExcluded ? '❌' : '👩‍💼'}</span>
+                                                    <span className={`text-sm font-medium ${isExcluded ? 'line-through text-gray-400' : ''}`}>
+                                                        {typeof d === 'string' ? d : (d as any).name || JSON.stringify(d)}
+                                                    </span>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Final Action */}
+                        <div className="flex flex-col items-center pt-8">
+                            <button
+                                onClick={async () => {
+                                    if (suggestionPhase === 'lunches') {
+                                        setSuggestionPhase('snacks');
+                                        window.scrollTo(0, 0);
+                                    } else {
+                                        setSubmitting(true);
+                                        try {
+                                            await createWeek(planningWeek!);
+                                            const res = await generateDraft(planningWeek!, selections, [], leftoverAssignments, excludedDefaults);
+                                            setDraftPlan(res.plan_data);
+                                            setStep('draft');
+                                        } catch (e) {
+                                            console.error(e);
+                                            showToast('Failed to generate plan', 'error');
+                                        } finally {
+                                            setSubmitting(false);
+                                        }
+                                    }
+                                }}
+                                disabled={submitting}
+                                className="btn-premium text-lg px-12 py-5 shadow-2xl scale-110"
+                            >
+                                {submitting ? 'Preparing your week...' : (suggestionPhase === 'lunches' ? 'Next: Plan Snacks 🍿' : 'Generate Full Draft ✨')}
+                            </button>
+                            <p className="mt-6 text-[10px] uppercase font-black tracking-widest text-[var(--text-muted)]">
+                                {suggestionPhase === 'lunches' ? 'Step 5a: Lunch Selection' : 'Step 5b: Snack Confirmation'}
+                            </p>
+                        </div>
+                    </div>
+                )}
             </main>
         );
     }

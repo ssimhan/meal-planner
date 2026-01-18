@@ -811,4 +811,20 @@ The best tools are the ones you actually use. This system works because it reduc
 - **The Database is the Source of Truth**: When local files get messy, your production database (Supabase) is your definitive anchor. Use its row count to "prune" your local dev environment.
 - **Idempotency is Peace of Mind**: A script that does nothing when there's nothing to do is the safest script. Always design your automation so it can be run 1,000 times without side effects.
 
-**Final Phase 27 Status:** Recipe index is standardized, lean (185 recipes), and perfectly synced with Supabase.
+### Phase 28: Logic Refinement & Sequential Flow (2026-01-18) ✅ Complete
+
+**Goal:** Transform "Plan Your Extras" into a logic-driven, 3-phase progression to reduce decision fatigue and improve ingredient efficiency.
+
+**Implemented:**
+- **Sequential Progression:** Refactored the manual planning steps into a strict sequence: **Phase 1: Dinners -> Phase 2: Lunches -> Phase 3: Snacks**.
+- **Context-Aware Lunches:** Updated the backend (`/api/plan/suggest-options`) to analyze chosen dinner ingredients and rank lunch recipes by overlap.
+- **Match ✨ Indicator:** Added a visual "Match" badge for lunch recipes that reuse ingredients from the week's dinner plan.
+- **Leftover Sync:** Integrated assigned leftovers directly into the lunch grid. They appear as "Assigned Leftover" slots, preventing accidental double-planning.
+- **Granular Selection:** Replaced global toggles with a per-day lunch review grid.
+
+**Learning for Vibecoders:**
+- **Sequential Architecture:** Forcing a specific sequence (Dinners -> Lunches -> Snacks) allows subsequent steps to be "smarter" because they can inherit context from previous choices.
+- **Visual Micro-Feedback:** A simple badge like "Match ✨" makes the system feel much more intelligent than just sorted text.
+- **Sync is Sanity:** Providing immediate visual feedback for choices made in previous steps (like assigned leftovers) builds trust and reduces cognitive load.
+
+**Final Phase 28 Status:** General workflow is stabilized, suggestion logic is context-aware, and the wizard provides a frictionless end-to-end planning experience.

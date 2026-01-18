@@ -258,11 +258,26 @@ export async function getWasteNotSuggestions(): Promise<any> {
     return handleResponse<any>(res, 'Failed to fetch waste-not suggestions');
 }
 
-export async function generateDraft(week_of: string, selections: { day: string, recipe_id: string }[], locked_days: string[] = [], leftovers: { day: string, slot: string, item: string }[] = []): Promise<any> {
+export async function getSuggestOptions(selections: any[] = [], leftovers: any[] = []): Promise<any> {
+    const res = await fetch('/api/plan/suggest-options', {
+        method: 'POST',
+        headers: await getAuthHeaders(),
+        body: JSON.stringify({ selections, leftovers }),
+    });
+    return handleResponse<any>(res, 'Failed to fetch plan suggestions');
+}
+
+export async function generateDraft(
+    week_of: string,
+    selections: { day: string, slot: string, recipe_id: string, recipe_name: string }[],
+    locked_days: string[] = [],
+    leftovers: { day: string, slot: string, item: string }[] = [],
+    exclude_defaults: string[] = []
+): Promise<any> {
     const res = await fetch('/api/plan/draft', {
         method: 'POST',
         headers: await getAuthHeaders(),
-        body: JSON.stringify({ week_of, selections, locked_days, leftovers }),
+        body: JSON.stringify({ week_of, selections, locked_days, leftovers, exclude_defaults }),
     });
     return handleResponse<any>(res, 'Failed to generate draft plan');
 }

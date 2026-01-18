@@ -61,7 +61,7 @@ def create_new_week(week_str, history_dict=None, recipes_list=None, config_dict=
     return input_data
 
 
-def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
+def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None, exclude_defaults=None):
     """Generate the weekly meal plan."""
     print("\n" + "="*60)
     print(f"GENERATING MEAL PLAN")
@@ -128,7 +128,8 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
         selected_lunches = lunch_selector.select_weekly_lunches(
             dinner_plan=dinner_plan_list, 
             week_of=week_of,
-            current_lunches=existing_lunches
+            current_lunches=existing_lunches,
+            exclude_defaults=exclude_defaults
         )
         # Filter selected lunches to remove days logic - wait, selected_lunches returns a dict of days
         # We keep the object for now, Status API handles visibility based on config 

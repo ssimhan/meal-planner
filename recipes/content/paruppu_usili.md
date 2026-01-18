@@ -5,7 +5,7 @@ categories:
 - Indian
 cuisine: indian
 meal_type: soup_stew
-effort_level: normal
+effort_level: high
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null

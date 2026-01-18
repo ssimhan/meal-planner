@@ -4,7 +4,7 @@ categories:
 - Guest Apps
 cuisine: indian
 meal_type: appetizer
-effort_level: normal
+effort_level: high
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
@@ -16,15 +16,15 @@ ingredients:
 - 1cupfrozen peas
 - 2tbspoil
 - 1tspcumin
-- ½tsp asofoetida hing
+- "\xBDtsp asofoetida hing"
 - 5-6 curry leaves
 - 2tspginger shredded
 - 1tspgaram masala
 - 1tspmango powder amchur
-- ¼tsp red chilli powder
+- "\xBCtsp red chilli powder"
 - 1tsplemon juice
 - 1tspsugar
-- ½cup coriander chopped (optional)
+- "\xBDcup coriander chopped (optional)"
 main_veg:
 - ginger
 - lemon

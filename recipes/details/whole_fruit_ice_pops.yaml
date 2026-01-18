@@ -4,7 +4,7 @@ categories:
 - ''
 cuisine: unknown
 meal_type: frozen_treat
-effort_level: normal
+effort_level: high
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
@@ -21,29 +21,15 @@ ingredients:
 main_veg:
 - lime
 avoid_contains: []
-instructions: 'Here’s a look at the steps to make these popsicles. Scroll down to
-  the end of the post for the full information and amounts.
-
-  Peel the fruit, if needed. Wash the fruit if not peeling it and dry it gently. Dice
-  the fruit and measure it out.
-
-  Add to a blender. Add any optional ingredients.
-
-  Blend very smooth.
-
-  Use a funnel to pour into ice pop sleeves or add to a popsicle mold. Freeze for
-  at least 4 hours.
-
-  AD
-
-  Add the ingredients to a blender. Blend until very smooth. Taste and adjust sweetness
-  as desired.
-
-  Pour into ice pop sleeves or popsicle molds. Freeze for at least 4 hours or overnight.
-
-  Serve cold.
-
-  (To make without a blender, add ingredients to a wide bowl and mash coarsely with
-  a potato masher.)'
+instructions: "Here\u2019s a look at the steps to make these popsicles. Scroll down\
+  \ to the end of the post for the full information and amounts.\nPeel the fruit,\
+  \ if needed. Wash the fruit if not peeling it and dry it gently. Dice the fruit\
+  \ and measure it out.\nAdd to a blender. Add any optional ingredients.\nBlend very\
+  \ smooth.\nUse a funnel to pour into ice pop sleeves or add to a popsicle mold.\
+  \ Freeze for at least 4 hours.\nAD\nAdd the ingredients to a blender. Blend until\
+  \ very smooth. Taste and adjust sweetness as desired.\nPour into ice pop sleeves\
+  \ or popsicle molds. Freeze for at least 4 hours or overnight.\nServe cold.\n(To\
+  \ make without a blender, add ingredients to a wide bowl and mash coarsely with\
+  \ a potato masher.)"
 source_url: null
 source_file: Whole Fruit Ice Pops.html

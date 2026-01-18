@@ -4,7 +4,7 @@ name: Mini Egg Muffins with Cheese and Veggies
 categories: []
 cuisine: unknown
 meal_type: baked_goods
-effort_level: normal
+effort_level: high
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null

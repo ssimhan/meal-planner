@@ -7,7 +7,7 @@ categories:
 - TCL
 cuisine: indian
 meal_type: grain_bowl
-effort_level: normal
+effort_level: high
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null

@@ -6,15 +6,15 @@ categories:
 - Salad
 cuisine: italian
 meal_type: salad
-effort_level: normal
+effort_level: high
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - instant_pot
 ingredients:
-- ½cup mayonnaise
-- ¼cup sour cream
+- "\xBDcup mayonnaise"
+- "\xBCcup sour cream"
 - Adobo seasoning
 - Cilantro
 - Garlic powder
@@ -25,7 +25,7 @@ ingredients:
 - Lime juice
 - 1(12-ounce) box tri-color rotini pasta
 - 1canblack beans
-- 1½cups frozen fire-roasted corn
+- "1\xBDcups frozen fire-roasted corn"
 - 1 bell pepper, red
 - 1/2 red onion
 - 1cupcherry tomatoes, halved

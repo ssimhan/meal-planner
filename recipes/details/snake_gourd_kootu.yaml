@@ -5,7 +5,7 @@ categories:
 - Raks Kitchen
 cuisine: indian
 meal_type: soup_stew
-effort_level: normal
+effort_level: high
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
@@ -13,7 +13,7 @@ appliances:
 - instant_pot
 ingredients:
 - 2cupsSnake gourd
-- ¼cup Chana dal
+- "\xBCcup Chana dal"
 - 2 tablespoon Moong dal
 - Turmeric
 - Salt
@@ -23,19 +23,12 @@ ingredients:
 - Curry leaves
 main_veg: []
 avoid_contains: []
-instructions: 'Soak chana dal in water for 1 hour.
-
-  Clean and cut the snake gourd to your desired size cubes. I chopped little fine.
-
-  Take both the dals in a small pressure cooker and just add enough water to immerse
-  the dal. Add turmeric and stir well.
-
-  Add the chopped veggie over it (don’t stir)
-
-  Pressure cook for 3 whistles in medium flame. Allow pressure to release naturally.
-
-  Add kootu powder and salt and bring to boil for a few minutes.
-
-  Add tempering items: mustard seeds, urad dal, curry leaves.'
+instructions: "Soak chana dal in water for 1 hour.\nClean and cut the snake gourd\
+  \ to your desired size cubes. I chopped little fine.\nTake both the dals in a small\
+  \ pressure cooker and just add enough water to immerse the dal. Add turmeric and\
+  \ stir well.\nAdd the chopped veggie over it (don\u2019t stir)\nPressure cook for\
+  \ 3 whistles in medium flame. Allow pressure to release naturally.\nAdd kootu powder\
+  \ and salt and bring to boil for a few minutes.\nAdd tempering items: mustard seeds,\
+  \ urad dal, curry leaves."
 source_url: null
 source_file: Snake Gourd Kootu.html

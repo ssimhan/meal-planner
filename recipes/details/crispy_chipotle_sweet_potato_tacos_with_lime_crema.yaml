@@ -4,7 +4,7 @@ categories:
 - Mexican
 cuisine: mexican
 meal_type: tacos_wraps
-effort_level: normal
+effort_level: high
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
@@ -26,7 +26,7 @@ ingredients:
 - 8 hard shell tacos
 - 11/2 cups shredded Mexican cheese
 - Cilantro
-- 1 jalapeño
+- "1 jalape\xF1o"
 - 1/2cupGreek yogurt
 - 3 tablespoons mayonnaise
 - zest of 1 lime
@@ -41,34 +41,17 @@ main_veg:
 - potatoe
 - sweet potato
 avoid_contains: []
-instructions: 'Peel and cube the sweet potatoes.Seed and chop the poblano.
-
-  Preheat the oven to 425° F.
-
-  Place the sweet potatoes on a baking sheet and toss with olive oil, chili powder,
-  paprika, cumin, garlic powder, red pepper flakes, oregano, and salt.
-
-  Add the poblano and toss to combine.
-
-  Arrange in an even layer.
-
-  Bake 35 to 40 minutes, until the potatoes are tender and beginning to char on the
-  edges.
-
-  Remove from the oven and stir in the black beans.
-
-  Meanwhile, make the crema.
-
-  Combine all ingredients in a glass jar and shake or stir until creamy.
-
-  Line the taco shells up on a sheet pan or in a 9×13 inch baking dish.
-
-  Transfer to the oven and bake 5 minutes. Evenly divide the sweet potatoes among
-  each taco shell and top with cheese.
-
-  Bake 10 minutes, until the cheese has melted.
-
-  Mix the cilantro and jalapeño in a small bowl. Serve the tacos topped with crema,
-  avocado, and the spicy cilantro. Enjoy!'
+instructions: "Peel and cube the sweet potatoes.Seed and chop the poblano.\nPreheat\
+  \ the oven to 425\xB0 F.\nPlace the sweet potatoes on a baking sheet and toss with\
+  \ olive oil, chili powder, paprika, cumin, garlic powder, red pepper flakes, oregano,\
+  \ and salt.\nAdd the poblano and toss to combine.\nArrange in an even layer.\nBake\
+  \ 35 to 40 minutes, until the potatoes are tender and beginning to char on the edges.\n\
+  Remove from the oven and stir in the black beans.\nMeanwhile, make the crema.\n\
+  Combine all ingredients in a glass jar and shake or stir until creamy.\nLine the\
+  \ taco shells up on a sheet pan or in a 9\xD713 inch baking dish.\nTransfer to the\
+  \ oven and bake 5 minutes. Evenly divide the sweet potatoes among each taco shell\
+  \ and top with cheese.\nBake 10 minutes, until the cheese has melted.\nMix the cilantro\
+  \ and jalape\xF1o in a small bowl. Serve the tacos topped with crema, avocado, and\
+  \ the spicy cilantro. Enjoy!"
 source_url: null
 source_file: Crispy Chipotle Sweet Potato Tacos with Lime Crema.html

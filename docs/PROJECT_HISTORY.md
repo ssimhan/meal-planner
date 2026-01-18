@@ -781,4 +781,21 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Ghost State**: Button fades to a subtle outlined state when the index is clean, reducing visual clutter.
 - **Automated Capture**: New manual entries or URL imports now automatically receive audit tags (`not meal`, `missing ingredients`, `missing instructions`), ensuring they immediately drop into the review queue.
 
-**Learning**: Separating local file updates from database syncs provides a safe "staging" environment for edits. Automated quality tags prevent the index from deteriorating over time as new meals are added.
+**Block 4: Visual Effort Indicators & Recalibration (Completed)**
+- **Battery-Style Indicators**: Replaced text effort tags with vertical visual blocks across the app (Recipe Card, Detail, Review Modal, Batch Edit).
+    - 1 Green segment: Low
+    - 2 Yellow segments: Medium/Normal
+    - 3 Red segments: High
+- **Smart Recalibration**: Developed an instruction-parsing script to estimate total time (prep + cook) from unstructured text. Automatically updated 24 recipes > 45 minutes to "High" effort.
+
+**Block 5: Mobile "Focus Mode" Cooking Experience (Completed)**
+- **Kitchen-First UI**: Focused, high-legibility interface that splits recipes into Ingredients -> Prep -> Cook phases.
+- **Interactive Checklists**: Large tap targets for checking off ingredients/steps, allowing users to track progress hands-free-ish while cooking.
+- **Dynamic Theming**: Interface shifts colors (Emerald -> Amber -> Rose) as the cook progresses through phases.
+
+**Learning for Vibecoders (Self-Taught Developers):**
+- **"Vibe-First" Prototyping**: Don't start with the database schema. Start with the *feeling* of the UI. If it feels too transparent or "stiff", tweak the CSS variables first. The "vibes" often reveal the missing logic.
+- **Regex is a Superpower**: When your data is messy (like timing trapped inside instruction text), a simple regular expression can "recalibrate" hundreds of rows in seconds. It's better than manual entry 100% of the time.
+- **Component Wrapping**: If you have a complex server-side page (like a Recipe Detail) and want to add an interactive modal (like Focus Mode), don't try to make the whole page a Client Component. Wrap just the interactive parts in a "Client Wrapper" to keep the speed of server rendering.
+
+**Final Phase 27 Status:** Recipe index is standardized, clean, and has a premium mobile cooking experience.

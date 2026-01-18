@@ -5,7 +5,7 @@ categories:
 - Indian
 cuisine: indian
 meal_type: breakfast
-effort_level: normal
+effort_level: high
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
@@ -25,24 +25,16 @@ main_veg:
 - ginger
 - onion
 avoid_contains: []
-instructions: 'Rinse well a few times until the water runs clear.
-
-  Pour fresh water and soak in enough water for about 4 to 6 hours. If using rice
-  soak it along with dal. I don’t use rice most of the times.
-
-  Once the green gram is soaked, rinse them well.
-
-  Blend with ginger, salt, green chilies, cumin seeds.
-
-  Chop onions. Sauté with ghee, cumin, green chilies until slightly brown
-
-  When making the peasrattu, sprinkle fried onions on topping
-
-  To make the next one, ensure the pan is not very hot. If it is too hot, reduce the
-  flame or turn off the stove for a while and then make the next one.
-
-  If you are unable to spread the batter on the tawa it means the batter is very thick.
-  Add back to the blender with little water and blend again. Adding water directly
-  to the batter most times doesn’t yield me good ones.'
+instructions: "Rinse well a few times until the water runs clear.\nPour fresh water\
+  \ and soak in enough water for about 4 to 6 hours. If using rice soak it along with\
+  \ dal. I don\u2019t use rice most of the times.\nOnce the green gram is soaked,\
+  \ rinse them well.\nBlend with ginger, salt, green chilies, cumin seeds.\nChop onions.\
+  \ Saut\xE9 with ghee, cumin, green chilies until slightly brown\nWhen making the\
+  \ peasrattu, sprinkle fried onions on topping\nTo make the next one, ensure the\
+  \ pan is not very hot. If it is too hot, reduce the flame or turn off the stove\
+  \ for a while and then make the next one.\nIf you are unable to spread the batter\
+  \ on the tawa it means the batter is very thick. Add back to the blender with little\
+  \ water and blend again. Adding water directly to the batter most times doesn\u2019\
+  t yield me good ones."
 source_url: null
 source_file: Pesarattu.html

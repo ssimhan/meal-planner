@@ -5,7 +5,7 @@ categories:
 - Italian
 cuisine: italian
 meal_type: casserole
-effort_level: normal
+effort_level: high
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
@@ -23,8 +23,8 @@ ingredients:
 - 2 tablespoons parsley
 - 2tbspbasil
 - 15 ounces ricotta cheese
-- 2¼cups grated mozzarella cheese
-- ½cup grated Parmesan cheese
+- "2\xBCcups grated mozzarella cheese"
+- "\xBDcup grated Parmesan cheese"
 - 24 ounces marinara sauce
 - No-boil lasagna noodles
 main_veg:
@@ -36,32 +36,17 @@ main_veg:
 - spinach
 - zucchini
 avoid_contains: []
-instructions: 'Preheat oven to 400 degrees F. Spray a 9 x 13-inch baking dish with
-  cooking spray and set aside.
-
-  Dice zucchini, bell pepper, onion and spinach.
-
-  In a large skillet or Dutch oven, heat oil over medium-high heat. Sauté veggies
-  and garlic.
-
-  Use a separate bowl to stir together egg, parsley, basil, ricotta cheese, 1 ¼ cups
-  mozzarella, and ¼ cup Parmesan.
-
-  When the vegetables are done cooking, stir the marinara sauce into the skillet.
-
-  Spread ¼ of the marinara-vegetable sauce mixture in a thin layer in the bottom of
-  the prepared baking dish.
-
-  Create layer of no-boil lasagna noodles, ⅓ of the ricotta mixture, and another ¼
-  of the sauce mixture.
-
-  Repeat layers two more times. Finish with remaining 1 cup of mozzarella and ¼ cup
-  of Parmesan cheese on top. Cover with aluminum foil.
-
-  Bake for 35 minutes.
-
-  Remove foil, and bake for another 5-10 minutes (until cheese on top is browned).
-
-  Let stand for about 10 minutes before slicing and serving.'
+instructions: "Preheat oven to 400 degrees F. Spray a 9 x 13-inch baking dish with\
+  \ cooking spray and set aside.\nDice zucchini, bell pepper, onion and spinach.\n\
+  In a large skillet or Dutch oven, heat oil over medium-high heat. Saut\xE9 veggies\
+  \ and garlic.\nUse a separate bowl to stir together egg, parsley, basil, ricotta\
+  \ cheese, 1 \xBC cups mozzarella, and \xBC cup Parmesan.\nWhen the vegetables are\
+  \ done cooking, stir the marinara sauce into the skillet.\nSpread \xBC of the marinara-vegetable\
+  \ sauce mixture in a thin layer in the bottom of the prepared baking dish.\nCreate\
+  \ layer of no-boil lasagna noodles, \u2153 of the ricotta mixture, and another \xBC\
+  \ of the sauce mixture.\nRepeat layers two more times. Finish with remaining 1 cup\
+  \ of mozzarella and \xBC cup of Parmesan cheese on top. Cover with aluminum foil.\n\
+  Bake for 35 minutes.\nRemove foil, and bake for another 5-10 minutes (until cheese\
+  \ on top is browned).\nLet stand for about 10 minutes before slicing and serving."
 source_url: null
 source_file: Vegetable Lasagna.html

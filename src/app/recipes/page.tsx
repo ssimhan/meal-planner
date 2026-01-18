@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { getRecipes, updateRecipeMetadata, deleteRecipe, searchRecipes } from '@/lib/api';
+import { getRecipes, updateRecipeMetadata, deleteRecipe, updateRecipeContent } from '@/lib/api';
 import AppLayout from '@/components/AppLayout';
 import Link from 'next/link';
 import { RecipeListItem } from '@/types';
+import EffortIndicator from '@/components/EffortIndicator';
 
 export default function RecipesPage() {
     const [recipes, setRecipes] = useState<RecipeListItem[]>([]);
@@ -269,16 +270,8 @@ function RecipeCard({ recipe }: { recipe: any }) {
                         </div>
                     )}
                 </div>
-                <div className="flex flex-col items-end gap-2">
-                    {recipe.effort_level && (
-                        <span className={`px-2 py-1 text-xs font-bold rounded-sm border ${recipe.effort_level === 'high' ? 'bg-[var(--accent-terracotta)] text-white border-[var(--accent-terracotta)]' :
-                            recipe.effort_level === 'mild' ? 'bg-[var(--accent-gold)] border-[var(--accent-gold)]' :
-                                recipe.effort_level === 'low' ? 'bg-[var(--accent-green)] text-white border-[var(--accent-green)]' :
-                                    'bg-gray-100 text-gray-800 border-gray-200'
-                            }`}>
-                            {recipe.effort_level.toUpperCase()}
-                        </span>
-                    )}
+                <div className="flex flex-col items-end justify-center h-full">
+                    <EffortIndicator level={recipe.effort_level} size="md" />
                 </div>
             </div>
         </div>
@@ -412,14 +405,17 @@ function RecipeReviewModal({ recipes, onClose, onRefresh }: { recipes: RecipeLis
                             <span className="text-[10px] font-bold text-[var(--accent-sage)] uppercase tracking-widest mb-1 block">
                                 Reviewing {currentIndex + 1} of {recipes.length}
                             </span>
-                            <input
-                                ref={nameRef}
-                                type="text"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                className="text-2xl font-bold text-gray-900 border-none bg-transparent focus:ring-1 focus:ring-gray-200 rounded-lg w-full outline-none p-0"
-                                placeholder="Recipe Name"
-                            />
+                            <div className="flex items-center gap-3">
+                                <input
+                                    ref={nameRef}
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    className="text-2xl font-bold text-gray-900 border-none bg-transparent focus:ring-1 focus:ring-gray-200 rounded-lg flex-1 outline-none p-0"
+                                    placeholder="Recipe Name"
+                                />
+                                <EffortIndicator level={effort} size="md" />
+                            </div>
                         </div>
                         <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors p-1">
                             ✕

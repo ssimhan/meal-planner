@@ -5,6 +5,7 @@ import { getRecipes, updateRecipeMetadata, deleteRecipe, getRecipeContent, updat
 import AppLayout from '@/components/AppLayout';
 import Link from 'next/link';
 import { RecipeListItem } from '@/types';
+import EffortIndicator from '@/components/EffortIndicator';
 
 export default function BatchEditPage() {
     const [recipes, setRecipes] = useState<RecipeListItem[]>([]);
@@ -202,17 +203,20 @@ export default function BatchEditPage() {
                                             </select>
                                         </td>
                                         <td className="p-4" onClick={(e) => e.stopPropagation()}>
-                                            <select
-                                                value={recipe.effort_level || ''}
-                                                onChange={(e) => handleUpdate(recipe.id, 'effort_level', e.target.value)}
-                                                disabled={saving.has(recipe.id)}
-                                                className="w-full p-2 border border-[var(--border-subtle)] rounded-lg bg-white focus:ring-2 focus:ring-[var(--accent-sage)] outline-none text-sm"
-                                            >
-                                                <option value="">Select effort...</option>
-                                                <option value="low">Low</option>
-                                                <option value="medium">Medium</option>
-                                                <option value="high">High</option>
-                                            </select>
+                                            <div className="flex items-center gap-3">
+                                                <select
+                                                    value={recipe.effort_level || ''}
+                                                    onChange={(e) => handleUpdate(recipe.id, 'effort_level', e.target.value)}
+                                                    disabled={saving.has(recipe.id)}
+                                                    className="flex-1 p-2 border border-[var(--border-subtle)] rounded-lg bg-white focus:ring-2 focus:ring-[var(--accent-sage)] outline-none text-sm"
+                                                >
+                                                    <option value="">Select effort...</option>
+                                                    <option value="low">Low</option>
+                                                    <option value="medium">Medium</option>
+                                                    <option value="high">High</option>
+                                                </select>
+                                                <EffortIndicator level={recipe.effort_level} size="sm" />
+                                            </div>
                                         </td>
                                         <td className="p-4" onClick={(e) => e.stopPropagation()}>
                                             <button

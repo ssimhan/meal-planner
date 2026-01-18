@@ -278,4 +278,9 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ---
 
-See [PROJECT_HISTORY.md](PROJECT_HISTORY.md) for detailed development timeline.
+### Future Improvements & Ideas
+- **Universal Search**: Search recipes, inventory, and meal plans from a single global search bar.
+- **AI-Powered Substitutions**: Suggest ingredient swaps based on current inventory.
+- **Timer Capability**: Integrate multi-timer support directly into the Focus Mode recipe view for active cooking.
+
+See [PROJECT_HISTORY.md](file:///Users/sandhyasimhan/Documents/3_Career/Coding%20Projects/meal-planner/docs/PROJECT_HISTORY.md) for detailed development timeline.

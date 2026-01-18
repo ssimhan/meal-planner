@@ -7,7 +7,7 @@ categories:
 - Salad
 cuisine: italian
 meal_type: salad
-effort_level: normal
+effort_level: high
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null

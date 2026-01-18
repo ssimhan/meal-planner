@@ -6,9 +6,26 @@ import Link from 'next/link';
 import matter from 'gray-matter';
 import ReactMarkdown from 'react-markdown';
 import RecipeScaler from '@/components/RecipeScaler';
+import EffortIndicator from '@/components/EffortIndicator';
+import RecipeDetailClientWrapper from '@/components/RecipeDetailClientWrapper';
 
 interface RecipeViewerProps {
     params: Promise<{ id: string }>;
+}
+
+function extractList(markdown: string, sectionName: string): string[] {
+    const regex = new RegExp(`(?:##|###)\\s*${sectionName}[\\s\\S]*?(?=(?:##|###)|$)`, 'i');
+    const match = markdown.match(regex);
+    if (!match) return [];
+
+    // Extract list items (- or 1.)
+    const content = match[0];
+    const items = content.split('\n')
+        .map(line => line.trim())
+        .filter(line => line.startsWith('- ') || /^\d+\.\s+/.test(line))
+        .map(line => line.replace(/^- \s*|^\d+\.\s+/, ''));
+
+    return items;
 }
 
 export default async function RecipeViewer({ params }: RecipeViewerProps) {
@@ -48,6 +65,11 @@ export default async function RecipeViewer({ params }: RecipeViewerProps) {
         );
     }
 
+    const ingredients = extractList(markdownContent, 'Ingredients');
+    const prepSteps = extractList(markdownContent, 'Prep Steps');
+    let instructions = extractList(markdownContent, 'Instructions');
+    if (instructions.length === 0) instructions = extractList(markdownContent, 'Directions');
+
     return (
         <div className="min-h-screen bg-[var(--bg-primary)] p-4 md:p-8">
             <div className="max-w-4xl mx-auto">
@@ -62,12 +84,7 @@ export default async function RecipeViewer({ params }: RecipeViewerProps) {
                                     {recipeData.cuisine}
                                 </span>
                             )}
-                            {recipeData.effort_level && (
-                                <span className={`px-2 py-1 rounded text-[10px] uppercase font-bold ${recipeData.effort_level === 'no_chop' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
-                                    }`}>
-                                    {recipeData.effort_level.replace('_', ' ')}
-                                </span>
-                            )}
+                            <EffortIndicator level={recipeData.effort_level} size="md" />
                         </div>
                     </div>
                     <h1 className="text-4xl font-bold mb-2">{recipeData.name || id}</h1>
@@ -90,53 +107,60 @@ export default async function RecipeViewer({ params }: RecipeViewerProps) {
                     </div>
                 </header>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-2">
-                        <RecipeScaler markdownContent={markdownContent} />
+                <RecipeDetailClientWrapper
+                    name={recipeData.name || id}
+                    ingredients={ingredients}
+                    prepSteps={prepSteps}
+                    instructions={instructions}
+                >
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div className="lg:col-span-2">
+                            <RecipeScaler markdownContent={markdownContent} />
+                        </div>
+
+                        <div className="space-y-6">
+                            {recipeData.main_veg?.length > 0 && (
+                                <section className="card">
+                                    <h3 className="text-xs font-mono uppercase tracking-widest text-[var(--text-muted)] mb-3">Key Vegetables</h3>
+                                    <div className="flex flex-wrap gap-1">
+                                        {recipeData.main_veg.map((v: string) => (
+                                            <span key={v} className="px-2 py-1 bg-green-50 text-green-700 rounded-full text-xs font-medium border border-green-100">
+                                                {v}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </section>
+                            )}
+
+                            {recipeData.source_url && (
+                                <section className="card">
+                                    <h3 className="text-xs font-mono uppercase tracking-widest text-[var(--text-muted)] mb-3">Original Link</h3>
+                                    <a
+                                        href={recipeData.source_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-sm text-[var(--accent-sage)] hover:underline break-all"
+                                    >
+                                        {new URL(recipeData.source_url).hostname} →
+                                    </a>
+                                </section>
+                            )}
+
+                            {recipeData.categories?.length > 0 && (
+                                <section className="card">
+                                    <h3 className="text-xs font-mono uppercase tracking-widest text-[var(--text-muted)] mb-3">Categories</h3>
+                                    <div className="flex flex-wrap gap-1">
+                                        {recipeData.categories.map((c: string) => (
+                                            <span key={c} className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-[10px] uppercase font-mono">
+                                                {c}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </section>
+                            )}
+                        </div>
                     </div>
-
-                    <div className="space-y-6">
-                        {recipeData.main_veg?.length > 0 && (
-                            <section className="card">
-                                <h3 className="text-xs font-mono uppercase tracking-widest text-[var(--text-muted)] mb-3">Key Vegetables</h3>
-                                <div className="flex flex-wrap gap-1">
-                                    {recipeData.main_veg.map((v: string) => (
-                                        <span key={v} className="px-2 py-1 bg-green-50 text-green-700 rounded-full text-xs font-medium border border-green-100">
-                                            {v}
-                                        </span>
-                                    ))}
-                                </div>
-                            </section>
-                        )}
-
-                        {recipeData.source_url && (
-                            <section className="card">
-                                <h3 className="text-xs font-mono uppercase tracking-widest text-[var(--text-muted)] mb-3">Original Link</h3>
-                                <a
-                                    href={recipeData.source_url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-sm text-[var(--accent-sage)] hover:underline break-all"
-                                >
-                                    {new URL(recipeData.source_url).hostname} →
-                                </a>
-                            </section>
-                        )}
-
-                        {recipeData.categories?.length > 0 && (
-                            <section className="card">
-                                <h3 className="text-xs font-mono uppercase tracking-widest text-[var(--text-muted)] mb-3">Categories</h3>
-                                <div className="flex flex-wrap gap-1">
-                                    {recipeData.categories.map((c: string) => (
-                                        <span key={c} className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-[10px] uppercase font-mono">
-                                            {c}
-                                        </span>
-                                    ))}
-                                </div>
-                            </section>
-                        )}
-                    </div>
-                </div>
+                </RecipeDetailClientWrapper>
             </div>
         </div >
     );

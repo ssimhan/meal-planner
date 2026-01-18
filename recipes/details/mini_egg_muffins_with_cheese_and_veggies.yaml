@@ -3,7 +3,7 @@ name: Mini Egg Muffins with Cheese and Veggies
 categories: []
 cuisine: unknown
 meal_type: baked_goods
-effort_level: normal
+effort_level: high
 no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
@@ -12,7 +12,7 @@ appliances:
 - oven
 ingredients:
 - US Customary Metric
-- 1 tablespoon onion, peeled and grated (or ¼ teaspoon onion powder)
+- "1 tablespoon onion, peeled and grated (or \xBC teaspoon onion powder)"
 - 1/2cupbutternut squash, finely grated (or leftover diced roasted squash, minced
   broccoli, grated carrot, or minced spinach)
 - 2 eggs lightly beaten

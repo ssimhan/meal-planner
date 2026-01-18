@@ -1,4 +1,5 @@
 id: vegetarian_enchiladas
+title: Vegetarian Enchiladas
 name: Vegetarian Enchiladas
 categories:
 - Dinner
@@ -6,26 +7,41 @@ categories:
 cuisine: mexican
 meal_type: tacos_wraps
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - oven
 - stovetop
 ingredients:
-- 2 Tablespoons olive oil
-- 1 red bell pepper, chopped
-- 1/2 medium onion
-- 15 oz. can of black beans, drained and rinsed
-- 14.5 oz. can fire roasted, diced tomatoes
-- 4 oz. can diced chiles
-- 12 oz. enchilada sauce
 - 10 tortillas
-- 3cupssharp cheddar cheese, divided {or cheese of your choice}
-- Cilantro
+- 1/2 medium onion
+- Tablespoons olive oil
+- Red bell pepper, chopped
+- 14.5 oz. can fire roasted, diced tomatoes
+- 15 oz. can of black beans, drained and rinsed
 - Avocado, optional
-- Sour Cream, optional
+- Cilantro
+- 12 oz. enchilada sauce
+- 3cupssharp cheddar cheese, divided {or cheese of your choice}
+- 4 oz. can diced chiles
 - Salsa, optional
+- Sour Cream, optional
+prep_steps: []
+cook_steps:
+- Preheat the oven to 350 degrees F.
+- In a large skillet heat the 2 Tablespoons olive oil over medium high heat. Add the
+  bell pepper and onion and sauté until the onion is soft. Add the black beans, fire
+  roasted tomatoes and diced chiles and cook for another 2 minutes. Remove from the
+  heat and set aside.
+- Spray a 9 x 13 inch dish with non-stick cooking spray. Place tortillas on a large
+  plate or cutting board. Using a spoon place 2-3 spoonfuls of the black bean mixture
+  into the center of the tortilla, a sprinkle of cheese and a drizzle of enchilada
+  sauce and roll it until closed. Place seem side down in the dish. Continue to do
+  all of the tortillas laying them side by side.
+- Drizzle the remaining enchilada sauce on top of the enchiladas followed by the cheese.
+  Bake for 20 minutes, or until the cheese is melted and the enchiladas are heated
+  through.
+- Remove from the oven and garnish with fresh cilantro, sour cream and avocado.
 main_veg:
 - avocado
 - beans
@@ -33,6 +49,8 @@ main_veg:
 - cilantro
 - onion
 - tomato
+source_url: null
+source_file: Vegetarian Enchiladas.html
 avoid_contains: []
 instructions: 'Preheat the oven to 350 degrees F.
 
@@ -52,5 +70,4 @@ instructions: 'Preheat the oven to 350 degrees F.
   through.
 
   Remove from the oven and garnish with fresh cilantro, sour cream and avocado.'
-source_url: null
-source_file: Vegetarian Enchiladas.html
+no_chop_compatible: false

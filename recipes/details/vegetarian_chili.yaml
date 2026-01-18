@@ -1,4 +1,5 @@
 id: vegetarian_chili
+title: Vegetarian Chili
 name: Vegetarian Chili
 categories:
 - Dinner
@@ -7,32 +8,48 @@ categories:
 cuisine: mexican
 meal_type: soup_stew
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - instant_pot
 - oven
 ingredients:
-- 1 tablespoon olive oil
+- 1/2cupuncooked quinoa
+- Crushed tortilla chips
 - 1 medium onion
-- 2 medium sweet potatoes
-- 2 bell peppers, red
-- 4clovesgarlic
+- Olive oil
+- Bell peppers, red
 - Chili powder
 - Chipotle chili powder
+- Clovesgarlic
 - Cumin powder
 - Salt
-- 21/2 cups vegetable broth
-- 1cantomato sauce, 8 oz
-- 1/2cupuncooked quinoa
 - 1canblack beans
 - 1cankidney beans
-- 1/2 teaspoon granulated sugar
+- 1cantomato sauce, 8 oz
+- 2 medium sweet potatoes
 - Cilantro
-- Shredded cheese
-- Crushed tortilla chips
+- 1/2 teaspoon granulated sugar
+- 21/2 cups vegetable broth
 - Greek yogurt
+- Shredded cheese
+prep_steps:
+- Dice yellow onion, sweet potatoes, red bell peppers.
+cook_steps:
+- Once the oil is hot, add the onion and cook until beginning to soften, about 3 minutes.
+- Add the sweet potatoes, bell pepper, garlic, chili powder, chipotle chili powder,
+  cumin, and kosher salt.
+- Cook for 1 to 2 minutes, until the garlic is fragrant.
+- Add 2.5 cups of the vegetable broth and the quinoa.
+- Pour the tomato sauce on top (do not stir again).
+- Cover and seal the Instant Pot. Cook on manual (HIGH) pressure for 8 minutes. Immediately
+  release the pressure. Carefully open the Instant Pot.
+- Turn the Instant Pot to OFF. Stir in the black beans, kidney beans, and sugar. Place
+  the lid back on top and let stand 10 minutes to thicken. Uncover. Taste and adjust
+  seasoning as desired. Serve hot, with any and all the toppings!
+- Vegetarian chili is good in the refrigerator for 5 days and in the freezer for 3
+  months. Let the leftovers cool completely, and store them in an airtight container.
+- Can serve with salad, cornbread or roasted veggies
 main_veg:
 - beans
 - bell pepper
@@ -44,6 +61,8 @@ main_veg:
 - potatoe
 - sweet potato
 - tomato
+source_url: null
+source_file: Vegetarian Chili.html
 avoid_contains: []
 instructions: 'Dice yellow onion, sweet potatoes, red bell peppers.
 
@@ -69,5 +88,4 @@ instructions: 'Dice yellow onion, sweet potatoes, red bell peppers.
   months. Let the leftovers cool completely, and store them in an airtight container.
 
   Can serve with salad, cornbread or roasted veggies'
-source_url: null
-source_file: Vegetarian Chili.html
+no_chop_compatible: false

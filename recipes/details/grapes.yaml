@@ -1,21 +1,25 @@
 id: grapes
+title: Grapes
 name: Grapes
 categories:
 - School Snacks
 cuisine: snack
 meal_type: simple_snack
 effort_level: low
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
 - Grapes
+prep_steps: []
+cook_steps:
+- Grapes
 main_veg: []
+source_url: null
+source_file: Grapes.html
 avoid_contains: []
 instructions:
 - Grapes
-source_url: null
-source_file: Grapes.html
+no_chop_compatible: false
 tags: []

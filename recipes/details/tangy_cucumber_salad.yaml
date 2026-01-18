@@ -1,4 +1,5 @@
 id: tangy_cucumber_salad
+title: Tangy Cucumber Salad
 name: Tangy Cucumber Salad
 categories:
 - Guest Apps
@@ -6,22 +7,30 @@ categories:
 cuisine: unknown
 meal_type: salad
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
-- 1/4cupapple cider vinegar
-- 2 tablespoons olive oil
-- 2 teaspoons granulated sugar
-- 1 teaspoon kosher salt, plus more as needed
+- Tablespoons olive oil
 - Freshly ground black pepper
+- Kosher salt, plus more as needed
 - 2 pounds cucumbers (about 4 medium)
+- 1/4cupapple cider vinegar
 - 2 tablespoons finely chopped fresh chives
+- 2 teaspoons granulated sugar
+prep_steps: []
+cook_steps:
+- Place the vinegar, oil, sugar, salt, and a few grinds of pepper in a large bowl
+  and whisk to combine. Thinly slice the cucumbers crosswise. Place them in the bowl,
+  add the chives, and toss to combine.
+- Cover and refrigerate for at least 30 minutes or overnight to allow the flavors
+  to meld. Taste and season with salt and pepper as needed before serving.
 main_veg:
 - chive
 - cucumber
+source_url: null
+source_file: Tangy Cucumber Salad.html
 avoid_contains: []
 instructions: 'Place the vinegar, oil, sugar, salt, and a few grinds of pepper in
   a large bowl and whisk to combine. Thinly slice the cucumbers crosswise. Place them
@@ -29,5 +38,4 @@ instructions: 'Place the vinegar, oil, sugar, salt, and a few grinds of pepper i
 
   Cover and refrigerate for at least 30 minutes or overnight to allow the flavors
   to meld. Taste and season with salt and pepper as needed before serving.'
-source_url: null
-source_file: Tangy Cucumber Salad.html
+no_chop_compatible: false

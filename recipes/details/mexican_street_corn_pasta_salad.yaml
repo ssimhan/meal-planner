@@ -1,11 +1,11 @@
 id: mexican_street_corn_pasta_salad
+title: Mexican Street Corn Pasta Salad
 name: Mexican Street Corn Pasta Salad
 categories:
 - Mexican
 cuisine: italian
 meal_type: pasta_noodles
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
@@ -13,18 +13,35 @@ appliances:
 ingredients:
 - 2cupssmall pasta
 - Olive oil
-- 3cupscorn
-- 2clovesgarlic
-- 1/2 jalapeño, ribs removed
-- 1bunchcilantro
-- 1bunchscallions
-- 1/4cupcotija cheese, crumbled
-- 1/2cupsour cream
-- 1/2cupmayo
-- 2 chipotle peppers in adobo
-- 1/3cupfresh lime juice
-- Salt
 - Black pepper
+- Chipotle peppers in adobo
+- Clovesgarlic
+- Salt
+- 1/3cupfresh lime juice
+- 1bunchcilantro
+- 3cupscorn
+- 1/2 jalapeño, ribs removed
+- 1/2cupmayo
+- 1/2cupsour cream
+- 1/4cupcotija cheese, crumbled
+- 1bunchscallions
+prep_steps:
+- 'Prep:'
+cook_steps:
+- Cook pasta in salted water until al dente. Drain and rinse with cold water.
+- Mince garlic, jalapeño, and chop cilantro and scallions (reserve some for garnish).
+- Crumble cotija cheese (reserve some for garnish).
+- 'Cook:'
+- Heat olive oil in a skillet, add corn in a single layer, season with salt and pepper,
+  and cook undisturbed for 5 minutes until charred.
+- Add garlic, cook for 1–2 more minutes, and cool.
+- Blend sour cream, mayonnaise, chipotle peppers, lime juice, and zest to make the
+  dressing. Season with salt and pepper.
+- 'Assemble:'
+- Combine pasta, charred corn, jalapeño, cilantro, scallions, and cotija cheese in
+  a large bowl.
+- Toss with the dressing and adjust seasoning if needed.
+- Garnish with reserved cilantro, scallions, and cotija cheese. Serve or refrigerate.
 main_veg:
 - cilantro
 - corn
@@ -32,6 +49,8 @@ main_veg:
 - lime
 - pepper
 - scallion
+source_url: null
+source_file: Mexican Street Corn Pasta Salad.html
 avoid_contains: []
 instructions: 'Prep:
 
@@ -59,5 +78,4 @@ instructions: 'Prep:
   Toss with the dressing and adjust seasoning if needed.
 
   Garnish with reserved cilantro, scallions, and cotija cheese. Serve or refrigerate.'
-source_url: null
-source_file: Mexican Street Corn Pasta Salad.html
+no_chop_compatible: false

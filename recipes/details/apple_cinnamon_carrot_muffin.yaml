@@ -1,4 +1,5 @@
 id: apple_cinnamon_carrot_muffin
+title: Apple Cinnamon Carrot Muffin
 name: Apple Cinnamon Carrot Muffin
 categories:
 - REW
@@ -6,7 +7,6 @@ categories:
 cuisine: unknown
 meal_type: baked_goods
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
@@ -14,20 +14,33 @@ appliances:
 - oven
 ingredients:
 - 13/4 cup flour, wheat
-- 11/2 tsp baking powder
-- 1tspcinnamon
-- 1/2tspbaking soda
-- 1/2tspsalt
-- 2 red apples, medium
+- Cupavocado oil
+- Baking powder
+- Tspcinnamon
+- Tspsalt
 - 1 carrot, large
-- 3/4cupmilk
-- 2 eggs, large
 - 1/2cuphoney or agave
-- 1/2cupavocado oil
+- 1/2tspbaking soda
 - 1tspvanilla
+- 2 eggs, large
+- 2 red apples, medium
+- 3/4cupmilk
+prep_steps: []
+cook_steps:
+- Shred apples to get 1 1/2 cup for recipe, squeeze out extra moisture.Shred carrot
+  to get 1/2 cup for recipe, squeeze out extra moisture.
+- Preheat over to 350 degrees and prepare muffin tins
+- In a large mixing bowl, combine dry ingredients. Mix in apples and carrots until
+  well combined.
+- In a small bowl, combine wet ingredients. Add wet ingredients to dry ingredients
+  and mix to incorporate ingredients.
+- Spoon into muffin tins. Bake for approximately 16 minutes or until atoothpick/knife
+  inserted into the center comes out clean.
 main_veg:
 - avocado
 - carrot
+source_url: null
+source_file: Apple Cinnamon Carrot Muffin.html
 avoid_contains: []
 instructions: 'Shred apples to get 1 1/2 cup for recipe, squeeze out extra moisture.Shred
   carrot to get 1/2 cup for recipe, squeeze out extra moisture.
@@ -42,5 +55,4 @@ instructions: 'Shred apples to get 1 1/2 cup for recipe, squeeze out extra moist
 
   Spoon into muffin tins. Bake for approximately 16 minutes or until atoothpick/knife
   inserted into the center comes out clean.'
-source_url: null
-source_file: Apple Cinnamon Carrot Muffin.html
+no_chop_compatible: false

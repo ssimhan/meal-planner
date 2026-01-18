@@ -1,4 +1,5 @@
 id: loaded_greek_chickpea_pasta_salad
+title: Loaded Greek Chickpea Pasta Salad
 name: Loaded Greek Chickpea Pasta Salad
 categories:
 - Dinner
@@ -7,29 +8,42 @@ categories:
 cuisine: italian
 meal_type: salad
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
 - 8 ounce box of pasta
-- 1(15 ounce) can chickpeas
-- 1 red bell pepper
-- 1 yellow bell pepper
-- 11/2 cups cherry tomatoes
+- Cupolive oil
+- Black pepper
+- Clovegarlic
+- Red bell pepper
+- Salt
+- Yellow bell pepper
 - 1 cucumber, large diced
-- 1cupfeta, crumbled
-- 3/4cupkalamata olives
-- Parsley
-- 1/3cupolive oil
-- 2 tablespoons red wine vinegar
-- 1clovegarlic
+- 1(15 ounce) can chickpeas
+- 11/2 cups cherry tomatoes
 - 1/2 teaspoon dijon mustard
 - 1/2 teaspoon maple syrup
 - 1/4 teaspoon oregano
-- Salt
-- Black pepper
+- 1cupfeta, crumbled
+- 2 tablespoons red wine vinegar
+- 3/4cupkalamata olives
+- Parsley
+prep_steps:
+- Prep
+- Dice bell peppers and cucumber.
+- Chop kalamata olives
+- CookPrepare all vegetables and place them in a large bowl with the feta, chickpeas
+  and parsley.
+cook_steps:
+- Halve cherry tomatoes.
+- Cook pasta according to package directions. Drain and add to the bowl.
+- Add all dressing ingredients to a small bowl and whisk until combined.  This includes
+  olive oil, wine vinegar, garlic, dijon mustard, maple syrup, oregano, salt and pepper.
+- Pour dressing over pasta salad and mix all ingredients together until it’s combined.
+- Pasta salad can be served immediately or refrigerated up to 3 days.
+- If turning into Mason jar salad, layer asdressing, pasta, veggies, chickpeas, feta.
 main_veg:
 - bell pepper
 - cucumber
@@ -37,6 +51,8 @@ main_veg:
 - parsley
 - peas
 - tomato
+source_url: null
+source_file: Loaded Greek Chickpea Pasta Salad.html
 avoid_contains: []
 instructions: 'Prep
 
@@ -59,5 +75,4 @@ instructions: 'Prep
   Pasta salad can be served immediately or refrigerated up to 3 days.
 
   If turning into Mason jar salad, layer asdressing, pasta, veggies, chickpeas, feta.'
-source_url: null
-source_file: Loaded Greek Chickpea Pasta Salad.html
+no_chop_compatible: false

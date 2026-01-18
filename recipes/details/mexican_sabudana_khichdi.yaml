@@ -1,4 +1,5 @@
 id: mexican_sabudana_khichdi
+title: Mexican Sabudana Khichdi
 name: Mexican Sabudana Khichdi
 categories:
 - Dinner
@@ -7,28 +8,49 @@ categories:
 cuisine: indian
 meal_type: grain_bowl
 effort_level: high
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
-- 1.5 cups sabudana
-- 2tbspoil
-- 1tspcumin seeds
-- 1 red bell pepper
-- 1 green bell pepper
+- Tbspoil
+- Clovesgarlic
+- Green bell pepper
+- Red bell pepper
+- Tspcumin seeds
+- Tspred chili powder
+- Tspsalt
+- Tspturmeric
 - 1/2cupcorn
-- 1 medium Jalapeno
-- 2 scallions, green and white parts separated
-- 1tbsptaco seasoning
-- 1/4cupcilantro
 - 1/2tsplime juice
-- 1/2tspsalt
-- 1/4tspred chili powder
-- 1/4tspturmeric
-- 2clovesgarlic
+- 1/4cupcilantro
+- 1 medium Jalapeno
+- 1.5 cups sabudana
 - 1/2cupshredded mexican cheese
+- 1tbsptaco seasoning
+- 2 scallions, green and white parts separated
+prep_steps:
+- Quick Soak Sabudana
+cook_steps:
+- Heat 2-3 cups of water until it is boiling hot. It’s convenient to do this in a
+  hot water kettle or right on the stove.
+- Rinse the sabudana thoroughly (wash about 2-3 times until you get clear liquid).
+  Drain the liquid and place in a deep bowl.
+- Pour 1.5 cups of the hot water on top of the sabudana and let it sit for 30 minutes.
+- After 30 minutes, press a few of the sabudana between your fingers- they should
+  be soft.
+- Drain the sabudana , rinse with cold water and transfer the sabudana to a wide colander
+  or spread out in a large pan until the sabudana is completely dry (about 15-20 minutes).
+- Directions
+- In a large pot, heat the oil over medium high heat. Once the oil is hot, add the
+  cumin seeds and scallion whites and stir.
+- Next add the bell peppers, turmeric, chili powder, taco seasoning and cook on low
+  heat until the bell peppers are soft.
+- Once the peppers are soft, add the garlic and salt.
+- Add the sabudana, cilantro, lime juice, green scallions and mix until everything
+  is well combined.I like my sabudana a little sticky and more soft so I cook it for
+  an additional 5-6 minutes until I get that texture.
+- Remove from heat, top off cheese, a dollop of sour cream and enjoy!!
 main_veg:
 - bell pepper
 - cilantro
@@ -37,22 +59,38 @@ main_veg:
 - jalapeno
 - lime
 - scallion
-avoid_contains: []
-instructions: "Quick Soak Sabudana\nHeat 2-3 cups of water until it is boiling hot.\
-  \ It\u2019s convenient to do this in a hot water kettle or right on the stove.\n\
-  Rinse the sabudana thoroughly (wash about 2-3 times until you get clear liquid).\
-  \ Drain the liquid and place in a deep bowl.\nPour 1.5 cups of the hot water on\
-  \ top of the sabudana and let it sit for 30 minutes.\nAfter 30 minutes, press a\
-  \ few of the sabudana between your fingers- they should be soft.\nDrain the sabudana\
-  \ , rinse with cold water and transfer the sabudana to a wide colander or spread\
-  \ out in a large pan until the sabudana is completely dry (about 15-20 minutes).\n\
-  Directions\nIn a large pot, heat the oil over medium high heat. Once the oil is\
-  \ hot, add the cumin seeds and scallion whites and stir.\nNext add the bell peppers,\
-  \ turmeric, chili powder, taco seasoning and cook on low heat until the bell peppers\
-  \ are soft.\nOnce the peppers are soft, add the garlic and salt.\nAdd the sabudana,\
-  \ cilantro, lime juice, green scallions and mix until everything is well combined.I\
-  \ like my sabudana a little sticky and more soft so I cook it for an additional\
-  \ 5-6 minutes until I get that texture.\nRemove from heat, top off cheese, a dollop\
-  \ of sour cream and enjoy!!"
 source_url: null
 source_file: Mexican Sabudana Khichdi.html
+avoid_contains: []
+instructions: 'Quick Soak Sabudana
+
+  Heat 2-3 cups of water until it is boiling hot. It’s convenient to do this in a
+  hot water kettle or right on the stove.
+
+  Rinse the sabudana thoroughly (wash about 2-3 times until you get clear liquid).
+  Drain the liquid and place in a deep bowl.
+
+  Pour 1.5 cups of the hot water on top of the sabudana and let it sit for 30 minutes.
+
+  After 30 minutes, press a few of the sabudana between your fingers- they should
+  be soft.
+
+  Drain the sabudana , rinse with cold water and transfer the sabudana to a wide colander
+  or spread out in a large pan until the sabudana is completely dry (about 15-20 minutes).
+
+  Directions
+
+  In a large pot, heat the oil over medium high heat. Once the oil is hot, add the
+  cumin seeds and scallion whites and stir.
+
+  Next add the bell peppers, turmeric, chili powder, taco seasoning and cook on low
+  heat until the bell peppers are soft.
+
+  Once the peppers are soft, add the garlic and salt.
+
+  Add the sabudana, cilantro, lime juice, green scallions and mix until everything
+  is well combined.I like my sabudana a little sticky and more soft so I cook it for
+  an additional 5-6 minutes until I get that texture.
+
+  Remove from heat, top off cheese, a dollop of sour cream and enjoy!!'
+no_chop_compatible: false

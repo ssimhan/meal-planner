@@ -1,4 +1,5 @@
 id: curried_egg_salad_sandwich
+title: Curried Egg Salad Sandwich
 name: Curried Egg Salad Sandwich
 categories:
 - Sandwich
@@ -7,28 +8,33 @@ categories:
 cuisine: indian
 meal_type: sandwich
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
-- 1cupmayo
-- 3clovesgarlic, minced
-- 1/2tspred chili powder
-- 1.5 tsp curry powder
-- 1/2tspgaram masala
-- 1/4cupcilantro, finely chopped
-- 6 boiled eggs, chopped
 - Bread, croissant or crackers
+- Boiled eggs, chopped
+- Clovesgarlic, minced
+- Curry powder
+- Tspgaram masala
+- Tspred chili powder
+- 1/4cupcilantro, finely chopped
+- 1cupmayo
+prep_steps: []
+cook_steps:
+- In a large bowl, mix together all of the ingredients except the eggs.
+- Add in the boiled chopped eggs, mix together well and serve!
+- Great on a croissant, between bread or on enjoy on crackers for a great snack.
 main_veg:
 - cilantro
 - garlic
+source_url: null
+source_file: Curried Egg Salad Sandwich.html
 avoid_contains: []
 instructions: 'In a large bowl, mix together all of the ingredients except the eggs.
 
   Add in the boiled chopped eggs, mix together well and serve!
 
   Great on a croissant, between bread or on enjoy on crackers for a great snack.'
-source_url: null
-source_file: Curried Egg Salad Sandwich.html
+no_chop_compatible: false

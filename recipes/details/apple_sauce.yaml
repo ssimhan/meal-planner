@@ -1,21 +1,25 @@
 id: apple_sauce
+title: Apple sauce
 name: Apple sauce
 categories:
 - School Snacks
 cuisine: snack
 meal_type: sauce_dip
 effort_level: low
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
+- Applesauce
+prep_steps: []
+cook_steps:
 - applesauce
 main_veg: []
+source_url: null
+source_file: Apple sauce.html
 avoid_contains: []
 instructions:
 - applesauce
-source_url: null
-source_file: Apple sauce.html
+no_chop_compatible: false
 tags: []

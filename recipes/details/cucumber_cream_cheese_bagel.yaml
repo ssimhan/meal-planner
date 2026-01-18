@@ -1,4 +1,5 @@
 id: cucumber_cream_cheese_bagel
+title: Cucumber Cream Cheese Bagel
 name: Cucumber Cream Cheese Bagel
 categories:
 - REW
@@ -6,19 +7,26 @@ categories:
 cuisine: unknown
 meal_type: sandwich
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
+- Fresh ground pepper
+- Salt
+- 6 slices English cucumbers
 - 1 bagel
 - 2 tablespoons cream cheese
-- 6 slices English cucumbers
-- salt
-- fresh ground pepper
+prep_steps: []
+cook_steps:
+- Slice and toast bagel.
+- Spread both sides with cream cheese.
+- Top on side with cucumber slices.
+- Sprinkle with salt and pepper.
 main_veg:
 - cucumber
+source_url: null
+source_file: Cucumber Cream Cheese Bagel.html
 avoid_contains: []
 instructions: 'Slice and toast bagel.
 
@@ -27,5 +35,4 @@ instructions: 'Slice and toast bagel.
   Top on side with cucumber slices.
 
   Sprinkle with salt and pepper.'
-source_url: null
-source_file: Cucumber Cream Cheese Bagel.html
+no_chop_compatible: false

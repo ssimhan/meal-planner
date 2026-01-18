@@ -1,9 +1,13 @@
-ingredients:
-- Costco pesto
-- Gnocchi
-instructions:
-- Cook and mix together
+title: Pesto Gnocchi
 name: Pesto Gnocchi
 cuisine: italian
 effort_level: medium
+ingredients:
+- Costco pesto
+- Gnocchi
+prep_steps: []
+cook_steps:
+- Cook and mix together
+instructions:
+- Cook and mix together
 tags: []

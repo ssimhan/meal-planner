@@ -1,4 +1,5 @@
 id: vegan_lemon_pepper_tofu
+title: Vegan Lemon Pepper Tofu
 name: Vegan Lemon Pepper Tofu
 categories:
 - Dinner
@@ -6,27 +7,50 @@ categories:
 cuisine: italian
 meal_type: simple_snack
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - instant_pot
 - oven
 ingredients:
-- 1 block extra firm tofu, frozen
-- 1/4CupCornstarch
-- 2 Tablespoons olive oil
-- 2 teaspoons lemon pepper seasoning
-- 4 garlic cloves
-- Salt and pepper
-- Steamed Broccoli (optional)
 - Pasta (optional)
 - Quinoa (optional side)
+- Tablespoons olive oil
+- Garlic cloves
+- Salt and pepper
+- Teaspoons lemon pepper seasoning
+- 1/4CupCornstarch
+- Steamed Broccoli (optional)
+- 1 block extra firm tofu, frozen
+prep_steps:
+- When ready to cook, thaw the tofu completely, then take it out of the package and
+  drain it.
+cook_steps:
+- 'Night before: freeze the block of tofu until completely frozen. This changes the
+  texture.'
+- Press the tofu for 10-15 minutes to get any excess liquid out while you preheat
+  the oven to 400 degrees F.
+- Break the block of tofu into small pieces. The texture will be firm and meaty now
+  so it will break apart into pieces easily.
+- Put the tofu into a large mixing bowl. Then sprinkle with cornstarch onto the tofu
+  and toss to coat.
+- Now drizzle with the olive oil and toss so all of the tofu is wet with oil.
+- Then sprinkle with the lemon pepper and toss to coat. If your lemon pepper seasoning
+  already has salt then you can skip it. If it doesn't have salt, add a few pinches
+  to the bowl with the tofu.
+- Next, add the garlic to the bowl and toss one more time.
+- Place the tofu on a sheet pan, lined with parchment paper or sprayed with non-stick
+  spray.
+- Bake for 10 minutes, flip the tofu and bake for another 10-15 minutes or until brown
+  and crunchy.
+- 'Serve with any sides you want: steam broccoli, pasta, quinoa, etc.'
 main_veg:
 - broccoli
 - corn
 - garlic
 - lemon
+source_url: null
+source_file: Vegan Lemon Pepper Tofu.html
 avoid_contains: []
 instructions: 'Night before: freeze the block of tofu until completely frozen. This
   changes the texture.
@@ -58,5 +82,4 @@ instructions: 'Night before: freeze the block of tofu until completely frozen. T
   and crunchy.
 
   Serve with any sides you want: steam broccoli, pasta, quinoa, etc.'
-source_url: null
-source_file: Vegan Lemon Pepper Tofu.html
+no_chop_compatible: false

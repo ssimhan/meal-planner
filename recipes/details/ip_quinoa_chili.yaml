@@ -1,4 +1,5 @@
 id: ip_quinoa_chili
+title: IP Quinoa Chili
 name: IP Quinoa Chili
 categories:
 - Dinner
@@ -8,28 +9,50 @@ categories:
 cuisine: unknown
 meal_type: soup_stew
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - instant_pot
 - oven
 ingredients:
-- 1 medium onion
-- 1 bell pepper, green
-- 3clovesgarlic
 - 2/3cupquinoa
+- 1 medium onion
+- Bell pepper, green
+- Clovesgarlic
+- Cumin powder
+- Red chili powder
+- Salt
 - 14.5 ounce can Fire-roasted diced Tomatoes
 - 1canblack beans
 - 1cupfrozen corn
-- Red chili powder
-- Paprika
-- Cumin powder
-- Salt
-- 2cupbroth
 - Cilantro
 - Lemon wedges
+- 2cupbroth
+- Paprika
 - Sour cream
+prep_steps:
+- Prep:Dice 1 cup yellow onion.Dice 1 cup green bell pepper.Finely dice ½ a jalapeño.Mince
+  3 cloves garlic.Wash ⅓ cup quinoa.Rinse and drain 1 can black beans (about 1.25
+  cups).
+- Add all the ingredients to the Instant Pot in this order:Diced onion, bell pepper,
+  jalapeño, and garlic.
+- Washed quinoa, 1 can fire-roasted diced tomatoes (14.5 oz), 1 cup frozen corn, and
+  the rinsed black beans.
+cook_steps:
+- Cook
+- Add ¾ tablespoon chili powder, ½ tablespoon paprika, 1 teaspoon ground cumin, and
+  1 teaspoon salt (adjust later to taste).
+- Pour in 2 cups vegetable broth.
+- 'Pressure Cook: Close the lid and set the vent to sealing. Cook on high pressure
+  for 6 minutes.'
+- 'Release Pressure: Once done, allow the pressure to release naturally (this might
+  take 10-15 minutes). Open the lid and taste the chili. Adjust the salt if necessary.'
+- 'Serve: Garnish with chopped cilantro. Add any optional toppings you like:'
+- Shredded cheddarAvocado, lemon wedges, or diced red onionSour cream or greek yogurtServe
+  with tortilla chips
+- 'Refrigerate: Store in an airtight container for up to 4 days.Freeze: Portion into
+  small containers and freeze. Reheat in the microwave or on the stove when ready
+  to eat.'
 main_veg:
 - beans
 - bell pepper
@@ -39,6 +62,8 @@ main_veg:
 - lemon
 - onion
 - tomato
+source_url: null
+source_file: IP Quinoa Chili.html
 avoid_contains: []
 instructions: 'Prep:Dice 1 cup yellow onion.Dice 1 cup green bell pepper.Finely dice
   ½ a jalapeño.Mince 3 cloves garlic.Wash ⅓ cup quinoa.Rinse and drain 1 can black
@@ -71,5 +96,4 @@ instructions: 'Prep:Dice 1 cup yellow onion.Dice 1 cup green bell pepper.Finely 
   Refrigerate: Store in an airtight container for up to 4 days.Freeze: Portion into
   small containers and freeze. Reheat in the microwave or on the stove when ready
   to eat.'
-source_url: null
-source_file: IP Quinoa Chili.html
+no_chop_compatible: false

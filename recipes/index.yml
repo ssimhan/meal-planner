@@ -1,21 +1,8 @@
-- id: 3_ingredient_cereal_bars
-  name: 3-Ingredient Cereal Bars
-  cuisine: unknown
-  meal_type: snack_bar
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/3_ingredient_cereal_bars.md
 - id: aloo_corn_tikki_roll
   name: Aloo Corn Tikki Roll
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -33,9 +20,9 @@
     file: recipes/content/aloo_corn_tikki_roll.md
 - id: apple_cinnamon_carrot_muffin
   name: Apple Cinnamon Carrot Muffin
-  cuisine: unknown
+  cuisine: dessert
   meal_type: baked_goods
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -49,9 +36,9 @@
     file: recipes/content/apple_cinnamon_carrot_muffin.md
 - id: apple_sauce
   name: Apple sauce
-  cuisine: unknown
+  cuisine: snack
   meal_type: sauce_dip
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -61,10 +48,10 @@
     type: markdown
     file: recipes/content/apple_sauce.md
 - id: arisi_upma_mix
-  name: Arisi Upma Mix
+  name: Arisi Upma
   cuisine: indian
   meal_type: breakfast
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -75,9 +62,9 @@
     file: recipes/content/arisi_upma_mix.md
 - id: avocado_packs
   name: Avocado packs
-  cuisine: unknown
+  cuisine: snack
   meal_type: simple_snack
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - none
@@ -88,9 +75,9 @@
     file: recipes/content/avocado_packs.md
 - id: baby_carrots
   name: Baby Carrots
-  cuisine: unknown
+  cuisine: snack
   meal_type: simple_snack
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -103,7 +90,7 @@
   name: Baked Black Bean and Sweet Potato Flautas
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -125,7 +112,7 @@
   name: Balsamic Bruschetta
   cuisine: italian
   meal_type: appetizer
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -140,9 +127,9 @@
     file: recipes/content/balsamic_bruschetta.md
 - id: banana_bread_muffins
   name: Banana Bread Muffins
-  cuisine: unknown
+  cuisine: dessert
   meal_type: baked_goods
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -151,26 +138,11 @@
   source:
     type: markdown
     file: recipes/content/banana_bread_muffins.md
-- id: beans_poriyal
-  name: Beans Poriyal
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - beans
-  - onion
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/beans_poriyal.md
 - id: best_ever_banana_nut_muffins
   name: Best Ever Banana Nut Muffins
-  cuisine: unknown
+  cuisine: snack
   meal_type: baked_goods
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -183,7 +155,7 @@
   name: Bhel Puri Chaat
   cuisine: indian
   meal_type: appetizer
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -202,7 +174,7 @@
   name: Bisi Bele Bath
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -220,9 +192,9 @@
     file: recipes/content/bisi_bele_bath.md
 - id: black_bean_brownie_bites
   name: Black Bean Brownie Bites
-  cuisine: unknown
+  cuisine: dessert
   meal_type: snack_bar
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -235,9 +207,9 @@
     file: recipes/content/black_bean_brownie_bites.md
 - id: black_bean_quinoa_salad
   name: Black Bean Quinoa Salad
-  cuisine: unknown
+  cuisine: mexican
   meal_type: salad
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -254,9 +226,9 @@
     file: recipes/content/black_bean_quinoa_salad.md
 - id: blackberries
   name: Blackberries
-  cuisine: unknown
+  cuisine: snack
   meal_type: unknown
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -267,9 +239,9 @@
     file: recipes/content/blackberries.md
 - id: blueberry_chocolate_chip_muffin
   name: Blueberry Chocolate Chip Muffin
-  cuisine: unknown
+  cuisine: dessert
   meal_type: baked_goods
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -282,25 +254,11 @@
   source:
     type: markdown
     file: recipes/content/blueberry_chocolate_chip_muffin.md
-- id: blueberry_date_oatmeal
-  name: Blueberry Date Oatmeal
-  cuisine: unknown
-  meal_type: breakfast
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - cauliflower
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/blueberry_date_oatmeal.md
 - id: broccoli_spinach_pasta_sauce
   name: Broccoli Spinach Pasta Sauce
   cuisine: italian
   meal_type: pasta_noodles
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -318,7 +276,7 @@
   name: Butternut Squash Mac and Cheese
   cuisine: american
   meal_type: pasta_noodles
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -331,9 +289,9 @@
     file: recipes/content/butternut_squash_mac_and_cheese.md
 - id: caramel_delight_energy_balls
   name: Caramel Delight Energy Balls
-  cuisine: unknown
+  cuisine: dessert
   meal_type: snack_bar
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -344,9 +302,9 @@
     file: recipes/content/caramel_delight_energy_balls.md
 - id: carrot_cake_bars
   name: Carrot Cake Bars
-  cuisine: indian
+  cuisine: dessert
   meal_type: simple_snack
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -357,26 +315,11 @@
   source:
     type: markdown
     file: recipes/content/carrot_cake_bars.md
-- id: carrot_poriyal
-  name: Carrot Poriyal
-  cuisine: indian
-  meal_type: simple_snack
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - carrot
-  - onion
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/carrot_poriyal.md
 - id: cauliflower_alfredo_sauce
-  name: Cauliflower Alfredo Sauce
+  name: Pasta with Cauliflower Alfredo Sauce
   cuisine: italian
   meal_type: sauce_dip
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -392,7 +335,7 @@
   name: Cauliflower Rasam
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -409,7 +352,7 @@
   name: Chana Masala (IP)
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -425,27 +368,11 @@
   source:
     type: markdown
     file: recipes/content/chana_masala_ip.md
-- id: cheddar_and_spinach_muffins
-  name: Cheddar and Spinach Muffins
-  cuisine: unknown
-  meal_type: baked_goods
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg:
-  - garlic
-  - pepper
-  - spinach
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/cheddar_and_spinach_muffins.md
 - id: cheese_and_tomato_quinoa_balls
   name: Cheese and Tomato Quinoa Balls
-  cuisine: unknown
+  cuisine: snack
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - oven
@@ -461,9 +388,9 @@
     file: recipes/content/cheese_and_tomato_quinoa_balls.md
 - id: cheese_cubes
   name: Cheese cubes
-  cuisine: unknown
+  cuisine: snack
   meal_type: simple_snack
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - none
@@ -472,24 +399,11 @@
   source:
     type: markdown
     file: recipes/content/cheese_cubes.md
-- id: cheese_sticks
-  name: Cheese sticks
-  cuisine: unknown
-  meal_type: simple_snack
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/cheese_sticks.md
 - id: cheesy_veggie_quesadilla
   name: Cheesy Veggie Quesadilla
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -507,7 +421,7 @@
   name: Chef’s Paniyaram
   cuisine: indian
   meal_type: unknown
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -520,9 +434,9 @@
     file: recipes/content/chef_s_paniyaram.md
 - id: cherry_tomato_salad
   name: Cherry Tomato Salad
-  cuisine: unknown
+  cuisine: snack
   meal_type: salad
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -535,9 +449,9 @@
     file: recipes/content/cherry_tomato_salad.md
 - id: cherry_tomatoes
   name: Cherry tomatoes
-  cuisine: unknown
+  cuisine: snack
   meal_type: simple_snack
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -548,9 +462,9 @@
     file: recipes/content/cherry_tomatoes.md
 - id: chex_cereal
   name: Chex cereal
-  cuisine: unknown
+  cuisine: snack
   meal_type: unknown
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -563,7 +477,7 @@
   name: Chickpea Chaat Salad
   cuisine: indian
   meal_type: salad
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -582,38 +496,11 @@
   source:
     type: markdown
     file: recipes/content/chickpea_chaat_salad.md
-- id: chocolate_banana_bark
-  name: Chocolate Banana Bark
-  cuisine: unknown
-  meal_type: snack_bar
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/chocolate_banana_bark.md
-- id: chocolate_banana_lentil_muffins_rew
-  name: Chocolate Banana Lentil Muffins (REW)
-  cuisine: unknown
-  meal_type: baked_goods
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/chocolate_banana_lentil_muffins_rew.md
 - id: chocolate_chip_mini_muffins_little_bites_copycat
   name: Chocolate Chip Mini Muffins (Little Bites Copycat)
-  cuisine: unknown
+  cuisine: dessert
   meal_type: baked_goods
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -625,9 +512,9 @@
     file: recipes/content/chocolate_chip_mini_muffins_little_bites_copycat.md
 - id: chocolate_protein_muffins_with_veggies
   name: Chocolate Protein Muffins (with Veggies!)
-  cuisine: unknown
+  cuisine: american
   meal_type: baked_goods
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -643,7 +530,7 @@
   name: Chow Chow Kootu
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -652,28 +539,11 @@
   source:
     type: markdown
     file: recipes/content/chow_chow_kootu.md
-- id: cilantro_lime_crema
-  name: Cilantro Lime Crema
-  cuisine: unknown
-  meal_type: sauce_dip
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - cilantro
-  - garlic
-  - lime
-  - onion
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/cilantro_lime_crema.md
 - id: corn_black_bean_dip_tcl
-  name: Corn & Black Bean Dip TCL
-  cuisine: unknown
+  name: Corn & Black Bean Casserole
+  cuisine: mexican
   meal_type: sauce_dip
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -694,9 +564,9 @@
     file: recipes/content/corn_black_bean_dip_tcl.md
 - id: cowboy_caviar_salad
   name: Cowboy Caviar Salad
-  cuisine: unknown
+  cuisine: american
   meal_type: salad
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -716,24 +586,11 @@
   source:
     type: markdown
     file: recipes/content/cowboy_caviar_salad.md
-- id: crackers_and_cheese_cubes
-  name: Crackers and Cheese Cubes
-  cuisine: unknown
-  meal_type: simple_snack
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/crackers_and_cheese_cubes.md
 - id: creamy_macaroni_pasta_salad
   name: Creamy Macaroni Pasta Salad
   cuisine: italian
   meal_type: pasta_noodles
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -750,7 +607,7 @@
   name: Crispy Chipotle Sweet Potato Tacos with Lime Crema
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -770,9 +627,9 @@
     file: recipes/content/crispy_chipotle_sweet_potato_tacos_with_lime_crema.md
 - id: cubed_fried_tofu
   name: Cubed, fried tofu
-  cuisine: unknown
+  cuisine: asian
   meal_type: side_dish
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -783,9 +640,9 @@
     file: recipes/content/cubed_fried_tofu.md
 - id: cucumber_cream_cheese_bagel
   name: Cucumber Cream Cheese Bagel
-  cuisine: unknown
+  cuisine: snack
   meal_type: sandwich
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -798,9 +655,9 @@
     file: recipes/content/cucumber_cream_cheese_bagel.md
 - id: cucumber_sandwiches
   name: Cucumber Sandwiches
-  cuisine: unknown
+  cuisine: american
   meal_type: sandwich
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -818,7 +675,7 @@
   name: Curried Cauliflower Quinoa Salad
   cuisine: mediterranean
   meal_type: salad
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -839,7 +696,7 @@
   name: Curried Egg Salad Sandwich
   cuisine: indian
   meal_type: sandwich
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -850,24 +707,11 @@
   source:
     type: markdown
     file: recipes/content/curried_egg_salad_sandwich.md
-- id: date_cookies
-  name: Date Cookies
-  cuisine: unknown
-  meal_type: baked_goods
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/date_cookies.md
 - id: dry_paneer_masala
   name: Dry Paneer Masala
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -882,56 +726,11 @@
   source:
     type: markdown
     file: recipes/content/dry_paneer_masala.md
-- id: easiest_animal_crackers
-  name: Easiest Animal Crackers
-  cuisine: unknown
-  meal_type: simple_snack
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/easiest_animal_crackers.md
-- id: easy_cheese_crackers
-  name: Easy Cheese Crackers
-  cuisine: unknown
-  meal_type: simple_snack
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/easy_cheese_crackers.md
-- id: easy_chickpea_fritters
-  name: Easy Chickpea Fritters
-  cuisine: mediterranean
-  meal_type: appetizer
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - beans
-  - cucumber
-  - garlic
-  - peas
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/easy_chickpea_fritters.md
 - id: easy_french_toast_sticks
   name: Easy French Toast Sticks
   cuisine: american
   meal_type: sandwich
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - air_fryer
@@ -942,25 +741,11 @@
   source:
     type: markdown
     file: recipes/content/easy_french_toast_sticks.md
-- id: easy_fruit_snacks_gummies
-  name: Easy Fruit Snacks (Gummies)
-  cuisine: unknown
-  meal_type: simple_snack
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - carrot
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/easy_fruit_snacks_gummies.md
 - id: easy_homemade_granola_bars
   name: Easy Homemade Granola Bars
-  cuisine: unknown
+  cuisine: snack
   meal_type: snack_bar
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -975,40 +760,11 @@
   source:
     type: markdown
     file: recipes/content/easy_homemade_granola_bars.md
-- id: easy_oatmeal_bars_with_blueberry_and_carrot
-  name: Easy Oatmeal Bars (with Blueberry and Carrot)
-  cuisine: unknown
-  meal_type: breakfast
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - carrot
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/easy_oatmeal_bars_with_blueberry_and_carrot.md
-- id: easy_pancake_muffins_favorite_pancake_bites
-  name: Easy Pancake Muffins (Favorite Pancake Bites)
-  cuisine: american
-  meal_type: breakfast
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/easy_pancake_muffins_favorite_pancake_bites.md
 - id: easy_pear_popsicles
   name: Easy Pear Popsicles
-  cuisine: unknown
+  cuisine: dessert
   meal_type: frozen_treat
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1021,7 +777,7 @@
   name: Easy Zucchini Pasta Sauce
   cuisine: italian
   meal_type: pasta_noodles
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1040,9 +796,9 @@
     file: recipes/content/easy_zucchini_pasta_sauce.md
 - id: edamame
   name: Edamame
-  cuisine: unknown
+  cuisine: snack
   meal_type: simple_snack
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1055,7 +811,7 @@
   name: Enchilada Sauce
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1069,9 +825,9 @@
     file: recipes/content/enchilada_sauce.md
 - id: esquites_mexican_street_corn_salad
   name: Esquites (Mexican Street Corn Salad)
-  cuisine: unknown
+  cuisine: mexican
   meal_type: salad
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1087,9 +843,9 @@
     file: recipes/content/esquites_mexican_street_corn_salad.md
 - id: favorite_bliss_balls
   name: Favorite Bliss Balls
-  cuisine: unknown
+  cuisine: dessert
   meal_type: snack_bar
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1098,26 +854,11 @@
   source:
     type: markdown
     file: recipes/content/favorite_bliss_balls.md
-- id: favorite_mango_smoothie
-  name: Favorite Mango Smoothie
-  cuisine: unknown
-  meal_type: breakfast
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - cauliflower
-  - squash
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/favorite_mango_smoothie.md
 - id: favorite_pizza_rolls_with_spinach_and_cheese
   name: Favorite Pizza Rolls (with Spinach and Cheese)
   cuisine: italian
   meal_type: pizza
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1128,81 +869,11 @@
   source:
     type: markdown
     file: recipes/content/favorite_pizza_rolls_with_spinach_and_cheese.md
-- id: favorite_toddler_smoothie_with_veggies
-  name: Favorite Toddler Smoothie (with Veggies!)
-  cuisine: unknown
-  meal_type: breakfast
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - avocado
-  - beet
-  - butternut squash
-  - cauliflower
-  - kale
-  - potato
-  - spinach
-  - squash
-  - sweet potato
-  - zucchini
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/favorite_toddler_smoothie_with_veggies.md
-- id: favorite_yogurt_drinks
-  name: Favorite Yogurt Drinks
-  cuisine: unknown
-  meal_type: breakfast
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - carrot
-  - potato
-  - spinach
-  - sweet potato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/favorite_yogurt_drinks.md
-- id: favorite_yogurt_melts
-  name: Favorite Yogurt Melts
-  cuisine: unknown
-  meal_type: frozen_treat
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/favorite_yogurt_melts.md
-- id: favorite_yogurt_muffins
-  name: Favorite Yogurt Muffins
-  cuisine: unknown
-  meal_type: baked_goods
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - carrot
-  - ginger
-  - lemon
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/favorite_yogurt_muffins.md
 - id: freeze_dried_fruits
-  name: Freeze dried fruits
-  cuisine: unknown
+  name: Dried mango (Costco)
+  cuisine: snack
   meal_type: unknown
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1215,7 +886,7 @@
   name: Freezer Ready Mini Pizzas
   cuisine: italian
   meal_type: pizza
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - oven
@@ -1227,37 +898,11 @@
   source:
     type: markdown
     file: recipes/content/freezer_ready_mini_pizzas.md
-- id: froyo_pouch
-  name: Froyo pouch
-  cuisine: unknown
-  meal_type: frozen_treat
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/froyo_pouch.md
-- id: frozen_yogurt_bark
-  name: Frozen Yogurt Bark
-  cuisine: unknown
-  meal_type: snack_bar
-  effort_level: no_chop
-  no_chop_compatible: true
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/frozen_yogurt_bark.md
 - id: fruit_and_nut_bars_copycat_larabar
   name: Fruit and Nut Bars (Copycat Larabar)
-  cuisine: unknown
+  cuisine: snack
   meal_type: snack_bar
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1268,9 +913,9 @@
     file: recipes/content/fruit_and_nut_bars_copycat_larabar.md
 - id: fruit_bar
   name: Fruit bar
-  cuisine: unknown
+  cuisine: snack
   meal_type: unknown
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1281,9 +926,9 @@
     file: recipes/content/fruit_bar.md
 - id: garlic_parmesan_white_beans
   name: Garlic Parmesan White Beans
-  cuisine: unknown
+  cuisine: italian
   meal_type: side_dish
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1298,39 +943,11 @@
   source:
     type: markdown
     file: recipes/content/garlic_parmesan_white_beans.md
-- id: ginger_chutney_allam_chutney
-  name: Ginger Chutney Allam Chutney
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg:
-  - ginger
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/ginger_chutney_allam_chutney.md
-- id: granny_eggs
-  name: Granny Eggs
-  cuisine: unknown
-  meal_type: baked_goods
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/granny_eggs.md
 - id: granola_bar
   name: Granola bar
-  cuisine: unknown
+  cuisine: snack
   meal_type: snack_bar
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1341,9 +958,9 @@
     file: recipes/content/granola_bar.md
 - id: grapes
   name: Grapes
-  cuisine: unknown
+  cuisine: snack
   meal_type: simple_snack
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1356,7 +973,7 @@
   name: Greek Quesadillas
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1373,7 +990,7 @@
   name: Grilled Cheese and Tomato Soup
   cuisine: american
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1389,7 +1006,7 @@
   name: Guacamole
   cuisine: mexican
   meal_type: sauce_dip
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1404,37 +1021,11 @@
   source:
     type: markdown
     file: recipes/content/guacamole.md
-- id: hard_boiled_egg
-  name: Hard boiled egg
-  cuisine: unknown
-  meal_type: breakfast
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/hard_boiled_egg.md
-- id: healthy_breakfast_bars_with_jam
-  name: Healthy Breakfast Bars with Jam
-  cuisine: unknown
-  meal_type: unknown
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/healthy_breakfast_bars_with_jam.md
 - id: healthy_homemade_fruit_roll_ups_flavor_guide
   name: Healthy Homemade Fruit Roll Ups (+ Flavor Guide)
-  cuisine: unknown
+  cuisine: snack
   meal_type: snack_bar
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1445,60 +1036,11 @@
   source:
     type: markdown
     file: recipes/content/healthy_homemade_fruit_roll_ups_flavor_guide.md
-- id: healthy_vegetable_sheet_pan_frittata
-  name: Healthy Vegetable Sheet Pan Frittata
-  cuisine: unknown
-  meal_type: breakfast
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg:
-  - garlic
-  - onion
-  - pepper
-  - spinach
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/healthy_vegetable_sheet_pan_frittata.md
-- id: high_protein_marry_me_breakfast_toast
-  name: HIGH PROTEIN ‘MARRY ME’ BREAKFAST TOAST
-  cuisine: mediterranean
-  meal_type: sandwich
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - stovetop
-  main_veg:
-  - beans
-  - parsley
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/high_protein_marry_me_breakfast_toast.md
-- id: homemade_frozen_yogurt
-  name: Homemade Frozen Yogurt
-  cuisine: unknown
-  meal_type: frozen_treat
-  effort_level: no_chop
-  no_chop_compatible: true
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/homemade_frozen_yogurt.md
 - id: homemade_larabars
   name: Homemade Larabars
-  cuisine: unknown
+  cuisine: snack
   meal_type: snack_bar
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1509,9 +1051,9 @@
     file: recipes/content/homemade_larabars.md
 - id: homemade_oatmeal_cream_pies
   name: Homemade Oatmeal Cream Pies
-  cuisine: unknown
+  cuisine: dessert
   meal_type: breakfast
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1523,9 +1065,9 @@
     file: recipes/content/homemade_oatmeal_cream_pies.md
 - id: homemade_popcorn
   name: Homemade popcorn
-  cuisine: unknown
+  cuisine: snack
   meal_type: unknown
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1538,7 +1080,7 @@
   name: Hotel Sambar
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1555,9 +1097,9 @@
     file: recipes/content/hotel_sambar.md
 - id: how_to_make_coconut_rice
   name: How to Make Coconut Rice
-  cuisine: unknown
+  cuisine: asian
   meal_type: side_dish
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1572,7 +1114,7 @@
   name: Idli Dosa Batter
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - oven
@@ -1585,7 +1127,7 @@
   name: Instant Nei Appam
   cuisine: indian
   meal_type: breakfast
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1598,7 +1140,7 @@
   name: Instant Pot Lasagna Soup
   cuisine: italian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1619,7 +1161,7 @@
   name: Instant Pot Mexican Rice & Beans
   cuisine: mexican
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1639,7 +1181,7 @@
   name: IP Dal Tadka
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1658,7 +1200,7 @@
   name: IP Masoor Dal / Red Lentils
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1677,9 +1219,9 @@
     file: recipes/content/ip_masoor_dal_red_lentils.md
 - id: ip_no_soak_kidney_beans_rajma
   name: IP No Soak Kidney Beans / Rajma
-  cuisine: unknown
+  cuisine: indian
   meal_type: unknown
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1692,9 +1234,9 @@
     file: recipes/content/ip_no_soak_kidney_beans_rajma.md
 - id: ip_quinoa_chili
   name: IP Quinoa Chili
-  cuisine: unknown
+  cuisine: mexican
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1717,7 +1259,7 @@
   name: IP Ven Pongal
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1732,9 +1274,9 @@
     file: recipes/content/ip_ven_pongal.md
 - id: jeera_rice
   name: Jeera Rice
-  cuisine: unknown
+  cuisine: indian
   meal_type: unknown
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1747,7 +1289,7 @@
   name: Khaman Dhokla IP
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1763,7 +1305,7 @@
   name: Kondakadalai Kala Channa Masala Sundal
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -1775,9 +1317,9 @@
     file: recipes/content/kondakadalai_kala_channa_masala_sundal.md
 - id: lemon_crinkle_cookies
   name: Lemon Crinkle Cookies
-  cuisine: unknown
+  cuisine: dessert
   meal_type: baked_goods
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1793,7 +1335,7 @@
   name: Loaded Greek Chickpea Pasta Salad
   cuisine: italian
   meal_type: salad
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1809,25 +1351,11 @@
   source:
     type: markdown
     file: recipes/content/loaded_greek_chickpea_pasta_salad.md
-- id: mango_yogurt
-  name: Mango Yogurt
-  cuisine: indian
-  meal_type: breakfast
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - lime
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/mango_yogurt.md
 - id: masala_puri
   name: Masala Puri
   cuisine: indian
   meal_type: unknown
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1836,24 +1364,11 @@
   source:
     type: markdown
     file: recipes/content/masala_puri.md
-- id: masala_puri_recipe__bangalore_street_style
-  name: Masala Puri Recipe (Bangalore Street Style)
-  cuisine: indian
-  meal_type: dinner
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/masala_puri_recipe__bangalore_street_style.md
 - id: masoor_dal
   name: Masoor Dal
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1871,7 +1386,7 @@
   name: Mattar Paneer Sabji
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1887,9 +1402,9 @@
     file: recipes/content/mattar_paneer_sabji.md
 - id: mediterranean_diet_black_bean_brownies
   name: Mediterranean Diet Black Bean Brownies
-  cuisine: unknown
+  cuisine: dessert
   meal_type: snack_bar
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1902,9 +1417,9 @@
     file: recipes/content/mediterranean_diet_black_bean_brownies.md
 - id: mediterranean_quinoa_salad
   name: Mediterranean Quinoa Salad
-  cuisine: unknown
+  cuisine: mediterranean
   meal_type: salad
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1922,7 +1437,7 @@
   name: Mexican Papdi Chaat
   cuisine: indian
   meal_type: appetizer
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1938,29 +1453,11 @@
   source:
     type: markdown
     file: recipes/content/mexican_papdi_chaat.md
-- id: mexican_pinwheels
-  name: Mexican Pinwheels
-  cuisine: mexican
-  meal_type: appetizer
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - avocado
-  - beans
-  - cilantro
-  - onion
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/mexican_pinwheels.md
 - id: mexican_risotto_ip
   name: Mexican Risotto (IP)
   cuisine: mexican
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -1978,7 +1475,7 @@
   name: Mexican Sabudana Khichdi
   cuisine: indian
   meal_type: grain_bowl
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -1999,7 +1496,7 @@
   name: Mexican Street Corn Pasta Salad
   cuisine: italian
   meal_type: pasta_noodles
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2016,9 +1513,9 @@
     file: recipes/content/mexican_street_corn_pasta_salad.md
 - id: mini_crustless_quiches
   name: Mini Crustless Quiches
-  cuisine: unknown
+  cuisine: american
   meal_type: breakfast
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -2033,9 +1530,9 @@
     file: recipes/content/mini_crustless_quiches.md
 - id: mini_egg_muffins_with_cheese_and_veggies
   name: Mini Egg Muffins with Cheese and Veggies
-  cuisine: unknown
+  cuisine: american
   meal_type: baked_goods
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2053,9 +1550,9 @@
     file: recipes/content/mini_egg_muffins_with_cheese_and_veggies.md
 - id: mini_orange
   name: Mini orange
-  cuisine: unknown
+  cuisine: snack
   meal_type: simple_snack
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2068,7 +1565,7 @@
   name: Moong Dal Chilla
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2081,36 +1578,22 @@
   source:
     type: markdown
     file: recipes/content/moong_dal_chilla.md
-- id: moroccan_chickpea_stew
-  name: Moroccan Chickpea Stew
-  cuisine: unknown
-  meal_type: soup_stew
-  effort_level: normal
+- id: more_kozhumbu
+  name: Mor Kuzhambu
+  cuisine: indian
+  meal_type: dinner
+  effort_level: high
   no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - stovetop
-  main_veg:
-  - cilantro
-  - garlic
-  - ginger
-  - lemon
-  - onion
-  - peas
-  - pepper
-  - potato
-  - spinach
-  - sweet potato
-  - tomato
+  appliances: []
+  main_veg: []
   avoid_contains: []
   source:
-    type: markdown
-    file: recipes/content/moroccan_chickpea_stew.md
+    type: manual
 - id: no_bake_chocolate_granola_bars
   name: No-Bake Chocolate Granola Bars
-  cuisine: unknown
+  cuisine: dessert
   meal_type: snack_bar
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2124,7 +1607,7 @@
   name: One Pan Enchilada Quinoa
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2141,9 +1624,9 @@
     file: recipes/content/one_pan_enchilada_quinoa.md
 - id: one_pot_broccoli_cheddar_quinoa
   name: One Pot Broccoli Cheddar Quinoa
-  cuisine: unknown
+  cuisine: american
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2160,7 +1643,7 @@
   name: Oven-Baked Crispy Black Bean Tacos
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2183,7 +1666,7 @@
   name: Pachai Payaru, Moong Dal Sundal
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2193,24 +1676,11 @@
   source:
     type: markdown
     file: recipes/content/pachai_payaru_moong_dal_sundal.md
-- id: page_not_found_8211_smitten_kitchen
-  name: Whoops!
-  cuisine: unknown
-  meal_type: unknown
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/page_not_found_8211_smitten_kitchen.md
 - id: palak_paneer_spinach
   name: Palak Paneer Spinach
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2230,7 +1700,7 @@
   name: Panchmel Dal
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2249,7 +1719,7 @@
   name: Paneeer & Corn Utthapam
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2264,7 +1734,7 @@
   name: Paruppu Thogayal
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2278,7 +1748,7 @@
   name: Paruppu Usili
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2293,7 +1763,7 @@
   name: Pasta with Veggie Sauce
   cuisine: italian
   meal_type: pasta_noodles
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2309,7 +1779,7 @@
   name: Pav Bhaji
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2335,7 +1805,7 @@
   name: Peanut Chutney
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -2349,7 +1819,7 @@
   name: Pesarattu
   cuisine: indian
   meal_type: breakfast
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2365,7 +1835,7 @@
   name: Pesto Gnocchi
   cuisine: italian
   meal_type: pasta_noodles
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2374,28 +1844,11 @@
   source:
     type: markdown
     file: recipes/content/pesto_gnocchi.md
-- id: pickled_red_onions
-  name: Pickled Red Onions
-  cuisine: unknown
-  meal_type: sauce_dip
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - corn
-  - garlic
-  - onion
-  - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/pickled_red_onions.md
 - id: pinto_bean_casserole
   name: Pinto Bean Casserole
   cuisine: mexican
   meal_type: casserole
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2419,7 +1872,7 @@
   name: Pizza Muffins (with Veggies!)
   cuisine: italian
   meal_type: pizza
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -2434,7 +1887,7 @@
   name: Poblano Cream Enchilada Sauce
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -2447,66 +1900,11 @@
   source:
     type: markdown
     file: recipes/content/poblano_cream_enchilada_sauce.md
-- id: pomegranate_orange_muffins
-  name: Pomegranate Orange Muffins
-  cuisine: unknown
-  meal_type: baked_goods
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/pomegranate_orange_muffins.md
-- id: porridge_fingers
-  name: Porridge Fingers
-  cuisine: unknown
-  meal_type: snack_bar
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - carrot
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/porridge_fingers.md
-- id: pretzel_bites_with_cheese_sauce
-  name: Pretzel Bites with Cheese Sauce
-  cuisine: unknown
-  meal_type: baked_goods
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/pretzel_bites_with_cheese_sauce.md
-- id: pretzels
-  name: Pretzels
-  cuisine: unknown
-  meal_type: baked_goods
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/pretzels.md
 - id: protein_banana_bread
   name: Protein Banana Bread
   cuisine: indian
   meal_type: baked_goods
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - oven
@@ -2519,7 +1917,7 @@
   name: Protein Banana Muffins
   cuisine: indian
   meal_type: baked_goods
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2533,7 +1931,7 @@
   name: Puree Pancakes
   cuisine: american
   meal_type: breakfast
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2546,7 +1944,7 @@
   name: Quick Refried Bean Tacos
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: no_chop
+  effort_level: low
   no_chop_compatible: true
   appliances:
   - instant_pot
@@ -2566,7 +1964,7 @@
   name: Quick Tortilla Pizzas
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: no_chop
+  effort_level: low
   no_chop_compatible: true
   appliances:
   - instant_pot
@@ -2583,7 +1981,7 @@
   name: Quinoa Fried Rice
   cuisine: asian
   meal_type: grain_bowl
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2600,11 +1998,11 @@
   source:
     type: markdown
     file: recipes/content/quinoa_fried_rice.md
-- id: ragda_patty
-  name: Ragda Patty
+- id: ragada_patty
+  name: Ragada Patty
   cuisine: indian
   meal_type: unknown
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2615,37 +2013,16 @@
   - onion
   - potato
   - tomato
+  - tomatoe
   avoid_contains: []
   source:
+    file: recipes/content/ragada_patty.md
     type: markdown
-    file: recipes/content/ragda_patty.md
-- id: rainbow_tacos
-  name: Rainbow Tacos
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - beans
-  - bell pepper
-  - cabbage
-  - carrot
-  - cucumber
-  - onion
-  - pepper
-  - tomato
-  avoid_contains:
-  - cabbage
-  source:
-    type: markdown
-    file: recipes/content/rainbow_tacos.md
 - id: raisins
   name: Raisins
-  cuisine: unknown
+  cuisine: snack
   meal_type: simple_snack
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2658,7 +2035,7 @@
   name: Rajma Nachos
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2678,7 +2055,7 @@
   name: Rasam Recipe
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2692,9 +2069,9 @@
     file: recipes/content/rasam_recipe.md
 - id: rasam_rice_with_beetroot_kai
   name: Rasam Rice with Beetroot Kai
-  cuisine: unknown
+  cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2706,27 +2083,11 @@
   source:
     type: markdown
     file: recipes/content/rasam_rice_with_beetroot_kai.md
-- id: rasam_rice_with_broccoli_kai
-  name: Rasam Rice with Broccoli Kai
-  cuisine: unknown
-  meal_type: soup_stew
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - garlic
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/rasam_rice_with_broccoli_kai.md
 - id: rasam_rice_with_carrot_kai
   name: Rasam Rice with Carrot Kai
-  cuisine: unknown
+  cuisine: snack
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2742,7 +2103,7 @@
   name: Refried Bean Burrito
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2762,7 +2123,7 @@
   name: Romesco Gnocchi
   cuisine: italian
   meal_type: pasta_noodles
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2779,7 +2140,7 @@
   name: Romesco Pasta Sauce
   cuisine: italian
   meal_type: pasta_noodles
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -2797,7 +2158,7 @@
   name: Salted Tahini Oatmeal Chocolate Chip Cookies
   cuisine: mediterranean
   meal_type: breakfast
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2811,7 +2172,7 @@
   name: Sambar Rice
   cuisine: indian
   meal_type: dinner
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2827,7 +2188,7 @@
   name: Samosa Grilled Cheese
   cuisine: indian
   meal_type: sandwich
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -2844,7 +2205,7 @@
   name: Samosa Pinwheels (Baked)
   cuisine: indian
   meal_type: appetizer
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - oven
@@ -2857,29 +2218,11 @@
   source:
     type: markdown
     file: recipes/content/samosa_pinwheels_baked.md
-- id: sheet_pan_black_bean_quesadillas
-  name: Sheet Pan Black Bean Quesadillas
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - beans
-  - cilantro
-  - potato
-  - sweet potato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/sheet_pan_black_bean_quesadillas.md
 - id: sheet_pan_black_bean_quesadillas_with_coleslaw
   name: Sheet Pan Black Bean Quesadillas with Coleslaw
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2897,7 +2240,7 @@
   name: Sheet Pan Coconut Vegetable Curry
   cuisine: indian
   meal_type: unknown
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -2917,9 +2260,9 @@
     file: recipes/content/sheet_pan_coconut_vegetable_curry.md
 - id: shiro_wot_ground_chickpea_stew
   name: Shiro Wot (Ground-Chickpea Stew)
-  cuisine: unknown
+  cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - oven
@@ -2934,9 +2277,9 @@
     file: recipes/content/shiro_wot_ground_chickpea_stew.md
 - id: simple_vegetarian_slow_cooked_beans
   name: Simple Vegetarian Slow-Cooked Beans
-  cuisine: unknown
+  cuisine: american
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - slow_cooker
@@ -2954,9 +2297,9 @@
     file: recipes/content/simple_vegetarian_slow_cooked_beans.md
 - id: six_bean_chili
   name: Six-Bean Chili
-  cuisine: unknown
+  cuisine: mexican
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - slow_cooker
@@ -2973,24 +2316,11 @@
   source:
     type: markdown
     file: recipes/content/six_bean_chili.md
-- id: sliced_bell_pepper
-  name: Sliced bell pepper
-  cuisine: unknown
-  meal_type: simple_snack
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/sliced_bell_pepper.md
 - id: sliced_cucumber
   name: Sliced Cucumber
-  cuisine: unknown
+  cuisine: snack
   meal_type: simple_snack
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3003,7 +2333,7 @@
   name: Snake Gourd Kootu
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3014,9 +2344,9 @@
     file: recipes/content/snake_gourd_kootu.md
 - id: so_good_chickpea_blondies
   name: So Good Chickpea Blondies
-  cuisine: unknown
+  cuisine: dessert
   meal_type: snack_bar
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3028,26 +2358,11 @@
   source:
     type: markdown
     file: recipes/content/so_good_chickpea_blondies.md
-- id: so_good_spinach_egg_muffins
-  name: So Good Spinach Egg Muffins
-  cuisine: mexican
-  meal_type: baked_goods
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg:
-  - corn
-  - spinach
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/so_good_spinach_egg_muffins.md
 - id: soft_and_chewy_white_chocolate_chip_cookies
   name: Soft and Chewy White Chocolate Chip Cookies
-  cuisine: unknown
+  cuisine: dessert
   meal_type: baked_goods
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3057,25 +2372,11 @@
   source:
     type: markdown
     file: recipes/content/soft_and_chewy_white_chocolate_chip_cookies.md
-- id: soft_roasted_chickpeas
-  name: Soft Roasted Chickpeas
-  cuisine: unknown
-  meal_type: side_dish
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg:
-  - peas
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/soft_roasted_chickpeas.md
 - id: southwest_corn_chowder_freezer_meal_prep
   name: Southwest Corn Chowder (Freezer Meal Prep)
-  cuisine: unknown
+  cuisine: american
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3093,7 +2394,7 @@
   name: Southwest Pasta Salad
   cuisine: italian
   meal_type: salad
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3119,7 +2420,7 @@
   name: Spinach and Feta Stuffed Pita with a Side of Greek Salad
   cuisine: mediterranean
   meal_type: sandwich
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3138,7 +2439,7 @@
   name: Spinach-Cilantro Pesto
   cuisine: italian
   meal_type: sauce_dip
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3152,9 +2453,9 @@
     file: recipes/content/spinach_cilantro_pesto.md
 - id: spinach_puffs
   name: Spinach Puffs
-  cuisine: unknown
+  cuisine: indian
   meal_type: appetizer
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - oven
@@ -3171,7 +2472,7 @@
   name: Spinach White Bean Enchiladas
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -3191,7 +2492,7 @@
   name: Stir Fry
   cuisine: asian
   meal_type: stir_fry
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3211,9 +2512,9 @@
     file: recipes/content/stir_fry.md
 - id: strawberries
   name: Strawberries
-  cuisine: unknown
+  cuisine: snack
   meal_type: simple_snack
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3224,9 +2525,9 @@
     file: recipes/content/strawberries.md
 - id: strawberry_muffins
   name: Strawberry Muffins
-  cuisine: unknown
+  cuisine: dessert
   meal_type: baked_goods
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -3235,29 +2536,11 @@
   source:
     type: markdown
     file: recipes/content/strawberry_muffins.md
-- id: strawberry_spinach_feta_salad
-  name: Strawberry Spinach Feta Salad
-  cuisine: unknown
-  meal_type: salad
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - cucumber
-  - garlic
-  - onion
-  - pepper
-  - spinach
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/strawberry_spinach_feta_salad.md
 - id: string_cheese
   name: String cheese
-  cuisine: unknown
+  cuisine: snack
   meal_type: simple_snack
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3266,24 +2549,11 @@
   source:
     type: markdown
     file: recipes/content/string_cheese.md
-- id: sunflower_seeds
-  name: Sunflower seeds
-  cuisine: unknown
-  meal_type: unknown
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/sunflower_seeds.md
 - id: sweet_and_sour_quinoa
   name: Sweet and Sour Quinoa
-  cuisine: unknown
+  cuisine: asian
   meal_type: sauce_dip
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3300,7 +2570,7 @@
   name: Sweet Potato Black Bean Quesadilla
   cuisine: mexican
   meal_type: dinner
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3314,38 +2584,33 @@
   source:
     type: markdown
     file: recipes/content/sweet_potato_black_bean_quesadilla.md
-- id: sweet_potato_tofu_chickpea_curry
-  name: Sweet Potato, Tofu & Chickpea Curry
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: normal
+- id: sweet_potato_roast_with_thai_peanut_butter_sauce
+  name: Sweet Potato Roast with Thai Peanut Butter Sauce
+  cuisine: asian
+  meal_type: dinner
+  effort_level: medium
   no_chop_compatible: false
   appliances:
-  - instant_pot
-  - oven
   - stovetop
   main_veg:
-  - butternut squash
-  - cauliflower
-  - garlic
-  - ginger
-  - lemon
+  - bell pepper
+  - cabbage
+  - cilantro
+  - lime
   - onion
-  - peas
-  - pepper
   - potato
-  - squash
+  - potatoe
   - sweet potato
-  - tomato
-  avoid_contains: []
+  avoid_contains:
+  - cabbage
   source:
+    file: recipes/content/sweet_potatoes_with_thai_peanut_butter_sauce.md
     type: markdown
-    file: recipes/content/sweet_potato_tofu_chickpea_curry.md
 - id: sweet_potato_tofu_chickpea_curry_make_sauce_ahead
   name: Sweet Potato, Tofu & Chickpea Curry (Make Sauce Ahead)
   cuisine: indian
   meal_type: sauce_dip
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3368,33 +2633,11 @@
   source:
     type: markdown
     file: recipes/content/sweet_potato_tofu_chickpea_curry_make_sauce_ahead.md
-- id: sweet_potatoes_with_thai_peanut_butter_sauce
-  name: Sweet Potatoes with Thai Peanut Butter Sauce
-  cuisine: unknown
-  meal_type: sauce_dip
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - bell pepper
-  - cabbage
-  - cilantro
-  - lime
-  - onion
-  - pepper
-  - potato
-  - sweet potato
-  avoid_contains:
-  - cabbage
-  source:
-    type: markdown
-    file: recipes/content/sweet_potatoes_with_thai_peanut_butter_sauce.md
 - id: sweet_spinach_muffins_with_banana
   name: Sweet Spinach Muffins with Banana
-  cuisine: unknown
+  cuisine: dessert
   meal_type: baked_goods
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3409,7 +2652,7 @@
   name: Tandoori Veggie Quesadillas
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3426,9 +2669,9 @@
     file: recipes/content/tandoori_veggie_quesadillas.md
 - id: tangy_cucumber_salad
   name: Tangy Cucumber Salad
-  cuisine: unknown
+  cuisine: american
   meal_type: salad
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3444,7 +2687,7 @@
   name: Thai Curry Pizza with Naan Bread
   cuisine: indian
   meal_type: pizza
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -3459,9 +2702,9 @@
     file: recipes/content/thai_curry_pizza_with_naan_bread.md
 - id: tofu_scramble_freezer_meal_prep
   name: Tofu Scramble (Freezer Meal Prep)
-  cuisine: unknown
+  cuisine: asian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3479,7 +2722,7 @@
   name: Tomato Bisque with Feta-Pesto Panini
   cuisine: italian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3492,7 +2735,7 @@
   name: Tomato Rice
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3507,9 +2750,9 @@
     file: recipes/content/tomato_rice.md
 - id: tortellini_primavera
   name: Tortellini Primavera
-  cuisine: unknown
+  cuisine: italian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3525,9 +2768,9 @@
     file: recipes/content/tortellini_primavera.md
 - id: vegan_chocolate_mousse
   name: Vegan Chocolate Mousse
-  cuisine: unknown
+  cuisine: dessert
   meal_type: unknown
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3540,7 +2783,7 @@
   name: Vegan Lemon Pepper Tofu
   cuisine: italian
   meal_type: simple_snack
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3559,7 +2802,7 @@
   name: Vegan Pad Thai
   cuisine: asian
   meal_type: pasta_noodles
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3576,7 +2819,7 @@
   name: Vegan Spicy Thai Drunken Noodles with Seared Tofu
   cuisine: asian
   meal_type: pasta_noodles
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3599,7 +2842,7 @@
   name: Vegan Sweet Potato Beetroot Hotdogs
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3625,7 +2868,7 @@
   name: Vegetable Gyoza
   cuisine: asian
   meal_type: appetizer
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3649,7 +2892,7 @@
   name: Vegetable Lasagna
   cuisine: italian
   meal_type: casserole
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - oven
@@ -3671,7 +2914,7 @@
   name: Vegetarian Burrito Bowl with Avocado Crema
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3695,7 +2938,7 @@
   name: Vegetarian Chili
   cuisine: mexican
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3718,7 +2961,7 @@
   name: Vegetarian Enchiladas
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -3739,7 +2982,7 @@
   name: Vegetarian Tortilla Soup
   cuisine: mexican
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3761,10 +3004,10 @@
     type: markdown
     file: recipes/content/vegetarian_tortilla_soup.md
 - id: veggie_marinara_sauce
-  name: Veggie Marinara Sauce
+  name: Pasta with Veggie Marinara
   cuisine: italian
   meal_type: sauce_dip
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot
@@ -3790,7 +3033,7 @@
   name: Veggie Roti
   cuisine: indian
   meal_type: tacos_wraps
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -3804,9 +3047,9 @@
     file: recipes/content/veggie_roti.md
 - id: veggie_straws
   name: Veggie straws
-  cuisine: unknown
+  cuisine: snack
   meal_type: unknown
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3819,7 +3062,7 @@
   name: Veggie Upma
   cuisine: indian
   meal_type: breakfast
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -3838,7 +3081,7 @@
   name: Veggie Wrap
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - oven
@@ -3861,7 +3104,7 @@
   name: Vetha Kozhumbu
   cuisine: indian
   meal_type: soup_stew
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3874,9 +3117,9 @@
     file: recipes/content/vetha_kozhumbu.md
 - id: wheat_thins_or_triscuits
   name: Wheat thins or triscuits
-  cuisine: unknown
+  cuisine: snack
   meal_type: unknown
-  effort_level: normal
+  effort_level: low
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3887,9 +3130,9 @@
     file: recipes/content/wheat_thins_or_triscuits.md
 - id: whole_fruit_ice_pops
   name: Whole Fruit Ice Pops
-  cuisine: unknown
+  cuisine: snack
   meal_type: frozen_treat
-  effort_level: normal
+  effort_level: high
   no_chop_compatible: false
   appliances:
   - stovetop
@@ -3899,24 +3142,11 @@
   source:
     type: markdown
     file: recipes/content/whole_fruit_ice_pops.md
-- id: yogurt_bites
-  name: Yogurt bites
-  cuisine: unknown
-  meal_type: unknown
-  effort_level: normal
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/yogurt_bites.md
 - id: zucchini_and_paneer_waffles
   name: Zucchini and Paneer Waffles
   cuisine: indian
   meal_type: breakfast
-  effort_level: normal
+  effort_level: medium
   no_chop_compatible: false
   appliances:
   - instant_pot

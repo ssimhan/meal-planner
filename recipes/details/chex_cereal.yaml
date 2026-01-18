@@ -1,21 +1,25 @@
 id: chex_cereal
+title: Chex cereal
 name: Chex cereal
 categories:
 - School Snacks
 cuisine: snack
 meal_type: unknown
 effort_level: low
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
 - Chex cereal
+prep_steps: []
+cook_steps:
+- Chex cereal
 main_veg: []
+source_url: null
+source_file: Chex cereal.html
 avoid_contains: []
 instructions:
 - Chex cereal
-source_url: null
-source_file: Chex cereal.html
+no_chop_compatible: false
 tags: []

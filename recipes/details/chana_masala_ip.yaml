@@ -1,4 +1,5 @@
 id: chana_masala_ip
+title: Chana Masala (IP)
 name: Chana Masala (IP)
 categories:
 - Dinner
@@ -7,26 +8,48 @@ categories:
 cuisine: indian
 meal_type: soup_stew
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - instant_pot
 - stovetop
 ingredients:
-- 1can chickpeas
-- Ghee
-- Cumin seeds
 - 1yellow onion
-- 2plum tomatoes
-- Ginger
 - Garlic
+- Ginger
+- Ghee
 - Coriander powder
-- Salt
-- Kashmiri red chili powder
-- Turmeric
+- Cumin seeds
 - Garam masala
+- Kashmiri red chili powder
+- Salt
+- Turmeric
+- 1can chickpeas
+- 2plum tomatoes
 - ½cup cilantro
+prep_steps:
+- Chop 1 large onion and 2 tomatoes (or 1 can of diced tomatoes). Drain and rinse
+  2 cans of chickpeas.
+cook_steps:
+- Turn on the Instant Pot and select the 'Sauté' function.
+- Add 2 tablespoons of ghee and let it heat up.
+- Add 1 teaspoon of cumin seeds and let them sizzle for a few seconds.
+- Add the finely chopped onions to the Instant Pot and sauté until golden brown.
+- Add the minced garlic, ginger, and green chilies (if using). Cook for 1-2 minutes
+  until fragrant.
+- Add the chopped tomatoes (or canned diced tomatoes) and cook until they become soft
+  and the oil starts to separate from the mixture.
+- Stir in the ground coriander, ground cumin, turmeric powder, paprika, and chili
+  powder. Cook for another 2 minutes.
+- Add the drained and rinsed chickpeas to the Instant Pot. Mix well to coat the chickpeas
+  with the spice mixture.
+- Add about 1 cup of water to the Instant Pot. Stir well.
+- Secure the lid on the Instant Pot, making sure the valve is set to 'Sealing'.
+- Select the 'Manual' or 'Pressure Cook' function and set the timer for 5 minutes.
+- Once the cooking cycle is complete, let the pressure release naturally for 10 minutes,
+  then carefully turn the valve to 'Venting' to release any remaining pressure.
+- Open the Instant Pot and sprinkle 1 teaspoon of garam masala over the chana masala.
+  Stir well and adjust salt to taste.
 main_veg:
 - cilantro
 - garlic
@@ -34,6 +57,8 @@ main_veg:
 - onion
 - peas
 - tomato
+source_url: null
+source_file: Chana Masala (IP).html
 avoid_contains: []
 instructions: 'Chop 1 large onion and 2 tomatoes (or 1 can of diced tomatoes). Drain
   and rinse 2 cans of chickpeas.
@@ -69,5 +94,4 @@ instructions: 'Chop 1 large onion and 2 tomatoes (or 1 can of diced tomatoes). D
 
   Open the Instant Pot and sprinkle 1 teaspoon of garam masala over the chana masala.
   Stir well and adjust salt to taste.'
-source_url: null
-source_file: Chana Masala (IP).html
+no_chop_compatible: false

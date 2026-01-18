@@ -1,30 +1,37 @@
 id: cowboy_caviar_salad
+title: Cowboy Caviar Salad
 name: Cowboy Caviar Salad
 categories:
 - Salad
 cuisine: unknown
 meal_type: salad
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - instant_pot
 ingredients:
-- 2 roma tomatoes, seeded and diced
-- 1(15 ounce) can black beans, drained and rinsed
-- 2cupscorn kernels
 - ½red onion, diced
-- 1 green bell pepper, diced
-- 1 medium jalapeno, diced
-- 1cupblack eyed peas, drained and rinsed
-- ¼chopped cup cilantro
 - ⅓cup olive oil
-- 2 tablespoons white wine vinegar
-- 1 tablespoon honey (or maple syrup)
-- 1 lime, juiced
-- ½teaspoon salt
+- Green bell pepper, diced
 - ¼teaspoon garlic powder
+- ½teaspoon salt
+- 1 lime, juiced
+- 1(15 ounce) can black beans, drained and rinsed
+- 1cupblack eyed peas, drained and rinsed
+- 2 roma tomatoes, seeded and diced
+- 2cupscorn kernels
+- ¼chopped cup cilantro
+- 1 medium jalapeno, diced
+- 1 tablespoon honey (or maple syrup)
+- 2 tablespoons white wine vinegar
+prep_steps: []
+cook_steps:
+- In a small bowl, mix together the dressing ingredients.
+- Cook corn in microwave.
+- Add all of the salad ingredients to a large bowl and drizzle the dressing on top.
+- Enjoy! Serve plain or as a dip for tortilla chips. Optionally, refrigerate 10 -
+  15 minutes before serving to let the flavors marinate.
 main_veg:
 - beans
 - bell pepper
@@ -36,6 +43,8 @@ main_veg:
 - onion
 - peas
 - tomato
+source_url: null
+source_file: Cowboy Caviar Salad.html
 avoid_contains: []
 instructions: 'In a small bowl, mix together the dressing ingredients.
 
@@ -45,5 +54,4 @@ instructions: 'In a small bowl, mix together the dressing ingredients.
 
   Enjoy! Serve plain or as a dip for tortilla chips. Optionally, refrigerate 10 -
   15 minutes before serving to let the flavors marinate.'
-source_url: null
-source_file: Cowboy Caviar Salad.html
+no_chop_compatible: false

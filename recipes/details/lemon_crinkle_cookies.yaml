@@ -1,11 +1,11 @@
 id: lemon_crinkle_cookies
+title: Lemon Crinkle Cookies
 name: Lemon Crinkle Cookies
 categories:
 - ''
 cuisine: unknown
 meal_type: baked_goods
 effort_level: high
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
@@ -13,42 +13,80 @@ appliances:
 - oven
 ingredients:
 - 2cupsall-purpose flour
-- 1tspcorn starch
-- 1tspbaking powder
-- "\xBDtsp salt"
-- "\xBEcup room temperature unsalted butter (or vegan butter)"
-- 1cupgranulated sugar
-- 2 vegan egg (I used Bob's Red Mill egg replacer)
-- 2tbspfresh lemon juice
+- ¾cup room temperature unsalted butter (or vegan butter)
+- Tspbaking powder
+- ½tsp salt
 - 1largelemon zested
+- 1tspcorn starch
+- 2tbspfresh lemon juice
+- 1cupconfectioners’ sugar
+- 1cupgranulated sugar
 - 1tspvanilla extract
-- "\xBDcup mini vegan white chocolate chips"
+- 2 vegan egg (I used Bob's Red Mill egg replacer)
+- 4tbspgranulated sugar
 - Optional yellow food dye (I used 3 drops of organic yellow dye)
 - ROLLING INGREDIENTS
-- 4tbspgranulated sugar
-- "1cupconfectioners\u2019 sugar"
+- ½cup mini vegan white chocolate chips
+prep_steps: []
+cook_steps:
+- In a medium bowl, sift the flour, baking powder, cornstarch, and salt. Set aside.
+- Zest the lemon into a small bowl. And press the lemon juice into a separate bowl.
+- Using a mixer, beat the butter and sugar on high speed for 3-4 minutes. It should
+  be soft and pale. Scrape the bowl using a rubber spatula.
+- Add in the lemon zest, lemon juice, vanilla and egg replacer. Mix on medium until
+  combined. Add in the yellow gel food dye if desired. I added 3 drops.
+- Add in the dry ingredients. Mix on low speed until just combined. Add in the white
+  chocolate chips and mix on low.
+- Cover dough tightly and chill in the refrigerator for at least 1 hour and up to
+  2 days. Chilling is required for this sticky cookie dough.
+- Remove cookie dough from the refrigerator.
+- Preheat the oven to 350℉. Line two cookie sheets with parchment paper. Let the cookie
+  dough rest for 10 minutes. This helps to prevent too much spread.
+- Place the sugar in one bowl and the powdered sugar in another bowl. Use a small
+  cookie scoop (1 oz or 1 Tablespoon) and scoop the dough. Place 12 cookie dough balls
+  per cookie sheet.
+- Roll the cookie dough ball in the sugar first. Then, roll in the powdered sugar.
+  Make sure it has a thick coat of powdered sugar.
+- Once all rolled, bake for 11-13 minutes. Bake until the edges are set. Make sure
+  to not over bake these, otherwise they will be dry and the powdered sugar will melt.
+- Cool the cookies on the hot pan for 5 minutes before transferring to a cooling rack.
 main_veg:
 - corn
 - lemon
-avoid_contains: []
-instructions: "In a medium bowl, sift the flour, baking powder, cornstarch, and salt.\
-  \ Set aside.\nZest the lemon into a small bowl. And press the lemon juice into a\
-  \ separate bowl.\nUsing a mixer, beat the butter and sugar on high speed for 3-4\
-  \ minutes. It should be soft and pale. Scrape the bowl using a rubber spatula.\n\
-  Add in the lemon zest, lemon juice, vanilla and egg replacer. Mix on medium until\
-  \ combined. Add in the yellow gel food dye if desired. I added 3 drops.\nAdd in\
-  \ the dry ingredients. Mix on low speed until just combined. Add in the white chocolate\
-  \ chips and mix on low.\nCover dough tightly and chill in the refrigerator for at\
-  \ least 1 hour and up to 2 days. Chilling is required for this sticky cookie dough.\n\
-  Remove cookie dough from the refrigerator.\nPreheat the oven to 350\u2109. Line\
-  \ two cookie sheets with parchment paper. Let the cookie dough rest for 10 minutes.\
-  \ This helps to prevent too much spread.\nPlace the sugar in one bowl and the powdered\
-  \ sugar in another bowl. Use a small cookie scoop (1 oz or 1 Tablespoon) and scoop\
-  \ the dough. Place 12 cookie dough balls per cookie sheet.\nRoll the cookie dough\
-  \ ball in the sugar first. Then, roll in the powdered sugar. Make sure it has a\
-  \ thick coat of powdered sugar.\nOnce all rolled, bake for 11-13 minutes. Bake until\
-  \ the edges are set. Make sure to not over bake these, otherwise they will be dry\
-  \ and the powdered sugar will melt.\nCool the cookies on the hot pan for 5 minutes\
-  \ before transferring to a cooling rack."
 source_url: null
 source_file: Lemon Crinkle Cookies.html
+avoid_contains: []
+instructions: 'In a medium bowl, sift the flour, baking powder, cornstarch, and salt.
+  Set aside.
+
+  Zest the lemon into a small bowl. And press the lemon juice into a separate bowl.
+
+  Using a mixer, beat the butter and sugar on high speed for 3-4 minutes. It should
+  be soft and pale. Scrape the bowl using a rubber spatula.
+
+  Add in the lemon zest, lemon juice, vanilla and egg replacer. Mix on medium until
+  combined. Add in the yellow gel food dye if desired. I added 3 drops.
+
+  Add in the dry ingredients. Mix on low speed until just combined. Add in the white
+  chocolate chips and mix on low.
+
+  Cover dough tightly and chill in the refrigerator for at least 1 hour and up to
+  2 days. Chilling is required for this sticky cookie dough.
+
+  Remove cookie dough from the refrigerator.
+
+  Preheat the oven to 350℉. Line two cookie sheets with parchment paper. Let the cookie
+  dough rest for 10 minutes. This helps to prevent too much spread.
+
+  Place the sugar in one bowl and the powdered sugar in another bowl. Use a small
+  cookie scoop (1 oz or 1 Tablespoon) and scoop the dough. Place 12 cookie dough balls
+  per cookie sheet.
+
+  Roll the cookie dough ball in the sugar first. Then, roll in the powdered sugar.
+  Make sure it has a thick coat of powdered sugar.
+
+  Once all rolled, bake for 11-13 minutes. Bake until the edges are set. Make sure
+  to not over bake these, otherwise they will be dry and the powdered sugar will melt.
+
+  Cool the cookies on the hot pan for 5 minutes before transferring to a cooling rack.'
+no_chop_compatible: false

@@ -1,4 +1,5 @@
 id: vegetarian_tortilla_soup
+title: Vegetarian Tortilla Soup
 name: Vegetarian Tortilla Soup
 categories:
 - Dinner
@@ -6,7 +7,6 @@ categories:
 cuisine: mexican
 meal_type: soup_stew
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
@@ -15,20 +15,34 @@ appliances:
 - stovetop
 ingredients:
 - 1 medium onion
-- 1 bell pepper, green
-- 4 garlic cloves
-- 215-ounce cans black beans
 - Olive oil
-- Oregano
-- Cumin powder
-- 28-ounce can fire roasted tomatoes
-- 1½cups frozen corn
 - Adobo powder
-- 4cupsbroth
+- Bell pepper, green
+- Cumin powder
+- Garlic cloves
 - Salt
-- 4 radishes
 - 1 lime
 - 1bunchcilantro
+- 1½cups frozen corn
+- 215-ounce cans black beans
+- 28-ounce can fire roasted tomatoes
+- 4 radishes
+- 4cupsbroth
+- Oregano
+prep_steps:
+- PrepPeel and dice the onion. Dice the green pepper. Peel and mince the garlic. Drain
+  and rinse the beans.
+cook_steps:
+- In a large pot or Dutch oven, heat 2 tablespoons olive oil and sauté the onion until
+  translucent, about 5 minutes.
+- Add the green pepper and the garlic and sauté for 2 minutes.
+- Stir in the oregano and the cumin for 1 minute.
+- Add the tomatoes, beans, corn, adobo sauce, broth, and kosher salt.
+- Bring to a boil, then simmer for 10 minutes.
+- 'Prep the garnishes: Slice the radishes. Slice the lime into wedges.'
+- 'Serve: To serve, ladle the soup into bowls and allow to cool to warm. Garnish with
+  the tortilla strips, radishes, torn cilantro leaves, hot sauce, and plenty of lime
+  juice.'
 main_veg:
 - beans
 - bell pepper
@@ -39,6 +53,8 @@ main_veg:
 - onion
 - radish
 - tomato
+source_url: null
+source_file: Vegetarian Tortilla Soup.html
 avoid_contains: []
 instructions: 'PrepPeel and dice the onion. Dice the green pepper. Peel and mince
   the garlic. Drain and rinse the beans.
@@ -59,5 +75,4 @@ instructions: 'PrepPeel and dice the onion. Dice the green pepper. Peel and minc
   Serve: To serve, ladle the soup into bowls and allow to cool to warm. Garnish with
   the tortilla strips, radishes, torn cilantro leaves, hot sauce, and plenty of lime
   juice.'
-source_url: null
-source_file: Vegetarian Tortilla Soup.html
+no_chop_compatible: false

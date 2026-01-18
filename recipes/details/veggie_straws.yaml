@@ -1,21 +1,25 @@
 id: veggie_straws
+title: Veggie straws
 name: Veggie straws
 categories:
 - School Snacks
 cuisine: snack
 meal_type: unknown
 effort_level: low
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
 - Veggie straws
+prep_steps: []
+cook_steps:
+- Veggie straws
 main_veg: []
+source_url: null
+source_file: Veggie straws.html
 avoid_contains: []
 instructions:
 - Veggie straws
-source_url: null
-source_file: Veggie straws.html
+no_chop_compatible: false
 tags: []

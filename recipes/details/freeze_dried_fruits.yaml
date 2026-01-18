@@ -1,21 +1,25 @@
 id: freeze_dried_fruits
+title: Dried mango (Costco)
 name: Dried mango (Costco)
 categories:
 - School Snacks
 cuisine: snack
 meal_type: unknown
 effort_level: low
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
 - Dried mango (Costco)
+prep_steps: []
+cook_steps:
+- Dried mango (Costco)
 main_veg: []
+source_url: null
+source_file: Freeze dried fruits.html
 avoid_contains: []
 instructions:
 - Dried mango (Costco)
-source_url: null
-source_file: Freeze dried fruits.html
+no_chop_compatible: false
 tags: []

@@ -1,65 +1,120 @@
 id: khaman_dhokla_ip
+title: Khaman Dhokla IP
 name: Khaman Dhokla IP
 categories:
 - School Entrees
 cuisine: indian
 meal_type: soup_stew
 effort_level: high
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - instant_pot
 - stovetop
 ingredients:
-- "1\xBCcup besan chickpea flour"
+- 1¼cup besan chickpea flour
 - 2 tablespoon Semolina (Sooji/Rava) fine
-- 1 teaspoon Sugar
-- "\xBDteaspoon Salt"
-- "\xBCteaspoon Ground Turmeric (Haldi powder)"
-- 1 green chili, minced
-- 2 teaspoon Lime juice
-- 1 tablespoon Oil
 - 1 teaspoon Ginger grated
+- 5 Curry Leaves
+- Green chili, minced
+- Oil
+- Oil
+- Eno fruit salt
+- Mustard Seeds
+- ¼teaspoon Ground Turmeric (Haldi powder)
+- ¼teaspoon Salt
+- ½teaspoon Salt
+- 2 teaspoon Lime juice
+- 1 teaspoon Sesame seeds
+- 1 teaspoon Sugar
+- 1 teaspoon Sugar
 - 1cupWater
-- 1 teaspoon Eno fruit salt
 - 2cupsWater for steaming
 - For tempering (tadka)
-- 2 tablespoon Oil
-- 1 teaspoon Mustard Seeds
-- 5 Curry Leaves
-- 1 teaspoon Sesame seeds
-- "\xBCcup Water"
-- 1 teaspoon Sugar
-- "\xBCteaspoon Salt"
+- ¼cup Water
+prep_steps:
+- 'Prepare Khaman Batter:'
+cook_steps:
+- Mix in all of the ingredients, except the Eno fruit salt – gram flour, semolina,
+  turmeric, salt, sugar, green chili, ginger, lime juice, oil and water. Stir to combine
+  well and let the batter sit for 15 minutes.
+- While the batter is resting, boil 2 cups water in the pressure cooker on sauté mode.
+  Also, grease the steel pan in which you will make the khaman with oil. I used one
+  container from the stackable steel containers for the instant pot.
+- After 15 minutes, add Eno to the batter and stir it gently in one direction. The
+  batter will become frothy and increase in volume. Do not over stir.
+- Quickly transfer the batter to the greased steel container and place the container
+  on a trivet. It is important to start cooking quickly after adding Eno to get soft
+  and fluffy Khaman.
+- Steaming in Instant Pot
+- Then place the trivet along with the pan in the instant pot. Set to Steam mode for
+  15 mins in venting mode. The instant pot timer does not work in venting mode, hence
+  you will need to set an external timer.
+- After the cooking time is done, let the khaman sit for 5 minutes. Then open the
+  lid of the instant pot and take out the khaman using tongs.
+- Let it cool for 5 more minutes, so it is easy to remove. Insert a knife or toothpick
+  to check it is cooked. The knife should come out almost clean. If not, you will
+  need to steam for 2-3 more minutes.
+- Run a knife around the edges of the khaman. Place a plate on top of the container
+  and turn it upside down. This will help to get the khaman out of the container easily.
+- Prepare Tempering
+- While the khaman is steaming in the instant pot, heart oil in a pan on stovetop
+  on high heat.
+- Then add the mustard seeds and let them sizzle. Now add the curry leaves. Let them
+  sauté for about 30 seconds. Add the sesame seeds and turn off heat.
+- Now add water, sugar, salt and stir well.
+- Cut the khaman into small pieces. Spread the tempering over it.
+- Garnish with chopped cilantro and serve with green mint chutney.
 main_veg:
 - ginger
 - lime
-avoid_contains: []
-instructions: "Prepare Khaman Batter:\nMix in all of the ingredients, except the Eno\
-  \ fruit salt \u2013 gram flour, semolina, turmeric, salt, sugar, green chili, ginger,\
-  \ lime juice, oil and water. Stir to combine well and let the batter sit for 15\
-  \ minutes.\nWhile the batter is resting, boil 2 cups water in the pressure cooker\
-  \ on saut\xE9 mode. Also, grease the steel pan in which you will make the khaman\
-  \ with oil. I used one container from the stackable steel containers for the instant\
-  \ pot.\nAfter 15 minutes, add Eno to the batter and stir it gently in one direction.\
-  \ The batter will become frothy and increase in volume. Do not over stir.\nQuickly\
-  \ transfer the batter to the greased steel container and place the container on\
-  \ a trivet. It is important to start cooking quickly after adding Eno to get soft\
-  \ and fluffy Khaman.\nSteaming in Instant Pot\nThen place the trivet along with\
-  \ the pan in the instant pot. Set to Steam mode for 15 mins in venting mode. The\
-  \ instant pot timer does not work in venting mode, hence you will need to set an\
-  \ external timer.\nAfter the cooking time is done, let the khaman sit for 5 minutes.\
-  \ Then open the lid of the instant pot and take out the khaman using tongs.\nLet\
-  \ it cool for 5 more minutes, so it is easy to remove. Insert a knife or toothpick\
-  \ to check it is cooked. The knife should come out almost clean. If not, you will\
-  \ need to steam for 2-3 more minutes.\nRun a knife around the edges of the khaman.\
-  \ Place a plate on top of the container and turn it upside down. This will help\
-  \ to get the khaman out of the container easily.\nPrepare Tempering\nWhile the khaman\
-  \ is steaming in the instant pot, heart oil in a pan on stovetop on high heat.\n\
-  Then add the mustard seeds and let them sizzle. Now add the curry leaves. Let them\
-  \ saut\xE9 for about 30 seconds. Add the sesame seeds and turn off heat.\nNow add\
-  \ water, sugar, salt and stir well.\nCut the khaman into small pieces. Spread the\
-  \ tempering over it.\nGarnish with chopped cilantro and serve with green mint chutney."
 source_url: null
 source_file: Khaman Dhokla IP.html
+avoid_contains: []
+instructions: 'Prepare Khaman Batter:
+
+  Mix in all of the ingredients, except the Eno fruit salt – gram flour, semolina,
+  turmeric, salt, sugar, green chili, ginger, lime juice, oil and water. Stir to combine
+  well and let the batter sit for 15 minutes.
+
+  While the batter is resting, boil 2 cups water in the pressure cooker on sauté mode.
+  Also, grease the steel pan in which you will make the khaman with oil. I used one
+  container from the stackable steel containers for the instant pot.
+
+  After 15 minutes, add Eno to the batter and stir it gently in one direction. The
+  batter will become frothy and increase in volume. Do not over stir.
+
+  Quickly transfer the batter to the greased steel container and place the container
+  on a trivet. It is important to start cooking quickly after adding Eno to get soft
+  and fluffy Khaman.
+
+  Steaming in Instant Pot
+
+  Then place the trivet along with the pan in the instant pot. Set to Steam mode for
+  15 mins in venting mode. The instant pot timer does not work in venting mode, hence
+  you will need to set an external timer.
+
+  After the cooking time is done, let the khaman sit for 5 minutes. Then open the
+  lid of the instant pot and take out the khaman using tongs.
+
+  Let it cool for 5 more minutes, so it is easy to remove. Insert a knife or toothpick
+  to check it is cooked. The knife should come out almost clean. If not, you will
+  need to steam for 2-3 more minutes.
+
+  Run a knife around the edges of the khaman. Place a plate on top of the container
+  and turn it upside down. This will help to get the khaman out of the container easily.
+
+  Prepare Tempering
+
+  While the khaman is steaming in the instant pot, heart oil in a pan on stovetop
+  on high heat.
+
+  Then add the mustard seeds and let them sizzle. Now add the curry leaves. Let them
+  sauté for about 30 seconds. Add the sesame seeds and turn off heat.
+
+  Now add water, sugar, salt and stir well.
+
+  Cut the khaman into small pieces. Spread the tempering over it.
+
+  Garnish with chopped cilantro and serve with green mint chutney.'
+no_chop_compatible: false

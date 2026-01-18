@@ -1,4 +1,5 @@
 id: tandoori_veggie_quesadillas
+title: Tandoori Veggie Quesadillas
 name: Tandoori Veggie Quesadillas
 categories:
 - Dinner
@@ -6,36 +7,56 @@ categories:
 cuisine: mexican
 meal_type: tacos_wraps
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
-- 1 bell pepper, red
-- 1 bell pepper, green
+- 1 package tortillas
 - 1 onion, red
-- 1tspcumin seeds
 - 1tbspgarlic, minced
-- 1tspgaram masala
-- 1tsptaco seasoning
-- 1tsppaprika
-- 1tspred chili
-- 1 pinch cinnamon, optional
+- Tspred chili
+- Tbspoil
+- Bell pepper, green
+- Bell pepper, red
+- Pinch cinnamon, optional
+- Salt to taste
+- Tspcumin seeds
+- Tspgaram masala
 - 1/4cupcilantro
 - 1cupfrozen corn, rinsed and thawed
-- Salt to taste
-- 2tbspoil
 - 1 package shredded mexican blend cheese
-- 1 package tortillas
 - 1cupcream cheese or Greek yogurt
+- 1tsppaprika
+- 1tsptaco seasoning
 - 2tspsriracha sauce
+prep_steps:
+- Dice peppers and onion.
+cook_steps:
+- Set corn to cook in microwave.
+- Set up rotimatic if using. Adults need 3-4, kids need 2-3.
+- Heat a large wide skillet over medium high heat. Add oil. Once oil is hot add the
+  cumin seeds and let splutter for about 10-15 seconds.
+- Add the sliced peppers and onions and sauté until slightly softened (about 4-5 minutes)
+- Drain the cooked corn and let it cool.
+- Add garlic, dry seasonings, and salt to the pan - reduce heat to low so the spices
+  do not burn.
+- Add corn, cilantro and stir well. Taste test for spice and salt levels. Remove from
+  heat.
+- Mix cream cheese and Sriracha sauce.
+- In a large pan heat up a little bit of oil and add one tortilla spread with a layer
+  of the cream cheese mixture.
+- Top with cheese, a few spoonfuls of the veggie filling, additional cheese and fold
+  the tortilla over.
+- Press in panini/sandwich maker for 1 minute. Remove from heat, cut and serve hot!
 main_veg:
 - bell pepper
 - cilantro
 - corn
 - garlic
 - onion
+source_url: null
+source_file: Tandoori Veggie Quesadillas.html
 avoid_contains: []
 instructions: 'Set corn to cook in microwave.
 
@@ -65,5 +86,4 @@ instructions: 'Set corn to cook in microwave.
   the tortilla over.
 
   Press in panini/sandwich maker for 1 minute. Remove from heat, cut and serve hot!'
-source_url: null
-source_file: Tandoori Veggie Quesadillas.html
+no_chop_compatible: false

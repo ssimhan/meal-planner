@@ -1,26 +1,60 @@
 id: tomato_bisque_with_feta_pesto_panini
+title: Tomato Bisque with Feta-Pesto Panini
 name: Tomato Bisque with Feta-Pesto Panini
 categories:
 - ''
 cuisine: italian
 meal_type: soup_stew
 effort_level: medium
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
-- 1 carton tomato soup
-- '½ cup milk '
+- Bread
+- Butter
 - Oil
 - Black pepper
-- Bread
-- Pesto
-- Feta cheese
+- 1 carton tomato soup
 - 1 tomato
-- Butter
+- Feta cheese
+- Pesto
+- ½ cup milk
+prep_steps:
+- 'Prep:'
+cook_steps:
+- ''
+- Slice 1 small tomato into thin rounds.
+- ''
+- Crumble ½ cup feta cheese if not already crumbled.
+- ''
+- Spread 1 tbsp pesto on each slice of bread (you’ll need 4 tbsp total).
+- ''
+- '🍳 Cook:'
+- ''
+- 'For the Tomato Bisque:'
+- ''
+- In a saucepan, add 1 tsp butter and warm over medium heat.
+- ''
+- Pour in the store-bought tomato soup and stir.
+- ''
+- Add ½ cup cream (or milk), ½ tsp black pepper, and a pinch of sugar if needed.
+- ''
+- Heat gently for 5–7 minutes, stirring occasionally, until hot but not boiling.
+- ''
+- 'For the Panini:'
+- ''
+- On one slice of pesto-spread bread, layer tomato slices and crumbled feta.
+- ''
+- Top with the second pesto-covered slice to make a sandwich.
+- ''
+- Heat a pan on medium. Spread butter on the outsides of the sandwich.
+- ''
+- Toast on both sides until golden brown and cheese starts to soften (about 3–4 minutes
+  per side). Press down gently with a spatula while toasting.
 main_veg: []
+source_url: null
+source_file: Tomato Bisque with Feta-Pesto Panini.html
 avoid_contains: []
 instructions:
 - 'Prep:'
@@ -53,6 +87,5 @@ instructions:
 - ''
 - Toast on both sides until golden brown and cheese starts to soften (about 3–4 minutes
   per side). Press down gently with a spatula while toasting.
-source_url: null
-source_file: Tomato Bisque with Feta-Pesto Panini.html
+no_chop_compatible: false
 tags: []

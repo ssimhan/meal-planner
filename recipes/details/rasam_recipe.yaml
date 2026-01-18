@@ -1,4 +1,5 @@
 id: rasam_recipe
+title: Rasam Recipe
 name: Rasam Recipe
 categories:
 - Dinner
@@ -7,31 +8,46 @@ categories:
 cuisine: indian
 meal_type: soup_stew
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - instant_pot
 - stovetop
 ingredients:
-- 2 medium tomatoes
-- ½cup toor dal
-- Water
-- Tamarind concentrate
-- 1–2 green chilies
-- 1tspjaggery
-- 1tsprasam powder
-- Salt
-- Oil
-- Mustard seeds
-- Cumin seeds
-- 1 dried red chili
-- Hing
 - Curry leaves
+- Dried red chili
+- –2 green chilies
+- Oil
+- Cumin seeds
+- Hing
+- Mustard seeds
+- Salt
+- Tsprasam powder
+- 2 medium tomatoes
 - Cilantro
+- 1tspjaggery
+- Tamarind concentrate
+- Water
+- ½cup toor dal
+prep_steps:
+- Chop 2 medium tomatoes.
+cook_steps:
+- Rinse ½ cup toor dal until the water runs clear.
+- In a pressure cooker, add the rinsed dal, chopped tomatoes, 1½ cups water, 1 tsp
+  tamarind concentrate, slit green chilies, 1 tsp jaggery, 1 tsp rasam powder, and
+  salt.
+- Close the lid and cook on medium heat for 3 to 4 whistles.
+- Let the pressure release naturally. Open the lid and gently mash the dal and tomatoes.
+- In a small pan, heat 1 tsp ghee. Add mustard seeds and let them splutter.
+- Add cumin seeds, dried red chili, a pinch of hing, and curry leaves. Sauté for a
+  few seconds until fragrant.
+- Pour the tempering into the rasam. Stir to combine.
+- Garnish with chopped coriander leaves.
 main_veg:
 - cilantro
 - tomato
+source_url: null
+source_file: Rasam Recipe.html
 avoid_contains: []
 instructions: 'Rinse ½ cup toor dal until the water runs clear.
 
@@ -53,5 +69,4 @@ instructions: 'Rinse ½ cup toor dal until the water runs clear.
   Pour the tempering into the rasam. Stir to combine.
 
   Garnish with chopped coriander leaves.'
-source_url: null
-source_file: Rasam Recipe.html
+no_chop_compatible: false

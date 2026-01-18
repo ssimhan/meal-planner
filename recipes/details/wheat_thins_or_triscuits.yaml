@@ -1,21 +1,25 @@
 id: wheat_thins_or_triscuits
+title: Wheat thins or triscuits
 name: Wheat thins or triscuits
 categories:
 - School Snacks
 cuisine: snack
 meal_type: unknown
 effort_level: low
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
 - Wheat thins
+prep_steps: []
+cook_steps:
+- Wheat thins
 main_veg: []
+source_url: null
+source_file: Wheat thins or triscuits.html
 avoid_contains: []
 instructions:
 - Wheat thins
-source_url: null
-source_file: Wheat thins or triscuits.html
+no_chop_compatible: false
 tags: []

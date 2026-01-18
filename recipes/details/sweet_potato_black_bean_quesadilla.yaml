@@ -1,4 +1,5 @@
 id: sweet_potato_black_bean_quesadilla
+title: Sweet Potato Black Bean Quesadilla
 name: Sweet Potato Black Bean Quesadilla
 categories:
 - Mexican
@@ -6,46 +7,77 @@ categories:
 cuisine: mexican
 meal_type: tacos_wraps
 effort_level: easy
-no_chop_compatible: false
 prep_time_minutes: 15
 cook_time_minutes: 20
 appliances:
 - stovetop
 ingredients:
-- 2 medium sweet potatoes, peeled and diced
-- 1 can black beans, drained and rinsed
-- 1 onion, diced
-- 2 cloves garlic, minced
-- 1 tsp cumin
-- 1/2 tsp chili powder
-- Salt and pepper to taste
 - 8 flour tortillas
+- 1 onion, diced
+- Olive oil
+- Chili powder
+- Cloves garlic, minced
+- Cumin
+- Salt and pepper to taste
+- 1 can black beans, drained and rinsed
+- 2 medium sweet potatoes, peeled and diced
 - 2 cups shredded cheese (mozzarella and Mexican blend)
-- 2 tbsp olive oil
 - Optional: salsa, sour cream, cilantro for serving
+prep_steps:
+- Dice sweet potatoes into small 1/2-inch cubes (can prep ahead on Wednesday).
+cook_steps:
+- Heat 1 tbsp oil in a large skillet over medium heat.
+- Add sweet potatoes and cook for 10-12 minutes, stirring occasionally, until tender
+  and lightly browned.
+- Add onion and garlic, cook for 3-4 minutes until softened.
+- Add black beans, cumin, chili powder, salt, and pepper. Cook for 2-3 minutes until
+  heated through.
+- Remove mixture from pan and set aside.
+- Wipe out the pan and heat remaining oil over medium heat.
+- Place one tortilla in the pan, sprinkle with cheese, add sweet potato mixture, more
+  cheese, and top with another tortilla.
+- Cook for 2-3 minutes per side until golden brown and cheese is melted.
+- Repeat with remaining tortillas and filling.
+- Cut into wedges and serve with salsa and sour cream.
 main_veg:
 - sweet potato
 - onion
-avoid_contains: []
-instructions: |
-  Dice sweet potatoes into small 1/2-inch cubes (can prep ahead on Wednesday).
-  
-  Heat 1 tbsp oil in a large skillet over medium heat.
-  Add sweet potatoes and cook for 10-12 minutes, stirring occasionally, until tender and lightly browned.
-  
-  Add onion and garlic, cook for 3-4 minutes until softened.
-  Add black beans, cumin, chili powder, salt, and pepper. Cook for 2-3 minutes until heated through.
-  Remove mixture from pan and set aside.
-  
-  Wipe out the pan and heat remaining oil over medium heat.
-  Place one tortilla in the pan, sprinkle with cheese, add sweet potato mixture, more cheese, and top with another tortilla.
-  
-  Cook for 2-3 minutes per side until golden brown and cheese is melted.
-  Repeat with remaining tortillas and filling.
-  
-  Cut into wedges and serve with salsa and sour cream.
 source_url: null
 source_file: null
+avoid_contains: []
+instructions: 'Dice sweet potatoes into small 1/2-inch cubes (can prep ahead on Wednesday).
+
+
+  Heat 1 tbsp oil in a large skillet over medium heat.
+
+  Add sweet potatoes and cook for 10-12 minutes, stirring occasionally, until tender
+  and lightly browned.
+
+
+  Add onion and garlic, cook for 3-4 minutes until softened.
+
+  Add black beans, cumin, chili powder, salt, and pepper. Cook for 2-3 minutes until
+  heated through.
+
+  Remove mixture from pan and set aside.
+
+
+  Wipe out the pan and heat remaining oil over medium heat.
+
+  Place one tortilla in the pan, sprinkle with cheese, add sweet potato mixture, more
+  cheese, and top with another tortilla.
+
+
+  Cook for 2-3 minutes per side until golden brown and cheese is melted.
+
+  Repeat with remaining tortillas and filling.
+
+
+  Cut into wedges and serve with salsa and sour cream.
+
+  '
 kid_favorite: true
 leftover_potential: high
-notes: Great for meal prep, sweet potatoes can be prepped ahead. Leftovers reheat well for lunch.
+no_chop_compatible: false
+notes: Great for meal prep, sweet potatoes can be prepped ahead. Leftovers reheat
+  well for lunch.

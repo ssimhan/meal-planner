@@ -1,4 +1,5 @@
 id: rasam_rice_with_carrot_kai
+title: Rasam Rice with Carrot Kai
 name: Rasam Rice with Carrot Kai
 categories:
 - South Indian
@@ -8,24 +9,46 @@ categories:
 cuisine: unknown
 meal_type: soup_stew
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
-- 1 tsp tamarind concentrate
-- 1 medium tomato, chopped
-- 1 tsp black pepper (coarsely crushed)
-- 1 tsp cumin seeds
-- 2 garlic cloves, crushed
-- 1/4 tsp turmeric powder
-- 1/2 tsp rasam powder (or use more black pepper + cumin if unavailable)
+- Black pepper (coarsely crushed)
+- Cumin seeds
+- Garlic cloves, crushed
+- Rasam powder (or use more black pepper + cumin if unavailable)
 - Salt to taste
+- Turmeric powder
+- 1 medium tomato, chopped
+- 1 tsp tamarind concentrate
 - 3 cups water
+prep_steps:
+- Chop 1 medium tomato.
+- Peel and dice 2 medium carrots into small cubes.
+- Add chopped tomato, crushed garlic, 1/4 tsp turmeric powder, 1 tsp black pepper,
+  1 tsp cumin seeds, 1/2 tsp rasam powder, and salt.
+cook_steps:
+- Crush 2 garlic cloves.
+- Cook 1 cup rice and keep it ready (preferably slightly mushy, like for rasam rice).
+- In a pot, mix 1 tsp tamarind concentrate with 3 cups water.
+- Let it simmer on medium heat for 10–12 minutes until tomatoes soften and flavors
+  blend. Don't boil too hard—rasam should be light.
+- In a small pan, heat 1 tsp ghee or oil.
+- Add 1 tsp mustard seeds. When they splutter, add 1/2 tsp cumin seeds, 1 red chilli,
+  pinch of hing, and curry leaves.
+- Pour this tempering into the simmering rasam. Turn off heat.
+- Heat 1 tsp oil in a pan.
+- Add diced carrots and sauté on medium heat for 4–5 minutes.
+- Sprinkle 1/4 tsp turmeric powder, 1/2 tsp red chilli powder, and salt.
+- Stir and cook until carrots are tender (about 5–6 more minutes).
+- In a bowl or plate, mix cooked rice with hot rasam.
+- Top or serve it with the sautéed carrot kai on the side or mixed in.
 main_veg:
 - garlic
 - tomato
+source_url: null
+source_file: Rasam Rice with Carrot Kai.html
 avoid_contains: []
 instructions: 'Chop 1 medium tomato.
 
@@ -61,5 +84,4 @@ instructions: 'Chop 1 medium tomato.
   In a bowl or plate, mix cooked rice with hot rasam.
 
   Top or serve it with the sautéed carrot kai on the side or mixed in.'
-source_url: null
-source_file: Rasam Rice with Carrot Kai.html
+no_chop_compatible: false

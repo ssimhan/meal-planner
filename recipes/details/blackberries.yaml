@@ -1,8 +1,12 @@
-ingredients:
-- 'Blackberries '
-instructions:
-- 'Blackberries. '
+title: Blackberries
 name: Blackberries
 cuisine: snack
 effort_level: low
+ingredients:
+- Blackberries
+prep_steps: []
+cook_steps:
+- Blackberries.
+instructions:
+- 'Blackberries. '
 tags: []

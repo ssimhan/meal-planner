@@ -1,4 +1,5 @@
 id: instant_pot_lasagna_soup
+title: Instant Pot Lasagna Soup
 name: Instant Pot Lasagna Soup
 categories:
 - Dinner
@@ -8,26 +9,46 @@ categories:
 cuisine: italian
 meal_type: soup_stew
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - instant_pot
 - stovetop
 ingredients:
-- 24 oz. Rao's Marinara Sauce
-- 24 oz. Rao's Arrabbiata Sauce
 - 5cupsmafalda or campanelle pasta
-- 4 garlic cloves
-- 4cupsspinach
-- 1 green bell pepper, diced small
 - 1 onion, diced small
+- Garlic cloves
+- Green bell pepper, diced small
 - 1/4cupcilantro chopped
+- 4cupsspinach
+- 1cupmozzarella cheese, shredded
+- 1cupwater
+- 24 oz. Rao's Arrabbiata Sauce
+- 24 oz. Rao's Marinara Sauce
+- 4cupsvegetable broth
 - Oregano
 - Parsley
-- 4cupsvegetable broth
-- 1cupwater
-- 1cupmozzarella cheese, shredded
+prep_steps:
+- Dice the onion, bell pepper and spinach.
+cook_steps:
+- Set your IP to saute mode and add two tablespoons of oil. Once the oil is hot, add
+  the serrano chilis, oregano and garlic and let splutter for a few moments.
+- Add the onions and peppers and continue to cook for 5 minutes.
+- Prepare the broth (4 cups) + 1 extra cup of water.
+- Once the onions and peppers have softened, add in the rao's sauce, spinach, vegetable
+  broth, 1 cup water, scallions, cilantro, and parsley.
+- Stir well for a few minutes until all the ingredients are incorporated.
+- Add in the pasta (4-5 cups)
+- Hit cancel on the IP and switch it to Pressure Cook on High Mode. Cut the cooking
+  time on the box in half for the pressure cook time (box said 6 minutes to al dente-
+  so I cooked the pasta for 3 minutes).
+- After it cooks, immediately do a quick release.
+- The consistency should be soupy.
+- If it is too thick- add water in one cup increments until you reach the desired
+  consistency.
+- If your pasta is undercooked- just set it on saute mode and let it simmer until
+  the pasta cooks.
+- Add in the mozzarella. No additional salt needed.
 main_veg:
 - bell pepper
 - cilantro
@@ -35,6 +56,8 @@ main_veg:
 - onion
 - parsley
 - spinach
+source_url: null
+source_file: Instant Pot Lasagna Soup.html
 avoid_contains: []
 instructions: 'Dice the onion, bell pepper and spinach.
 
@@ -67,5 +90,4 @@ instructions: 'Dice the onion, bell pepper and spinach.
   the pasta cooks.
 
   Add in the mozzarella. No additional salt needed.'
-source_url: null
-source_file: Instant Pot Lasagna Soup.html
+no_chop_compatible: false

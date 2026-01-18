@@ -797,5 +797,18 @@ The best tools are the ones you actually use. This system works because it reduc
 - **"Vibe-First" Prototyping**: Don't start with the database schema. Start with the *feeling* of the UI. If it feels too transparent or "stiff", tweak the CSS variables first. The "vibes" often reveal the missing logic.
 - **Regex is a Superpower**: When your data is messy (like timing trapped inside instruction text), a simple regular expression can "recalibrate" hundreds of rows in seconds. It's better than manual entry 100% of the time.
 - **Component Wrapping**: If you have a complex server-side page (like a Recipe Detail) and want to add an interactive modal (like Focus Mode), don't try to make the whole page a Client Component. Wrap just the interactive parts in a "Client Wrapper" to keep the speed of server rendering.
+**Block 6: Continuous YAML Normalization (2026-01-17) ✅ COMPLETE**
+- **Deterministic Formatting**: Created `scripts/normalize_recipes.py` to ensure all recipe files follow a strict schema with sorted categories (Grains -> Produces -> Aromatics -> Fats -> Spices).
+- **Culinary Intelligence**: Implemented automated spice cleanup (stripping quantities from seasonings) and heuristic-based instruction splitting (Prep vs. Cook phases).
+- **CI Readiness**: Added a `--check` mode for idempotency verification, ensuring the repository remains standardized over time.
 
-**Final Phase 27 Status:** Recipe index is standardized, clean, and has a premium mobile cooking experience.
+**Block 7: Repository Sync & Cleanup (2026-01-17) ✅ COMPLETE**
+- **Local-Cloud Parity**: Synchronized the local filesystem with the active Supabase instance, bringing the index to exactly **185 active recipes**.
+- **Data Purge**: Safely removed 52 inactive detail files and 53 content files that were no longer part of the master index.
+- **Index Alignment**: Updated `recipes/index.yml` to match the definitive database state, resolving ID inconsistencies (e.g., `ragada_patty`) and ensuring 100% data integrity.
+
+**Learning for Vibecoders:**
+- **The Database is the Source of Truth**: When local files get messy, your production database (Supabase) is your definitive anchor. Use its row count to "prune" your local dev environment.
+- **Idempotency is Peace of Mind**: A script that does nothing when there's nothing to do is the safest script. Always design your automation so it can be run 1,000 times without side effects.
+
+**Final Phase 27 Status:** Recipe index is standardized, lean (185 recipes), and perfectly synced with Supabase.

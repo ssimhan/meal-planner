@@ -1,4 +1,5 @@
 id: mediterranean_quinoa_salad
+title: Mediterranean Quinoa Salad
 name: Mediterranean Quinoa Salad
 categories:
 - Dinner
@@ -9,27 +10,33 @@ categories:
 cuisine: unknown
 meal_type: salad
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
 - 11⁄2 cups cooked quinoa
+- ⁄4 cup olive oil
+- Salt and pepper
 - 1canwhite beans
 - 1largecucumber
 - 1largetomato
+- 2 Tbs. lemon juice
+- 1 scallion, diced
 - 1/2canblack olives
 - 1⁄4 cup feta cheese (optional)
-- 1 scallion, diced
-- 1⁄4 cup olive oil
-- 2 Tbs. lemon juice
-- Salt and pepper
+prep_steps: []
+cook_steps:
+- In a large bowl, mix quinoa, beans, cucumbers, tomatoes, olives, feta and scallion.
+- In a small bowl, combine lemon juice, olive oil, salt and pepper together.
+- Pour dressing over salad and mix gently.
 main_veg:
 - beans
 - cucumber
 - lemon
 - tomato
+source_url: null
+source_file: Mediterranean Quinoa Salad.html
 avoid_contains: []
 instructions: 'In a large bowl, mix quinoa, beans, cucumbers, tomatoes, olives, feta
   and scallion.
@@ -37,5 +44,4 @@ instructions: 'In a large bowl, mix quinoa, beans, cucumbers, tomatoes, olives, 
   In a small bowl, combine lemon juice, olive oil, salt and pepper together.
 
   Pour dressing over salad and mix gently.'
-source_url: null
-source_file: Mediterranean Quinoa Salad.html
+no_chop_compatible: false

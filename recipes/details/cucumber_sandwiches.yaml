@@ -1,4 +1,5 @@
 id: cucumber_sandwiches
+title: Cucumber Sandwiches
 name: Cucumber Sandwiches
 categories:
 - Guest Apps
@@ -8,25 +9,44 @@ categories:
 cuisine: unknown
 meal_type: sandwich
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - instant_pot
 ingredients:
 - 16 slices bread
-- 1 English cucumber
-- 8 ounces cream cheese
-- Dill
-- Chives
-- lemon juice
-- garlic
+- Garlic
 - Salt and black pepper
+- 1 English cucumber
+- Lemon juice
+- 8 ounces cream cheese
+- Chives
+- Dill
+prep_steps:
+- Peel the cucumber in stripes and cut into 1/8-inch thin slices using a mandolin
+  or sharp knife. Place the slices on paper towels and sprinkle with coarse salt.
+  Let rest for 15-30 minutes to extract moisture. Pat dry with clean paper towels.
+cook_steps:
+- In the meantime, make the spread. In a medium bowl, using a handheld mixer, blend
+  together the softened cream cheese, mayo, dill, chives, lemon juice, garlic powder,
+  and salt.
+- Spread one side of each slice of bread with the herbed cream cheese.
+- Layer cucumber slices over half of the bread slices. Season with fresh cracked black
+  pepper, to taste. Top with remaining bread slices, cream cheese mixture down. (At
+  this point, you'll have 8 full sandwiches.)
+- Using a sharp Chef's knife, cut each sandwich into quarters, pushing through the
+  bread down to the bottom. So you have 32 tea sandwiches.
+- Serve right away and enjoy!
+- To Make Ahead“One day before, the sandwiches were made and cut and layered with
+  damp doubled paper towels in a fish bin (or on a sheet pan, and then saran wrapped)
+  and refrigerated.”
 main_veg:
 - chive
 - cucumber
 - garlic
 - lemon
+source_url: null
+source_file: Cucumber Sandwiches.html
 avoid_contains: []
 instructions: 'Peel the cucumber in stripes and cut into 1/8-inch thin slices using
   a mandolin or sharp knife. Place the slices on paper towels and sprinkle with coarse
@@ -50,5 +70,4 @@ instructions: 'Peel the cucumber in stripes and cut into 1/8-inch thin slices us
   To Make Ahead“One day before, the sandwiches were made and cut and layered with
   damp doubled paper towels in a fish bin (or on a sheet pan, and then saran wrapped)
   and refrigerated.”'
-source_url: null
-source_file: Cucumber Sandwiches.html
+no_chop_compatible: false

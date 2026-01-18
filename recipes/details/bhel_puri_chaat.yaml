@@ -1,4 +1,5 @@
 id: bhel_puri_chaat
+title: Bhel Puri Chaat
 name: Bhel Puri Chaat
 categories:
 - Dinner
@@ -6,27 +7,33 @@ categories:
 cuisine: indian
 meal_type: appetizer
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - oven
 ingredients:
-- 1 medium potato
-- 1 medium Cucumber
-- 1 Green apple, optional
-- 1 Red onion
-- 1 medium tomato
 - 2cuppuffed rice
-- 2tbspfried peanuts
-- ½tsp chaat masala
+- 1 Red onion
 - ¼tsp kashmiri red chilli powder
 - ¼tsp salt
-- 3tbsptamarind chutney
-- 2tbspgreen chutney
+- ½tsp chaat masala
+- 1 medium Cucumber
+- 1 medium potato
+- 1 medium tomato
 - 1tsplemon juice
-- 2tbspsev
 - Cilantro
+- 1 Green apple, optional
+- 2tbspfried peanuts
+- 2tbspgreen chutney
+- 2tbspsev
+- 3tbsptamarind chutney
+prep_steps:
+- Chop up veggies.
+cook_steps:
+- Roast peanuts.
+- Add spices and mix well.
+- Add chutneys, lemon juice and cilantro. Mix well to distribute.
+- Serve with puffed rice, sev and peanuts.
 main_veg:
 - cilantro
 - cucumber
@@ -34,6 +41,8 @@ main_veg:
 - onion
 - potato
 - tomato
+source_url: null
+source_file: Bhel Puri Chaat.html
 avoid_contains: []
 instructions: 'Roast peanuts.
 
@@ -44,5 +53,4 @@ instructions: 'Roast peanuts.
   Add chutneys, lemon juice and cilantro. Mix well to distribute.
 
   Serve with puffed rice, sev and peanuts.'
-source_url: null
-source_file: Bhel Puri Chaat.html
+no_chop_compatible: false

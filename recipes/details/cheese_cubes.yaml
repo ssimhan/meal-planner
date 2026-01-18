@@ -1,8 +1,12 @@
-ingredients:
-- Cheese cubes
-instructions:
-- Cheese cubes
+title: Cheese cubes
 name: Cheese cubes
 cuisine: snack
 effort_level: low
+ingredients:
+- Cheese cubes
+prep_steps: []
+cook_steps:
+- Cheese cubes
+instructions:
+- Cheese cubes
 tags: []

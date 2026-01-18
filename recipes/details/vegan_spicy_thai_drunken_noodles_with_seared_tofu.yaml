@@ -1,4 +1,5 @@
 id: vegan_spicy_thai_drunken_noodles_with_seared_tofu
+title: Vegan Spicy Thai Drunken Noodles with Seared Tofu
 name: Vegan Spicy Thai Drunken Noodles with Seared Tofu
 categories:
 - Asian
@@ -6,28 +7,58 @@ categories:
 cuisine: asian
 meal_type: pasta_noodles
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
 - 1 Package Wide Rice Noodle
+- 4 Tablespoons Rice Vinegar
+- 1 medium onion
+- Bell pepper (optional)
+- Clovesgarlic
+- 1 lime
+- Baby corn (optional)
+- Broccoli (optional)
+- Carrot (optional)
+- Snow peas (optional)
 - 1 package extra firm tofu
+- 1/4cupbroth
+- 1cupbasil
+- 4 tablespoons maple syrup
 - Soy Sauce
 - Sriracha
-- 1 lime
-- 4 Tablespoons Rice Vinegar
-- 1/4cupbroth
-- 4 tablespoons maple syrup
-- 1 medium onion
-- 6clovesgarlic
-- 1cupbasil
-- Broccoli (optional)
-- Bell pepper (optional)
-- Snow peas (optional)
-- Carrot (optional)
-- Baby corn (optional)
+prep_steps:
+- PrepPress tofu thoroughly BEFORE cutting into cubes.
+- Mix amino/soy sauce, 2 tablespoons sriracha and lime juice together. Soak the cut
+  tofu cubes in this marinade, cover and refrigerate for an hour.
+- Dice onions. Can also add bell pepper, broccoli, snow peas, carrot, or baby corn.
+cook_steps:
+- CookPlace all your rice noodles in a wide mixing bowl.
+- Bring 4 cups of water to boil.
+- Pour the boiling water over the rice noodles until they are completely submerged.
+- Stir to loosen the noodles every few minutes so they don't stick together.
+- When they are completely limp, give them a taste to see if they're cooked through.
+- Depending on thickness, the flat rice noodles might take upwards of ten minutes.
+- Pay attention and test the noodles frequently because they'll become mushy if they
+  overcook.
+- The noodles are being stir-fried for the drunken noodles, so you want to under-cook
+  them a bit.
+- They will absorb more moisture and cook the rest once in the stir fry. If your noodles
+  are perfectly cooked to start, they will turn to mush in the stir fry.
+- Once the noodles are tender, drain them and run them under COLD water to stop the
+  cooking.
+- Whisk Drunken Noodle sauce ingredients together (rice vinegar, broth, aminos/soy
+  sauce, maple syrup, sriracha).
+- Pour sauce over noodles and let sit while you cook the tofu.
+- Heat wok to medium-high.
+- Add tofu and sauce, and sear tofu.
+- Put to the side.
+- Add veggies and garlic, and cook until translucent.
+- Add rice noodles, sauce and tofu back in.
+- Add 3/4 cup basil, reserving 1/4 cup for garnish.
+- Add noodles mixture to a bowl.
+- Sprinkle with extra basil.Serve with a wedge of lime and Sriracha
 main_veg:
 - basil
 - bell pepper
@@ -38,6 +69,8 @@ main_veg:
 - lime
 - onion
 - peas
+source_url: null
+source_file: Vegan Spicy Thai Drunken Noodles with Seared Tofu.html
 avoid_contains: []
 instructions: 'PrepPress tofu thoroughly BEFORE cutting into cubes.
 
@@ -90,5 +123,4 @@ instructions: 'PrepPress tofu thoroughly BEFORE cutting into cubes.
   Add noodles mixture to a bowl.
 
   Sprinkle with extra basil.Serve with a wedge of lime and Sriracha'
-source_url: null
-source_file: Vegan Spicy Thai Drunken Noodles with Seared Tofu.html
+no_chop_compatible: false

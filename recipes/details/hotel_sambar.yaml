@@ -1,4 +1,5 @@
 id: hotel_sambar
+title: Hotel Sambar
 name: Hotel Sambar
 categories:
 - Dinner
@@ -7,31 +8,51 @@ categories:
 cuisine: indian
 meal_type: soup_stew
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
-- 1½cups toor dal, cooked
-- 1cuptamarind extract
-- Turmeric powder
-- 1 teaspoon jaggery
-- 2 green chilies
 - Curry leaves
+- Curry leaves
+- Dried red chili
+- Green chilies
 - ½onion
-- 5 green beans
-- 1 medium carrot
-- 1 medium tomato
-- Salt
-- Water
-- Sambar powder
-- Cilantro
-- 'For Tempering:'
 - Oil
 - Mustard seeds
-- Dried red chili
-- Curry leaves
+- Salt
+- Sambar powder
+- Turmeric powder
+- 1 medium carrot
+- 1 medium tomato
+- 5 green beans
+- Cilantro
+- 1 teaspoon jaggery
+- 1cuptamarind extract
+- 1½cups toor dal, cooked
+- 'For Tempering:'
+- Water
+prep_steps:
+- '**Prep:**Cook 1/2 cup of toor dal.'
+- Chop carrot, potato, tomato, onion.
+- 'Soak tamarind: Take a small lemon-sized piece of tamarind and soak it in ¼ cup
+  warm water for about 10 minutes. Then squeeze and strain to get the juice.'
+cook_steps:
+- Cook:Take the chopped carrot, potato, and onion with 1 cup water.Boil until vegetables
+  are soft and cooked through.
+- Add the chopped tomato to the cooked vegetables and cook for 2 minutes.
+- Add the mashed dal to the pot.
+- Stir in 1½ tablespoons sambar powder.
+- Add the tamarind extract and salt to taste.
+- Let everything simmer together for about 5 minutes.
+- 'Make the tempering (tadka):'
+- In a small pan, heat 2 teaspoons oil.
+- Add 1 teaspoon mustard seeds and let them pop.
+- Add a pinch of asafoetida and 1 dried red chili, broken in half.
+- Let it sizzle for a few seconds, then turn off the heat.
+- Pour the tempering into the simmering sambar.
+- Mix well and let it simmer 2 more minutes.
+- Add cilantro for garnish.
 main_veg:
 - beans
 - carrot
@@ -39,6 +60,8 @@ main_veg:
 - green bean
 - onion
 - tomato
+source_url: null
+source_file: Hotel Sambar.html
 avoid_contains: []
 instructions: '**Prep:**Cook 1/2 cup of toor dal.
 
@@ -75,5 +98,4 @@ instructions: '**Prep:**Cook 1/2 cup of toor dal.
   Mix well and let it simmer 2 more minutes.
 
   Add cilantro for garnish.'
-source_url: null
-source_file: Hotel Sambar.html
+no_chop_compatible: false

@@ -1,34 +1,52 @@
 id: romesco_pasta_sauce
+title: Romesco Pasta Sauce
 name: Romesco Pasta Sauce
 categories:
 - ''
 cuisine: italian
 meal_type: pasta_noodles
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - oven
 ingredients:
-- 3 red peppers
-- 2 medium tomatoes
-- 8clovesgarlic
-- 1/3cupalmonds
 - Olive oil
-- 7ozfirm tofu
+- Clovesgarlic
+- Pepper
+- Red peppers
+- Salt
+- 2 medium tomatoes
+- Lemon juice
+- 1/3cupalmonds
 - 3tbspnutritional yeast
+- 7ozfirm tofu
 - Broth for blending
 - Fresh parsley
-- Lemon juice
-- Salt
-- Pepper
+prep_steps: []
+cook_steps:
+- Prep:Preheat your oven to 180°C (356°F).
+- Place the halved red peppers, tomatoes on baking tray
+- Drizzle with olive oil and sprinkle with salt and pepper.
+- Bake for about 25 minutes.
+- CookBlend the veggies and 8 garlic cloves.
+- Add tofu, a splash of olive oil, a handful of fresh parsley, 3 tablespoons of nutritional
+  yeast, 1/3 cup of raw almonds, and the juice of one lemon.
+- Season again with a bit of salt and pepper to taste.
+- Add vegetable broth to help blend everything to a smooth consistency. You can adjust
+  the amount to make the sauce as thick or thin as you like.
+- Use the sauce with cooked chickpeas, drizzled over yogurt, mixed with broccoli pesto,
+  or as a creamy pasta sauce.
+- For a gourmet touch, sprinkle toasted almond flakes and vegan parmesan on top before
+  serving.
 main_veg:
 - garlic
 - lemon
 - parsley
 - pepper
 - tomato
+source_url: null
+source_file: Romesco Pasta Sauce.html
 avoid_contains: []
 instructions: 'Prep:Preheat your oven to 180°C (356°F).
 
@@ -53,5 +71,4 @@ instructions: 'Prep:Preheat your oven to 180°C (356°F).
 
   For a gourmet touch, sprinkle toasted almond flakes and vegan parmesan on top before
   serving.'
-source_url: null
-source_file: Romesco Pasta Sauce.html
+no_chop_compatible: false

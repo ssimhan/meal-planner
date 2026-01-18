@@ -1,4 +1,5 @@
 id: rajma_nachos
+title: Rajma Nachos
 name: Rajma Nachos
 categories:
 - Dinner
@@ -7,33 +8,47 @@ categories:
 cuisine: indian
 meal_type: soup_stew
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - instant_pot
 ingredients:
-- 1cupRed Kidney Beans
-- 1 tablespoon Ghee
-- 1 teaspoon cumin
-- Ginger
-- Garlic
-- 1 Green chili
 - 2 medium Onion
-- 4 medium Tomatoes
-- 1 tablespoon Lime juice
-- Cilantro
-- ½teaspoon Turmeric
-- 1 teaspoon Cumin powder
-- 1 teaspoon Coriander powder
+- Garlic
+- Ginger
+- Green chili
+- Ghee
+- Coriander powder
+- Cumin
+- Cumin powder
 - ½teaspoon Garam Masala
 - ½teaspoon Red Chili powder
-- Greek yogurt
+- ½teaspoon Turmeric
+- 1 tablespoon Lime juice
+- 1cupRed Kidney Beans
+- 4 medium Tomatoes
+- Cilantro
 - Tomatoes (optional)
-- Salsa (optional)
-- Guacamole (optional)
 - 8ozshredded cheese
+- Greek yogurt
+- Guacamole (optional)
 - Nacho chips
+- Salsa (optional)
+prep_steps: []
+cook_steps:
+- Start the instant pot in Saute (More) mode and let it heat until it displays HOT.
+  Add oil, cumin seeds and green chili.
+- Add onions, ginger and garlic. Stir and saute for about 3 minutes.
+- Add tomatoes and spices to the instant pot. Stir and saute for 2 more minutes.
+- Drain the old soaking water from the soaked beans and discard. Add the beans and
+  the water (for cooking) to the instant pot. Stir it all up.
+- Close the lid with vent in sealing position. Change the setting to "Bean/Chili"
+  mode. This will set the timer to 30 minutes at high pressure cooking. Once the instant
+  pot beeps, let the pressure release naturally and then open the lid. If using canned
+  beans, use 6 min instead of 30 and reduce water to 1 cup.
+- Add lime juice and cilantro and stir the rajma.
+- Serve on top of chips with cheese, greek yogurt/sour cream, lettuce, tomatoes, salsa
+  as toppings.
 main_veg:
 - beans
 - cilantro
@@ -42,6 +57,8 @@ main_veg:
 - lime
 - onion
 - tomato
+source_url: null
+source_file: Rajma Nachos.html
 avoid_contains: []
 instructions: 'Start the instant pot in Saute (More) mode and let it heat until it
   displays HOT. Add oil, cumin seeds and green chili.
@@ -62,5 +79,4 @@ instructions: 'Start the instant pot in Saute (More) mode and let it heat until 
 
   Serve on top of chips with cheese, greek yogurt/sour cream, lettuce, tomatoes, salsa
   as toppings.'
-source_url: null
-source_file: Rajma Nachos.html
+no_chop_compatible: false

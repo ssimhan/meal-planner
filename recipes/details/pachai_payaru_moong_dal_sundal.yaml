@@ -1,4 +1,5 @@
 id: pachai_payaru_moong_dal_sundal
+title: Pachai Payaru, Moong Dal Sundal
 name: Pachai Payaru, Moong Dal Sundal
 categories:
 - Guest Apps
@@ -7,26 +8,34 @@ categories:
 cuisine: indian
 meal_type: soup_stew
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
-- ½cup Green gram pachai payaru
-- ¼cup Grated coconut
-- 1 teaspoon Ginger optional, finely chopped
-- 2 tablespoon Coriander leaves optional
-- Salt
-- 'To temper:'
-- 2 teaspoon Oil
-- ½teaspoon Mustard
-- 1 teaspoon Urad dal
-- ¼teaspoon Asafoetida
-- 2 Red chilli
 - 1 sprig Curry leaves
+- 1 teaspoon Ginger optional, finely chopped
+- Oil
+- Coriander leaves optional
+- Salt
+- 1 teaspoon Urad dal
+- 2 Red chilli
+- 'To temper:'
+- ¼cup Grated coconut
+- ¼teaspoon Asafoetida
+- ½cup Green gram pachai payaru
+- ½teaspoon Mustard
+prep_steps: []
+cook_steps:
+- Heat heavy bottom pan, add oil, splutter mustard, followed by urad dal, asafoetida,
+  red chilli and curry leaves.
+- Add ginger, coriander leaves and give it a fry.
+- In goes cooked green gram, drain water if any. Toss well.
+- Lastly top with grated coconut and mix. Cook for a minute and switch off the flame.
 main_veg:
 - ginger
+source_url: null
+source_file: Pachai Payaru, Moong Dal Sundal.html
 avoid_contains: []
 instructions: 'Heat heavy bottom pan, add oil, splutter mustard, followed by urad
   dal, asafoetida, red chilli and curry leaves.
@@ -36,5 +45,4 @@ instructions: 'Heat heavy bottom pan, add oil, splutter mustard, followed by ura
   In goes cooked green gram, drain water if any. Toss well.
 
   Lastly top with grated coconut and mix. Cook for a minute and switch off the flame.'
-source_url: null
-source_file: Pachai Payaru, Moong Dal Sundal.html
+no_chop_compatible: false

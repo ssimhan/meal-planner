@@ -1,26 +1,55 @@
 id: soft_and_chewy_white_chocolate_chip_cookies
+title: Soft and Chewy White Chocolate Chip Cookies
 name: Soft and Chewy White Chocolate Chip Cookies
 categories:
 - Dessert
 cuisine: unknown
 meal_type: baked_goods
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - instant_pot
 - oven
 ingredients:
-- 1cupbutter (softened)
-- ¾cup sugar
-- ¾cup brown sugar
-- 1 egg
 - 2¼cup flour
-- 1 teaspoon baking soda
+- Cupbutter (softened)
 - ½teaspoon salt
+- 1 egg
+- 1 teaspoon baking soda
 - 1-1½cups white chocolate chips
+- ¾cup brown sugar
+- ¾cup sugar
+prep_steps: []
+cook_steps:
+- Now, if you like your cookie a little crunchier, you can bake these cookies a tad
+  longer in the oven. A crunchy cookie is great to dunk in milk or in a warm cup of
+  hot chocolate.
+- Would you rather have Macadamia Nuts in them? You could always add them to this
+  recipe or you could try this cookie recipe here.
+- Cream all of the ingredients together.
+- 'To make this cookie recipe: simply mix sugars, softened butter and egg together
+  in medium bowl. (Remember, my favorite bowl is no more. I still mourn the loss.)'
+- Then mix in the dry ingredients. Stir well and put on cookie sheet (ungreased).
+- Then bake and serve. Delicious and easy!
+- Yes, you do. Too little or too much of the brown sugar will drastically result in
+  cookies that don't turn out right. Be sure to measure the brown sugar carefully.
+- I would cook them for 12-15 minutes and go from there.
+- Wait! 365 degrees? Why?
+- Good question! I found that one of the secrets to these cookies is 365 degrees is
+  the perfect. 375 degrees is too high and 350 degrees is too low.
+- I personally think this cookie recipe is the best for soft and chewy cookies and
+  I urge you to try it.
+- You will probably never use another cookie recipe again.
+- Cream together butter, sugars and egg in a large bowl
+- Stir in flour, baking soda and salt
+- Fold in white chocolate chips
+- Roll into 1 inch balls and place on ungreased cookie sheet
+- Bake at 365* for 8 minutes or until done
+- Preheat oven to 365°
 main_veg: []
+source_url: null
+source_file: Soft and Chewy White Chocolate Chip Cookies.html
 avoid_contains: []
 instructions: 'Now, if you like your cookie a little crunchier, you can bake these
   cookies a tad longer in the oven. A crunchy cookie is great to dunk in milk or in
@@ -64,5 +93,4 @@ instructions: 'Now, if you like your cookie a little crunchier, you can bake the
   Bake at 365* for 8 minutes or until done
 
   Preheat oven to 365°'
-source_url: null
-source_file: Soft and Chewy White Chocolate Chip Cookies.html
+no_chop_compatible: false

@@ -1,21 +1,25 @@
 id: granola_bar
+title: Granola bar
 name: Granola bar
 categories:
 - School Snacks
 cuisine: snack
 meal_type: snack_bar
 effort_level: low
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
 - Granola bar
+prep_steps: []
+cook_steps:
+- Granola bar
 main_veg: []
+source_url: null
+source_file: Granola bar.html
 avoid_contains: []
 instructions:
 - Granola bar
-source_url: null
-source_file: Granola bar.html
+no_chop_compatible: false
 tags: []

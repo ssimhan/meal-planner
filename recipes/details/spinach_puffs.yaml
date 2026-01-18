@@ -1,4 +1,5 @@
 id: spinach_puffs
+title: Spinach Puffs
 name: Spinach Puffs
 categories:
 - Guest Apps
@@ -6,25 +7,42 @@ categories:
 cuisine: unknown
 meal_type: appetizer
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - oven
 ingredients:
-- 3-4cupsspinach
-- 1/2cupcrumbled feta
-- 1/4cupminced onion, optional
-- 1 tablespoon olive oil
-- 1 teaspoon chopped dill
 - 1 teaspoon minced garlic
+- 1/4cupminced onion, optional
+- Olive oil
 - Kosher salt and freshly ground black pepper
-- 2 eggs
+- 3-4cupsspinach
 - 1 sheet frozen puff pastry, thawed
+- 1 teaspoon chopped dill
+- 1/2cupcrumbled feta
+- 2 eggs
+prep_steps: []
+cook_steps:
+- Cut and saute spinach until wilted. Squeeze out any remaining water.
+- Take puff pastry out to thaw on counter.
+- Mix spinach, feta, onion, oil, dill and garlic in a medium bowl. Season to taste
+  with salt and pepper. In a small bowl, beat 1 egg to blend; fold into spinach mixture.
+- Preheat oven to 400°.
+- Roll out pastry on lightly floured surface.
+- Cut out large squares and place one in each muffin cup, pressing into bottom and
+  up sides and leaving corners pointing up.
+- Divide filling among cups. Fold pastry over filling, pressing corners together to
+  meet in center.
+- Beat second egg to blend in a small bowl. Brush pastry with egg wash (this will
+  give the pastry a nice sheen). Alternatively use oil or butter here instead.
+- Bake until pastry is golden brown and puffed, about 25 minutes.
+- Let them cool on counter for 10 minutes before serving.
 main_veg:
 - garlic
 - onion
 - spinach
+source_url: null
+source_file: Spinach Puffs.html
 avoid_contains: []
 instructions: 'Cut and saute spinach until wilted. Squeeze out any remaining water.
 
@@ -49,5 +67,4 @@ instructions: 'Cut and saute spinach until wilted. Squeeze out any remaining wat
   Bake until pastry is golden brown and puffed, about 25 minutes.
 
   Let them cool on counter for 10 minutes before serving.'
-source_url: null
-source_file: Spinach Puffs.html
+no_chop_compatible: false

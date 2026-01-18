@@ -1,11 +1,11 @@
 id: ip_no_soak_kidney_beans_rajma
+title: IP No Soak Kidney Beans / Rajma
 name: IP No Soak Kidney Beans / Rajma
 categories:
 - Instant Pot
 cuisine: unknown
 meal_type: unknown
 effort_level: high
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
@@ -13,9 +13,23 @@ appliances:
 - stovetop
 ingredients:
 - 1cupkidney beans
-- "3\xBDcups water"
+- 3½cups water
+prep_steps: []
+cook_steps:
+- Add kidney beans and water to the Instant Pot and stir to prevent sticking.
+- Pressure cook on high (40 minutes for more firm, 45 for more tender)
+- It take about 8 minutes for the Instant Pot to pressurize before cooking begins.
+- Allow to naturally release for 15 minutes, then release any remaining pressure.
+- Carefully remove lid once steam has fully escaped and strain off any excess cooking
+  liquid.
+- Store cooled leftovers in the refrigerator up to 5 days or in the freezer up to
+  1 month.
+- Reheat in a saucepan on the stovetop, adding a little water, as needed, to prevent
+  sticking.
 main_veg:
 - beans
+source_url: null
+source_file: IP No Soak Kidney Beans  Rajma.html
 avoid_contains: []
 instructions: 'Add kidney beans and water to the Instant Pot and stir to prevent sticking.
 
@@ -33,5 +47,4 @@ instructions: 'Add kidney beans and water to the Instant Pot and stir to prevent
 
   Reheat in a saucepan on the stovetop, adding a little water, as needed, to prevent
   sticking.'
-source_url: null
-source_file: IP No Soak Kidney Beans  Rajma.html
+no_chop_compatible: false

@@ -1,4 +1,5 @@
 id: guacamole
+title: Guacamole
 name: Guacamole
 categories:
 - Guest Apps
@@ -7,25 +8,35 @@ categories:
 cuisine: mexican
 meal_type: sauce_dip
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
-- 2 ripe avocados
-- 1/4 teaspoon kosher salt
-- 1 tablespoon lemon juice
 - 2to 4 tablespoons minced red onion
-- 2 tablespoons cilantro, finely chopped
+- Kosher salt
 - Pinch freshly ground black pepper
+- 1 tablespoon lemon juice
 - 1/2 ripe tomato, chopped
+- 2 ripe avocados
+- 2 tablespoons cilantro, finely chopped
+prep_steps: []
+cook_steps:
+- Cut the avocados, score and mash in the bowl.
+- Sprinkle with salt and lime (or lemon) juice.
+- Add the chopped onion, cilantro, black pepper.
+- If making a few hours ahead, place plastic wrap on the surface of the guacamole
+  and press down to cover it to prevent air reaching it. (The oxygen in the air causes
+  oxidation which will turn the guacamole brown.)
+- Refrigerate leftover guacamole up to 3 days.
 main_veg:
 - avocado
 - cilantro
 - lemon
 - onion
 - tomato
+source_url: null
+source_file: Guacamole.html
 avoid_contains: []
 instructions: 'Cut the avocados, score and mash in the bowl.
 
@@ -38,5 +49,4 @@ instructions: 'Cut the avocados, score and mash in the bowl.
   oxidation which will turn the guacamole brown.)
 
   Refrigerate leftover guacamole up to 3 days.'
-source_url: null
-source_file: Guacamole.html
+no_chop_compatible: false

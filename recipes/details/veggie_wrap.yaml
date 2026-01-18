@@ -1,25 +1,35 @@
 id: veggie_wrap
+title: Veggie Wrap
 name: Veggie Wrap
 categories:
 - ''
 cuisine: mexican
 meal_type: tacos_wraps
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - oven
 ingredients:
 - 4 flour tortillas
-- 2/3cuphummus
-- 1cupedamame
-- 2cupsspinach
-- 1-2 medium avocados
-- 1largecarrot
-- 1 medium cucumber
 - 'Other veggie ideas: chopped tomato, corn, lettuce, beets, bell peppers'
 - Salt & pepper
+- 1 medium cucumber
+- 1-2 medium avocados
+- 1largecarrot
+- 2cupsspinach
+- 1cupedamame
+- 2/3cuphummus
+prep_steps:
+- Shred carrot and chop cucumber.
+cook_steps:
+- Spread hummus over tortilla.
+- Add edamame, spinach, avocado, carrot, cucumber, and any other desired vegetables.
+- Sprinkle with freshly ground black pepper, to taste.
+- Drizzle with a tiny bit of olive oil. Roll up your wrap and enjoy!
+- '*I love using regular hummus or roasted red pepper!'
+- '**Other vegetable ideas: tomato, radish, corn, lettuce, cabbage, red bell pepper,
+  zucchini, alfalfa sprouts etc.'
 main_veg:
 - avocado
 - beet
@@ -31,6 +41,8 @@ main_veg:
 - pepper
 - spinach
 - tomato
+source_url: null
+source_file: Veggie Wrap.html
 avoid_contains: []
 instructions: 'Shred carrot and chop cucumber.
 
@@ -46,5 +58,4 @@ instructions: 'Shred carrot and chop cucumber.
 
   **Other vegetable ideas: tomato, radish, corn, lettuce, cabbage, red bell pepper,
   zucchini, alfalfa sprouts etc.'
-source_url: null
-source_file: Veggie Wrap.html
+no_chop_compatible: false

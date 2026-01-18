@@ -1,21 +1,25 @@
 id: homemade_popcorn
+title: Homemade popcorn
 name: Homemade popcorn
 categories:
 - School Snacks
 cuisine: snack
 meal_type: unknown
 effort_level: low
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
 - Popcorn kernels
+prep_steps: []
+cook_steps:
+- Popcorn
 main_veg: []
+source_url: null
+source_file: Homemade popcorn.html
 avoid_contains: []
 instructions:
 - Popcorn
-source_url: null
-source_file: Homemade popcorn.html
+no_chop_compatible: false
 tags: []

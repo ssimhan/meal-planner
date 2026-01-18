@@ -1,4 +1,5 @@
 id: paruppu_thogayal
+title: Paruppu Thogayal
 name: Paruppu Thogayal
 categories:
 - Indian
@@ -6,19 +7,30 @@ categories:
 cuisine: indian
 meal_type: soup_stew
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
-- ½cup Toor dal
-- 3 red chillies
-- 3clovesgarlic
-- Salt
 - Oil
+- Clovesgarlic
+- Salt
+- 3 red chillies
+- ½cup Toor dal
+prep_steps: []
+cook_steps:
+- Fry toor dal with red chillies, with little oil till golden brown in medium flame
+  or low flame.
+- Cool down and grind it to a coarse paste with added salt, peeled garlic and required.
+- You can add 2 tablespoon of coconut while grinding, that will give you an enhanced
+  taste!
+- A pinch of tamarind is also a good idea.
+- To eat with rice, mix this paste with rice and little sesame oil or you can have
+  as an accompaniment for vatral kuzhambu rice or curd rice!
 main_veg:
 - garlic
+source_url: null
+source_file: Paruppu Thogayal.html
 avoid_contains: []
 instructions: 'Fry toor dal with red chillies, with little oil till golden brown in
   medium flame or low flame.
@@ -32,5 +44,4 @@ instructions: 'Fry toor dal with red chillies, with little oil till golden brown
 
   To eat with rice, mix this paste with rice and little sesame oil or you can have
   as an accompaniment for vatral kuzhambu rice or curd rice!'
-source_url: null
-source_file: Paruppu Thogayal.html
+no_chop_compatible: false

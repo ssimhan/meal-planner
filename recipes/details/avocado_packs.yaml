@@ -1,8 +1,12 @@
-ingredients:
-- Avocado packs
-instructions:
-- Avocado packs
+title: Avocado packs
 name: Avocado packs
 cuisine: snack
 effort_level: low
+ingredients:
+- Avocado packs
+prep_steps: []
+cook_steps:
+- Avocado packs
+instructions:
+- Avocado packs
 tags: []

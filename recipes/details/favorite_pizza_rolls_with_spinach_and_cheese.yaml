@@ -1,4 +1,5 @@
 id: favorite_pizza_rolls_with_spinach_and_cheese
+title: Favorite Pizza Rolls (with Spinach and Cheese)
 name: Favorite Pizza Rolls (with Spinach and Cheese)
 categories:
 - Dinner
@@ -6,7 +7,6 @@ categories:
 cuisine: italian
 meal_type: pizza
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
@@ -14,12 +14,38 @@ appliances:
 - oven
 ingredients:
 - 1cupbaby spinach
-- 13-16 ounces pizza dough (at room temperature)
-- 3/4cuppizza sauce
-- 2cupsshredded mozzarella
 - 1/4cupgrated Parmesan cheese
+- 13-16 ounces pizza dough (at room temperature)
+- 2cupsshredded mozzarella
+- 3/4cuppizza sauce
+prep_steps: []
+cook_steps:
+- Prep:Preheat the oven to 400°F.
+- Grease a muffin tin, making sure to coat the top edges of each cup (cheese may spill
+  over).
+- Stretch the pizza dough into an 11x16-inch rectangle on a piece of parchment paper
+  (this will prevent sticking). If the dough is too tough to stretch, let it rest
+  for 5 minutes and try again.
+- Chop the spinach if it's not pre-chopped.
+- 'Cook:Spread the Toppings: Spread pizza sauce over the dough. Sprinkle on the spinach,
+  mozzarella, and Parmesan evenly.'
+- 'Roll the Dough: Starting on one long side, roll the dough up into a log, using
+  the parchment paper to help you roll.'
+- 'Slice: Cut the rolled dough into 12 even slices using a serrated knife. To make
+  it easier, start cutting in the center, then work on cutting each half evenly.'
+- 'Bake: Place each slice into the greased muffin tin. Bake for 22-26 minutes, or
+  until the dough is baked through, the cheese is melted, and the tops are golden
+  brown.'
+- 'Cool: Let the rolls cool in the muffin tin for 3-5 minutes to let the cheese firm
+  up. Use a knife to loosen any stuck cheese before transferring them to a wire rack
+  or serving plate.'
+- 'Storage:Fridge: Store in an airtight container in the fridge for up to 3 days.Freezer:
+  Freeze in a zip-lock bag for up to 3 months. To reheat, microwave frozen rolls for
+  30-60 seconds or until warm.'
 main_veg:
 - spinach
+source_url: null
+source_file: Favorite Pizza Rolls (with Spinach and Cheese).html
 avoid_contains: []
 instructions: 'Prep:Preheat the oven to 400°F.
 
@@ -51,5 +77,4 @@ instructions: 'Prep:Preheat the oven to 400°F.
   Storage:Fridge: Store in an airtight container in the fridge for up to 3 days.Freezer:
   Freeze in a zip-lock bag for up to 3 months. To reheat, microwave frozen rolls for
   30-60 seconds or until warm.'
-source_url: null
-source_file: Favorite Pizza Rolls (with Spinach and Cheese).html
+no_chop_compatible: false

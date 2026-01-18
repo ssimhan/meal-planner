@@ -1,4 +1,5 @@
 id: cherry_tomato_salad
+title: Cherry Tomato Salad
 name: Cherry Tomato Salad
 categories:
 - Dinner
@@ -7,26 +8,32 @@ categories:
 cuisine: unknown
 meal_type: salad
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
-- ¼cup olive oil
-- 3 tablespoons balsamic vinegar
-- 2 teaspoons agave
 - ½teaspoon minced garlic
+- ¼cup olive oil
 - 4cupscherry tomatoes
+- 2 teaspoons agave
+- 3 tablespoons balsamic vinegar
 - ¼cup chopped fresh oregano
+prep_steps: []
+cook_steps:
+- In a large bowl, combine the olive oil, balsamic vinegar, agave, garlic, salt, and
+  pepper.
+- Add the tomatoes and the oregano and toss to combine. Taste and adjust seasonings
+  as needed.
 main_veg:
 - garlic
 - tomato
+source_url: null
+source_file: Cherry Tomato Salad.html
 avoid_contains: []
 instructions: 'In a large bowl, combine the olive oil, balsamic vinegar, agave, garlic,
   salt, and pepper.
 
   Add the tomatoes and the oregano and toss to combine. Taste and adjust seasonings
   as needed.'
-source_url: null
-source_file: Cherry Tomato Salad.html
+no_chop_compatible: false

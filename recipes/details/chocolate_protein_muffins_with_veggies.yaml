@@ -1,34 +1,45 @@
 id: chocolate_protein_muffins_with_veggies
+title: Chocolate Protein Muffins (with Veggies!)
 name: Chocolate Protein Muffins (with Veggies!)
 categories:
 - ''
 cuisine: unknown
 meal_type: baked_goods
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - instant_pot
 - oven
 ingredients:
-- US Customary Metric
-- 1cuppeanut butter
-- 1cupbanana
+- Cuppeanut butter
+- Baking powder
+- ¼cup cocoa powder
+- ¼teaspoon salt
 - 1cupraw zucchini, or 2 nd banana
 - 1cupspinach
-- 3 eggs
-- ¼cup honey
-- Vanilla extract
-- ¼cup cocoa powder
+- 1cupbanana
 - 2 tablespoons ground flaxseeds
-- 1 teaspoon baking powder
-- ¼teaspoon baking soda
+- 3 eggs
 - Chocolate chips
-- ¼teaspoon salt
+- US Customary Metric
+- Vanilla extract
+- ¼cup honey
+- ¼teaspoon baking soda
+prep_steps: []
+cook_steps:
+- Preheat the oven to 350 degrees. Grease the muffin tin.
+- Place all ingredients into a blender and blend until very smooth.
+- Fill muffin cups about ½ full using about ¼ cup batter in each. Top with chocolate
+  chips, if using.
+- Bake 20 minutes for regular muffins and 12 for mini muffins.
+- Let cool for 5-10 minutes in the pan, run a knife around the edges, and carefully
+  transfer to a wire rack to cool.
 main_veg:
 - spinach
 - zucchini
+source_url: null
+source_file: Chocolate Protein Muffins (with Veggies!).html
 avoid_contains: []
 instructions: 'Preheat the oven to 350 degrees. Grease the muffin tin.
 
@@ -41,5 +52,4 @@ instructions: 'Preheat the oven to 350 degrees. Grease the muffin tin.
 
   Let cool for 5-10 minutes in the pan, run a knife around the edges, and carefully
   transfer to a wire rack to cool.'
-source_url: null
-source_file: Chocolate Protein Muffins (with Veggies!).html
+no_chop_compatible: false

@@ -1,4 +1,5 @@
 id: peanut_chutney
+title: Peanut Chutney
 name: Peanut Chutney
 categories:
 - Dinner
@@ -6,24 +7,37 @@ categories:
 cuisine: indian
 meal_type: soup_stew
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - oven
 ingredients:
-- ½cup Peanuts
-- 1 tablespoon Chana dal
-- 1 tablespoon Urad dal
-- 5 green chilies
 - Garlic
-- Salt
+- Green chilies
 - Oil
 - Mustard seeds
-- Urad dal
+- Salt
 - 1 curry leaf
+- 1 tablespoon Chana dal
+- 1 tablespoon Urad dal
+- Urad dal
+- ½cup Peanuts
+prep_steps: []
+cook_steps:
+- Dry roast peanuts in low flame to ensure even roasting.
+- Once its is crisp, transfer to a plate for cooling and roast channa and urad dal
+  with a teaspoon of oil.
+- Lastly add green chillies and fry.
+- Cool everything.
+- Remove the skin of the peanuts completely.
+- Place in the mixer and grind with ginger (if desired), salt and water. Grind smoothly.
+- Adjust water consistency to make it runny.
+- 'Temper: oil, mustard seeds, urad dal, curry leaf.'
+- Mix well.
 main_veg:
 - garlic
+source_url: null
+source_file: Peanut Chutney.html
 avoid_contains: []
 instructions: 'Dry roast peanuts in low flame to ensure even roasting.
 
@@ -43,5 +57,4 @@ instructions: 'Dry roast peanuts in low flame to ensure even roasting.
   Temper: oil, mustard seeds, urad dal, curry leaf.
 
   Mix well.'
-source_url: null
-source_file: Peanut Chutney.html
+no_chop_compatible: false

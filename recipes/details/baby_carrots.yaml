@@ -1,21 +1,25 @@
 id: baby_carrots
+title: Baby Carrots
 name: Baby Carrots
 categories:
 - School Snacks
 cuisine: snack
 meal_type: simple_snack
 effort_level: low
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
 - Baby carrots
+prep_steps: []
+cook_steps:
+- Baby carrots
 main_veg: []
+source_url: null
+source_file: Baby Carrots.html
 avoid_contains: []
 instructions:
 - Baby carrots
-source_url: null
-source_file: Baby Carrots.html
+no_chop_compatible: false
 tags: []

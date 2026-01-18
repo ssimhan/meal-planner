@@ -1,4 +1,5 @@
 id: instant_nei_appam
+title: Instant Nei Appam
 name: Instant Nei Appam
 categories:
 - Dessert
@@ -6,19 +7,30 @@ categories:
 cuisine: indian
 meal_type: breakfast
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - instant_pot
 ingredients:
+- 1 tablespoon wheat flour
 - 1cupRice flour
 - ¼cup ghee
-- 1cupjaggery, powder
-- 1 banana, ripe
-- 1 tablespoon wheat flour
+- Cupjaggery, powder
 - ⅛teaspoon Salt
+- 1 banana, ripe
+prep_steps: []
+cook_steps:
+- In a blender, place banana, jaggery or brown sugar, cardamom, salt and grind smoothly.
+- Add rice flour and wheat flour to it along and blend again.
+- No need to add water. If needed only add later maximum 1 or 2 tbsp. Batter should
+  be like pancake batter or idli dosa batter consistency.
+- Transfer to the bowl. Heat appe pan/ paniyaram pan and generously drizzle with ghee.
+- Pour the batter in the shallows (kuzhi) and cook covered in medium flame.
+- Flip and cook again to cook until golden on both sides. Add ghee more on top if
+  desired.
 main_veg: []
+source_url: null
+source_file: Instant Nei Appam.html
 avoid_contains: []
 instructions: 'In a blender, place banana, jaggery or brown sugar, cardamom, salt
   and grind smoothly.
@@ -34,5 +46,4 @@ instructions: 'In a blender, place banana, jaggery or brown sugar, cardamom, sal
 
   Flip and cook again to cook until golden on both sides. Add ghee more on top if
   desired.'
-source_url: null
-source_file: Instant Nei Appam.html
+no_chop_compatible: false

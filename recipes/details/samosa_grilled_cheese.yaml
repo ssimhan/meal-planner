@@ -1,4 +1,5 @@
 id: samosa_grilled_cheese
+title: Samosa Grilled Cheese
 name: Samosa Grilled Cheese
 categories:
 - Indian
@@ -7,35 +8,66 @@ categories:
 cuisine: indian
 meal_type: sandwich
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
-- 2tbspneutral oil like vegetable or canola
-- 1/2tspmustard seeds
-- 1tspcumin seeds
-- 1/8 teaspoon hing
-- 1 medium onion
-- 2clovesgarlic
-- 3largepotatoes
-- 2 teaspoons coriander-cumin powder
-- 1/2tspchili powder
-- 1/4tspturmeric
-- 1tspgaram masala
-- 11/4 teaspoon salt
 - 8 slices sandwich bread like Sourdough
-- 8ozshredded cheese
-- 1cupprepared Tamarind -Date Chutney
+- 1 medium onion
+- Tbspneutral oil like vegetable or canola
+- Tbspunsalted butter, softened
+- Clovesgarlic
+- Hing
+- Salt
+- Teaspoons coriander-cumin powder
+- Tspchili powder
+- Tspcumin seeds
+- Tspgaram masala
+- Tspmustard seeds
+- Tspturmeric
 - 1cupCilantro Chutney
-- 4tbspunsalted butter, softened
+- 3largepotatoes
+- 1cupprepared Tamarind -Date Chutney
+- 8ozshredded cheese
+prep_steps: []
+cook_steps:
+- Peel, boil and dice potatoes.
+- In a non stick skillet add 2 tbsp oil over medium high heat.
+- Once the oil is hot add mustard seeds, cumin seeds, hing and let the seeds crackle.
+- Add the diced onions and cook until onions are translucent and golden around the
+  edges.
+- Lower the heat slightly and add the grated garlic, turmeric powder, chili powder,
+  coriander cumin powder, garam masala powder and mix well.
+- Add the potatoes, salt, and continue to stir and combine all ingredients gently
+  until everything is evenly incorporated
+- Using the back of a spoon or a potato masher, gently smash the potatoes if they
+  are too large and continue to stir.
+- Remove from heat.
+- 'Assembly:'
+- In a medium size skillet melt over medium heat, add 1/2 tablespoon of butter until
+  it is foamy and melted.
+- Lay two slices of bread down on the pan and spread one of the slices with roughly
+  1 tablespoon of cilantro chutney and the other slice with about 1 tablespoon of
+  apple butter chutney.
+- Add a slice of cheese or handful of shredded cheese on top of the cilantro chutney,
+  then top with about 1/3 cup of the potato mixture, using the back of a spoon to
+  press it down, and then place the remaining slice of bread (apple butter chutney
+  side down) on top. Use a spatula to gently press the sandwich down and continue
+  to cook until both sides are golden. To help the cheese melt, cover the pan with
+  a melting dome. Repeat with remaining ingredients and add butter as needed to the
+  pan.
+- Top the potato mixture with a few spoonfuls of the sweet chutney and top with another
+  slice of cheese.
+- Serve the sandwiches hot, and enjoy!
 main_veg:
 - cilantro
 - garlic
 - onion
 - potato
 - potatoe
+source_url: null
+source_file: Samosa Grilled Cheese.html
 avoid_contains: []
 instructions: 'Peel, boil and dice potatoes.
 
@@ -78,5 +110,4 @@ instructions: 'Peel, boil and dice potatoes.
   slice of cheese.
 
   Serve the sandwiches hot, and enjoy!'
-source_url: null
-source_file: Samosa Grilled Cheese.html
+no_chop_compatible: false

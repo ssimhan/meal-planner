@@ -1,28 +1,42 @@
 id: black_bean_brownie_bites
+title: Black Bean Brownie Bites
 name: Black Bean Brownie Bites
 categories:
 - School Snacks
 cuisine: unknown
 meal_type: snack_bar
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - instant_pot
 - oven
 ingredients:
-- 1/4cupcoconut oil (or melted butter)
+- 1/3cupwhole wheat flour
+- Cupcoconut oil (or melted butter)
+- Baking powder
+- Salt
+- Tablespoons cocoa powder
+- 14.5- ounce can black beans
+- 1 teaspoon pure vanilla extract
 - 1/2cupchocolate chips
 - 1/3cupagave
-- 1 teaspoon pure vanilla extract
-- 14.5- ounce can black beans
-- 2 tablespoons cocoa powder
-- 1/2 teaspoon baking powder
-- 1/4 teaspoon salt
-- 1/3cupwhole wheat flour
+prep_steps: []
+cook_steps:
+- Preheat the oven to 350 degrees F. Line a 24-cup mini muffin tin with paper liners.
+- Add the oil and chocolate chips to a heat-safe bowl. Warm in the microwave for 1
+  minute. Remove from microwave and stir together until the chocolate and oil are
+  blended together.
+- Add the chocolate-oil mixture to a food processor with the rest of the ingredients
+  except the flour. Blend well.
+- Pulse in the flour.
+- Divide the batter among the muffin cups, using a heaping tablespoon in each. Flatten
+  a bit with a spoon and add sprinkles if desired.
+- Bake for 10-12 minutes or until firm to the touch. Let cool fully before serving.
 main_veg:
 - beans
+source_url: null
+source_file: Black Bean Brownie Bites.html
 avoid_contains: []
 instructions: 'Preheat the oven to 350 degrees F. Line a 24-cup mini muffin tin with
   paper liners.
@@ -40,5 +54,4 @@ instructions: 'Preheat the oven to 350 degrees F. Line a 24-cup mini muffin tin 
   a bit with a spoon and add sprinkles if desired.
 
   Bake for 10-12 minutes or until firm to the touch. Let cool fully before serving.'
-source_url: null
-source_file: Black Bean Brownie Bites.html
+no_chop_compatible: false

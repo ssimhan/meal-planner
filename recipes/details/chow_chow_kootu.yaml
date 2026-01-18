@@ -1,29 +1,46 @@
 id: chow_chow_kootu
+title: Chow Chow Kootu
 name: Chow Chow Kootu
 categories:
 - Indian
 cuisine: indian
 meal_type: soup_stew
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - instant_pot
 ingredients:
-- 1 chow chow
-- ¼cup Moong dal
-- 1 teaspoon Sambar powder
-- ⅛teaspoon Turmeric
-- Salt
-- ¼cup Coconut grated
-- ½teaspoon Cumin seeds
 - ½teaspoon Rice flour optional
+- Curry leaves
 - Oil
 - Mustard seeds
+- Salt
+- Sambar powder
+- ½teaspoon Cumin seeds
+- ⅛teaspoon Turmeric
+- 1 chow chow
 - Urad dal
-- Curry leaves
+- ¼cup Coconut grated
+- ¼cup Moong dal
+prep_steps:
+- Peel and dice chow chow.
+- Grind coconut with the rice flour mixture well.
+- Add a little jeera and grind coarsely.
+- (Finely chop small onions if you have time)
+cook_steps:
+- Add moong dal, turmeric, sambar powder and salt.
+- Add a cup of water and make sure everything is mixed together
+- Put in IP for 8 minutes manual mode and then natural pressure release. Full process
+  should take 20 minutes.
+- Meanwhile, mix rice flour into a small amount of water.
+- By now, pressure should have release, so add the mixture to cooked vegetables and
+  bring to boil in saute mode.
+- Thalichify with coconut oil, mustard seeds, urad dal, curry leaves. Add finely chopped
+  small onion and mix well.
 main_veg: []
+source_url: null
+source_file: Chow Chow Kootu.html
 avoid_contains: []
 instructions: 'Peel and dice chow chow.
 
@@ -47,5 +64,4 @@ instructions: 'Peel and dice chow chow.
 
   Thalichify with coconut oil, mustard seeds, urad dal, curry leaves. Add finely chopped
   small onion and mix well.'
-source_url: null
-source_file: Chow Chow Kootu.html
+no_chop_compatible: false

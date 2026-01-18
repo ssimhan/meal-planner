@@ -1,21 +1,25 @@
 id: mini_orange
+title: Mini orange
 name: Mini orange
 categories:
 - School Snacks
 cuisine: snack
 meal_type: simple_snack
 effort_level: medium
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
 - Mini oranges
+prep_steps: []
+cook_steps:
+- Mini oranges
 main_veg: []
+source_url: null
+source_file: Mini orange.html
 avoid_contains: []
 instructions:
 - Mini oranges
-source_url: null
-source_file: Mini orange.html
+no_chop_compatible: false
 tags: []

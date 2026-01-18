@@ -1,4 +1,5 @@
 id: cauliflower_rasam
+title: Cauliflower Rasam
 name: Cauliflower Rasam
 categories:
 - Dinner
@@ -6,27 +7,38 @@ categories:
 cuisine: indian
 meal_type: soup_stew
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
-- Cauliflower florets (package)
+- Green chili (must have)
+- Ghee
+- Cumin seeds
+- Mustard seeds
 - 2 medium tomatoes
+- Cauliflower florets (package)
 - Cilantro
+- Lemon juice
 - 1cuptoor dal
 - Shredded coconut
-- Green chili (must have)
-- Cumin seeds
-- Ghee
-- Mustard seeds
-- Lemon juice
+prep_steps: []
+cook_steps:
+- Boil florets with a little salt in hot water.
+- Drain when half done.
+- Immerse in water with salt, turmeric, 1 tomato and cilantro
+- While that boils, keep paruppu.
+- Grind coconut, green chili, half tomato, cumin, cilantro into paste
+- Add paruppu jelam and simmer for ten minutes.
+- Add tadka with ghee, cumin and mustard seeds.
+- Add lemon juice just before serving.
 main_veg:
 - cauliflower
 - cilantro
 - lemon
 - tomato
+source_url: null
+source_file: Cauliflower Rasam.html
 avoid_contains: []
 instructions: 'Boil florets with a little salt in hot water.
 
@@ -43,5 +55,4 @@ instructions: 'Boil florets with a little salt in hot water.
   Add tadka with ghee, cumin and mustard seeds.
 
   Add lemon juice just before serving.'
-source_url: null
-source_file: Cauliflower Rasam.html
+no_chop_compatible: false

@@ -1,21 +1,25 @@
 id: fruit_bar
+title: Fruit bar
 name: Fruit bar
 categories:
 - School Snacks
 cuisine: snack
 meal_type: unknown
 effort_level: low
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
 - Fruit bar
+prep_steps: []
+cook_steps:
+- Fruit bar
 main_veg: []
+source_url: null
+source_file: Fruit bar.html
 avoid_contains: []
 instructions:
 - Fruit bar
-source_url: null
-source_file: Fruit bar.html
+no_chop_compatible: false
 tags: []

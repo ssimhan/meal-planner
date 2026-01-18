@@ -1,4 +1,5 @@
 id: southwest_pasta_salad
+title: Southwest Pasta Salad
 name: Southwest Pasta Salad
 categories:
 - Dinner
@@ -7,31 +8,46 @@ categories:
 cuisine: italian
 meal_type: salad
 effort_level: high
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - instant_pot
 ingredients:
-- "\xBDcup mayonnaise"
-- "\xBCcup sour cream"
-- Adobo seasoning
-- Cilantro
+- 1(12-ounce) box tri-color rotini pasta
+- 1/2 red onion
+- Bell pepper, red
 - Garlic powder
 - Onion powder
-- Chives
-- Parsley
-- Oregano
-- Lime juice
-- 1(12-ounce) box tri-color rotini pasta
 - 1canblack beans
-- "1\xBDcups frozen fire-roasted corn"
-- 1 bell pepper, red
-- 1/2 red onion
 - 1cupcherry tomatoes, halved
 - 1largeavocado, diced
+- 1½cups frozen fire-roasted corn
 - Cilantro
+- Cilantro
+- Lime juice
+- Adobo seasoning
+- Chives
+- Oregano
+- Parsley
 - Scallions
+- ¼cup sour cream
+- ½cup mayonnaise
+prep_steps:
+- '**Prep**Dice bell pepper, red onion, cilantro, scallionsCut cherry tomatoes, avocado'
+cook_steps:
+- CookDrain and rinse black beans
+- Cook corn
+- In a small mixing bowl, whisk together the mayonnaise, sour cream, chipotle peppers,
+  minced cilantro, garlic powder, onion powder, chives, parsley, oregano, and lime
+  juice. Set aside.
+- Cook the rotini according to the package instructions. Then, drain, rinse with cold
+  water, and allow to dry for about 5 minutes.
+- In a large bowl, combine the cooked pasta, black beans, corn, bell pepper, red onion,
+  grape tomatoes, avocado, and chopped cilantro.
+- Pour in the chipotle dressing, and stir to fully coat the salad ingredients.
+- Add salt and pepper to taste.
+- Cover and place in the refrigerator, and chill for at least 1 hour before serving.
+- Garnish with sliced scallions.
 main_veg:
 - avocado
 - beans
@@ -45,6 +61,8 @@ main_veg:
 - parsley
 - scallion
 - tomato
+source_url: null
+source_file: Southwest Pasta Salad.html
 avoid_contains: []
 instructions: '**Prep**Dice bell pepper, red onion, cilantro, scallionsCut cherry
   tomatoes, avocado
@@ -70,5 +88,4 @@ instructions: '**Prep**Dice bell pepper, red onion, cilantro, scallionsCut cherr
   Cover and place in the refrigerator, and chill for at least 1 hour before serving.
 
   Garnish with sliced scallions.'
-source_url: null
-source_file: Southwest Pasta Salad.html
+no_chop_compatible: false

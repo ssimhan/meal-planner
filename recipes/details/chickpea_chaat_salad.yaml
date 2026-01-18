@@ -1,4 +1,5 @@
 id: chickpea_chaat_salad
+title: Chickpea Chaat Salad
 name: Chickpea Chaat Salad
 categories:
 - Guest Apps
@@ -7,29 +8,38 @@ categories:
 cuisine: indian
 meal_type: salad
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
-- 1canchickpeas
 - 1 onion, red
-- 1 bell pepper, green
+- Garlic
+- Olive oil
+- Bell pepper, green
+- Chaat masala
+- Cumin powder
+- Salt
+- 1 medium carrot
 - 1 medium cucumber
 - 1 medium tomato
-- 1 medium carrot
+- 1canchickpeas
 - Cilantro
-- Mint
-- Olive oil
-- Sriracha
 - Lemon juice
-- Garlic
-- Cumin powder
-- Chaat masala
-- Tamarind paste
-- Salt
+- Mint
 - Peanuts
+- Sriracha
+- Tamarind paste
+prep_steps:
+- Grate carrotDice onion, bell pepper, cucumber, tomatoChop and toast peanuts
+- Prepare the dressing by mixing olive oil, sriracha, lemon juice, garlic, cumin powder,
+  chaat masala, tamarind paste, salt.
+cook_steps:
+- Place chickpeas, onion, bell pepper, cucumber, tomato, carrot, red chilli, coriander
+  and mint in a large bowl. Toss and mix well.
+- When ready to serve, add the dressing to the salad in the bowl. Toss and mix well
+  to coat everything evenly with the dressing.
+- Top with peanuts and extra cilantro
 main_veg:
 - bell pepper
 - carrot
@@ -40,6 +50,8 @@ main_veg:
 - onion
 - peas
 - tomato
+source_url: null
+source_file: Chickpea Chaat Salad.html
 avoid_contains: []
 instructions: 'Grate carrotDice onion, bell pepper, cucumber, tomatoChop and toast
   peanuts
@@ -54,5 +66,4 @@ instructions: 'Grate carrotDice onion, bell pepper, cucumber, tomatoChop and toa
   to coat everything evenly with the dressing.
 
   Top with peanuts and extra cilantro'
-source_url: null
-source_file: Chickpea Chaat Salad.html
+no_chop_compatible: false

@@ -1,29 +1,39 @@
 id: cauliflower_alfredo_sauce
+title: Pasta with Cauliflower Alfredo Sauce
 name: Pasta with Cauliflower Alfredo Sauce
 categories:
 - Italian
 cuisine: italian
 meal_type: sauce_dip
 effort_level: medium
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - oven
 - stovetop
 ingredients:
-- 2 cups cauliflower florets
-- 1 potato
+- 2 cups pasta
+- Butter
 - Garlic powder
 - Salt
-- Butter
-- '1 cup milk '
+- 1 potato
+- 2 cups cauliflower florets
+- 1 cup milk
 - 1/2 cup nutritional yeast
 - Shredded mozzarella
-- 2 cups pasta
+prep_steps: []
+cook_steps:
+- Put all ingredients into a medium pot and bring to a complete boil, then cover and
+  simmer 15 minutes or until the cauliflower is fall-apart tender.
+- Pulverize with either an immersion or regular blender.
+- Serve over pasta, or spaghetti squash, rice, roasted vegetables, or whatever you
+  wish.
+- Makes about 2 cups, and it gets much thicker as it sits.
 main_veg:
 - cauliflower
 - garlic
+source_url: null
+source_file: Cauliflower Alfredo Sauce.html
 avoid_contains: []
 instructions:
 - Put all ingredients into a medium pot and bring to a complete boil, then cover and
@@ -32,6 +42,5 @@ instructions:
 - Serve over pasta, or spaghetti squash, rice, roasted vegetables, or whatever you
   wish.
 - Makes about 2 cups, and it gets much thicker as it sits.
-source_url: null
-source_file: Cauliflower Alfredo Sauce.html
+no_chop_compatible: false
 tags: []

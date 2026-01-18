@@ -1,4 +1,5 @@
 id: black_bean_quinoa_salad
+title: Black Bean Quinoa Salad
 name: Black Bean Quinoa Salad
 categories:
 - Dinner
@@ -9,29 +10,37 @@ categories:
 cuisine: unknown
 meal_type: salad
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - stovetop
 ingredients:
 - 1/2cupquinoa
-- 2 Tablespoons olive oil
-- 1 Tablespoon lime juice
-- 1/4 teaspoon cumin
-- cilantro
-- 1canblack beans
-- 1 medium tomato
-- 1 red bell pepper
-- 1 green bell pepper
+- Tablespoons olive oil
+- Cumin
+- Green bell pepper
+- Red bell pepper
 - Salt and black pepper
+- 1 medium tomato
+- 1 Tablespoon lime juice
+- 1canblack beans
+- Cilantro
 - 1⁄2 cup Feta cheese (optional)
+prep_steps: []
+cook_steps:
+- Cook 1/2 cup quinoa
+- In a small bowl, mix together olive oil, lime juice, cumin, cilantro and scallions.
+- In a large bowl, mix together quinoa, black beans, tomato and bell peppers. Pour
+  dressing over quinoa mixture and mix well.
+- Add feta, salt and pepper if desired, to taste.
 main_veg:
 - beans
 - bell pepper
 - cilantro
 - lime
 - tomato
+source_url: null
+source_file: Black Bean Quinoa Salad.html
 avoid_contains: []
 instructions: 'Cook 1/2 cup quinoa
 
@@ -41,5 +50,4 @@ instructions: 'Cook 1/2 cup quinoa
   dressing over quinoa mixture and mix well.
 
   Add feta, salt and pepper if desired, to taste.'
-source_url: null
-source_file: Black Bean Quinoa Salad.html
+no_chop_compatible: false

@@ -1,25 +1,39 @@
 id: strawberry_muffins
+title: Strawberry Muffins
 name: Strawberry Muffins
 categories:
 - ''
 cuisine: unknown
 meal_type: baked_goods
 effort_level: normal
-no_chop_compatible: false
 prep_time_minutes: null
 cook_time_minutes: null
 appliances:
 - oven
 ingredients:
-- ½cup milk
-- ¼cup canola oil
-- 1largeegg
 - 1¾cups all-purpose flour
-- ½cup white sugar
-- 2 teaspoons baking powder
+- ¼cup canola oil
+- Teaspoons baking powder
 - ½teaspoon salt
 - 1cupchopped strawberries
+- 1largeegg
+- ½cup milk
+- ½cup white sugar
+prep_steps: []
+cook_steps:
+- Preheat the oven to 375 degrees F (190 degrees C)
+- Lightly beat milk, oil, and egg in a small bowl.
+- Mix flour, sugar, baking powder, and salt together in a large bowl.
+- Toss in chopped strawberries and stir to coat with flour.
+- Fold in the milk mixture until just combined.  Can add in some vanilla extract too
+  if desired.
+- Divide batter evenly among the prepared muffin cups.
+- Bake in the preheated oven until the tops bounce back from the touch and a toothpick
+  inserted into the center comes out clean, about 25 minutes. Remove from the oven
+  and cool for 10 minutes in the pan before removing to a wire rack to cool completely.
 main_veg: []
+source_url: null
+source_file: Strawberry Muffins.html
 avoid_contains: []
 instructions: 'Preheat the oven to 375 degrees F (190 degrees C)
 
@@ -37,5 +51,4 @@ instructions: 'Preheat the oven to 375 degrees F (190 degrees C)
   Bake in the preheated oven until the tops bounce back from the touch and a toothpick
   inserted into the center comes out clean, about 25 minutes. Remove from the oven
   and cool for 10 minutes in the pan before removing to a wire rack to cool completely.'
-source_url: null
-source_file: Strawberry Muffins.html
+no_chop_compatible: false

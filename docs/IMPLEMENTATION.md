@@ -126,6 +126,10 @@ Declining energy model: Monday (high) → Friday (zero prep)
 - **Block 3: Dynamic Review Button ✅**
   - [x] Emerald Green active state / Ghost faded state
   - [x] Automated audit tags for new captures
+- **Block 4: Continuous YAML Normalization ✅**
+  - [x] Schema mapping (name -> title) and instruction splitting
+  - [x] Ingredient standardization (category sorting + spice quantity stripping)
+  - [x] Deterministic rewrite & CI check mode
 
 ### Phase 28: User Authentication (The "Family Gate")
 **Goal:** Secure the application for single-household access via Supabase.

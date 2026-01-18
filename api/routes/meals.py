@@ -101,23 +101,35 @@ def generate_draft_route():
         for selection in selections:
             day = selection.get('day')
             recipe_id = selection.get('recipe_id')
+            slot = selection.get('slot', 'dinner')
             if not day or not recipe_id: continue
             
             day_abbr = day.lower()[:3]
             days_covered.add(day_abbr)
             
-            # Find and update or add
-            found = False
-            for dinner in history_week.get('dinners', []):
-                if dinner.get('day') == day_abbr:
-                    dinner['recipe_id'] = recipe_id
-                    found = True
-                    break
-            if not found:
-                history_week.setdefault('dinners', []).append({
-                    'day': day_abbr,
-                    'recipe_id': recipe_id
-                })
+            if slot == 'dinner':
+                # Find and update or add
+                found = False
+                for dinner in history_week.get('dinners', []):
+                    if dinner.get('day') == day_abbr:
+                        dinner['recipe_id'] = recipe_id
+                        found = True
+                        break
+                if not found:
+                    history_week.setdefault('dinners', []).append({
+                        'day': day_abbr,
+                        'recipe_id': recipe_id
+                    })
+            elif slot == 'lunch':
+                history_week.setdefault('lunches', {})
+                history_week['lunches'][day_abbr] = {
+                    'recipe_id': recipe_id,
+                    'recipe_name': selection.get('recipe_name') or recipe_id.replace('_', ' ').title(),
+                    'prep_style': 'manual'
+                }
+            elif slot in ['school_snack', 'home_snack']:
+                history_week.setdefault('snacks', {}).setdefault(day_abbr, {})
+                history_week['snacks'][day_abbr][slot] = selection.get('recipe_name') or recipe_id.replace('_', ' ').title()
 
         # Apply explicit leftover assignments
         for assignment in leftover_assignments:
@@ -153,6 +165,7 @@ def generate_draft_route():
             if w.get('week_of') == week_of:
                 w['dinners'] = history_week.get('dinners', [])
                 w['lunches'] = history_week.get('lunches', {})
+                w['snacks'] = history_week.get('snacks', {})
                 updated_any = True
                 break
         if not updated_any:

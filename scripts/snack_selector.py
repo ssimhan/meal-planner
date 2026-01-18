@@ -23,8 +23,9 @@ class SnackSelector:
                 return False
         return True
 
-    def select_weekly_snacks(self, days: List[str]) -> Dict[str, Dict[str, str]]:
+    def select_weekly_snacks(self, days: List[str], current_snacks: Dict[str, Dict[str, str]] = None) -> Dict[str, Dict[str, str]]:
         """Select school and home snacks for the week."""
+        current_snacks = current_snacks or {}
         safe_snacks = [r for r in self.snack_recipes if self.is_safe(r)]
         if not safe_snacks:
             # Fallback to very basic ones if somehow none are safe
@@ -32,6 +33,11 @@ class SnackSelector:
 
         weekly_snacks = {}
         for day in days:
+            # If we already have snacks for this day, respect them
+            if day in current_snacks:
+                weekly_snacks[day] = current_snacks[day]
+                continue
+
             # Pick two different snacks if possible
             if len(safe_snacks) >= 2:
                 selected = random.sample(safe_snacks, 2)
@@ -45,4 +51,10 @@ class SnackSelector:
                     "school_snack": s,
                     "home_snack": s
                 }
+        
+        # Also include any current snacks for days NOT in the 'days' list
+        for day, snacks in current_snacks.items():
+            if day not in weekly_snacks:
+                weekly_snacks[day] = snacks
+
         return weekly_snacks

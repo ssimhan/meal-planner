@@ -201,7 +201,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [ ] Advanced analytics
   - [ ] Nutrition estimation
 
-### Phase 31: Mobile Friendly UX
+### Phase 33: Mobile Friendly UX
 **Goal:** Ensure - and validate - that the application is fully responsive and optimized for mobile devices.
 - **Block 1: Navigation & Layout**
   - [ ] Fix collapsible mobile navigation.

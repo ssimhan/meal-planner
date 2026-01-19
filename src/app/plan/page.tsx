@@ -147,6 +147,7 @@ function PlanningWizardContent() {
     const [submitting, setSubmitting] = useState(false);
     const [step, setStep] = useState<'review_meals' | 'review_snacks' | 'inventory' | 'suggestions' | 'draft' | 'groceries'>('review_meals');
     const [suggestionPhase, setSuggestionPhase] = useState<'dinners' | 'lunches' | 'snacks'>('dinners');
+    const [error, setError] = useState<string | null>(null);
 
     // Suggestions State
     const [suggestions, setSuggestions] = useState<any[]>([]);
@@ -331,6 +332,7 @@ function PlanningWizardContent() {
 
     const loadSuggestions = React.useCallback(async () => {
         setLoadingSuggestions(true);
+        setError(null);
         try {
             let wasteData: any = { suggestions: [] };
             // If in dinner phase, fetch waste-not recommendations
@@ -346,6 +348,7 @@ function PlanningWizardContent() {
             autoDraftSelections(suggestionPhase, { ...data, wasteNot: wasteData.suggestions }, inventory);
         } catch (e) {
             console.error(e);
+            setError('Failed to load suggestions. Please check your connection.');
             showToast('Failed to load suggestions', 'error');
         } finally {
             setLoadingSuggestions(false);
@@ -1259,9 +1262,21 @@ function PlanningWizardContent() {
                 </header>
 
                 {loadingSuggestions || !suggestionOptions ? (
-                    <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
-                        {[1, 2, 3, 4, 5, 6, 7].map(i => <Skeleton key={i} className="h-48 w-full rounded-2xl" />)}
-                    </div>
+                    error ? (
+                        <div className="flex flex-col items-center justify-center p-12 text-center rounded-2xl bg-red-50 border border-red-200">
+                            <p className="text-red-600 mb-4 font-bold">{error}</p>
+                            <button
+                                onClick={loadSuggestions}
+                                className="px-6 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors font-bold text-sm"
+                            >
+                                Retry
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
+                            {[1, 2, 3, 4, 5, 6, 7].map(i => <Skeleton key={i} className="h-48 w-full rounded-2xl" />)}
+                        </div>
+                    )
                 ) : (
                     <WeeklyMealGrid phase={suggestionPhase} />
                 )}

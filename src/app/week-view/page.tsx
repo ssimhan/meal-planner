@@ -78,7 +78,7 @@ function WeekViewContent() {
       }
     }
     fetchWeekData();
-  }, [weekParam]);
+  }, [weekParam, showToast]);
 
   useEffect(() => {
     async function loadRecipes() {
@@ -94,7 +94,7 @@ function WeekViewContent() {
       }
     }
     loadRecipes();
-  }, []);
+  }, [showToast]);
 
   useEffect(() => {
     async function fetchInventory() {

@@ -232,7 +232,7 @@ function PlanningWizardContent() {
         }
     }, [showToast]);
 
-    const autoDraftSelections = (phase: 'dinners' | 'lunches' | 'snacks', options: any, currentInventory: any) => {
+    const autoDraftSelections = React.useCallback((phase: 'dinners' | 'lunches' | 'snacks', options: any, currentInventory: any) => {
         const newSelections = [...selections];
         const newLeftovers = [...leftoverAssignments];
         const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
@@ -327,7 +327,7 @@ function PlanningWizardContent() {
 
         setSelections(newSelections);
         setLeftoverAssignments(newLeftovers);
-    };
+    }, [selections, leftoverAssignments, wasteNotSuggestions]);
 
     const loadSuggestions = React.useCallback(async () => {
         setLoadingSuggestions(true);
@@ -350,7 +350,7 @@ function PlanningWizardContent() {
         } finally {
             setLoadingSuggestions(false);
         }
-    }, [suggestionPhase, selections, leftoverAssignments, inventory, showToast]);
+    }, [suggestionPhase, selections, leftoverAssignments, inventory, showToast, autoDraftSelections]);
 
     useEffect(() => {
         if (step === 'suggestions') {

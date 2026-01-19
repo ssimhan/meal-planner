@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { getRecipes, updateRecipeMetadata, deleteRecipe, updateRecipeContent, searchRecipes } from '@/lib/api';
 import AppLayout from '@/components/AppLayout';
 import Link from 'next/link';
@@ -322,6 +322,30 @@ function RecipeReviewModal({ recipes, onClose, onRefresh }: { recipes: RecipeLis
         return () => clearTimeout(timer);
     }, [name, recipe]);
 
+    const handleSave = useCallback(async () => {
+        if (!recipe || saving) return;
+        setSaving(true);
+        try {
+            await updateRecipeMetadata(recipe.id, {
+                name: name.trim() || recipe.name,
+                cuisine: cuisine.trim().toLowerCase() || 'unknown',
+                effort_level: effort || 'normal'
+            });
+
+            if (currentIndex < recipes.length - 1) {
+                setCurrentIndex(currentIndex + 1);
+            } else {
+                if (onRefresh) onRefresh();
+                onClose();
+            }
+        } catch (err) {
+            console.error('Failed to save changes:', err);
+            alert('Failed to save changes');
+        } finally {
+            setSaving(false);
+        }
+    }, [recipe, saving, name, cuisine, effort, currentIndex, recipes.length, onRefresh, onClose]);
+
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (saving) return;
@@ -349,31 +373,7 @@ function RecipeReviewModal({ recipes, onClose, onRefresh }: { recipes: RecipeLis
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [currentIndex, cuisine, name, effort, saving, onClose, recipes.length]);
-
-    async function handleSave() {
-        if (!recipe || saving) return;
-        setSaving(true);
-        try {
-            await updateRecipeMetadata(recipe.id, {
-                name: name.trim() || recipe.name,
-                cuisine: cuisine.trim().toLowerCase() || 'unknown',
-                effort_level: effort || 'normal'
-            });
-
-            if (currentIndex < recipes.length - 1) {
-                setCurrentIndex(currentIndex + 1);
-            } else {
-                if (onRefresh) onRefresh();
-                onClose();
-            }
-        } catch (err) {
-            console.error('Failed to save changes:', err);
-            alert('Failed to save changes');
-        } finally {
-            setSaving(false);
-        }
-    }
+    }, [currentIndex, cuisine, name, effort, saving, onClose, recipes.length, handleSave]);
 
     async function handleDelete() {
         if (!recipe || !confirm(`Are you sure you want to delete "${recipe.name}"?`)) return;

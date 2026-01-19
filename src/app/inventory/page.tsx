@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { getInventory, addItemToInventory, bulkAddItemsToInventory, deleteItemFromInventory, updateInventoryItem, moveInventoryItem } from '@/lib/api';
 import { transformInventory, NormalizedInventory } from '@/lib/inventoryManager';
 import AppLayout from '@/components/AppLayout';
@@ -35,11 +35,7 @@ export default function InventoryPage() {
     const [editingItem, setEditingItem] = useState<{ category: string, name: string } | null>(null);
     const [editValue, setEditValue] = useState<any>({});
 
-    useEffect(() => {
-        fetchInventory();
-    }, []);
-
-    async function fetchInventory() {
+    const fetchInventory = useCallback(async () => {
         try {
             setLoading(true);
             const data = await getInventory();
@@ -50,7 +46,11 @@ export default function InventoryPage() {
         } finally {
             setLoading(false);
         }
-    }
+    }, [showToast]);
+
+    useEffect(() => {
+        fetchInventory();
+    }, [fetchInventory]);
 
     async function handleAddItem(category: string, item: string) {
         if (!item.trim()) return;

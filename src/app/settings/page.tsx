@@ -15,11 +15,7 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [config, setConfig] = useState<any>({});
 
-  useEffect(() => {
-    loadSettings();
-  }, []);
-
-  async function loadSettings() {
+  const loadSettings = React.useCallback(async () => {
     try {
       setLoading(true);
       const data = await getSettings();
@@ -30,7 +26,11 @@ export default function SettingsPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [showToast]);
+
+  useEffect(() => {
+    loadSettings();
+  }, [loadSettings]);
 
   async function handleSave() {
     try {

@@ -38,11 +38,7 @@ export default function ShopPage() {
 
   const { showToast } = useToast();
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  async function loadData() {
+  const loadData = React.useCallback(async () => {
     try {
       setLoading(true);
 
@@ -67,7 +63,11 @@ export default function ShopPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [showToast]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   // Group items by store
   const groupedItems = useMemo(() => {

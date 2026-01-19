@@ -262,26 +262,27 @@ function RecipeContentModal({ recipe, onClose, onSave }: { recipe: RecipeListIte
     const [ingredients, setIngredients] = useState<string[]>([]);
     const [instructions, setInstructions] = useState<string[]>([]);
 
-    useEffect(() => {
-        loadContent();
-    }, [recipe.id]);
+    const loadContent = useEffect(() => {
+        let mounted = true;
+        async function fetchContent() {
+            try {
+                const data = await getRecipeContent(recipe.id);
+                if (mounted && data.status === 'success') {
+                    const rawIngredients = data.recipe.ingredients || [];
+                    const rawInstructions = data.recipe.instructions || [];
 
-    async function loadContent() {
-        try {
-            const data = await getRecipeContent(recipe.id);
-            if (data.status === 'success') {
-                const rawIngredients = data.recipe.ingredients || [];
-                const rawInstructions = data.recipe.instructions || [];
-
-                setIngredients(Array.isArray(rawIngredients) ? rawIngredients : [rawIngredients]);
-                setInstructions(Array.isArray(rawInstructions) ? rawInstructions : [rawInstructions]);
+                    setIngredients(Array.isArray(rawIngredients) ? rawIngredients : [rawIngredients]);
+                    setInstructions(Array.isArray(rawInstructions) ? rawInstructions : [rawInstructions]);
+                }
+            } catch (err) {
+                console.error('Failed to load content:', err);
+            } finally {
+                if (mounted) setLoading(false);
             }
-        } catch (err) {
-            console.error('Failed to load content:', err);
-        } finally {
-            setLoading(false);
         }
-    }
+        fetchContent();
+        return () => { mounted = false; };
+    }, [recipe.id]);
 
     async function handleLocalSave() {
         setSaving(true);

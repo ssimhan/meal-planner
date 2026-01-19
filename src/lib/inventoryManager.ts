@@ -1,4 +1,4 @@
-import { InventoryItem, FreezerMeal } from '@/types';
+
 
 export interface NormalizedInventory {
     meals: any[];  // Consolidated: Fridge leftovers + Freezer backups
@@ -6,6 +6,7 @@ export interface NormalizedInventory {
         fridge: any[];
         freezer: any[];
         pantry: any[];
+        spice_rack: any[];
     };
 }
 
@@ -69,10 +70,13 @@ export function transformInventory(data: any): NormalizedInventory {
         ingredients: {
             fridge: fridgeIngredients,
             freezer: freezerIngredients,
-            pantry: [
-                ...(rawData.pantry || []),
-                ...(rawData.spice_rack || [])
-            ].map((item: any) => ({
+            pantry: (rawData.pantry || []).map((item: any) => ({
+                ...(typeof item === 'object' ? item : {}),
+                item: typeof item === 'string' ? item : item.item,
+                quantity: typeof item === 'object' && item.quantity ? item.quantity : 1,
+                unit: typeof item === 'object' && item.unit ? item.unit : 'unit'
+            })),
+            spice_rack: (rawData.spice_rack || []).map((item: any) => ({
                 ...(typeof item === 'object' ? item : {}),
                 item: typeof item === 'string' ? item : item.item,
                 quantity: typeof item === 'object' && item.quantity ? item.quantity : 1,

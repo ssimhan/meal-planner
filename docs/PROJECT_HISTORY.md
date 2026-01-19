@@ -845,3 +845,6 @@ The best tools are the ones you actually use. This system works because it reduc
 **Learning:** 
 - **Data Duplication:** When you store data in two places (Plan vs History), *every* operation (Swap, Move, Edit) must update both. Forgetting one leads to "Ghost Data" where the UI shows one thing but the underlying record shows another.
 - **Monoliths Hide Bugs:** Large files (`page.tsx`) make it hard to see state flow. If you can't see the state, you can't debug persistence. Refactoring is not just cleanup; it's a transparency tool.
+
+**Build Fixes:**
+- **Type Hardening:** Resolved TypeScript build errors in `src/app/page.tsx` and `src/app/plan/page.tsx` by synchronizing the `NormalizedInventory` interface with the frontend state types. Explicitly handled the `spice_rack` property and fixed `slot` string casting.

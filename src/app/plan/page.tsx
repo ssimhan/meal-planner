@@ -18,7 +18,7 @@ import {
     getStatus,
     getSuggestOptions
 } from '@/lib/api';
-import { transformInventory } from '@/lib/inventoryManager';
+import { transformInventory, NormalizedInventory } from '@/lib/inventoryManager';
 import AppLayout from '@/components/AppLayout';
 import Skeleton from '@/components/Skeleton';
 import ReplacementModal from '@/components/ReplacementModal';
@@ -141,8 +141,8 @@ function PlanningWizardContent() {
     const [reviews, setReviews] = useState<ReviewDay[]>([]);
     const [reviewWeek, setReviewWeek] = useState<string | null>(null);
     const [planningWeek, setPlanningWeek] = useState<string | null>(null);
-    const [inventory, setInventory] = useState<InventoryState | null>(null);
-    const [pendingChanges, setPendingChanges] = useState<{ category: string, item: string, quantity: number, type?: 'meal' | 'ingredient', operation: 'add' | 'remove' }[]>([]);
+    const [inventory, setInventory] = useState<NormalizedInventory | null>(null);
+    const [pendingChanges, setPendingChanges] = useState<{ category: string, item: string, quantity: number, type?: 'meal' | 'ingredient', operation: 'add' | 'remove' | 'update' }[]>([]);
     const [newItemInputs, setNewItemInputs] = useState<Record<string, { name: string, qty: number, type?: 'meal' | 'ingredient' }>>({});
     const [submitting, setSubmitting] = useState(false);
     const [step, setStep] = useState<'review_meals' | 'review_snacks' | 'inventory' | 'suggestions' | 'draft' | 'groceries'>('review_meals');
@@ -719,7 +719,7 @@ function PlanningWizardContent() {
         if (madeStatus === 'leftovers') {
             const newLeftovers = [
                 ...leftoverAssignments.filter(l => !(l.day === day && l.slot === slot)),
-                { day, slot, item: newMeal }
+                { day, slot: slot as 'lunch' | 'dinner', item: newMeal }
             ];
             setLeftoverAssignments(newLeftovers);
             // Remove any recipe selection for this slot

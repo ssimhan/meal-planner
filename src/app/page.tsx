@@ -5,7 +5,8 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getStatus, getInventory, generatePlan, createWeek, confirmVeg, logMeal, getRecipes, replan, WorkflowStatus, getRecipeContent } from '@/lib/api';
 import { transformInventory } from '@/lib/inventoryManager';
-import type { RecipeListItem, WorkflowStatus as WorkflowStatusType, InventoryResponse } from '@/types';
+import type { RecipeListItem, WorkflowStatus as WorkflowStatusType } from '@/types';
+import { NormalizedInventory } from '@/lib/inventoryManager';
 import AppLayout from '@/components/AppLayout';
 import Skeleton from '@/components/Skeleton';
 import Card from '@/components/Card';
@@ -52,7 +53,7 @@ function DashboardContent() {
   const weekParam = searchParams.get('week');
 
   const [status, setStatus] = useState<WorkflowStatus | null>(null);
-  const [inventory, setInventory] = useState<InventoryResponse | null>(null);
+  const [inventory, setInventory] = useState<NormalizedInventory | null>(null);
   const [loading, setLoading] = useState(true);
   const [ui, setUi] = useState({
     actionLoading: false,

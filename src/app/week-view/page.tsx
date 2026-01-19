@@ -9,6 +9,7 @@ import AppLayout from '@/components/AppLayout';
 import { useToast } from '@/context/ToastContext';
 import MealCorrectionInput from '@/components/MealCorrectionInput';
 import ReplacementModal from '@/components/ReplacementModal';
+import SwapConfirmationModal from '@/components/SwapConfirmationModal';
 import ReplanWorkflowModal from '@/components/ReplanWorkflowModal';
 import StepByStepCooking from '@/components/StepByStepCooking';
 import { ChefHat } from 'lucide-react';

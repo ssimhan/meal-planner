@@ -1,0 +1,45 @@
+   ▲ Next.js 15.5.9
+   - Environments: .env.local, .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 1849ms
+   Linting and checking validity of types ...
+
+Failed to compile.
+
+./src/app/inventory/page.tsx
+38:8  Warning: React Hook useEffect has a missing dependency: 'fetchInventory'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/page.tsx
+75:6  Warning: React Hook useEffect has a missing dependency: 'selectedWeek'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+89:6  Warning: React Hook useEffect has a missing dependency: 'fetchStatus'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+106:6  Warning: React Hook useEffect has a missing dependency: 'showToast'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+639:12  Error: 'MealLogFlow' is not defined.  react/jsx-no-undef
+
+./src/app/plan/page.tsx
+279:8  Warning: React Hook useEffect has a missing dependency: 'loadSuggestions'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+334:13  Error: 'list' is never reassigned. Use 'const' instead.  prefer-const
+466:8  Warning: React Hook useEffect has missing dependencies: 'loadInventory' and 'searchParams'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+486:8  Warning: React Hook useEffect has missing dependencies: 'leftoverAssignments' and 'showToast'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+513:8  Warning: React Hook useEffect has missing dependencies: 'customShoppingItems', 'lockedDays', and 'purchasedItems'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/recipes/batch-edit/page.tsx
+267:8  Warning: React Hook useEffect has a missing dependency: 'loadContent'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/recipes/page.tsx
+352:8  Warning: React Hook useEffect has a missing dependency: 'handleSave'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/settings/page.tsx
+20:6  Warning: React Hook useEffect has a missing dependency: 'loadSettings'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/shop/page.tsx
+43:6  Warning: React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/week-view/page.tsx
+80:6  Warning: React Hook useEffect has a missing dependency: 'showToast'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+96:6  Warning: React Hook useEffect has a missing dependency: 'showToast'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/ReplanWorkflowModal.tsx
+63:8  Warning: React Hook useEffect has missing dependencies: 'pastDays' and 'status.week_data?.dinners'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules

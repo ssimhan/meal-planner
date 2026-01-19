@@ -17,6 +17,7 @@ import PendingRecipesListModal from '@/components/PendingRecipesListModal';
 import BrainDump from '@/components/dashboard/BrainDump';
 import StatCard from '@/components/dashboard/StatCard';
 import TimelineView from '@/components/dashboard/TimelineView';
+import MealLogFlow from '@/components/MealLogFlow';
 import { useToast } from '@/context/ToastContext';
 import { logout } from './login/actions';
 import StepByStepCooking from '@/components/StepByStepCooking';

@@ -331,7 +331,7 @@ function PlanningWizardContent() {
         const addedItems = pendingChanges.filter(c => c.category === category && c.operation === 'add');
         const removedItems = pendingChanges.filter(c => c.category === category && c.operation === 'remove').map(c => c.item);
 
-        let list = currentItems.filter((item: any) => !removedItems.includes(typeof item === 'string' ? item : item.item));
+        const list = currentItems.filter((item: any) => !removedItems.includes(typeof item === 'string' ? item : item.item));
 
         addedItems.forEach(added => {
             const existingIdx = list.findIndex((item: any) => (typeof item === 'string' ? item : item.item) === added.item);
@@ -897,7 +897,7 @@ function PlanningWizardContent() {
                         day={isReplacing.day}
                         currentMeal={isReplacing.currentMeal}
                         recipes={recipes}
-                        leftoverInventory={inventory?.fridge?.filter((i: any) => i.type === 'meal') || []}
+                        leftoverInventory={(inventory?.fridge?.filter((i: any) => typeof i !== 'string' && i.type === 'meal') as any[]) || []}
                         onConfirm={(newMeal) => handleReplacementConfirm(newMeal)}
                         onCancel={() => setIsReplacing(null)}
                     />

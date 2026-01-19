@@ -435,7 +435,7 @@ export default function InventoryPage() {
                                                 </div>
                                                 <div className="p-2 space-y-1 bg-[var(--bg-card)]/30">
                                                     {grouped[group]
-                                                        .sort((a, b) => {
+                                                        .sort((a: any, b: any) => {
                                                             const nameA = a.meal || a.item || '';
                                                             const nameB = b.meal || b.item || '';
                                                             return nameA.localeCompare(nameB);

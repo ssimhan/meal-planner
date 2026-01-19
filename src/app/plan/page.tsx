@@ -221,7 +221,7 @@ function PlanningWizardContent() {
     };
 
     // ... (rest of transitions)
-    const loadInventory = async () => {
+    const loadInventory = React.useCallback(async () => {
         try {
             const response = await getInventory();
             const processedInventory = transformInventory(response);
@@ -230,7 +230,7 @@ function PlanningWizardContent() {
         } catch (e) {
             showToast('Failed to load inventory', 'error');
         }
-    };
+    }, [showToast]);
 
     const autoDraftSelections = (phase: 'dinners' | 'lunches' | 'snacks', options: any, currentInventory: any) => {
         const newSelections = [...selections];
@@ -329,7 +329,7 @@ function PlanningWizardContent() {
         setLeftoverAssignments(newLeftovers);
     };
 
-    const loadSuggestions = async () => {
+    const loadSuggestions = React.useCallback(async () => {
         setLoadingSuggestions(true);
         try {
             let wasteData: any = { suggestions: [] };
@@ -350,13 +350,13 @@ function PlanningWizardContent() {
         } finally {
             setLoadingSuggestions(false);
         }
-    };
+    }, [suggestionPhase, selections, leftoverAssignments, inventory, showToast]);
 
     useEffect(() => {
         if (step === 'suggestions') {
             loadSuggestions();
         }
-    }, [step]);
+    }, [step, loadSuggestions]);
 
     const handleSaveInventory = async () => {
         setSubmitting(true);
@@ -617,7 +617,7 @@ function PlanningWizardContent() {
             setLoading(false);
         };
         load();
-    }, []);
+    }, [searchParams, loadInventory]);
     // ...
 
     // Auto-load draft if missing when on Step 4
@@ -637,7 +637,7 @@ function PlanningWizardContent() {
             };
             fetchDraft();
         }
-    }, [step, draftPlan, planningWeek, selections]);
+    }, [step, draftPlan, planningWeek, selections, leftoverAssignments, showToast]);
 
     // Save state on step change or major data update
     useEffect(() => {
@@ -664,7 +664,7 @@ function PlanningWizardContent() {
         }, 1000);
 
         return () => clearTimeout(timer);
-    }, [step, reviews, pendingChanges, selections, shoppingList, planningWeek, leftoverAssignments]);
+    }, [step, reviews, pendingChanges, selections, shoppingList, planningWeek, leftoverAssignments, purchasedItems, customShoppingItems, lockedDays]);
 
     // Restore state
     useEffect(() => {

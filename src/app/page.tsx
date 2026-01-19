@@ -75,40 +75,10 @@ function DashboardContent() {
     if (weekParam && weekParam !== selectedWeek) {
       setSelectedWeek(weekParam);
     }
-  }, [weekParam]);
+  }, [weekParam, selectedWeek]);
 
   // Dinner Logging State consolidated
-  const [dinnerState, setDinnerState] = useState({
-    showAlternatives: false,
-    selectedAlternative: null as 'freezer' | 'outside' | 'other' | 'leftovers' | null,
-    otherMealText: '',
-    selectedFreezerMeal: '',
-    isEditing: false,
-    editInput: ''
-  });
-
-  useEffect(() => {
-    fetchStatus(true, selectedWeek || undefined);
-  }, [selectedWeek]);
-
-  useEffect(() => {
-    async function loadRecipes() {
-      try {
-        const data = await getRecipes();
-        const recipeList = data.recipes.map((r: RecipeListItem) => ({
-          id: r.id,
-          name: r.name
-        }));
-        setRecipes(recipeList);
-      } catch (err) {
-        showToast('Failed to load recipes.', 'error');
-        console.error('Failed to load recipes:', err);
-      }
-    }
-    loadRecipes();
-  }, []);
-
-  async function fetchStatus(isInitial = false, week?: string) {
+  const fetchStatus = React.useCallback(async (isInitial = false, week?: string) => {
     try {
       if (isInitial) setLoading(true);
       const [data, inventoryData] = await Promise.all([
@@ -129,7 +99,39 @@ function DashboardContent() {
     } finally {
       if (isInitial) setLoading(false);
     }
-  }
+  }, [showToast]);
+
+  const [dinnerState, setDinnerState] = useState({
+    showAlternatives: false,
+    selectedAlternative: null as 'freezer' | 'outside' | 'other' | 'leftovers' | null,
+    otherMealText: '',
+    selectedFreezerMeal: '',
+    isEditing: false,
+    editInput: ''
+  });
+
+  useEffect(() => {
+    fetchStatus(true, selectedWeek || undefined);
+  }, [selectedWeek, fetchStatus]);
+
+  useEffect(() => {
+    async function loadRecipes() {
+      try {
+        const data = await getRecipes();
+        const recipeList = data.recipes.map((r: RecipeListItem) => ({
+          id: r.id,
+          name: r.name
+        }));
+        setRecipes(recipeList);
+      } catch (err) {
+        showToast('Failed to load recipes.', 'error');
+        console.error('Failed to load recipes:', err);
+      }
+    }
+    loadRecipes();
+  }, [showToast]);
+
+
 
   async function handleCreateWeek() {
     try {

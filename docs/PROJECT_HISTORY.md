@@ -848,3 +848,5 @@ The best tools are the ones you actually use. This system works because it reduc
 
 **Build Fixes:**
 - **Type Hardening:** Resolved TypeScript build errors in `src/app/page.tsx` and `src/app/plan/page.tsx` by synchronizing the `NormalizedInventory` interface with the frontend state types. Explicitly handled the `spice_rack` property and fixed `slot` string casting.
+
+- **ESLint/React Hook Fixes:** Systematically resolved React Hook dependency warnings in `src/app/page.tsx` and `src/app/plan/page.tsx`. Wrapped unstable functions (`fetchStatus`, `loadInventory`, `loadSuggestions`) in `useCallback` and corrected `useEffect` dependency arrays to ensure stable and predictable re-renders.

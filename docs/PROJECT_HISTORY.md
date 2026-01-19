@@ -828,3 +828,20 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Sync is Sanity:** Providing immediate visual feedback for choices made in previous steps (like assigned leftovers) builds trust and reduces cognitive load.
 
 **Final Phase 28 Status:** General workflow is stabilized, suggestion logic is context-aware, and the wizard provides a frictionless end-to-end planning experience.
+
+### Phase 28: Maintenance & Debugging (2026-01-19) ✅
+**Goal:** Resolve critical persistence bugs and plan future architecture.
+
+**Fixed:**
+- **Inventory Persistence:** Fixed the 'leftovers' category mapping in `api/routes/inventory.py`, ensuring repeated adds correctly increment quantity instead of overwriting.
+- **Ghost Data in Reviews:** Updated `swap_meals` in `api/routes/meals.py` to synchronize `history_data` alongside `plan_data`. This prevents original meals from reappearing in the Review step after a swap.
+
+**Operations:**
+- **Start-Over Capability:** Created `reset_week.py` script to manually delete specific meal plan weeks from Supabase when the UI state gets stuck.
+
+**Planning:**
+- **Phase 29 Definitions:** Defined the "Wizard Architecture Refactor" phase to break down the monolithic `src/app/plan/page.tsx` (1800+ lines) into modular components and custom hooks.
+
+**Learning:** 
+- **Data Duplication:** When you store data in two places (Plan vs History), *every* operation (Swap, Move, Edit) must update both. Forgetting one leads to "Ghost Data" where the UI shows one thing but the underlying record shows another.
+- **Monoliths Hide Bugs:** Large files (`page.tsx`) make it hard to see state flow. If you can't see the state, you can't debug persistence. Refactoring is not just cleanup; it's a transparency tool.

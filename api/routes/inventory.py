@@ -61,7 +61,8 @@ def add_inventory():
             'meals': 'freezer', # Special handling needed as freezer is dict
             'frozen_ingredient': 'freezer',
             'freezer_backup': 'freezer',
-            'freezer_ingredient': 'freezer'
+            'freezer_ingredient': 'freezer',
+            'leftovers': 'fridge'
         }
         
         inv_key = inv_key_map.get(category)

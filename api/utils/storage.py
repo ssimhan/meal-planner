@@ -35,6 +35,30 @@ if SUPABASE_URL and SUPABASE_SERVICE_KEY:
         init_error = str(e)
         print(f"ERROR: Failed to initialize Supabase client: {e}")
 
+import time
+
+def execute_with_retry(query, max_retries=3, delay=0.5):
+    """
+    Execute a Supabase query with retry logic for transient network errors.
+    Handles [Errno 35] Resource temporarily unavailable and other httpx errors.
+    """
+    last_exception = None
+    for i in range(max_retries):
+        try:
+            return query.execute()
+        except Exception as e:
+            last_exception = e
+            msg = str(e)
+            # Retry on specific network errors
+            if "[Errno 35]" in msg or "Resource temporarily unavailable" in msg or "httpx" in msg:
+                print(f"Supabase query retry {i+1}/{max_retries} due to: {e}")
+                time.sleep(delay * (2 ** i)) # Exponential backoff
+                continue
+            raise e
+    
+    print(f"Supabase query failed after {max_retries} retries: {last_exception}")
+    raise last_exception
+
 def get_household_id():
     """Helper to get household_id from request context."""
     return getattr(request, 'household_id', "00000000-0000-0000-0000-000000000001")

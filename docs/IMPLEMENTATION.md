@@ -159,14 +159,26 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [x] **Leftover Integration:** Immediate sync of assigned leftovers into the lunch grid.
   - [x] **Visual Feedback:** "Match ✨" badges for ingredient-efficient recipes.
 
-### Phase 29: Household Communication & Persistence
+### Phase 29: Wizard Architecture Refactor
+**Goal:** Modularize the monolithic `src/app/plan/page.tsx` for maintainability and performance.
+- **Block 1: Component Extraction (~3 hrs)**
+  - [ ] Extract `ReviewStep` component
+  - [ ] Extract `InventoryStep` component
+  - [ ] Extract `SuggestionsStep`, `DraftStep`, and `GroceryStep` components
+- **Block 2: State Logic Separation (~3 hrs)**
+  - [ ] Create `usePlanningWizard` custom hook
+  - [ ] Move state management and API side-effects out of `page.tsx`
+- **Block 3: Type Definitions (~1 hr)**
+  - [ ] Centralize wizard types into `src/types/wizard.ts`
+
+### Phase 30: Household Communication & Persistence
 **Goal:** Enhance multi-user coordination and note-taking.
 - **Block 1: Brain Dump & Household Communication (~3 hrs)**
   - [ ] **Persistence:** Define storage and API for Brain Dump notes (Supabase `household_notes` or similar).
   - [ ] **Dashboard Integration:** Display persistent Brain Dump notes on the dashboard for multi-adult coordination.
   - [ ] **Note Management:** Implement full CRUD (View, Edit, Clear) for Brain Dump notes.
 
-### Phase 30: User Authentication (The "Family Gate")
+### Phase 31: User Authentication (The "Family Gate")
 **Goal:** Secure the application for single-household access via Supabase.
 - **Block 1: Infrastructure & Schema (~3 hrs)**
   - [ ] Supabase Auth setup
@@ -179,7 +191,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [ ] Auth caching optimization
   - [ ] Empty states and onboarding
 
-### Phase 31: Analytics & Future Features
+### Phase 32: Analytics & Future Features
 **Goal:** Lower-priority enhancements for power users.
 - **Block 1: Member Management (~2 hrs)**
   - [ ] View household members in Settings
@@ -203,31 +215,11 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ---
 
-## Previously Fixed (Phases 23-23.5)
+## Previously Completed
 
-| Area | Bug | Fix |
-|------|-----|-----|
-| UI | Dark Mode contrast/legibility | Glassmorphism variable updates |
-| UI | Dashboard "System" card clutter | Simplified layout |
-| UI | Prep Task visibility | Show Today/Overdue only |
-| UI | Week View visual cues | Shadows/badges for completed days |
-| UI | JSX parsing errors in wizard | Fixed malformed JSX |
-| Week View | Missing meal plan data | Backend resolution logic |
-| Week View | "Save Changes" failure | History data integrity fix |
-| Data | Date bugs (4-week view) | Fixed date calculations |
-| Data | Supabase `PGRST116` edge cases | Internalized error handling |
-| Settings | "Meal Defaults" read-only | Made section editable |
+Recent phases (23-28) have focused on stabilizing the core experience, refining the UX, and ensuring data integrity.
 
-## Previously Completed (Recent)
-
-### Phase 17: Core Stability & Data Hygiene ✅ Complete
-**Goal:** Fix known bugs and standardise data.
-
-### Phase 18: Enhanced Planning Workflow (Wizard 2.0) ✅ Complete
-**Goal:** Remove friction from the weekly planning process.
-
-### Phase 19: Recipe Ecosystem & UX Polish ✅ Complete
-**Goal:** Close the loop on data entry.
+> **Note:** For a complete log of all fixed bugs and completed blocks, refer to [PROJECT_HISTORY.md](PROJECT_HISTORY.md).
 
 ### Phase 20: Advanced Planning Control ✅ Complete
 **Goal:** Give the user more control over the automated plans.

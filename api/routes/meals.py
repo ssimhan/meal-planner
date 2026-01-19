@@ -637,7 +637,7 @@ def swap_meals():
                  if dinner.get('day') == d: return i, dinner
             return -1, None
 
-        # Swap
+        # Swap in Plan Data
         if 'dinners' in week_data:
             idx1, dinner1 = get_dinner(week_data['dinners'], day1)
             idx2, dinner2 = get_dinner(week_data['dinners'], day2)
@@ -649,8 +649,22 @@ def swap_meals():
             elif dinner1: dinner1['day'] = day2
             elif dinner2: dinner2['day'] = day1
 
-        # Save to DB
-        storage.StorageEngine.update_meal_plan(week_str, plan_data=week_data)
+        # Swap in History Data (Critical for Review/Confirm steps)
+        history_week = plan_record.get('history_data') or {'week_of': week_str}
+        if 'dinners' in history_week:
+            h_idx1, h_dinner1 = get_dinner(history_week['dinners'], day1)
+            h_idx2, h_dinner2 = get_dinner(history_week['dinners'], day2)
+            
+            # Simple swap of day fields if both exist, similar to plan_data
+            if h_dinner1 and h_dinner2:
+                h_dinner1['day'] = day2
+                h_dinner2['day'] = day1
+                # No re-ordering needed for logic, but key for consistency
+            elif h_dinner1: h_dinner1['day'] = day2
+            elif h_dinner2: h_dinner2['day'] = day1
+
+        # Save to DB (both plan and history)
+        storage.StorageEngine.update_meal_plan(week_str, plan_data=week_data, history_data=history_week)
         invalidate_cache()
         
         return jsonify({"status": "success", "message": "Meals swapped", "week_data": week_data})

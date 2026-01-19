@@ -18,13 +18,14 @@ def get_last_week_review_data():
         
         # specific logic: Get the latest week that isn't 'planning' (i.e. the one we just finished or are finishing)
         # We assume the user is starting a NEW week, so we want the PREVIOUS chronological week.
-        res = storage.supabase.table("meal_plans") \
+        query = storage.supabase.table("meal_plans") \
             .select("*") \
             .eq("household_id", h_id) \
             .neq("status", "planning") \
             .order("week_of", desc=True) \
-            .limit(1) \
-            .execute()
+            .limit(1)
+            
+        res = storage.execute_with_retry(query)
             
         if not res.data:
             today = datetime.now()
@@ -56,7 +57,8 @@ def get_last_week_review_data():
         actual_dinners = {d.get('day'): d for d in history_data.get('dinners', [])}
         
         # 2. Get All Recipes for name resolution
-        all_recipes_res = storage.supabase.table("recipes").select("id, name").eq("household_id", h_id).execute()
+        all_recipes_query = storage.supabase.table("recipes").select("id, name").eq("household_id", h_id)
+        all_recipes_res = storage.execute_with_retry(all_recipes_query)
         all_recipes = all_recipes_res.data or []
         recipe_map = {r['id']: r['name'] for r in all_recipes}
         
@@ -149,7 +151,8 @@ def submit_review():
         h_id = storage.get_household_id()
         
         # 1. Fetch existing record
-        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).execute()
+        query = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str)
+        res = storage.execute_with_retry(query)
         if not res.data or len(res.data) == 0:
             return jsonify({"status": "error", "message": "Week not found"}), 404
             
@@ -221,7 +224,8 @@ def submit_review():
                 # Improving this to Fetch-then-Add would be better but let's stick to aggregation for now to fix the overwrite-within-batch issue.
                 
                 # Fetch existing to increment (Low Friction improvement)
-                existing_res = storage.supabase.table("inventory_items").select("quantity").eq("household_id", h_id).eq("category", "fridge").eq("item", item_name).execute()
+                existing_query = storage.supabase.table("inventory_items").select("quantity").eq("household_id", h_id).eq("category", "fridge").eq("item", item_name)
+                existing_res = storage.execute_with_retry(existing_query)
                 current_qty = 0
                 if existing_res.data:
                     current_qty = existing_res.data[0]['quantity']

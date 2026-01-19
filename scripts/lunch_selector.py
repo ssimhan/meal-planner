@@ -46,22 +46,10 @@ class LunchSelector:
         self.config = self._load_config()
         self.kid_profiles = self.config.get('kid_profiles', {})
 
-        # Load lunch defaults from config.yml (with fallback to hardcoded values)
+        # Load lunch defaults from config.yml (with empty fallback)
         self.defaults = self.config.get('lunch_defaults', {
-            'kids': [
-                'PBJ on whole wheat',
-                'Egg sandwich or scrambled egg sandwich',
-                'Toad-in-a-hole (egg cooked in bread)',
-                'Ravioli with brown butter or simple tomato sauce',
-                'Chapati or dosa rolls with fruit',
-                'Veggie burrito or pizza roll',
-                'Quesadilla with cheese and beans'
-            ],
-            'adult': [
-                'Leftovers from previous night\'s dinner (preferred)',
-                'Grain bowl: prepped grain + roasted vegetables + protein',
-                'Salad with dinner components'
-            ]
+            'kids': [],
+            'adult': []
         })
         self.lunch_recipes = self._filter_lunch_suitable()
 

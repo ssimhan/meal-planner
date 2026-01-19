@@ -201,6 +201,16 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [ ] Advanced analytics
   - [ ] Nutrition estimation
 
+### Phase 31: Mobile Friendly UX
+**Goal:** Ensure - and validate - that the application is fully responsive and optimized for mobile devices.
+- **Block 1: Navigation & Layout**
+  - [ ] Fix collapsible mobile navigation.
+  - [ ] Optimize "Week at a Glance" for vertical scrolling or compact view.
+  - [ ] Ensure all forms and inputs are zoom-friendly and accessible.
+- **Block 2: Interaction Design**
+  - [ ] Audit touch targets (min 44px) across the app.
+  - [ ] Improve modal behavior on small screens.
+
 ---
 
 | Area | Bug | Phase | Status |

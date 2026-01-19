@@ -57,3 +57,7 @@ instructions: 'Cut bread into sticks.
 
   Serve with cut fruit'
 no_chop_compatible: false
+tags:
+- air_fryer
+- instant_pot
+- oven

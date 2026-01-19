@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { getInventory, addItemToInventory, bulkAddItemsToInventory, deleteItemFromInventory, updateInventoryItem, moveInventoryItem } from '@/lib/api';
+import { transformInventory, NormalizedInventory } from '@/lib/inventoryManager';
 import AppLayout from '@/components/AppLayout';
 import Link from 'next/link';
 import { useToast } from '@/context/ToastContext';
@@ -10,12 +11,13 @@ import BrainDumpModal from '@/components/BrainDumpModal';
 
 export default function InventoryPage() {
     const [inventory, setInventory] = useState<any>(null);
+    const [normalized, setNormalized] = useState<NormalizedInventory | null>(null);
     const [loading, setLoading] = useState(true);
     const { showToast } = useToast();
     const [newItem, setNewItem] = useState({ category: 'fridge', name: '' });
     const [updating, setUpdating] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [activeTab, setActiveTab] = useState<'fridge' | 'pantry' | 'frozen_ingredient'>('fridge');
+    const [activeTab, setActiveTab] = useState<'prepared' | 'fridge' | 'pantry' | 'frozen_ingredient'>('prepared');
 
     // Undo states
     const [lastDeleted, setLastDeleted] = useState<{ category: string, item: any } | null>(null);
@@ -33,30 +35,56 @@ export default function InventoryPage() {
     const [editingItem, setEditingItem] = useState<{ category: string, name: string } | null>(null);
     const [editValue, setEditValue] = useState<any>({});
 
-    useEffect(() => {
-        fetchInventory();
-    }, []);
-
-    async function fetchInventory() {
+    const fetchInventory = useCallback(async () => {
         try {
             setLoading(true);
             const data = await getInventory();
-            setInventory(data.inventory);
+            setInventory(data.inventory || data);
+            setNormalized(transformInventory(data));
         } catch (err: any) {
             showToast(err.message || 'Failed to load inventory.', 'error');
         } finally {
             setLoading(false);
         }
-    }
+    }, [showToast]);
+
+    useEffect(() => {
+        fetchInventory();
+    }, [fetchInventory]);
 
     async function handleAddItem(category: string, item: string) {
         if (!item.trim()) return;
         try {
+            // Deduplication Check
+            const cleanItem = item.trim();
+            const existingList = inventory?.[category] || (category === 'frozen_ingredient' ? inventory?.freezer?.ingredients : (category === 'meals' ? inventory?.freezer?.backups : []));
+            const existing = existingList?.find((i: any) =>
+                (i.item || i.meal || '').toLowerCase() === cleanItem.toLowerCase()
+            );
+
             setUpdating(true);
-            const result = await addItemToInventory(category, item.trim());
-            setInventory(result.inventory);
+
+            if (existing) {
+                if (category === 'meals') {
+                    await updateInventoryItem(category, existing.meal, {
+                        servings: (existing.servings || 0) + 1
+                    });
+                    showToast(`Added another serving of ${cleanItem}`, 'success');
+                } else {
+                    await updateInventoryItem(category, existing.item, {
+                        quantity: (existing.quantity || 1) + 1
+                    });
+                    showToast(`Increased quantity of ${cleanItem}`, 'success');
+                }
+                await fetchInventory();
+            } else {
+                const result = await addItemToInventory(category, cleanItem);
+                setInventory(result.inventory || result);
+                setNormalized(transformInventory(result));
+                showToast('Item added successfully!', 'success');
+            }
+
             setNewItem({ ...newItem, name: '' });
-            showToast('Item added successfully!', 'success');
         } catch (err: any) {
             showToast(err.message || 'Failed to add item.', 'error');
         } finally {
@@ -70,12 +98,12 @@ export default function InventoryPage() {
             setUpdating(true);
             const result = await deleteItemFromInventory(category, itemName);
 
-            // Set up undo
             setLastDeleted({ category, item });
             setShowUndo(true);
-            setTimeout(() => setShowUndo(false), 5000); // Hide after 5 seconds
+            setTimeout(() => setShowUndo(false), 5000);
 
-            setInventory(result.inventory);
+            setInventory(result.inventory || result);
+            setNormalized(transformInventory(result));
         } catch (err: any) {
             showToast(err.message || 'Failed to delete item.', 'error');
         } finally {
@@ -87,8 +115,8 @@ export default function InventoryPage() {
         try {
             setUpdating(true);
             const result = await updateInventoryItem(category, item, updates);
-            setInventory(result.inventory);
-            // Don't toast for minor updates to avoid spam
+            setInventory(result.inventory || result);
+            setNormalized(transformInventory(result));
         } catch (err: any) {
             showToast(err.message || 'Failed to update item.', 'error');
         } finally {
@@ -100,7 +128,8 @@ export default function InventoryPage() {
         try {
             setUpdating(true);
             const result = await moveInventoryItem(item, fromCategory, toCategory);
-            setInventory(result.inventory);
+            setInventory(result.inventory || result);
+            setNormalized(transformInventory(result));
             showToast(`Moved to ${toCategory.replace('_', ' ')}`, 'success');
         } catch (err: any) {
             showToast(err.message || 'Failed to move item.', 'error');
@@ -189,7 +218,7 @@ export default function InventoryPage() {
         <AppLayout>
             <div className="container mx-auto max-w-4xl pb-32">
                 <header className="mb-8">
-                    <Link href="/" className="text-sm text-[var(--accent-green)] hover:underline mb-4 inline-block font-mono">← Dashboard</Link>
+                    <Link href="/" className="text-sm text-[var(--accent-sage)] hover:underline mb-4 inline-block font-mono">← Dashboard</Link>
                     <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4">
                         <div>
                             <h1 className="text-4xl font-bold mb-1">Inventory</h1>
@@ -208,7 +237,7 @@ export default function InventoryPage() {
                                 <input
                                     type="text"
                                     placeholder="Search all items..."
-                                    className="w-full pl-9 pr-4 py-2 border border-[var(--border-subtle)] rounded-lg text-sm bg-white"
+                                    className="w-full pl-9 pr-4 py-2 border border-[var(--border-subtle)] rounded-lg text-sm bg-[var(--bg-card)]"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
@@ -219,7 +248,7 @@ export default function InventoryPage() {
                 </header>
 
                 {/* Quick Add Bar (Sticky) */}
-                <div className={`sticky top-4 z-40 bg-white/95 backdrop-blur shadow-sm border border-[var(--border-subtle)] rounded-lg p-2 mb-8 flex gap-2 transition-all duration-300 ${searchQuery ? 'opacity-50 pointer-events-none' : ''}`}>
+                <div className={`sticky top-4 z-40 bg-[var(--bg-body)]/95 backdrop-blur shadow-sm border border-[var(--border-subtle)] rounded-lg p-2 mb-8 flex gap-2 transition-all duration-300 ${searchQuery ? 'opacity-50 pointer-events-none' : ''}`}>
                     <select
                         className="bg-transparent border-none text-sm font-bold text-[var(--text-primary)] focus:ring-0 cursor-pointer"
                         value={newItem.category}
@@ -231,7 +260,7 @@ export default function InventoryPage() {
                         <option value="meals">Freezer Meal</option>
                         <option value="frozen_ingredient">Freezer Ingr</option>
                     </select>
-                    <div className="w-px bg-gray-200"></div>
+                    <div className="w-px bg-[var(--border-subtle)]"></div>
                     <input
                         type="text"
                         placeholder={newItem.category === 'leftovers' ? "e.g. Lasagna (2 servings)" : `Add item to ${newItem.category.replace('_', ' ')}...`}
@@ -279,10 +308,10 @@ export default function InventoryPage() {
                         {/* High Priority: Leftovers & Freezer Meals */}
                         <div className="grid gap-8 md:grid-cols-2">
                             {/* Leftovers (Filtered from Fridge) */}
-                            <section className="card border-[var(--accent-sage)] bg-green-50/30">
+                            <section className="card border-[var(--cat-leftovers)] bg-[var(--cat-leftovers)]/10">
                                 <header className="flex justify-between items-center mb-4">
-                                    <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--accent-sage)] font-bold">Leftovers</h2>
-                                    <span className="text-xs bg-white border border-[var(--accent-sage)] text-[var(--accent-sage)] px-2 py-0.5 rounded-full">
+                                    <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--cat-leftovers-text)] font-bold">Leftovers</h2>
+                                    <span className="text-xs bg-[var(--bg-card)] border border-[var(--cat-leftovers)] text-[var(--cat-leftovers-text)] px-2 py-0.5 rounded-full">
                                         {inventory?.fridge?.filter((i: any) => i.item.toLowerCase().includes('leftover') || i.category === 'leftovers').length || 0}
                                     </span>
                                 </header>
@@ -306,13 +335,13 @@ export default function InventoryPage() {
                             </section>
 
                             {/* Freezer Meals (Backups) */}
-                            <section className="card border-[var(--accent-terracotta)] bg-orange-50/30">
+                            <section className="card border-[var(--cat-grains)] bg-[var(--cat-grains)]/10">
                                 <header className="flex justify-between items-center mb-4">
                                     <div className="flex items-center gap-2">
                                         <span className="text-xl">🧊</span>
-                                        <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--accent-terracotta)] font-bold">Freezer Stash</h2>
+                                        <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--cat-grains-text)] font-bold">Freezer Stash</h2>
                                     </div>
-                                    <span className="text-xs bg-white border border-[var(--accent-terracotta)] text-[var(--accent-terracotta)] px-2 py-0.5 rounded-full">
+                                    <span className="text-xs bg-[var(--bg-card)] border border-[var(--cat-grains)] text-[var(--cat-grains-text)] px-2 py-0.5 rounded-full">
                                         {inventory?.freezer?.backups?.length || 0}
                                     </span>
                                 </header>
@@ -338,7 +367,7 @@ export default function InventoryPage() {
                         <div className="card">
                             <div className="flex border-b border-[var(--border-subtle)] mb-6">
                                 {/* Tabs Header */}
-                                {['fridge', 'pantry', 'frozen_ingredient'].map((tab) => (
+                                {['prepared', 'fridge', 'pantry', 'frozen_ingredient'].map((tab) => (
                                     <button
                                         key={tab}
                                         onClick={() => setActiveTab(tab as any)}
@@ -349,9 +378,10 @@ export default function InventoryPage() {
                                     >
                                         {tab.replace('_', ' ')}
                                         <span className="ml-2 text-xs opacity-50">
-                                            {tab === 'fridge' ? (inventory?.fridge?.length || 0) :
-                                                tab === 'pantry' ? (inventory?.pantry?.length || 0) :
-                                                    (inventory?.freezer?.ingredients?.length || 0)}
+                                            {tab === 'prepared' ? (normalized?.meals?.length || 0) :
+                                                tab === 'fridge' ? (inventory?.fridge?.length || 0) :
+                                                    tab === 'pantry' ? (inventory?.pantry?.length || 0) :
+                                                        (inventory?.freezer?.ingredients?.length || 0)}
                                         </span>
                                     </button>
                                 ))}
@@ -360,6 +390,27 @@ export default function InventoryPage() {
                             {/* Tab Content */}
                             <div className="space-y-8 min-h-[300px]">
                                 {(() => {
+                                    if (activeTab === 'prepared') {
+                                        if (!normalized?.meals?.length) {
+                                            return <p className="text-sm text-[var(--text-muted)] italic">No prepared meals found.</p>;
+                                        }
+                                        return (
+                                            <div className="space-y-4">
+                                                {normalized.meals.map((item, idx) => (
+                                                    <InventoryItemRow
+                                                        key={`prepared-${idx}`}
+                                                        item={item}
+                                                        category={item.location === 'freezer' ? 'meals' : 'fridge'}
+                                                        onUpdate={handleUpdateItem}
+                                                        onDelete={handleDeleteItem}
+                                                        onMove={handleMoveItem}
+                                                        disabled={updating}
+                                                    />
+                                                ))}
+                                            </div>
+                                        );
+                                    }
+
                                     const currentItems = activeTab === 'fridge' ? inventory?.fridge :
                                         activeTab === 'pantry' ? inventory?.pantry :
                                             inventory?.freezer?.ingredients;
@@ -394,22 +445,28 @@ export default function InventoryPage() {
                                                     <h3 className={`text-xs font-bold uppercase tracking-wider ${meta.color}`}>
                                                         {group}
                                                     </h3>
-                                                    <span className={`ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-white/50 ${meta.color}`}>
+                                                    <span className={`ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[var(--bg-card)]/50 ${meta.color}`}>
                                                         {grouped[group].length}
                                                     </span>
                                                 </div>
-                                                <div className="p-2 space-y-1 bg-white">
-                                                    {grouped[group].map((item: any, idx: number) => (
-                                                        <InventoryItemRow
-                                                            key={`${activeTab}-${idx}`}
-                                                            item={item}
-                                                            category={activeTab}
-                                                            onUpdate={handleUpdateItem}
-                                                            onDelete={handleDeleteItem}
-                                                            onMove={handleMoveItem}
-                                                            disabled={updating}
-                                                        />
-                                                    ))}
+                                                <div className="p-2 space-y-1 bg-[var(--bg-card)]/30">
+                                                    {grouped[group]
+                                                        .sort((a: any, b: any) => {
+                                                            const nameA = a.meal || a.item || '';
+                                                            const nameB = b.meal || b.item || '';
+                                                            return nameA.localeCompare(nameB);
+                                                        })
+                                                        .map((item: any, idx: number) => (
+                                                            <InventoryItemRow
+                                                                key={`${activeTab}-${idx}`}
+                                                                item={item}
+                                                                category={activeTab}
+                                                                onUpdate={handleUpdateItem}
+                                                                onDelete={handleDeleteItem}
+                                                                onMove={handleMoveItem}
+                                                                disabled={updating}
+                                                            />
+                                                        ))}
                                                 </div>
                                             </div>
                                         );
@@ -423,7 +480,7 @@ export default function InventoryPage() {
                 {/* Undo Toast */}
                 {showUndo && lastDeleted && (
                     <div className="fixed bottom-8 right-8 z-40 animate-in slide-in-from-bottom-4">
-                        <div className="bg-gray-900 text-white px-6 py-4 rounded-lg shadow-2xl flex items-center gap-6 border border-gray-700">
+                        <div className="bg-[var(--bg-card)] text-[var(--text-main)] px-6 py-4 rounded-lg shadow-2xl flex items-center gap-6 border border-[var(--border-color)]">
                             <span className="text-sm font-medium">
                                 Deleted <span className="text-[var(--accent-sage)]">{lastDeleted.category === 'meals' ? lastDeleted.item.meal : lastDeleted.item.item}</span>
                             </span>
@@ -452,6 +509,11 @@ export default function InventoryPage() {
 function classifyItem(itemObj: any | string, categoryType: 'fridge' | 'pantry' | 'frozen_ingredient'): string {
     // Handle both raw string (legacy) and object inputs
     const item = (typeof itemObj === 'string' ? itemObj : (itemObj.item || '')).toLowerCase();
+
+    // Explicit category override
+    if (typeof itemObj !== 'string' && itemObj.manual_category) {
+        return itemObj.manual_category;
+    }
 
     // Explicit category override from backend
     if (itemObj.category === 'leftovers') return 'Leftovers';
@@ -505,20 +567,20 @@ function classifyItem(itemObj: any | string, categoryType: 'fridge' | 'pantry' |
 
 function getCategoryMetadata(category: string) {
     switch (category) {
-        case 'Leftovers': return { icon: '🥡', color: 'text-amber-700', border: 'border-amber-200', bg: 'bg-amber-50' };
-        case 'Produce': return { icon: '🥬', color: 'text-green-700', border: 'border-green-200', bg: 'bg-green-50' };
-        case 'Dairy & Eggs': return { icon: '🥛', color: 'text-sky-700', border: 'border-sky-200', bg: 'bg-sky-50' };
-        case 'Meat & Protein': return { icon: '🥩', color: 'text-red-700', border: 'border-red-200', bg: 'bg-red-50' };
-        case 'Condiments & Sauces': return { icon: '🥫', color: 'text-orange-700', border: 'border-orange-200', bg: 'bg-orange-50' };
-        case 'Grains & Bread': return { icon: '🍞', color: 'text-yellow-700', border: 'border-yellow-200', bg: 'bg-yellow-50' };
-        case 'Canned & Jars': return { icon: '🫙', color: 'text-stone-600', border: 'border-stone-200', bg: 'bg-stone-50' };
-        case 'Baking & Spices': return { icon: '🧂', color: 'text-amber-800', border: 'border-amber-200', bg: 'bg-amber-50' };
-        case 'Snacks': return { icon: '🥨', color: 'text-purple-700', border: 'border-purple-200', bg: 'bg-purple-50' };
-        case 'Beverages': return { icon: '🥤', color: 'text-cyan-700', border: 'border-cyan-200', bg: 'bg-cyan-50' };
-        case 'Vegetables': return { icon: '🥦', color: 'text-emerald-700', border: 'border-emerald-200', bg: 'bg-emerald-50' };
-        case 'Fruit': return { icon: '🍎', color: 'text-red-600', border: 'border-red-200', bg: 'bg-red-50' };
-        case 'Breads': return { icon: '🥯', color: 'text-yellow-700', border: 'border-yellow-200', bg: 'bg-yellow-50' };
-        case 'Meat': return { icon: '🍖', color: 'text-rose-700', border: 'border-rose-200', bg: 'bg-rose-50' };
-        default: return { icon: '📦', color: 'text-gray-600', border: 'border-gray-200', bg: 'bg-gray-50' };
+        case 'Leftovers': return { icon: '🥡', color: 'text-[var(--cat-leftovers-text)]', border: 'border-[var(--cat-leftovers)]', bg: 'bg-[var(--cat-leftovers)]/20' };
+        case 'Produce': return { icon: '🥬', color: 'text-[var(--cat-produce-text)]', border: 'border-[var(--cat-produce)]', bg: 'bg-[var(--cat-produce)]/20' };
+        case 'Dairy & Eggs': return { icon: '🥛', color: 'text-[var(--cat-dairy-text)]', border: 'border-[var(--cat-dairy)]', bg: 'bg-[var(--cat-dairy)]/20' };
+        case 'Meat & Protein': return { icon: '🥩', color: 'text-[var(--cat-meat-text)]', border: 'border-[var(--cat-meat)]', bg: 'bg-[var(--cat-meat)]/20' };
+        case 'Condiments & Sauces': return { icon: '🥫', color: 'text-[var(--cat-pantry-text)]', border: 'border-[var(--cat-pantry)]', bg: 'bg-[var(--cat-pantry)]/20' };
+        case 'Grains & Bread': return { icon: '🍞', color: 'text-[var(--cat-grains-text)]', border: 'border-[var(--cat-grains)]', bg: 'bg-[var(--cat-grains)]/20' };
+        case 'Canned & Jars': return { icon: '🫙', color: 'text-[var(--cat-dairy-text)]', border: 'border-[var(--cat-dairy)]', bg: 'bg-[var(--cat-dairy)]/20' };
+        case 'Baking & Spices': return { icon: '🧂', color: 'text-[var(--cat-grains-text)]', border: 'border-[var(--cat-grains)]', bg: 'bg-[var(--cat-grains)]/20' };
+        case 'Snacks': return { icon: '🥨', color: 'text-[var(--cat-leftovers-text)]', border: 'border-[var(--cat-leftovers)]', bg: 'bg-[var(--cat-leftovers)]/20' };
+        case 'Beverages': return { icon: '🥤', color: 'text-[var(--cat-dairy-text)]', border: 'border-[var(--cat-dairy)]', bg: 'bg-[var(--cat-dairy)]/20' };
+        case 'Vegetables': return { icon: '🥦', color: 'text-[var(--cat-produce-text)]', border: 'border-[var(--cat-produce)]', bg: 'bg-[var(--cat-produce)]/20' };
+        case 'Fruit': return { icon: '🍎', color: 'text-[var(--cat-grains-text)]', border: 'border-[var(--cat-grains)]', bg: 'bg-[var(--cat-grains)]/20' };
+        case 'Breads': return { icon: '🥯', color: 'text-[var(--cat-grains-text)]', border: 'border-[var(--cat-grains)]', bg: 'bg-[var(--cat-grains)]/20' };
+        case 'Meat': return { icon: '🍖', color: 'text-[var(--cat-meat-text)]', border: 'border-[var(--cat-meat)]', bg: 'bg-[var(--cat-meat)]/20' };
+        default: return { icon: '📦', color: 'text-[var(--cat-pantry-text)]', border: 'border-[var(--cat-pantry)]', bg: 'bg-[var(--cat-pantry)]/20' };
     }
 }

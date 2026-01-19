@@ -65,3 +65,5 @@ instructions: 'Here’s a look at the steps to make these popsicles. Scroll down
   (To make without a blender, add ingredients to a wide bowl and mash coarsely with
   a potato masher.)'
 no_chop_compatible: false
+tags:
+- stovetop

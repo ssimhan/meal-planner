@@ -175,7 +175,7 @@ export default function BatchEditPage() {
                                             <div className="font-medium">{recipe.name}</div>
                                             <div className="flex gap-1 mt-1 flex-wrap">
                                                 {(recipe.tags || []).map((tag: string) => (
-                                                    <span key={tag} className="text-[10px] px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded">
+                                                    <span key={tag} className="text-[10px] px-1.5 py-0.5 bg-[var(--accent-sage)]/10 text-[var(--accent-sage)] rounded">
                                                         {tag}
                                                     </span>
                                                 ))}
@@ -262,26 +262,27 @@ function RecipeContentModal({ recipe, onClose, onSave }: { recipe: RecipeListIte
     const [ingredients, setIngredients] = useState<string[]>([]);
     const [instructions, setInstructions] = useState<string[]>([]);
 
-    useEffect(() => {
-        loadContent();
-    }, [recipe.id]);
+    const loadContent = useEffect(() => {
+        let mounted = true;
+        async function fetchContent() {
+            try {
+                const data = await getRecipeContent(recipe.id);
+                if (mounted && data.status === 'success') {
+                    const rawIngredients = data.recipe.ingredients || [];
+                    const rawInstructions = data.recipe.instructions || [];
 
-    async function loadContent() {
-        try {
-            const data = await getRecipeContent(recipe.id);
-            if (data.status === 'success') {
-                const rawIngredients = data.recipe.ingredients || [];
-                const rawInstructions = data.recipe.instructions || [];
-
-                setIngredients(Array.isArray(rawIngredients) ? rawIngredients : [rawIngredients]);
-                setInstructions(Array.isArray(rawInstructions) ? rawInstructions : [rawInstructions]);
+                    setIngredients(Array.isArray(rawIngredients) ? rawIngredients : [rawIngredients]);
+                    setInstructions(Array.isArray(rawInstructions) ? rawInstructions : [rawInstructions]);
+                }
+            } catch (err) {
+                console.error('Failed to load content:', err);
+            } finally {
+                if (mounted) setLoading(false);
             }
-        } catch (err) {
-            console.error('Failed to load content:', err);
-        } finally {
-            setLoading(false);
         }
-    }
+        fetchContent();
+        return () => { mounted = false; };
+    }, [recipe.id]);
 
     async function handleLocalSave() {
         setSaving(true);
@@ -351,7 +352,7 @@ function RecipeContentModal({ recipe, onClose, onSave }: { recipe: RecipeListIte
                                     <option value="high">High</option>
                                 </select>
                                 {tags.map((tag) => (
-                                    <span key={tag} className="text-xs px-2 py-1 bg-amber-100 text-amber-800 rounded flex items-center gap-1 group">
+                                    <span key={tag} className="text-xs px-2 py-1 bg-[var(--accent-sage)]/10 text-[var(--accent-sage)] rounded flex items-center gap-1 group">
                                         {tag}
                                         <button
                                             onClick={() => removeTag(tag)}

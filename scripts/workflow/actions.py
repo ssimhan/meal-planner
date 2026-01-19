@@ -61,7 +61,7 @@ def create_new_week(week_str, history_dict=None, recipes_list=None, config_dict=
     return input_data
 
 
-def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
+def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None, exclude_defaults=None):
     """Generate the weekly meal plan."""
     print("\n" + "="*60)
     print(f"GENERATING MEAL PLAN")
@@ -128,7 +128,8 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
         selected_lunches = lunch_selector.select_weekly_lunches(
             dinner_plan=dinner_plan_list, 
             week_of=week_of,
-            current_lunches=existing_lunches
+            current_lunches=existing_lunches,
+            exclude_defaults=exclude_defaults
         )
         # Filter selected lunches to remove days logic - wait, selected_lunches returns a dict of days
         # We keep the object for now, Status API handles visibility based on config 
@@ -173,7 +174,8 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None):
         from scripts.snack_selector import SnackSelector
         selector = SnackSelector(recipes=recipes, kid_profiles=config.get('kid_profiles', {}))
         days_needing_snacks = [d for d in ['mon', 'tue', 'wed', 'thu', 'fri'] if is_covered('school_snack', d) or is_covered('home_snack', d)]
-        data['snacks'] = selector.select_weekly_snacks(days_needing_snacks)
+        existing_snacks = current_week_history.get('snacks', {}) if current_week_history else {}
+        data['snacks'] = selector.select_weekly_snacks(days_needing_snacks, current_snacks=existing_snacks)
     except Exception as e:
         print(f"Warning: Snack selection failed: {e}")
         data['snacks'] = {}

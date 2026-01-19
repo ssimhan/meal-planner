@@ -69,3 +69,6 @@ instructions: 'Preheat the oven to 350 F and grease 12 mini muffin cups with non
 
   Double the recipe and bake a whole pan of 24 mini muffins at once.'
 no_chop_compatible: false
+tags:
+- instant_pot
+- oven

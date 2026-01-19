@@ -35,6 +35,30 @@ if SUPABASE_URL and SUPABASE_SERVICE_KEY:
         init_error = str(e)
         print(f"ERROR: Failed to initialize Supabase client: {e}")
 
+import time
+
+def execute_with_retry(query, max_retries=3, delay=0.5):
+    """
+    Execute a Supabase query with retry logic for transient network errors.
+    Handles [Errno 35] Resource temporarily unavailable and other httpx errors.
+    """
+    last_exception = None
+    for i in range(max_retries):
+        try:
+            return query.execute()
+        except Exception as e:
+            last_exception = e
+            msg = str(e)
+            # Retry on specific network errors
+            if "[Errno 35]" in msg or "Resource temporarily unavailable" in msg or "httpx" in msg:
+                print(f"Supabase query retry {i+1}/{max_retries} due to: {e}")
+                time.sleep(delay * (2 ** i)) # Exponential backoff
+                continue
+            raise e
+    
+    print(f"Supabase query failed after {max_retries} retries: {last_exception}")
+    raise last_exception
+
 def get_household_id():
     """Helper to get household_id from request context."""
     return getattr(request, 'household_id', "00000000-0000-0000-0000-000000000001")
@@ -180,6 +204,26 @@ class StorageEngine:
                 "unit": unit,
                 "metadata": updates or {}
             }, on_conflict="household_id, category, item").execute()
+
+            # PENDING RECIPE WORKFLOW: If this is a freezer meal, ensure it exists in the recipe index
+            if category == 'freezer_backup' and not delete:
+                import re
+                recipe_id = re.sub(r'[^a-zA-Z0-9]', '_', item_name.lower()).strip('_')
+                
+                # Check if recipe exists
+                existing_recipe = StorageEngine.get_recipe_details(recipe_id)
+                if not existing_recipe:
+                    print(f"Auto-capturing new meal as recipe: {item_name}")
+                    # Create skeleton recipe
+                    metadata = {
+                        "name": item_name,
+                        "cuisine": "unknown",
+                        "meal_type": "dinner", # Assume dinner for freezer backups
+                        "effort_level": "normal",
+                        "tags": ["missing ingredients", "missing instructions"]
+                    }
+                    StorageEngine.save_recipe(recipe_id, item_name, metadata, f"# {item_name}\n\nRecipe captured from freezer inventory. Please add ingredients and instructions.")
+                    
         except Exception as e:
             print(f"Error updating inventory item {item_name}: {e}")
     @staticmethod

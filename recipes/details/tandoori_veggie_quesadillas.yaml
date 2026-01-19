@@ -87,3 +87,7 @@ instructions: 'Set corn to cook in microwave.
 
   Press in panini/sandwich maker for 1 minute. Remove from heat, cut and serve hot!'
 no_chop_compatible: false
+tags:
+- dinner
+- stovetop
+- tcl

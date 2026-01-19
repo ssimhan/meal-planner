@@ -811,4 +811,42 @@ The best tools are the ones you actually use. This system works because it reduc
 - **The Database is the Source of Truth**: When local files get messy, your production database (Supabase) is your definitive anchor. Use its row count to "prune" your local dev environment.
 - **Idempotency is Peace of Mind**: A script that does nothing when there's nothing to do is the safest script. Always design your automation so it can be run 1,000 times without side effects.
 
-**Final Phase 27 Status:** Recipe index is standardized, lean (185 recipes), and perfectly synced with Supabase.
+### Phase 28: Logic Refinement & Sequential Flow (2026-01-18) ✅ Complete
+
+**Goal:** Transform "Plan Your Extras" into a logic-driven, 3-phase progression to reduce decision fatigue and improve ingredient efficiency.
+
+**Implemented:**
+- **Sequential Progression:** Refactored the manual planning steps into a strict sequence: **Phase 1: Dinners -> Phase 2: Lunches -> Phase 3: Snacks**.
+- **Context-Aware Lunches:** Updated the backend (`/api/plan/suggest-options`) to analyze chosen dinner ingredients and rank lunch recipes by overlap.
+- **Match ✨ Indicator:** Added a visual "Match" badge for lunch recipes that reuse ingredients from the week's dinner plan.
+- **Leftover Sync:** Integrated assigned leftovers directly into the lunch grid. They appear as "Assigned Leftover" slots, preventing accidental double-planning.
+- **Granular Selection:** Replaced global toggles with a per-day lunch review grid.
+
+**Learning for Vibecoders:**
+- **Sequential Architecture:** Forcing a specific sequence (Dinners -> Lunches -> Snacks) allows subsequent steps to be "smarter" because they can inherit context from previous choices.
+- **Visual Micro-Feedback:** A simple badge like "Match ✨" makes the system feel much more intelligent than just sorted text.
+- **Sync is Sanity:** Providing immediate visual feedback for choices made in previous steps (like assigned leftovers) builds trust and reduces cognitive load.
+
+**Final Phase 28 Status:** General workflow is stabilized, suggestion logic is context-aware, and the wizard provides a frictionless end-to-end planning experience.
+
+### Phase 28: Maintenance & Debugging (2026-01-19) ✅
+**Goal:** Resolve critical persistence bugs and plan future architecture.
+
+**Fixed:**
+- **Inventory Persistence:** Fixed the 'leftovers' category mapping in `api/routes/inventory.py`, ensuring repeated adds correctly increment quantity instead of overwriting.
+- **Ghost Data in Reviews:** Updated `swap_meals` in `api/routes/meals.py` to synchronize `history_data` alongside `plan_data`. This prevents original meals from reappearing in the Review step after a swap.
+
+**Operations:**
+- **Start-Over Capability:** Created `reset_week.py` script to manually delete specific meal plan weeks from Supabase when the UI state gets stuck.
+
+**Planning:**
+- **Phase 29 Definitions:** Defined the "Wizard Architecture Refactor" phase to break down the monolithic `src/app/plan/page.tsx` (1800+ lines) into modular components and custom hooks.
+
+**Learning:** 
+- **Data Duplication:** When you store data in two places (Plan vs History), *every* operation (Swap, Move, Edit) must update both. Forgetting one leads to "Ghost Data" where the UI shows one thing but the underlying record shows another.
+- **Monoliths Hide Bugs:** Large files (`page.tsx`) make it hard to see state flow. If you can't see the state, you can't debug persistence. Refactoring is not just cleanup; it's a transparency tool.
+
+**Build Fixes:**
+- **Type Hardening:** Resolved TypeScript build errors in `src/app/page.tsx` and `src/app/plan/page.tsx` by synchronizing the `NormalizedInventory` interface with the frontend state types. Explicitly handled the `spice_rack` property and fixed `slot` string casting.
+
+- **ESLint/React Hook Fixes:** Systematically resolved React Hook dependency warnings in `src/app/page.tsx` and `src/app/plan/page.tsx`. Wrapped unstable functions (`fetchStatus`, `loadInventory`, `loadSuggestions`) in `useCallback` and corrected `useEffect` dependency arrays to ensure stable and predictable re-renders.

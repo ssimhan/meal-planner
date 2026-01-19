@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { getRecipes, updateRecipeMetadata, deleteRecipe, updateRecipeContent, searchRecipes } from '@/lib/api';
 import AppLayout from '@/components/AppLayout';
 import Link from 'next/link';
@@ -249,7 +249,7 @@ export default function RecipesPage() {
 
 function RecipeCard({ recipe }: { recipe: any }) {
     return (
-        <div className="card hover:shadow-md transition-shadow group relative bg-white">
+        <div className="card hover:shadow-md transition-shadow group relative">
             <Link href={`/recipes/${recipe.id}`} className="absolute inset-0 z-10" />
             <div className="flex justify-between items-start">
                 <div>
@@ -322,6 +322,30 @@ function RecipeReviewModal({ recipes, onClose, onRefresh }: { recipes: RecipeLis
         return () => clearTimeout(timer);
     }, [name, recipe]);
 
+    const handleSave = useCallback(async () => {
+        if (!recipe || saving) return;
+        setSaving(true);
+        try {
+            await updateRecipeMetadata(recipe.id, {
+                name: name.trim() || recipe.name,
+                cuisine: cuisine.trim().toLowerCase() || 'unknown',
+                effort_level: effort || 'normal'
+            });
+
+            if (currentIndex < recipes.length - 1) {
+                setCurrentIndex(currentIndex + 1);
+            } else {
+                if (onRefresh) onRefresh();
+                onClose();
+            }
+        } catch (err) {
+            console.error('Failed to save changes:', err);
+            alert('Failed to save changes');
+        } finally {
+            setSaving(false);
+        }
+    }, [recipe, saving, name, cuisine, effort, currentIndex, recipes.length, onRefresh, onClose]);
+
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (saving) return;
@@ -349,31 +373,7 @@ function RecipeReviewModal({ recipes, onClose, onRefresh }: { recipes: RecipeLis
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [currentIndex, cuisine, name, effort, saving, onClose, recipes.length]);
-
-    async function handleSave() {
-        if (!recipe || saving) return;
-        setSaving(true);
-        try {
-            await updateRecipeMetadata(recipe.id, {
-                name: name.trim() || recipe.name,
-                cuisine: cuisine.trim().toLowerCase() || 'unknown',
-                effort_level: effort || 'normal'
-            });
-
-            if (currentIndex < recipes.length - 1) {
-                setCurrentIndex(currentIndex + 1);
-            } else {
-                if (onRefresh) onRefresh();
-                onClose();
-            }
-        } catch (err) {
-            console.error('Failed to save changes:', err);
-            alert('Failed to save changes');
-        } finally {
-            setSaving(false);
-        }
-    }
+    }, [currentIndex, cuisine, name, effort, saving, onClose, recipes.length, handleSave]);
 
     async function handleDelete() {
         if (!recipe || !confirm(`Are you sure you want to delete "${recipe.name}"?`)) return;
@@ -398,7 +398,7 @@ function RecipeReviewModal({ recipes, onClose, onRefresh }: { recipes: RecipeLis
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 p-4 backdrop-blur-sm">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all animate-in fade-in zoom-in duration-200">
+            <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all animate-in fade-in zoom-in duration-200">
                 <div className="p-6">
                     <div className="flex justify-between items-start mb-6">
                         <div className="flex-1 mr-4">
@@ -411,7 +411,7 @@ function RecipeReviewModal({ recipes, onClose, onRefresh }: { recipes: RecipeLis
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className="text-2xl font-bold text-gray-900 border-none bg-transparent focus:ring-1 focus:ring-gray-200 rounded-lg flex-1 outline-none p-0"
+                                    className="text-2xl font-bold text-[var(--text-main)] border-none bg-transparent focus:ring-1 focus:ring-[var(--border-color)] rounded-lg flex-1 outline-none p-0"
                                     placeholder="Recipe Name"
                                 />
                                 <EffortIndicator level={effort} size="md" />

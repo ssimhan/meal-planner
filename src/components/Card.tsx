@@ -20,7 +20,7 @@ export default function Card({
   isConfirmed = false
 }: CardProps) {
   return (
-    <div className={`card flex flex-col h-full border-t-2 border-t-[var(--accent-sage)] shadow-sm hover:shadow-md transition-all ${isConfirmed ? 'opacity-50 grayscale bg-gray-50' : ''}`}>
+    <div className={`card flex flex-col h-full border-t-2 border-t-[var(--accent-sage)] shadow-sm hover:shadow-md transition-all ${isConfirmed ? 'opacity-50 grayscale bg-[var(--bg-secondary)]' : ''}`}>
       <div className="flex justify-between items-center">
         <span className="text-xs font-mono uppercase text-[var(--text-muted)]">{title}</span>
         <span className="text-xl">{icon}</span>
@@ -31,7 +31,7 @@ export default function Card({
         {badge && (
           <div className="mt-2">
             {typeof badge === 'string' ? (
-              <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-[10px] rounded-full font-bold uppercase">
+              <span className="inline-block px-2 py-0.5 bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] text-[10px] rounded-full font-bold uppercase border border-[var(--accent-primary)]/20">
                 {badge}
               </span>
             ) : (

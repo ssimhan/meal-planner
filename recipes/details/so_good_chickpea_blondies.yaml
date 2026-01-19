@@ -105,3 +105,6 @@ instructions: 'Here’s a peak at how to make this recipe so you know what to ex
 
   Let cool fully in the pan and slice to serve.'
 no_chop_compatible: false
+tags:
+- instant_pot
+- oven

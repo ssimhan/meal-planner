@@ -10,7 +10,7 @@ import sys
 # Configuration
 RECIPE_DIR = Path("recipes/details")
 SCHEMA_REQUIRED_KEYS = ["title", "ingredients", "prep_steps", "cook_steps"]
-KEY_ORDER = ["id", "title", "name", "categories", "cuisine", "meal_type", "effort_level", "prep_time_minutes", "cook_time_minutes", "appliances", "ingredients", "prep_steps", "cook_steps", "main_veg", "source_url", "source_file"]
+KEY_ORDER = ["id", "title", "name", "categories", "cuisine", "meal_type", "effort_level", "prep_time_minutes", "cook_time_minutes", "appliances", "tags", "ingredients", "prep_steps", "cook_steps", "main_veg", "source_url", "source_file"]
 
 # Ingredient Categories (Ordered by importance)
 # Note: Fats and Spices should be checked EARLY to catch "Avocado Oil" before "Avocado"

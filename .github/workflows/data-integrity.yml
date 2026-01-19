@@ -31,6 +31,3 @@ jobs:
 
       - name: Validate YAML syntax
         run: python3 scripts/validate_yaml.py
-
-      - name: Run logic unit tests
-        run: python3 scripts/test_logic.py

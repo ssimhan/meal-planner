@@ -147,3 +147,5 @@ instructions: 'Below is an overview of the method for the recipe. Scroll down to
   as you like or store the remaining sauce for future use. Serve with Parmesan, lemon
   zest, and/or pepper as desired.'
 no_chop_compatible: false
+tags:
+- instant_pot

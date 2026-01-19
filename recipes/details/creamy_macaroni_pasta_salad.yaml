@@ -51,3 +51,6 @@ instructions: 'Cook the pasta according to the directions on the package, adding
   if needed. Cover and refrigerate until ready to serve. Stir again just before serving.
   Enjoy!'
 no_chop_compatible: false
+tags:
+- dinner
+- stovetop

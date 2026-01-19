@@ -45,7 +45,8 @@ def generate_plan_route():
             input_file=None, 
             data=data,
             recipes_list=all_recipes,
-            history_dict=history
+            history_dict=history,
+            exclude_defaults=data.get('exclude_defaults')
         )
         
         # 3. Save back to DB
@@ -101,23 +102,35 @@ def generate_draft_route():
         for selection in selections:
             day = selection.get('day')
             recipe_id = selection.get('recipe_id')
+            slot = selection.get('slot', 'dinner')
             if not day or not recipe_id: continue
             
             day_abbr = day.lower()[:3]
             days_covered.add(day_abbr)
             
-            # Find and update or add
-            found = False
-            for dinner in history_week.get('dinners', []):
-                if dinner.get('day') == day_abbr:
-                    dinner['recipe_id'] = recipe_id
-                    found = True
-                    break
-            if not found:
-                history_week.setdefault('dinners', []).append({
-                    'day': day_abbr,
-                    'recipe_id': recipe_id
-                })
+            if slot == 'dinner':
+                # Find and update or add
+                found = False
+                for dinner in history_week.get('dinners', []):
+                    if dinner.get('day') == day_abbr:
+                        dinner['recipe_id'] = recipe_id
+                        found = True
+                        break
+                if not found:
+                    history_week.setdefault('dinners', []).append({
+                        'day': day_abbr,
+                        'recipe_id': recipe_id
+                    })
+            elif slot == 'lunch':
+                history_week.setdefault('lunches', {})
+                history_week['lunches'][day_abbr] = {
+                    'recipe_id': recipe_id,
+                    'recipe_name': selection.get('recipe_name') or recipe_id.replace('_', ' ').title(),
+                    'prep_style': 'manual'
+                }
+            elif slot in ['school_snack', 'home_snack']:
+                history_week.setdefault('snacks', {}).setdefault(day_abbr, {})
+                history_week['snacks'][day_abbr][slot] = selection.get('recipe_name') or recipe_id.replace('_', ' ').title()
 
         # Apply explicit leftover assignments
         for assignment in leftover_assignments:
@@ -153,6 +166,7 @@ def generate_draft_route():
             if w.get('week_of') == week_of:
                 w['dinners'] = history_week.get('dinners', [])
                 w['lunches'] = history_week.get('lunches', {})
+                w['snacks'] = history_week.get('snacks', {})
                 updated_any = True
                 break
         if not updated_any:
@@ -166,7 +180,8 @@ def generate_draft_route():
             input_file=None, 
             data=plan_data,
             recipes_list=all_recipes,
-            history_dict=history
+            history_dict=history,
+            exclude_defaults=data.get('exclude_defaults')
         )
         
         # 5. Extract the generated week's history
@@ -622,7 +637,7 @@ def swap_meals():
                  if dinner.get('day') == d: return i, dinner
             return -1, None
 
-        # Swap
+        # Swap in Plan Data
         if 'dinners' in week_data:
             idx1, dinner1 = get_dinner(week_data['dinners'], day1)
             idx2, dinner2 = get_dinner(week_data['dinners'], day2)
@@ -634,8 +649,22 @@ def swap_meals():
             elif dinner1: dinner1['day'] = day2
             elif dinner2: dinner2['day'] = day1
 
-        # Save to DB
-        storage.StorageEngine.update_meal_plan(week_str, plan_data=week_data)
+        # Swap in History Data (Critical for Review/Confirm steps)
+        history_week = plan_record.get('history_data') or {'week_of': week_str}
+        if 'dinners' in history_week:
+            h_idx1, h_dinner1 = get_dinner(history_week['dinners'], day1)
+            h_idx2, h_dinner2 = get_dinner(history_week['dinners'], day2)
+            
+            # Simple swap of day fields if both exist, similar to plan_data
+            if h_dinner1 and h_dinner2:
+                h_dinner1['day'] = day2
+                h_dinner2['day'] = day1
+                # No re-ordering needed for logic, but key for consistency
+            elif h_dinner1: h_dinner1['day'] = day2
+            elif h_dinner2: h_dinner2['day'] = day1
+
+        # Save to DB (both plan and history)
+        storage.StorageEngine.update_meal_plan(week_str, plan_data=week_data, history_data=history_week)
         invalidate_cache()
         
         return jsonify({"status": "success", "message": "Meals swapped", "week_data": week_data})
@@ -830,4 +859,86 @@ def delete_week():
         invalidate_cache()
         return jsonify({"status": "success", "message": f"Deleted week {week_of}"})
     except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@meals_bp.route("/api/plan/suggest-options", methods=["GET", "POST"])
+@require_auth
+def suggest_options_route():
+    try:
+        h_id = storage.get_household_id()
+        
+        # 1. Load context from request
+        data = request.json if request.method == "POST" else {}
+        selections = data.get('selections', [])
+        leftovers = data.get('leftovers', [])
+        
+        # Load recipes
+        all_recipes_res = storage.supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id).execute()
+        all_recipes = [{"id": r['id'], "name": r['name'], **(r.get('metadata') or {})} for r in all_recipes_res.data]
+        
+        # Load config
+        from api.routes.status import _load_config
+        config = _load_config()
+        
+        # 2. Suggested Snacks
+        from scripts.snack_selector import SnackSelector
+        snack_selector = SnackSelector(recipes=all_recipes, kid_profiles=config.get('kid_profiles', {}))
+        safe_snacks = [r for r in snack_selector.snack_recipes if snack_selector.is_safe(r)]
+        suggested_snacks = [{"id": r.get('id'), "name": r.get('name')} for r in safe_snacks[:12]]
+        
+        # 3. Suggested Lunch Recipes (Ranked by Dinner ingredients)
+        from scripts.lunch_selector import LunchSelector
+        lunch_selector = LunchSelector(recipes=all_recipes)
+        lunch_selector.config = config 
+        
+        # Calculate available ingredients from selected dinners
+        dinner_plan_list = []
+        for s in selections:
+            if s.get('slot') == 'dinner' or 'dinner' in s.get('slot', ''):
+                recipe_id = s.get('recipe_id')
+                recipe_name = s.get('recipe_name')
+                day = s.get('day')
+                # Find the recipe to get main_veg
+                recipe = next((r for r in all_recipes if r['id'] == recipe_id), None)
+                dinner_plan_list.append({
+                    'day': day,
+                    'recipe_id': recipe_id,
+                    'recipe_name': recipe_name,
+                    'vegetables': list(recipe.get('main_veg', [])) if recipe else []
+                })
+        
+        dinner_ingredients = lunch_selector._extract_dinner_ingredients(dinner_plan_list)
+        # Flatten all dinner ingredients for the week to see which lunch recipes match ANY of them
+        all_week_ingredients = set()
+        for day_ingredients in dinner_ingredients.values():
+            all_week_ingredients.update(day_ingredients)
+            
+        candidates = lunch_selector._find_reusable_lunch_recipes(list(all_week_ingredients), day='mon') # Day doesn't matter for ranking list
+        
+        # Sort based on overlap count
+        ranked_lunches = []
+        for c in candidates:
+            r = c['recipe']
+            # Kid-safe check
+            if not lunch_selector._is_safe(r):
+                continue
+                
+            ranked_lunches.append({
+                "id": r.get('id'),
+                "name": r.get('name'),
+                "overlap_count": c['overlap_count'],
+                "overlap_ingredients": c['overlap_ingredients']
+            })
+            
+        # Sort by overlap (desc) then name
+        ranked_lunches.sort(key=lambda x: (x['overlap_count'], x['name'] if x['name'] else ''), reverse=True)
+        
+        return jsonify({
+            "status": "success",
+            "snacks": suggested_snacks,
+            "lunch_recipes": ranked_lunches[:20],
+            "lunch_defaults": lunch_selector.defaults
+        })
+    except Exception as e:
+        import traceback; traceback.print_exc()
         return jsonify({"status": "error", "message": str(e)}), 500

@@ -54,3 +54,7 @@ instructions: 'Roast peanuts.
 
   Serve with puffed rice, sev and peanuts.'
 no_chop_compatible: false
+tags:
+- dinner
+- guest apps
+- oven

@@ -44,14 +44,14 @@ export default function FeedbackButtons({
         <button
           onClick={() => onLogFeedback(feedbackType, '👍', true)}
           disabled={logLoading}
-          className="btn-primary text-xs py-1 px-3 bg-[var(--accent-sage)] hover:bg-[var(--accent-sage-dark)]"
+          className="btn-primary text-xs py-1 px-3"
         >
           ✓ Made
         </button>
         <button
           onClick={() => onLogFeedback(feedbackType, 'Skipped', false)}
           disabled={logLoading}
-          className="btn-secondary text-xs py-1 px-3 border-gray-300 hover:bg-gray-100"
+          className="btn-secondary text-xs py-1 px-3 border-[var(--border-subtle)] hover:bg-[var(--bg-secondary)]"
         >
           ✗ Not Made
         </button>
@@ -63,7 +63,7 @@ export default function FeedbackButtons({
   if (madeStatus === true && !isEditing) {
     return (
       <div className="flex flex-col gap-2">
-        <div className="flex justify-around items-center bg-gray-50 p-1 rounded">
+        <div className="flex justify-around items-center bg-[var(--bg-secondary)] p-1 rounded">
           {['❤️', '👍', '😐', '👎', '❌'].map(emoji => (
             <button
               key={emoji}

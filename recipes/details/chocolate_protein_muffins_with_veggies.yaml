@@ -53,3 +53,6 @@ instructions: 'Preheat the oven to 350 degrees. Grease the muffin tin.
   Let cool for 5-10 minutes in the pan, run a knife around the edges, and carefully
   transfer to a wire rack to cool.'
 no_chop_compatible: false
+tags:
+- instant_pot
+- oven

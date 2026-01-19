@@ -22,4 +22,6 @@ avoid_contains: []
 instructions:
 - Send string cheese as snack
 no_chop_compatible: false
-tags: []
+tags:
+- school snacks
+- stovetop

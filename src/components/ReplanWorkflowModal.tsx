@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { logMeal, addItemToInventory, replan, WorkflowStatus, getInventory } from '@/lib/api';
+import { transformInventory } from '@/lib/inventoryManager';
 import MealLogFlow from './MealLogFlow';
 import { FreezerMeal, InventoryItem } from '@/types';
 
@@ -11,6 +12,8 @@ interface ReplanWorkflowModalProps {
     onCancel: () => void;
     recipes: { id: string; name: string }[];
 }
+
+const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
 export default function ReplanWorkflowModal({
     status,
@@ -30,9 +33,12 @@ export default function ReplanWorkflowModal({
     const [newItem, setNewItem] = useState('');
     const [newItemCategory, setNewItemCategory] = useState('fridge');
 
-    const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-    const todayIndex = days.indexOf(status.current_day || 'mon');
-    const pastDays = days.slice(0, todayIndex + 1);
+
+    // Memoize pastDays to stabilize dependency
+    const pastDays = useMemo(() => {
+        const todayIndex = days.indexOf(status.current_day || 'mon');
+        return days.slice(0, todayIndex + 1);
+    }, [status.current_day]);
 
     // Skip days that are already confirmed/made
     useEffect(() => {
@@ -60,7 +66,7 @@ export default function ReplanWorkflowModal({
         } else {
             setCurrentDayIndex(firstUnconfirmed);
         }
-    }, []); // Only on mount
+    }, [pastDays, status.week_data]); // Run when structure or content might change
 
     useEffect(() => {
         // We always need inventory for MealLogFlow "Something Else" options
@@ -71,13 +77,12 @@ export default function ReplanWorkflowModal({
         try {
             setLoading(true);
             const data = await getInventory();
-            setInventory(data.inventory);
+            const processed = transformInventory(data);
+            setInventory(processed);
 
             // Extract typed versions for MealLogFlow
-            if (data.inventory) {
-                setFreezerMeals(data.inventory.freezer?.backups || []);
-                setLeftoverItems(data.inventory.fridge || []);
-            }
+            setFreezerMeals(processed.meals.filter(m => m.location === 'freezer'));
+            setLeftoverItems(processed.meals.filter(m => m.location === 'fridge'));
         } catch (e) {
             console.error(e);
         } finally {

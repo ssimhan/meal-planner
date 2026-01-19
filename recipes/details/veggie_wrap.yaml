@@ -59,3 +59,5 @@ instructions: 'Shred carrot and chop cucumber.
   **Other vegetable ideas: tomato, radish, corn, lettuce, cabbage, red bell pepper,
   zucchini, alfalfa sprouts etc.'
 no_chop_compatible: false
+tags:
+- oven

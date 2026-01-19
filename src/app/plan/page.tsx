@@ -15,8 +15,10 @@ import {
     getRecipes,
     saveWizardState,
     getWizardState,
-    getStatus
+    getStatus,
+    getSuggestOptions
 } from '@/lib/api';
+import { transformInventory, NormalizedInventory } from '@/lib/inventoryManager';
 import AppLayout from '@/components/AppLayout';
 import Skeleton from '@/components/Skeleton';
 import ReplacementModal from '@/components/ReplacementModal';
@@ -48,13 +50,13 @@ type ReviewDay = {
 };
 
 type InventoryState = {
-    fridge: ({ item: string; quantity: number; unit: string; type?: 'meal' | 'ingredient' } | string)[];
-    pantry: ({ item: string; quantity: number; unit: string } | string)[];
-    freezer: {
-        backups: { meal: string; servings: number }[];
-        ingredients: { item: string; quantity: number; unit: string }[];
+    meals: any[];  // Consolidated: Fridge leftovers + Freezer backups
+    ingredients: {
+        fridge: any[];
+        freezer: any[];
+        pantry: any[];
+        spice_rack: any[];
     };
-    spice_rack: ({ item: string; quantity: number; unit: string } | string)[];
 };
 
 function PlanningWizardContent() {
@@ -91,38 +93,42 @@ function PlanningWizardContent() {
         return str.replace(/\b\w/g, l => l.toUpperCase());
     };
 
-    // Wizard Steps Configuration
-    const WIZARD_STEPS = [
-        { id: 'review_meals', label: 'Meals', icon: '🍽️' },
-        { id: 'review_snacks', label: 'Snacks', icon: '🍎' },
-        { id: 'inventory', label: 'Inventory', icon: '🥦' },
-        { id: 'leftovers', label: 'Leftovers', icon: '🍱' },
-        { id: 'suggestions', label: 'Generate', icon: '🧑‍🍳' },
-        { id: 'draft', label: 'Plan', icon: '📋' },
-        { id: 'groceries', label: 'Shop', icon: '🛒' },
+    // Wizard Phases for top navigation
+    const PHASES = [
+        { id: 'review', label: 'Review', icon: '📝', steps: ['review_meals', 'review_snacks'] },
+        { id: 'inventory', label: 'Inventory', icon: '🥦', steps: ['inventory'] },
+        { id: 'plan', label: 'Plan', icon: '🍳', steps: ['suggestions', 'draft', 'groceries'] }
     ];
 
     // Progress Breadcrumb Component
     const WizardProgress = ({ currentStep }: { currentStep: string }) => {
-        const currentIndex = WIZARD_STEPS.findIndex(s => s.id === currentStep);
+        const currentPhaseIndex = PHASES.findIndex(p => p.steps.includes(currentStep));
+
         return (
-            <div className="flex items-center justify-center gap-1 mb-8 flex-wrap">
-                {WIZARD_STEPS.map((s, idx) => {
-                    const isActive = s.id === currentStep;
-                    const isCompleted = idx < currentIndex;
+            <div className="flex items-center justify-center gap-4 mb-12">
+                {PHASES.map((p, idx) => {
+                    const isActive = idx === currentPhaseIndex;
+                    const isCompleted = idx < currentPhaseIndex;
+
                     return (
-                        <div key={s.id} className="flex items-center">
-                            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-all ${isActive
-                                ? 'bg-[var(--accent-sage)] text-white font-bold shadow-md'
-                                : isCompleted
-                                    ? 'bg-[var(--bg-secondary)] text-[var(--accent-sage)]'
-                                    : 'text-[var(--text-muted)]'
-                                }`}>
-                                <span>{s.icon}</span>
-                                <span className="hidden sm:inline">{s.label}</span>
+                        <div key={p.id} className="flex items-center gap-4">
+                            <div className="flex flex-col items-center gap-2">
+                                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg transition-all duration-300 ${isActive
+                                    ? 'bg-[var(--accent-sage)] text-white shadow-lg scale-110'
+                                    : isCompleted
+                                        ? 'bg-[var(--accent-sage)] bg-opacity-20 text-[var(--accent-sage)]'
+                                        : 'bg-[var(--bg-secondary)] text-[var(--text-muted)] opacity-50'
+                                    }`}>
+                                    {isCompleted ? '✓' : p.icon}
+                                </div>
+                                <span className={`text-[10px] font-black uppercase tracking-widest ${isActive ? 'text-[var(--accent-sage)]' : 'text-[var(--text-muted)]'
+                                    }`}>
+                                    {p.label}
+                                </span>
                             </div>
-                            {idx < WIZARD_STEPS.length - 1 && (
-                                <span className={`mx-1 ${isCompleted ? 'text-[var(--accent-sage)]' : 'text-[var(--text-muted)]'}`}>→</span>
+                            {idx < PHASES.length - 1 && (
+                                <div className={`h-[2px] w-12 rounded-full ${isCompleted ? 'bg-[var(--accent-sage)] bg-opacity-30' : 'bg-[var(--bg-secondary)]'
+                                    }`} />
                             )}
                         </div>
                     );
@@ -135,24 +141,33 @@ function PlanningWizardContent() {
     const [reviews, setReviews] = useState<ReviewDay[]>([]);
     const [reviewWeek, setReviewWeek] = useState<string | null>(null);
     const [planningWeek, setPlanningWeek] = useState<string | null>(null);
-    const [inventory, setInventory] = useState<InventoryState | null>(null);
-    const [pendingChanges, setPendingChanges] = useState<{ category: string, item: string, quantity: number, type?: 'meal' | 'ingredient', operation: 'add' | 'remove' }[]>([]);
+    const [inventory, setInventory] = useState<NormalizedInventory | null>(null);
+    const [pendingChanges, setPendingChanges] = useState<{ category: string, item: string, quantity: number, type?: 'meal' | 'ingredient', operation: 'add' | 'remove' | 'update' }[]>([]);
     const [newItemInputs, setNewItemInputs] = useState<Record<string, { name: string, qty: number, type?: 'meal' | 'ingredient' }>>({});
     const [submitting, setSubmitting] = useState(false);
-    const [step, setStep] = useState<'review_meals' | 'review_snacks' | 'inventory' | 'leftovers' | 'suggestions' | 'draft' | 'groceries'>('review_meals');
+    const [step, setStep] = useState<'review_meals' | 'review_snacks' | 'inventory' | 'suggestions' | 'draft' | 'groceries'>('review_meals');
+    const [suggestionPhase, setSuggestionPhase] = useState<'dinners' | 'lunches' | 'snacks'>('dinners');
 
     // Suggestions State
     const [suggestions, setSuggestions] = useState<any[]>([]);
     const [selectedSuggestions, setSelectedSuggestions] = useState<string[]>([]);
-    const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
     // Draft State
     const [draftPlan, setDraftPlan] = useState<any>(null);
-    const [selections, setSelections] = useState<{ day: string, recipe_id: string }[]>([]);
+    const [selections, setSelections] = useState<{ day: string, slot: string, recipe_id: string, recipe_name: string }[]>([]);
+    const [suggestionOptions, setSuggestionOptions] = useState<{
+        snacks: { id: string, name: string }[],
+        lunch_recipes: { id: string, name: string }[],
+        lunch_defaults: { kids: string[], adult: string[] }
+    } | null>(null);
+    const [loadingSuggestions, setLoadingSuggestions] = useState(false);
     const [leftoverAssignments, setLeftoverAssignments] = useState<{ day: string, slot: 'lunch' | 'dinner', item: string }[]>([]);
     const [lockedDays, setLockedDays] = useState<string[]>([]);
-    const [isReplacing, setIsReplacing] = useState<string | null>(null);
+    const [isReplacing, setIsReplacing] = useState<{ day: string, slot: string, currentMeal: string } | null>(null);
     const [recipes, setRecipes] = useState<{ id: string; name: string }[]>([]);
+    const [wasteNotSuggestions, setWasteNotSuggestions] = useState<any[]>([]);
+    const [confirmedSelections, setConfirmedSelections] = useState<Record<string, boolean>>({}); // Key: day-slot
+    const [excludedDefaults, setExcludedDefaults] = useState<string[]>([]);
 
     // Shopping List State
     const [shoppingList, setShoppingList] = useState<{ item: string; store: string }[]>([]);
@@ -176,13 +191,13 @@ function PlanningWizardContent() {
         setNewItemInputs(prev => ({ ...prev, [category]: { name: '', qty: 1, type: subType } }));
     };
 
-    const handleRemoveItem = (category: string, item: string) => {
+    const handleRemoveItem = (category: string, item: string, type: 'meal' | 'ingredient' = 'ingredient') => {
         // Find if we are removing a pending add first
         const pendingAddIdx = pendingChanges.findIndex(c => c.category === category && c.item === item && c.operation === 'add');
         if (pendingAddIdx !== -1) {
             setPendingChanges(prev => prev.filter((_, i) => i !== pendingAddIdx));
         } else {
-            setPendingChanges(prev => [...prev, { category, item, quantity: 0, operation: 'remove' }]);
+            setPendingChanges(prev => [...prev, { category, item, quantity: 0, operation: 'remove', type }]);
         }
     };
 
@@ -205,54 +220,143 @@ function PlanningWizardContent() {
         }
     };
 
-    // ... (rest of transitions) ...
-
-    const loadInventory = async () => {
+    // ... (rest of transitions)
+    const loadInventory = React.useCallback(async () => {
         try {
             const response = await getInventory();
-            const data: any = response.inventory || response;
-            // Ensure all items have quantity and type for fridge
-            const processedInventory: InventoryState = {
-                fridge: (data.fridge || []).map((item: any) => ({
-                    item: typeof item === 'string' ? item : item.item,
-                    quantity: typeof item === 'object' && item.quantity ? item.quantity : 1,
-                    unit: typeof item === 'object' && item.unit ? item.unit : 'unit',
-                    type: typeof item === 'object' && item.type ? item.type : (typeof item === 'string' && item.toLowerCase().includes('meal') ? 'meal' : 'ingredient')
-                })),
-                pantry: (data.pantry || []).map((item: any) => ({
-                    item: typeof item === 'string' ? item : item.item,
-                    quantity: typeof item === 'object' && item.quantity ? item.quantity : 1,
-                    unit: typeof item === 'object' && item.unit ? item.unit : 'unit'
-                })),
-                freezer: {
-                    backups: (data.freezer?.backups || []).map((b: any) => ({
-                        meal: b.meal,
-                        servings: b.servings || 1,
-                        frozen_date: b.frozen_date
-                    })),
-                    ingredients: (data.freezer?.ingredients || []).map((i: any) => ({
-                        item: i.item,
-                        quantity: i.quantity || 1,
-                        unit: i.unit || 'unit'
-                    }))
-                },
-                spice_rack: (data.spice_rack || []).map((item: any) => ({
-                    item: typeof item === 'string' ? item : item.item,
-                    quantity: typeof item === 'object' && item.quantity ? item.quantity : 1,
-                    unit: typeof item === 'object' && item.unit ? item.unit : 'unit'
-                }))
-            };
+            const processedInventory = transformInventory(response);
             setInventory(processedInventory);
-            setNewItemInputs({
-                fridge: { name: '', qty: 1, type: 'meal' },
-                pantry: { name: '', qty: 1 },
-                spice_rack: { name: '', qty: 1 }
-            });
-        } catch (error) {
-            showToast('Failed to load inventory.', 'error');
-            console.error('Failed to load inventory:', error);
+            setNewItemInputs({});
+        } catch (e) {
+            showToast('Failed to load inventory', 'error');
         }
-    };
+    }, [showToast]);
+
+    const autoDraftSelections = React.useCallback((phase: 'dinners' | 'lunches' | 'snacks', options: any, currentInventory: any) => {
+        const newSelections = [...selections];
+        const newLeftovers = [...leftoverAssignments];
+        const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+        const workDays = ['mon', 'tue', 'wed', 'thu', 'fri'];
+
+        if (phase === 'dinners') {
+            const availableMeals = (currentInventory?.meals || []).filter((m: any) => m.quantity > 0 && m.location === 'fridge');
+            const wasteNot = wasteNotSuggestions.length > 0 ? wasteNotSuggestions : options.wasteNot || [];
+            const commonDinners = options.dinner_recipes || [];
+
+            days.forEach((day, idx) => {
+                const existingLeftover = newLeftovers.find(l => l.day === day && l.slot === 'dinner');
+                const existingRecipe = newSelections.find(s => s.day === day && (s as any).slot === 'dinner');
+
+                if (!existingLeftover && !existingRecipe) {
+                    // 1. Try to assign a leftover first (FRIDGE ONLY)
+                    const mealWithQty = availableMeals.find((m: any) => {
+                        const assigned = newLeftovers.filter(l => l.item === m.item).length;
+                        return m.quantity - assigned > 0;
+                    });
+
+                    if (mealWithQty) {
+                        newLeftovers.push({ day, slot: 'dinner', item: mealWithQty.item });
+                    } else if (wasteNot[idx]) {
+                        // 2. Use waste-not suggestion
+                        newSelections.push({
+                            day,
+                            slot: 'dinner',
+                            recipe_id: wasteNot[idx].recipe_id || wasteNot[idx].id,
+                            recipe_name: wasteNot[idx].recipe_name || wasteNot[idx].name
+                        });
+                    } else if (commonDinners[idx % commonDinners.length]) {
+                        // 3. Fallback to common recipes
+                        const recipe = commonDinners[idx % commonDinners.length];
+                        newSelections.push({
+                            day,
+                            slot: 'dinner',
+                            recipe_id: recipe.id,
+                            recipe_name: recipe.name
+                        });
+                    }
+                }
+            });
+        }
+        else if (phase === 'lunches') {
+            const availableMeals = (currentInventory?.meals || []).filter((m: any) => m.quantity > 0);
+            const lunchRecipes = options.lunch_recipes || [];
+
+            workDays.forEach(day => {
+                const existingLeftover = newLeftovers.find(l => l.day === day && l.slot === 'lunch');
+                const existingRecipe = newSelections.find(s => s.day === day && (s as any).slot === 'lunch');
+
+                if (!existingLeftover && !existingRecipe) {
+                    // Try to assign a leftover first
+                    const mealWithQty = availableMeals.find((m: any) => {
+                        const assigned = newLeftovers.filter(l => l.item === m.item).length;
+                        return m.quantity - assigned > 0;
+                    });
+
+                    if (mealWithQty) {
+                        newLeftovers.push({ day, slot: 'lunch', item: mealWithQty.item });
+                    } else if (lunchRecipes[0]) {
+                        // fallback to top suggestion
+                        newSelections.push({
+                            day,
+                            slot: 'lunch',
+                            recipe_id: lunchRecipes[0].id,
+                            recipe_name: lunchRecipes[0].name
+                        });
+                    }
+                }
+            });
+        } else if (phase === 'snacks') {
+            const snackRecipes = options.snacks || [];
+            if (snackRecipes.length >= 2) {
+                // School snack (Mon-Fri)
+                const existingSchool = newSelections.find(s => (s as any).slot === 'school_snack');
+                if (!existingSchool) {
+                    workDays.forEach(day => {
+                        newSelections.push({ day, slot: 'school_snack', recipe_id: snackRecipes[0].id, recipe_name: snackRecipes[0].name });
+                    });
+                }
+                // Home snack (Mon-Fri)
+                const existingHome = newSelections.find(s => (s as any).slot === 'home_snack');
+                if (!existingHome) {
+                    workDays.forEach(day => {
+                        newSelections.push({ day, slot: 'home_snack', recipe_id: snackRecipes[1].id, recipe_name: snackRecipes[1].name });
+                    });
+                }
+            }
+        }
+
+        setSelections(newSelections);
+        setLeftoverAssignments(newLeftovers);
+    }, [selections, leftoverAssignments, wasteNotSuggestions]);
+
+    const loadSuggestions = React.useCallback(async () => {
+        setLoadingSuggestions(true);
+        try {
+            let wasteData: any = { suggestions: [] };
+            // If in dinner phase, fetch waste-not recommendations
+            if (suggestionPhase === 'dinners') {
+                wasteData = await getWasteNotSuggestions();
+                setWasteNotSuggestions(wasteData.suggestions || []);
+            }
+
+            const data = await getSuggestOptions(selections, leftoverAssignments);
+            setSuggestionOptions(data);
+
+            // Auto-draft if we just entered the phase and nothing is selected for it
+            autoDraftSelections(suggestionPhase, { ...data, wasteNot: wasteData.suggestions }, inventory);
+        } catch (e) {
+            console.error(e);
+            showToast('Failed to load suggestions', 'error');
+        } finally {
+            setLoadingSuggestions(false);
+        }
+    }, [suggestionPhase, selections, leftoverAssignments, inventory, showToast, autoDraftSelections]);
+
+    useEffect(() => {
+        if (step === 'suggestions') {
+            loadSuggestions();
+        }
+    }, [step, loadSuggestions]);
 
     const handleSaveInventory = async () => {
         setSubmitting(true);
@@ -267,6 +371,13 @@ function PlanningWizardContent() {
                         type: change.type, // For fridge
                         operation: 'add' as const
                     };
+                } else if (change.operation === 'update') {
+                    return {
+                        category: change.category,
+                        item: change.item,
+                        quantity: change.quantity,
+                        operation: 'add' as const // Backend 'add' with existing name increments/updates
+                    };
                 } else {
                     return {
                         category: change.category,
@@ -278,34 +389,111 @@ function PlanningWizardContent() {
 
             if (updates.length > 0) {
                 await bulkUpdateInventory(updates);
-                showToast('Inventory updated successfully!', 'success');
                 setPendingChanges([]); // Clear pending changes after successful update
+                setLoading(true); // Ensure loading state is active while we refresh
                 await loadInventory(); // Reload inventory to reflect changes
             }
-            // Always proceed to next step
-            setStep('leftovers');
+            showToast('Inventory updated!', 'success');
+            setSuggestionPhase('dinners');
+            setStep('suggestions');
         } catch (error) {
             showToast('Failed to update inventory.', 'error');
             console.error('Failed to update inventory:', error);
         } finally {
             setSubmitting(false);
+            setLoading(false);
         }
     };
 
-    const getDisplayList = (category: string) => {
-        const currentItems = inventory ? (inventory as any)[category] : [];
-        const addedItems = pendingChanges.filter(c => c.category === category && c.operation === 'add');
-        const removedItems = pendingChanges.filter(c => c.category === category && c.operation === 'remove').map(c => c.item);
+    const handleUpdateQuantity = (category: string, itemName: string, delta: number, type: 'meal' | 'ingredient' = 'ingredient') => {
+        const displayList = getDisplayList(type === 'meal' ? 'meals' : category);
+        const item = displayList.find(i => {
+            const iName = typeof i === 'string' ? i : (i.item || i.meal);
+            return iName?.toLowerCase() === itemName.toLowerCase();
+        });
+        if (!item) return;
 
-        let list = currentItems.filter((item: any) => !removedItems.includes(typeof item === 'string' ? item : item.item));
+        const currentQty = (typeof item === 'object' ? item.quantity || item.servings : 1) || 1;
+        const newQty = Math.max(0, currentQty + delta);
 
-        addedItems.forEach(added => {
-            const existingIdx = list.findIndex((item: any) => (typeof item === 'string' ? item : item.item) === added.item);
-            if (existingIdx === -1) {
-                list.push({ item: added.item, quantity: added.quantity, unit: 'unit', type: added.type });
-            } else {
-                // If an item was added that already exists, update its quantity
-                list[existingIdx].quantity += added.quantity;
+        if (newQty === 0) {
+            handleRemoveItem(category, itemName);
+        } else {
+            setPendingChanges(prev => {
+                // Remove existing changes for this item
+                const otherChanges = prev.filter(c => !(c.category === category && c.item === itemName));
+                return [...otherChanges, {
+                    category,
+                    item: itemName,
+                    quantity: newQty,
+                    type,
+                    operation: 'update'
+                }];
+            });
+        }
+    };
+
+    const getDisplayList = (mode: string) => {
+        let currentItems: any[] = [];
+        if (!inventory) return [];
+
+        if (mode === 'meals') {
+            currentItems = [...inventory.meals];
+        } else if (mode === 'fridge') {
+            currentItems = [...inventory.ingredients.fridge];
+        } else if (mode === 'frozen_ingredient') {
+            currentItems = [...inventory.ingredients.freezer];
+        } else if (mode === 'pantry' || mode === 'spice_rack') {
+            currentItems = [...inventory.ingredients.pantry];
+        }
+
+        const list = [...currentItems];
+
+        pendingChanges.forEach(change => {
+            let applies = false;
+            if (mode === 'meals') {
+                applies = change.type === 'meal';
+            } else if (mode === 'fridge') {
+                applies = (change.category === 'fridge' || change.category === 'grocery') && change.type === 'ingredient';
+            } else if (mode === 'frozen_ingredient') {
+                applies = change.category === 'frozen_ingredient';
+            } else if (mode === 'pantry' || mode === 'spice_rack') {
+                applies = change.category === 'pantry' || change.category === 'spice_rack';
+            }
+
+            if (!applies) return;
+
+            const name = change.item;
+            const existingIdx = list.findIndex(i => {
+                const iName = typeof i === 'string' ? i : (i.item || i.meal);
+                return iName?.toLowerCase() === name.toLowerCase();
+            });
+
+            if (change.operation === 'remove') {
+                if (existingIdx !== -1) list.splice(existingIdx, 1);
+            } else if (change.operation === 'add') {
+                if (existingIdx === -1) {
+                    list.push({
+                        item: name,
+                        quantity: change.quantity,
+                        unit: 'unit',
+                        type: change.type,
+                        location: mode === 'meals' ? (change.category === 'meals' || change.category === 'freezer' ? 'freezer' : 'fridge') : undefined,
+                        is_new: true
+                    });
+                } else {
+                    const existing = list[existingIdx];
+                    if (typeof existing === 'object') {
+                        existing.quantity = (existing.quantity || 0) + change.quantity;
+                    }
+                }
+            } else if (change.operation === 'update') {
+                if (existingIdx !== -1) {
+                    const existing = list[existingIdx];
+                    if (typeof existing === 'object') {
+                        existing.quantity = change.quantity;
+                    }
+                }
             }
         });
 
@@ -429,7 +617,7 @@ function PlanningWizardContent() {
             setLoading(false);
         };
         load();
-    }, []);
+    }, [searchParams, loadInventory]);
     // ...
 
     // Auto-load draft if missing when on Step 4
@@ -449,7 +637,7 @@ function PlanningWizardContent() {
             };
             fetchDraft();
         }
-    }, [step, draftPlan, planningWeek, selections]);
+    }, [step, draftPlan, planningWeek, selections, leftoverAssignments, showToast]);
 
     // Save state on step change or major data update
     useEffect(() => {
@@ -470,12 +658,13 @@ function PlanningWizardContent() {
                 shoppingList,
                 purchasedItems,
                 customShoppingItems,
-                lockedDays
+                lockedDays,
+                leftoverAssignments
             });
         }, 1000);
 
         return () => clearTimeout(timer);
-    }, [step, reviews, pendingChanges, selections, shoppingList, planningWeek]);
+    }, [step, reviews, pendingChanges, selections, shoppingList, planningWeek, leftoverAssignments, purchasedItems, customShoppingItems, lockedDays]);
 
     // Restore state
     useEffect(() => {
@@ -496,6 +685,7 @@ function PlanningWizardContent() {
                     if (res.state.purchasedItems) setPurchasedItems(res.state.purchasedItems);
                     if (res.state.customShoppingItems) setCustomShoppingItems(res.state.customShoppingItems);
                     if (res.state.lockedDays) setLockedDays(res.state.lockedDays);
+                    if (res.state.leftoverAssignments) setLeftoverAssignments(res.state.leftoverAssignments);
                 }
             } catch (e) {
                 console.error("Failed to restore state", e);
@@ -520,32 +710,67 @@ function PlanningWizardContent() {
         loadRecipes();
     }, []);
 
-    const handleReplacementConfirm = async (newMeal: string) => {
-        if (!isReplacing || !planningWeek) return;
+    const handleReplacementConfirm = async (newMeal: string, requestRecipe: boolean = false, madeStatus: boolean | string = true) => {
+        if (!isReplacing) return;
 
-        // Find recipe ID if possible, otherwise use name as ID (or handle manual entry)
-        // ideally we map name back to ID. 
-        const recipe = recipes.find(r => r.name === newMeal);
-        const recipeId = recipe ? recipe.id : newMeal;
+        const { day, slot } = isReplacing;
 
-        const newSelections = [
-            ...selections.filter(s => s.day !== isReplacing),
-            { day: isReplacing, recipe_id: recipeId }
-        ];
+        // 1. Handle Leftover assignment vs Recipe selection
+        if (madeStatus === 'leftovers') {
+            const newLeftovers = [
+                ...leftoverAssignments.filter(l => !(l.day === day && l.slot === slot)),
+                { day, slot: slot as 'lunch' | 'dinner', item: newMeal }
+            ];
+            setLeftoverAssignments(newLeftovers);
+            // Remove any recipe selection for this slot
+            setSelections(prev => prev.filter(s => !(s.day === day && (s as any).slot === slot)));
+        } else {
+            const recipe = recipes.find(r => r.name === newMeal);
+            const recipeId = recipe ? recipe.id : newMeal;
+            const recipeName = newMeal;
 
-        setSelections(newSelections);
+            let newSelections;
+            if (slot === 'school_snack' || slot === 'home_snack') {
+                // Apply to all work days
+                const workDays = ['mon', 'tue', 'wed', 'thu', 'fri'];
+                newSelections = [
+                    ...selections.filter(s => (s as any).slot !== slot),
+                    ...workDays.map(d => ({ day: d, slot, recipe_id: recipeId, recipe_name: recipeName }))
+                ];
+            } else {
+                newSelections = [
+                    ...selections.filter(s => !(s.day === day && (s as any).slot === slot)),
+                    { day, slot, recipe_id: recipeId, recipe_name: recipeName }
+                ];
+            }
+            setSelections(newSelections);
+            // Remove any leftover assignment for this slot
+            setLeftoverAssignments(prev => prev.filter(l => !(l.day === day && l.slot === slot)));
+        }
+
+        // Auto-confirm the swapped meal
+        setConfirmedSelections(prev => ({ ...prev, [`${day}-${slot}`]: true }));
+
         setIsReplacing(null);
-        setLoading(true); // Show skeleton while regenerating
 
-        try {
-            const res = await generateDraft(planningWeek, newSelections);
-            setDraftPlan(res.plan_data);
-            showToast('Plan updated!', 'success');
-        } catch (e) {
-            showToast('Failed to update plan', 'error');
-            console.error(e);
-        } finally {
-            setLoading(false);
+        // 2. Only generate draft if we're actually in the draft step
+        if (step === 'draft' && planningWeek) {
+            setLoading(true);
+            try {
+                // We need the latest state, but setSelections is async. 
+                // For 'draft' step, it's safer to use the derived newLists
+                // but handleReplacementConfirm is simpler here if it just triggers a refresh.
+                // However, generateDraft takes the full state, so we might need a more robust way.
+                // For now, let's keep it simple as the draft step is less used in the wizard.
+                const res = await generateDraft(planningWeek, selections, lockedDays, leftoverAssignments, excludedDefaults);
+                setDraftPlan(res.plan_data);
+                showToast('Plan updated!', 'success');
+            } catch (e) {
+                showToast('Failed to update plan', 'error');
+                console.error(e);
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
@@ -592,17 +817,36 @@ function PlanningWizardContent() {
                 <WizardProgress currentStep={step} />
 
                 <header className="mb-8">
-                    <div className="flex justify-between items-start mb-4">
-                        <div>
-                            <div className="inline-block px-3 py-1 rounded-full bg-[var(--accent-terracotta)] bg-opacity-20 text-[var(--accent-terracotta)] text-sm font-bold mb-2">
-                                🛒 Step 7 of 7
-                            </div>
-                            <h1 className="text-3xl font-bold">Shopping List</h1>
-                            <p className="text-[var(--text-muted)] mt-2">
-                                Check items as you shop. We'll add them to your inventory when you finalize.
-                            </p>
-                        </div>
-                        <button onClick={() => setStep('draft')} className="btn-secondary whitespace-nowrap">← Back</button>
+                    <div className="flex flex-col items-end gap-3">
+                        <button
+                            onClick={async () => {
+                                setSubmitting(true);
+                                try {
+                                    if (purchasedItems.length > 0) {
+                                        const changes = purchasedItems.map(item => ({
+                                            category: 'fridge',
+                                            item,
+                                            operation: 'add' as const
+                                        }));
+                                        await bulkUpdateInventory(changes);
+                                    }
+                                    await finalizePlan(planningWeek!);
+                                    showToast('Plan finalized and inventory updated!', 'success');
+                                    router.push('/');
+                                } catch (e) {
+                                    showToast('Failed to finalize plan', 'error');
+                                } finally {
+                                    setSubmitting(false);
+                                }
+                            }}
+                            disabled={submitting}
+                            className="btn-premium px-8 py-4 shadow-xl flex items-center gap-2 text-sm"
+                        >
+                            {submitting ? '...' : 'Finalize Plan 🎉'}
+                        </button>
+                        <button onClick={() => setStep('draft')} className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--accent-sage)] transition-colors">
+                            ← Back to Draft
+                        </button>
                     </div>
                 </header>
 
@@ -650,44 +894,13 @@ function PlanningWizardContent() {
                     )}
                 </div>
 
-                <div className="flex justify-end sticky bottom-4">
-                    <button
-                        onClick={async () => {
-                            setSubmitting(true);
-                            try {
-                                // 1. Sync purchased items to inventory (Best guess category: fridge or pantry)
-                                // We'll just put them in fridge for now as that's most common for weekly shopping
-                                if (purchasedItems.length > 0) {
-                                    const changes = purchasedItems.map(item => ({
-                                        category: 'fridge',
-                                        item,
-                                        operation: 'add' as const
-                                    }));
-                                    await bulkUpdateInventory(changes);
-                                }
-
-                                // 2. Finalize
-                                await finalizePlan(planningWeek!);
-                                showToast('Plan finalized and inventory updated!', 'success');
-                                router.push('/');
-                            } catch (e) {
-                                showToast('Failed to finalize plan', 'error');
-                            } finally {
-                                setSubmitting(false);
-                            }
-                        }}
-                        disabled={submitting}
-                        className="btn-primary shadow-xl scale-110"
-                    >
-                        {submitting ? 'Finalizing...' : 'Finalize Plan 🎉'}
-                    </button>
-                </div>
             </main>
         );
     }
 
     // STEP 5: TENTATIVE PLAN UI
     if (step === 'draft') {
+        const dayNames: any = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
         return (
             <main className="container mx-auto max-w-5xl px-4 py-12">
                 <WizardProgress currentStep={step} />
@@ -695,20 +908,15 @@ function PlanningWizardContent() {
                 <header className="mb-8">
                     <div className="flex justify-between items-start mb-4">
                         <div>
-                            <div className="inline-block px-3 py-1 rounded-full bg-[var(--accent-sage)] bg-opacity-20 text-[var(--accent-sage)] text-sm font-bold mb-2">
-                                📋 Step 6 of 7
-                            </div>
                             <h1 className="text-3xl font-bold">Review Your Plan</h1>
                             <p className="text-[var(--text-muted)] mt-2">
                                 Here's the proposed meal plan for {planningWeek}. Lock days you like, edit any you don't.
                             </p>
                         </div>
-                        <div className="flex gap-2">
-                            <button onClick={() => setStep('suggestions')} className="btn-secondary whitespace-nowrap">← Back</button>
+                        <div className="flex flex-col items-end gap-3">
                             <button
                                 onClick={async () => {
                                     setStep('groceries');
-                                    // Pre-fetch shopping list
                                     try {
                                         const res = await getShoppingList(planningWeek!);
                                         setShoppingList(res.shopping_list);
@@ -716,9 +924,12 @@ function PlanningWizardContent() {
                                         console.error(e);
                                     }
                                 }}
-                                className="btn-primary whitespace-nowrap"
+                                className="btn-premium px-8 py-4 shadow-xl flex items-center gap-2 text-sm"
                             >
-                                Looks Good →
+                                Next: Shopping List →
+                            </button>
+                            <button onClick={() => setStep('suggestions')} className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--accent-sage)] transition-colors">
+                                ← Back to Planning
                             </button>
                         </div>
                     </div>
@@ -732,36 +943,96 @@ function PlanningWizardContent() {
                     </div>
                 ) : (
                     <div className="space-y-6">
-                        <div className="grid gap-4">
+                        <div className="grid gap-6">
                             {['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map(day => {
                                 const dinner = draftPlan.dinners?.find((d: any) => d.day === day);
-                                const isSelected = selections.some(s => s.day === day);
+                                const lunch = draftPlan.lunches?.[day];
+                                const snacks = draftPlan.snacks?.[day] || {};
                                 const isLocked = lockedDays.includes(day);
 
                                 return (
-                                    <div key={day} className={`card flex items-center justify-between ${isSelected ? 'border-[var(--accent-sage)] bg-green-50' : ''} ${isLocked ? 'border-l-4 border-l-[var(--accent-sage)]' : ''}`}>
-                                        <div className="flex items-center gap-4">
-                                            <span className="font-mono uppercase text-[var(--accent-sage)] w-12">{day}</span>
-                                            <div>
-                                                <span className="text-lg font-bold block">{dinner?.recipe_id?.replace(/_/g, ' ') || 'No Meal'}</span>
-                                                {isSelected && <span className="text-xs text-[var(--accent-sage)] font-bold uppercase tracking-wider mr-2">Manual Selection</span>}
+                                    <div key={day} className={`card overflow-visible transition-all ${isLocked ? 'border-l-4 border-l-[var(--accent-sage)] bg-green-50/10' : ''}`}>
+                                        <div className="flex justify-between items-center border-b border-[var(--border-subtle)] pb-2 mb-4">
+                                            <div className="flex items-center gap-3">
+                                                <span className="font-mono text-sm uppercase text-[var(--accent-sage)] tracking-widest font-black">{dayNames[day]}</span>
+                                                {isLocked && <span className="text-[10px] bg-[var(--accent-sage)] text-white px-2 py-0.5 rounded-full font-black uppercase tracking-widest">Locked</span>}
                                             </div>
-                                        </div>
-                                        <div className="flex gap-2">
                                             <button
                                                 onClick={() => setLockedDays(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day])}
-                                                className={`p-2 rounded-full ${isLocked ? 'text-[var(--accent-sage)] bg-[var(--bg-secondary)]' : 'text-[var(--text-muted)] hover:bg-[var(--bg-secondary)]'}`}
+                                                className={`p-2 rounded-full transition-all ${isLocked ? 'text-[var(--accent-sage)] bg-white shadow-sm' : 'text-[var(--text-muted)] hover:bg-[var(--bg-secondary)]'}`}
                                                 title={isLocked ? "Unlock Day" : "Lock Day (Keep when regenerating)"}
                                             >
                                                 {isLocked ? '🔒' : '🔓'}
                                             </button>
-                                            <button
-                                                onClick={() => setIsReplacing(day)}
-                                                className="text-[var(--text-muted)] hover:text-[var(--accent-sage)] p-2 rounded-full hover:bg-[var(--bg-secondary)]"
-                                                title="Edit Meal"
-                                            >
-                                                ✏️
-                                            </button>
+                                        </div>
+
+                                        <div className="grid md:grid-cols-3 gap-4">
+                                            {/* Dinner Slot */}
+                                            <div className="flex flex-col p-3 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-subtle)] hover:border-[var(--accent-sage)] transition-colors group">
+                                                <div className="flex justify-between items-start mb-1">
+                                                    <label className="text-[10px] uppercase font-black tracking-widest text-[var(--text-muted)]">Dinner</label>
+                                                    <button
+                                                        onClick={() => setIsReplacing({ day, slot: 'dinner', currentMeal: dinner?.recipe_id || '' })}
+                                                        className="opacity-0 group-hover:opacity-100 text-[var(--accent-sage)] text-xs font-bold"
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                </div>
+                                                <p className="font-bold text-sm line-clamp-2">
+                                                    {dinner?.recipe_name || dinner?.recipe_id?.replace(/_/g, ' ') || 'Not Planned'}
+                                                </p>
+                                                {dinner?.vegetables && dinner.vegetables.length > 0 && (
+                                                    <p className="text-[10px] text-[var(--text-muted)] mt-1 font-medium">🥬 {dinner.vegetables.join(', ')}</p>
+                                                )}
+                                            </div>
+
+                                            {/* Lunch Slot */}
+                                            <div className="flex flex-col p-3 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-subtle)] hover:border-blue-200 transition-colors group">
+                                                <div className="flex justify-between items-start mb-1">
+                                                    <label className="text-[10px] uppercase font-black tracking-widest text-[var(--text-muted)]">Lunch</label>
+                                                    <button
+                                                        onClick={() => setIsReplacing({ day, slot: 'lunch', currentMeal: lunch?.recipe_name || '' })}
+                                                        className="opacity-0 group-hover:opacity-100 text-blue-500 text-xs font-bold"
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                </div>
+                                                <p className="font-bold text-sm line-clamp-2">
+                                                    {lunch?.recipe_name || 'Not Planned'}
+                                                </p>
+                                                {lunch?.prep_style && (
+                                                    <p className="text-[10px] text-blue-500 mt-1 font-black uppercase tracking-widest">{lunch.prep_style.replace('_', ' ')}</p>
+                                                )}
+                                            </div>
+
+                                            {/* Snacks Slot */}
+                                            <div className="flex flex-col p-3 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-subtle)] hover:border-amber-200 transition-colors group">
+                                                <div className="flex justify-between items-start mb-1">
+                                                    <label className="text-[10px] uppercase font-black tracking-widest text-[var(--text-muted)]">Snacks</label>
+                                                    <div className="flex gap-2 opacity-0 group-hover:opacity-100">
+                                                        <button
+                                                            onClick={() => setIsReplacing({ day, slot: 'school_snack', currentMeal: snacks.school_snack || '' })}
+                                                            className="text-amber-500 text-[10px] font-bold"
+                                                        >
+                                                            Edit School
+                                                        </button>
+                                                        <button
+                                                            onClick={() => setIsReplacing({ day, slot: 'home_snack', currentMeal: snacks.home_snack || '' })}
+                                                            className="text-amber-500 text-[10px] font-bold"
+                                                        >
+                                                            Edit Home
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <p className="text-xs">
+                                                        <span className="text-[var(--text-muted)] font-medium">🏫</span> {snacks.school_snack || 'None'}
+                                                    </p>
+                                                    <p className="text-xs">
+                                                        <span className="text-[var(--text-muted)] font-medium">🏠</span> {snacks.home_snack || 'None'}
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 );
@@ -774,7 +1045,7 @@ function PlanningWizardContent() {
                                     setLoading(true);
                                     try {
                                         // Pass lockedDays to regenerate everything else
-                                        const res = await generateDraft(planningWeek!, selections, lockedDays);
+                                        const res = await generateDraft(planningWeek!, selections, lockedDays, leftoverAssignments, excludedDefaults);
                                         setDraftPlan(res.plan_data);
                                         showToast('Plan regenerated!', 'success');
                                     } catch (e) {
@@ -785,7 +1056,7 @@ function PlanningWizardContent() {
                                     }
                                 }}
                                 disabled={loading}
-                                className="text-sm text-[var(--text-muted)] hover:text-[var(--foreground)] underline"
+                                className="text-sm font-black uppercase tracking-widest text-[var(--accent-sage)] hover:text-[var(--foreground)] flex items-center gap-2 bg-white px-6 py-3 rounded-full shadow-sm border border-[var(--border-subtle)] hover:shadow-md transition-all"
                             >
                                 🔄 Regenerate Unlocked Days
                             </button>
@@ -795,10 +1066,11 @@ function PlanningWizardContent() {
 
                 {isReplacing && (
                     <ReplacementModal
-                        day={isReplacing}
-                        currentMeal={draftPlan?.dinners?.find((d: any) => d.day === isReplacing)?.recipe_id || ''}
+                        day={isReplacing.day}
+                        currentMeal={isReplacing.currentMeal}
                         recipes={recipes}
-                        onConfirm={(newMeal) => handleReplacementConfirm(newMeal)}
+                        leftoverInventory={inventory?.meals || []}
+                        onConfirm={(newMeal, req, status) => handleReplacementConfirm(newMeal, req, status)}
                         onCancel={() => setIsReplacing(null)}
                     />
                 )}
@@ -806,199 +1078,203 @@ function PlanningWizardContent() {
         );
     }
 
-    // STEP 4: GENERATE PLAN
-    if (step === 'suggestions') {
-        return (
-            <main className="container mx-auto max-w-3xl px-4 py-12">
-                <WizardProgress currentStep={step} />
+    const WeeklyMealGrid = ({ phase }: { phase: 'dinners' | 'lunches' | 'snacks' }) => {
+        const days = phase === 'snacks' ? ['mon', 'tue', 'wed', 'thu', 'fri'] : ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+        const displayDays = phase === 'lunches' ? ['mon', 'tue', 'wed', 'thu', 'fri'] : days;
 
-                <header className="mb-8">
-                    <div className="flex justify-between items-start mb-4">
-                        <div>
-                            <div className="inline-block px-3 py-1 rounded-full bg-[var(--accent-gold)] bg-opacity-20 text-[var(--accent-gold)] text-sm font-bold mb-2">
-                                🧑‍🍳 Step 5 of 7
-                            </div>
-                            <h1 className="text-3xl font-bold">Generate Your Plan</h1>
-                            <p className="text-[var(--text-muted)] mt-2">
-                                Let's create a balanced meal plan based on your inventory.
-                            </p>
-                        </div>
-                        <button onClick={() => setStep('inventory')} className="btn-secondary whitespace-nowrap">
-                            ← Back
-                        </button>
-                    </div>
-                </header>
+        const getSlotContent = (day: string, slot: string) => {
+            const leftover = leftoverAssignments.find(l => l.day === day && l.slot === slot);
+            if (leftover) return { type: 'Leftover', name: leftover.item, color: 'purple' };
 
-                <div className="card text-center py-12">
-                    <div className="mb-6 text-6xl">🧑‍🍳</div>
-                    <h3 className="text-2xl font-bold mb-4">Ready to build your plan?</h3>
-                    <p className="text-[var(--text-muted)] mb-8 max-w-md mx-auto">
-                        We'll use your inventory and history to suggest a balanced meal plan for the week of {planningWeek}.
-                    </p>
-                    <button
-                        onClick={async () => {
-                            setSubmitting(true);
-                            try {
-                                // Initialize the week
-                                await createWeek(planningWeek!);
-                                // Fetch the draft
-                                const res = await generateDraft(planningWeek!, selections, [], leftoverAssignments);
-                                setDraftPlan(res.plan_data);
-                                setStep('draft');
-                            } catch (e) {
-                                console.error(e);
-                                showToast('Failed to generate plan', 'error');
-                            } finally {
-                                setSubmitting(false);
-                            }
-                        }}
-                        disabled={submitting}
-                        className="btn-primary text-lg px-8 py-4 shadow-lg hover:scale-105 transition-transform"
-                    >
-                        {submitting ? 'Chef is thinking...' : 'Generate Plan ✨'}
-                    </button>
-                </div>
-            </main>
-        );
-    }
-    // STEP 4: USE UP LEFTOVERS UI
-    if (step === 'leftovers') {
-        const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-        const dayNames = { mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri', sat: 'Sat', sun: 'Sun' };
+            const selection = selections.find(s => s.day === day && (s as any).slot === slot);
+            if (selection) return { type: 'Recipe', name: selection.recipe_name, color: slot === 'dinner' ? 'sage' : 'blue' };
 
-        // Get leftover meals from inventory
-        const leftoverMeals = (inventory?.fridge || [])
-            .filter((item: any) =>
-                (item.type === 'meal' || (typeof item.item === 'string' && item.item.toLowerCase().includes('meal'))) &&
-                item.quantity > 0
-            )
-            .map((item: any) => ({ item: item.item, quantity: item.quantity }));
-
-        const handleAddAssignment = (item: string) => {
-            setLeftoverAssignments([...leftoverAssignments, { day: 'mon', slot: 'lunch', item }]);
+            return null;
         };
 
-        const handleRemoveAssignment = (index: number) => {
-            setLeftoverAssignments(leftoverAssignments.filter((_, i) => i !== index));
-        };
-
-        const handleUpdateAssignment = (index: number, field: string, value: string) => {
-            const newAssignments = [...leftoverAssignments];
-            (newAssignments[index] as any)[field] = value;
-            setLeftoverAssignments(newAssignments);
-        };
+        const slots = phase === 'dinners' ? ['dinner'] :
+            phase === 'lunches' ? ['lunch'] :
+                ['school_snack', 'home_snack'];
 
         return (
-            <main className="container mx-auto max-w-4xl px-4 py-12">
-                <WizardProgress currentStep={step} />
+            <div className={`grid grid-cols-1 ${displayDays.length > 1 ? 'md:grid-cols-7' : 'md:grid-cols-2'} gap-4 mb-12`}>
+                {displayDays.map(day => (
+                    <div key={day} className="space-y-3">
+                        <h3 className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] px-1">{day}</h3>
+                        {slots.map(slot => {
+                            const content = getSlotContent(day, slot);
+                            const isConfirmed = confirmedSelections[`${day}-${slot}`];
 
-                <header className="mb-8">
-                    <div className="flex justify-between items-start mb-4">
-                        <div>
-                            <div className="inline-block px-3 py-1 rounded-full bg-[var(--accent-terracotta)] bg-opacity-20 text-[var(--accent-terracotta)] text-sm font-bold mb-2">
-                                🍱 Step 4 of 7
-                            </div>
-                            <h1 className="text-3xl font-bold">Use Up Leftovers</h1>
-                            <p className="text-[var(--text-muted)] mt-2">
-                                Book your available leftovers into specific slots for next week.
-                            </p>
-                        </div>
-                        <div className="flex gap-2">
-                            <button onClick={() => setStep('inventory')} className="btn-secondary">
-                                ← Inventory
-                            </button>
-                            <button onClick={() => setStep('suggestions')} className="btn-primary">
-                                Next: Generate →
-                            </button>
-                        </div>
-                    </div>
-                </header>
-
-                <div className="grid md:grid-cols-3 gap-8">
-                    {/* Leftover Library */}
-                    <div className="md:col-span-1">
-                        <div className="card sticky top-24">
-                            <h3 className="text-sm font-bold uppercase tracking-widest text-[var(--text-muted)] mb-4 pb-2 border-b border-[var(--border-subtle)]">Available Leftovers</h3>
-                            {leftoverMeals.length === 0 ? (
-                                <p className="text-sm text-[var(--text-muted)] italic">No leftovers found in your fridge.</p>
-                            ) : (
-                                <ul className="space-y-3">
-                                    {leftoverMeals.map((meal, idx) => (
-                                        <li key={idx} className="flex justify-between items-center bg-[var(--bg-secondary)] p-3 rounded-lg border border-[var(--border-subtle)]">
-                                            <div className="flex flex-col">
-                                                <span className="font-bold text-sm">{meal.item}</span>
-                                                <span className="text-[10px] text-[var(--accent-sage)] font-bold">{meal.quantity} servings left</span>
-                                            </div>
-                                            <button
-                                                onClick={() => handleAddAssignment(meal.item)}
-                                                className="w-8 h-8 rounded-full bg-[var(--bg-primary)] border border-[var(--border-subtle)] flex items-center justify-center hover:bg-[var(--accent-sage)] hover:text-white transition-colors"
-                                            >
-                                                +
-                                            </button>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Assignments */}
-                    <div className="md:col-span-2 space-y-4">
-                        <h3 className="text-sm font-bold uppercase tracking-widest text-[var(--text-muted)] mb-4">Your Plan Assignments</h3>
-
-                        {leftoverAssignments.length === 0 ? (
-                            <div className="p-12 border-2 border-dashed border-[var(--border-subtle)] rounded-xl flex flex-col items-center justify-center text-[var(--text-muted)]">
-                                <span className="text-4xl mb-2">📅</span>
-                                <p>Click the + button on a leftover to assign it.</p>
-                            </div>
-                        ) : (
-                            <div className="space-y-3">
-                                {leftoverAssignments.map((assignment, idx) => (
-                                    <div key={idx} className="flex gap-3 items-center bg-[var(--bg-primary)] p-4 rounded-xl border border-[var(--border-subtle)] shadow-sm animate-in slide-in-from-right-2">
-                                        <div className="flex-grow">
-                                            <span className="text-xs uppercase font-bold text-[var(--accent-terracotta)] block mb-1">Eating {assignment.item} on...</span>
-                                            <div className="flex gap-2">
-                                                <select
-                                                    value={assignment.day}
-                                                    onChange={(e) => handleUpdateAssignment(idx, 'day', e.target.value)}
-                                                    className="p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm font-bold uppercase"
-                                                >
-                                                    {days.map(d => <option key={d} value={d}>{(dayNames as any)[d]}</option>)}
-                                                </select>
-                                                <select
-                                                    value={assignment.slot}
-                                                    onChange={(e) => handleUpdateAssignment(idx, 'slot', e.target.value as any)}
-                                                    className="p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm font-bold uppercase"
-                                                >
-                                                    <option value="lunch">Lunch</option>
-                                                    <option value="dinner">Dinner</option>
-                                                </select>
-                                            </div>
+                            return (
+                                <div key={slot} className={`card p-4 min-h-[140px] flex flex-col justify-between transition-all ${isConfirmed ? 'border-[var(--accent-sage)] bg-green-50/30' : 'border-dashed border-gray-200 bg-white'}`}>
+                                    <div className="flex flex-col gap-1">
+                                        <div className="flex justify-between items-start">
+                                            <span className={`text-[8px] font-black uppercase tracking-tight px-1.5 py-0.5 rounded leading-none ${slot === 'school_snack' ? 'bg-amber-100 text-amber-700' :
+                                                slot === 'home_snack' ? 'bg-orange-100 text-orange-700' :
+                                                    content?.type === 'Leftover' ? 'bg-purple-100 text-purple-700' :
+                                                        'bg-blue-100 text-blue-700'
+                                                }`}>
+                                                {slot === 'school_snack' ? 'School' : slot === 'home_snack' ? 'Home' : content?.type || slot}
+                                            </span>
+                                            {isConfirmed && <span className="text-[var(--accent-sage)] text-xs">✓</span>}
                                         </div>
+                                        <p className="text-sm font-bold leading-tight mt-2 line-clamp-3 h-[3.5em]">
+                                            {content?.name || 'Empty'}
+                                        </p>
+                                    </div>
+
+                                    <div className="flex flex-col gap-2 mt-4">
+                                        {!isConfirmed ? (
+                                            <button
+                                                onClick={() => setConfirmedSelections(prev => ({ ...prev, [`${day}-${slot}`]: true }))}
+                                                className="w-full py-2 bg-[var(--accent-sage)] text-white text-[9px] font-black uppercase tracking-widest rounded-lg shadow-sm hover:opacity-90 transition-all"
+                                            >
+                                                Confirm
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={() => setConfirmedSelections(prev => ({ ...prev, [`${day}-${slot}`]: false }))}
+                                                className="w-full py-2 bg-white border border-[var(--accent-sage)] text-[var(--accent-sage)] text-[9px] font-black uppercase tracking-widest rounded-lg shadow-sm hover:bg-green-50 transition-all"
+                                            >
+                                                Confirmed
+                                            </button>
+                                        )}
                                         <button
-                                            onClick={() => handleRemoveAssignment(idx)}
-                                            className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)] p-2"
+                                            onClick={() => setIsReplacing({ day, slot, currentMeal: content?.name || '' })}
+                                            className="w-full py-2 bg-gray-50 text-[var(--text-muted)] text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-gray-100 transition-all"
                                         >
-                                            <span className="text-xl">×</span>
+                                            Swap
                                         </button>
                                     </div>
-                                ))}
-                            </div>
-                        )}
-
-                        {leftoverAssignments.length > 0 && (
-                            <p className="text-xs text-[var(--text-muted)] italic text-center mt-4">
-                                These will be pre-filled in your draft meal plan.
-                            </p>
-                        )}
+                                </div>
+                            );
+                        })}
                     </div>
-                </div>
+                ))}
+            </div>
+        );
+    };
 
-                <div className="flex justify-end mt-12 mb-8">
-                    <button onClick={() => setStep('suggestions')} className="btn-primary shadow-xl scale-110 px-10 py-4">
-                        Next: Generate Draft →
-                    </button>
-                </div>
+    // STEP 2: SUGGESTIONS (Dinners, Lunches, Snacks)
+    if (step === 'suggestions') {
+        const toggleSelection = (recipe: { id: string, name: string }, slot: string) => {
+            const days = ['mon', 'tue', 'wed', 'thu', 'fri'];
+            const alreadySelected = selections.find(s => (s as any).slot === slot && s.recipe_id === recipe.id);
+
+            if (alreadySelected) {
+                setSelections(prev => prev.filter(s => !((s as any).slot === slot && s.recipe_id === recipe.id)));
+            } else {
+                // Remove existing for this slot across all days
+                const baseSelections = selections.filter(s => (s as any).slot !== slot);
+                const newSelections = days.map(day => ({
+                    day,
+                    slot,
+                    recipe_id: recipe.id,
+                    recipe_name: recipe.name
+                }));
+                setSelections([...baseSelections, ...newSelections]);
+            }
+        };
+
+        const toggleDaySelection = (recipe: { id: string, name: string }, slot: string, day: string) => {
+            const alreadySelected = selections.find(s => s.day === day && (s as any).slot === slot && s.recipe_id === recipe.id);
+
+            if (alreadySelected) {
+                setSelections(prev => prev.filter(s => !(s.day === day && (s as any).slot === slot)));
+            } else {
+                const baseSelections = selections.filter(s => !(s.day === day && (s as any).slot === slot));
+                setSelections([...baseSelections, {
+                    day,
+                    slot,
+                    recipe_id: recipe.id,
+                    recipe_name: recipe.name
+                }]);
+            }
+        };
+
+        const isSlotSelected = (recipeId: string, slot: string, day?: string) => {
+            if (day) {
+                return selections.some(s => s.day === day && (s as any).slot === slot && s.recipe_id === recipeId);
+            }
+            return selections.some(s => (s as any).slot === slot && s.recipe_id === recipeId);
+        };
+
+        return (
+            <main className="container mx-auto max-w-5xl px-4 py-12">
+                <WizardProgress currentStep={step} />
+
+                <header className="mb-12">
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <div className="flex items-center gap-3 mb-2">
+                                <span className="text-2xl">{suggestionPhase === 'dinners' ? '🍳' : suggestionPhase === 'lunches' ? '🍱' : '🍿'}</span>
+                                <h1 className="text-3xl font-bold tracking-tight">
+                                    {suggestionPhase === 'dinners' ? 'Confirm Dinners' :
+                                        suggestionPhase === 'lunches' ? 'Confirm Lunches' : 'Confirm Snacks'}
+                                </h1>
+                            </div>
+                            <p className="text-[var(--text-muted)] max-w-xl">
+                                {suggestionPhase === 'dinners'
+                                    ? 'We’ve auto-filled your week with Waste-Not suggestions. Confirm or swap as needed.' :
+                                    suggestionPhase === 'lunches'
+                                        ? 'Lunches pre-filled using fridge leftovers first, then context-aware recipes.'
+                                        : 'Snacks confirmed for school and home. Adjust if the kids need something else!'
+                                }
+                            </p>
+                        </div>
+                        <div className="flex flex-col items-end gap-3">
+                            <button
+                                onClick={async () => {
+                                    if (suggestionPhase === 'dinners') {
+                                        setSuggestionPhase('lunches');
+                                        window.scrollTo(0, 0);
+                                    } else if (suggestionPhase === 'lunches') {
+                                        setSuggestionPhase('snacks');
+                                        window.scrollTo(0, 0);
+                                    } else {
+                                        setSubmitting(true);
+                                        try {
+                                            await createWeek(planningWeek!);
+                                            const res = await generateDraft(planningWeek!, selections, [], leftoverAssignments, excludedDefaults);
+                                            setDraftPlan(res.plan_data);
+                                            setStep('draft');
+                                        } catch (e) {
+                                            console.error(e);
+                                            showToast('Failed to generate plan', 'error');
+                                        } finally {
+                                            setSubmitting(false);
+                                        }
+                                    }
+                                }}
+                                disabled={submitting}
+                                className="btn-premium px-8 py-4 shadow-xl flex items-center gap-2 text-sm"
+                            >
+                                {submitting ? '...' : (suggestionPhase === 'lunches' ? 'Next: Plan Snacks →' : suggestionPhase === 'dinners' ? 'Next: Plan Lunches →' : 'Review Draft ✨')}
+                            </button>
+                            <button onClick={() => setStep('inventory')} className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--accent-sage)] transition-colors">
+                                ← Back to Inventory
+                            </button>
+                        </div>
+                    </div>
+                </header>
+
+                {loadingSuggestions || !suggestionOptions ? (
+                    <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
+                        {[1, 2, 3, 4, 5, 6, 7].map(i => <Skeleton key={i} className="h-48 w-full rounded-2xl" />)}
+                    </div>
+                ) : (
+                    <WeeklyMealGrid phase={suggestionPhase} />
+                )}
+                {isReplacing && (
+                    <ReplacementModal
+                        day={isReplacing.day}
+                        currentMeal={isReplacing.currentMeal}
+                        recipes={recipes}
+                        leftoverInventory={inventory?.meals || []}
+                        onConfirm={(newMeal, req, status) => handleReplacementConfirm(newMeal, req, status)}
+                        onCancel={() => setIsReplacing(null)}
+                    />
+                )}
             </main>
         );
     }
@@ -1012,145 +1288,271 @@ function PlanningWizardContent() {
                 <header className="mb-8">
                     <div className="flex justify-between items-start mb-4">
                         <div>
-                            <div className="inline-block px-3 py-1 rounded-full bg-[var(--accent-sage)] bg-opacity-20 text-[var(--accent-sage)] text-sm font-bold mb-2">
-                                🥦 Step 3 of 7
-                            </div>
                             <h1 className="text-3xl font-bold">Update Inventory</h1>
                             <p className="text-[var(--text-muted)] mt-1">Planning for week of: <strong>{planningWeek}</strong></p>
                         </div>
-                        <div className="flex gap-2">
-                            <button onClick={() => setStep('review_snacks')} className="btn-secondary whitespace-nowrap">
-                                ← Back
+                        <div className="flex flex-col items-end gap-3">
+                            <button onClick={handleSaveInventory} disabled={submitting} className="btn-premium px-8 py-4 shadow-xl flex items-center gap-2 text-sm">
+                                {submitting ? '...' : 'Next: Plan Week →'}
                             </button>
-                            <button onClick={handleSaveInventory} disabled={submitting} className="btn-primary whitespace-nowrap">
-                                {submitting ? 'Saving...' : 'Continue →'}
+                            <button onClick={() => setStep('review_snacks')} className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--accent-sage)] transition-colors">
+                                ← Back to Snacks
                             </button>
                         </div>
                     </div>
                 </header>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {/* Fridge Section - Split into Meals vs Ingredients */}
-                    <div className="card lg:col-span-2">
-                        <h3 className="text-xl mb-4 border-b border-[var(--border-subtle)] pb-2">🥦 Fridge</h3>
-                        <div className="grid md:grid-cols-2 gap-8">
-                            {/* Leftover Meals */}
+                <div className="space-y-12">
+                    {/* MEALS SECTION: The "Ready-to-Eat" unified view */}
+                    <section className="card p-8 border-2 border-[var(--accent-sage)] bg-[var(--bg-primary)] shadow-xl relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 opacity-10 text-6xl">🍱</div>
+                        <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                            <span className="p-2 bg-[var(--accent-sage)] bg-opacity-20 rounded-lg">🍱</span>
+                            Ready-to-Eat / Leftovers
+                        </h2>
+
+                        <div className="grid md:grid-cols-2 gap-12">
+                            {/* Fridge Leftovers */}
                             <div>
-                                <h4 className="text-sm font-bold uppercase text-[var(--accent-sage)] mb-2">Leftover Meals</h4>
-                                <div className="flex gap-2 mb-4">
+                                <h3 className="text-xs font-black uppercase tracking-widest text-[var(--accent-sage)] mb-4 flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-[var(--accent-sage)]"></span>
+                                    In the Fridge
+                                </h3>
+
+                                <div className="flex gap-2 mb-6">
                                     <input
                                         type="text"
-                                        placeholder="Meal name..."
+                                        placeholder="Add fridge leftover..."
                                         value={newItemInputs['fridge']?.type === 'meal' ? newItemInputs['fridge']?.name : ''}
                                         onChange={e => setNewItemInputs(prev => ({ ...prev, 'fridge': { ...prev['fridge'], name: e.target.value, type: 'meal' } }))}
                                         onKeyDown={e => e.key === 'Enter' && handleAddItem('fridge', 'meal')}
-                                        className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
+                                        className="flex-1 p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-xl text-sm focus:ring-2 focus:ring-[var(--accent-sage)]"
                                     />
-                                    <input
-                                        type="number"
-                                        placeholder="#"
-                                        min="1"
-                                        className="w-16 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
-                                        value={newItemInputs['fridge']?.type === 'meal' ? (newItemInputs['fridge']?.qty || 1) : 1}
-                                        onChange={e => setNewItemInputs(prev => ({ ...prev, 'fridge': { ...prev['fridge'], qty: parseInt(e.target.value) || 1, type: 'meal' } }))}
-                                    />
-                                    <button onClick={() => handleAddItem('fridge', 'meal')} className="btn-secondary px-3">+</button>
+                                    <div className="flex flex-col">
+                                        <input
+                                            type="number"
+                                            placeholder="#"
+                                            min="1"
+                                            className="w-14 p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-xl text-sm font-bold text-center"
+                                            value={newItemInputs['fridge']?.type === 'meal' ? (newItemInputs['fridge']?.qty || 1) : 1}
+                                            onChange={e => setNewItemInputs(prev => ({ ...prev, 'fridge': { ...prev['fridge'], qty: parseInt(e.target.value) || 1, type: 'meal' } }))}
+                                        />
+                                    </div>
+                                    <button onClick={() => handleAddItem('fridge', 'meal')} className="bg-[var(--accent-sage)] text-white p-3 rounded-xl hover:opacity-90 transition-all font-bold shadow-sm">+</button>
                                 </div>
-                                <ul className="space-y-2">
-                                    {getDisplayList('fridge').filter((i: any) => i.type === 'meal' || (typeof i === 'string' && i.toLowerCase().includes('meal'))).map((item: any, idx: number) => {
+
+                                <ul className="space-y-3">
+                                    {getDisplayList('meals').filter(i => i.location !== 'freezer').map((item: any, idx: number) => {
                                         const name = typeof item === 'string' ? item : item.item;
                                         const qty = typeof item === 'object' ? item.quantity : 1;
-                                        const isNew = pendingChanges.some(c => c.category === 'fridge' && c.item === name && c.operation === 'add');
+                                        const isNew = item.is_new || pendingChanges.some(c => c.category === 'fridge' && c.item === name && c.operation === 'add');
                                         return (
-                                            <li key={`meal-${name}-${idx}`} className={`flex justify-between items-center text-sm p-2 rounded ${isNew ? 'bg-[var(--bg-secondary)] border-l-2 border-[var(--accent-sage)]' : ''}`}>
-                                                <span>{name} <span className="text-xs text-[var(--text-muted)]">({qty})</span></span>
-                                                <button onClick={() => handleRemoveItem('fridge', name)} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)]">×</button>
+                                            <li key={`fridge-meal-${name}-${idx}`} className={`flex justify-between items-center text-sm p-3 rounded-xl transition-all ${isNew ? 'bg-green-50 border-l-4 border-[var(--accent-sage)] shadow-sm animate-in slide-in-from-left-2' : 'bg-[var(--bg-secondary)]/40 hover:bg-[var(--bg-secondary)]/60'}`}>
+                                                <span className="font-medium flex-1">{name}</span>
+                                                <div className="flex items-center gap-3">
+                                                    <div className="flex items-center bg-white/50 rounded-lg p-1 border border-[var(--border-subtle)]">
+                                                        <button onClick={() => handleUpdateQuantity('fridge', name, -1, 'meal')} className="w-6 h-6 flex items-center justify-center text-[var(--accent-terracotta)] hover:bg-black/5 rounded">-</button>
+                                                        <span className="w-8 text-center text-xs font-bold">{qty}</span>
+                                                        <button onClick={() => handleUpdateQuantity('fridge', name, 1, 'meal')} className="w-6 h-6 flex items-center justify-center text-[var(--accent-sage)] hover:bg-black/5 rounded">+</button>
+                                                    </div>
+                                                    <button onClick={() => handleRemoveItem('fridge', name, 'meal')} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)] p-1">×</button>
+                                                </div>
                                             </li>
                                         );
                                     })}
                                 </ul>
                             </div>
 
-                            {/* Ingredients */}
+                            {/* Freezer Backups */}
                             <div>
-                                <h4 className="text-sm font-bold uppercase text-[var(--accent-gold)] mb-2">Ingredients / Produce</h4>
+                                <h3 className="text-xs font-black uppercase tracking-widest text-blue-500 mb-4 flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                                    In the Freezer
+                                </h3>
+
+                                <div className="flex gap-2 mb-6">
+                                    <input
+                                        type="text"
+                                        placeholder="Add freezer meal..."
+                                        value={newItemInputs['meals']?.name || ''}
+                                        onChange={e => setNewItemInputs(prev => ({ ...prev, 'meals': { ...prev['meals'], name: e.target.value, type: 'meal' } }))}
+                                        onKeyDown={e => e.key === 'Enter' && handleAddItem('meals', 'meal')}
+                                        className="flex-1 p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-xl text-sm focus:ring-2 focus:ring-blue-500"
+                                    />
+                                    <div className="flex flex-col">
+                                        <input
+                                            type="number"
+                                            placeholder="#"
+                                            min="1"
+                                            className="w-14 p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-xl text-sm font-bold text-center"
+                                            value={newItemInputs['meals']?.qty || 4}
+                                            onChange={e => setNewItemInputs(prev => ({ ...prev, 'meals': { ...prev['meals'], qty: parseInt(e.target.value) || 1 } }))}
+                                        />
+                                    </div>
+                                    <button onClick={() => handleAddItem('meals', 'meal')} className="bg-blue-500 text-white p-3 rounded-xl hover:opacity-90 transition-all font-bold shadow-sm">+</button>
+                                </div>
+
+                                <ul className="space-y-3">
+                                    {getDisplayList('meals').filter(i => i.location === 'freezer').map((item: any, idx: number) => {
+                                        const name = typeof item === 'string' ? item : item.item;
+                                        const qty = typeof item === 'object' ? item.quantity : 1;
+                                        const isNew = item.is_new || pendingChanges.some(c => c.category === 'meals' && c.item === name && c.operation === 'add');
+                                        return (
+                                            <li key={`freezer-meal-${name}-${idx}`} className={`flex justify-between items-center text-sm p-3 rounded-xl transition-all ${isNew ? 'bg-blue-50 border-l-4 border-blue-500 shadow-sm animate-in slide-in-from-left-2' : 'bg-[var(--bg-secondary)]/40 hover:bg-[var(--bg-secondary)]/60'}`}>
+                                                <span className="font-medium flex-1">{name}</span>
+                                                <div className="flex items-center gap-3">
+                                                    <div className="flex items-center bg-white/50 rounded-lg p-1 border border-[var(--border-subtle)]">
+                                                        <button onClick={() => handleUpdateQuantity('meals', name, -1, 'meal')} className="w-6 h-6 flex items-center justify-center text-[var(--accent-terracotta)] hover:bg-black/5 rounded">-</button>
+                                                        <span className="w-8 text-center text-xs font-bold">{qty}</span>
+                                                        <button onClick={() => handleUpdateQuantity('meals', name, 1, 'meal')} className="w-6 h-6 flex items-center justify-center text-blue-500 hover:bg-black/5 rounded">+</button>
+                                                    </div>
+                                                    <button onClick={() => handleRemoveItem('meals', name, 'meal')} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)] p-1">×</button>
+                                                </div>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* INGREDIENTS SECTION: Split by Storage */}
+                    <section className="space-y-6">
+                        <h2 className="text-xl font-bold flex items-center gap-2 px-2">
+                            <span className="p-2 bg-[var(--accent-gold)] bg-opacity-20 rounded-lg">🥑</span>
+                            Ingredients & Produce
+                        </h2>
+
+                        <div className="grid md:grid-cols-3 gap-6">
+                            {/* Fridge Ingredients */}
+                            <div className="card border-t-4 border-[var(--accent-gold)]">
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-[var(--accent-gold)] mb-4 pb-2 border-b border-[var(--border-subtle)] flex justify-between">
+                                    Fridge
+                                    <span className="opacity-50 font-normal">{getDisplayList('fridge').length} items</span>
+                                </h4>
                                 <div className="flex gap-2 mb-4">
                                     <input
                                         type="text"
-                                        placeholder="Ingredient..."
+                                        placeholder="Add to fridge..."
                                         value={newItemInputs['fridge']?.type === 'ingredient' ? newItemInputs['fridge']?.name : ''}
                                         onChange={e => setNewItemInputs(prev => ({ ...prev, 'fridge': { ...prev['fridge'], name: e.target.value, type: 'ingredient' } }))}
                                         onKeyDown={e => e.key === 'Enter' && handleAddItem('fridge', 'ingredient')}
-                                        className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
+                                        className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-xs"
                                     />
-                                    <input
-                                        type="number"
-                                        placeholder="#"
-                                        min="1"
-                                        className="w-16 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
-                                        value={newItemInputs['fridge']?.type === 'ingredient' ? (newItemInputs['fridge']?.qty || 1) : 1}
-                                        onChange={e => setNewItemInputs(prev => ({ ...prev, 'fridge': { ...prev['fridge'], qty: parseInt(e.target.value) || 1, type: 'ingredient' } }))}
-                                    />
-                                    <button onClick={() => handleAddItem('fridge', 'ingredient')} className="btn-secondary px-3">+</button>
+                                    <button onClick={() => handleAddItem('fridge', 'ingredient')} className="bg-[var(--accent-gold)] text-white px-3 py-1 rounded shadow-sm hover:opacity-90">+</button>
                                 </div>
-                                <ul className="space-y-2">
-                                    {getDisplayList('fridge').filter((i: any) => i.type !== 'meal' && !(typeof i === 'string' && i.toLowerCase().includes('meal'))).map((item: any, idx: number) => {
+                                <ul className="space-y-1">
+                                    {getDisplayList('fridge').map((item: any, idx: number) => {
                                         const name = typeof item === 'string' ? item : item.item;
                                         const qty = typeof item === 'object' ? item.quantity : 1;
-                                        const isNew = pendingChanges.some(c => c.category === 'fridge' && c.item === name && c.operation === 'add');
+                                        const isNew = item.is_new || pendingChanges.some(c => c.category === 'fridge' && c.item === name && c.operation === 'add');
                                         return (
-                                            <li key={`ing-${name}-${idx}`} className={`flex justify-between items-center text-sm p-2 rounded ${isNew ? 'bg-[var(--bg-secondary)] border-l-2 border-[var(--accent-sage)]' : ''}`}>
-                                                <span>{name} <span className="text-xs text-[var(--text-muted)]">({qty})</span></span>
-                                                <button onClick={() => handleRemoveItem('fridge', name)} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)]">×</button>
+                                            <li key={`f-ing-${name}-${idx}`} className={`flex justify-between items-center text-xs p-2 rounded transition-all ${isNew ? 'bg-yellow-50 border-l border-[var(--accent-gold)]' : 'hover:bg-[var(--bg-secondary)]/30'}`}>
+                                                <span className="truncate flex-1">{name}</span>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="flex items-center bg-white/80 rounded border border-[var(--border-subtle)] px-1">
+                                                        <button onClick={() => handleUpdateQuantity('fridge', name, -1)} className="text-[var(--accent-terracotta)] px-1 hover:bg-black/5">-</button>
+                                                        <span className="w-5 text-center font-bold opacity-70">{qty}</span>
+                                                        <button onClick={() => handleUpdateQuantity('fridge', name, 1)} className="text-[var(--accent-gold)] px-1 hover:bg-black/5">+</button>
+                                                    </div>
+                                                    <button onClick={() => handleRemoveItem('fridge', name)} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)]">×</button>
+                                                </div>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+
+                            {/* Freezer Ingredients */}
+                            <div className="card border-t-4 border-blue-400">
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-4 pb-2 border-b border-[var(--border-subtle)] flex justify-between">
+                                    Freezer
+                                    <span className="opacity-50 font-normal">{getDisplayList('frozen_ingredient').length} items</span>
+                                </h4>
+                                <div className="flex gap-2 mb-4">
+                                    <input
+                                        type="text"
+                                        placeholder="Add to freezer..."
+                                        value={newItemInputs['frozen_ingredient']?.name || ''}
+                                        onChange={e => setNewItemInputs(prev => ({ ...prev, 'frozen_ingredient': { ...prev['frozen_ingredient'], name: e.target.value, type: 'ingredient' } }))}
+                                        onKeyDown={e => e.key === 'Enter' && handleAddItem('frozen_ingredient', 'ingredient')}
+                                        className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-xs"
+                                    />
+                                    <button onClick={() => handleAddItem('frozen_ingredient', 'ingredient')} className="bg-blue-400 text-white px-3 py-1 rounded shadow-sm hover:opacity-90">+</button>
+                                </div>
+                                <ul className="space-y-1">
+                                    {getDisplayList('frozen_ingredient').map((item: any, idx: number) => {
+                                        const name = typeof item === 'string' ? item : item.item;
+                                        const qty = typeof item === 'object' ? item.quantity : 1;
+                                        const isNew = item.is_new || pendingChanges.some(c => c.category === 'frozen_ingredient' && c.item === name && c.operation === 'add');
+                                        return (
+                                            <li key={`fz-ing-${name}-${idx}`} className={`flex justify-between items-center text-xs p-2 rounded transition-all ${isNew ? 'bg-blue-50 border-l border-blue-300' : 'hover:bg-[var(--bg-secondary)]/30'}`}>
+                                                <span className="truncate flex-1">{name}</span>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="flex items-center bg-white/80 rounded border border-[var(--border-subtle)] px-1">
+                                                        <button onClick={() => handleUpdateQuantity('frozen_ingredient', name, -1)} className="text-[var(--accent-terracotta)] px-1 hover:bg-black/5">-</button>
+                                                        <span className="w-5 text-center font-bold opacity-70">{qty}</span>
+                                                        <button onClick={() => handleUpdateQuantity('frozen_ingredient', name, 1)} className="text-blue-500 px-1 hover:bg-black/5">+</button>
+                                                    </div>
+                                                    <button onClick={() => handleRemoveItem('frozen_ingredient', name)} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)]">×</button>
+                                                </div>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+
+                            {/* Pantry (Merged with Spices) */}
+                            <div className="card border-t-4 border-[var(--accent-sage)]">
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-[var(--accent-sage)] mb-4 pb-2 border-b border-[var(--border-subtle)] flex justify-between">
+                                    Pantry & Spices
+                                    <span className="opacity-50 font-normal">{getDisplayList('pantry').length} items</span>
+                                </h4>
+                                <div className="flex gap-2 mb-4">
+                                    <input
+                                        type="text"
+                                        placeholder="Add to pantry..."
+                                        value={newItemInputs['pantry']?.name || ''}
+                                        onChange={e => setNewItemInputs(prev => ({ ...prev, 'pantry': { ...prev['pantry'], name: e.target.value } }))}
+                                        onKeyDown={e => e.key === 'Enter' && handleAddItem('pantry')}
+                                        className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-xs"
+                                    />
+                                    <button onClick={() => handleAddItem('pantry')} className="bg-[var(--accent-sage)] text-white px-3 py-1 rounded shadow-sm hover:opacity-90">+</button>
+                                </div>
+                                <ul className="space-y-1">
+                                    {getDisplayList('pantry').map((item: any, idx: number) => {
+                                        const name = typeof item === 'string' ? item : item.item;
+                                        const qty = typeof item === 'object' ? item.quantity : 1;
+                                        const isNew = item.is_new || pendingChanges.some(c => c.category === 'pantry' && c.item === name && c.operation === 'add');
+                                        return (
+                                            <li key={`p-${name}-${idx}`} className={`flex justify-between items-center text-xs p-2 rounded transition-all ${isNew ? 'bg-green-50 border-l border-[var(--accent-sage)]' : 'hover:bg-[var(--bg-secondary)]/30'}`}>
+                                                <span className="truncate flex-1">{name}</span>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="flex items-center bg-white/80 rounded border border-[var(--border-subtle)] px-1">
+                                                        <button onClick={() => handleUpdateQuantity('pantry', name, -1)} className="text-[var(--accent-terracotta)] px-1 hover:bg-black/5">-</button>
+                                                        <span className="w-5 text-center font-bold opacity-70">{qty}</span>
+                                                        <button onClick={() => handleUpdateQuantity('pantry', name, 1)} className="text-[var(--accent-sage)] px-1 hover:bg-black/5">+</button>
+                                                    </div>
+                                                    <button onClick={() => handleRemoveItem('pantry', name)} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)]">×</button>
+                                                </div>
                                             </li>
                                         );
                                     })}
                                 </ul>
                             </div>
                         </div>
-                    </div>
-
-                    {/* Pantry & Spices handled simpler for now (Chunk 2 focusing on fridge split) */}
-                    {['pantry', 'spice_rack'].map(catId => (
-                        <div key={catId} className="card">
-                            <h3 className="text-xl mb-4 border-b border-[var(--border-subtle)] pb-2">{catId === 'pantry' ? '🥫 Pantry' : '🧂 Spices'}</h3>
-                            <div className="flex gap-2 mb-4">
-                                <input
-                                    type="text"
-                                    placeholder="Item..."
-                                    value={newItemInputs[catId]?.name || ''}
-                                    onChange={e => setNewItemInputs(prev => ({ ...prev, [catId]: { ...prev[catId], name: e.target.value, type: undefined } }))}
-                                    onKeyDown={e => e.key === 'Enter' && handleAddItem(catId)}
-                                    className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
-                                />
-                                {catId === 'pantry' && (
-                                    <input
-                                        type="number"
-                                        placeholder="#"
-                                        min="1"
-                                        className="w-16 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
-                                        value={newItemInputs[catId]?.qty || 1}
-                                        onChange={e => setNewItemInputs(prev => ({ ...prev, [catId]: { ...prev[catId], qty: parseInt(e.target.value) || 1 } }))}
-                                    />
-                                )}
-                                <button onClick={() => handleAddItem(catId)} className="btn-secondary px-3">+</button>
-                            </div>
-                            <ul className="space-y-2 max-h-60 overflow-y-auto pr-2">
-                                {getDisplayList(catId).map((item: any, idx: number) => {
-                                    const name = typeof item === 'string' ? item : item.item;
-                                    const qty = typeof item === 'object' ? item.quantity : 1;
-                                    const isNew = pendingChanges.some(c => c.category === catId && c.item === name && c.operation === 'add');
-                                    return (
-                                        <li key={`${catId}-${name}-${idx}`} className={`flex justify-between items-center text-sm p-2 rounded ${isNew ? 'bg-[var(--bg-secondary)] border-l-2 border-[var(--accent-sage)]' : ''}`}>
-                                            <span>{name} {catId === 'pantry' && <span className="text-xs text-[var(--text-muted)]">({qty})</span>}</span>
-                                            <button onClick={() => handleRemoveItem(catId, name)} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)]">×</button>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                    ))}
+                    </section>
                 </div>
+                {isReplacing && (
+                    <ReplacementModal
+                        day={isReplacing.day}
+                        currentMeal={isReplacing.currentMeal}
+                        recipes={recipes}
+                        leftoverInventory={inventory?.meals || []}
+                        onConfirm={(newMeal, req, status) => handleReplacementConfirm(newMeal, req, status)}
+                        onCancel={() => setIsReplacing(null)}
+                    />
+                )}
             </main>
         );
     }
@@ -1166,20 +1568,17 @@ function PlanningWizardContent() {
                 <header className="mb-8">
                     <div className="flex justify-between items-start mb-4">
                         <div>
-                            <div className="inline-block px-3 py-1 rounded-full bg-[var(--accent-sage)] bg-opacity-20 text-[var(--accent-sage)] text-sm font-bold mb-2">
-                                🍎 Step 2 of 7
-                            </div>
                             <h1 className="text-3xl font-bold">Review Snacks</h1>
                             <p className="text-[var(--text-muted)] mt-2">
                                 Log what snacks were actually eaten last week.
                             </p>
                         </div>
-                        <div className="flex gap-2">
-                            <button onClick={() => setStep('review_meals')} className="btn-secondary whitespace-nowrap">
-                                ← Meals
+                        <div className="flex flex-col items-end gap-3">
+                            <button onClick={handleSubmitReview} disabled={submitting} className="btn-premium px-8 py-4 shadow-xl flex items-center gap-2 text-sm">
+                                {submitting ? '...' : 'Next: Update Inventory →'}
                             </button>
-                            <button onClick={handleSubmitReview} disabled={submitting} className="btn-primary whitespace-nowrap">
-                                {submitting ? 'Saving...' : 'Continue →'}
+                            <button onClick={() => setStep('review_meals')} className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--accent-sage)] transition-colors">
+                                ← Back to Meals
                             </button>
                         </div>
                     </div>
@@ -1218,15 +1617,8 @@ function PlanningWizardContent() {
                     ))}
                 </div>
 
-                <div className="flex justify-between mt-12 mb-8 items-center px-4 py-6 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-subtle)]">
-                    <p className="text-sm text-[var(--text-muted)] italic">Great! Now let's check your inventory.</p>
-                    <button
-                        onClick={handleSubmitReview}
-                        disabled={submitting}
-                        className="btn-primary shadow-lg scale-110 px-8"
-                    >
-                        {submitting ? 'Updating...' : 'Confirm & Continue →'}
-                    </button>
+                <div className="flex justify-center mt-12 mb-8 items-center px-4 py-6">
+                    <p className="text-sm text-[var(--text-muted)] italic">Ready to move on?</p>
                 </div>
             </main>
         );
@@ -1244,17 +1636,16 @@ function PlanningWizardContent() {
                 <header className="mb-8">
                     <div className="flex justify-between items-start mb-4">
                         <div>
-                            <div className="inline-block px-3 py-1 rounded-full bg-[var(--accent-terracotta)] bg-opacity-20 text-[var(--accent-terracotta)] text-sm font-bold mb-2">
-                                🍽️ Step 1 of 7
-                            </div>
                             <h1 className="text-3xl font-bold">Review Last Week's Meals</h1>
                             <p className="text-[var(--text-muted)] mt-2">
                                 Confirm what you actually ate for dinners and lunches.
                             </p>
                         </div>
-                        <button onClick={() => setStep('review_snacks')} className="btn-primary whitespace-nowrap">
-                            Next: Snacks →
-                        </button>
+                        <div className="flex flex-col items-end gap-3">
+                            <button onClick={() => setStep('review_snacks')} className="btn-premium px-8 py-4 shadow-xl flex items-center gap-2 text-sm">
+                                Next: Review Snacks →
+                            </button>
+                        </div>
                     </div>
                 </header>
 

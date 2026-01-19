@@ -88,4 +88,5 @@ instructions:
 - Toast on both sides until golden brown and cheese starts to soften (about 3–4 minutes
   per side). Press down gently with a spatula while toasting.
 no_chop_compatible: false
-tags: []
+tags:
+- stovetop

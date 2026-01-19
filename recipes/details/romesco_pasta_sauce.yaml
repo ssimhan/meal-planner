@@ -72,3 +72,5 @@ instructions: 'Prep:Preheat your oven to 180°C (356°F).
   For a gourmet touch, sprinkle toasted almond flakes and vegan parmesan on top before
   serving.'
 no_chop_compatible: false
+tags:
+- oven

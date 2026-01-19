@@ -82,3 +82,5 @@ instructions: 'Preheat your oven to 350 degrees Fahrenheit and prepare a 12-cup 
   Let the muffins cool in their tins for a few minutes before removing them to a wire
   rack to cool completely.'
 no_chop_compatible: false
+tags:
+- oven

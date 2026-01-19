@@ -100,7 +100,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     <div className="flex h-screen w-full overflow-hidden bg-[var(--bg-body)]">
       {/* Sidebar */}
       <nav className="w-72 bg-[var(--bg-sidebar)]/80 backdrop-blur-xl border-r border-[var(--border-subtle)] flex flex-col gap-10 p-6 pt-10 z-20 shadow-2xl relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--text-main)]/5 to-transparent pointer-events-none" />
 
         {/* Brand */}
         <div className="flex items-center gap-4 px-2 relative">
@@ -119,8 +119,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 key={item.id}
                 onClick={() => handleNavigation(item.path)}
                 className={`flex items-center gap-4 px-4 py-4 rounded-2xl font-semibold transition-all group ${isActive
-                  ? 'bg-white text-[var(--nav-active-text)] shadow-sm border border-[var(--border-subtle)]'
-                  : 'text-[var(--text-muted)] hover:bg-white/50 hover:text-[var(--text-main)]'
+                  ? 'bg-[var(--bg-card)] text-[var(--nav-active-text)] shadow-sm border border-[var(--border-subtle)]'
+                  : 'text-[var(--text-muted)] hover:bg-[var(--bg-card)]/50 hover:text-[var(--text-main)]'
                   }`}
               >
                 <span className={`transition-transform group-hover:scale-110 ${isActive ? 'text-[var(--accent-primary)]' : ''}`}>
@@ -134,8 +134,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
         {/* Footer */}
         <div className="mt-auto border-t border-[var(--border-subtle)] pt-8 relative">
-          <div className="px-4 py-3 bg-white/40 rounded-2xl border border-white/50 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[var(--bg-sidebar)] border border-white flex items-center justify-center text-xs">👤</div>
+          <div className="px-4 py-3 bg-[var(--bg-card)]/40 rounded-2xl border border-[var(--border-subtle)]/50 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-[var(--bg-sidebar)] border border-[var(--border-subtle)] flex items-center justify-center text-xs">👤</div>
             <div className="flex flex-col">
               <span className="text-xs font-bold text-[var(--text-main)]">Demo User</span>
               <span className="text-[10px] text-[var(--text-muted)] uppercase font-mono">Family Pro</span>

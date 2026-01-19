@@ -154,4 +154,7 @@ instructions:
   Add some protein to the pasta and sauce by adding canned white beans or chickpeas,
   warmed frozen peas, diced cooked chicken breast, meatballs, or even lentils.'
 no_chop_compatible: false
-tags: []
+tags:
+- instant_pot
+- slow_cooker
+- stovetop

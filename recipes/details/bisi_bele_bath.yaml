@@ -86,3 +86,7 @@ instructions: 'This recipe is for 4 adult lunch servings
   Open the lid, stir well, and adjust consistency by adding a little hot water if
   needed.'
 no_chop_compatible: false
+tags:
+- indian
+- instant_pot
+- stovetop

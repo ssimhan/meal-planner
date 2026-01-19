@@ -79,3 +79,5 @@ instructions: 'Below is an overview of how to make this recipe so you know what 
 
   Serve chilled or at room temperature.'
 no_chop_compatible: false
+tags:
+- instant_pot

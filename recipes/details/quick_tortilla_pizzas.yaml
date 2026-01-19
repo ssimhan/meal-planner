@@ -82,3 +82,6 @@ instructions: 'Here’s a peek at how to make this recipe so you know what to ex
 
   Serve warm, slicing up into wedges.'
 no_chop_compatible: true
+tags:
+- instant_pot
+- oven

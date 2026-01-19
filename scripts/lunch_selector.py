@@ -46,22 +46,10 @@ class LunchSelector:
         self.config = self._load_config()
         self.kid_profiles = self.config.get('kid_profiles', {})
 
-        # Load lunch defaults from config.yml (with fallback to hardcoded values)
+        # Load lunch defaults from config.yml (with empty fallback)
         self.defaults = self.config.get('lunch_defaults', {
-            'kids': [
-                'PBJ on whole wheat',
-                'Egg sandwich or scrambled egg sandwich',
-                'Toad-in-a-hole (egg cooked in bread)',
-                'Ravioli with brown butter or simple tomato sauce',
-                'Chapati or dosa rolls with fruit',
-                'Veggie burrito or pizza roll',
-                'Quesadilla with cheese and beans'
-            ],
-            'adult': [
-                'Leftovers from previous night\'s dinner (preferred)',
-                'Grain bowl: prepped grain + roasted vegetables + protein',
-                'Salad with dinner components'
-            ]
+            'kids': [],
+            'adult': []
         })
         self.lunch_recipes = self._filter_lunch_suitable()
 
@@ -102,20 +90,28 @@ class LunchSelector:
     def select_weekly_lunches(
         self,
         dinner_plan: List[Dict[str, Any]],
-        week_of: str,
-        current_lunches: Dict[str, Any] = None
+        week_of: str = None,
+        current_lunches: Dict[str, Any] = None,
+        exclude_defaults: List[str] = None
     ) -> Dict[str, LunchSuggestion]:
         """
-        Select lunches for the entire week based on dinner plan.
-
+        Select lunches for the week based on dinner plans and constraints.
+        
         Args:
-            dinner_plan: List of dinner recipes with their scheduled days
-            week_of: ISO date string (YYYY-MM-DD) for start of week
-            current_lunches: Optional dictionary of already assigned lunches
+            dinner_plan: List of selected dinner recipes with their metadata
+            week_of: The week we are planning for
+            current_lunches: Existing lunch selections to respect
+            exclude_defaults: List of default lunch names to skip
         """
         weekly_lunches = {}
         current_lunches = current_lunches or {}
-
+        exclude_defaults = exclude_defaults or []
+        
+        # Filter defaults if exclusions provided
+        if exclude_defaults:
+            self.defaults['kids'] = [d for d in self.defaults.get('kids', []) if d not in exclude_defaults]
+            self.defaults['adult'] = [d for d in self.defaults.get('adult', []) if d not in exclude_defaults]
+            
         # Extract all ingredients used in dinners this week
         dinner_ingredients = self._extract_dinner_ingredients(dinner_plan)
 
@@ -443,18 +439,22 @@ class LunchSelector:
         # STANDARD LEFTOVERS: Adult only
         # Get default for kids (rotate through defaults)
         day_idx = day_order.index(day)
-        default_idx = day_idx % len(self.defaults['kids'])
-        kids_default = self.defaults['kids'][default_idx]
+        kids_defaults = self.defaults.get('kids', [])
+        if kids_defaults:
+            default_idx = day_idx % len(kids_defaults)
+            kids_default = kids_defaults[default_idx]
+        else:
+            kids_default = "Simple Lunch"
 
         return LunchSuggestion(
             recipe_id=f'leftovers_{day}',
-            recipe_name=f"{kids_default} OR Adult: Leftovers from {dinner_name}",
+            recipe_name=f"{kids_default}",
             kid_friendly=True,
             prep_style='quick_fresh',
             prep_components=[],
             storage_days=1,
             prep_day=previous_day,
-            assembly_notes=f'Kids: {kids_default} (<10 mins) | Adult: Reheat {previous_day.capitalize()} dinner leftovers',
+            assembly_notes=f'Kids: {kids_default} (<10 mins)',
             reuses_ingredients=previous_dinner.get('vegetables', []),
             default_option=kids_default,
             kid_profiles={name: kids_default for name in self.kid_profiles} if self.kid_profiles else None

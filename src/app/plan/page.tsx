@@ -18,6 +18,7 @@ import {
     getStatus,
     getSuggestOptions
 } from '@/lib/api';
+import { transformInventory } from '@/lib/inventoryManager';
 import AppLayout from '@/components/AppLayout';
 import Skeleton from '@/components/Skeleton';
 import ReplacementModal from '@/components/ReplacementModal';
@@ -49,13 +50,13 @@ type ReviewDay = {
 };
 
 type InventoryState = {
-    fridge: ({ item: string; quantity: number; unit: string; type?: 'meal' | 'ingredient' } | string)[];
-    pantry: ({ item: string; quantity: number; unit: string } | string)[];
-    freezer: {
-        backups: { meal: string; servings: number }[];
-        ingredients: { item: string; quantity: number; unit: string }[];
+    meals: any[];  // Consolidated: Fridge leftovers + Freezer backups
+    ingredients: {
+        fridge: any[];
+        freezer: any[];
+        pantry: any[];
+        spice_rack: any[];
     };
-    spice_rack: ({ item: string; quantity: number; unit: string } | string)[];
 };
 
 function PlanningWizardContent() {
@@ -184,13 +185,13 @@ function PlanningWizardContent() {
         setNewItemInputs(prev => ({ ...prev, [category]: { name: '', qty: 1, type: subType } }));
     };
 
-    const handleRemoveItem = (category: string, item: string) => {
+    const handleRemoveItem = (category: string, item: string, type: 'meal' | 'ingredient' = 'ingredient') => {
         // Find if we are removing a pending add first
         const pendingAddIdx = pendingChanges.findIndex(c => c.category === category && c.item === item && c.operation === 'add');
         if (pendingAddIdx !== -1) {
             setPendingChanges(prev => prev.filter((_, i) => i !== pendingAddIdx));
         } else {
-            setPendingChanges(prev => [...prev, { category, item, quantity: 0, operation: 'remove' }]);
+            setPendingChanges(prev => [...prev, { category, item, quantity: 0, operation: 'remove', type }]);
         }
     };
 
@@ -217,41 +218,7 @@ function PlanningWizardContent() {
     const loadInventory = async () => {
         try {
             const response = await getInventory();
-            const data: any = response.inventory || response;
-            const processedInventory: InventoryState = {
-                fridge: (data.fridge || []).map((item: any) => {
-                    const itemName = typeof item === 'string' ? item : item.item;
-                    const isMeal = typeof item === 'object' && item.type ? item.type === 'meal' : itemName.toLowerCase().includes('meal');
-                    return {
-                        item: itemName,
-                        quantity: typeof item === 'object' && item.quantity ? item.quantity : 1,
-                        unit: typeof item === 'object' && item.unit ? item.unit : 'unit',
-                        type: isMeal ? 'meal' : 'ingredient'
-                    };
-                }),
-                pantry: (data.pantry || []).map((item: any) => ({
-                    item: typeof item === 'string' ? item : item.item,
-                    quantity: typeof item === 'object' && item.quantity ? item.quantity : 1,
-                    unit: typeof item === 'object' && item.unit ? item.unit : 'unit'
-                })),
-                freezer: {
-                    backups: (data.freezer?.backups || []).map((b: any) => ({
-                        meal: b.meal,
-                        servings: b.servings || 1,
-                        frozen_date: b.frozen_date
-                    })),
-                    ingredients: (data.freezer?.ingredients || []).map((i: any) => ({
-                        item: i.item,
-                        quantity: i.quantity || 1,
-                        unit: i.unit || 'unit'
-                    }))
-                },
-                spice_rack: (data.spice_rack || []).map((item: any) => ({
-                    item: typeof item === 'string' ? item : item.item,
-                    quantity: typeof item === 'object' && item.quantity ? item.quantity : 1,
-                    unit: typeof item === 'object' && item.unit ? item.unit : 'unit'
-                }))
-            };
+            const processedInventory = transformInventory(response);
             setInventory(processedInventory);
             setNewItemInputs({});
         } catch (e) {
@@ -291,6 +258,13 @@ function PlanningWizardContent() {
                         type: change.type, // For fridge
                         operation: 'add' as const
                     };
+                } else if (change.operation === 'update') {
+                    return {
+                        category: change.category,
+                        item: change.item,
+                        quantity: change.quantity,
+                        operation: 'add' as const // Backend 'add' with existing name increments/updates
+                    };
                 } else {
                     return {
                         category: change.category,
@@ -317,29 +291,95 @@ function PlanningWizardContent() {
         }
     };
 
-    const getDisplayList = (category: string) => {
-        let currentItems: any[] = [];
-        if (inventory) {
-            if (category === 'meals') {
-                currentItems = inventory.freezer.backups.map(b => ({ item: b.meal, quantity: b.servings }));
-            } else if (category === 'frozen_ingredient') {
-                currentItems = inventory.freezer.ingredients;
-            } else {
-                currentItems = (inventory as any)[category] || [];
-            }
+    const handleUpdateQuantity = (category: string, itemName: string, delta: number, type: 'meal' | 'ingredient' = 'ingredient') => {
+        const displayList = getDisplayList(type === 'meal' ? 'meals' : category);
+        const item = displayList.find(i => {
+            const iName = typeof i === 'string' ? i : (i.item || i.meal);
+            return iName?.toLowerCase() === itemName.toLowerCase();
+        });
+        if (!item) return;
+
+        const currentQty = (typeof item === 'object' ? item.quantity || item.servings : 1) || 1;
+        const newQty = Math.max(0, currentQty + delta);
+
+        if (newQty === 0) {
+            handleRemoveItem(category, itemName);
+        } else {
+            setPendingChanges(prev => {
+                // Remove existing changes for this item
+                const otherChanges = prev.filter(c => !(c.category === category && c.item === itemName));
+                return [...otherChanges, {
+                    category,
+                    item: itemName,
+                    quantity: newQty,
+                    type,
+                    operation: 'update'
+                }];
+            });
         }
-        const addedItems = pendingChanges.filter(c => c.category === category && c.operation === 'add');
-        const removedItems = pendingChanges.filter(c => c.category === category && c.operation === 'remove').map(c => c.item);
+    };
 
-        const list = currentItems.filter((item: any) => !removedItems.includes(typeof item === 'string' ? item : item.item));
+    const getDisplayList = (mode: string) => {
+        let currentItems: any[] = [];
+        if (!inventory) return [];
 
-        addedItems.forEach(added => {
-            const existingIdx = list.findIndex((item: any) => (typeof item === 'string' ? item : item.item) === added.item);
-            if (existingIdx === -1) {
-                list.push({ item: added.item, quantity: added.quantity, unit: 'unit', type: added.type });
-            } else {
-                // If an item was added that already exists, update its quantity
-                list[existingIdx].quantity += added.quantity;
+        if (mode === 'meals') {
+            currentItems = [...inventory.meals];
+        } else if (mode === 'fridge') {
+            currentItems = [...inventory.ingredients.fridge];
+        } else if (mode === 'frozen_ingredient') {
+            currentItems = [...inventory.ingredients.freezer];
+        } else if (mode === 'pantry' || mode === 'spice_rack') {
+            currentItems = [...inventory.ingredients.pantry];
+        }
+
+        const list = [...currentItems];
+
+        pendingChanges.forEach(change => {
+            let applies = false;
+            if (mode === 'meals') {
+                applies = change.type === 'meal';
+            } else if (mode === 'fridge') {
+                applies = (change.category === 'fridge' || change.category === 'grocery') && change.type === 'ingredient';
+            } else if (mode === 'frozen_ingredient') {
+                applies = change.category === 'frozen_ingredient';
+            } else if (mode === 'pantry' || mode === 'spice_rack') {
+                applies = change.category === 'pantry' || change.category === 'spice_rack';
+            }
+
+            if (!applies) return;
+
+            const name = change.item;
+            const existingIdx = list.findIndex(i => {
+                const iName = typeof i === 'string' ? i : (i.item || i.meal);
+                return iName?.toLowerCase() === name.toLowerCase();
+            });
+
+            if (change.operation === 'remove') {
+                if (existingIdx !== -1) list.splice(existingIdx, 1);
+            } else if (change.operation === 'add') {
+                if (existingIdx === -1) {
+                    list.push({
+                        item: name,
+                        quantity: change.quantity,
+                        unit: 'unit',
+                        type: change.type,
+                        location: mode === 'meals' ? (change.category === 'meals' || change.category === 'freezer' ? 'freezer' : 'fridge') : undefined,
+                        is_new: true
+                    });
+                } else {
+                    const existing = list[existingIdx];
+                    if (typeof existing === 'object') {
+                        existing.quantity = (existing.quantity || 0) + change.quantity;
+                    }
+                }
+            } else if (change.operation === 'update') {
+                if (existingIdx !== -1) {
+                    const existing = list[existingIdx];
+                    if (typeof existing === 'object') {
+                        existing.quantity = change.quantity;
+                    }
+                }
             }
         });
 
@@ -897,7 +937,7 @@ function PlanningWizardContent() {
                         day={isReplacing.day}
                         currentMeal={isReplacing.currentMeal}
                         recipes={recipes}
-                        leftoverInventory={(inventory?.fridge?.filter((i: any) => typeof i !== 'string' && i.type === 'meal') as any[]) || []}
+                        leftoverInventory={inventory?.meals || []}
                         onConfirm={(newMeal) => handleReplacementConfirm(newMeal)}
                         onCancel={() => setIsReplacing(null)}
                     />
@@ -1226,12 +1266,9 @@ function PlanningWizardContent() {
         const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
         const dayNames = { mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri', sat: 'Sat', sun: 'Sun' };
 
-        // Get leftover meals from inventory
-        const leftoverMeals = (inventory?.fridge || [])
-            .filter((item: any) =>
-                (item.type === 'meal' || (typeof item.item === 'string' && item.item.toLowerCase().includes('meal'))) &&
-                item.quantity > 0
-            )
+        // Get leftover meals from consolidated inventory
+        const leftoverMeals = (inventory?.meals || [])
+            .filter((item: any) => item.quantity > 0)
             .map((item: any) => ({ item: item.item, quantity: item.quantity }));
 
         const handleAddAssignment = (item: string) => {
@@ -1395,137 +1432,161 @@ function PlanningWizardContent() {
                     </div>
                 </header>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {/* Fridge Section - Split into Meals vs Ingredients */}
-                    <div className="card lg:col-span-2">
-                        <h3 className="text-xl mb-4 border-b border-[var(--border-subtle)] pb-2">🥦 Fridge</h3>
-                        <div className="grid md:grid-cols-2 gap-8">
-                            {/* Leftover Meals */}
+                <div className="space-y-12">
+                    {/* MEALS SECTION: The "Ready-to-Eat" unified view */}
+                    <section className="card p-8 border-2 border-[var(--accent-sage)] bg-[var(--bg-primary)] shadow-xl relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 opacity-10 text-6xl">🍱</div>
+                        <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                            <span className="p-2 bg-[var(--accent-sage)] bg-opacity-20 rounded-lg">🍱</span>
+                            Ready-to-Eat / Leftovers
+                        </h2>
+
+                        <div className="grid md:grid-cols-2 gap-12">
+                            {/* Fridge Leftovers */}
                             <div>
-                                <h4 className="text-sm font-bold uppercase text-[var(--accent-sage)] mb-2">Leftover Meals</h4>
-                                <div className="flex gap-2 mb-4">
+                                <h3 className="text-xs font-black uppercase tracking-widest text-[var(--accent-sage)] mb-4 flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-[var(--accent-sage)]"></span>
+                                    In the Fridge
+                                </h3>
+
+                                <div className="flex gap-2 mb-6">
                                     <input
                                         type="text"
-                                        placeholder="Meal name..."
+                                        placeholder="Add fridge leftover..."
                                         value={newItemInputs['fridge']?.type === 'meal' ? newItemInputs['fridge']?.name : ''}
                                         onChange={e => setNewItemInputs(prev => ({ ...prev, 'fridge': { ...prev['fridge'], name: e.target.value, type: 'meal' } }))}
                                         onKeyDown={e => e.key === 'Enter' && handleAddItem('fridge', 'meal')}
-                                        className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
+                                        className="flex-1 p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-xl text-sm focus:ring-2 focus:ring-[var(--accent-sage)]"
                                     />
                                     <div className="flex flex-col">
-                                        <label className="text-[8px] uppercase font-bold text-[var(--text-muted)] ml-1">Srv</label>
                                         <input
                                             type="number"
                                             placeholder="#"
                                             min="1"
-                                            className="w-12 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm font-bold"
+                                            className="w-14 p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-xl text-sm font-bold text-center"
                                             value={newItemInputs['fridge']?.type === 'meal' ? (newItemInputs['fridge']?.qty || 1) : 1}
                                             onChange={e => setNewItemInputs(prev => ({ ...prev, 'fridge': { ...prev['fridge'], qty: parseInt(e.target.value) || 1, type: 'meal' } }))}
                                         />
                                     </div>
-                                    <button onClick={() => handleAddItem('fridge', 'meal')} className="btn-secondary self-end px-3 py-2">+</button>
+                                    <button onClick={() => handleAddItem('fridge', 'meal')} className="bg-[var(--accent-sage)] text-white p-3 rounded-xl hover:opacity-90 transition-all font-bold shadow-sm">+</button>
                                 </div>
-                                <ul className="space-y-2">
-                                    {getDisplayList('fridge').filter((i: any) => {
-                                        const name = typeof i === 'string' ? i : i.item;
-                                        return i.type === 'meal' || name.toLowerCase().includes('meal');
-                                    }).map((item: any, idx: number) => {
+
+                                <ul className="space-y-3">
+                                    {getDisplayList('meals').filter(i => i.location !== 'freezer').map((item: any, idx: number) => {
                                         const name = typeof item === 'string' ? item : item.item;
                                         const qty = typeof item === 'object' ? item.quantity : 1;
-                                        const isNew = pendingChanges.some(c => c.category === 'fridge' && c.item === name && c.operation === 'add');
+                                        const isNew = item.is_new || pendingChanges.some(c => c.category === 'fridge' && c.item === name && c.operation === 'add');
                                         return (
-                                            <li key={`meal-${name}-${idx}`} className={`flex justify-between items-center text-sm p-2 rounded ${isNew ? 'bg-[var(--bg-secondary)] border-l-2 border-[var(--accent-sage)]' : ''}`}>
-                                                <span>{name} <span className="text-xs text-[var(--text-muted)]">({qty})</span></span>
-                                                <button onClick={() => handleRemoveItem('fridge', name)} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)]">×</button>
+                                            <li key={`fridge-meal-${name}-${idx}`} className={`flex justify-between items-center text-sm p-3 rounded-xl transition-all ${isNew ? 'bg-green-50 border-l-4 border-[var(--accent-sage)] shadow-sm animate-in slide-in-from-left-2' : 'bg-[var(--bg-secondary)]/40 hover:bg-[var(--bg-secondary)]/60'}`}>
+                                                <span className="font-medium flex-1">{name}</span>
+                                                <div className="flex items-center gap-3">
+                                                    <div className="flex items-center bg-white/50 rounded-lg p-1 border border-[var(--border-subtle)]">
+                                                        <button onClick={() => handleUpdateQuantity('fridge', name, -1, 'meal')} className="w-6 h-6 flex items-center justify-center text-[var(--accent-terracotta)] hover:bg-black/5 rounded">-</button>
+                                                        <span className="w-8 text-center text-xs font-bold">{qty}</span>
+                                                        <button onClick={() => handleUpdateQuantity('fridge', name, 1, 'meal')} className="w-6 h-6 flex items-center justify-center text-[var(--accent-sage)] hover:bg-black/5 rounded">+</button>
+                                                    </div>
+                                                    <button onClick={() => handleRemoveItem('fridge', name, 'meal')} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)] p-1">×</button>
+                                                </div>
                                             </li>
                                         );
                                     })}
                                 </ul>
                             </div>
 
-                            {/* Ingredients */}
+                            {/* Freezer Backups */}
                             <div>
-                                <h4 className="text-sm font-bold uppercase text-[var(--accent-gold)] mb-2">Ingredients / Produce</h4>
-                                <div className="flex gap-2 mb-4">
+                                <h3 className="text-xs font-black uppercase tracking-widest text-blue-500 mb-4 flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                                    In the Freezer
+                                </h3>
+
+                                <div className="flex gap-2 mb-6">
                                     <input
                                         type="text"
-                                        placeholder="Ingredient..."
-                                        value={newItemInputs['fridge']?.type === 'ingredient' ? newItemInputs['fridge']?.name : ''}
-                                        onChange={e => setNewItemInputs(prev => ({ ...prev, 'fridge': { ...prev['fridge'], name: e.target.value, type: 'ingredient' } }))}
-                                        onKeyDown={e => e.key === 'Enter' && handleAddItem('fridge', 'ingredient')}
-                                        className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
+                                        placeholder="Add freezer meal..."
+                                        value={newItemInputs['meals']?.name || ''}
+                                        onChange={e => setNewItemInputs(prev => ({ ...prev, 'meals': { ...prev['meals'], name: e.target.value, type: 'meal' } }))}
+                                        onKeyDown={e => e.key === 'Enter' && handleAddItem('meals', 'meal')}
+                                        className="flex-1 p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-xl text-sm focus:ring-2 focus:ring-blue-500"
                                     />
                                     <div className="flex flex-col">
-                                        <label className="text-[8px] uppercase font-bold text-[var(--text-muted)] ml-1">Qty</label>
                                         <input
                                             type="number"
                                             placeholder="#"
                                             min="1"
-                                            className="w-12 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm font-bold"
-                                            value={newItemInputs['fridge']?.type === 'ingredient' ? (newItemInputs['fridge']?.qty || 1) : 1}
-                                            onChange={e => setNewItemInputs(prev => ({ ...prev, 'fridge': { ...prev['fridge'], qty: parseInt(e.target.value) || 1, type: 'ingredient' } }))}
+                                            className="w-14 p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-xl text-sm font-bold text-center"
+                                            value={newItemInputs['meals']?.qty || 4}
+                                            onChange={e => setNewItemInputs(prev => ({ ...prev, 'meals': { ...prev['meals'], qty: parseInt(e.target.value) || 1 } }))}
                                         />
                                     </div>
-                                    <button onClick={() => handleAddItem('fridge', 'ingredient')} className="btn-secondary self-end px-3 py-2">+</button>
+                                    <button onClick={() => handleAddItem('meals', 'meal')} className="bg-blue-500 text-white p-3 rounded-xl hover:opacity-90 transition-all font-bold shadow-sm">+</button>
                                 </div>
-                                <ul className="space-y-2">
-                                    {getDisplayList('fridge').filter((i: any) => {
-                                        const name = typeof i === 'string' ? i : i.item;
-                                        return i.type !== 'meal' && !name.toLowerCase().includes('meal');
-                                    }).map((item: any, idx: number) => {
+
+                                <ul className="space-y-3">
+                                    {getDisplayList('meals').filter(i => i.location === 'freezer').map((item: any, idx: number) => {
                                         const name = typeof item === 'string' ? item : item.item;
                                         const qty = typeof item === 'object' ? item.quantity : 1;
-                                        const isNew = pendingChanges.some(c => c.category === 'fridge' && c.item === name && c.operation === 'add');
+                                        const isNew = item.is_new || pendingChanges.some(c => c.category === 'meals' && c.item === name && c.operation === 'add');
                                         return (
-                                            <li key={`ing-${name}-${idx}`} className={`flex justify-between items-center text-sm p-2 rounded ${isNew ? 'bg-[var(--bg-secondary)] border-l-2 border-[var(--accent-sage)]' : ''}`}>
-                                                <span>{name} <span className="text-xs text-[var(--text-muted)]">({qty})</span></span>
-                                                <button onClick={() => handleRemoveItem('fridge', name)} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)]">×</button>
+                                            <li key={`freezer-meal-${name}-${idx}`} className={`flex justify-between items-center text-sm p-3 rounded-xl transition-all ${isNew ? 'bg-blue-50 border-l-4 border-blue-500 shadow-sm animate-in slide-in-from-left-2' : 'bg-[var(--bg-secondary)]/40 hover:bg-[var(--bg-secondary)]/60'}`}>
+                                                <span className="font-medium flex-1">{name}</span>
+                                                <div className="flex items-center gap-3">
+                                                    <div className="flex items-center bg-white/50 rounded-lg p-1 border border-[var(--border-subtle)]">
+                                                        <button onClick={() => handleUpdateQuantity('meals', name, -1, 'meal')} className="w-6 h-6 flex items-center justify-center text-[var(--accent-terracotta)] hover:bg-black/5 rounded">-</button>
+                                                        <span className="w-8 text-center text-xs font-bold">{qty}</span>
+                                                        <button onClick={() => handleUpdateQuantity('meals', name, 1, 'meal')} className="w-6 h-6 flex items-center justify-center text-blue-500 hover:bg-black/5 rounded">+</button>
+                                                    </div>
+                                                    <button onClick={() => handleRemoveItem('meals', name, 'meal')} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)] p-1">×</button>
+                                                </div>
                                             </li>
                                         );
                                     })}
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </section>
 
-                    {/* Freezer Section */}
-                    <div className="card lg:col-span-1">
-                        <h3 className="text-xl mb-4 border-b border-[var(--border-subtle)] pb-2">❄️ Freezer</h3>
-                        <div className="space-y-6">
-                            {/* Freezer Meals */}
-                            <div>
-                                <h4 className="text-sm font-bold uppercase text-[var(--accent-sage)] mb-2">Backups / Meals</h4>
+                    {/* INGREDIENTS SECTION: Split by Storage */}
+                    <section className="space-y-6">
+                        <h2 className="text-xl font-bold flex items-center gap-2 px-2">
+                            <span className="p-2 bg-[var(--accent-gold)] bg-opacity-20 rounded-lg">🥑</span>
+                            Ingredients & Produce
+                        </h2>
+
+                        <div className="grid md:grid-cols-3 gap-6">
+                            {/* Fridge Ingredients */}
+                            <div className="card border-t-4 border-[var(--accent-gold)]">
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-[var(--accent-gold)] mb-4 pb-2 border-b border-[var(--border-subtle)] flex justify-between">
+                                    Fridge
+                                    <span className="opacity-50 font-normal">{getDisplayList('fridge').length} items</span>
+                                </h4>
                                 <div className="flex gap-2 mb-4">
                                     <input
                                         type="text"
-                                        placeholder="Meal..."
-                                        value={newItemInputs['meals']?.name || ''}
-                                        onChange={e => setNewItemInputs(prev => ({ ...prev, 'meals': { ...prev['meals'], name: e.target.value, type: 'meal' } }))}
-                                        onKeyDown={e => e.key === 'Enter' && handleAddItem('meals', 'meal')}
-                                        className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
+                                        placeholder="Add to fridge..."
+                                        value={newItemInputs['fridge']?.type === 'ingredient' ? newItemInputs['fridge']?.name : ''}
+                                        onChange={e => setNewItemInputs(prev => ({ ...prev, 'fridge': { ...prev['fridge'], name: e.target.value, type: 'ingredient' } }))}
+                                        onKeyDown={e => e.key === 'Enter' && handleAddItem('fridge', 'ingredient')}
+                                        className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-xs"
                                     />
-                                    <div className="flex flex-col">
-                                        <label className="text-[8px] uppercase font-bold text-[var(--text-muted)] ml-1">Srv</label>
-                                        <input
-                                            type="number"
-                                            placeholder="#"
-                                            min="1"
-                                            className="w-12 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm font-bold"
-                                            value={newItemInputs['meals']?.qty || 4}
-                                            onChange={e => setNewItemInputs(prev => ({ ...prev, 'meals': { ...prev['meals'], qty: parseInt(e.target.value) || 1 } }))}
-                                        />
-                                    </div>
-                                    <button onClick={() => handleAddItem('meals', 'meal')} className="btn-secondary self-end px-3 py-2">+</button>
+                                    <button onClick={() => handleAddItem('fridge', 'ingredient')} className="bg-[var(--accent-gold)] text-white px-3 py-1 rounded shadow-sm hover:opacity-90">+</button>
                                 </div>
-                                <ul className="space-y-2 max-h-40 overflow-y-auto pr-1">
-                                    {getDisplayList('meals').map((item: any, idx: number) => {
+                                <ul className="space-y-1">
+                                    {getDisplayList('fridge').map((item: any, idx: number) => {
                                         const name = typeof item === 'string' ? item : item.item;
                                         const qty = typeof item === 'object' ? item.quantity : 1;
-                                        const isNew = pendingChanges.some(c => c.category === 'meals' && c.item === name && c.operation === 'add');
+                                        const isNew = item.is_new || pendingChanges.some(c => c.category === 'fridge' && c.item === name && c.operation === 'add');
                                         return (
-                                            <li key={`freezer-meal-${name}-${idx}`} className={`flex justify-between items-center text-sm p-2 rounded ${isNew ? 'bg-[var(--bg-secondary)] border-l-2 border-[var(--accent-sage)] shadow-sm' : 'bg-[var(--bg-secondary)]/30'}`}>
-                                                <span>{name} <span className="text-xs text-[var(--text-muted)]">({qty} srv)</span></span>
-                                                <button onClick={() => handleRemoveItem('meals', name)} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)]">×</button>
+                                            <li key={`f-ing-${name}-${idx}`} className={`flex justify-between items-center text-xs p-2 rounded transition-all ${isNew ? 'bg-yellow-50 border-l border-[var(--accent-gold)]' : 'hover:bg-[var(--bg-secondary)]/30'}`}>
+                                                <span className="truncate flex-1">{name}</span>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="flex items-center bg-white/80 rounded border border-[var(--border-subtle)] px-1">
+                                                        <button onClick={() => handleUpdateQuantity('fridge', name, -1)} className="text-[var(--accent-terracotta)] px-1 hover:bg-black/5">-</button>
+                                                        <span className="w-5 text-center font-bold opacity-70">{qty}</span>
+                                                        <button onClick={() => handleUpdateQuantity('fridge', name, 1)} className="text-[var(--accent-gold)] px-1 hover:bg-black/5">+</button>
+                                                    </div>
+                                                    <button onClick={() => handleRemoveItem('fridge', name)} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)]">×</button>
+                                                </div>
                                             </li>
                                         );
                                     })}
@@ -1533,78 +1594,84 @@ function PlanningWizardContent() {
                             </div>
 
                             {/* Freezer Ingredients */}
-                            <div>
-                                <h4 className="text-sm font-bold uppercase text-[var(--accent-gold)] mb-2">Frozen Ingredients</h4>
+                            <div className="card border-t-4 border-blue-400">
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-4 pb-2 border-b border-[var(--border-subtle)] flex justify-between">
+                                    Freezer
+                                    <span className="opacity-50 font-normal">{getDisplayList('frozen_ingredient').length} items</span>
+                                </h4>
                                 <div className="flex gap-2 mb-4">
                                     <input
                                         type="text"
-                                        placeholder="Item..."
+                                        placeholder="Add to freezer..."
                                         value={newItemInputs['frozen_ingredient']?.name || ''}
                                         onChange={e => setNewItemInputs(prev => ({ ...prev, 'frozen_ingredient': { ...prev['frozen_ingredient'], name: e.target.value, type: 'ingredient' } }))}
                                         onKeyDown={e => e.key === 'Enter' && handleAddItem('frozen_ingredient', 'ingredient')}
-                                        className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
+                                        className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-xs"
                                     />
-                                    <button onClick={() => handleAddItem('frozen_ingredient', 'ingredient')} className="btn-secondary px-3">+</button>
+                                    <button onClick={() => handleAddItem('frozen_ingredient', 'ingredient')} className="bg-blue-400 text-white px-3 py-1 rounded shadow-sm hover:opacity-90">+</button>
                                 </div>
-                                <ul className="space-y-2 max-h-32 overflow-y-auto pr-1">
+                                <ul className="space-y-1">
                                     {getDisplayList('frozen_ingredient').map((item: any, idx: number) => {
                                         const name = typeof item === 'string' ? item : item.item;
-                                        const isNew = pendingChanges.some(c => c.category === 'frozen_ingredient' && c.item === name && c.operation === 'add');
+                                        const qty = typeof item === 'object' ? item.quantity : 1;
+                                        const isNew = item.is_new || pendingChanges.some(c => c.category === 'frozen_ingredient' && c.item === name && c.operation === 'add');
                                         return (
-                                            <li key={`freezer-ing-${name}-${idx}`} className={`flex justify-between items-center text-sm p-2 rounded ${isNew ? 'bg-[var(--bg-secondary)] border-l-2 border-[var(--accent-gold)] shadow-sm' : 'bg-[var(--bg-secondary)]/30'}`}>
-                                                <span>{name}</span>
-                                                <button onClick={() => handleRemoveItem('frozen_ingredient', name)} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)]">×</button>
+                                            <li key={`fz-ing-${name}-${idx}`} className={`flex justify-between items-center text-xs p-2 rounded transition-all ${isNew ? 'bg-blue-50 border-l border-blue-300' : 'hover:bg-[var(--bg-secondary)]/30'}`}>
+                                                <span className="truncate flex-1">{name}</span>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="flex items-center bg-white/80 rounded border border-[var(--border-subtle)] px-1">
+                                                        <button onClick={() => handleUpdateQuantity('frozen_ingredient', name, -1)} className="text-[var(--accent-terracotta)] px-1 hover:bg-black/5">-</button>
+                                                        <span className="w-5 text-center font-bold opacity-70">{qty}</span>
+                                                        <button onClick={() => handleUpdateQuantity('frozen_ingredient', name, 1)} className="text-blue-500 px-1 hover:bg-black/5">+</button>
+                                                    </div>
+                                                    <button onClick={() => handleRemoveItem('frozen_ingredient', name)} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)]">×</button>
+                                                </div>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+
+                            {/* Pantry (Merged with Spices) */}
+                            <div className="card border-t-4 border-[var(--accent-sage)]">
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-[var(--accent-sage)] mb-4 pb-2 border-b border-[var(--border-subtle)] flex justify-between">
+                                    Pantry & Spices
+                                    <span className="opacity-50 font-normal">{getDisplayList('pantry').length} items</span>
+                                </h4>
+                                <div className="flex gap-2 mb-4">
+                                    <input
+                                        type="text"
+                                        placeholder="Add to pantry..."
+                                        value={newItemInputs['pantry']?.name || ''}
+                                        onChange={e => setNewItemInputs(prev => ({ ...prev, 'pantry': { ...prev['pantry'], name: e.target.value } }))}
+                                        onKeyDown={e => e.key === 'Enter' && handleAddItem('pantry')}
+                                        className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-xs"
+                                    />
+                                    <button onClick={() => handleAddItem('pantry')} className="bg-[var(--accent-sage)] text-white px-3 py-1 rounded shadow-sm hover:opacity-90">+</button>
+                                </div>
+                                <ul className="space-y-1">
+                                    {getDisplayList('pantry').map((item: any, idx: number) => {
+                                        const name = typeof item === 'string' ? item : item.item;
+                                        const qty = typeof item === 'object' ? item.quantity : 1;
+                                        const isNew = item.is_new || pendingChanges.some(c => c.category === 'pantry' && c.item === name && c.operation === 'add');
+                                        return (
+                                            <li key={`p-${name}-${idx}`} className={`flex justify-between items-center text-xs p-2 rounded transition-all ${isNew ? 'bg-green-50 border-l border-[var(--accent-sage)]' : 'hover:bg-[var(--bg-secondary)]/30'}`}>
+                                                <span className="truncate flex-1">{name}</span>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="flex items-center bg-white/80 rounded border border-[var(--border-subtle)] px-1">
+                                                        <button onClick={() => handleUpdateQuantity('pantry', name, -1)} className="text-[var(--accent-terracotta)] px-1 hover:bg-black/5">-</button>
+                                                        <span className="w-5 text-center font-bold opacity-70">{qty}</span>
+                                                        <button onClick={() => handleUpdateQuantity('pantry', name, 1)} className="text-[var(--accent-sage)] px-1 hover:bg-black/5">+</button>
+                                                    </div>
+                                                    <button onClick={() => handleRemoveItem('pantry', name)} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)]">×</button>
+                                                </div>
                                             </li>
                                         );
                                     })}
                                 </ul>
                             </div>
                         </div>
-                    </div>
-
-                    {/* Pantry & Spices handled simpler */}
-                    {['pantry', 'spice_rack'].map(catId => (
-                        <div key={catId} className="card">
-                            <h3 className="text-xl mb-4 border-b border-[var(--border-subtle)] pb-2">{catId === 'pantry' ? '🥫 Pantry' : '🧂 Spices'}</h3>
-                            <div className="flex gap-2 mb-4">
-                                <input
-                                    type="text"
-                                    placeholder="Item..."
-                                    value={newItemInputs[catId]?.name || ''}
-                                    onChange={e => setNewItemInputs(prev => ({ ...prev, [catId]: { ...prev[catId], name: e.target.value, type: undefined } }))}
-                                    onKeyDown={e => e.key === 'Enter' && handleAddItem(catId)}
-                                    className="flex-1 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm"
-                                />
-                                {catId === 'pantry' && (
-                                    <div className="flex flex-col">
-                                        <label className="text-[8px] uppercase font-bold text-[var(--text-muted)] ml-1">Qty</label>
-                                        <input
-                                            type="number"
-                                            placeholder="#"
-                                            min="1"
-                                            className="w-12 p-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded text-sm font-bold"
-                                            value={newItemInputs[catId]?.qty || 1}
-                                            onChange={e => setNewItemInputs(prev => ({ ...prev, [catId]: { ...prev[catId], qty: parseInt(e.target.value) || 1 } }))}
-                                        />
-                                    </div>
-                                )}
-                                <button onClick={() => handleAddItem(catId)} className="btn-secondary self-end px-3 py-2">+</button>
-                            </div>
-                            <ul className="space-y-2 max-h-60 overflow-y-auto pr-2">
-                                {getDisplayList(catId).map((item: any, idx: number) => {
-                                    const name = typeof item === 'string' ? item : item.item;
-                                    const qty = typeof item === 'object' ? item.quantity : 1;
-                                    const isNew = pendingChanges.some(c => c.category === catId && c.item === name && c.operation === 'add');
-                                    return (
-                                        <li key={`${catId}-${name}-${idx}`} className={`flex justify-between items-center text-sm p-2 rounded ${isNew ? 'bg-[var(--bg-secondary)] border-l-2 border-[var(--accent-sage)] shadow-sm' : 'bg-[var(--bg-secondary)]/30'}`}>
-                                            <span>{name} {catId === 'pantry' && <span className="text-xs text-[var(--text-muted)]">({qty})</span>}</span>
-                                            <button onClick={() => handleRemoveItem(catId, name)} className="text-[var(--text-muted)] hover:text-[var(--accent-terracotta)]">×</button>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                    ))}
+                    </section>
                 </div>
             </main>
         );

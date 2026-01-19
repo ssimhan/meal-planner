@@ -4,6 +4,7 @@ import Link from 'next/link';
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getStatus, getInventory, generatePlan, createWeek, confirmVeg, logMeal, getRecipes, replan, WorkflowStatus, getRecipeContent } from '@/lib/api';
+import { transformInventory } from '@/lib/inventoryManager';
 import type { RecipeListItem, WorkflowStatus as WorkflowStatusType, InventoryResponse } from '@/types';
 import AppLayout from '@/components/AppLayout';
 import Skeleton from '@/components/Skeleton';
@@ -114,7 +115,8 @@ function DashboardContent() {
         getInventory()
       ]);
       setStatus(data);
-      setInventory(inventoryData);
+      const processedInventory = transformInventory(inventoryData);
+      setInventory(processedInventory);
 
       // Initialize completed prep from backend
       if (data.today?.prep_completed) {
@@ -365,8 +367,8 @@ function DashboardContent() {
       mealName: name,
       logType: type,
       initialStatus: initial,
-      freezerInventory: status.week_data?.freezer_inventory || [],
-      leftoverInventory: inventory?.fridge || [],
+      freezerInventory: inventory?.meals?.filter((m: any) => m.location === 'freezer') || [],
+      leftoverInventory: inventory?.meals?.filter((m: any) => m.location === 'fridge') || [],
       recipes: recipes,
       onSuccess: commonLogSuccess,
       onClose: commonLogClose,

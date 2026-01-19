@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { logMeal, addItemToInventory, replan, WorkflowStatus, getInventory } from '@/lib/api';
+import { transformInventory } from '@/lib/inventoryManager';
 import MealLogFlow from './MealLogFlow';
 import { FreezerMeal, InventoryItem } from '@/types';
 
@@ -71,13 +72,12 @@ export default function ReplanWorkflowModal({
         try {
             setLoading(true);
             const data = await getInventory();
-            setInventory(data.inventory);
+            const processed = transformInventory(data);
+            setInventory(processed);
 
             // Extract typed versions for MealLogFlow
-            if (data.inventory) {
-                setFreezerMeals(data.inventory.freezer?.backups || []);
-                setLeftoverItems(data.inventory.fridge || []);
-            }
+            setFreezerMeals(processed.meals.filter(m => m.location === 'freezer'));
+            setLeftoverItems(processed.meals.filter(m => m.location === 'fridge'));
         } catch (e) {
             console.error(e);
         } finally {

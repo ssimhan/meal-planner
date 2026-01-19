@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getStatus, getRecipes, WorkflowStatus, replan, swapMeals, logMeal, getInventory, getRecipeContent } from '@/lib/api';
+import { transformInventory } from '@/lib/inventoryManager';
 import { InventoryItem } from '@/types';
 import AppLayout from '@/components/AppLayout';
 import { useToast } from '@/context/ToastContext';
@@ -99,8 +100,9 @@ function WeekViewContent() {
     async function fetchInventory() {
       try {
         const data = await getInventory();
-        if (data.inventory?.fridge) {
-          setLeftoverInventory(data.inventory.fridge);
+        const processedInventory = transformInventory(data);
+        if (processedInventory.meals) {
+          setLeftoverInventory(processedInventory.meals);
         }
       } catch (err) {
         console.error('Failed to fetch inventory:', err);

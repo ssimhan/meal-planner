@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { getInventory, addItemToInventory, bulkAddItemsToInventory, deleteItemFromInventory, updateInventoryItem, moveInventoryItem } from '@/lib/api';
+import { transformInventory, NormalizedInventory } from '@/lib/inventoryManager';
 import AppLayout from '@/components/AppLayout';
 import Link from 'next/link';
 import { useToast } from '@/context/ToastContext';
@@ -10,12 +11,13 @@ import BrainDumpModal from '@/components/BrainDumpModal';
 
 export default function InventoryPage() {
     const [inventory, setInventory] = useState<any>(null);
+    const [normalized, setNormalized] = useState<NormalizedInventory | null>(null);
     const [loading, setLoading] = useState(true);
     const { showToast } = useToast();
     const [newItem, setNewItem] = useState({ category: 'fridge', name: '' });
     const [updating, setUpdating] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [activeTab, setActiveTab] = useState<'fridge' | 'pantry' | 'frozen_ingredient'>('fridge');
+    const [activeTab, setActiveTab] = useState<'prepared' | 'fridge' | 'pantry' | 'frozen_ingredient'>('prepared');
 
     // Undo states
     const [lastDeleted, setLastDeleted] = useState<{ category: string, item: any } | null>(null);
@@ -41,7 +43,8 @@ export default function InventoryPage() {
         try {
             setLoading(true);
             const data = await getInventory();
-            setInventory(data.inventory);
+            setInventory(data.inventory || data);
+            setNormalized(transformInventory(data));
         } catch (err: any) {
             showToast(err.message || 'Failed to load inventory.', 'error');
         } finally {
@@ -54,7 +57,7 @@ export default function InventoryPage() {
         try {
             // Deduplication Check
             const cleanItem = item.trim();
-            const existingList = inventory?.[category];
+            const existingList = inventory?.[category] || (category === 'frozen_ingredient' ? inventory?.freezer?.ingredients : (category === 'meals' ? inventory?.freezer?.backups : []));
             const existing = existingList?.find((i: any) =>
                 (i.item || i.meal || '').toLowerCase() === cleanItem.toLowerCase()
             );
@@ -62,32 +65,22 @@ export default function InventoryPage() {
             setUpdating(true);
 
             if (existing) {
-                // Determine update based on type
                 if (category === 'meals') {
-                    // Updating servings for a meal backup
-                    const currentServings = existing.servings || 0;
-                    // Ask user or default to +1 serving? Or +4? 
-                    // Let's increment by 1 batch (usually 4? or just 1?) 
-                    // Actually safer to just toast "Updated quantity" and increment by 1
                     await updateInventoryItem(category, existing.meal, {
-                        servings: currentServings + 1
+                        servings: (existing.servings || 0) + 1
                     });
                     showToast(`Added another serving of ${cleanItem}`, 'success');
                 } else {
-                    // Update quantity
-                    const currentQty = existing.quantity || 1;
                     await updateInventoryItem(category, existing.item, {
-                        quantity: currentQty + 1
+                        quantity: (existing.quantity || 1) + 1
                     });
                     showToast(`Increased quantity of ${cleanItem}`, 'success');
                 }
-                // Refresh
-                const result = await getInventory();
-                setInventory(result.inventory);
+                await fetchInventory();
             } else {
-                // Add new
                 const result = await addItemToInventory(category, cleanItem);
-                setInventory(result.inventory);
+                setInventory(result.inventory || result);
+                setNormalized(transformInventory(result));
                 showToast('Item added successfully!', 'success');
             }
 
@@ -105,12 +98,12 @@ export default function InventoryPage() {
             setUpdating(true);
             const result = await deleteItemFromInventory(category, itemName);
 
-            // Set up undo
             setLastDeleted({ category, item });
             setShowUndo(true);
-            setTimeout(() => setShowUndo(false), 5000); // Hide after 5 seconds
+            setTimeout(() => setShowUndo(false), 5000);
 
-            setInventory(result.inventory);
+            setInventory(result.inventory || result);
+            setNormalized(transformInventory(result));
         } catch (err: any) {
             showToast(err.message || 'Failed to delete item.', 'error');
         } finally {
@@ -122,8 +115,8 @@ export default function InventoryPage() {
         try {
             setUpdating(true);
             const result = await updateInventoryItem(category, item, updates);
-            setInventory(result.inventory);
-            // Don't toast for minor updates to avoid spam
+            setInventory(result.inventory || result);
+            setNormalized(transformInventory(result));
         } catch (err: any) {
             showToast(err.message || 'Failed to update item.', 'error');
         } finally {
@@ -135,7 +128,8 @@ export default function InventoryPage() {
         try {
             setUpdating(true);
             const result = await moveInventoryItem(item, fromCategory, toCategory);
-            setInventory(result.inventory);
+            setInventory(result.inventory || result);
+            setNormalized(transformInventory(result));
             showToast(`Moved to ${toCategory.replace('_', ' ')}`, 'success');
         } catch (err: any) {
             showToast(err.message || 'Failed to move item.', 'error');
@@ -373,7 +367,7 @@ export default function InventoryPage() {
                         <div className="card">
                             <div className="flex border-b border-[var(--border-subtle)] mb-6">
                                 {/* Tabs Header */}
-                                {['fridge', 'pantry', 'frozen_ingredient'].map((tab) => (
+                                {['prepared', 'fridge', 'pantry', 'frozen_ingredient'].map((tab) => (
                                     <button
                                         key={tab}
                                         onClick={() => setActiveTab(tab as any)}
@@ -384,9 +378,10 @@ export default function InventoryPage() {
                                     >
                                         {tab.replace('_', ' ')}
                                         <span className="ml-2 text-xs opacity-50">
-                                            {tab === 'fridge' ? (inventory?.fridge?.length || 0) :
-                                                tab === 'pantry' ? (inventory?.pantry?.length || 0) :
-                                                    (inventory?.freezer?.ingredients?.length || 0)}
+                                            {tab === 'prepared' ? (normalized?.meals?.length || 0) :
+                                                tab === 'fridge' ? (inventory?.fridge?.length || 0) :
+                                                    tab === 'pantry' ? (inventory?.pantry?.length || 0) :
+                                                        (inventory?.freezer?.ingredients?.length || 0)}
                                         </span>
                                     </button>
                                 ))}
@@ -395,6 +390,27 @@ export default function InventoryPage() {
                             {/* Tab Content */}
                             <div className="space-y-8 min-h-[300px]">
                                 {(() => {
+                                    if (activeTab === 'prepared') {
+                                        if (!normalized?.meals?.length) {
+                                            return <p className="text-sm text-[var(--text-muted)] italic">No prepared meals found.</p>;
+                                        }
+                                        return (
+                                            <div className="space-y-4">
+                                                {normalized.meals.map((item, idx) => (
+                                                    <InventoryItemRow
+                                                        key={`prepared-${idx}`}
+                                                        item={item}
+                                                        category={item.location === 'freezer' ? 'meals' : 'fridge'}
+                                                        onUpdate={handleUpdateItem}
+                                                        onDelete={handleDeleteItem}
+                                                        onMove={handleMoveItem}
+                                                        disabled={updating}
+                                                    />
+                                                ))}
+                                            </div>
+                                        );
+                                    }
+
                                     const currentItems = activeTab === 'fridge' ? inventory?.fridge :
                                         activeTab === 'pantry' ? inventory?.pantry :
                                             inventory?.freezer?.ingredients;

@@ -873,7 +873,8 @@ def suggest_options_route():
         leftovers = data.get('leftovers', [])
         
         # Load recipes
-        all_recipes_res = storage.supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id).execute()
+        all_recipes_query = storage.supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id)
+        all_recipes_res = storage.execute_with_retry(all_recipes_query)
         all_recipes = [{"id": r['id'], "name": r['name'], **(r.get('metadata') or {})} for r in all_recipes_res.data]
         
         # Load config

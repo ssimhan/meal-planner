@@ -27,7 +27,8 @@ def _load_config():
         return {'timezone': 'America/Los_Angeles'}
 
     try:
-        res = storage.supabase.table("households").select("config").eq("id", h_id).execute()
+        query = storage.supabase.table("households").select("config").eq("id", h_id)
+        res = storage.execute_with_retry(query)
         if res.data and len(res.data) > 0:
             config = res.data[0]['config']
             CACHE['config'] = {'data': config, 'timestamp': now}

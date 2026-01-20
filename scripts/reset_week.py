@@ -1,38 +1,36 @@
 import sys
 import os
+from pathlib import Path
 
-# Add the project root to the python path so we can import api modules
-sys.path.append(os.getcwd())
+# Add project root to sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from api.utils.storage import supabase, get_household_id
+from api.utils.storage import supabase, IS_SERVICE_ROLE
 
-def reset_week(week_of):
+TARGET_WEEK = '2026-01-26'
+HOUSEHOLD_ID = '00000000-0000-0000-0000-000000000001' # Default for now, matched storage.py default
+
+
+def list_and_reset():
     if not supabase:
         print("Error: Supabase client not initialized.")
         return
 
-    # We can't use get_household_id() easily because it relies on request context
-    # Hardcode the default ID used in storage.py fallback for now for local dev
-    # Or fetch it from a user if we had one.
-    # storage.py: return getattr(request, 'household_id', "00000000-0000-0000-0000-000000000001")
-    h_id = "00000000-0000-0000-0000-000000000001"
-    
-    print(f"Attempting to reset (delete) meal plan for week: {week_of}")
-    
+    print("Fetching ALL meal plans to verify dates...")
     try:
-        # Check if it exists first
-        res = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_of).execute()
-        if not res.data:
-            print(f"No plan found for {week_of}. Nothing to delete.")
-            return
+        res = supabase.table("meal_plans").select("id, week_of, status").execute()
+        print(f"Found {len(res.data)} plans:")
+        for plan in res.data:
+            print(f" - {plan['week_of']} ({plan['status']}) [ID: {plan['id']}]")
+            
+            if plan['week_of'] == TARGET_WEEK:
+                print(f"   -> MATCH FOUND! Deleting {plan['id']}...")
+                del_res = supabase.table("meal_plans").delete().eq("id", plan['id']).execute()
+                print(f"   -> Deleted: {del_res.data}")
 
-        # Delete the plan
-        del_res = supabase.table("meal_plans").delete().eq("household_id", h_id).eq("week_of", week_of).execute()
-        print(f"Successfully deleted plan for {week_of}")
-        
     except Exception as e:
-        print(f"Error deleting plan: {e}")
+        print(f"Error listing/deleting plans: {e}")
 
-if __name__ == "__main__":
-    # Target week: Jan 12, 2026
-    reset_week("2026-01-12")
+if __name__ == '__main__':
+    list_and_reset()
+

@@ -61,7 +61,7 @@ def execute_with_retry(query, max_retries=3, delay=0.5):
             last_exception = e
             msg = str(e)
             # Retry on specific network errors
-            if "[Errno 35]" in msg or "Resource temporarily unavailable" in msg or "httpx" in msg:
+            if "[Errno 35]" in msg or "[Errno 8]" in msg or "Resource temporarily unavailable" in msg or "nodename nor servname provided" in msg or "httpx" in msg:
                 print(f"Supabase query retry {i+1}/{max_retries} due to: {e}")
                 time.sleep(delay * (2 ** i)) # Exponential backoff
                 continue
@@ -80,7 +80,8 @@ class StorageEngine:
     @staticmethod
     def get_inventory():
         h_id = get_household_id()
-        res = supabase.table("inventory_items").select("*").eq("household_id", h_id).execute()
+        query = supabase.table("inventory_items").select("*").eq("household_id", h_id)
+        res = execute_with_retry(query)
         
         # Transform flat DB rows back to the nested YAML structure for compatibility
         # Transform flat DB rows back to the nested YAML structure for compatibility
@@ -116,7 +117,8 @@ class StorageEngine:
         if not supabase: return []
         h_id = get_household_id()
         try:
-            res = supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id).execute()
+            query = supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id)
+            res = execute_with_retry(query)
             if not res or not hasattr(res, 'data') or res.data is None:
                 return []
                 

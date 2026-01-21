@@ -1,6 +1,8 @@
 import React from 'react';
 import ReplacementModal from '@/components/ReplacementModal';
 import { InventoryState } from '@/types';
+import { WizardProgress } from './WizardProgress';
+import { toTitleCase } from '@/lib/utils';
 
 interface InventoryStepProps {
     step: 'inventory';
@@ -20,7 +22,7 @@ interface InventoryStepProps {
     handleReplacementConfirm: (newMeal: string, req: boolean, status: any) => void;
     recipes: { id: string, name: string }[];
     inventory: InventoryState | null;
-    WizardProgress: React.ComponentType<{ currentStep: string }>;
+
 }
 
 export const InventoryStep: React.FC<InventoryStepProps> = ({
@@ -41,7 +43,7 @@ export const InventoryStep: React.FC<InventoryStepProps> = ({
     handleReplacementConfirm,
     recipes,
     inventory,
-    WizardProgress
+
 }) => {
     return (
         <main className="container mx-auto max-w-5xl px-4 py-12">

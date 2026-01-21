@@ -1,5 +1,6 @@
 import React from 'react';
 import { ReviewDay } from '@/types';
+import { WizardProgress } from './WizardProgress';
 
 interface ReviewStepProps {
     step: 'review_meals' | 'review_snacks';
@@ -10,7 +11,7 @@ interface ReviewStepProps {
     handleUpdateSnack: (day: string, field: any, value: any) => void;
     handleSubmitReview: () => void;
     dayNames: Record<string, string>;
-    WizardProgress: React.ComponentType<{ currentStep: string }>;
+
 }
 
 export const ReviewStep: React.FC<ReviewStepProps> = ({
@@ -21,8 +22,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
     handleUpdateDinner,
     handleUpdateSnack,
     handleSubmitReview,
-    dayNames,
-    WizardProgress
+    dayNames
 }) => {
     // REVIEW MEALS UI
     if (step === 'review_meals') {

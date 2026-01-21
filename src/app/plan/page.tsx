@@ -21,10 +21,15 @@ import {
 import { transformInventory, NormalizedInventory } from '@/lib/inventoryManager';
 import AppLayout from '@/components/AppLayout';
 import Skeleton from '@/components/Skeleton';
-import ReplacementModal from '@/components/ReplacementModal';
+
 import { useToast } from '@/context/ToastContext';
 import { ReviewStep } from './components/ReviewStep';
 import { InventoryStep } from './components/InventoryStep';
+import { DraftStep } from './components/DraftStep';
+import { SuggestionsStep } from './components/SuggestionsStep';
+import { GroceryStep } from './components/GroceryStep';
+import { WizardProgress } from './components/WizardProgress';
+
 import { ReviewDay, InventoryState } from '@/types';
 
 
@@ -59,53 +64,9 @@ function PlanningWizardContent() {
         checkStatus();
     }, [searchParams, router]);
 
-    const toTitleCase = (str: string) => {
-        return str.replace(/\b\w/g, l => l.toUpperCase());
-    };
 
-    // Wizard Phases for top navigation
-    const PHASES = [
-        { id: 'review', label: 'Review', icon: '📝', steps: ['review_meals', 'review_snacks'] },
-        { id: 'inventory', label: 'Inventory', icon: '🥦', steps: ['inventory'] },
-        { id: 'plan', label: 'Plan', icon: '🍳', steps: ['suggestions', 'draft', 'groceries'] }
-    ];
 
-    // Progress Breadcrumb Component
-    const WizardProgress = ({ currentStep }: { currentStep: string }) => {
-        const currentPhaseIndex = PHASES.findIndex(p => p.steps.includes(currentStep));
 
-        return (
-            <div className="flex items-center justify-center gap-4 mb-12">
-                {PHASES.map((p, idx) => {
-                    const isActive = idx === currentPhaseIndex;
-                    const isCompleted = idx < currentPhaseIndex;
-
-                    return (
-                        <div key={p.id} className="flex items-center gap-4">
-                            <div className="flex flex-col items-center gap-2">
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg transition-all duration-300 ${isActive
-                                    ? 'bg-[var(--accent-sage)] text-white shadow-lg scale-110'
-                                    : isCompleted
-                                        ? 'bg-[var(--accent-sage)] bg-opacity-20 text-[var(--accent-sage)]'
-                                        : 'bg-[var(--bg-secondary)] text-[var(--text-muted)] opacity-50'
-                                    }`}>
-                                    {isCompleted ? '✓' : p.icon}
-                                </div>
-                                <span className={`text-[10px] font-black uppercase tracking-widest ${isActive ? 'text-[var(--accent-sage)]' : 'text-[var(--text-muted)]'
-                                    }`}>
-                                    {p.label}
-                                </span>
-                            </div>
-                            {idx < PHASES.length - 1 && (
-                                <div className={`h-[2px] w-12 rounded-full ${isCompleted ? 'bg-[var(--accent-sage)] bg-opacity-30' : 'bg-[var(--bg-secondary)]'
-                                    }`} />
-                            )}
-                        </div>
-                    );
-                })}
-            </div>
-        );
-    };
 
     // Step State
     const [reviews, setReviews] = useState<ReviewDay[]>([]);
@@ -755,516 +716,89 @@ function PlanningWizardContent() {
 
     // STEP 6: SMART GROCERY LIST UI
     if (step === 'groceries') {
-        // Normalize shoppingList items to strings for display
-        const shoppingListStrings = shoppingList.map(item =>
-            typeof item === 'string' ? item : item.item
-        );
-        const allItems = [...new Set([...shoppingListStrings, ...customShoppingItems])];
-
-        const togglePurchased = (itemName: string) => {
-            setPurchasedItems(prev =>
-                prev.includes(itemName) ? prev.filter(i => i !== itemName) : [...prev, itemName]
-            );
-        };
-
-        const handleAddCustomItem = () => {
-            if (!newShoppingItem.trim()) return;
-            setCustomShoppingItems(prev => [...prev, toTitleCase(newShoppingItem.trim())]);
-            setNewShoppingItem('');
-        };
-
-        // Group items by store for better display
-        const getStore = (itemName: string): string => {
-            const found = shoppingList.find(i =>
-                (typeof i === 'string' ? i : i.item) === itemName
-            );
-            return found && typeof found === 'object' ? found.store : 'Other';
-        };
-
-        // Group by store
-        const itemsByStore: Record<string, string[]> = {};
-        allItems.forEach(itemName => {
-            const store = getStore(itemName);
-            if (!itemsByStore[store]) itemsByStore[store] = [];
-            itemsByStore[store].push(itemName);
-        });
-
         return (
-            <main className="container mx-auto max-w-3xl px-4 py-12">
-                <WizardProgress currentStep={step} />
-
-                <header className="mb-8">
-                    <div className="flex flex-col items-end gap-3">
-                        <button
-                            onClick={async () => {
-                                setSubmitting(true);
-                                try {
-                                    if (purchasedItems.length > 0) {
-                                        const changes = purchasedItems.map(item => ({
-                                            category: 'fridge',
-                                            item,
-                                            operation: 'add' as const
-                                        }));
-                                        await bulkUpdateInventory(changes);
-                                    }
-                                    await finalizePlan(planningWeek!);
-                                    showToast('Plan finalized and inventory updated!', 'success');
-                                    router.push('/');
-                                } catch (e) {
-                                    showToast('Failed to finalize plan', 'error');
-                                } finally {
-                                    setSubmitting(false);
-                                }
-                            }}
-                            disabled={submitting}
-                            className="btn-premium px-8 py-4 shadow-xl flex items-center gap-2 text-sm"
-                        >
-                            {submitting ? '...' : 'Finalize Plan 🎉'}
-                        </button>
-                        <button onClick={() => setStep('draft')} className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--accent-sage)] transition-colors">
-                            ← Back to Draft
-                        </button>
-                    </div>
-                </header>
-
-                <div className="card mb-8">
-                    {loading ? (
-                        <Skeleton className="h-48 w-full" />
-                    ) : (
-                        <div className="space-y-6">
-                            <div className="flex gap-2">
-                                <input
-                                    type="text"
-                                    placeholder="Add custom item (e.g. Milk, Apples)..."
-                                    value={newShoppingItem}
-                                    onChange={(e) => setNewShoppingItem(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && handleAddCustomItem()}
-                                    className="flex-1 p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg"
-                                />
-                                <button onClick={handleAddCustomItem} className="btn-secondary px-6">Add</button>
-                            </div>
-
-                            {Object.entries(itemsByStore).length > 0 ? (
-                                Object.entries(itemsByStore).map(([store, items]) => (
-                                    <div key={store}>
-                                        <h3 className="text-sm font-bold uppercase text-[var(--accent-sage)] mb-2">{store}</h3>
-                                        <ul className="space-y-3">
-                                            {items.map((itemName, i) => {
-                                                const isPurchased = purchasedItems.includes(itemName);
-                                                return (
-                                                    <li key={i} className={`flex items-center gap-4 p-4 rounded-lg border transition-all cursor-pointer ${isPurchased ? 'bg-green-50 border-[var(--accent-sage)] opacity-80' : 'bg-[var(--bg-secondary)] border-[var(--border-subtle)]'}`}
-                                                        onClick={() => togglePurchased(itemName)}>
-                                                        <div className={`w-6 h-6 rounded flex items-center justify-center border-2 ${isPurchased ? 'bg-[var(--accent-sage)] border-[var(--accent-sage)]' : 'border-[var(--text-muted)]'}`}>
-                                                            {isPurchased && <span className="text-white">✓</span>}
-                                                        </div>
-                                                        <span className={`text-lg ${isPurchased ? 'line-through text-[var(--text-muted)]' : ''}`}>{itemName}</span>
-                                                    </li>
-                                                );
-                                            })}
-                                        </ul>
-                                    </div>
-                                ))
-                            ) : (
-                                <p className="text-center py-8 text-[var(--text-muted)] italic">No items needed! Use the input above to add extras.</p>
-                            )}
-                        </div>
-                    )}
-                </div>
-
-            </main>
+            <GroceryStep
+                step={step}
+                planningWeek={planningWeek}
+                shoppingList={shoppingList}
+                customShoppingItems={customShoppingItems}
+                setCustomShoppingItems={setCustomShoppingItems}
+                purchasedItems={purchasedItems}
+                setPurchasedItems={setPurchasedItems}
+                submitting={submitting}
+                setSubmitting={setSubmitting}
+                setStep={setStep}
+                bulkUpdateInventory={bulkUpdateInventory}
+                finalizePlan={finalizePlan}
+                showToast={showToast}
+                router={router}
+                loading={loading}
+            />
         );
     }
 
     // STEP 5: TENTATIVE PLAN UI
     if (step === 'draft') {
-        const dayNames: any = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
         return (
-            <main className="container mx-auto max-w-5xl px-4 py-12">
-                <WizardProgress currentStep={step} />
-
-                <header className="mb-8">
-                    <div className="flex justify-between items-start mb-4">
-                        <div>
-                            <h1 className="text-3xl font-bold">Review Your Plan</h1>
-                            <p className="text-[var(--text-muted)] mt-2">
-                                Here's the proposed meal plan for {planningWeek}. Lock days you like, edit any you don't.
-                            </p>
-                        </div>
-                        <div className="flex flex-col items-end gap-3">
-                            <button
-                                onClick={async () => {
-                                    setStep('groceries');
-                                    try {
-                                        const res = await getShoppingList(planningWeek!);
-                                        setShoppingList(res.shopping_list);
-                                    } catch (e) {
-                                        console.error(e);
-                                    }
-                                }}
-                                className="btn-premium px-8 py-4 shadow-xl flex items-center gap-2 text-sm"
-                            >
-                                Next: Shopping List →
-                            </button>
-                            <button onClick={() => setStep('suggestions')} className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--accent-sage)] transition-colors">
-                                ← Back to Planning
-                            </button>
-                        </div>
-                    </div>
-                </header>
-
-                {loading || !draftPlan ? (
-                    <div className="space-y-4">
-                        <Skeleton className="h-32 w-full" />
-                        <Skeleton className="h-32 w-full" />
-                        <Skeleton className="h-32 w-full" />
-                    </div>
-                ) : (
-                    <div className="space-y-6">
-                        <div className="grid gap-6">
-                            {['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map(day => {
-                                const dinner = draftPlan.dinners?.find((d: any) => d.day === day);
-                                const lunch = draftPlan.lunches?.[day];
-                                const snacks = draftPlan.snacks?.[day] || {};
-                                const isLocked = lockedDays.includes(day);
-
-                                return (
-                                    <div key={day} className={`card overflow-visible transition-all ${isLocked ? 'border-l-4 border-l-[var(--accent-sage)] bg-green-50/10' : ''}`}>
-                                        <div className="flex justify-between items-center border-b border-[var(--border-subtle)] pb-2 mb-4">
-                                            <div className="flex items-center gap-3">
-                                                <span className="font-mono text-sm uppercase text-[var(--accent-sage)] tracking-widest font-black">{dayNames[day]}</span>
-                                                {isLocked && <span className="text-[10px] bg-[var(--accent-sage)] text-white px-2 py-0.5 rounded-full font-black uppercase tracking-widest">Locked</span>}
-                                            </div>
-                                            <button
-                                                onClick={() => setLockedDays(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day])}
-                                                className={`p-2 rounded-full transition-all ${isLocked ? 'text-[var(--accent-sage)] bg-white shadow-sm' : 'text-[var(--text-muted)] hover:bg-[var(--bg-secondary)]'}`}
-                                                title={isLocked ? "Unlock Day" : "Lock Day (Keep when regenerating)"}
-                                            >
-                                                {isLocked ? '🔒' : '🔓'}
-                                            </button>
-                                        </div>
-
-                                        <div className="grid md:grid-cols-3 gap-4">
-                                            {/* Dinner Slot */}
-                                            <div className="flex flex-col p-3 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-subtle)] hover:border-[var(--accent-sage)] transition-colors group">
-                                                <div className="flex justify-between items-start mb-1">
-                                                    <label className="text-[10px] uppercase font-black tracking-widest text-[var(--text-muted)]">Dinner</label>
-                                                    <button
-                                                        onClick={() => setIsReplacing({ day, slot: 'dinner', currentMeal: dinner?.recipe_id || '' })}
-                                                        className="opacity-0 group-hover:opacity-100 text-[var(--accent-sage)] text-xs font-bold"
-                                                    >
-                                                        Edit
-                                                    </button>
-                                                </div>
-                                                <p className="font-bold text-sm line-clamp-2">
-                                                    {dinner?.recipe_name || dinner?.recipe_id?.replace(/_/g, ' ') || 'Not Planned'}
-                                                </p>
-                                                {dinner?.vegetables && dinner.vegetables.length > 0 && (
-                                                    <p className="text-[10px] text-[var(--text-muted)] mt-1 font-medium">🥬 {dinner.vegetables.join(', ')}</p>
-                                                )}
-                                            </div>
-
-                                            {/* Lunch Slot */}
-                                            <div className="flex flex-col p-3 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-subtle)] hover:border-blue-200 transition-colors group">
-                                                <div className="flex justify-between items-start mb-1">
-                                                    <label className="text-[10px] uppercase font-black tracking-widest text-[var(--text-muted)]">Lunch</label>
-                                                    <button
-                                                        onClick={() => setIsReplacing({ day, slot: 'lunch', currentMeal: lunch?.recipe_name || '' })}
-                                                        className="opacity-0 group-hover:opacity-100 text-blue-500 text-xs font-bold"
-                                                    >
-                                                        Edit
-                                                    </button>
-                                                </div>
-                                                <p className="font-bold text-sm line-clamp-2">
-                                                    {lunch?.recipe_name || 'Not Planned'}
-                                                </p>
-                                                {lunch?.prep_style && (
-                                                    <p className="text-[10px] text-blue-500 mt-1 font-black uppercase tracking-widest">{lunch.prep_style.replace('_', ' ')}</p>
-                                                )}
-                                            </div>
-
-                                            {/* Snacks Slot */}
-                                            <div className="flex flex-col p-3 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-subtle)] hover:border-amber-200 transition-colors group">
-                                                <div className="flex justify-between items-start mb-1">
-                                                    <label className="text-[10px] uppercase font-black tracking-widest text-[var(--text-muted)]">Snacks</label>
-                                                    <div className="flex gap-2 opacity-0 group-hover:opacity-100">
-                                                        <button
-                                                            onClick={() => setIsReplacing({ day, slot: 'school_snack', currentMeal: snacks.school_snack || '' })}
-                                                            className="text-amber-500 text-[10px] font-bold"
-                                                        >
-                                                            Edit School
-                                                        </button>
-                                                        <button
-                                                            onClick={() => setIsReplacing({ day, slot: 'home_snack', currentMeal: snacks.home_snack || '' })}
-                                                            className="text-amber-500 text-[10px] font-bold"
-                                                        >
-                                                            Edit Home
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <div className="space-y-1">
-                                                    <p className="text-xs">
-                                                        <span className="text-[var(--text-muted)] font-medium">🏫</span> {snacks.school_snack || 'None'}
-                                                    </p>
-                                                    <p className="text-xs">
-                                                        <span className="text-[var(--text-muted)] font-medium">🏠</span> {snacks.home_snack || 'None'}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-
-                        <div className="flex justify-center mt-6">
-                            <button
-                                onClick={async () => {
-                                    setLoading(true);
-                                    try {
-                                        // Pass lockedDays to regenerate everything else
-                                        const res = await generateDraft(planningWeek!, selections, lockedDays, leftoverAssignments, excludedDefaults);
-                                        setDraftPlan(res.plan_data);
-                                        showToast('Plan regenerated!', 'success');
-                                    } catch (e) {
-                                        console.error(e);
-                                        showToast('Failed to regenerate plan', 'error');
-                                    } finally {
-                                        setLoading(false);
-                                    }
-                                }}
-                                disabled={loading}
-                                className="text-sm font-black uppercase tracking-widest text-[var(--accent-sage)] hover:text-[var(--foreground)] flex items-center gap-2 bg-white px-6 py-3 rounded-full shadow-sm border border-[var(--border-subtle)] hover:shadow-md transition-all"
-                            >
-                                🔄 Regenerate Unlocked Days
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-                {isReplacing && (
-                    <ReplacementModal
-                        day={isReplacing.day}
-                        currentMeal={isReplacing.currentMeal}
-                        recipes={recipes}
-                        leftoverInventory={inventory?.meals || []}
-                        onConfirm={(newMeal, req, status) => handleReplacementConfirm(newMeal, req, status)}
-                        onCancel={() => setIsReplacing(null)}
-                    />
-                )}
-            </main>
+            <DraftStep
+                step={step}
+                planningWeek={planningWeek}
+                draftPlan={draftPlan}
+                setDraftPlan={setDraftPlan}
+                loading={loading}
+                setLoading={setLoading}
+                setStep={setStep}
+                lockedDays={lockedDays}
+                setLockedDays={setLockedDays}
+                isReplacing={isReplacing}
+                setIsReplacing={setIsReplacing}
+                handleReplacementConfirm={handleReplacementConfirm}
+                generateDraft={generateDraft}
+                getShoppingList={getShoppingList}
+                setShoppingList={setShoppingList}
+                showToast={showToast}
+                selections={selections}
+                leftoverAssignments={leftoverAssignments}
+                excludedDefaults={excludedDefaults}
+                recipes={recipes}
+                inventory={inventory}
+            />
         );
     }
 
-    const WeeklyMealGrid = ({ phase }: { phase: 'dinners' | 'lunches' | 'snacks' }) => {
-        const days = phase === 'snacks' ? ['mon', 'tue', 'wed', 'thu', 'fri'] : ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-        const displayDays = phase === 'lunches' ? ['mon', 'tue', 'wed', 'thu', 'fri'] : days;
 
-        const getSlotContent = (day: string, slot: string) => {
-            const leftover = leftoverAssignments.find(l => l.day === day && l.slot === slot);
-            if (leftover) return { type: 'Leftover', name: leftover.item, color: 'purple' };
-
-            const selection = selections.find(s => s.day === day && (s as any).slot === slot);
-            if (selection) return { type: 'Recipe', name: selection.recipe_name, color: slot === 'dinner' ? 'sage' : 'blue' };
-
-            return null;
-        };
-
-        const slots = phase === 'dinners' ? ['dinner'] :
-            phase === 'lunches' ? ['lunch'] :
-                ['school_snack', 'home_snack'];
-
-        return (
-            <div className={`grid grid-cols-1 ${displayDays.length > 1 ? 'md:grid-cols-7' : 'md:grid-cols-2'} gap-4 mb-12`}>
-                {displayDays.map(day => (
-                    <div key={day} className="space-y-3">
-                        <h3 className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] px-1">{day}</h3>
-                        {slots.map(slot => {
-                            const content = getSlotContent(day, slot);
-                            const isConfirmed = confirmedSelections[`${day}-${slot}`];
-
-                            return (
-                                <div key={slot} className={`card p-4 min-h-[140px] flex flex-col justify-between transition-all ${isConfirmed ? 'border-[var(--accent-sage)] bg-green-50/30' : 'border-dashed border-gray-200 bg-white'}`}>
-                                    <div className="flex flex-col gap-1">
-                                        <div className="flex justify-between items-start">
-                                            <span className={`text-[8px] font-black uppercase tracking-tight px-1.5 py-0.5 rounded leading-none ${slot === 'school_snack' ? 'bg-amber-100 text-amber-700' :
-                                                slot === 'home_snack' ? 'bg-orange-100 text-orange-700' :
-                                                    content?.type === 'Leftover' ? 'bg-purple-100 text-purple-700' :
-                                                        'bg-blue-100 text-blue-700'
-                                                }`}>
-                                                {slot === 'school_snack' ? 'School' : slot === 'home_snack' ? 'Home' : content?.type || slot}
-                                            </span>
-                                            {isConfirmed && <span className="text-[var(--accent-sage)] text-xs">✓</span>}
-                                        </div>
-                                        <p className="text-sm font-bold leading-tight mt-2 line-clamp-3 h-[3.5em]">
-                                            {content?.name || 'Empty'}
-                                        </p>
-                                    </div>
-
-                                    <div className="flex flex-col gap-2 mt-4">
-                                        {!isConfirmed ? (
-                                            <button
-                                                onClick={() => setConfirmedSelections(prev => ({ ...prev, [`${day}-${slot}`]: true }))}
-                                                className="w-full py-2 bg-[var(--accent-sage)] text-white text-[9px] font-black uppercase tracking-widest rounded-lg shadow-sm hover:opacity-90 transition-all"
-                                            >
-                                                Confirm
-                                            </button>
-                                        ) : (
-                                            <button
-                                                onClick={() => setConfirmedSelections(prev => ({ ...prev, [`${day}-${slot}`]: false }))}
-                                                className="w-full py-2 bg-white border border-[var(--accent-sage)] text-[var(--accent-sage)] text-[9px] font-black uppercase tracking-widest rounded-lg shadow-sm hover:bg-green-50 transition-all"
-                                            >
-                                                Confirmed
-                                            </button>
-                                        )}
-                                        <button
-                                            onClick={() => setIsReplacing({ day, slot, currentMeal: content?.name || '' })}
-                                            className="w-full py-2 bg-gray-50 text-[var(--text-muted)] text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-gray-100 transition-all"
-                                        >
-                                            Swap
-                                        </button>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                ))}
-            </div>
-        );
-    };
 
     // STEP 2: SUGGESTIONS (Dinners, Lunches, Snacks)
     if (step === 'suggestions') {
-        const toggleSelection = (recipe: { id: string, name: string }, slot: string) => {
-            const days = ['mon', 'tue', 'wed', 'thu', 'fri'];
-            const alreadySelected = selections.find(s => (s as any).slot === slot && s.recipe_id === recipe.id);
-
-            if (alreadySelected) {
-                setSelections(prev => prev.filter(s => !((s as any).slot === slot && s.recipe_id === recipe.id)));
-            } else {
-                // Remove existing for this slot across all days
-                const baseSelections = selections.filter(s => (s as any).slot !== slot);
-                const newSelections = days.map(day => ({
-                    day,
-                    slot,
-                    recipe_id: recipe.id,
-                    recipe_name: recipe.name
-                }));
-                setSelections([...baseSelections, ...newSelections]);
-            }
-        };
-
-        const toggleDaySelection = (recipe: { id: string, name: string }, slot: string, day: string) => {
-            const alreadySelected = selections.find(s => s.day === day && (s as any).slot === slot && s.recipe_id === recipe.id);
-
-            if (alreadySelected) {
-                setSelections(prev => prev.filter(s => !(s.day === day && (s as any).slot === slot)));
-            } else {
-                const baseSelections = selections.filter(s => !(s.day === day && (s as any).slot === slot));
-                setSelections([...baseSelections, {
-                    day,
-                    slot,
-                    recipe_id: recipe.id,
-                    recipe_name: recipe.name
-                }]);
-            }
-        };
-
-        const isSlotSelected = (recipeId: string, slot: string, day?: string) => {
-            if (day) {
-                return selections.some(s => s.day === day && (s as any).slot === slot && s.recipe_id === recipeId);
-            }
-            return selections.some(s => (s as any).slot === slot && s.recipe_id === recipeId);
-        };
-
         return (
-            <main className="container mx-auto max-w-5xl px-4 py-12">
-                <WizardProgress currentStep={step} />
-
-                <header className="mb-12">
-                    <div className="flex justify-between items-start">
-                        <div>
-                            <div className="flex items-center gap-3 mb-2">
-                                <span className="text-2xl">{suggestionPhase === 'dinners' ? '🍳' : suggestionPhase === 'lunches' ? '🍱' : '🍿'}</span>
-                                <h1 className="text-3xl font-bold tracking-tight">
-                                    {suggestionPhase === 'dinners' ? 'Confirm Dinners' :
-                                        suggestionPhase === 'lunches' ? 'Confirm Lunches' : 'Confirm Snacks'}
-                                </h1>
-                            </div>
-                            <p className="text-[var(--text-muted)] max-w-xl">
-                                {suggestionPhase === 'dinners'
-                                    ? 'We’ve auto-filled your week with Waste-Not suggestions. Confirm or swap as needed.' :
-                                    suggestionPhase === 'lunches'
-                                        ? 'Lunches pre-filled using fridge leftovers first, then context-aware recipes.'
-                                        : 'Snacks confirmed for school and home. Adjust if the kids need something else!'
-                                }
-                            </p>
-                        </div>
-                        <div className="flex flex-col items-end gap-3">
-                            <button
-                                onClick={async () => {
-                                    if (suggestionPhase === 'dinners') {
-                                        setSuggestionPhase('lunches');
-                                        window.scrollTo(0, 0);
-                                    } else if (suggestionPhase === 'lunches') {
-                                        setSuggestionPhase('snacks');
-                                        window.scrollTo(0, 0);
-                                    } else {
-                                        setSubmitting(true);
-                                        try {
-                                            await createWeek(planningWeek!);
-                                            const res = await generateDraft(planningWeek!, selections, [], leftoverAssignments, excludedDefaults);
-                                            setDraftPlan(res.plan_data);
-                                            setStep('draft');
-                                        } catch (e) {
-                                            console.error(e);
-                                            showToast('Failed to generate plan', 'error');
-                                        } finally {
-                                            setSubmitting(false);
-                                        }
-                                    }
-                                }}
-                                disabled={submitting}
-                                className="btn-premium px-8 py-4 shadow-xl flex items-center gap-2 text-sm"
-                            >
-                                {submitting ? '...' : (suggestionPhase === 'lunches' ? 'Next: Plan Snacks →' : suggestionPhase === 'dinners' ? 'Next: Plan Lunches →' : 'Review Draft ✨')}
-                            </button>
-                            <button onClick={() => setStep('inventory')} className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--accent-sage)] transition-colors">
-                                ← Back to Inventory
-                            </button>
-                        </div>
-                    </div>
-                </header>
-
-                {loadingSuggestions || !suggestionOptions ? (
-                    error ? (
-                        <div className="flex flex-col items-center justify-center p-12 text-center rounded-2xl bg-red-50 border border-red-200">
-                            <p className="text-red-600 mb-4 font-bold">{error}</p>
-                            <button
-                                onClick={loadSuggestions}
-                                className="px-6 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors font-bold text-sm"
-                            >
-                                Retry
-                            </button>
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
-                            {[1, 2, 3, 4, 5, 6, 7].map(i => <Skeleton key={i} className="h-48 w-full rounded-2xl" />)}
-                        </div>
-                    )
-                ) : (
-                    <WeeklyMealGrid phase={suggestionPhase} />
-                )}
-                {isReplacing && (
-                    <ReplacementModal
-                        day={isReplacing.day}
-                        currentMeal={isReplacing.currentMeal}
-                        recipes={recipes}
-                        leftoverInventory={inventory?.meals || []}
-                        onConfirm={(newMeal, req, status) => handleReplacementConfirm(newMeal, req, status)}
-                        onCancel={() => setIsReplacing(null)}
-                    />
-                )}
-            </main>
+            <SuggestionsStep
+                step={step}
+                suggestionPhase={suggestionPhase}
+                setSuggestionPhase={setSuggestionPhase}
+                selections={selections}
+                setSelections={setSelections}
+                planningWeek={planningWeek}
+                setStep={setStep}
+                submitting={submitting}
+                setSubmitting={setSubmitting}
+                createWeek={createWeek}
+                generateDraft={generateDraft}
+                setDraftPlan={setDraftPlan}
+                showToast={showToast}
+                loadingSuggestions={loadingSuggestions}
+                suggestionOptions={suggestionOptions}
+                error={error}
+                loadSuggestions={loadSuggestions}
+                leftoverAssignments={leftoverAssignments}
+                confirmedSelections={confirmedSelections}
+                setConfirmedSelections={setConfirmedSelections}
+                isReplacing={isReplacing}
+                setIsReplacing={setIsReplacing}
+                handleReplacementConfirm={handleReplacementConfirm}
+                recipes={recipes}
+                inventory={inventory}
+                excludedDefaults={excludedDefaults}
+            />
         );
     }
 
@@ -1289,7 +823,7 @@ function PlanningWizardContent() {
                 handleReplacementConfirm={handleReplacementConfirm}
                 recipes={recipes}
                 inventory={inventory}
-                WizardProgress={WizardProgress}
+
             />
         );
     }
@@ -1307,7 +841,7 @@ function PlanningWizardContent() {
                 handleUpdateSnack={handleUpdateSnack}
                 handleSubmitReview={handleSubmitReview}
                 dayNames={dayNames}
-                WizardProgress={WizardProgress}
+
             />
         );
     }
@@ -1326,7 +860,7 @@ function PlanningWizardContent() {
                 handleUpdateSnack={handleUpdateSnack}
                 handleSubmitReview={handleSubmitReview}
                 dayNames={dayNames}
-                WizardProgress={WizardProgress}
+
             />
         );
     }

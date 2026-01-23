@@ -1,4 +1,5 @@
 import React from 'react';
+import { useWizardContext } from '../context/WizardContext';
 import Skeleton from '@/components/Skeleton';
 import ReplacementModal from '@/components/ReplacementModal';
 import { WizardProgress } from './WizardProgress';
@@ -96,63 +97,36 @@ const WeeklyMealGrid: React.FC<WeeklyMealGridProps> = ({
     );
 };
 
-interface SuggestionsStepProps {
-    step: string;
-    suggestionPhase: 'dinners' | 'lunches' | 'snacks';
-    setSuggestionPhase: (phase: 'dinners' | 'lunches' | 'snacks') => void;
-    selections: any[];
-    setSelections: React.Dispatch<React.SetStateAction<any[]>>;
-    planningWeek: string | null;
-    setStep: (step: any) => void;
-    submitting: boolean;
-    setSubmitting: (val: boolean) => void;
-    createWeek: (week: string) => Promise<any>;
-    generateDraft: (week: string, selections: any[], locked: any[], leftovers: any[], excluded: any[]) => Promise<any>;
-    setDraftPlan: (plan: any) => void;
-    showToast: (msg: string, type: 'success' | 'error') => void;
-    loadingSuggestions: boolean;
-    suggestionOptions: any;
-    error: string | null;
-    loadSuggestions: () => void;
-    leftoverAssignments: any[];
-    confirmedSelections: Record<string, boolean>;
-    setConfirmedSelections: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
-    isReplacing: { day: string, slot: string, currentMeal: string } | null;
-    setIsReplacing: (val: any) => void;
-    handleReplacementConfirm: (newMeal: string, req: boolean, status: any) => void;
-    recipes: any[];
-    inventory: any;
-    excludedDefaults: any[];
-}
+export const SuggestionsStep: React.FC = () => {
+    const {
+        step,
+        suggestionPhase,
+        setSuggestionPhase,
+        selections,
+        setSelections,
+        planningWeek,
+        setStep,
+        submitting,
+        setSubmitting,
+        createWeek,
+        generateDraft,
+        setDraftPlan,
+        showToast,
+        loadingSuggestions,
+        suggestionOptions,
+        error,
+        loadSuggestions,
+        leftoverAssignments,
+        confirmedSelections,
+        setConfirmedSelections,
+        isReplacing,
+        setIsReplacing,
+        handleReplacementConfirm,
+        recipes,
+        inventory,
+        excludedDefaults
+    } = useWizardContext();
 
-export const SuggestionsStep: React.FC<SuggestionsStepProps> = ({
-    step,
-    suggestionPhase,
-    setSuggestionPhase,
-    selections,
-    setSelections,
-    planningWeek,
-    setStep,
-    submitting,
-    setSubmitting,
-    createWeek,
-    generateDraft,
-    setDraftPlan,
-    showToast,
-    loadingSuggestions,
-    suggestionOptions,
-    error,
-    loadSuggestions,
-    leftoverAssignments,
-    confirmedSelections,
-    setConfirmedSelections,
-    isReplacing,
-    setIsReplacing,
-    handleReplacementConfirm,
-    recipes,
-    inventory,
-    excludedDefaults
-}) => {
 
     const toggleSelection = (recipe: { id: string, name: string }, slot: string) => {
         const days = ['mon', 'tue', 'wed', 'thu', 'fri'];

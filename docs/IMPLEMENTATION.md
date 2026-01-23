@@ -164,7 +164,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
 - **Block 1: Component Extraction (~3 hrs) ✅ Partially Complete**
   - [x] Extract `ReviewStep` component
   - [x] Extract `InventoryStep` component
-  - [ ] Extract `SuggestionsStep`, `DraftStep`, and `GroceryStep` components
+  - [x] Extract `SuggestionsStep`, `DraftStep`, and `GroceryStep` components
   - [x] **Critical Fixes:** Resolved infinite rendering loops & SSL connection errors.
 - **Block 2: State Logic Separation (~3 hrs)**
   - [ ] Create `WizardContext` (Recommended to fix circular dependencies in `autoDraft`)

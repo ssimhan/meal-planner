@@ -1,43 +1,27 @@
 import React, { useState } from 'react';
+import { useWizardContext } from '../context/WizardContext';
 import Skeleton from '@/components/Skeleton';
 import { WizardProgress } from './WizardProgress';
 import { toTitleCase } from '@/lib/utils';
 
-interface GroceryStepProps {
-    step: string;
-    planningWeek: string | null;
-    shoppingList: any[];
-    customShoppingItems: string[];
-    setCustomShoppingItems: React.Dispatch<React.SetStateAction<string[]>>;
-    purchasedItems: string[];
-    setPurchasedItems: React.Dispatch<React.SetStateAction<string[]>>;
-    submitting: boolean;
-    setSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
-    setStep: (step: any) => void;
-    bulkUpdateInventory: (changes: any[]) => Promise<any>;
-    finalizePlan: (week: string) => Promise<any>;
-    showToast: (message: string, type: 'success' | 'error') => void;
-    router: any;
-    loading: boolean;
-}
-
-export const GroceryStep: React.FC<GroceryStepProps> = ({
-    step,
-    planningWeek,
-    shoppingList,
-    customShoppingItems,
-    setCustomShoppingItems,
-    purchasedItems,
-    setPurchasedItems,
-    submitting,
-    setSubmitting,
-    setStep,
-    bulkUpdateInventory,
-    finalizePlan,
-    showToast,
-    router,
-    loading
-}) => {
+export const GroceryStep: React.FC = () => {
+    const {
+        step,
+        planningWeek,
+        shoppingList,
+        customShoppingItems,
+        setCustomShoppingItems,
+        purchasedItems,
+        setPurchasedItems,
+        submitting,
+        setSubmitting,
+        setStep,
+        bulkUpdateInventory,
+        finalizePlan,
+        showToast,
+        router,
+        loading
+    } = useWizardContext();
     const [newShoppingItem, setNewShoppingItem] = useState('');
 
     // Normalize shoppingList items to strings for display

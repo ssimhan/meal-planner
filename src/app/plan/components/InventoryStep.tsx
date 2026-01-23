@@ -1,50 +1,30 @@
 import React from 'react';
+import { useWizardContext } from '../context/WizardContext';
 import ReplacementModal from '@/components/ReplacementModal';
-import { InventoryState } from '@/types';
 import { WizardProgress } from './WizardProgress';
 import { toTitleCase } from '@/lib/utils';
 
-interface InventoryStepProps {
-    step: 'inventory';
-    planningWeek: string | null;
-    submitting: boolean;
-    setStep: (step: any) => void;
-    handleSaveInventory: () => void;
-    newItemInputs: Record<string, { name: string, qty: number, type?: 'meal' | 'ingredient' }>;
-    setNewItemInputs: React.Dispatch<React.SetStateAction<Record<string, { name: string, qty: number, type?: 'meal' | 'ingredient' }>>>;
-    handleAddItem: (category: string, subType?: 'meal' | 'ingredient') => void;
-    handleRemoveItem: (category: string, item: string, type?: 'meal' | 'ingredient') => void;
-    handleUpdateQuantity: (category: string, item: string, delta: number, type?: 'meal' | 'ingredient') => void;
-    getDisplayList: (mode: string) => any[];
-    pendingChanges: any[];
-    isReplacing: { day: string, slot: string, currentMeal: string } | null;
-    setIsReplacing: (val: any) => void;
-    handleReplacementConfirm: (newMeal: string, req: boolean, status: any) => void;
-    recipes: { id: string, name: string }[];
-    inventory: InventoryState | null;
+export const InventoryStep: React.FC = () => {
+    const {
+        step,
+        planningWeek,
+        submitting,
+        setStep,
+        handleSaveInventory,
+        newItemInputs,
+        setNewItemInputs,
+        handleAddItem,
+        handleRemoveItem,
+        handleUpdateQuantity,
+        getDisplayList,
+        pendingChanges,
+        isReplacing,
+        setIsReplacing,
+        handleReplacementConfirm,
+        recipes,
+        inventory,
+    } = useWizardContext();
 
-}
-
-export const InventoryStep: React.FC<InventoryStepProps> = ({
-    step,
-    planningWeek,
-    submitting,
-    setStep,
-    handleSaveInventory,
-    newItemInputs,
-    setNewItemInputs,
-    handleAddItem,
-    handleRemoveItem,
-    handleUpdateQuantity,
-    getDisplayList,
-    pendingChanges,
-    isReplacing,
-    setIsReplacing,
-    handleReplacementConfirm,
-    recipes,
-    inventory,
-
-}) => {
     return (
         <main className="container mx-auto max-w-5xl px-4 py-12">
             <WizardProgress currentStep={step} />

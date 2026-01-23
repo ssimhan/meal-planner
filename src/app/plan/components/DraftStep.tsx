@@ -1,55 +1,34 @@
 import React from 'react';
+import { useWizardContext } from '../context/WizardContext';
 import Skeleton from '@/components/Skeleton';
 import ReplacementModal from '@/components/ReplacementModal';
 import { WizardProgress } from './WizardProgress';
 
-interface DraftStepProps {
-    step: string;
-    planningWeek: string | null;
-    draftPlan: any;
-    setDraftPlan: (plan: any) => void;
-    loading: boolean;
-    setLoading: (loading: boolean) => void;
-    setStep: (step: any) => void;
-    lockedDays: string[];
-    setLockedDays: React.Dispatch<React.SetStateAction<string[]>>;
-    isReplacing: { day: string, slot: string, currentMeal: string } | null;
-    setIsReplacing: (val: any) => void;
-    handleReplacementConfirm: (newMeal: string, req: boolean, status: any) => void;
-    generateDraft: (week: string, selections: any[], locked: string[], leftovers: any[], excluded: any[]) => Promise<any>;
-    getShoppingList: (week: string) => Promise<any>;
-    setShoppingList: (list: any[]) => void;
-    showToast: (msg: string, type: 'success' | 'error') => void;
-    selections: any[];
-    leftoverAssignments: any[];
-    excludedDefaults: any[];
-    recipes: any[];
-    inventory: any;
-}
+export const DraftStep: React.FC = () => {
+    const {
+        step,
+        planningWeek,
+        draftPlan,
+        setDraftPlan,
+        loading,
+        setLoading,
+        setStep,
+        lockedDays,
+        setLockedDays,
+        isReplacing,
+        setIsReplacing,
+        handleReplacementConfirm,
+        generateDraft,
+        getShoppingList,
+        setShoppingList,
+        showToast,
+        selections,
+        leftoverAssignments,
+        excludedDefaults,
+        recipes,
+        inventory
+    } = useWizardContext();
 
-export const DraftStep: React.FC<DraftStepProps> = ({
-    step,
-    planningWeek,
-    draftPlan,
-    setDraftPlan,
-    loading,
-    setLoading,
-    setStep,
-    lockedDays,
-    setLockedDays,
-    isReplacing,
-    setIsReplacing,
-    handleReplacementConfirm,
-    generateDraft,
-    getShoppingList,
-    setShoppingList,
-    showToast,
-    selections,
-    leftoverAssignments,
-    excludedDefaults,
-    recipes,
-    inventory
-}) => {
     const dayNames: any = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
 
     return (

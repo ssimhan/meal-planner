@@ -1,29 +1,28 @@
 import React from 'react';
-import { ReviewDay } from '@/types';
+import { useWizardContext } from '../context/WizardContext';
 import { WizardProgress } from './WizardProgress';
 
-interface ReviewStepProps {
-    step: 'review_meals' | 'review_snacks';
-    reviews: ReviewDay[];
-    submitting: boolean;
-    setStep: (step: any) => void;
-    handleUpdateDinner: (day: string, field: any, value: any) => void;
-    handleUpdateSnack: (day: string, field: any, value: any) => void;
-    handleSubmitReview: () => void;
-    dayNames: Record<string, string>;
+const dayNames: Record<string, string> = {
+    'mon': 'Monday',
+    'tue': 'Tuesday',
+    'wed': 'Wednesday',
+    'thu': 'Thursday',
+    'fri': 'Friday',
+    'sat': 'Saturday',
+    'sun': 'Sunday'
+};
 
-}
+export const ReviewStep: React.FC = () => {
+    const {
+        step,
+        reviews,
+        submitting,
+        setStep,
+        handleUpdateDinner,
+        handleUpdateSnack,
+        handleSubmitReview
+    } = useWizardContext();
 
-export const ReviewStep: React.FC<ReviewStepProps> = ({
-    step,
-    reviews,
-    submitting,
-    setStep,
-    handleUpdateDinner,
-    handleUpdateSnack,
-    handleSubmitReview,
-    dayNames
-}) => {
     // REVIEW MEALS UI
     if (step === 'review_meals') {
         return (

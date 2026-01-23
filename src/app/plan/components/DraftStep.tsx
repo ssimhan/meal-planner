@@ -50,8 +50,11 @@ export const DraftStep: React.FC = () => {
                                 try {
                                     const res = await getShoppingList(planningWeek!);
                                     setShoppingList(res.shopping_list);
-                                } catch (e) {
-                                    console.error(e);
+                                } catch (e: any) {
+                                    console.error('[Wizard Error] Shopping list generation failed:', e);
+                                    if (e.code) console.error(`[Error Code] ${e.code}`);
+                                    if (e.details) console.debug(`[Error Details]`, e.details);
+                                    showToast('Failed to load shopping list', 'error');
                                 }
                             }}
                             className="btn-premium px-8 py-4 shadow-xl flex items-center gap-2 text-sm"
@@ -178,9 +181,12 @@ export const DraftStep: React.FC = () => {
                                     const res = await generateDraft(planningWeek!, selections, lockedDays, leftoverAssignments, excludedDefaults);
                                     setDraftPlan(res.plan_data);
                                     showToast('Plan regenerated!', 'success');
-                                } catch (e) {
-                                    console.error(e);
-                                    showToast('Failed to regenerate plan', 'error');
+                                } catch (e: any) {
+                                    console.error('[Wizard Error] Regeneration failed:', e);
+                                    if (e.code) console.error(`[Error Code] ${e.code}`);
+                                    if (e.details) console.debug(`[Error Details]`, e.details);
+
+                                    showToast(e.message || 'Failed to regenerate plan', 'error');
                                 } finally {
                                     setLoading(false);
                                 }

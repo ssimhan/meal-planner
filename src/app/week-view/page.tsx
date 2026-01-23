@@ -227,11 +227,11 @@ function WeekViewContent() {
   };
 
   const handleCorrectionSave = async (day: string, type: string, value: string, requestRecipe: boolean = false) => {
-    if (!status?.week_data?.week_of) return;
+    if (!status?.week_of) return;
 
     try {
       const data = await logMeal({
-        week: status.week_data.week_of,
+        week: status.week_of,
         day,
         request_recipe: requestRecipe,
         ...(type === 'dinner'
@@ -242,7 +242,7 @@ function WeekViewContent() {
       if (data.week_of) {
         setStatus(data as WorkflowStatus);
       } else {
-        const newData = await getStatus(status.week_data.week_of);
+        const newData = await getStatus(status.week_of);
         setStatus(newData);
       }
 
@@ -277,11 +277,11 @@ function WeekViewContent() {
   };
 
   const handleSwapConfirm = async () => {
-    if (viewState.swapSelection.length !== 2 || !status?.week_data?.week_of) return;
+    if (viewState.swapSelection.length !== 2 || !status?.week_of) return;
 
     try {
       setViewState(prev => ({ ...prev, isSwapping: true }));
-      await swapMeals(status.week_data.week_of, viewState.swapSelection[0], viewState.swapSelection[1]);
+      await swapMeals(status.week_of, viewState.swapSelection[0], viewState.swapSelection[1]);
       const data = await getStatus();
       setStatus(data);
       setViewState(prev => ({ ...prev, swapSelection: [], isSwapMode: false }));
@@ -296,10 +296,23 @@ function WeekViewContent() {
 
   const handleReplacementConfirm = async (newMeal: string, requestRecipe: boolean = false, madeStatus: boolean | string = true) => {
     const { day, type } = viewState.replacementModal;
-    if (!day || !status?.week_data?.week_of) return;
+    console.log('[WeekView] handleReplacementConfirm triggered. Full State:', {
+      modalState: viewState.replacementModal,
+      weekStatus: status?.week_of
+    });
+
+    if (!day || !status?.week_of) {
+      console.error('[WeekView] Missing data:', {
+        day: String(day),
+        week: String(status?.week_of),
+        isOpen: viewState.replacementModal.isOpen
+      });
+      showToast("Error: Missing session data. Please refresh.", "error");
+      return;
+    }
 
     const payload: any = {
-      week: status.week_data.week_of,
+      week: status.week_of,
       day,
       request_recipe: requestRecipe
     };
@@ -320,14 +333,23 @@ function WeekViewContent() {
       if (data.week_of) {
         setStatus(data as WorkflowStatus);
       } else {
-        const newData = await getStatus(status.week_data.week_of);
+        const newData = await getStatus(status.week_of);
         setStatus(newData);
       }
 
       setViewState(prev => ({ ...prev, replacementModal: { isOpen: false, day: '', currentMeal: '', type: 'dinner' } }));
       showToast("Meal replaced successfully", "success");
-    } catch (e) {
-      showToast(e instanceof Error ? e.message : "Replacement failed", "error");
+    } catch (e: any) {
+      console.error('[WeekView Error] Replacement failed:', e);
+
+      // Extract detailed error info if available
+      const message = e.message || "Replacement failed";
+
+      // Log full details for debugging
+      if (e.code) console.error(`[Error Code] ${e.code}`);
+      if (e.details) console.debug(`[Error Details]`, e.details);
+
+      showToast(message, "error");
     }
   };
 

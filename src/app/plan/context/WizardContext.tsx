@@ -691,9 +691,11 @@ export const WizardProvider = ({ children }: { children: ReactNode }) => {
                 const res = await generateDraft(planningWeek, selections, lockedDays, leftoverAssignments, excludedDefaults);
                 setDraftPlan(res.plan_data);
                 showToast('Plan updated!', 'success');
-            } catch (e) {
-                showToast('Failed to update plan', 'error');
-                console.error(e);
+            } catch (e: any) {
+                console.error('[WizardContext Error] Plan update failed:', e);
+                if (e.code) console.error(`[Error Code] ${e.code}`);
+                if (e.details) console.debug(`[Error Details]`, e.details);
+                showToast(e.message || 'Failed to update plan', 'error');
             } finally {
                 setLoading(false);
             }

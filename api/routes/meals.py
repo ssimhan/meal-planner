@@ -424,16 +424,30 @@ def log_meal():
         outside_leftover_qty = data.get('outside_leftover_qty')
 
         if not week_str or not day:
-             return jsonify({"status": "error", "message": "Week and day required"}), 400
+             return jsonify({
+                 "status": "error", 
+                 "code": "MISSING_PARAMETERS",
+                 "message": "Week and day required"
+             }), 400
              
         # Fetch plan from DB
         h_id = storage.get_household_id()
-        print(f"DEBUG: Logging meal for week={week_str}, day={day}, h_id={h_id}")
+        
+        # DEBUG LOGGING
+        try:
+            with open("debug_log.txt", "a") as f:
+                f.write(f"\n--- LOG MEAL REQUEST ---\n")
+                f.write(f"Week: {week_str}, Day: {day}, Made: {made}\n")
+        except: pass
         
         res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).order("week_of", desc=True).limit(1).execute()
         if not res.data:
             print(f"DEBUG: Meal plan for {week_str} not found in DB")
-            return jsonify({"status": "error", "message": f"Meal plan for week {week_str} not found"}), 404
+            return jsonify({
+                "status": "error", 
+                "code": "PLAN_NOT_FOUND",
+                "message": f"Meal plan for week {week_str} not found"
+            }), 404
             
         plan_record = res.data[0]
         history_week = plan_record.get('history_data') or {}
@@ -447,6 +461,11 @@ def log_meal():
 
         target_day = day.lower()[:3]
         target_dinner = None
+        
+        with open("debug_log.txt", "a") as f:
+            f.write(f"\n--- LOG MEAL ---\n")
+            f.write(f"Processing for day={target_day}\n")
+            f.write(f"History week dinners count: {len(history_week.get('dinners', []))}\n")
         
         confirm_day = data.get('confirm_day', False)
         
@@ -483,10 +502,13 @@ def log_meal():
              elif str(made).lower() in ('freezer', 'backup'): target_dinner['made'] = 'freezer_backup'
              elif str(made).lower() == 'outside_meal' or str(made).lower() == 'ate_out': target_dinner['made'] = 'outside_meal'
              elif str(made).lower() == 'leftovers': 
-                 target_dinner['made'] = False
+                 target_dinner['made'] = 'leftovers'
                  target_dinner['actual_meal'] = "Leftovers"
              else: target_dinner['made'] = made
         
+        with open("debug_log.txt", "a") as f:
+             f.write(f"Target dinner updated: {target_dinner}\n")
+
         if not is_feedback_only or confirm_day:
              if vegetables: 
                  v_list = [v.strip() for v in vegetables.split(',')]
@@ -608,7 +630,12 @@ def log_meal():
     except Exception as e:
         print(f"ERROR in log_meal: {e}")
         import traceback; traceback.print_exc()
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({
+            "status": "error", 
+            "code": "INTERNAL_SERVER_ERROR",
+            "message": str(e),
+            "details": traceback.format_exc()
+        }), 500
 
 @meals_bp.route("/api/swap-meals", methods=["POST"])
 @require_auth

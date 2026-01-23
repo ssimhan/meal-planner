@@ -161,14 +161,16 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ### Phase 29: Wizard Architecture Refactor
 **Goal:** Modularize the monolithic `src/app/plan/page.tsx` for maintainability and performance.
-- **Block 1: Component Extraction (~3 hrs) ✅ Partially Complete**
+- **Block 1: Component Extraction (~3 hrs) ✅ Complete**
   - [x] Extract `ReviewStep` component
   - [x] Extract `InventoryStep` component
   - [x] Extract `SuggestionsStep`, `DraftStep`, and `GroceryStep` components
   - [x] **Critical Fixes:** Resolved infinite rendering loops & SSL connection errors.
-- **Block 2: State Logic Separation (~3 hrs)**
+- **Block 2: State Logic Separation & Stability (~3 hrs)**
   - [ ] Create `WizardContext` (Recommended to fix circular dependencies in `autoDraft`)
   - [ ] Move state management and API side-effects out of `page.tsx`
+  - [x] **Debugging Improvements:** Added structured error logging (`MISSING_PARAMETERS`, `PLAN_NOT_FOUND`) and frontend error inspection.
+  - [x] **Critical Fix:** Fixed "Missing session data" error in `WeekView` (incorrect state access).
 - **Block 3: Type Definitions (~1 hr)**
   - [ ] Centralize wizard types into `src/types/wizard.ts`
 
@@ -211,6 +213,12 @@ Declining energy model: Monday (high) → Friday (zero prep)
 - **Block 2: Interaction Design**
   - [ ] Audit touch targets (min 44px) across the app.
   - [ ] Improve modal behavior on small screens.
+
+### Phase 34: Execution Flow Refinements
+**Goal:** Enhance the realism and flexibility of meal logging.
+- **Block 1: Replacement Logic**
+  - [ ] Add "Ate Out" option to `src/components/ReplacementModal.tsx`.
+  - [ ] Prompt for leftovers when updating a meal in the past (e.g. "Did this meal generate leftovers?").
 
 ---
 

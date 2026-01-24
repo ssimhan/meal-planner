@@ -167,6 +167,7 @@ NEVER proceed with invalid plan. Ask for guidance.
 **Production Readiness:**
 - **Environment Variables**: Verify `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are in Vercel before deployment.
 - **Debug Endpoints**: Keep `/api/debug` updated to expose connection/init errors.
+- **Error Handling**: return structured errors `{"status": "error", "code": "CODE", "message": "msg", "details": ...}` for easy frontend debugging.
 - **Workflow & Git Standards**:
     - **Branching**: Create a new branch for every subphase (e.g., `feat/phase-18-block-1`). NEVER push directly to `main`.
     - **Testing**: Test changes locally first.

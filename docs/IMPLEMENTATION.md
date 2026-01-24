@@ -5,10 +5,10 @@
 
 ---
 
-> **Workflow Rule:** 
 > 1. **Phase = One Branch:** Every phase belongs in a single dedicated branch (e.g. `phase-22-ux-redesign`) until fully complete.
 > 2. **Block/Chunk Workflow:** Code -> Test Locally -> Push to Branch (Vercel Preview) -> Manual Verification on Vercel.
-> 3. **Merge to Main:** ONLY merge to `main` when the *entire phase* is 100% complete and verified.
+> 3. **Bug Sweep:** Maintain a running list of bugs discovered during the phase in the "Open Bugs" table. ALL bugs must be resolved before the phase is considered complete.
+> 4. **Merge to Main:** ONLY merge to `main` when the *entire phase* is 100% complete and verified (features + bug fixes).
 
 ## System Overview
 
@@ -222,15 +222,11 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ---
 
-| Area | Bug | Phase | Status |
-|------|-----|-------|--------|
-| Plan | Draft Error (`'selections' is not defined`) | 26 | ✅ Fixed |
-| Plan | Shopping List Rendering (object as React child) | 26 | ✅ Fixed |
-| Plan | Leftovers Sync Failure (Misclassified as Ingredients) | 26 | ✅ Fixed |
-| Prep | Task Duplication (In-place list modification) | 26 | ✅ Fixed |
-| Dash | Prep Counter / Dinner Display out of sync | 26 | ✅ Fixed |
-| Recipe | `.join()` Type Error in Content Modal | 27 | ✅ Fixed |
-| Recipe | Missing YAML file 404 in Editor | 27 | ✅ Fixed |
+### Open Bugs
+ 
+ | Area | Bug | Phase | Status |
+ |------|-----|-------|--------|
+ | | | | |
 
 ---
 

@@ -166,13 +166,16 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ### Phase 29: Wizard Architecture Refactor
 **Goal:** Modularize the monolithic `src/app/plan/page.tsx` for maintainability and performance.
-- **Block 1: Component Extraction (~3 hrs)**
-  - [ ] Extract `ReviewStep` component
-  - [ ] Extract `InventoryStep` component
-  - [ ] Extract `SuggestionsStep`, `DraftStep`, and `GroceryStep` components
-- **Block 2: State Logic Separation (~3 hrs)**
-  - [ ] Create `usePlanningWizard` custom hook
+- **Block 1: Component Extraction (~3 hrs) ✅ Complete**
+  - [x] Extract `ReviewStep` component
+  - [x] Extract `InventoryStep` component
+  - [x] Extract `SuggestionsStep`, `DraftStep`, and `GroceryStep` components
+  - [x] **Critical Fixes:** Resolved infinite rendering loops & SSL connection errors.
+- **Block 2: State Logic Separation & Stability (~3 hrs)**
+  - [ ] Create `WizardContext` (Recommended to fix circular dependencies in `autoDraft`)
   - [ ] Move state management and API side-effects out of `page.tsx`
+  - [x] **Debugging Improvements:** Added structured error logging (`MISSING_PARAMETERS`, `PLAN_NOT_FOUND`) and frontend error inspection.
+  - [x] **Critical Fix:** Fixed "Missing session data" error in `WeekView` (incorrect state access).
 - **Block 3: Type Definitions (~1 hr)**
   - [ ] Centralize wizard types into `src/types/wizard.ts`
 

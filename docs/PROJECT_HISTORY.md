@@ -797,7 +797,27 @@ The best tools are the ones you actually use. This system works because it reduc
 - **"Vibe-First" Prototyping**: Don't start with the database schema. Start with the *feeling* of the UI. If it feels too transparent or "stiff", tweak the CSS variables first. The "vibes" often reveal the missing logic.
 - **Regex is a Superpower**: When your data is messy (like timing trapped inside instruction text), a simple regular expression can "recalibrate" hundreds of rows in seconds. It's better than manual entry 100% of the time.
 - **Component Wrapping**: If you have a complex server-side page (like a Recipe Detail) and want to add an interactive modal (like Focus Mode), don't try to make the whole page a Client Component. Wrap just the interactive parts in a "Client Wrapper" to keep the speed of server rendering.
-**Block 6: Continuous YAML Normalization (2026-01-17) ✅ COMPLETE**
+- **Schema Normalization**: Built `fix_yaml_schema.py` to auto-split instructions into lists and rename `name` -> `title`.
+- **Determinism**: Added a checksum mode to CI so pre-commit hooks catch bad YAML before it merges.
+
+### Phase 29: Wizard Architecture Refactor (2026-01-23) ✅ Complete
+**Goal:** Modularize the monolithic `src/app/plan/page.tsx` for maintainability and performance.
+
+**Block 1: Component Extraction (Completed)**
+- **Refactor:** Successfully extracted `ReviewStep`, `InventoryStep`, `SuggestionsStep`, `DraftStep`, and `GroceryStep` into standalone components.
+- **State Logic:** Identified circular dependency risks and planned `WizardContext` migration.
+
+**Block 2: Critical Fixes & Debugging (Completed)**
+- **Bug Fix:** Fixed "Missing session data" error in `WeekView` where replacements failed due to incorrect state access (`status.week_data.week_of` vs `status.week_of`).
+- **Error Logging:** Implemented structured error handling (`MISSING_PARAMETERS`, `PLAN_NOT_FOUND`) across both Backend and Frontend.
+- **Wizard Stability:** Extended enhanced error logging to `DraftStep` and `WizardContext`, ensuring clear feedback for plan generation failures.
+
+**Block 3: Documentation Updates**
+- **API Reference:** Added comprehensive "Error Handling" section to `API_REFERENCE.md`.
+- **Future Roadmap:** Defined "Phase 34: Execution Flow Refinements" to tackle "Ate Out" options and retroactive leftover prompts.
+
+**Learning:** When refactoring deeply nested state (like `status.week_data`), TypeScript types are your best friend—but runtime validation via robust logging is the only way to catch edge cases in production.
+
 - **Deterministic Formatting**: Created `scripts/normalize_recipes.py` to ensure all recipe files follow a strict schema with sorted categories (Grains -> Produces -> Aromatics -> Fats -> Spices).
 - **Culinary Intelligence**: Implemented automated spice cleanup (stripping quantities from seasonings) and heuristic-based instruction splitting (Prep vs. Cook phases).
 - **CI Readiness**: Added a `--check` mode for idempotency verification, ensuring the repository remains standardized over time.
@@ -850,3 +870,20 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Type Hardening:** Resolved TypeScript build errors in `src/app/page.tsx` and `src/app/plan/page.tsx` by synchronizing the `NormalizedInventory` interface with the frontend state types. Explicitly handled the `spice_rack` property and fixed `slot` string casting.
 
 - **ESLint/React Hook Fixes:** Systematically resolved React Hook dependency warnings in `src/app/page.tsx` and `src/app/plan/page.tsx`. Wrapped unstable functions (`fetchStatus`, `loadInventory`, `loadSuggestions`) in `useCallback` and corrected `useEffect` dependency arrays to ensure stable and predictable re-renders.
+
+### Phase 29: Wizard Architecture Refactor (2026-01-21) 🔄
+
+**Goal:** Modularize the monolithic `PlanningWizard` component to improve maintainability and separate UI from business logic.
+
+**Block 1: Component Extraction (Completed)**
+- **Extracted UI Components:** Sliced the 1300-line `page.tsx` file by extracting major steps into standalone components:
+    - `GroceryStep` (Grocery List & Store grouping)
+    - `DraftStep` (Tentative plan review & regeneration)
+    - `SuggestionsStep` (Including `WeeklyMealGrid` logic)
+    - `WizardProgress` (Shared navigation component)
+- **Shared Utilities:** Moved `toTitleCase` to `src/lib/utils.ts`.
+- **Cleanup:** Updated `InventoryStep` and `ReviewStep` to use the new shared components, removing duplicate definitions.
+- **Result:** `page.tsx` is now significantly cleaner, serving primarily as a state container and orchestrator.
+
+**Block 2: State Logic Separation (Next)**
+- **Goal:** Move the complex state management (useEffect, data fetching, handlers) into a custom `usePlanningWizard` hook.

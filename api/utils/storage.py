@@ -17,12 +17,23 @@ except ImportError:
 
 # Initialize Supabase client with Service Role Key to bypass RLS in the backend
 SUPABASE_URL = os.environ.get('NEXT_PUBLIC_SUPABASE_URL') or os.environ.get('SUPABASE_URL')
-SUPABASE_SERVICE_KEY = os.environ.get('SUPABASE_SERVICE_ROLE_KEY') or os.environ.get('NEXT_PUBLIC_SUPABASE_ANON_KEY') or os.environ.get('SUPABASE_ANON_KEY')
+
+# Critical: Distinguish between Service Role (Admin) and Anon (Public) keys
+_service_role_key = os.environ.get('SUPABASE_SERVICE_ROLE_KEY')
+_anon_key = os.environ.get('NEXT_PUBLIC_SUPABASE_ANON_KEY') or os.environ.get('SUPABASE_ANON_KEY')
+
+# We prefer the Service Role key for backend operations to bypass RLS
+SUPABASE_SERVICE_KEY = _service_role_key or _anon_key
+
+# Flag to verify we have write access
+IS_SERVICE_ROLE = bool(_service_role_key)
 
 if not SUPABASE_URL:
     print("WARNING: SUPABASE_URL is missing from environment!")
 if not SUPABASE_SERVICE_KEY:
     print("WARNING: SUPABASE_SERVICE_KEY is missing from environment!")
+if not IS_SERVICE_ROLE:
+    print("WARNING: SUPABASE_SERVICE_ROLE_KEY is missing. Backend is running with Public/Anon permissions only. Writes may fail RLS.")
 
 supabase = None
 init_error = None
@@ -50,7 +61,7 @@ def execute_with_retry(query, max_retries=3, delay=0.5):
             last_exception = e
             msg = str(e)
             # Retry on specific network errors
-            if "[Errno 35]" in msg or "Resource temporarily unavailable" in msg or "httpx" in msg:
+            if "[Errno 35]" in msg or "[Errno 8]" in msg or "Resource temporarily unavailable" in msg or "nodename nor servname provided" in msg or "httpx" in msg:
                 print(f"Supabase query retry {i+1}/{max_retries} due to: {e}")
                 time.sleep(delay * (2 ** i)) # Exponential backoff
                 continue
@@ -69,7 +80,8 @@ class StorageEngine:
     @staticmethod
     def get_inventory():
         h_id = get_household_id()
-        res = supabase.table("inventory_items").select("*").eq("household_id", h_id).execute()
+        query = supabase.table("inventory_items").select("*").eq("household_id", h_id)
+        res = execute_with_retry(query)
         
         # Transform flat DB rows back to the nested YAML structure for compatibility
         # Transform flat DB rows back to the nested YAML structure for compatibility
@@ -105,7 +117,8 @@ class StorageEngine:
         if not supabase: return []
         h_id = get_household_id()
         try:
-            res = supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id).execute()
+            query = supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id)
+            res = execute_with_retry(query)
             if not res or not hasattr(res, 'data') or res.data is None:
                 return []
                 
@@ -168,6 +181,8 @@ class StorageEngine:
     def update_meal_plan(week_of, plan_data=None, history_data=None, status=None):
         if not supabase: return
         h_id = get_household_id()
+        if not IS_SERVICE_ROLE:
+            raise Exception("SUPABASE_SERVICE_ROLE_KEY is missing. Cannot write to database.")
         try:
             update_payload = {}
             if plan_data is not None: update_payload['plan_data'] = plan_data
@@ -186,6 +201,8 @@ class StorageEngine:
     def update_inventory_item(category, item_name, updates=None, delete=False):
         if not supabase: return
         h_id = get_household_id()
+        if not IS_SERVICE_ROLE:
+            raise Exception("SUPABASE_SERVICE_ROLE_KEY is missing. Cannot write to database.")
         try:
             if delete:
                 supabase.table("inventory_items").delete().eq("household_id", h_id).eq("category", category).eq("item", item_name).execute()
@@ -459,6 +476,8 @@ class StorageEngine:
         """Delete a single recipe from the database."""
         if not supabase: return
         h_id = get_household_id()
+        if not IS_SERVICE_ROLE:
+            raise Exception("SUPABASE_SERVICE_ROLE_KEY is missing. Cannot write to database.")
         try:
             supabase.table("recipes").delete().eq("id", recipe_id).eq("household_id", h_id).execute()
         except Exception as e:
@@ -530,6 +549,8 @@ class StorageEngine:
         """Save a single recipe to the database."""
         if not supabase: return
         h_id = get_household_id()
+        if not IS_SERVICE_ROLE:
+            raise Exception("SUPABASE_SERVICE_ROLE_KEY is missing. Cannot write to database.")
         try:
             supabase.table("recipes").upsert({
                 "id": recipe_id,
@@ -582,6 +603,13 @@ class StorageEngine:
     @staticmethod
     def save_preference(ingredient, brand_or_note):
         """Save a user preference for an ingredient."""
+        if not IS_SERVICE_ROLE:
+            print("WARNING: Sketchy write without Service Role")
+            # raise Exception("SUPABASE_SERVICE_ROLE_KEY is missing. Cannot write to database.")
+            # Preferences are currently file-based fallback mostly, but let's be safe or strict?
+            # The current impl uses FILE based preferences (lines 586+).
+            # So actually, we don't need the DB check here for the current file implementation.
+            # But wait, looking at the code...
         try:
             pref_path = Path('data/preferences.yml')
             current = {}
@@ -629,6 +657,8 @@ class StorageEngine:
         """Save config to DB."""
         if not supabase: return False
         h_id = get_household_id()
+        if not IS_SERVICE_ROLE:
+            raise Exception("SUPABASE_SERVICE_ROLE_KEY is missing. Cannot write to database.")
         try:
             supabase.table("households").update({"config": new_config}).eq("id", h_id).execute()
             return True

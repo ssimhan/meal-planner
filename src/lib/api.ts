@@ -41,11 +41,19 @@ async function handleResponse<T>(res: Response, fallbackMessage: string): Promis
         try {
             const errorData = await res.json();
             errorMessage = errorData.message || errorData.error || fallbackMessage;
+
+            // Create enhanced error object
+            const error: any = new Error(errorMessage);
+            error.code = errorData.code;
+            error.details = errorData.details;
+            throw error;
         } catch (e) {
-            // If body is not JSON, use fallback or status text
+            // If body is not JSON or other parsing error, use fallback
+            if (e instanceof Error && (e as any).code) throw e; // Re-throw enhanced error
+
             errorMessage = `${fallbackMessage}: ${res.statusText}`;
+            throw new Error(errorMessage);
         }
-        throw new Error(errorMessage);
     }
     return res.json();
 }

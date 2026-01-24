@@ -1,6 +1,24 @@
 # API Reference
 
 Base URL: `/api`
+ 
+ ## Error Handling
+ All API endpoints return structured error responses in the following format:
+ 
+ ```json
+ {
+   "status": "error",
+   "code": "ERROR_CODE_STRING",
+   "message": "Human readable error message",
+   "details": "Optional stack trace or additional context"
+ }
+ ```
+ 
+ **Common Error Codes:**
+ - `MISSING_PARAMETERS`: Required fields are missing from the payload.
+ - `PLAN_NOT_FOUND`: The requested meal plan (week/day) does not exist in the database.
+ - `INTERNAL_SERVER_ERROR`: An unhandled exception occurred on the server (check `details` for stack trace).
+
 
 ## Status
 

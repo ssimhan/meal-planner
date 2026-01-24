@@ -45,37 +45,34 @@ def resolve_slot(plan_item, actual_item):
             # Normalize for comparison if possible, but keep it simple for now
             # If actual explicitly says "actual_meal" string, it might differ from plan key
             
-            if actual_item.get('made') is True or actual_item.get('made') == 'True' or actual_item.get('made') == 'freezer_backup':
-                 # Consider it adhered if it matches, substituted otherwise.
-                 # However, the user request says: 
-                 # "ADHERED: actual meal matches planned meal"
-                 # "SUBSTITUTED: actual meal differs from planned meal"
-                 
-                 # Logic: If actual_item has a distinct 'actual_meal' text that differs from plan, or explicit 'substituted' flag (not currently in data model but inferred)
-                 
-                 # In existing data, 'actual_meal' is often set when it differs. 
-                 # If 'actual_meal' matches 'recipe_id' loosely, it is adherence.
-                 
-                 p_name = (plan_id or '').lower().replace('_', ' ')
-                 a_name = (str(actual_item.get('actual_meal') or actual_item.get('recipe_id') or '')).lower().replace('_', ' ')
-                 
-                 # Detailed check: 
-                 # If made=True and actual_meal is provided and substantially different -> Sub
-                 # If made=True and actual_meal is same or empty -> Adhered
-                 
+            made_status = actual_item.get('made')
+            
+            # Normalize names for comparison
+            p_name = (plan_id or '').lower().replace('_', ' ')
+            a_name = (str(actual_item.get('actual_meal') or actual_item.get('recipe_id') or '')).lower().replace('_', ' ')
+
+            if made_status is True or str(made_status) == 'True':
+                 # Check if actual meal differs significantly from plan
                  if p_name and a_name and p_name != a_name and actual_item.get('actual_meal'):
                      adherence = ADHERENCE_STATES['SUBSTITUTED']
-                 elif actual_item.get('made') == 'freezer_backup':
-                     # Freezer backup is a form of substitution usually, unless planned?
-                     # Let's count it as SUBSTITUTE for now unless plan was freezer
-                     if plan_item.get('meal_type') == 'freezer':
-                         adherence = ADHERENCE_STATES['ADHERED']
-                     else:
-                         adherence = ADHERENCE_STATES['SUBSTITUTED']
-                 elif actual_item.get('made') == 'outside_meal':
-                      adherence = ADHERENCE_STATES['SUBSTITUTED']
                  else:
                      adherence = ADHERENCE_STATES['ADHERED']
+
+            elif made_status == 'freezer_backup':
+                 if plan_item.get('meal_type') == 'freezer':
+                     adherence = ADHERENCE_STATES['ADHERED']
+                 else:
+                     adherence = ADHERENCE_STATES['SUBSTITUTED']
+
+            elif made_status == 'outside_meal':
+                 adherence = ADHERENCE_STATES['SUBSTITUTED']
+
+            elif made_status == 'leftovers':
+                 adherence = ADHERENCE_STATES['SUBSTITUTED']
+
+            else:
+                 # Default fallback for unknown made status (e.g. legacy or simple boolean True)
+                 adherence = ADHERENCE_STATES['ADHERED']
             
             resolved = actual_item
 

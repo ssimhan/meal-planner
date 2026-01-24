@@ -216,6 +216,41 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [ ] Audit touch targets (min 44px) across the app.
   - [ ] Improve modal behavior on small screens.
 
+### Phase 34: Advanced Features & Integrations
+**Goal:** Enhance the system with automation, intelligence, and integrations.
+- **Block 1: Universal Search (~3 hrs)**
+  - [ ] Implement global search bar across all pages
+  - [ ] Search across recipes (title, ingredients, tags)
+  - [ ] Search inventory items
+  - [ ] Search meal plan history
+  - [ ] Keyboard shortcuts (Cmd+K / Ctrl+K)
+- **Block 2: Timer Capability (~2 hrs)**
+  - [ ] Multi-timer support in Focus Mode (Step-by-Step Cooking)
+  - [ ] Named timers (e.g., "Simmer sauce", "Bake muffins")
+  - [ ] Audio/visual notifications
+  - [ ] Persistent timers across page navigation
+- **Block 3: AI-Powered Substitutions (~4 hrs)**
+  - [ ] Ingredient swap suggestions based on current inventory
+  - [ ] Allergen-safe substitution logic
+  - [ ] Preserve recipe integrity (e.g., don't swap critical ingredients)
+  - [ ] Integration with recipe view and planning wizard
+- **Block 4: Weather/Calendar Integration (~3 hrs)**
+  - [ ] Weather API integration (OpenWeatherMap or similar)
+  - [ ] Suggest meals based on weather (e.g., soups on cold days)
+  - [ ] Calendar sync for family events/busy days
+  - [ ] Auto-adjust schedule based on calendar conflicts
+- **Block 5: Weekly Summary Email (~3 hrs)**
+  - [ ] Email template design (meal plan summary)
+  - [ ] Auto-generate weekly summary (meals, groceries, prep tasks)
+  - [ ] Email delivery integration (SendGrid, Resend, or similar)
+  - [ ] Subscription management (opt-in/out, frequency)
+- **Block 6: Nutrition Tracking (~4 hrs)**
+  - [ ] Add nutrition data to recipe schema (calories, protein, carbs, fat)
+  - [ ] Nutrition API integration (USDA FoodData Central or similar)
+  - [ ] Display nutrition info in recipe view
+  - [ ] Weekly nutrition summary dashboard
+  - [ ] Dietary goal tracking (optional)
+
 ---
 
 ## Bug & Technical Debt Tracking
@@ -318,8 +353,9 @@ Recent phases (23-28) have focused on stabilizing the core experience, refining 
 ---
 
 ### Future Improvements & Ideas
-- **Universal Search**: Search recipes, inventory, and meal plans from a single global search bar.
-- **AI-Powered Substitutions**: Suggest ingredient swaps based on current inventory.
-- **Timer Capability**: Integrate multi-timer support directly into the Focus Mode recipe view for active cooking.
+- **Voice Input**: "Alexa, add milk to my shopping list"
+- **Meal Sharing**: Export/share weekly plans with family members
+- **Recipe Scaling**: Auto-adjust ingredient quantities for different serving sizes
+- **Cost Tracking**: Track grocery spending and optimize for budget
 
-See [PROJECT_HISTORY.md](file:///Users/sandhyasimhan/Documents/3_Career/Coding%20Projects/meal-planner/docs/PROJECT_HISTORY.md) for detailed development timeline.
+See [PROJECT_HISTORY.md](docs/PROJECT_HISTORY.md) for detailed development timeline.

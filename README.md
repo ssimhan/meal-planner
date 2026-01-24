@@ -77,21 +77,32 @@ See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for complete configuration gu
 
 ### CLI Usage
 
+The system supports both a **web dashboard** (recommended) and **CLI** for local development.
+
+#### Recommended: Web Dashboard
 ```bash
-# Create a new week
-python mealplan create-week
+npm run dev
+# Open http://localhost:3000
+# Use the interactive wizard for weekly planning
+```
 
-# Confirm farmers market vegetables
-python mealplan confirm-veg "broccoli, sweet potato, spinach"
+#### CLI (Local/Maintenance)
+```bash
+# Streamlined workflow (auto-detects next step)
+./mealplan next      # Auto-run next workflow step
+./mealplan status    # Show current workflow status
+./mealplan reset     # Start planning next week
 
-# Generate weekly plan
-python mealplan generate
+# Legacy numbered workflow
+./mealplan 1-start           # Start new week (interactive prompts)
+./mealplan 2-update 2026-01-20  # Edit vegetables after farmers market
+./mealplan 3-plan 2026-01-20    # Generate meal plan
+./mealplan 4-view 2026-01-20    # View a specific plan
+./mealplan 5-latest          # View most recent plan
 
-# Log meal execution
-python mealplan log --day mon --made yes --feedback "❤️"
-
-# Re-plan mid-week
-python mealplan replan --skip tue --move-to wed
+# Utility commands
+./mealplan parse      # Parse HTML recipes into index
+./mealplan validate 2026-01-20  # Validate a meal plan
 ```
 
 ## 📁 Project Structure
@@ -127,17 +138,19 @@ meal-planner/
 
 ## 🎯 Current Status
 
-**Phase 10: Smart Personalization & Core Flow Optimization** ✅ Complete
-- Kid profiles with allergy tracking
-- Leftover optimizer with planned pipelines
-- Smart re-plan with auto-refreshing lunches
-- Improved Week View UX (Selection Mode & Dedicated Edit Queue)
+**Phase 28: General Workflow and Frontend Clean up** ✅ Complete
+- Global visual polish and dark mode improvements
+- Inventory & shopping stability fixes
+- Recipe experience enhancements (Focus Mode, tag migration)
+- Advanced planning persistence (pause/resume workflow)
 
-**Phase 11: Future Enhancements** 🚧 In Progress
-- ✅ Recipe Importer (completed)
-- 🔜 Weather/Calendar Integration
-- 🔜 Weekly Summary Email
-- 🔜 Nutrition Tracking
+**Phase 29+: Next Steps** 🚧 Planned
+- Wizard architecture refactor
+- Household communication & persistence
+- User authentication (single-household access)
+- Mobile-friendly UX improvements
+
+See [IMPLEMENTATION.md](docs/IMPLEMENTATION.md) for complete roadmap.
 
 ## 🛠️ Technology Stack
 

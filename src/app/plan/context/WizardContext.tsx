@@ -21,7 +21,7 @@ import {
 } from '@/lib/api';
 import { transformInventory, NormalizedInventory } from '@/lib/inventoryManager';
 import { useToast } from '@/context/ToastContext';
-import { ReviewDay } from '@/types';
+import { WizardStep, SuggestionPhase, ReviewDay, PendingInventoryChange } from '@/types/wizard';
 
 interface WizardContextType {
     // State
@@ -32,15 +32,15 @@ interface WizardContextType {
     reviewWeek: string | null;
     planningWeek: string | null;
     inventory: NormalizedInventory | null;
-    pendingChanges: { category: string, item: string, quantity: number, type?: 'meal' | 'ingredient', operation: 'add' | 'remove' | 'update' }[];
+    pendingChanges: PendingInventoryChange[];
     newItemInputs: Record<string, { name: string, qty: number, type?: 'meal' | 'ingredient' }>;
     setNewItemInputs: React.Dispatch<React.SetStateAction<Record<string, { name: string, qty: number, type?: 'meal' | 'ingredient' }>>>;
     submitting: boolean;
     setSubmitting: (submitting: boolean) => void;
-    step: 'review_meals' | 'review_snacks' | 'inventory' | 'suggestions' | 'draft' | 'groceries';
-    setStep: (step: 'review_meals' | 'review_snacks' | 'inventory' | 'suggestions' | 'draft' | 'groceries') => void;
-    suggestionPhase: 'dinners' | 'lunches' | 'snacks';
-    setSuggestionPhase: (phase: 'dinners' | 'lunches' | 'snacks') => void;
+    step: WizardStep;
+    setStep: (step: WizardStep) => void;
+    suggestionPhase: SuggestionPhase;
+    setSuggestionPhase: (phase: SuggestionPhase) => void;
     error: string | null;
     suggestions: any[];
     selectedSuggestions: string[];
@@ -107,11 +107,11 @@ export const WizardProvider = ({ children }: { children: ReactNode }) => {
     const [reviewWeek, setReviewWeek] = useState<string | null>(null);
     const [planningWeek, setPlanningWeek] = useState<string | null>(null);
     const [inventory, setInventory] = useState<NormalizedInventory | null>(null);
-    const [pendingChanges, setPendingChanges] = useState<{ category: string, item: string, quantity: number, type?: 'meal' | 'ingredient', operation: 'add' | 'remove' | 'update' }[]>([]);
+    const [pendingChanges, setPendingChanges] = useState<PendingInventoryChange[]>([]);
     const [newItemInputs, setNewItemInputs] = useState<Record<string, { name: string, qty: number, type?: 'meal' | 'ingredient' }>>({});
     const [submitting, setSubmitting] = useState(false);
-    const [step, setStep] = useState<'review_meals' | 'review_snacks' | 'inventory' | 'suggestions' | 'draft' | 'groceries'>('review_meals');
-    const [suggestionPhase, setSuggestionPhase] = useState<'dinners' | 'lunches' | 'snacks'>('dinners');
+    const [step, setStep] = useState<WizardStep>('review_meals');
+    const [suggestionPhase, setSuggestionPhase] = useState<SuggestionPhase>('dinners');
     const [error, setError] = useState<string | null>(null);
 
     // Suggestions State

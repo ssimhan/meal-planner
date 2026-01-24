@@ -7,7 +7,9 @@ const PHASES = [
     { id: 'plan', label: 'Plan', icon: '🍳', steps: ['suggestions', 'draft', 'groceries'] }
 ];
 
-export const WizardProgress = ({ currentStep }: { currentStep: string }) => {
+import { WizardStep } from '@/types/wizard';
+
+export const WizardProgress = ({ currentStep }: { currentStep: WizardStep }) => {
     const currentPhaseIndex = PHASES.findIndex(p => p.steps.includes(currentStep));
 
     return (

@@ -388,38 +388,5 @@ export interface ApiError {
 }
 
 // Wizard Types
+// Moved to ./wizard.ts
 
-export interface ReviewDay {
-  day: string;
-  dinner: {
-    planned_recipe_id: string | null;
-    planned_recipe_name: string | null;
-    made: boolean | null;
-    actual_meal: string | null;
-    leftovers: boolean | null;
-    leftovers_note: string;
-    leftovers_qty: number;
-    instead_meal?: string;
-  };
-  snacks: {
-    school_snack: string | null;
-    home_snack: string | null;
-    kids_lunch: string | null;
-    adult_lunch: string | null;
-  };
-  planned_snacks: {
-    school_snack: string | null;
-    home_snack: string | null;
-    kids_lunch: string | null;
-  };
-}
-
-export interface InventoryState {
-  meals: any[];
-  ingredients: {
-    fridge: any[];
-    freezer: any[];
-    pantry: any[];
-    spice_rack: any[];
-  };
-}

@@ -1,14 +1,18 @@
 # Meal Planner Implementation Guide
 
-**Last Updated:** 2026-01-17
+**Last Updated:** 2026-01-24
 **Live Site:** [meal-planner-eta-seven.vercel.app](https://meal-planner-eta-seven.vercel.app/)
 
 ---
 
-> **Workflow Rule:** 
+> **Workflow Rule:**
 > 1. **Phase = One Branch:** Every phase belongs in a single dedicated branch (e.g. `phase-22-ux-redesign`) until fully complete.
 > 2. **Block/Chunk Workflow:** Code -> Test Locally -> Push to Branch (Vercel Preview) -> Manual Verification on Vercel.
 > 3. **Merge to Main:** ONLY merge to `main` when the *entire phase* is 100% complete and verified.
+>
+> **Quality Gate (Zero-Debt Policy):**
+> No phase is complete until **Active Bugs = 0** and **Technical Debt = 0**.
+> See [BUGS.md](BUGS.md) for current status. Fix all issues before marking blocks complete.
 
 ## System Overview
 
@@ -89,7 +93,8 @@ Declining energy model: Monday (high) → Friday (zero prep)
 ## Implementation Roadmap (Ideal Order)
 
 > [!IMPORTANT]
-> **Priority Check:** Before starting new features or moving to the next phase, please go through all the bugs listed in the bug tables and on each page. Ensure existing functionality is stable and verified before proceeding with the implementation plan.
+> **Zero-Debt Policy:** Every phase must complete with Active Bugs = 0 and Technical Debt = 0.
+> Track all issues in [BUGS.md](BUGS.md). No exceptions. Quality over speed.
 
 ### Phase 26: Wizard UX Improvements
 **Goal:** Streamline the weekly planning wizard for better usability.
@@ -213,15 +218,12 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ---
 
-| Area | Bug | Phase | Status |
-|------|-----|-------|--------|
-| Plan | Draft Error (`'selections' is not defined`) | 26 | ✅ Fixed |
-| Plan | Shopping List Rendering (object as React child) | 26 | ✅ Fixed |
-| Plan | Leftovers Sync Failure (Misclassified as Ingredients) | 26 | ✅ Fixed |
-| Prep | Task Duplication (In-place list modification) | 26 | ✅ Fixed |
-| Dash | Prep Counter / Dinner Display out of sync | 26 | ✅ Fixed |
-| Recipe | `.join()` Type Error in Content Modal | 27 | ✅ Fixed |
-| Recipe | Missing YAML file 404 in Editor | 27 | ✅ Fixed |
+## Bug & Technical Debt Tracking
+
+**See [BUGS.md](BUGS.md) for:**
+- Active Bugs (must be 0 before phase completion)
+- Technical Debt (must be 0 before phase completion)
+- Historical audit log of resolved issues
 
 ---
 

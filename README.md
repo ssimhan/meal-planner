@@ -120,6 +120,7 @@ meal-planner/
 ## 📖 Documentation
 
 - **[IMPLEMENTATION.md](docs/IMPLEMENTATION.md)**: Complete system architecture and roadmap
+- **[BUGS.md](docs/BUGS.md)**: Bug tracking and technical debt (zero-debt policy)
 - **[PROJECT_HISTORY.md](docs/PROJECT_HISTORY.md)**: Development history and session logs
 - **[FIELD_NAMING_CONVENTION.md](docs/FIELD_NAMING_CONVENTION.md)**: Field naming standards for meal feedback
 - **[CLAUDE.md](CLAUDE.md)**: AI assistant context and guidelines

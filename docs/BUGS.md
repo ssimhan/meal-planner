@@ -35,7 +35,9 @@
 |----|------|-------------|--------|--------|-------|
 | - | - | - | - | - | - |
 
-**Count: 0** ✅
+| TD-001 | Frontend | Refactor WeekView: Extract constants and sub-components (God Component >1300 lines) | High | 2-4hrs | Found in Phase 29 |
+| TD-002 | Types | Strict Inventory Types: Replace `any[]` in `InventoryState` with `InventoryItem[]` | Medium | 1hr | Found in Phase 29 |
+
 
 ---
 
@@ -56,6 +58,9 @@ Before merging to `main`:
 ## Audit Log
 
 **Historical reference only - issues from completed phases.**
+
+### Phase 29 (In Progress)
+- Fixed: Week at a Glance: Rows don't line up properly (UI-001)
 
 ### Phase 28 (Completed 2026-01-24)
 - All bugs resolved before completion

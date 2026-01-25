@@ -17,7 +17,7 @@ export default function InventoryPage() {
     const [newItem, setNewItem] = useState({ category: 'fridge', name: '' });
     const [updating, setUpdating] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [activeTab, setActiveTab] = useState<'prepared' | 'fridge' | 'pantry' | 'frozen_ingredient'>('prepared');
+    const [activeTab, setActiveTab] = useState<'fridge' | 'pantry' | 'frozen_ingredient'>('fridge');
 
     // Undo states
     const [lastDeleted, setLastDeleted] = useState<{ category: string, item: any } | null>(null);
@@ -304,174 +304,167 @@ export default function InventoryPage() {
                         </div>
                     </section>
                 ) : (
-                    <div className="space-y-8">
-                        {/* High Priority: Leftovers & Freezer Meals */}
-                        <div className="grid gap-8 md:grid-cols-2">
-                            {/* Leftovers (Filtered from Fridge) */}
-                            <section className="card border-[var(--cat-leftovers)] bg-[var(--cat-leftovers)]/10">
-                                <header className="flex justify-between items-center mb-4">
-                                    <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--cat-leftovers-text)] font-bold">Leftovers</h2>
-                                    <span className="text-xs bg-[var(--bg-card)] border border-[var(--cat-leftovers)] text-[var(--cat-leftovers-text)] px-2 py-0.5 rounded-full">
-                                        {inventory?.fridge?.filter((i: any) => i.item.toLowerCase().includes('leftover') || i.category === 'leftovers').length || 0}
-                                    </span>
-                                </header>
-                                <div className="space-y-1">
-                                    {inventory?.fridge?.filter((i: any) => i.item.toLowerCase().includes('leftover') || i.category === 'leftovers').length > 0 ? (
-                                        inventory.fridge
-                                            .filter((i: any) => i.item.toLowerCase().includes('leftover') || i.category === 'leftovers')
-                                            .map((item: any, idx: number) => (
-                                                <InventoryItemRow
-                                                    key={`leftover-${idx}`}
-                                                    item={item}
-                                                    category="fridge"
-                                                    onUpdate={handleUpdateItem}
-                                                    onDelete={handleDeleteItem}
-                                                    onMove={handleMoveItem}
-                                                    disabled={updating}
-                                                />
-                                            ))
-                                    ) : <p className="text-sm text-[var(--text-muted)] italic">No leftovers recorded.</p>}
-                                </div>
-                            </section>
-
-                            {/* Freezer Meals (Backups) */}
-                            <section className="card border-[var(--cat-grains)] bg-[var(--cat-grains)]/10">
-                                <header className="flex justify-between items-center mb-4">
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-xl">🧊</span>
-                                        <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--cat-grains-text)] font-bold">Freezer Stash</h2>
-                                    </div>
-                                    <span className="text-xs bg-[var(--bg-card)] border border-[var(--cat-grains)] text-[var(--cat-grains-text)] px-2 py-0.5 rounded-full">
-                                        {inventory?.freezer?.backups?.length || 0}
-                                    </span>
-                                </header>
-                                <div className="space-y-1">
-                                    {inventory?.freezer?.backups?.length ? (
-                                        inventory.freezer.backups.map((item: any, idx: number) => (
-                                            <InventoryItemRow
-                                                key={`meals-${idx}`}
-                                                item={item}
-                                                category="meals"
-                                                onUpdate={handleUpdateItem}
-                                                onDelete={handleDeleteItem}
-                                                onMove={handleMoveItem}
-                                                disabled={updating}
-                                            />
-                                        ))
-                                    ) : <p className="text-sm text-[var(--text-muted)] italic">No freezer meals.</p>}
-                                </div>
-                            </section>
-                        </div>
-
-                        {/* Tabbed Inventory View */}
-                        <div className="card">
-                            <div className="flex border-b border-[var(--border-subtle)] mb-6">
-                                {/* Tabs Header */}
-                                {['prepared', 'fridge', 'pantry', 'frozen_ingredient'].map((tab) => (
-                                    <button
-                                        key={tab}
-                                        onClick={() => setActiveTab(tab as any)}
-                                        className={`px-6 py-3 text-sm font-mono uppercase tracking-wider border-b-2 transition-colors ${activeTab === tab
-                                            ? 'border-[var(--accent-sage)] text-[var(--accent-sage)] font-bold'
-                                            : 'border-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-                                            }`}
-                                    >
-                                        {tab.replace('_', ' ')}
-                                        <span className="ml-2 text-xs opacity-50">
-                                            {tab === 'prepared' ? (normalized?.meals?.length || 0) :
-                                                tab === 'fridge' ? (inventory?.fridge?.length || 0) :
-                                                    tab === 'pantry' ? (inventory?.pantry?.length || 0) :
-                                                        (inventory?.freezer?.ingredients?.length || 0)}
+                    <div className="space-y-12">
+                        {/* MEALS SECTION: Ready-to-Eat */}
+                        <div className="mb-12">
+                            <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+                                <span className="p-2 bg-[var(--accent-sage)] bg-opacity-20 rounded-lg">🍱</span>
+                                Meals (Ready to Eat)
+                            </h2>
+                            <div className="grid gap-8 md:grid-cols-2">
+                                {/* Leftovers */}
+                                <section className="card border-[var(--cat-leftovers)] bg-[var(--cat-leftovers)]/10">
+                                    <header className="flex justify-between items-center mb-4">
+                                        <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--cat-leftovers-text)] font-bold">In the Fridge</h2>
+                                        <span className="text-xs bg-[var(--bg-card)] border border-[var(--cat-leftovers)] text-[var(--cat-leftovers-text)] px-2 py-0.5 rounded-full">
+                                            {normalized?.meals?.filter(i => i.location === 'fridge').length || 0}
                                         </span>
-                                    </button>
-                                ))}
-                            </div>
-
-                            {/* Tab Content */}
-                            <div className="space-y-8 min-h-[300px]">
-                                {(() => {
-                                    if (activeTab === 'prepared') {
-                                        if (!normalized?.meals?.length) {
-                                            return <p className="text-sm text-[var(--text-muted)] italic">No prepared meals found.</p>;
-                                        }
-                                        return (
-                                            <div className="space-y-4">
-                                                {normalized.meals.map((item, idx) => (
+                                    </header>
+                                    <div className="space-y-1">
+                                        {normalized?.meals?.some(i => i.location === 'fridge') ? (
+                                            normalized.meals
+                                                .filter(i => i.location === 'fridge')
+                                                .map((item: any, idx: number) => (
                                                     <InventoryItemRow
-                                                        key={`prepared-${idx}`}
+                                                        key={`leftover-${idx}`}
                                                         item={item}
-                                                        category={item.location === 'freezer' ? 'meals' : 'fridge'}
+                                                        category="fridge"
                                                         onUpdate={handleUpdateItem}
                                                         onDelete={handleDeleteItem}
                                                         onMove={handleMoveItem}
                                                         disabled={updating}
                                                     />
-                                                ))}
-                                            </div>
-                                        );
-                                    }
+                                                ))
+                                        ) : <p className="text-sm text-[var(--text-muted)] italic">No leftovers recorded.</p>}
+                                    </div>
+                                </section>
 
-                                    const currentItems = activeTab === 'fridge' ? inventory?.fridge :
-                                        activeTab === 'pantry' ? inventory?.pantry :
-                                            inventory?.freezer?.ingredients;
+                                {/* Freezer Meals */}
+                                <section className="card border-[var(--cat-grains)] bg-[var(--cat-grains)]/10">
+                                    <header className="flex justify-between items-center mb-4">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-xl">🧊</span>
+                                            <h2 className="text-sm font-mono uppercase tracking-widest text-[var(--cat-grains-text)] font-bold">Freezer Stash</h2>
+                                        </div>
+                                        <span className="text-xs bg-[var(--bg-card)] border border-[var(--cat-grains)] text-[var(--cat-grains-text)] px-2 py-0.5 rounded-full">
+                                            {normalized?.meals?.filter(i => i.location === 'freezer').length || 0}
+                                        </span>
+                                    </header>
+                                    <div className="space-y-1">
+                                        {normalized?.meals?.some(i => i.location === 'freezer') ? (
+                                            normalized.meals
+                                                .filter(i => i.location === 'freezer')
+                                                .map((item: any, idx: number) => (
+                                                    <InventoryItemRow
+                                                        key={`meals-${idx}`}
+                                                        item={item}
+                                                        category="meals"
+                                                        onUpdate={handleUpdateItem}
+                                                        onDelete={handleDeleteItem}
+                                                        onMove={handleMoveItem}
+                                                        disabled={updating}
+                                                    />
+                                                ))
+                                        ) : <p className="text-sm text-[var(--text-muted)] italic">No freezer meals.</p>}
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
 
-                                    if (!currentItems?.length) {
-                                        return <p className="text-sm text-[var(--text-muted)] italic">No items found.</p>;
-                                    }
+                        {/* INGREDIENTS SECTION */}
+                        <div>
+                            <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+                                <span className="p-2 bg-[var(--accent-gold)] bg-opacity-20 rounded-lg">🥑</span>
+                                Ingredients
+                            </h2>
 
-                                    // Group items
-                                    const grouped = (currentItems as any[]).reduce((acc, item) => {
-                                        const cat = classifyItem(item, activeTab);
-                                        if (!acc[cat]) acc[cat] = [];
-                                        acc[cat].push(item);
-                                        return acc;
-                                    }, {} as Record<string, any[]>);
+                            <div className="card">
+                                <div className="flex border-b border-[var(--border-subtle)] mb-6 overflow-x-auto">
+                                    {/* Tabs Header */}
+                                    {['fridge', 'pantry', 'frozen_ingredient'].map((tab) => (
+                                        <button
+                                            key={tab}
+                                            onClick={() => setActiveTab(tab as any)}
+                                            className={`px-6 py-3 text-sm font-mono uppercase tracking-wider border-b-2 transition-colors whitespace-nowrap ${activeTab === tab
+                                                ? 'border-[var(--accent-sage)] text-[var(--accent-sage)] font-bold'
+                                                : 'border-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                                                }`}
+                                        >
+                                            {tab === 'frozen_ingredient' ? 'Freezer' : tab}
+                                            <span className="ml-2 text-xs opacity-50">
+                                                {
+                                                    tab === 'fridge' ? (normalized?.ingredients?.fridge?.length || 0) :
+                                                        tab === 'pantry' ? (normalized?.ingredients?.pantry?.length || 0) :
+                                                            (normalized?.ingredients?.freezer?.length || 0)}
+                                            </span>
+                                        </button>
+                                    ))}
+                                </div>
 
-                                    // Sort categories (Leftovers first, General last)
-                                    const categories = Object.keys(grouped).sort((a, b) => {
-                                        if (a === 'Leftovers') return -1;
-                                        if (b === 'Leftovers') return 1;
-                                        if (a === 'General') return 1;
-                                        if (b === 'General') return -1;
-                                        return a.localeCompare(b);
-                                    });
+                                {/* Tab Content */}
+                                <div className="space-y-8 min-h-[300px]">
+                                    {(() => {
+                                        // Simplified Tab Data Fetching using Normalized Data
+                                        const currentItems = activeTab === 'fridge' ? normalized?.ingredients?.fridge :
+                                            activeTab === 'pantry' ? normalized?.ingredients?.pantry :
+                                                normalized?.ingredients?.freezer;
 
-                                    return categories.map(group => {
-                                        const meta = getCategoryMetadata(group);
-                                        return (
-                                            <div key={group} className={`rounded-xl border ${meta.border} overflow-hidden`}>
-                                                <div className={`px-4 py-2 ${meta.bg} border-b ${meta.border} flex items-center gap-2`}>
-                                                    <span className="text-lg">{meta.icon}</span>
-                                                    <h3 className={`text-xs font-bold uppercase tracking-wider ${meta.color}`}>
-                                                        {group}
-                                                    </h3>
-                                                    <span className={`ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[var(--bg-card)]/50 ${meta.color}`}>
-                                                        {grouped[group].length}
-                                                    </span>
+                                        if (!currentItems?.length) {
+                                            return <p className="text-sm text-[var(--text-muted)] italic">No items found.</p>;
+                                        }
+
+                                        // Group items
+                                        const grouped = (currentItems as any[]).reduce((acc, item) => {
+                                            const cat = classifyItem(item, activeTab);
+                                            if (!acc[cat]) acc[cat] = [];
+                                            acc[cat].push(item);
+                                            return acc;
+                                        }, {} as Record<string, any[]>);
+
+                                        // Sort categories (Leftovers first, General last)
+                                        const categories = Object.keys(grouped).sort((a, b) => {
+                                            if (a === 'General') return 1;
+                                            if (b === 'General') return -1;
+                                            return a.localeCompare(b);
+                                        });
+
+                                        return categories.map(group => {
+                                            const meta = getCategoryMetadata(group);
+                                            return (
+                                                <div key={group} className={`rounded-xl border ${meta.border} overflow-hidden`}>
+                                                    <div className={`px-4 py-2 ${meta.bg} border-b ${meta.border} flex items-center gap-2`}>
+                                                        <span className="text-lg">{meta.icon}</span>
+                                                        <h3 className={`text-xs font-bold uppercase tracking-wider ${meta.color}`}>
+                                                            {group}
+                                                        </h3>
+                                                        <span className={`ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[var(--bg-card)]/50 ${meta.color}`}>
+                                                            {grouped[group].length}
+                                                        </span>
+                                                    </div>
+                                                    <div className="p-2 space-y-1 bg-[var(--bg-card)]/30">
+                                                        {grouped[group]
+                                                            .sort((a: any, b: any) => {
+                                                                const nameA = a.meal || a.item || '';
+                                                                const nameB = b.meal || b.item || '';
+                                                                return nameA.localeCompare(nameB);
+                                                            })
+                                                            .map((item: any, idx: number) => (
+                                                                <InventoryItemRow
+                                                                    key={`${activeTab}-${idx}`}
+                                                                    item={item}
+                                                                    category={activeTab === 'frozen_ingredient' ? 'frozen_ingredient' : activeTab} // Keep original category for API calls
+                                                                    onUpdate={handleUpdateItem}
+                                                                    onDelete={handleDeleteItem}
+                                                                    onMove={handleMoveItem}
+                                                                    disabled={updating}
+                                                                />
+                                                            ))}
+                                                    </div>
                                                 </div>
-                                                <div className="p-2 space-y-1 bg-[var(--bg-card)]/30">
-                                                    {grouped[group]
-                                                        .sort((a: any, b: any) => {
-                                                            const nameA = a.meal || a.item || '';
-                                                            const nameB = b.meal || b.item || '';
-                                                            return nameA.localeCompare(nameB);
-                                                        })
-                                                        .map((item: any, idx: number) => (
-                                                            <InventoryItemRow
-                                                                key={`${activeTab}-${idx}`}
-                                                                item={item}
-                                                                category={activeTab}
-                                                                onUpdate={handleUpdateItem}
-                                                                onDelete={handleDeleteItem}
-                                                                onMove={handleMoveItem}
-                                                                disabled={updating}
-                                                            />
-                                                        ))}
-                                                </div>
-                                            </div>
-                                        );
-                                    });
-                                })()}
+                                            );
+                                        });
+                                    })()}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -502,7 +495,7 @@ export default function InventoryPage() {
                 />
 
             </div>
-        </AppLayout>
+        </AppLayout >
     );
 }
 

@@ -21,9 +21,12 @@
 
 | ID | Area | Description | Priority | Repro Steps | Notes |
 |----|------|-------------|----------|-------------|-------|
-| - | - | - | - | - | - |
 
-**Count: 0** ✅
+
+
+
+
+**Count: 0** 🟢
 
 ---
 
@@ -62,6 +65,9 @@ Before merging to `main`:
 - Fixed: Week at a Glance: Rows don't line up properly (UI-001)
 - Refactored: WeekView component split into sub-components (TD-001)
 - Improved: Strict Types for InventoryState (TD-002)
+- Fixed: Inventory UI Confusion (Meals vs Ingredients) (USR-001)
+- Fixed: Week View missing week label (UI-002)
+- Added: Week View Navigation (NAV-001)
 
 ### Phase 28 (Completed 2026-01-24)
 - All bugs resolved before completion

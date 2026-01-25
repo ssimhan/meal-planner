@@ -17,7 +17,7 @@ import { ChefHat } from 'lucide-react';
 import { MobileDayCard } from './components/MobileDayCard';
 import { WeekViewTable } from './components/WeekViewTable';
 import { SelectionCheckbox } from './components/SelectionCheckbox';
-
+import { WeekNavigation } from './components/WeekNavigation';
 
 function WeekViewContent() {
   const searchParams = useSearchParams();
@@ -413,11 +413,15 @@ function WeekViewContent() {
               <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-2">
                 Week at a Glance
               </h1>
-              {weekData.week_of && (
+              {(status.week_of || weekData.week_of) && (
                 <p className="text-[var(--text-muted)] font-mono text-sm uppercase">
-                  WEEK OF {weekData.week_of.toUpperCase()}
+                  WEEK OF {(status.week_of || weekData.week_of || '').toUpperCase()}
                 </p>
               )}
+              <WeekNavigation
+                currentWeek={status.week_of || weekData.week_of || ''}
+                availableWeeks={status.available_weeks || []}
+              />
             </div>
             <div className="flex items-center gap-3">
               <button

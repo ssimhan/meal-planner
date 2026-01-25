@@ -885,5 +885,18 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Cleanup:** Updated `InventoryStep` and `ReviewStep` to use the new shared components, removing duplicate definitions.
 - **Result:** `page.tsx` is now significantly cleaner, serving primarily as a state container and orchestrator.
 
-**Block 2: State Logic Separation (Next)**
-- **Goal:** Move the complex state management (useEffect, data fetching, handlers) into a custom `usePlanningWizard` hook.
+**Block 2: State Logic Separation (Completed)**
+- **Architecture:** Implemented `WizardContext` (React Context API) to manage state, replacing prop drilling.
+- **Provider:** Created `WizardProvider` to encapsulate logic and business rules.
+- **Refactor:** Migrated `ReviewStep`, `InventoryStep`, `SuggestionsStep`, `DraftStep`, and `GroceryStep` to consume context.
+
+**Block 3: Type Safety & Maintenance (Completed)**
+- **Strict Types:** Created `src/types/wizard.ts` and centralized type definitions.
+- **Cleanup:** Fixed circular dependencies and established strict discriminated unions for Wizard Steps.
+
+**Bug Fixes (Post-Refactor)**
+- **Inventory UI (USR-001):** Clarified distinction between "Meals" (leftovers) and "Ingredients".
+- **Week View (UI-002, NAV-001):** Fixed missing week label and added navigation to view past weeks.
+- **Linting:** Fixed `jest.config` CommonJS conflict and cleaned up ESLint configuration.
+
+**Result:** The planning wizard is now architecturally mature, type-safe, and easier to extend. The `page.tsx` file is minimal, and state is globally accessible where needed.

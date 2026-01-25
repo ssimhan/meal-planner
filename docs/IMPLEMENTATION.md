@@ -164,20 +164,21 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [x] **Leftover Integration:** Immediate sync of assigned leftovers into the lunch grid.
   - [x] **Visual Feedback:** "Match ✨" badges for ingredient-efficient recipes.
 
-### Phase 29: Wizard Architecture Refactor
+### Phase 29: Wizard Architecture Refactor ✅ Complete
 **Goal:** Modularize the monolithic `src/app/plan/page.tsx` for maintainability and performance.
 - **Block 1: Component Extraction (~3 hrs) ✅ Complete**
   - [x] Extract `ReviewStep` component
   - [x] Extract `InventoryStep` component
   - [x] Extract `SuggestionsStep`, `DraftStep`, and `GroceryStep` components
   - [x] **Critical Fixes:** Resolved infinite rendering loops & SSL connection errors.
-- **Block 2: State Logic Separation & Stability (~3 hrs)**
-  - [ ] Create `WizardContext` (Recommended to fix circular dependencies in `autoDraft`)
-  - [ ] Move state management and API side-effects out of `page.tsx`
+- **Block 2: State Logic Separation & Stability (~3 hrs) ✅ Complete**
+  - [x] Create `WizardContext` (Recommended to fix circular dependencies in `autoDraft`)
+  - [x] Move state management and API side-effects out of `page.tsx`
   - [x] **Debugging Improvements:** Added structured error logging (`MISSING_PARAMETERS`, `PLAN_NOT_FOUND`) and frontend error inspection.
   - [x] **Critical Fix:** Fixed "Missing session data" error in `WeekView` (incorrect state access).
-- **Block 3: Type Definitions (~1 hr)**
-  - [ ] Centralize wizard types into `src/types/wizard.ts`
+- **Block 3: Type Definitions (~1 hr) ✅ Complete**
+  - [x] Centralize wizard types into `src/types/wizard.ts`
+  - [x] Extract `ReviewDay`, `InventoryState` and strict unions.
 
 ### Phase 30: Household Communication & Persistence
 **Goal:** Enhance multi-user coordination and note-taking.
@@ -189,6 +190,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
 ### Phase 31: User Authentication (The "Family Gate")
 **Goal:** Secure the application for single-household access via Supabase.
 - **Block 1: Infrastructure & Schema (~3 hrs)**
+  - [ ] **Settings Extraction:** Refactor local `config.yml`/settings into a `households` table (preferences, dietary rules) to support multiple distinct households.
   - [ ] Supabase Auth setup
   - [ ] RLS Policies
 - **Block 2: Login Page & Flow (~3 hrs)**
@@ -253,6 +255,16 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [ ] Display nutrition info in recipe view
   - [ ] Weekly nutrition summary dashboard
   - [ ] Dietary goal tracking (optional)
+
+### Phase 35: Individual Meal Tracking & Preferences
+**Goal:** deeply integrate individual household member preferences and track consumption at a granular level.
+- **Block 1: Enhanced Member Profiles**
+  - [ ] Track individual likes/dislikes (e.g., "Dad hates cilantro", "Kid 1 loves pasta").
+  - [ ] Integrate individual preferences into recipe scoring and suggestions.
+- **Block 2: Per-Person Meal Tracking (The "Split Meal" Overhaul)**
+  - [ ] Overhaul data model to track "who is eating what" for any given meal slot.
+  - [ ] Support split meals (e.g., Parents eating Recipe A, Kids eating Recipe B).
+  - [ ] Individual feedback logging (who liked it, who didn't).
 
 ---
 

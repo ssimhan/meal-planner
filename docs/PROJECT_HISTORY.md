@@ -900,3 +900,54 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Linting:** Fixed `jest.config` CommonJS conflict and cleaned up ESLint configuration.
 
 **Result:** The planning wizard is now architecturally mature, type-safe, and easier to extend. The `page.tsx` file is minimal, and state is globally accessible where needed.
+
+## Strategic Pivot: Preparing for Scale (January 2026)
+
+*Context for future blog post: "From Personal Tool to SaaS Product"*
+
+### The "God Component" Refactor (Phase 29 Retrospective)
+As we prepared to add multi-user collaboration to the Weekly Planning Wizard, we hit a wall. The `PlanWizard` (`src/app/plan/page.tsx`) had grown into a classic "God Component"—managing UI, complex business logic, API side-effects, and state for 6 different steps all in one file.
+
+**The Problem:**
+- **Prop Drilling Hell:** Passing `setInventory` down 4 levels to a grandchild component just to update a checkbox.
+- **Fragile State:** A change in the "Grocery" step would trigger re-renders in the "Review" step.
+- **Testing Nightmare:** You couldn't test the logic without rendering the entire page.
+
+**The Decision: Context over Redux**
+We opted for React Context API (`WizardContext`) rather than an external library like logical Redux or Zustand.
+- *Why?* The wizard state is complex but *scoped*. It lives for the duration of the session and doesn't need to be global across the entire app.
+- *Execution:* We established a strict Type System first (`src/types/wizard.ts`) to define the shape of our state before writing runtime code. This "Types First" approach caught dozens of potential bugs where undefined states might have crashed the wizard.
+
+**Outcome:**
+The code is now modular. `page.tsx` is less than 200 lines (down from 1000+), acting only as a layout shell. Each step (`ReviewStep`, `DraftStep`) consumes strictly the data it needs from the `useWizard` hook.
+
+---
+
+### The UI/UX Realignment (Inventory & Navigation)
+While refactoring, we addressed two persistent user friction points that highlighted a mismatch between our Data Model and the User's Mental Model.
+
+**1. "Meals" vs "Ingredients" (Inventory)**
+Previously, our inventory system dumped "Leftover Spaghetti" in the same visual bucket as "Raw Chicken Breast".
+- *User Mental Model:* "I am hungry *now* (Ready to Eat)" vs "I want to *cook* (Ingredients)".
+- *Fix:* We physically separated the UI. Top cards now show **Ready-to-Eat** items (Leftovers, Freezer Stash), while distinct tabs below handle **Raw Ingredients**. This simple grouping change significantly reduced cognitive load during "What's for dinner?" decision fatigue.
+
+**2. Lost in Time (Week View)**
+The "Week at a Glance" was a floating timeline without anchors. Users would swipe and lose track of whether they were viewing "This Week" or "Last Week".
+- *Fix:* We re-introduced explicit "Week Of [Date]" labels and a dedicated Year/Week dropdown navigation. It seems obvious in hindsight, but in a Single Page App, it's easy to forget that users need constant temporal orientation.
+
+---
+
+### The Architecture Pivot: Multi-Tenancy First (Looking Ahead to Phase 30)
+We originally planned to build "Household Notes" next. However, we realized we were about to build a "Collaboration Feature" on top of a single-player foundation.
+
+**The Realization:**
+If we built shared notes now, we'd hardcode them to the current user. When we eventually added "Spouse Login", we'd have to rewrite the entire database schema to support sharing.
+
+**The Decision: Infrastructure before Features**
+We completely reordered the roadmap to prioritize **Phase 30: Multi-Tenant Architecture**.
+1.  **Identity is not Authorization:** Just because a user is logged in (AuthN) doesn't mean they belong to a household (AuthZ).
+2.  **The Household Entity:** We are introducing a `households` table. Users will belong to a household. *Data* (recipes, plans) will belong to a household, not a user.
+3.  **RLS as the Firewall:** We will use Postgres Row Level Security (RLS) to enforce this at the database engine level. `SELECT * FROM recipes` will automatically only return recipes `WHERE household_id = current_user_household_id`.
+
+**Why this matters:**
+This transforms the project from a "Personal Tool" into a "SaaS Platform". It enables the future Mobile App (Phase 33) to simply hit the API, and the backend handles the security transparency. We are paying the "complexity tax" now to buy "velocity" later.

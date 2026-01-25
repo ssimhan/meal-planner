@@ -180,38 +180,34 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [x] Centralize wizard types into `src/types/wizard.ts`
   - [x] Extract `ReviewDay`, `InventoryState` and strict unions.
 
-### Phase 30: Household Communication & Persistence
-**Goal:** Enhance multi-user coordination and note-taking.
-- **Block 1: Brain Dump & Household Communication (~3 hrs)**
-  - [ ] **Persistence:** Define storage and API for Brain Dump notes (Supabase `household_notes` or similar).
-  - [ ] **Dashboard Integration:** Display persistent Brain Dump notes on the dashboard for multi-adult coordination.
-  - [ ] **Note Management:** Implement full CRUD (View, Edit, Clear) for Brain Dump notes.
+### Phase 30: Multi-Tenant Architecture & Authentication
+**Goal:** Transform the single-user local app into a secure, multi-household SaaS platform.
+> **Critical:** This phase MUST precede any household collaboration features to prevent data leakage and technical debt.
 
-### Phase 31: User Authentication (The "Family Gate")
-**Goal:** Secure the application for single-household access via Supabase.
-- **Block 1: Infrastructure & Schema (~3 hrs)**
-  - [ ] **Settings Extraction:** Refactor local `config.yml`/settings into a `households` table (preferences, dietary rules) to support multiple distinct households.
-  - [ ] Supabase Auth setup
-  - [ ] RLS Policies
-- **Block 2: Login Page & Flow (~3 hrs)**
-  - [ ] Login/Signup UI
-  - [ ] Session management
-- **Block 3: Cleanup & Polish (~2-4 hrs)**
-  - [ ] Legacy cleanup (archive local data/*.yml)
-  - [ ] Auth caching optimization
-  - [ ] Empty states and onboarding
+- **Block 1: Data Model Isolation (~4 hrs)**
+  - [ ] **Schema Migration:** Add `households` table and `profiles` table (linking `auth.users` to `households`).
+  - [ ] **Multi-Tenancy:** Add `household_id` foreign key to ALL core tables (`inventory`, `recipes`, `plan_history`, `week_status`).
+  - [ ] **RLS Policies:** Implement Row Level Security policies ensuring users only access their household's data.
+- **Block 2: Configuration Migration (~3 hrs)**
+  - [ ] **Settings Extraction:** Migrate logic from local `config.yml` to DB-backed `household_settings` table.
+  - [ ] ensure backend reads from DB context, not file system.
+- **Block 3: Auth Flow (~3 hrs)**
+  - [ ] **Sign Up / Login:** Supabase Auth UI integration.
+  - [ ] **Onboarding:** Automatic "Create Household" trigger upon fresh signup.
+  - [ ] **Session Context:** Ensure `household_id` is available in API headers/context.
 
-### Phase 32: Analytics & Future Features
-**Goal:** Lower-priority enhancements for power users.
+### Phase 31: Household Collaboration (The "Team" Update)
+**Goal:** Enable multiple adults to coordinate within the same verified household.
+
 - **Block 1: Member Management (~2 hrs)**
-  - [ ] View household members in Settings
-  - [ ] Invite flow (Join Code or Email)
-- **Block 2: Future Ideas**
-  - [ ] Freezer ingredients tracking
-  - [ ] Advanced analytics
-  - [ ] Nutrition estimation
+  - [ ] **Invite Flow:** "Invite Spouse" capability (via email or join code).
+  - [ ] **Profile Settings:** Manage display names and individual preferences within the household.
+- **Block 2: Shared Brain Dump (formerly Ph30) (~3 hrs)**
+  - [ ] **Persistence:** DB-backed `household_notes` table (replacing local state).
+  - [ ] **Real-time:** Display shared notes on Dashboard for all household members.
+  - [ ] **CRUD:** Add/Edit/Delete shared notes.
 
-### Phase 33: Mobile Friendly UX
+### Phase 32: Mobile Friendly UX (Shifted up)
 **Goal:** Ensure - and validate - that the application is fully responsive and optimized for mobile devices.
 - **Block 1: Navigation & Layout**
   - [ ] Fix collapsible mobile navigation.
@@ -221,10 +217,31 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [ ] Audit touch targets (min 44px) across the app.
   - [ ] Improve modal behavior on small screens.
 
-### Phase 34: Advanced Features & Integrations
+### Phase 33: Native Mobile App (Hybrid/PWA)
+**Goal:** Package the responsive web app into an installable mobile experience.
+- **Block 1: PWA Foundation (~2 hrs)**
+  - [ ] **Manifest:** Update `manifest.json` with correct icons, screenshots, and theme colors.
+  - [ ] **Service Worker:** Implement offline fallback page and asset caching.
+  - [ ] **Installability:** Add "Add to Home Screen" prompt logic.
+- **Block 2: Capacitor Integration (~4 hrs)**
+  - [ ] **Wrap:** Integrate Capacitor to wrap the Next.js app.
+  - [ ] **Native Features:** Implement Haptics for interaction feedback.
+  - [ ] **Status Bar:** Configure safe areas and native status bar styling.
+- **Block 3: App Store Prep (Future)**
+  - [ ] **Splash Screen:** Create native splash screens.
+  - [ ] **Push Notifications:** Setup OneSignal or Firebase-for-Capacitor.
+
+### Phase 34: Analytics & Advanced Features
+**Goal:** Lower-priority enhancements for power users.
+- **Block 1: Universal Search**
+  - [ ] Global search bar (recipes, inventory, history).
+- **Block 2: Future Ideas**
+  - [ ] Freezer ingredients tracking
+  - [ ] Nutrition estimation
+
+### Phase 35: Advanced Features & Integrations
 **Goal:** Enhance the system with automation, intelligence, and integrations.
-- **Block 1: Universal Search (~3 hrs)**
-  - [ ] Implement global search bar across all pages
+- **Block 1: Universal Search (Detailed) (~3 hrs)**
   - [ ] Search across recipes (title, ingredients, tags)
   - [ ] Search inventory items
   - [ ] Search meal plan history
@@ -256,7 +273,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [ ] Weekly nutrition summary dashboard
   - [ ] Dietary goal tracking (optional)
 
-### Phase 35: Individual Meal Tracking & Preferences
+### Phase 36: Individual Meal Tracking & Preferences
 **Goal:** deeply integrate individual household member preferences and track consumption at a granular level.
 - **Block 1: Enhanced Member Profiles**
   - [ ] Track individual likes/dislikes (e.g., "Dad hates cilantro", "Kid 1 loves pasta").

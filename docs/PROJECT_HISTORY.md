@@ -1001,3 +1001,23 @@ We completely reordered the roadmap to prioritize **Phase 30: Multi-Tenant Archi
 
 **Why this matters:**
 This transforms the project from a "Personal Tool" into a "SaaS Platform". It enables the future Mobile App (Phase 33) to simply hit the API, and the backend handles the security transparency. We are paying the "complexity tax" now to buy "velocity" later.
+
+### Phase 30: Multi-Tenant Architecture & Trigger Debugging (2026-01-25) ✅ Complete
+
+**Goal:** Transform single-user MVP into a secure multi-tenant SaaS with robust onboarding.
+
+**Issue:** "Database error saving new user"
+Users encountered a generic error during signup. The root cause was the Postgres Trigger `handle_new_user` running with `SECURITY DEFINER` privileges in a restricted search path.
+
+**Root Cause:**
+`SECURITY DEFINER` functions do not inherit the caller's search path. The function `gen_random_uuid()` (needed for ID generation) was not found because the search path didn't explicitly include `pg_catalog` or `extensions`.
+
+**Attempts:**
+1. **Implicit Defaults (Failed):** Relied on table `DEFAULT gen_random_uuid()`. Failed because triggers running as superuser sometimes bypass standard default firing or context.
+2. **Explicit Call without Schema (Failed):** Called `gen_random_uuid()` directly. Failed due to `search_path` restriction.
+3. **Explicit Schema + Path (Success):**
+   - Identified correct namespace: `pg_catalog`.
+   - Updated Trigger to `SET search_path = public, pg_catalog, extensions`.
+   - Explicitly called `pg_catalog.gen_random_uuid()`.
+
+**Learning:** When using `SECURITY DEFINER` in Postgres triggers, *always* explicitly set the `search_path` and use fully qualified function names (`schema.function`). Ambiguity is the enemy of security definers.

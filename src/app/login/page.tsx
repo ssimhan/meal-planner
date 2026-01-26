@@ -35,20 +35,41 @@ export default function LoginPage() {
         setLoading(true)
         setMessage('')
 
-        const { error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                emailRedirectTo: `${location.origin}/auth/callback`,
-            },
-        })
+        try {
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    emailRedirectTo: `${location.origin}/auth/callback`,
+                },
+            })
 
-        if (error) {
-            setMessage('Error: ' + error.message)
-        } else {
-            setMessage('Success! Check your email for confirmation.')
+            if (error) {
+                console.error("Signup Error Details:", error)
+                // Map common errors to user-friendly messages
+                if (error.message.includes("Database error")) {
+                    setMessage(`System Error (500): Onboarding failed. Please contact support. Code: ${error.code || 'DB_TRIGGER_FAIL'}`)
+                } else if (error.status === 422) {
+                    setMessage(`Validation Error (422): ${error.message}`)
+                } else if (error.status === 400) {
+                    setMessage(`Bad Request (400): ${error.message}`)
+                } else {
+                    setMessage(`Error (${error.status || 'Unknown'}): ${error.message}`)
+                }
+            } else {
+                if (data.user && !data.session) {
+                    setMessage('Success! Please check your email to confirm your account.')
+                } else if (data.user && data.session) {
+                    setMessage('Success! Account created. Redirecting...')
+                    router.push('/')
+                }
+            }
+        } catch (e: any) {
+            console.error("Unexpected Signup Exception:", e)
+            setMessage('Critical Client Error: ' + e.message)
+        } finally {
+            setLoading(false)
         }
-        setLoading(false)
     }
 
     return (

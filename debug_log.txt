@@ -1,0 +1,48 @@
+
+--- LOG MEAL REQUEST ---
+Week: 2026-01-19, Day: wed, Made: outside_meal
+
+--- LOG MEAL ---
+Processing for day=wed
+History week dinners count: 3
+Target dinner updated: {'day': 'wed', 'recipe_id': 'unplanned_meal', 'cuisine': 'various', 'vegetables': [], 'made': 'outside_meal'}
+
+--- LOG MEAL REQUEST ---
+Week: 2026-01-19, Day: thu, Made: True
+
+--- LOG MEAL ---
+Processing for day=thu
+History week dinners count: 4
+Target dinner updated: {'day': 'thu', 'made': True, 'cuisine': 'various', 'needs_fix': False, 'recipe_id': 'unplanned_meal', 'vegetables': [], 'actual_meal': 'Pasta with Veggie Sauce'}
+
+--- LOG MEAL REQUEST ---
+Week: 2026-01-19, Day: fri, Made: outside_meal
+
+--- LOG MEAL ---
+Processing for day=fri
+History week dinners count: 4
+Target dinner updated: {'day': 'fri', 'recipe_id': 'unplanned_meal', 'cuisine': 'various', 'vegetables': [], 'made': 'outside_meal'}
+
+--- LOG MEAL REQUEST ---
+Week: 2026-01-19, Day: sat, Made: outside_meal
+
+--- LOG MEAL ---
+Processing for day=sat
+History week dinners count: 5
+Target dinner updated: {'day': 'sat', 'recipe_id': 'unplanned_meal', 'cuisine': 'various', 'vegetables': [], 'made': 'outside_meal'}
+
+--- LOG MEAL REQUEST ---
+Week: 2026-01-19, Day: sat, Made: None
+
+--- LOG MEAL ---
+Processing for day=sat
+History week dinners count: 6
+Target dinner updated: None
+
+--- LOG MEAL REQUEST ---
+Week: 2026-01-19, Day: sat, Made: None
+
+--- LOG MEAL ---
+Processing for day=sat
+History week dinners count: 6
+Target dinner updated: None

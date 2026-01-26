@@ -798,6 +798,56 @@ The best tools are the ones you actually use. This system works because it reduc
 - **Regex is a Superpower**: When your data is messy (like timing trapped inside instruction text), a simple regular expression can "recalibrate" hundreds of rows in seconds. It's better than manual entry 100% of the time.
 - **Component Wrapping**: If you have a complex server-side page (like a Recipe Detail) and want to add an interactive modal (like Focus Mode), don't try to make the whole page a Client Component. Wrap just the interactive parts in a "Client Wrapper" to keep the speed of server rendering.
 - **Schema Normalization**: Built `fix_yaml_schema.py` to auto-split instructions into lists and rename `name` -> `title`.
+
+### Phase 28: General Workflow and Frontend Clean up (2026-01-24) ✅ Complete
+**Goal:** Standardize the visual system, fix inventory/shopping friction, and polish workflow persistence.
+
+**Blocked 1: Global Visual Polish & Coherence (Completed)**
+- **Dark Mode:** Improved legibility and contrast across all card components.
+- **Unified Styling:** Standardized buttons, usage of color, animations, and shadows.
+- **Premium Buttons:** Updated meal plan page buttons to match high-fidelity "Review" button styling.
+
+**Block 2: Inventory & Shopping Stability (Completed)**
+- **Shop Page:** Fixed broken store categorization.
+- **Alphabetical Ordering:** Sorted inventory lists alphabetically.
+- **Deduplication:** Implemented auto-consolidation of duplicate items.
+- **Immediate Sync:** Ensured added items appear immediately in the correct category.
+
+**Block 3: Recipe Experience & Data Cleanup (Completed)**
+- **Focus Mode Integration:** Linked `StepByStepCooking` component from Dashboard and Meal Plan pages.
+- **Tag Migration:** Converted legacy notes into standardized tag system.
+- **Pending Recipe Workflow:** Implemented logic to push recipes mentioned in Brain Dump/Quick Add to the Recipe Index.
+
+**Block 4: Advanced Planning Persistence (Completed)**
+- **Infrastructure:** Implemented persistent state for planning pauses (localStorage/Supabase).
+- **Resume UI:** Added "Resume Planning" banner/modal triggered on login/refresh.
+- **Wizard Inventory Upgrades:** Separated meals vs veggies sections, added freezer inventory option, and specific quantity inputs.
+
+**Block 7: Sequential Suggestion Flow & Context-Aware Lunches (Completed)**
+- **Sequential Progression:** Split "Plan Your Extras" into Lunch and Snack phases.
+- **Ingredient Ranking:** Backend scoring for lunches based on dinner ingredients.
+- **Leftover Integration:** Immediate sync of assigned leftovers into the lunch grid.
+- **Visual Feedback:** "Match ✨" badges for ingredient-efficient recipes.
+
+### Phase 29: Wizard Architecture Refactor (2026-01-25) ✅ Complete
+**Goal:** Modularize the monolithic `src/app/plan/page.tsx` for maintainability and performance.
+
+**Block 1: Component Extraction (Completed)**
+- **Refactor:** Extracted `ReviewStep`, `InventoryStep`, `SuggestionsStep`, `DraftStep`, and `GroceryStep` components.
+- **Critical Fixes:** Resolved infinite rendering loops & SSL connection errors.
+
+**Block 2: State Logic Separation & Stability (Completed)**
+- **Context API:** Created `WizardContext` to fix circular dependencies in `autoDraft`.
+- **Logic Move:** Moved state management and API side-effects out of `page.tsx`.
+- **Debugging:** Added structured error logging (`MISSING_PARAMETERS`, `PLAN_NOT_FOUND`).
+- **Critical Fix:** Fixed "Missing session data" error in `WeekView` (incorrect state access).
+
+**Block 3: Type Definitions (Completed)**
+- **Strict Typing:** Centralized wizard types into `src/types/wizard.ts`.
+- **Extraction:** Extracted `ReviewDay`, `InventoryState`, and implemented strict unions.
+
+**Learning:** Managing complex state in a multi-step wizard requires a dedicated Context. Passing props down 4 levels created a "prop drilling" nightmare that obscured the source of truth. Converting to `WizardContext` reduced `page.tsx` from 1200 lines to <200 lines and made bugs immediately obvious.
+
 - **Determinism**: Added a checksum mode to CI so pre-commit hooks catch bad YAML before it merges.
 
 ### Phase 29: Wizard Architecture Refactor (2026-01-23) ✅ Complete

@@ -184,17 +184,17 @@ Declining energy model: Monday (high) → Friday (zero prep)
 **Goal:** Transform the single-user local app into a secure, multi-household SaaS platform.
 > **Critical:** This phase MUST precede any household collaboration features to prevent data leakage and technical debt.
 
-- **Block 1: Data Model Isolation (~4 hrs)**
-  - [ ] **Schema Migration:** Add `households` table and `profiles` table (linking `auth.users` to `households`).
-  - [ ] **Multi-Tenancy:** Add `household_id` foreign key to ALL core tables (`inventory`, `recipes`, `plan_history`, `week_status`).
-  - [ ] **RLS Policies:** Implement Row Level Security policies ensuring users only access their household's data.
-- **Block 2: Configuration Migration (~3 hrs)**
-  - [ ] **Settings Extraction:** Migrate logic from local `config.yml` to DB-backed `household_settings` table.
-  - [ ] ensure backend reads from DB context, not file system.
-- **Block 3: Auth Flow (~3 hrs)**
-  - [ ] **Sign Up / Login:** Supabase Auth UI integration.
-  - [ ] **Onboarding:** Automatic "Create Household" trigger upon fresh signup.
-  - [ ] **Session Context:** Ensure `household_id` is available in API headers/context.
+- **Block 1: Data Model Isolation (~4 hrs) ✅**
+  - [x] **Schema Migration:** Add `households` table and `profiles` table (linking `auth.users` to `households`).
+  - [x] **Multi-Tenancy:** Add `household_id` foreign key to ALL core tables (`inventory`, `recipes`, `plan_history`, `week_status`).
+  - [x] **RLS Policies:** Implement Row Level Security policies ensuring users only access their household's data.
+- **Block 2: Configuration Migration (~3 hrs) ✅**
+  - [x] **Settings Extraction:** Migrate logic from local `config.yml` to DB-backed `household_settings` table.
+  - [x] **Context Awareness:** Ensure backend reads from DB context, not file system.
+- **Block 3: Auth Flow (~3 hrs) ✅**
+  - [x] **Sign Up / Login:** Supabase Auth UI integration.
+  - [x] **Onboarding:** Automatic "Create Household" trigger upon fresh signup.
+  - [x] **Session Context:** Ensure `household_id` is available in API headers/context.
 
 ### Phase 31: Household Collaboration (The "Team" Update)
 **Goal:** Enable multiple adults to coordinate within the same verified household.

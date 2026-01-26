@@ -1002,9 +1002,17 @@ We completely reordered the roadmap to prioritize **Phase 30: Multi-Tenant Archi
 **Why this matters:**
 This transforms the project from a "Personal Tool" into a "SaaS Platform". It enables the future Mobile App (Phase 33) to simply hit the API, and the backend handles the security transparency. We are paying the "complexity tax" now to buy "velocity" later.
 
+We are paying the "complexity tax" now to buy "velocity" later.
+
 ### Phase 30: Multi-Tenant Architecture & Trigger Debugging (2026-01-25) ✅ Complete
 
 **Goal:** Transform single-user MVP into a secure multi-tenant SaaS with robust onboarding.
+
+**Architectural Highlights:**
+1. **Row Level Security (RLS):** Implemented strict DB-level policies. `SELECT *` now acts as a firewall, returning only data belonging to the user's `household_id`.
+2. **Onboarding Flow:**
+   - **Trigger-Based Provisioning:** A Postgres trigger (`handle_new_user`) detects new auth signups and automatically provisions a "My Household" and Owner Profile.
+   - **Session Injection:** Middleware injects the `household_id` into every API request, ensuring backend code never has to manually query for it.
 
 **Issue:** "Database error saving new user"
 Users encountered a generic error during signup. The root cause was the Postgres Trigger `handle_new_user` running with `SECURITY DEFINER` privileges in a restricted search path.
@@ -1021,6 +1029,7 @@ Users encountered a generic error during signup. The root cause was the Postgres
    - Explicitly called `pg_catalog.gen_random_uuid()`.
 
 **Learning:** When using `SECURITY DEFINER` in Postgres triggers, *always* explicitly set the `search_path` and use fully qualified function names (`schema.function`). Ambiguity is the enemy of security definers.
+
 
 ### Phase 30: Multi-Tenant Architecture (Completed 2026-01-25)
 

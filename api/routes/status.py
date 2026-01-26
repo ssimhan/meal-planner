@@ -13,31 +13,24 @@ from api.utils import storage
 status_bp = Blueprint('status', __name__)
 
 def _load_config():
-    """Load config from DB households table with caching."""
+    """Load config with caching."""
     h_id = storage.get_household_id()
     now = datetime.now().timestamp()
     
     # Check cache
     cache_entry = CACHE.get('config')
-    if cache_entry and (now - cache_entry['timestamp'] < CACHE_TTL):
+    # Simple cache key verification - in a real multi-tenant app we should key by household_id
+    # But since this is per-request context in serverless (mostly), or single process per container...
+    # Actually for local dev server (multi-request), we MUST key by household_id
+    if cache_entry and cache_entry.get('household_id') == h_id and (now - cache_entry['timestamp'] < CACHE_TTL):
         return cache_entry['data']
 
-    if not storage.supabase:
-        print("Supabase client not initialized. Using fallback config.")
-        return {'timezone': 'America/Los_Angeles'}
-
-    try:
-        query = storage.supabase.table("households").select("config").eq("id", h_id)
-        res = storage.execute_with_retry(query)
-        if res.data and len(res.data) > 0:
-            config = res.data[0]['config']
-            CACHE['config'] = {'data': config, 'timestamp': now}
-            return config
-    except Exception as e:
-        print(f"Error loading config from DB for {h_id}: {e}")
-
-    # Fallback
-    return {'timezone': 'America/Los_Angeles'}
+    # Fetch from Storage Engine (which handles DB vs File logic)
+    config = storage.StorageEngine.get_config()
+    
+    # Update cache
+    CACHE['config'] = {'data': config, 'timestamp': now, 'household_id': h_id}
+    return config
 
 def _get_current_status(skip_sync=False, week_override=None):
     try:
@@ -335,3 +328,25 @@ def get_analytics():
 @require_auth
 def hello():
     return jsonify({"message": "Hello from Flask on Vercel!"})
+
+@status_bp.route("/api/debug/context")
+@require_auth
+def debug_context():
+    """Verify backend session context injection."""
+    return jsonify({
+        "status": "success",
+        "user_id": request.user.id if hasattr(request, 'user') else None,
+        "email": request.user.email if hasattr(request, 'user') else None,
+        "household_id": storage.get_household_id()
+    })
+
+@status_bp.route("/api/debug/clear_cache")
+@require_auth
+def debug_clear_cache():
+    """Clear backend cache (config, recipes, etc)."""
+    from api.utils import invalidate_cache
+    invalidate_cache()
+    # invalidate local module cache too if needed
+    if 'config' in CACHE:
+        del CACHE['config']
+    return jsonify({"status": "success", "message": "Cache cleared"})

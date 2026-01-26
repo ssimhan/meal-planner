@@ -44,15 +44,17 @@ def require_auth(f):
             request.user = user_res.user
 
             # Fetch household_id from profiles
-            profile_res = supabase.table("profiles").select("household_id").eq("id", user_res.user.id).execute()
+            # Query by user_id (linked to auth.uid)
+            profile_res = supabase.table("profiles").select("household_id").eq("user_id", user_res.user.id).execute()
             
             if profile_res.data and len(profile_res.data) > 0:
                 request.household_id = profile_res.data[0].get('household_id')
+                print(f"AUTH SUCCESS: User {user_res.user.email} -> Household {request.household_id}")
             else:
-                # NEW: Auto-onboard new user
-                from api.utils.onboarding import onboard_new_user
-                hh_id = onboard_new_user(user_res.user.id, user_res.user.email)
-                request.household_id = hh_id
+                print(f"AUTH WARNING: User {user_res.user.email} has no profile. Using Default Household fallback.")
+                # Fallback for now until Onboarding Block 3 is built
+                # This prevents "None" errors during transition
+                request.household_id = "00000000-0000-0000-0000-000000000001"
             
         except Exception as e:
             print(f"Auth verification error: {str(e)}")

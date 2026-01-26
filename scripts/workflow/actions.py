@@ -30,15 +30,13 @@ def create_new_week(week_str, history_dict=None, recipes_list=None, config_dict=
         index_path = Path('recipes/index.yml')
         proposed_veg, staples = generate_farmers_market_proposal(history_path, index_path)
 
+    from api.utils.storage import StorageEngine
+    
     if config_dict:
         config = config_dict
     else:
-        config_path = Path('config.yml')
-        if not config_path.exists():
-            config = {}
-        else:
-            with open(config_path, 'r') as f:
-                config = yaml.safe_load(f)
+        # Load from DB or legacy file via StorageEngine abstraction
+        config = StorageEngine.get_config()
 
     input_data = {
         'week_of': week_str,

@@ -168,3 +168,26 @@ Other workflows like `daily-checkin` work with the default token.
 **PRs don't trigger workflows:**
 - Verify token has "Workflows: Read and write" permission.
 - Ensure it is a fine-grained token or classic token with `workflow` scope.
+
+## Documentation Standards
+
+To maintain a clean and effective documentation workflow, please adhere to the following rules:
+
+### 1. docs/BUGS.md
+**Sole Purpose:** Tracking active issues and technical debt that must be resolved before the current phase is complete.
+
+*   **Strict Categories:** Only use **Active Bugs** and **Technical Debt**.
+*   **No Other Subcategories:** Do not add sections like "Guidelines", "Audit Log", "Future Ideas", or "Notes". Keeping this file clean ensures we focus on the "Zero-Debt Policy".
+*   **Handling Resolved Issues:** Once an issue is fixed, remove it from this file. If you wish to keep a record, move it to .
+
+### 2. docs/IMPLEMENTATION.md
+**Sole Purpose:** Tracking feature implementation status for the current execution block.
+
+*   **Features Only:** All new features, blocks of work, and functional requirements go here.
+*   **Checklist Format:** Use the existing checkbox format to track progress.
+
+### 3. docs/PROJECT_HISTORY.md
+**Sole Purpose:** Historical record of what was done.
+
+*   **Audit Logs:** Move completed items from  here at the end of a phase.
+*   **Design Decisions:** Document major architectural shifts or learnings here.

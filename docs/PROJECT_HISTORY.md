@@ -1021,3 +1021,17 @@ Users encountered a generic error during signup. The root cause was the Postgres
    - Explicitly called `pg_catalog.gen_random_uuid()`.
 
 **Learning:** When using `SECURITY DEFINER` in Postgres triggers, *always* explicitly set the `search_path` and use fully qualified function names (`schema.function`). Ambiguity is the enemy of security definers.
+
+### Phase 30: Multi-Tenant Architecture (Completed 2026-01-25)
+
+**Goal:** Transform the single-user local app into a secure, multi-household SaaS platform.
+
+**Built:**
+- **Data Model:** Added `households` and `profiles` tables with foreign keys and RLS policies.
+- **Auth Flow:** Implemented Supabase Auth with automatic household creation triggers.
+- **Config Migration:** Moved configuration from local files to the database.
+
+**Audit Log (Bugs Fixed):**
+- Fixed: Database Trigger Error (UUID Type Mismatch in `handle_new_user`) (CRIT-001)
+- Fixed: Signup Flow Validation & Error Feedback (AUTH-001)
+

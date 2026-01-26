@@ -9,7 +9,7 @@
 
 **No phase is complete until:**
 - Active Bugs = 0
-- Technical Debt = 0
+- Planned Features for Phase = 0
 - All tests passing
 - Vercel preview verified
 
@@ -30,9 +30,9 @@
 
 ---
 
-## Technical Debt
+## Features
 
-**Must be 0 before phase completion.**
+**New features or enhancements identified during development.**
 
 | ID | Area | Description | Impact | Effort | Notes |
 |----|------|-------------|--------|--------|-------|
@@ -48,7 +48,7 @@
 Before merging to `main`:
 
 - [ ] Active Bugs = 0
-- [ ] Technical Debt = 0
+- [ ] Features = 0 (for current phase)
 - [ ] All block features implemented
 - [ ] Local testing passed (`npm run dev:full`)
 - [ ] Vercel preview deployed and verified
@@ -60,6 +60,10 @@ Before merging to `main`:
 ## Audit Log
 
 **Historical reference only - issues from completed phases.**
+
+### Phase 30 (Completed 2026-01-25)
+- Fixed: Database Trigger Error (UUID Type Mismatch in `handle_new_user`) (CRIT-001)
+- Fixed: Signup Flow Validation & Error Feedback (AUTH-001)
 
 ### Phase 29 (Completed 2026-01-25)
 - Fixed: Week at a Glance: Rows don't line up properly (UI-001)
@@ -95,14 +99,12 @@ Before merging to `main`:
 - UI rendering incorrectly
 - **Add immediately when discovered** (don't defer)
 
-### When to Add to Technical Debt
-- Copy-pasted code (3+ times)
-- Hardcoded values that should be config
-- Functions >200 lines that need breaking up
-- Missing error handling
-- Commented-out code blocks
-- TODOs or FIXMEs in code
-- **Add when taking shortcut** (with plan to fix)
+### When to Add to Features
+- New functionality requests
+- Improvements to existing logic
+- Refactoring tasks (formerly tech debt)
+- UI polish items
+- **Add when identifying a need that isn't a bug**
 
 ### Priority Levels
 - **Critical:** Data loss, crashes, core functionality broken
@@ -110,10 +112,10 @@ Before merging to `main`:
 - **Medium:** Minor UX issue, edge case
 - **Low:** Cosmetic, nice-to-have
 
-### Impact Levels (Technical Debt)
-- **High:** Slows daily development, causes frequent confusion
-- **Medium:** Occasional friction, should clean up
-- **Low:** Minor improvement, nice-to-have
+### Impact Levels (Features)
+- **High:** Critical for user value or developer velocity
+- **Medium:** Standard enhancement
+- **Low:** Nice-to-have, can be deferred
 
 ### Effort Estimates
 - **15min:** Quick fix
@@ -132,6 +134,6 @@ Before merging to `main`:
 4. Help triage priority/impact levels
 
 **Before phase completion:**
-- Verify both tables are empty
-- Block merge to main if bugs/debt remain
+- Verify both tables are empty (for current phase items)
+- Block merge to main if bugs remain
 - Suggest de-scoping features if needed to hit quality gate

@@ -1035,3 +1035,16 @@ Users encountered a generic error during signup. The root cause was the Postgres
 - Fixed: Database Trigger Error (UUID Type Mismatch in `handle_new_user`) (CRIT-001)
 - Fixed: Signup Flow Validation & Error Feedback (AUTH-001)
 
+
+### Bug Fix: Future Planning State Reset (2026-01-26) ✅ Complete
+
+**Issue:** Users reported seeing "Planning for week of: 2026-04-13" (months in the future) when trying to update inventory, confusing the workflow.
+
+**Root Cause:**
+The system had likely auto-generated or the user had accidentally triggered empty placeholders for future weeks up to April 2026. The `status` API identifies the "next planning week" by finding the latest week in the database + 1, or simply lists future weeks as "active" if they exist.
+
+**Fix:**
+- **Data Cleanup:** Executed a script to strictly delete all `meal_plans` rows with `week_of > 2026-01-26`.
+- **Validation:** Verified the database now correctly reflects 2026-01-26 as the current active week.
+
+**Impact:** Restored the correct temporal state for the planning wizard.

@@ -75,6 +75,8 @@ Before using the meal planner, customize `config.yml` for your household:
 
 See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for complete configuration guide.
 
+For detailed setup, testing, and deployment instructions, see [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md).
+
 ### CLI Usage
 
 The system supports both a **web dashboard** (recommended) and **CLI** for local development.
@@ -131,6 +133,7 @@ meal-planner/
 ## 📖 Documentation
 
 - **[IMPLEMENTATION.md](docs/IMPLEMENTATION.md)**: Complete system architecture and roadmap
+- **[DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md)**: Setup, testing, deployment, and CI/CD guide
 - **[BUGS.md](docs/BUGS.md)**: Bug tracking and technical debt (zero-debt policy)
 - **[PROJECT_HISTORY.md](docs/PROJECT_HISTORY.md)**: Development history and session logs
 - **[FIELD_NAMING_CONVENTION.md](docs/FIELD_NAMING_CONVENTION.md)**: Field naming standards for meal feedback

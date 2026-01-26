@@ -4,7 +4,7 @@
 - `docs/USER_GUIDE.md`: Non-technical "How To" guide
 - `docs/IMPLEMENTATION.md`: Automation setup and implementation status
 - `docs/PROJECT_HISTORY.md`: Development journey and key decisions
-- `docs/GITHUB_ACTIONS_SETUP.md`: Setup guide for GitHub Actions
+- `docs/DEVELOPER_GUIDE.md`: Developer setup, deployment, and CI/CD
  for the meal-planner repository.
 
 ---
@@ -27,8 +27,10 @@ meal-planner/
 ├── docs/                        # Documentation
 │   ├── DESIGN_REFERENCE.md      # Original UX vision
 │   ├── IMPLEMENTATION.md        # Implementation details
+│   ├── DEVELOPER_GUIDE.md       # Setup & Deployment guide
 │   ├── PROJECT_HISTORY.md       # Project history
 │   ├── REPO_STRUCTURE.md (this file)
+│   ├── archive/                 # Archived/Outdated docs
 │   └── UPDATE_RECIPE_TEMPLATES.md
 │
 ├── scripts/                     # Python automation

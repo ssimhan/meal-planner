@@ -340,7 +340,7 @@ export default function ReplanWorkflowModal({
                             </div>
 
                             <button
-                                onClick={() => setStep('constraints')}
+                                onClick={() => setStep('strategy')}
                                 className="w-full py-3 bg-[var(--accent-primary)] text-white font-bold rounded shadow-lg hover:shadow-xl transition-all"
                             >
                                 Next: Choose Strategy →

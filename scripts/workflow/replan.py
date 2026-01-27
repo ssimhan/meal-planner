@@ -22,6 +22,10 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
     monday_str = monday.strftime('%Y-%m-%d')
     today_abbr = today.strftime('%a').lower()[:3]
     
+    # Ensure week_of is present in data for html_generator
+    if data and 'week_of' not in data:
+        data['week_of'] = monday_str
+    
     if data is None:
         if not input_file: 
             input_file = get_actual_path(f'inputs/{monday_str}.yml')
@@ -52,7 +56,12 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
 
     successful_dinners, to_be_planned = [], []
     current_day_idx = days_list.index(today_abbr)
-    planned_dinners = {d['day']: d for d in week_entry.get('dinners', [])}
+    # Robustly handle malformed dinner entries (None or missing 'day')
+    planned_dinners = {
+        d['day']: d 
+        for d in week_entry.get('dinners', []) 
+        if d and isinstance(d, dict) and d.get('day')
+    }
     
     for day in days_list:
         dinner = planned_dinners.get(day)

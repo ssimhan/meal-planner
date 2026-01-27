@@ -68,7 +68,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
 
 ## Development Status
 
-**Current State:** Completed Phase 30 (Multi-Tenant Architecture). Bug fixing and stabilization (Phase 30.5).
+**Current State:** Completed Phase 31 (Advanced Replan & Smart Features). Moving to Phase 32 (Household Collaboration).
 
 **Completed Phases:**
 - **1-9:** Foundation (recipe parsing, CLI, energy-based prep, HTML plans)
@@ -88,6 +88,8 @@ Declining energy model: Monday (high) → Friday (zero prep)
 - **23.5:** Household Configuration & UI Polish
 - 24 and 25 - original attempt at google oauth and multi-household features. Ended up having big errors and was rolled back. 
 - **27:** Recipe Index Refinement & Review Workflow
+- **30.5:** Serverless Stability Hardening
+- **31:** Advanced Replan & Smart Features (Fresh Plan strategy, Keep/Lock meals)
 ---
 
 ## Implementation Roadmap (Ideal Order)
@@ -196,7 +198,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [x] **Onboarding:** Automatic "Create Household" trigger upon fresh signup.
   - [x] **Session Context:** Ensure `household_id` is available in API headers/context.
 
-### Phase 31: Household Collaboration (The "Team" Update)
+### Phase 32: Household Collaboration (The "Team" Update)
 **Goal:** Enable multiple adults to coordinate within the same verified household.
 
 - **Block 1: Member Management (~2 hrs)**
@@ -207,7 +209,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [ ] **Real-time:** Display shared notes on Dashboard for all household members.
   - [ ] **CRUD:** Add/Edit/Delete shared notes.
 
-### Phase 32: Mobile Friendly UX (Shifted up)
+### Phase 33: Mobile Friendly UX (Shifted up)
 **Goal:** Ensure - and validate - that the application is fully responsive and optimized for mobile devices.
 - **Block 1: Navigation & Layout**
   - [ ] Fix collapsible mobile navigation.
@@ -217,7 +219,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [ ] Audit touch targets (min 44px) across the app.
   - [ ] Improve modal behavior on small screens.
 
-### Phase 33: Native Mobile App (Hybrid/PWA)
+### Phase 34: Native Mobile App (Hybrid/PWA)
 **Goal:** Package the responsive web app into an installable mobile experience.
 - **Block 1: PWA Foundation (~2 hrs)**
   - [ ] **Manifest:** Update `manifest.json` with correct icons, screenshots, and theme colors.
@@ -231,7 +233,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [ ] **Splash Screen:** Create native splash screens.
   - [ ] **Push Notifications:** Setup OneSignal or Firebase-for-Capacitor.
 
-### Phase 34: Analytics & Advanced Features
+### Phase 35: Analytics & Advanced Features
 **Goal:** Lower-priority enhancements for power users.
 - **Block 1: Universal Search**
   - [ ] Global search bar (recipes, inventory, history).
@@ -239,7 +241,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [ ] Freezer ingredients tracking
   - [ ] Nutrition estimation
 
-### Phase 35: Advanced Features & Integrations
+### Phase 36: Advanced Features & Integrations
 **Goal:** Enhance the system with automation, intelligence, and integrations.
 - **Block 1: Universal Search (Detailed) (~3 hrs)**
   - [ ] Search across recipes (title, ingredients, tags)
@@ -273,7 +275,7 @@ Declining energy model: Monday (high) → Friday (zero prep)
   - [ ] Weekly nutrition summary dashboard
   - [ ] Dietary goal tracking (optional)
 
-### Phase 36: Individual Meal Tracking & Preferences
+### Phase 37: Individual Meal Tracking & Preferences
 **Goal:** deeply integrate individual household member preferences and track consumption at a granular level.
 - **Block 1: Enhanced Member Profiles**
   - [ ] Track individual likes/dislikes (e.g., "Dad hates cilantro", "Kid 1 loves pasta").
@@ -380,6 +382,19 @@ Recent phases (23-28) have focused on stabilizing the core experience, refining 
     - ✅ **Person Management:** Ability to dynamically add/remove Adult profiles (not just Kids).
     - ✅ **Meal Scope Granularity:** Customize "Included Meals" (Dinner/Lunch/Snack) per day of the week.
     - ✅ **Prep Time Granularity:** Select specific prep time slots (Morning, Afternoon, Before Dinner, After Dinner) per day of the week.
+
+### Phase 31: Advanced Replan & Smart Features ✅ Complete
+**Goal:** Give users granular control over replanning without destroying existing progress.
+- **Block 1: Strategies.** ✅ Complete
+    - ✅ **Fresh Plan:** Regenerate remaining days from scratch while respecting locks.
+    - ✅ **Shuffle:** Optimized logic for just moving existing meals.
+- **Block 2: UX & Sync.** ✅ Complete
+    - ✅ **Keep/Lock:** Checkbox UI to preserve specific meals during fresh replan.
+    - ✅ **Prep Config:** Toggle "Prep Available" days to force No-Chop meals on busy days.
+    - ✅ **Shopping Sync:** Auto-add ingredients for new meals to the shopping list.
+- **Block 3: Hardening.** ✅ Complete
+    - ✅ **Error Codes:** Specific backend errors (`HISTORY_NOT_FOUND`) instead of generic 500s.
+    - ✅ **Crash Fix:** Resolved `idx` variable scope crash in replan logic.
 
 
 ---

@@ -1073,3 +1073,22 @@ The system had likely auto-generated or the user had accidentally triggered empt
 - `UI-007`: Replace JS Alerts with Toast Notifications.
 
 **Learning:** Serverless environments are hostile to "local-first" patterns. Legacy code that successfully writes "backups" to disk in development will crash production. Every `open(..., 'w')` must be guarded or removed.
+
+### Phase 31: Advanced Replan & Smart Features (2026-01-27) ✅ Complete
+**Goal:** Give users more control when life happens (work runs late, plans change) without destroying the progress they've already made.
+
+**Block 1: Flexible Replanning Strategies (Completed)**
+- **Feature:** Strategy Selector ("Shuffle Remaining" vs. "Fresh Plan").
+- **Logic:**
+    - **Shuffle:** Just moves existing planned meals to new days (preserves ingredients).
+    - **Fresh Plan:** Keeps specified meals but regenerates the rest from the recipe database based on current inventory.
+- **Control:** Added "Keep" checkboxes for meals and "Prep Available" toggles for days.
+- **Sync:** Automatically calculates new ingredient needs and appends them to the Farmers Market list.
+
+**Block 2: Backend Robustness (Completed)**
+- **Feature:** Granular Error Handling.
+- **Impact:** Replaced generic 500 Server Errors with specific codes (`HISTORY_NOT_FOUND`, `INPUT_ERROR`), making debugging significantly faster.
+- **Fix:** Resolved a critical crash (`UnboundLocalError: idx`) in the fresh replan logic path.
+- **Fix:** Corrected UX navigation flow where "Update Inventory" skipped the Strategy step.
+
+**Learning:** "Replan" isn't one thing. Sometimes you just need to shuffle days (Shuffle), and sometimes you need to scrap half the week and start over (Fresh). The system must support both mental models.

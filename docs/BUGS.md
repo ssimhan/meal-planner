@@ -21,7 +21,11 @@
 
 | ID | Area | Description | Priority | Repro Steps | Notes |
 |----|------|-------------|----------|-------------|-------|
-**Count: 0** ✅
+| UI-006 | Inventory Scroll Usability | High | Modal inventory list scroll is difficult/hidden. Needs better swipe/scroll. | [User Report] |
+
+| UI-007 | Replan Error Toast | High | Replace JS alert() with Toast for replan errors | [User Report] |
+
+**Count: 2** ⚠️
 ---
 
 ## Features

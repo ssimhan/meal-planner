@@ -115,8 +115,8 @@ export default function ReplanWorkflowModal({
         try {
             await replan(notes);
             onComplete(); // Parent should refresh status
-        } catch (e) {
-            alert('Replan failed');
+        } catch (e: any) {
+            alert(`Replan failed: ${e.message || 'Unknown error'}`);
         } finally {
             setLoading(false);
         }
@@ -224,7 +224,7 @@ export default function ReplanWorkflowModal({
                                 </div>
                             </div>
 
-                            <div className="max-h-48 overflow-y-auto border border-gray-100 rounded-lg p-2 space-y-1">
+                            <div className="border border-gray-100 rounded-lg p-2 space-y-1">
                                 <h4 className="text-xs font-bold text-gray-400 uppercase ml-2 mb-1">Current Fridge Inventory</h4>
                                 {inventory?.fridge?.map((item: any, i: number) => (
                                     <div key={i} className="flex justify-between items-center px-2 py-1 bg-gray-50 rounded text-sm">

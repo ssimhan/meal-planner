@@ -21,9 +21,7 @@
 
 | ID | Area | Description | Priority | Repro Steps | Notes |
 |----|------|-------------|----------|-------------|-------|
-
 **Count: 0** ✅
-
 ---
 
 ## Features
@@ -88,6 +86,8 @@ Before merging to `main`:
 
 ### Phase 30.5 (In Progress)
 - Fixed: `[Errno 30] Read-only file system: 'debug_log.txt'` during replan confirm (SYS-001)
+- Fixed: Replan Inventory Scroll (UI-005)
+- Fixed: Replan Failed Alert (SYS-003)
 
 ---
 

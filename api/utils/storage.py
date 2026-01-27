@@ -536,8 +536,14 @@ class StorageEngine:
             if tags is not None: data['tags'] = tags
             
             # Write back to file
-            with open(yaml_path, 'w', encoding='utf-8') as f:
-                yaml.dump(data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
+            try:
+                with open(yaml_path, 'w', encoding='utf-8') as f:
+                    yaml.dump(data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
+            except OSError as e:
+                if e.errno == 30: 
+                    print(f"WARN: Read-only filesystem. Cannot update local YAML for {recipe_id}")
+                    # Allow to proceed (return True) as DB might have been updated or this is secondary
+                else: raise e
             
             return True
         except Exception as e:
@@ -579,8 +585,12 @@ class StorageEngine:
                 # Sort for tidiness
                 existing.sort()
                 
-                with open(ignored_path, 'w', encoding='utf-8') as f:
-                    yaml.dump(existing, f)
+                try:
+                    with open(ignored_path, 'w', encoding='utf-8') as f:
+                        yaml.dump(existing, f)
+                except OSError as e:
+                    if e.errno == 30: print("WARN: Read-only filesystem. Cannot update ignored.yml")
+                    else: print(f"Error writing ignored.yml: {e}")
                     
             return True
         except Exception as e:
@@ -622,8 +632,14 @@ class StorageEngine:
             key = ingredient.lower().strip()
             current[key] = brand_or_note
             
-            with open(pref_path, 'w', encoding='utf-8') as f:
-                yaml.dump(current, f)
+            try:
+                with open(pref_path, 'w', encoding='utf-8') as f:
+                    yaml.dump(current, f)
+            except OSError as e:
+                if e.errno == 30: 
+                    print("WARN: Read-only filesystem. Cannot update preferences.yml")
+                else:
+                    print(f"Error writing preferences.yml: {e}")
             return True
         except Exception as e:
             print(f"Error saving preference: {e}")

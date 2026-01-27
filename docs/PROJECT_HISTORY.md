@@ -1057,3 +1057,12 @@ The system had likely auto-generated or the user had accidentally triggered empt
 - **Validation:** Verified the database now correctly reflects 2026-01-26 as the current active week.
 
 **Impact:** Restored the correct temporal state for the planning wizard.
+
+### Phase 30.5: Serverless Stability Hardening (2026-01-27) ✅ Complete
+**Goal:** Fix critical crashes caused by Vercel's read-only filesystem restrictions and improve error visibility.
+
+**Critical Fixes:**
+- **Read-Only Guards:** Audited `api/utils/storage.py`, `scripts/workflow/replan.py`, and `api/routes/meals.py`. Wrapped all legacy file write operations (history backup, HTML generation, local preference updates) in `try...except OSError` blocks.
+- **Detailed Error Handling:** Replaced generic "500 Internal Server Error" responses in the Replan workflow with specific `ReplanError` codes (`HISTORY_NOT_FOUND`, `INPUT_READ_ERROR`).
+
+**Learning:** Serverless environments are hostile to "local-first" patterns. Legacy code that successfully writes "backups" to disk in development will crash production. Every `open(..., 'w')` must be guarded or removed.

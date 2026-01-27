@@ -22,7 +22,7 @@
 | ID | Area | Description | Priority | Repro Steps | Notes |
 |----|------|-------------|----------|-------------|-------|
 
-**Count: 0** 🟢
+**Count: 0** ✅
 
 ---
 
@@ -85,6 +85,9 @@ Before merging to `main`:
 - Fixed: Leftovers Sync Failure (Misclassified as Ingredients)
 - Fixed: Task Duplication (In-place list modification)
 - Fixed: Prep Counter / Dinner Display out of sync
+
+### Phase 30.5 (In Progress)
+- Fixed: `[Errno 30] Read-only file system: 'debug_log.txt'` during replan confirm (SYS-001)
 
 ---
 

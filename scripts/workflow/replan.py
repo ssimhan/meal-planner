@@ -5,6 +5,12 @@ from .selection import _load_inventory_data, score_recipe_by_inventory
 from .state import load_history, get_actual_path
 from .html_generator import generate_html_plan
 
+class ReplanError(Exception):
+    def __init__(self, message, code="INTERNAL_ERROR"):
+        self.message = message
+        self.code = code
+        super().__init__(self.message)
+
 def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, notes=None):
     """Re-distribute remaining and skipped meals across the rest of the week."""
     today = datetime.now()
@@ -23,7 +29,7 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
             with open(input_file, 'r') as f: 
                 data = yaml.safe_load(f)
         else: 
-            return None, None
+            raise ReplanError(f"Input file not found: {input_file}", code="INPUT_READ_ERROR")
 
     if history_dict:
         history = history_dict
@@ -32,7 +38,7 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
 
     days_list = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
     if today_abbr not in days_list: 
-        return data, None # Should not happen with expanded list
+        raise ReplanError(f"Invalid day abbreviation derived: {today_abbr}", code="INVALID_DATE")
         
     week_entry = None
     for week in history.get('weeks', []):
@@ -42,7 +48,7 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
     
     if not week_entry:
         # If no history entry found for this week, we can't replan based on 'made' status
-        return data, None
+        raise ReplanError(f"Week {monday_str} not found in history. Cannot replan execution.", code="HISTORY_NOT_FOUND")
 
     successful_dinners, to_be_planned = [], []
     current_day_idx = days_list.index(today_abbr)
@@ -166,12 +172,20 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
     # Write fallback files for legacy support if paths exist
     if not history_dict:
         history_path = get_actual_path('data/history.yml')
-        with open(history_path, 'w') as f: 
-            yaml.dump(history, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        try:
+            with open(history_path, 'w') as f: 
+                yaml.dump(history, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        except OSError as e:
+            if e.errno == 30: print("WARN: Read-only file system, skipping history.yml write")
+            else: print(f"WARN: Failed to write history.yml: {e}")
             
     if input_file and input_file.exists():
-        with open(input_file, 'w') as f: 
-            yaml.dump(data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        try:
+            with open(input_file, 'w') as f: 
+                yaml.dump(data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        except OSError as e:
+            if e.errno == 30: print("WARN: Read-only file system, skipping input file write")
+            else: print(f"WARN: Failed to write input file: {e}")
 
     # Regenerate HTML and lunches
     try:
@@ -218,7 +232,11 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
     plans_dir = get_actual_path('public/plans')
     plans_dir.mkdir(exist_ok=True, parents=True)
     plan_file = plans_dir / f'{monday_str}-weekly-plan.html'
-    with open(plan_file, 'w') as f: 
-        f.write(plan_content)
+    try:
+        with open(plan_file, 'w') as f: 
+            f.write(plan_content)
+    except OSError as e:
+        if e.errno == 30: print("WARN: Read-only file system, skipping HTML plan write")
+        else: print(f"WARN: Failed to write HTML plan: {e}")
         
     return data, week_entry

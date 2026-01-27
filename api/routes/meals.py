@@ -342,7 +342,21 @@ def replan_route():
             return jsonify({"status": "success", "message": "Plan updated based on execution and latest inventory"})
         else:
             return jsonify({"status": "error", "message": "Replanning logic returned no data. Ensure week history exists."}), 400
+            
     except Exception as e:
+        # Check if it's our custom error (imported inside function to avoid circular imports if needed, 
+        # or assuming it's available via module)
+        if type(e).__name__ == 'ReplanError':
+            code = getattr(e, 'code', 'INTERNAL_ERROR')
+            status_code = 404 if code == 'HISTORY_NOT_FOUND' else 400
+            return jsonify({
+                "status": "error", 
+                "code": code,
+                "message": str(e)
+            }), status_code
+            
+        print(f"ERROR in replan_route: {e}")
+        import traceback; traceback.print_exc()
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @meals_bp.route("/api/confirm-veg", methods=["POST"])
@@ -434,11 +448,8 @@ def log_meal():
         h_id = storage.get_household_id()
         
         # DEBUG LOGGING
-        try:
-            with open("debug_log.txt", "a") as f:
-                f.write(f"\n--- LOG MEAL REQUEST ---\n")
-                f.write(f"Week: {week_str}, Day: {day}, Made: {made}\n")
-        except: pass
+        print(f"DEBUG: --- LOG MEAL REQUEST ---")
+        print(f"DEBUG: Week: {week_str}, Day: {day}, Made: {made}")
         
         res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).order("week_of", desc=True).limit(1).execute()
         if not res.data:
@@ -462,10 +473,9 @@ def log_meal():
         target_day = day.lower()[:3]
         target_dinner = None
         
-        with open("debug_log.txt", "a") as f:
-            f.write(f"\n--- LOG MEAL ---\n")
-            f.write(f"Processing for day={target_day}\n")
-            f.write(f"History week dinners count: {len(history_week.get('dinners', []))}\n")
+        print(f"DEBUG: --- LOG MEAL ---")
+        print(f"DEBUG: Processing for day={target_day}")
+        print(f"DEBUG: History week dinners count: {len(history_week.get('dinners', []))}")
         
         confirm_day = data.get('confirm_day', False)
         
@@ -506,8 +516,7 @@ def log_meal():
                  target_dinner['actual_meal'] = "Leftovers"
              else: target_dinner['made'] = made
         
-        with open("debug_log.txt", "a") as f:
-             f.write(f"Target dinner updated: {target_dinner}\n")
+        print(f"DEBUG: Target dinner updated: {target_dinner}")
 
         if not is_feedback_only or confirm_day:
              if vegetables: 

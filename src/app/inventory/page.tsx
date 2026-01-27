@@ -177,6 +177,7 @@ export default function InventoryPage() {
             setUpdating(true);
             const result = await bulkAddItemsToInventory(items);
             setInventory(result.inventory);
+            setNormalized(transformInventory(result));
             showToast(`Added ${items.length} items!`, 'success');
         } catch (err: any) {
             showToast(err.message || 'Failed to bulk add items.', 'error');

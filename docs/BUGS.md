@@ -22,10 +22,6 @@
 | ID | Area | Description | Priority | Repro Steps | Notes |
 |----|------|-------------|----------|-------------|-------|
 
-
-
-
-
 **Count: 0** 🟢
 
 ---
@@ -65,6 +61,7 @@ Before merging to `main`:
 - Fixed: Database Trigger Error (UUID Type Mismatch in `handle_new_user`) (CRIT-001)
 - Fixed: Signup Flow Validation & Error Feedback (AUTH-001)
 - Fixed: Future Planning State Reset (Future weeks > 2026-01-26 deleted) (DAT-001)
+- Fixed: Brain dump items don't display after submission (INV-001) - missing `setNormalized()` call
 
 ### Phase 29 (Completed 2026-01-25)
 - Fixed: Week at a Glance: Rows don't line up properly (UI-001)

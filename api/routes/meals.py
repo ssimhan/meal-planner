@@ -4,7 +4,7 @@ from pathlib import Path
 from datetime import datetime
 from flask import Blueprint, jsonify, request
 from scripts.workflow import (
-    generate_meal_plan, replan_meal_plan
+    generate_meal_plan, replan_meal_plan, ReplanError
 )
 from scripts.workflow.actions import create_new_week
 from api.utils import storage, invalidate_cache
@@ -350,8 +350,7 @@ def replan_route():
             return jsonify({"status": "error", "message": "Replanning logic returned no data. Ensure week history exists."}), 400
             
     except Exception as e:
-        # Check if it's our custom error (imported inside function to avoid circular imports if needed, 
-        # or assuming it's available via module)
+        # Check if it's our custom error
         if type(e).__name__ == 'ReplanError':
             code = getattr(e, 'code', 'INTERNAL_ERROR')
             status_code = 404 if code == 'HISTORY_NOT_FOUND' else 400
@@ -363,7 +362,11 @@ def replan_route():
             
         print(f"ERROR in replan_route: {e}")
         import traceback; traceback.print_exc()
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({
+            "status": "error", 
+            "code": "INTERNAL_SERVER_ERROR", 
+            "message": f"Server Error: {str(e)}"
+        }), 500
 
 @meals_bp.route("/api/confirm-veg", methods=["POST"])
 @require_auth

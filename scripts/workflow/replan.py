@@ -205,6 +205,9 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
                 'meal_type': recipe.get('meal_type'),
                 'vegetables': recipe.get('main_veg', [])
             })
+            
+        # Mark all old meals as handled so they don't roll over (fresh start means fresh start)
+        idx = len(to_be_planned)
 
     # --- STRATEGY: SHUFFLE (Default) ---
     else:    

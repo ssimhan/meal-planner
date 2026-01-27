@@ -2,4 +2,4 @@ from .state import find_current_week_file, get_workflow_state, archive_all_input
 from .html_generator import generate_granular_prep_tasks, generate_html_plan
 from .selection import generate_farmers_market_proposal, filter_recipes
 from .actions import create_new_week, generate_meal_plan
-from .replan import replan_meal_plan
+from .replan import replan_meal_plan, ReplanError

@@ -1064,5 +1064,12 @@ The system had likely auto-generated or the user had accidentally triggered empt
 **Critical Fixes:**
 - **Read-Only Guards:** Audited `api/utils/storage.py`, `scripts/workflow/replan.py`, and `api/routes/meals.py`. Wrapped all legacy file write operations (history backup, HTML generation, local preference updates) in `try...except OSError` blocks.
 - **Detailed Error Handling:** Replaced generic "500 Internal Server Error" responses in the Replan workflow with specific `ReplanError` codes (`HISTORY_NOT_FOUND`, `INPUT_READ_ERROR`).
+- **Replan UX:**
+    - **Inventory Scroll (UI-005):** Removed fixed height constraint on inventory list to allow natural scrolling.
+    - **Error Feedback (SYS-003):** Updated Replan Modal to show specific backend error messages instead of generic alerts.
+
+**New Issues Identified:**
+- `UI-006`: Inventory Scroll Usability (Needs clearer swipe/scroll affordance).
+- `UI-007`: Replace JS Alerts with Toast Notifications.
 
 **Learning:** Serverless environments are hostile to "local-first" patterns. Legacy code that successfully writes "backups" to disk in development will crash production. Every `open(..., 'w')` must be guarded or removed.

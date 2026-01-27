@@ -88,6 +88,9 @@ Before merging to `main`:
 - Fixed: Replan Failed Alert (SYS-003)
 - Fixed: Inventory Scroll Usability (UI-006) - Removed nested scroll container
 - Fixed: Replan Error Toast (UI-007) - Confirmed use of Toast instead of alert()
+- Fixed: Replan 500 Error (Server Crash) - Added robustness for missing data and auto-injection of `week_of`.
+- Fixed: Inventory Visibility in Replan (ID: 4) - Standardized inventory state to use normalized structure, fixing empty list display.
+
 
 ---
 

@@ -11,7 +11,7 @@ class ReplanError(Exception):
         self.code = code
         super().__init__(self.message)
 
-def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, notes=None):
+def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, notes=None, strategy='shuffle', keep_days=None, prep_days=None):
     """Re-distribute remaining and skipped meals across the rest of the week."""
     today = datetime.now()
     # If it's early morning (before 4am), consider it still 'yesterday' for replan purposes
@@ -146,13 +146,76 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
         to_be_planned = [r[0] for r in scored_recipes]
 
     new_dinners = list(successful_dinners)
-    idx = 0
-    for day in remaining_days:
-        if idx < len(to_be_planned):
-            recipe_entry = to_be_planned[idx]
-            recipe_entry['day'] = day
-            new_dinners.append(recipe_entry)
-            idx += 1
+    
+    # --- STRATEGY: FRESH ---
+    if strategy == 'fresh':
+        from .selection import filter_recipes, select_dinners
+        
+        # 1. Identify locked meals (Keep Days)
+        locked_dinners = {}
+        for d in week_entry.get('dinners', []):
+            if d.get('day') in keep_days and d.get('day') not in [x.get('day') for x in successful_dinners]:
+                new_dinners.append(d)
+                locked_dinners[d.get('day')] = d
+            # Also add successful diners to locked map for selection context
+            if d in successful_dinners:
+                 locked_dinners[d.get('day')] = d
+
+        # 2. Prepare inputs for selection
+        # We need to construct a mock 'inputs' object for select_dinners
+        # Logic: If a day is NOT in prep_days, it is considered 'busy'
+        busy_days = [d for d in days_list if d not in prep_days and d not in ['sat', 'sun']]
+        
+        mock_inputs = {
+            'schedule': {'busy_days': busy_days},
+            'preferences': data.get('preferences', {}),
+            'farmers_market': {'confirmed_veg': []}, # We don't want to constrain by confirmed veg for fresh plans?
+            'rollover': []
+        }
+        
+        # 3. Filter ALL recipes
+        # Need recent recipes to avoid repetition? 
+        recent = set() # For replan, maybe less strict? Or load from history.
+        # Let's load history properly to get recent
+        try:
+             from .selection import get_recent_recipes
+             recent = get_recent_recipes(history)
+        except ImportError:
+             pass
+             
+        filtered_candidates = filter_recipes(all_recipes, mock_inputs, recent)
+
+        # 4. Run Selection
+        # We pass the currently locked dinners as 'current_week_history' so they are respected
+        mock_history = {'dinners': list(locked_dinners.values())}
+        selected_map = select_dinners(filtered_candidates, mock_inputs, current_week_history=mock_history, all_recipes=all_recipes)
+        
+        # 5. Merge Selection into new_dinners (excluding what we already added)
+        existing_days = {d['day'] for d in new_dinners}
+        for day, recipe in selected_map.items():
+            if day in existing_days: continue
+            if day == 'from_scratch_day': continue
+            
+            # Create dinner entry
+            new_dinners.append({
+                'day': day,
+                'recipe_id': recipe.get('id'),
+                'recipe_name': recipe.get('name'), # selection returns full obj
+                'cuisine': recipe.get('cuisine'),
+                'meal_type': recipe.get('meal_type'),
+                'vegetables': recipe.get('main_veg', [])
+            })
+
+    # --- STRATEGY: SHUFFLE (Default) ---
+    else:    
+        idx = 0
+        for day in remaining_days:
+            if idx < len(to_be_planned):
+                recipe_entry = to_be_planned[idx]
+                recipe_entry['day'] = day
+                new_dinners.append(recipe_entry)
+                idx += 1
+
     
     # Handle rollover for meals that couldn't fit in the remaining days
     if idx < len(to_be_planned):
@@ -248,4 +311,34 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
         if e.errno == 30: print("WARN: Read-only file system, skipping HTML plan write")
         else: print(f"WARN: Failed to write HTML plan: {e}")
         
+    # --- SHOPPING LIST SYNC (FEATURE) ---
+    if strategy == 'fresh' and input_file and input_file.exists():
+        # Identify newly added meals (excluding leftovers/freezer backups/outside)
+        new_ingredients = set()
+        for d in new_dinners:
+             # Only consider days that were NOT in keep_days
+             if d.get('day') in keep_days: continue
+             
+             # Skip if it's not a real recipe
+             if d.get('recipe_id') in ['freezer_meal', 'outside_meal'] or str(d.get('recipe_id')).startswith('leftover:'):
+                 continue
+                 
+             # Add main veg
+             for v in d.get('vegetables', []):
+                 if v: new_ingredients.add(v.lower())
+        
+        if new_ingredients:
+            print(f"Syncing new ingredients to shopping list: {new_ingredients}")
+            current_confirmed = set(data.get('farmers_market', {}).get('confirmed_veg', []))
+            updated_list = list(current_confirmed)
+            
+            for ing in new_ingredients:
+                if ing not in current_confirmed:
+                    updated_list.append(ing)
+            
+            # Update data object
+            if 'farmers_market' not in data: data['farmers_market'] = {}
+            data['farmers_market']['confirmed_veg'] = updated_list
+            data['farmers_market']['status'] = 'confirmed' # Ensure status remains confirmed
+
     return data, week_entry

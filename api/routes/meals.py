@@ -313,9 +313,12 @@ def replan_route():
         week_str = active_plan['week_of']
         data = active_plan['plan_data']
         
-        # Extract optional notes
+        # Extract optional notes and new advanced replan params
         req_data = request.json or {}
         notes = req_data.get('notes')
+        strategy = req_data.get('strategy', 'shuffle') # 'shuffle' or 'fresh'
+        keep_days = req_data.get('keep_days', []) # ['mon', 'tue']
+        prep_days = req_data.get('prep_days', []) # ['sun', 'wed'] - days user can prep
         
         # 1. Fetch Latest Data from Supabase
         inventory = storage.StorageEngine.get_inventory()
@@ -328,7 +331,10 @@ def replan_route():
             data=active_plan['plan_data'],
             inventory_dict=inventory,
             history_dict=history,
-            notes=notes
+            notes=notes,
+            strategy=strategy,
+            keep_days=keep_days,
+            prep_days=prep_days
         )
         
         if new_plan_data and new_history_data:

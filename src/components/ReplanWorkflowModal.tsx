@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { logMeal, addItemToInventory, replan, WorkflowStatus, getInventory } from '@/lib/api';
+import { logMeal, addItemToInventory, replan, WorkflowStatus, getInventory, deleteItemFromInventory } from '@/lib/api';
 import { transformInventory } from '@/lib/inventoryManager';
 import MealLogFlow from './MealLogFlow';
 import { FreezerMeal, InventoryItem } from '@/types';
@@ -22,7 +22,7 @@ export default function ReplanWorkflowModal({
     onCancel,
     recipes
 }: ReplanWorkflowModalProps) {
-    const [step, setStep] = useState<'confirm_meals' | 'inventory' | 'constraints' | 'replan'>('confirm_meals');
+    const [step, setStep] = useState<'confirm_meals' | 'inventory' | 'strategy' | 'configure' | 'constraints' | 'replan'>('confirm_meals');
     const [notes, setNotes] = useState('');
     const [currentDayIndex, setCurrentDayIndex] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -34,6 +34,12 @@ export default function ReplanWorkflowModal({
     const [leftoverItems, setLeftoverItems] = useState<InventoryItem[]>([]);
     const [newItem, setNewItem] = useState('');
     const [newItemCategory, setNewItemCategory] = useState('fridge');
+    const [deleting, setDeleting] = useState<string | null>(null);
+
+    // Advanced Replan State
+    const [strategy, setStrategy] = useState<'shuffle' | 'fresh'>('shuffle');
+    const [keepDays, setKeepDays] = useState<string[]>([]);
+    const [prepDays, setPrepDays] = useState<string[]>([]);
 
 
     // Memoize pastDays to stabilize dependency
@@ -103,7 +109,8 @@ export default function ReplanWorkflowModal({
         setLoading(true);
         try {
             const res = await addItemToInventory(newItemCategory, newItem.trim());
-            setInventory(res.inventory);
+            const processed = transformInventory(res.inventory || res);
+            setInventory(processed);
             setNewItem('');
         } catch (e) {
             showToast('Failed to add item', 'error');
@@ -112,10 +119,24 @@ export default function ReplanWorkflowModal({
         }
     };
 
+    const handleDeleteItem = async (category: string, item: string) => {
+        setDeleting(item);
+        try {
+            const res = await deleteItemFromInventory(category, item);
+            const processed = transformInventory(res.inventory || res);
+            setInventory(processed);
+        } catch (e) {
+            showToast('Failed to delete item', 'error');
+        } finally {
+            setDeleting(null);
+        }
+    };
+
     const handleReplan = async () => {
+        setStep('replan');
         setLoading(true);
         try {
-            await replan(notes);
+            await replan(notes, strategy, keepDays, prepDays);
             onComplete(); // Parent should refresh status
         } catch (e: any) {
             showToast(`Replan failed: ${e.message || 'Unknown error'}`, 'error');
@@ -143,7 +164,9 @@ export default function ReplanWorkflowModal({
                     <h2 className="text-lg font-bold">
                         {step === 'confirm_meals' ? 'Confirm Past Meals' :
                             step === 'inventory' ? 'Update Inventory' :
-                                step === 'constraints' ? 'Special Requests' : 'Replanning'}
+                                step === 'strategy' ? 'Choose Strategy' :
+                                    step === 'configure' ? 'Configure Plan' :
+                                        step === 'constraints' ? 'Special Requests' : 'Replanning'}
                     </h2>
                     <button onClick={onCancel} className="text-gray-400 hover:text-gray-600">✕</button>
                 </div>
@@ -226,14 +249,185 @@ export default function ReplanWorkflowModal({
                                 </div>
                             </div>
 
-                            <div className="border border-gray-100 rounded-lg p-2 space-y-1">
-                                <h4 className="text-xs font-bold text-gray-400 uppercase ml-2 mb-1">Current Fridge Inventory</h4>
-                                {inventory?.fridge?.map((item: any, i: number) => (
-                                    <div key={i} className="flex justify-between items-center px-2 py-1 bg-gray-50 rounded text-sm">
-                                        <span>{item.item}</span>
-                                        {item.quantity > 1 && <span className="text-xs text-gray-400">x{item.quantity}</span>}
+                            <div className="space-y-4 max-h-[40vh] overflow-y-auto pr-1">
+                                {/* Meals & Leftovers */}
+                                {(inventory?.meals?.length > 0) && (
+                                    <div className="border border-gray-100 rounded-lg p-2 space-y-1">
+                                        <h4 className="text-xs font-bold text-orange-400 uppercase ml-2 mb-1">Meals & Leftovers</h4>
+                                        {inventory.meals.map((item: any, i: number) => (
+                                            <div key={i} className="flex justify-between items-center px-2 py-1 bg-orange-50/50 rounded text-sm group">
+                                                <span>{item.item}</span>
+                                                <div className="flex items-center gap-2">
+                                                    {(item.quantity > 1 || item.servings > 1) && (
+                                                        <span className="text-xs text-gray-400">x{item.quantity || item.servings}</span>
+                                                    )}
+                                                    <button
+                                                        onClick={() => handleDeleteItem(item.location === 'freezer' ? 'meals' : 'leftovers', item.item)}
+                                                        disabled={deleting === item.item}
+                                                        className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all font-bold px-1"
+                                                    >
+                                                        ×
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
+                                )}
+
+                                {/* Fridge */}
+                                <div className="border border-gray-100 rounded-lg p-2 space-y-1">
+                                    <h4 className="text-xs font-bold text-gray-400 uppercase ml-2 mb-1">Fridge Ingredients</h4>
+                                    {(inventory?.ingredients?.fridge || []).length === 0 && <p className="text-xs text-gray-300 ml-2 italic">Empty</p>}
+                                    {(inventory?.ingredients?.fridge || []).map((item: any, i: number) => (
+                                        <div key={i} className="flex justify-between items-center px-2 py-1 bg-gray-50 rounded text-sm group">
+                                            <span>{item.item}</span>
+                                            <div className="flex items-center gap-2">
+                                                {item.quantity > 1 && <span className="text-xs text-gray-400">x{item.quantity}</span>}
+                                                <button
+                                                    onClick={() => handleDeleteItem('fridge', item.item)}
+                                                    disabled={deleting === item.item}
+                                                    className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all font-bold px-1"
+                                                >
+                                                    ×
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Freezer Ingredients */}
+                                {(inventory?.ingredients?.freezer?.length > 0) && (
+                                    <div className="border border-gray-100 rounded-lg p-2 space-y-1">
+                                        <h4 className="text-xs font-bold text-blue-300 uppercase ml-2 mb-1">Freezer Ingredients</h4>
+                                        {inventory.ingredients.freezer.map((item: any, i: number) => (
+                                            <div key={i} className="flex justify-between items-center px-2 py-1 bg-blue-50/30 rounded text-sm group">
+                                                <span>{item.item}</span>
+                                                <div className="flex items-center gap-2">
+                                                    {item.quantity > 1 && <span className="text-xs text-gray-400">x{item.quantity}</span>}
+                                                    <button
+                                                        onClick={() => handleDeleteItem('frozen_ingredient', item.item)}
+                                                        disabled={deleting === item.item}
+                                                        className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all font-bold px-1"
+                                                    >
+                                                        ×
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* Pantry */}
+                                <div className="border border-gray-100 rounded-lg p-2 space-y-1">
+                                    <h4 className="text-xs font-bold text-amber-600/50 uppercase ml-2 mb-1">Pantry</h4>
+                                    {(inventory?.ingredients?.pantry || []).length === 0 && <p className="text-xs text-gray-300 ml-2 italic">Empty</p>}
+                                    {(inventory?.ingredients?.pantry || []).map((item: any, i: number) => (
+                                        <div key={i} className="flex justify-between items-center px-2 py-1 bg-amber-50/30 rounded text-sm group">
+                                            <span>{item.item}</span>
+                                            <div className="flex items-center gap-2">
+                                                {item.quantity > 1 && <span className="text-xs text-gray-400">x{item.quantity}</span>}
+                                                <button
+                                                    onClick={() => handleDeleteItem('pantry', item.item)}
+                                                    disabled={deleting === item.item}
+                                                    className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all font-bold px-1"
+                                                >
+                                                    ×
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={() => setStep('constraints')}
+                                className="w-full py-3 bg-[var(--accent-primary)] text-white font-bold rounded shadow-lg hover:shadow-xl transition-all"
+                            >
+                                Next: Choose Strategy →
+                            </button>
+                        </div>
+                    )}
+
+                    {step === 'strategy' && (
+                        <div className="space-y-6">
+                            <h3 className="text-sm font-bold text-gray-700">How should we rebuild your week?</h3>
+
+                            <div className="space-y-3">
+                                <button
+                                    onClick={() => setStrategy('shuffle')}
+                                    className={`w-full p-4 rounded-lg border-2 text-left transition-all ${strategy === 'shuffle' ? 'border-[var(--accent-sage)] bg-[var(--accent-sage)]/10 ring-1 ring-[var(--accent-sage)]' : 'border-gray-200 hover:border-gray-300'}`}
+                                >
+                                    <div className="font-bold text-gray-900">Shuffle Remaining Mechanics</div>
+                                    <div className="text-xs text-gray-500 mt-1">Keep existing meals but fill gaps and optimize order. Best for minor tweaks.</div>
+                                </button>
+
+                                <button
+                                    onClick={() => setStrategy('fresh')}
+                                    className={`w-full p-4 rounded-lg border-2 text-left transition-all ${strategy === 'fresh' ? 'border-[var(--accent-sage)] bg-[var(--accent-sage)]/10 ring-1 ring-[var(--accent-sage)]' : 'border-gray-200 hover:border-gray-300'}`}
+                                >
+                                    <div className="font-bold text-gray-900">Fresh Plan</div>
+                                    <div className="text-xs text-gray-500 mt-1">Generate completely new suggestions for the rest of the week. You can choose to keep specific meals.</div>
+                                </button>
+                            </div>
+
+                            <button
+                                onClick={() => setStep(strategy === 'fresh' ? 'configure' : 'constraints')}
+                                className="w-full py-3 bg-[var(--accent-primary)] text-white font-bold rounded shadow-lg hover:shadow-xl transition-all"
+                            >
+                                Next: {strategy === 'fresh' ? 'Configure Plan' : 'Special Requests'} →
+                            </button>
+                        </div>
+                    )}
+
+                    {step === 'configure' && (
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="text-sm font-bold text-gray-700 mb-2">1. Which meals do you want to KEEP?</h3>
+                                <p className="text-xs text-gray-400 mb-3">Unchecked meals will be replaced with new suggestions.</p>
+                                <div className="space-y-2">
+                                    {pastDays.length < days.length && days.slice(pastDays.length).map(day => {
+                                        const dinner = status.week_data?.dinners?.find((d: any) => d.day === day);
+                                        const mealName = dinner?.recipe_id?.replace(/_/g, ' ') || 'Unplanned';
+                                        return (
+                                            <label key={day} className="flex items-center p-3 border border-gray-100 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={keepDays.includes(day)}
+                                                    onChange={(e) => {
+                                                        if (e.target.checked) setKeepDays([...keepDays, day]);
+                                                        else setKeepDays(keepDays.filter(d => d !== day));
+                                                    }}
+                                                    className="rounded border-gray-300 text-[var(--accent-sage)] focus:ring-[var(--accent-sage)]"
+                                                />
+                                                <div className="ml-3">
+                                                    <span className="text-xs font-bold uppercase text-gray-400 block">{day}</span>
+                                                    <span className="text-sm font-medium text-gray-700">{mealName}</span>
+                                                </div>
+                                            </label>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="text-sm font-bold text-gray-700 mb-2">2. Can you prep on these days?</h3>
+                                <p className="text-xs text-gray-400 mb-3">If unchecked, we'll suggest Quick/No-Chop meals.</p>
+                                <div className="flex gap-2 flex-wrap">
+                                    {days.slice(pastDays.length).filter(d => !keepDays.includes(d)).map(day => (
+                                        <label key={day} className={`px-3 py-2 rounded border cursor-pointer text-sm transition-all ${prepDays.includes(day) ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-white border-gray-200 text-gray-500'}`}>
+                                            <input
+                                                type="checkbox"
+                                                className="hidden"
+                                                checked={prepDays.includes(day)}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) setPrepDays([...prepDays, day]);
+                                                    else setPrepDays(prepDays.filter(d => d !== day));
+                                                }}
+                                            />
+                                            {day.toUpperCase()} {prepDays.includes(day) ? '✓' : ''}
+                                        </label>
+                                    ))}
+                                </div>
                             </div>
 
                             <button
@@ -248,7 +442,7 @@ export default function ReplanWorkflowModal({
                     {step === 'constraints' && (
                         <div className="space-y-6">
                             <p className="text-sm text-gray-500">
-                                Any specific requests for the remaining meals? (e.g. "No chicken", "I want soup", "Use up the broccoli")
+                                Filter or re-prioritize your remaining meals. Use this to drop ingredients (e.g., 'No chicken') or move existing meals to sooner days.
                             </p>
 
                             <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
@@ -264,15 +458,16 @@ export default function ReplanWorkflowModal({
                             <textarea
                                 value={notes}
                                 onChange={(e) => setNotes(e.target.value)}
-                                placeholder='Try: "No chicken" or "I want soup"...'
+                                placeholder='Try: "No chicken", "I want the soup sooner", "Prioritize broccoli"...'
                                 className="w-full h-24 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--accent-sage)] focus:border-transparent text-sm"
                             />
 
                             <button
                                 onClick={handleReplan}
-                                className="w-full py-3 bg-[var(--accent-primary)] text-white font-bold rounded shadow-lg hover:shadow-xl transition-all"
+                                disabled={loading}
+                                className="w-full py-3 bg-[var(--accent-primary)] text-white font-bold rounded shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                Confirm & Replan Week →
+                                {loading ? 'Replanning...' : 'Confirm & Replan Week →'}
                             </button>
                         </div>
                     )}

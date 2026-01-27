@@ -389,5 +389,6 @@ Recent phases (23-28) have focused on stabilizing the core experience, refining 
 - **Meal Sharing**: Export/share weekly plans with family members
 - **Recipe Scaling**: Auto-adjust ingredient quantities for different serving sizes
 - **Cost Tracking**: Track grocery spending and optimize for budget
+- **Smart Replan Suggestions**: If a user requests a meal not in the current week (e.g. "Pizza"), suggest relevant recipes from the index instead of doing nothing.
 
 See [PROJECT_HISTORY.md](docs/PROJECT_HISTORY.md) for detailed development timeline.

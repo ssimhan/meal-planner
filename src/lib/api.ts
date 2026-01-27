@@ -194,11 +194,11 @@ export async function importRecipe(url: string): Promise<ImportRecipeResponse> {
     return handleResponse<ImportRecipeResponse>(res, 'Failed to import recipe');
 }
 
-export async function replan(notes?: string): Promise<ReplanResponse> {
+export async function replan(notes?: string, strategy: 'shuffle' | 'fresh' = 'shuffle', keep_days: string[] = [], prep_days: string[] = []): Promise<ReplanResponse> {
     const res = await fetch('/api/replan', {
         method: 'POST',
         headers: await getAuthHeaders(),
-        body: JSON.stringify({ notes }),
+        body: JSON.stringify({ notes, strategy, keep_days, prep_days }),
     });
     return handleResponse<ReplanResponse>(res, 'Failed to replan week');
 }

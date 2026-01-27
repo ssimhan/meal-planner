@@ -19,13 +19,7 @@
 
 **Must be 0 before phase completion.**
 
-| ID | Area | Description | Priority | Repro Steps | Notes |
-|----|------|-------------|----------|-------------|-------|
-| UI-006 | Inventory Scroll Usability | High | Modal inventory list scroll is difficult/hidden. Needs better swipe/scroll. | [User Report] |
-
-| UI-007 | Replan Error Toast | High | Replace JS alert() with Toast for replan errors | [User Report] |
-
-**Count: 2** ⚠️
+**Count: 0** ✅
 ---
 
 ## Features
@@ -92,6 +86,8 @@ Before merging to `main`:
 - Fixed: `[Errno 30] Read-only file system: 'debug_log.txt'` during replan confirm (SYS-001)
 - Fixed: Replan Inventory Scroll (UI-005)
 - Fixed: Replan Failed Alert (SYS-003)
+- Fixed: Inventory Scroll Usability (UI-006) - Removed nested scroll container
+- Fixed: Replan Error Toast (UI-007) - Confirmed use of Toast instead of alert()
 
 ---
 

@@ -5,6 +5,7 @@ import { logMeal, addItemToInventory, replan, WorkflowStatus, getInventory } fro
 import { transformInventory } from '@/lib/inventoryManager';
 import MealLogFlow from './MealLogFlow';
 import { FreezerMeal, InventoryItem } from '@/types';
+import { useToast } from '@/context/ToastContext';
 
 interface ReplanWorkflowModalProps {
     status: WorkflowStatus;
@@ -25,6 +26,7 @@ export default function ReplanWorkflowModal({
     const [notes, setNotes] = useState('');
     const [currentDayIndex, setCurrentDayIndex] = useState(0);
     const [loading, setLoading] = useState(false);
+    const { showToast } = useToast();
 
     // Inventory state
     const [inventory, setInventory] = useState<any>(null);
@@ -104,7 +106,7 @@ export default function ReplanWorkflowModal({
             setInventory(res.inventory);
             setNewItem('');
         } catch (e) {
-            alert('Failed to add item');
+            showToast('Failed to add item', 'error');
         } finally {
             setLoading(false);
         }
@@ -116,7 +118,7 @@ export default function ReplanWorkflowModal({
             await replan(notes);
             onComplete(); // Parent should refresh status
         } catch (e: any) {
-            alert(`Replan failed: ${e.message || 'Unknown error'}`);
+            showToast(`Replan failed: ${e.message || 'Unknown error'}`, 'error');
         } finally {
             setLoading(false);
         }

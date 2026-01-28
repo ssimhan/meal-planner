@@ -1092,3 +1092,23 @@ The system had likely auto-generated or the user had accidentally triggered empt
 - **Fix:** Corrected UX navigation flow where "Update Inventory" skipped the Strategy step.
 
 **Learning:** "Replan" isn't one thing. Sometimes you just need to shuffle days (Shuffle), and sometimes you need to scrap half the week and start over (Fresh). The system must support both mental models.
+
+### Phase 32: Smart Shopping Integration ✅
+**Status:** Complete (2026-01-27)
+
+**Goal:** Intercept the meal planning workflow with a smart review of the shopping list to reduce friction and redundant purchases.
+
+**Built:**
+- **Intelligence Layer:**
+    - **Staples Exclusion:** Automatic filtering of oils, ghee, salt, pepper, and common spices from shopping suggestions.
+    - **Inventory Awareness:** Items with `quantity > 0` in Fridge, Pantry, or Freezer are automatically subtracted from the list.
+    - **Quantity Logic:** Only items truly "in stock" (qty > 0) are considered available.
+- **Backend API:**
+    - Created `/api/plan/shopping-list/smart-update` for interactive user actions.
+    - Supports `add_to_inventory` (marks item as "I Have It") and `exclude_from_plan` (marks item as "Skip").
+- **Frontend Components:**
+    - **ReviewGroceriesModal:** A new high-fidelity interface that appears after replanning.
+    - Integrates with `ReplanWorkflowModal` to facilitate immediate shopping list adjustments.
+- **Robustness:** Added detailed error codes (`MISSING_FIELDS`, `INVENTORY_UPDATE_FAILED`, etc.) and batch error handling in the frontend.
+
+**Learning:** Intercepting the workflow at the moment of "maximum intent" (right after planning) is the best time to capture inventory updates. Automatic staples removal significantly reduces "list noise".

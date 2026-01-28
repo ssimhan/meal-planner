@@ -6,6 +6,11 @@ DATA_FILE = Path(os.getcwd()) / 'data' / 'store_map.json'
 
 DEFAULT_STORES = ['Costco', 'Trader Joe\'s', 'Safeway', 'Indian Store', 'Other']
 
+EXCLUDED_STAPLES = {
+    'oil', 'ghee', 'salt', 'pepper', 'black_pepper', 'red_chili_powder', 'turmeric', 
+    'olive_oil', 'sunflower_oil', 'sesame_oil', 'vegetable_oil'
+}
+
 class GroceryMapper:
     _data = None
 

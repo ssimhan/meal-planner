@@ -104,3 +104,54 @@ def remove_extra_item():
         return jsonify({"status": "success"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+@groceries_bp.route("/api/plan/shopping-list/smart-update", methods=["POST"])
+@require_auth
+def smart_action():
+    try:
+        data = request.json or {}
+        week_of = data.get('week_of')
+        item = data.get('item')
+        action = data.get('action') # 'add_to_inventory' or 'exclude_from_plan'
+        
+        if not week_of or not item or not action:
+            return jsonify({"status": "error", "message": "Missing required fields", "code": "MISSING_FIELDS"}), 400
+            
+        h_id = storage.get_household_id()
+        
+        # Action 1: Add to inventory
+        if action == 'add_to_inventory':
+            try:
+                # Default to pantry, quantity 1
+                storage.StorageEngine.update_inventory_item('pantry', item, {
+                    'quantity': 1,
+                    'unit': 'count'
+                })
+                return jsonify({"status": "success", "message": "Item added to inventory"})
+            except Exception as e:
+                return jsonify({"status": "error", "message": "Failed to update inventory", "code": "INVENTORY_UPDATE_FAILED", "details": str(e)}), 500
+            
+        # Action 2: Exclude from plan
+        elif action == 'exclude_from_plan':
+            try:
+                res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).execute()
+                
+                if res.data and len(res.data) > 0:
+                    plan_data = res.data[0].get('plan_data') or {}
+                    excluded = plan_data.get('excluded_items', [])
+                    
+                    if item not in excluded:
+                        excluded.append(item)
+                        plan_data['excluded_items'] = excluded
+                        storage.StorageEngine.update_meal_plan(week_of, plan_data=plan_data)
+                        invalidate_cache()
+                        
+                    return jsonify({"status": "success", "message": "Item excluded from plan"})
+                else:
+                     return jsonify({"status": "error", "message": "Plan not found", "code": "PLAN_NOT_FOUND"}), 404
+            except Exception as e:
+                return jsonify({"status": "error", "message": "Failed to update plan", "code": "PLAN_UPDATE_FAILED", "details": str(e)}), 500
+                
+        return jsonify({"status": "error", "message": "Invalid action", "code": "INVALID_ACTION"}), 400
+        
+    except Exception as e:
+        return jsonify({"status": "error", "message": "System error", "code": "INTERNAL_SERVER_ERROR", "details": str(e)}), 500

@@ -1,7 +1,7 @@
 import re
 import os
 from api.utils.storage import StorageEngine
-
+from api.utils.grocery_mapper import EXCLUDED_STAPLES
 def normalize_ingredient(name):
     """Normalize ingredient name for matching."""
     if not name: return ""
@@ -17,8 +17,10 @@ def normalize_ingredient(name):
     
     return name.replace(' ', '_')
 
+
+
 def get_inventory_items():
-    """Load all items from inventory via StorageEngine."""
+    """Load all items from inventory via StorageEngine. Only includes items with quantity > 0."""
     try:
         data = StorageEngine.get_inventory()
         items = set()
@@ -26,12 +28,24 @@ def get_inventory_items():
         # Add fridge items
         for item in data.get('fridge', []):
             if isinstance(item, dict) and item.get('item'):
-                items.add(normalize_ingredient(item['item']))
+                # Quantity Check: If key exists and is 0, skip. Default to 1 if missing.
+                qty = item.get('quantity', 1)
+                try:
+                    if float(qty) > 0:
+                        items.add(normalize_ingredient(item['item']))
+                except (ValueError, TypeError):
+                    # If quantity is weird text, assume we have it
+                    items.add(normalize_ingredient(item['item']))
                 
         # Add pantry items
         for item in data.get('pantry', []):
             if isinstance(item, dict) and item.get('item'):
-                items.add(normalize_ingredient(item['item']))
+                qty = item.get('quantity', 1)
+                try:
+                    if float(qty) > 0:
+                        items.add(normalize_ingredient(item['item']))
+                except (ValueError, TypeError):
+                    items.add(normalize_ingredient(item['item']))
                 
         # Add freezer ingredients
         if 'freezer' in data and 'ingredients' in data['freezer']:
@@ -225,13 +239,26 @@ def get_shopping_list(plan_data):
     inventory_set, _ = get_inventory_items()
     needed = []
     
+    # 0. Get user exclusions
+    excluded_items = set()
+    for excl in plan_data.get('excluded_items', []):
+        excluded_items.add(normalize_ingredient(excl))
+    
     # 1. Dinners (Main veggies)
     for dinner in plan_data.get('dinners', []):
         for veg in dinner.get('vegetables', []):
             norm = normalize_ingredient(veg)
-            # Remove underscores for display
-            display_name = veg.replace('_', ' ').title()
-            if norm not in inventory_set:
+            
+            # Checks:
+            # 1. Not in inventory (quantity aware)
+            # 2. Not a hardcoded staple
+            # 3. Not user excluded
+            if (norm not in inventory_set and 
+                norm not in EXCLUDED_STAPLES and 
+                norm not in excluded_items):
+                
+                # Remove underscores for display
+                display_name = veg.replace('_', ' ').title()
                 needed.append(display_name)
     
     # 2. Lunches (Prep components)
@@ -247,7 +274,10 @@ def get_shopping_list(plan_data):
             for comp in components:
                 norm = normalize_ingredient(comp)
                 display_name = comp.replace('_', ' ').title()
-                if norm not in inventory_set:
+                
+                if (norm not in inventory_set and 
+                    norm not in EXCLUDED_STAPLES and 
+                    norm not in excluded_items):
                     needed.append(display_name)
                     
     # 3. Planned Snacks (Heuristic extraction)
@@ -265,7 +295,10 @@ def get_shopping_list(plan_data):
                         # Remove words like "slices", "rounds", "sticks"
                         item = re.sub(r'\s+(?:slices|rounds|sticks|pieces|cubes)\b', '', item, flags=re.IGNORECASE)
                         norm = normalize_ingredient(item)
-                        if norm and norm not in inventory_set:
+                        if (norm and 
+                            norm not in inventory_set and 
+                            norm not in EXCLUDED_STAPLES and 
+                            norm not in excluded_items):
                             needed.append(item.title())
 
     # 4. Default Snack Fallbacks (Ensure staples are checked)

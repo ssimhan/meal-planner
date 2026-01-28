@@ -445,6 +445,15 @@ export async function removeShoppingListExtra(weekOf: string, item: string) {
     return handleResponse<any>(res, 'Failed to remove extra item');
 }
 
+export async function smartAction(weekOf: string, item: string, action: 'add_to_inventory' | 'exclude_from_plan') {
+    const res = await fetch('/api/plan/shopping-list/smart-update', {
+        method: 'POST',
+        headers: await getAuthHeaders(),
+        body: JSON.stringify({ week_of: weekOf, item, action }),
+    });
+    return handleResponse<any>(res, 'Failed to perform smart action');
+}
+
 export async function getSettings() {
     const res = await fetch('/api/settings', {
         headers: await getAuthHeaders(false),

@@ -7,6 +7,7 @@
 
 > **Workflow Rule:**
 > 1. **Phase = One Branch:** Every phase belongs in a single dedicated branch (e.g. `phase-22-ux-redesign`) until fully complete.
+>    - **CRITICAL:** Before starting a new phase, ALWAYS ask the user to create a new branch. Do not create it automatically without asking.
 > 2. **Block/Chunk Workflow:** Code -> Test Locally -> Push to Branch (Vercel Preview) -> Manual Verification on Vercel.
 > 3. **Merge to Main:** ONLY merge to `main` when the *entire phase* is 100% complete and verified.
 >
@@ -15,18 +16,6 @@
 > See [BUGS.md](BUGS.md) for current status. Fix all issues before marking blocks complete.
 
 ## 🚀 Active Phase
-
-### Phase 32: Smart Shopping Integration
-**Goal:** Close the loop between meal selection and grocery shopping with intelligent, incremental prompts.
-- **Block 1: Backend Intelligence**
-  - [ ] **Staples Exclusion:** Hardcode specific staples to ALWAYS be excluded (Oil, Ghee, Salt, Pepper, Red Chili Powder, Turmeric).
-  - [ ] **Quantity Awareness:** Logic must check *quantity* (e.g. need 6 eggs, have 2 -> suggest eggs), not just presence.
-  - [ ] **Exact Matching:** Use strict normalized string matching (no fuzzy matching) to prevent false negatives.
-- **Block 2: User Experience**
-  - [ ] **Workflow:** Trigger "Review Groceries" modal immediately after confirming a plan.
-  - [ ] **Smart Actions:**
-    - **"I have this":** Auto-adds the item to digital inventory (Fridge/Pantry) to improve future accuracy.
-    - **"Skip":** Explicit opt-out ("I don't have time to buy this") without updating inventory.
 
 ---
 
@@ -142,6 +131,18 @@ Hybrid Serverless application for weekly meal planning, daily execution tracking
 ## ✅ Previously Completed
 
 **Current State:** Phase 31 Complete. Setup for multi-tenancy (Phase 30) active. Smart Shopping (Phase 32) in progress.
+
+### Phase 32: Smart Shopping Integration ✅ Complete
+**Goal:** Close the loop between meal selection and grocery shopping with intelligent, incremental prompts.
+- **Block 1: Backend Intelligence** ✅
+  - [x] **Staples Exclusion:** Hardcode specific staples to ALWAYS be excluded (Oil, Ghee, Salt, Pepper, Red Chili Powder, Turmeric).
+  - [x] **Quantity Awareness:** Logic must check *quantity* (e.g. need 6 eggs, have 2 -> suggest eggs), not just presence.
+  - [x] **Exact Matching:** Use strict normalized string matching (no fuzzy matching) to prevent false negatives.
+- **Block 2: User Experience** ✅
+  - [x] **Workflow:** Trigger "Review Groceries" modal immediately after confirming a plan.
+  - [x] **Smart Actions:**
+    - [x] **"I have this":** Auto-adds the item to digital inventory (Fridge/Pantry) to improve future accuracy.
+    - [x] **"Skip":** Explicit opt-out ("I don't have time to buy this") without updating inventory.
 
 ### Phase 31: Advanced Replan & Smart Features ✅ Complete
 **Goal:** Give users granular control over replanning without destroying existing progress.

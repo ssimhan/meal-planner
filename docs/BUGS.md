@@ -28,7 +28,7 @@
 
 | ID | Area | Description | Impact | Effort | Notes |
 |----|------|-------------|--------|--------|-------|
-| - | - | - | - | - | - |
+| TD-003 | Smart Shopping | "I Have This" defaults to Pantry. Should infer category. | Low | 1hr | Hardcoded in `api/routes/groceries.py` |
 
 **Count: 0** ✅
 

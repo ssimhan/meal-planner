@@ -19,7 +19,11 @@
 
 **Must be 0 before phase completion.**
 
-**Count: 0** ✅
+| ID | Area | Description | Priority | Assignee | Notes |
+|----|------|-------------|----------|----------|-------|
+| CACHE-001 | Backend | Backend cache invalidation is inconsistent across mutation endpoints. Missing `invalidate_cache()` calls cause stale data in UI despite successful DB writes. Need systematic approach to ensure all write operations invalidate cache. | High | - | Found in `add_to_inventory` action. Likely affects other endpoints. |
+
+**Count: 1** ⚠️
 
 ---
 

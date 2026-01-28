@@ -126,6 +126,7 @@ def smart_action():
                     'quantity': 1,
                     'unit': 'count'
                 })
+                invalidate_cache()
                 return jsonify({"status": "success", "message": "Item added to inventory"})
             except Exception as e:
                 return jsonify({"status": "error", "message": "Failed to update inventory", "code": "INVENTORY_UPDATE_FAILED", "details": str(e)}), 500

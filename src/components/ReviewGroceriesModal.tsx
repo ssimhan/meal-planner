@@ -45,7 +45,8 @@ export default function ReviewGroceriesModal({ weekOf, onClose }: ReviewGrocerie
 
     const handleCommit = async () => {
         setProcessing(true);
-        let successCount = 0;
+        let inventoryCount = 0;
+        let skipCount = 0;
         let failCount = 0;
 
         try {
@@ -57,22 +58,28 @@ export default function ReviewGroceriesModal({ weekOf, onClose }: ReviewGrocerie
                 try {
                     const apiAction = i.status === 'have' ? 'add_to_inventory' : 'exclude_from_plan';
                     await smartAction(weekOf, i.item, apiAction);
-                    successCount++;
+                    if (i.status === 'have') {
+                        inventoryCount++;
+                    } else {
+                        skipCount++;
+                    }
                 } catch (e) {
                     console.error(`Failed to update ${i.item}`, e);
                     failCount++;
                 }
             }));
 
-            if (successCount > 0) {
-                showToast(`Updated ${successCount} items`, 'success');
+            // Show specific feedback
+            if (inventoryCount > 0) {
+                showToast(`✅ Added ${inventoryCount} item${inventoryCount > 1 ? 's' : ''} to inventory`, 'success');
+            }
+            if (skipCount > 0) {
+                showToast(`🛒 Removed ${skipCount} item${skipCount > 1 ? 's' : ''} from shopping list`, 'success');
             }
             if (failCount > 0) {
                 showToast(`Failed to update ${failCount} items`, 'error');
             }
 
-            // Only close if everything succeeded? Or just close?
-            // User flow: probably just close, they can verify in other views.
             onClose();
         } catch (e) {
             console.error(e);
@@ -90,8 +97,25 @@ export default function ReviewGroceriesModal({ weekOf, onClose }: ReviewGrocerie
                 <div className="p-6 bg-[var(--accent-sage)]/10 border-b border-[var(--accent-sage)]/20">
                     <h2 className="text-xl font-bold text-gray-800">Review Shopping List</h2>
                     <p className="text-sm text-gray-600 mt-1">
-                        We found these missing ingredients. Check off what you already have!
+                        These ingredients are missing. Let me know what you already have so I can update your inventory and shopping list.
                     </p>
+                    <div className="mt-4 p-3 bg-white/60 rounded-lg border border-gray-200">
+                        <p className="text-xs font-semibold text-gray-700 mb-2">How to mark items:</p>
+                        <div className="flex flex-col gap-1.5 text-xs">
+                            <div className="flex items-center gap-2">
+                                <div className="w-20 px-2 py-1 bg-green-100 text-green-700 rounded text-center font-bold">I Have It</div>
+                                <span className="text-gray-600">→ Adds to your inventory</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-20 px-2 py-1 bg-gray-100 text-gray-500 rounded text-center font-bold">Don't Need</div>
+                                <span className="text-gray-600">→ Removes from shopping list</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-20 px-2 py-1 bg-white border border-gray-300 text-gray-800 rounded text-center font-bold text-[10px]">Unmarked</div>
+                                <span className="text-gray-600">→ Stays on shopping list</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="p-4 overflow-y-auto flex-1 space-y-2">
@@ -126,7 +150,7 @@ export default function ReviewGroceriesModal({ weekOf, onClose }: ReviewGrocerie
                                                 onClick={() => handleAction(idx, 'skip')}
                                                 className="px-3 py-1.5 text-xs font-bold text-gray-500 bg-gray-100 rounded hover:bg-gray-200 transition-colors"
                                             >
-                                                Skip
+                                                Don't Need
                                             </button>
                                         </>
                                     ) : (

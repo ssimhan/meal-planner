@@ -1114,5 +1114,10 @@ The system had likely auto-generated or the user had accidentally triggered empt
     - **Metadata Merging:** Hardened `StorageEngine` to prevent data loss during inventory updates.
     - **Recipe Data Preservation:** Fixed a critical bug in replanning that stripped recipe metadata (vegetables), ensuring shopping list continuity.
     - **Cache Control:** Implemented `no-store` API fetching for immediate UI feedback.
+    - **Cache Invalidation:** Added `invalidate_cache()` to `add_to_inventory` action to ensure inventory page refreshes immediately.
+- **UX Polish:**
+    - Redesigned modal header with clearer instructional copy and visual legend
+    - Renamed "Skip" → "Don't Need" for better clarity
+    - Separate toast notifications showing counts for inventory additions vs shopping list removals
 
 **Learning:** Intercepting the workflow at the moment of "maximum intent" (right after planning) is the best time to capture inventory updates. Automatic staples removal significantly reduces "list noise".

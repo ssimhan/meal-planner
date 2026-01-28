@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from api.utils import storage
+from api.utils import storage, invalidate_cache
 from api.utils.auth import require_auth
 
 settings_bp = Blueprint('settings', __name__)
@@ -16,6 +16,7 @@ def update_settings():
     data = request.json
     success = storage.StorageEngine.save_config(data)
     if success:
+        invalidate_cache()
         return jsonify({"status": "success", "config": data})
     else:
         return jsonify({"status": "error", "message": "Failed to save config"}), 500

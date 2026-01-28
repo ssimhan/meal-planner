@@ -23,6 +23,7 @@ def add_store():
         if not name: return jsonify({"status": "error", "message": "Name required"}), 400
         
         stores = GroceryMapper.add_store(name)
+        invalidate_cache()
         return jsonify({"status": "success", "stores": stores})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
@@ -37,6 +38,7 @@ def map_item():
         if not item or not store: return jsonify({"status": "error", "message": "Item and store required"}), 400
         
         GroceryMapper.set_item_store(item, store)
+        invalidate_cache()
         return jsonify({"status": "success", "message": "Mapping updated"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500

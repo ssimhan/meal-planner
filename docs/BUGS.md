@@ -19,11 +19,7 @@
 
 **Must be 0 before phase completion.**
 
-| ID | Area | Description | Priority | Assignee | Notes |
-|----|------|-------------|----------|----------|-------|
-| CACHE-001 | Backend | Backend cache invalidation is inconsistent across mutation endpoints. Missing `invalidate_cache()` calls cause stale data in UI despite successful DB writes. Need systematic approach to ensure all write operations invalidate cache. | High | - | Found in `add_to_inventory` action. Likely affects other endpoints. |
-
-**Count: 1** ⚠️
+**Count: 0** ✅
 
 ---
 
@@ -96,6 +92,7 @@ Before merging to `main`:
 - Fixed: Replan Error Toast (UI-007) - Confirmed use of Toast instead of alert()
 - Fixed: Replan 500 Error (Server Crash) - Added robustness for missing data and auto-injection of `week_of`.
 - Fixed: Inventory Visibility in Replan (ID: 4) - Standardized inventory state to use normalized structure, fixing empty list display.
+- Fixed: Cache Invalidation (CACHE-001) - Added `invalidate_cache()` to 3 endpoints (`add_store`, `map_item`, `update_settings`) that were missing it.
 
 
 ---

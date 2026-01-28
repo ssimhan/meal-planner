@@ -4,9 +4,11 @@
     "Trader Joe's",
     "Safeway",
     "Indian Store",
-    "Other"
+    "Other",
+    "Test Store Cache"
   ],
   "map": {
-    "apple": "Trader Joe's"
+    "apple": "Trader Joe's",
+    "test item": "Costco"
   }
 }

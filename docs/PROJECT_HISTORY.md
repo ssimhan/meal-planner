@@ -1109,6 +1109,10 @@ The system had likely auto-generated or the user had accidentally triggered empt
 - **Frontend Components:**
     - **ReviewGroceriesModal:** A new high-fidelity interface that appears after replanning.
     - Integrates with `ReplanWorkflowModal` to facilitate immediate shopping list adjustments.
-- **Robustness:** Added detailed error codes (`MISSING_FIELDS`, `INVENTORY_UPDATE_FAILED`, etc.) and batch error handling in the frontend.
+- **Robustness:** 
+    - Added detailed error codes (`MISSING_FIELDS`, `INVENTORY_UPDATE_FAILED`, etc.) and batch error handling.
+    - **Metadata Merging:** Hardened `StorageEngine` to prevent data loss during inventory updates.
+    - **Recipe Data Preservation:** Fixed a critical bug in replanning that stripped recipe metadata (vegetables), ensuring shopping list continuity.
+    - **Cache Control:** Implemented `no-store` API fetching for immediate UI feedback.
 
 **Learning:** Intercepting the workflow at the moment of "maximum intent" (right after planning) is the best time to capture inventory updates. Automatic staples removal significantly reduces "list noise".

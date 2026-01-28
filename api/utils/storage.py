@@ -196,6 +196,7 @@ class StorageEngine:
             }, on_conflict="household_id, week_of").execute()
         except Exception as e:
             print(f"Error updating meal plan for {week_of}: {e}")
+            raise e
 
     @staticmethod
     def update_inventory_item(category, item_name, updates=None, delete=False):
@@ -204,23 +205,45 @@ class StorageEngine:
         if not IS_SERVICE_ROLE:
             raise Exception("SUPABASE_SERVICE_ROLE_KEY is missing. Cannot write to database.")
         try:
+            # Prepare lookup
+            query = supabase.table("inventory_items").select("id").eq("household_id", h_id).eq("category", category).eq("item", item_name)
+            existing = execute_with_retry(query)
+            
             if delete:
-                supabase.table("inventory_items").delete().eq("household_id", h_id).eq("category", category).eq("item", item_name).execute()
+                if existing.data:
+                    supabase.table("inventory_items").delete().eq("id", existing.data[0]['id']).execute()
                 return
 
-            # Prepare payload for upsert
-            # Since quantity and unit might be in updates, we need to extract them
-            quantity = updates.pop('quantity', 1) if updates else 1
-            unit = updates.pop('unit', 'count') if updates else 'count'
-            
-            supabase.table("inventory_items").upsert({
-                "household_id": h_id,
-                "category": category,
-                "item": item_name,
-                "quantity": quantity,
-                "unit": unit,
-                "metadata": updates or {}
-            }, on_conflict="household_id, category, item").execute()
+            if existing.data:
+                # Merge metadata to avoid wiping existing fields (like location)
+                existing_item = existing.data[0]
+                existing_metadata = existing_item.get('metadata') or {}
+                
+                # If we have updates, merge them. Otherwise use existing.
+                merged_metadata = {**existing_metadata, **(updates or {})}
+                
+                # Determine what to update
+                final_payload = {
+                    "quantity": updates.get('quantity', existing_item.get('quantity', 1)) if updates else existing_item.get('quantity', 1),
+                    "unit": updates.get('unit', existing_item.get('unit', 'count')) if updates else existing_item.get('unit', 'count'),
+                    "metadata": merged_metadata
+                }
+                
+                # Update by ID to be safe
+                supabase.table("inventory_items").update(final_payload).eq("id", existing_item['id']).execute()
+            else:
+                # Insert new
+                quantity = updates.pop('quantity', 1) if updates else 1
+                unit = updates.pop('unit', 'count') if updates else 'count'
+                payload = {
+                    "household_id": h_id,
+                    "category": category,
+                    "item": item_name,
+                    "quantity": quantity,
+                    "unit": unit,
+                    "metadata": updates or {}
+                }
+                supabase.table("inventory_items").insert(payload).execute()
 
             # PENDING RECIPE WORKFLOW: If this is a freezer meal, ensure it exists in the recipe index
             if category == 'freezer_backup' and not delete:
@@ -243,6 +266,7 @@ class StorageEngine:
                     
         except Exception as e:
             print(f"Error updating inventory item {item_name}: {e}")
+            raise e
     @staticmethod
     def get_active_week():
         """Find the active (not archived) meal plan for the household, prioritizing the current week."""

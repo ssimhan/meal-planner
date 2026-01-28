@@ -143,6 +143,11 @@ Hybrid Serverless application for weekly meal planning, daily execution tracking
   - [x] **Smart Actions:**
     - [x] **"I have this":** Auto-adds the item to digital inventory (Fridge/Pantry) to improve future accuracy.
     - [x] **"Skip":** Explicit opt-out ("I don't have time to buy this") without updating inventory.
+- **Block 3: Hardening & Resilience** ✅
+  - [x] **Metadata Preservation:** Fixed `StorageEngine` logic to merge metadata instead of wiping it.
+  - [x] **Recipe Persistence:** Corrected `replan_meal_plan` to preserve recipe data (vegetables, cuisines) for shopping list consistency.
+  - [x] **Cache Reliability:** Added `no-store` headers to critical API fetches to ensure immediate UI updates.
+  - [x] **API Tests:** Implemented and verified full suite of API tests for smart actions.
 
 ### Phase 31: Advanced Replan & Smart Features ✅ Complete
 **Goal:** Give users granular control over replanning without destroying existing progress.

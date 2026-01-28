@@ -25,8 +25,8 @@ export default function ReviewGroceriesModal({ weekOf, onClose }: ReviewGrocerie
         const loadData = async () => {
             try {
                 const data = await getShoppingList(weekOf);
-                // data is Array<{item, store}>
-                setItems(data.map((i: any) => ({ ...i, status: 'keep' })));
+                const list = data.shopping_list || [];
+                setItems(list.map((i: any) => ({ ...i, status: 'keep' })));
             } catch (e) {
                 console.error(e);
                 showToast('Failed to load shopping list', 'error');

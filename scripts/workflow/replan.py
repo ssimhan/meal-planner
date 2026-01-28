@@ -239,7 +239,16 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
     week_entry['dinners'] = new_dinners
     
     # Update data (plan_data) for consistency
-    data['dinners'] = [{'day': d.get('day'), 'recipe_id': d.get('recipe_id')} for d in new_dinners]
+    data['dinners'] = [
+        {
+            'day': d.get('day'), 
+            'recipe_id': d.get('recipe_id'),
+            'vegetables': d.get('vegetables', []),
+            'cuisine': d.get('cuisine', 'unknown'),
+            'meal_type': d.get('meal_type', 'dinner')
+        } 
+        for d in new_dinners
+    ]
     if 'workflow' in data:
         data['workflow']['updated_at'] = datetime.now().isoformat()
     data['replan_notice'] = f"Plan updated on {datetime.now().strftime('%a at %-I:%M %p')} due to skips/shifts."

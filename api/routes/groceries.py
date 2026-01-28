@@ -59,7 +59,7 @@ def add_extra_items():
             return jsonify({"status": "error", "message": "Week not found"}), 404
             
         plan_data = res.data[0].get('plan_data') or {}
-        current_extras = plan_data.get('extra_items', [])
+        current_extras = plan_data.get('extra_items') or []
         
         # Determine items to append (avoid exact dupes if needed, or allow?)
         # Let's allow dupes in the raw list, handled by set() in generator if desired, 
@@ -94,7 +94,7 @@ def remove_extra_item():
         
         if res.data and len(res.data) > 0:
             plan_data = res.data[0].get('plan_data') or {}
-            current_extras = plan_data.get('extra_items', [])
+            current_extras = plan_data.get('extra_items') or []
             if item in current_extras:
                 current_extras.remove(item)
                 plan_data['extra_items'] = current_extras
@@ -137,7 +137,7 @@ def smart_action():
                 
                 if res.data and len(res.data) > 0:
                     plan_data = res.data[0].get('plan_data') or {}
-                    excluded = plan_data.get('excluded_items', [])
+                    excluded = plan_data.get('excluded_items') or []
                     
                     if item not in excluded:
                         excluded.append(item)
@@ -149,9 +149,15 @@ def smart_action():
                 else:
                      return jsonify({"status": "error", "message": "Plan not found", "code": "PLAN_NOT_FOUND"}), 404
             except Exception as e:
+                import traceback
+                traceback.print_exc()
+                print(f"ERROR in smart_action exclude_from_plan: {str(e)}")
                 return jsonify({"status": "error", "message": "Failed to update plan", "code": "PLAN_UPDATE_FAILED", "details": str(e)}), 500
                 
         return jsonify({"status": "error", "message": "Invalid action", "code": "INVALID_ACTION"}), 400
         
     except Exception as e:
+        import traceback
+        traceback.print_exc()
+        print(f"ERROR in smart_action: {str(e)}")
         return jsonify({"status": "error", "message": "System error", "code": "INTERNAL_SERVER_ERROR", "details": str(e)}), 500

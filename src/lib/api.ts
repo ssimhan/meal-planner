@@ -77,6 +77,7 @@ export async function getStatus(week?: string): Promise<WorkflowStatus> {
     const url = week ? `/api/status?week=${week}` : '/api/status';
     const res = await fetch(url, {
         headers: await getAuthHeaders(false),
+        cache: 'no-store'
     });
     return handleResponse<WorkflowStatus>(res, 'Failed to fetch status');
 }
@@ -100,6 +101,7 @@ export async function getRecipes(): Promise<RecipesResponse> {
 export async function getInventory(): Promise<InventoryResponse> {
     const res = await fetch('/api/inventory', {
         headers: await getAuthHeaders(false),
+        cache: 'no-store'
     });
     return handleResponse<InventoryResponse>(res, 'Failed to fetch inventory');
 }
@@ -294,6 +296,7 @@ export async function generateDraft(
 export async function getShoppingList(week_of: string): Promise<any> {
     const res = await fetch(`/api/plan/shopping-list?week_of=${week_of}`, {
         headers: await getAuthHeaders(false),
+        cache: 'no-store'
     });
     return handleResponse<any>(res, 'Failed to fetch shopping list');
 }

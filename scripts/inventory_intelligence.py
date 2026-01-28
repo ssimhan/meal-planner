@@ -305,7 +305,7 @@ def get_shopping_list(plan_data):
     default_staples = ['Apple', 'Peanut Butter', 'Cheese', 'Cracker', 'Cucumber', 'Cream Cheese', 'Grape', 'Hummus']
     for staple in default_staples:
         norm = normalize_ingredient(staple)
-        if norm not in inventory_set:
+        if norm not in inventory_set and norm not in excluded_items:
             needed.append(staple)
 
     # 5. Extra Manual Items (From Quick Add)

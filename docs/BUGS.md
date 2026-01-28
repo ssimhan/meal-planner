@@ -20,6 +20,7 @@
 **Must be 0 before phase completion.**
 
 **Count: 0** ✅
+
 ---
 
 ## Features
@@ -82,7 +83,8 @@ Before merging to `main`:
 - Fixed: Task Duplication (In-place list modification)
 - Fixed: Prep Counter / Dinner Display out of sync
 
-### Phase 30.5 (In Progress)
+### Phase 32 (In Progress / Finishing)
+- Fixed: `TypeError: e.map is not a function` in ReviewGroceriesModal (SM-001). API response was an object, expected array.
 - Fixed: `[Errno 30] Read-only file system: 'debug_log.txt'` during replan confirm (SYS-001)
 - Fixed: Replan Inventory Scroll (UI-005)
 - Fixed: Replan Failed Alert (SYS-003)

@@ -225,3 +225,26 @@ Fruit + protein/fat (apple + peanut butter, banana + almond butter)
 
 **Groceries:**
 By aisle: Fresh Produce, Frozen, Dairy, Grains, Canned, Spices, Snacks, Condiments
+
+## Production Reliability Standards
+
+Before merging any code, verify against the **Production Reliability Checklist**:
+
+See `docs/RELIABILITY_CHECKLIST.md` for the complete checklist.
+
+### P0 Requirements (Blocking)
+1. **Timeouts** - All external calls have timeouts
+2. **Idempotency** - Write operations can be safely retried
+3. **Input validation** - API boundaries validate before processing
+4. **Error logging** - Exceptions logged with context
+5. **Resource cleanup** - Connections/files closed in `finally` blocks
+
+### Quick Checks
+- [ ] External calls have `timeout=` parameter
+- [ ] Write endpoints use unique IDs or upsert logic
+- [ ] API routes validate input before processing
+- [ ] Errors logged with `logger.error(..., extra={context})`
+- [ ] Database connections use `with` or `try/finally`
+
+**Rationale:** "Works fine until load or failure" bugs are the #1 production killer. These checks prevent 80% of outages.
+

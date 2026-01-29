@@ -133,11 +133,12 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None, e
         # We keep the object for now, Status API handles visibility based on config 
         pass
     
-    for d in ['sat', 'sun']:
-        if is_covered('dinner', d) and d not in selected_dinners:
-            selected_dinners[d] = {'name': 'Make at home', 'id': 'make_at_home', 'cuisine': 'various', 'meal_type': 'weekend_meal', 'main_veg': []}
-        if (is_covered('kids_lunch', d) or is_covered('adult_lunch', d)) and d not in selected_lunches:
-            selected_lunches[d] = LunchSuggestion(recipe_id=f'weekend_lunch_{d}', recipe_name='Make at home', kid_friendly=True, prep_style='fresh', prep_components=[], storage_days=0, prep_day=d, assembly_notes='Weekend flexibility', reuses_ingredients=[], default_option=None, kid_profiles=None)
+    # Remove automatic Sat/Sun defaults to allow per-household flexibility or empty planning (BUG-003)
+    # for d in ['sat', 'sun']:
+    #     if is_covered('dinner', d) and d not in selected_dinners:
+    #         selected_dinners[d] = {'name': 'Make at home', 'id': 'make_at_home', 'cuisine': 'various', 'meal_type': 'weekend_meal', 'main_veg': []}
+    #     if (is_covered('kids_lunch', d) or is_covered('adult_lunch', d)) and d not in selected_lunches:
+    #         selected_lunches[d] = LunchSuggestion(recipe_id=f'weekend_lunch_{d}', recipe_name='Make at home', kid_friendly=True, prep_style='fresh', prep_components=[], storage_days=0, prep_day=d, assembly_notes='Weekend flexibility', reuses_ingredients=[], default_option=None, kid_profiles=None)
             
     # Populate data with generated plan for frontend/DB
     data['dinners'] = [

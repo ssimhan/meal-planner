@@ -74,3 +74,30 @@ class GroceryMapper:
         data['map'][item_name.lower()] = store_name
         cls.save()
         return data['map']
+
+    @staticmethod
+    def infer_category(item_name):
+        """
+        Infer inventory category (fridge, pantry, freezer) based on item name.
+        """
+        name = item_name.lower()
+        
+        # Freezer high signal
+        if any(w in name for w in ['frozen', 'ice cream', 'peas', 'frozen_']):
+            return 'freezer_ingredient'
+            
+        # Fridge high signal
+        if any(w in name for w in ['milk', 'yogurt', 'cheese', 'butter', 'cream', 'berry', 'berries', 'lettuce', 'spinach', 'tofu', 'hummus', 'egg']):
+            return 'fridge'
+            
+        # Pantry high signal
+        if any(w in name for w in ['rice', 'pasta', 'flour', 'sugar', 'bean', 'chickpea', 'lentil', 'oil', 'salt', 'pepper', 'spice', 'powder', 'can ', 'canned', 'cracker', 'chip', 'nut', 'almond', 'cashew']):
+            return 'pantry'
+            
+        # Default to fridge for fresh-sounding items (veggies)
+        # But wait, many things are pantry. Let's do a heuristic for veggies.
+        if any(w in name for w in ['onion', 'garlic', 'potato', 'squash', 'shallot']):
+            return 'pantry' # These usually sit in pantry/cool dark place
+            
+        # Most other fresh produce goes in fridge
+        return 'fridge'

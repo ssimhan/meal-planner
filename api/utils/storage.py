@@ -145,7 +145,8 @@ class StorageEngine:
         if not supabase: return None
         h_id = get_household_id()
         try:
-            res = supabase.table("recipes").select("id, name, metadata, content").eq("household_id", h_id).eq("id", recipe_id).execute()
+            query = supabase.table("recipes").select("id, name, metadata, content").eq("household_id", h_id).eq("id", recipe_id)
+            res = execute_with_retry(query)
             if not res.data:
                 return None
             row = res.data[0]
@@ -171,7 +172,8 @@ class StorageEngine:
             # The original instruction snippet for get_history was likely a mistake,
             # as it introduced a 'week_of' parameter that wasn't present in the method signature
             # and changed the select columns. Reverting to original logic for fetching all history.
-            res = supabase.table("meal_plans").select("history_data").eq("household_id", h_id).order("week_of", desc=True).execute()
+            query = supabase.table("meal_plans").select("history_data").eq("household_id", h_id).order("week_of", desc=True)
+            res = execute_with_retry(query)
             return {"weeks": [row['history_data'] for row in res.data]}
         except Exception as e:
             print(f"Error fetching history: {e}")
@@ -189,11 +191,12 @@ class StorageEngine:
             if history_data is not None: update_payload['history_data'] = history_data
             if status is not None: update_payload['status'] = status
             
-            supabase.table("meal_plans").upsert({
+            query = supabase.table("meal_plans").upsert({
                 "household_id": h_id,
                 "week_of": week_of,
                 **update_payload
-            }, on_conflict="household_id, week_of").execute()
+            }, on_conflict="household_id, week_of")
+            execute_with_retry(query)
         except Exception as e:
             print(f"Error updating meal plan for {week_of}: {e}")
             raise e
@@ -211,7 +214,8 @@ class StorageEngine:
             
             if delete:
                 if existing.data:
-                    supabase.table("inventory_items").delete().eq("id", existing.data[0]['id']).execute()
+                    query = supabase.table("inventory_items").delete().eq("id", existing.data[0]['id'])
+                    execute_with_retry(query)
                 return
 
             if existing.data:
@@ -230,7 +234,8 @@ class StorageEngine:
                 }
                 
                 # Update by ID to be safe
-                supabase.table("inventory_items").update(final_payload).eq("id", existing_item['id']).execute()
+                query = supabase.table("inventory_items").update(final_payload).eq("id", existing_item['id'])
+                execute_with_retry(query)
             else:
                 # Insert new
                 quantity = updates.pop('quantity', 1) if updates else 1
@@ -243,7 +248,8 @@ class StorageEngine:
                     "unit": unit,
                     "metadata": updates or {}
                 }
-                supabase.table("inventory_items").insert(payload).execute()
+                query = supabase.table("inventory_items").insert(payload)
+                execute_with_retry(query)
 
             # PENDING RECIPE WORKFLOW: If this is a freezer meal, ensure it exists in the recipe index
             if category == 'freezer_backup' and not delete:
@@ -280,7 +286,8 @@ class StorageEngine:
             # 1. First priority: look for an 'active' plan that covers today
             # We look for plans where week_of <= today, ordered by week_of DESC
             today_str = today.strftime('%Y-%m-%d')
-            res = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("status", "active").lte("week_of", today_str).order("week_of", desc=True).limit(1).execute()
+            query = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("status", "active").lte("week_of", today_str).order("week_of", desc=True).limit(1)
+            res = execute_with_retry(query)
             
             if res.data:
                 plan = res.data[0]
@@ -293,12 +300,14 @@ class StorageEngine:
                     return plan
 
             # 2. Second priority: find any plan currently in 'planning'
-            res = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("status", "planning").order("week_of", desc=True).limit(1).execute()
+            query = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("status", "planning").order("week_of", desc=True).limit(1)
+            res = execute_with_retry(query)
             if res.data:
                 return res.data[0]
 
             # 3. Last fallback: the most recent non-archived plan of any status
-            res = supabase.table("meal_plans").select("*").eq("household_id", h_id).neq("status", "archived").order("week_of", desc=True).limit(1).execute()
+            query = supabase.table("meal_plans").select("*").eq("household_id", h_id).neq("status", "archived").order("week_of", desc=True).limit(1)
+            res = execute_with_retry(query)
             return res.data[0] if res.data else None
             
         except Exception as e:
@@ -371,7 +380,8 @@ class StorageEngine:
         existing_weeks = {}
         if supabase:
             try:
-                res = supabase.table("meal_plans").select("week_of, status").eq("household_id", h_id).execute()
+                query = supabase.table("meal_plans").select("week_of, status").eq("household_id", h_id)
+                res = execute_with_retry(query)
                 # Store keys as strings for reliable matching
                 for r in res.data:
                     w_key = str(r['week_of'])
@@ -413,7 +423,8 @@ class StorageEngine:
         h_id = get_household_id()
         # Find active/planning plans
         try:
-            res = supabase.table("meal_plans").select("*").eq("household_id", h_id).neq("status", "archived").execute()
+            query = supabase.table("meal_plans").select("*").eq("household_id", h_id).neq("status", "archived")
+            res = execute_with_retry(query)
             
             from datetime import datetime, timedelta
             now = datetime.now().date()
@@ -424,7 +435,8 @@ class StorageEngine:
                 week_end = week_start + timedelta(days=7)
                 
                 if now >= week_end:
-                    supabase.table("meal_plans").update({"status": "archived"}).eq("id", plan['id']).execute()
+                    query = supabase.table("meal_plans").update({"status": "archived"}).eq("id", plan['id'])
+                    execute_with_retry(query)
                     print(f"Archived expired week: {week_of}")
         except Exception as e:
             print(f"Error in archive_expired_weeks: {e}")
@@ -437,12 +449,14 @@ class StorageEngine:
         
         try:
             # 1. Get all recipes
-            recipes_res = supabase.table("recipes").select("id, name").eq("household_id", h_id).execute()
+            query = supabase.table("recipes").select("id, name").eq("household_id", h_id)
+            recipes_res = execute_with_retry(query)
             recipe_ids = {r['id'] for r in recipes_res.data}
             recipe_names = {r['name'].lower() for r in recipes_res.data}
             
             # 2. Get history (all weeks)
-            res = supabase.table("meal_plans").select("history_data").eq("household_id", h_id).execute()
+            query = supabase.table("meal_plans").select("history_data").eq("household_id", h_id)
+            res = execute_with_retry(query)
             weeks = [row['history_data'] for row in res.data if row.get('history_data')]
             
             pending = []
@@ -503,7 +517,8 @@ class StorageEngine:
         if not IS_SERVICE_ROLE:
             raise Exception("SUPABASE_SERVICE_ROLE_KEY is missing. Cannot write to database.")
         try:
-            supabase.table("recipes").delete().eq("id", recipe_id).eq("household_id", h_id).execute()
+            query = supabase.table("recipes").delete().eq("id", recipe_id).eq("household_id", h_id)
+            execute_with_retry(query)
         except Exception as e:
             print(f"Error deleting recipe {recipe_id}: {e}")
             raise e
@@ -582,13 +597,14 @@ class StorageEngine:
         if not IS_SERVICE_ROLE:
             raise Exception("SUPABASE_SERVICE_ROLE_KEY is missing. Cannot write to database.")
         try:
-            supabase.table("recipes").upsert({
+            query = supabase.table("recipes").upsert({
                 "id": recipe_id,
                 "household_id": h_id,
                 "name": name,
                 "metadata": metadata,
                 "content": content
-            }).execute()
+            })
+            execute_with_retry(query)
         except Exception as e:
             print(f"Error saving recipe {recipe_id}: {e}")
             raise e
@@ -685,7 +701,8 @@ class StorageEngine:
 
         h_id = get_household_id()
         try:
-            res = supabase.table("households").select("config").eq("id", h_id).execute()
+            query = supabase.table("households").select("config").eq("id", h_id)
+            res = execute_with_retry(query)
             if res.data and len(res.data) > 0:
                 return res.data[0]['config'] or {}
         except Exception as e:
@@ -700,7 +717,8 @@ class StorageEngine:
         if not IS_SERVICE_ROLE:
             raise Exception("SUPABASE_SERVICE_ROLE_KEY is missing. Cannot write to database.")
         try:
-            supabase.table("households").update({"config": new_config}).eq("id", h_id).execute()
+            query = supabase.table("households").update({"config": new_config}).eq("id", h_id)
+            execute_with_retry(query)
             return True
         except Exception as e:
             print(f"Error saving config: {e}")

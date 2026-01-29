@@ -37,10 +37,10 @@ PREP_RULES = [
     (r'\b(marinate|marinade)\b', "Marinate proteins (ahead of time)", []),
 ]
 
-def generate_prep_steps(md_content, force=False):
+def get_prep_tasks(md_content):
     """
     Heuristic-based prep step generator.
-    Looks for keywords in ingredients and instructions to suggest prep-ahead tasks.
+    Returns a list of suggested prep-ahead tasks.
     """
     lines = md_content.split('\n')
     ingredients = []
@@ -49,32 +49,11 @@ def generate_prep_steps(md_content, force=False):
     # Simple state machine to extract sections
     in_ingredients = False
     in_instructions = False
-    has_prep_steps = False
     
-    # Store section indices for replacement if forced
-    prep_start_idx = -1
-    prep_end_idx = -1
-
-    clean_lines = [] # Lines without existing Prep Steps if force=True
-
-    for i, line in enumerate(lines):
+    for line in lines:
         if re.match(r'#+\s*Prep Steps', line, re.IGNORECASE):
-            has_prep_steps = True
-            prep_start_idx = i
-            # Find end of prep steps (next header)
             continue
             
-        if has_prep_steps and prep_end_idx == -1:
-            if re.match(r'#+\s*', line) and not line.startswith('-') and not line.startswith('*') and line.strip():
-                # Found next header
-                prep_end_idx = i
-                has_prep_steps = False # Reset flag as we found the end
-                # clean_lines.append(line) # Add this header line
-                # continue
-            else:
-                # Still inside prep steps, verify validity?
-                continue 
-
         # Standard parsing
         if re.match(r'#+\s*Ingredients', line, re.IGNORECASE):
             in_ingredients = True
@@ -90,20 +69,6 @@ def generate_prep_steps(md_content, force=False):
             ingredients.append(line.strip()[1:].strip())
         elif in_instructions:
             instructions.append(line.strip())
-
-    # Re-read content to strip existing Prep Steps if force is True
-    if force and prep_start_idx != -1:
-        # Determine end index if not found (end of file)
-        if prep_end_idx == -1: 
-            prep_end_idx = len(lines)
-        
-        # Keep everything BEFORE start and AFTER end
-        lines = lines[:prep_start_idx] + lines[prep_end_idx:]
-    elif not force and prep_start_idx != -1:
-        return None # Already exists and not forced
-
-    # Re-scan mostly for simplicity or just run heuristics on extracted data
-    # (The extraction above worked on original lines, likely mostly correct unless Prep Steps was inside Instructions which is unlikely)
 
     generated_steps = []
     
@@ -121,15 +86,45 @@ def generate_prep_steps(md_content, force=False):
     # Check Instructions
     inst_text = ' '.join(instructions).lower()
     if 'marinate' in inst_text or 'marinade' in inst_text:
-        # Only add if not already covered? 
         if "Marinate proteins (ahead of time)" not in generated_steps:
              generated_steps.append("Marinate proteins (ahead of time)")
 
     # Deduplicate
-    generated_steps = list(dict.fromkeys(generated_steps))
+    return list(dict.fromkeys(generated_steps))
+
+def generate_prep_steps(md_content, force=False):
+    """
+    Heuristic-based prep step generator.
+    Looks for keywords in ingredients and instructions to suggest prep-ahead tasks.
+    """
+    lines = md_content.split('\n')
+    
+    # Simple state machine to find existing section
+    has_prep_steps = False
+    prep_start_idx = -1
+    prep_end_idx = -1
+
+    for i, line in enumerate(lines):
+        if re.match(r'#+\s*Prep Steps', line, re.IGNORECASE):
+            has_prep_steps = True
+            prep_start_idx = i
+            continue
+            
+        if has_prep_steps and prep_end_idx == -1:
+            if re.match(r'#+\s*', line) and not line.startswith('-') and not line.startswith('*') and line.strip():
+                prep_end_idx = i
+                has_prep_steps = False 
+
+    # Re-read content to strip existing Prep Steps if force is True
+    if force and prep_start_idx != -1:
+        if prep_end_idx == -1: prep_end_idx = len(lines)
+        lines = lines[:prep_start_idx] + lines[prep_end_idx:]
+    elif not force and prep_start_idx != -1:
+        return None # Already exists and not forced
+
+    generated_steps = get_prep_tasks(md_content)
     
     if not generated_steps:
-        # If no steps generated, return content as is (or stripped if forced)
         return '\n'.join(lines)
 
     # Insert Prep Steps section before Instructions
@@ -146,12 +141,12 @@ def generate_prep_steps(md_content, force=False):
         new_content_lines.append(line)
         
     if not inserted:
-        # Append to end if no instructions found
         new_content_lines.append("## Prep Steps")
         for step in generated_steps:
             new_content_lines.append(f"- {step}")
 
     return '\n'.join(new_content_lines)
+
 
 def main():
     parser = argparse.ArgumentParser(description='Generate prep steps for recipe markdown files.')

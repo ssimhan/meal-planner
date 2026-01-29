@@ -51,7 +51,8 @@ def _get_current_status(skip_sync=False, week_override=None):
     
     if requested_week:
         # Fetch specific week
-        res = storage.supabase.table("meal_plans").select("*").eq("household_id", storage.get_household_id()).eq("week_of", requested_week).execute()
+        query = storage.supabase.table("meal_plans").select("*").eq("household_id", storage.get_household_id()).eq("week_of", requested_week)
+        res = storage.execute_with_retry(query)
         if res.data:
             active_plan = res.data[0]
             state, data = storage.StorageEngine.get_workflow_state(active_plan)
@@ -67,7 +68,8 @@ def _get_current_status(skip_sync=False, week_override=None):
         # This ensures the dashboard aligns with reality.
         # We try to fetch the plan for the *current* week.
         week_str = monday.strftime('%Y-%m-%d')
-        res = storage.supabase.table("meal_plans").select("*").eq("household_id", storage.get_household_id()).eq("week_of", week_str).execute()
+        query = storage.supabase.table("meal_plans").select("*").eq("household_id", storage.get_household_id()).eq("week_of", week_str)
+        res = storage.execute_with_retry(query)
         
         if res.data:
             active_plan = res.data[0]
@@ -273,7 +275,8 @@ def _get_current_status(skip_sync=False, week_override=None):
         if storage.supabase:
             try:
                 # Simple check for any plan in the future
-                future_res = storage.supabase.table("meal_plans").select("week_of, status").eq("household_id", storage.get_household_id()).gt("week_of", week_str).order("week_of", desc=False).limit(1).execute()
+                query = storage.supabase.table("meal_plans").select("week_of, status").eq("household_id", storage.get_household_id()).gt("week_of", week_str).order("week_of", desc=False).limit(1)
+                future_res = storage.execute_with_retry(query)
                 if future_res.data:
                     res_dict["next_week_planned"] = True
                     res_dict["next_week"] = {

@@ -23,10 +23,12 @@
 
 | ID | Area | Description | Impact | Effort | Notes |
 |----|------|-------------|--------|--------|-------|
-| BUG-001 | Replan | Prep tasks don't refresh after a replan. | High | 2hr | Needs to trigger `generate_prep_steps.py` after replan. |
-| BUG-002 | Shopping List | Items purchased in list don't sync to inventory. | High | 2hr | Should trigger `add_to_inventory` logic. |
-| BUG-003 | Management | Meal defaults don't make sense for multiple households. | Medium | 1hr | Consider removal or scoped per-household defaults. |
-| BUG-004 | Roadmap | Review future roadmap phases (35-39) for multi-household support. | Medium | 2hr | Ensure all future features remain multi-tenant aware. |
+| BUG-001 | Replan | Prep tasks don't refresh after a replan. | High | 2hr | ✅ Fixed via heuristic fallback. |
+| BUG-002 | Shopping List | Items purchased in list don't sync to inventory. | High | 2hr | ✅ Fixed with category inference. |
+| BUG-003 | Management | Meal defaults don't make sense for multiple households. | Medium | 1hr | ✅ Removed hardcoded weekend defaults. |
+| BUG-004 | Roadmap | Review future roadmap phases (35-39) for multi-household support. | Medium | 2hr | ✅ Completed review. |
+| BUG-005 | Inventory | `add_inventory` has redundant whole-inventory fetch check. | Low | 1hr | Slows down checkout on large inventories. |
+| BUG-006 | Auth | Hardcoded household ID fallback in `require_auth` hides profile gaps. | Medium | 1hr | Should probably redirect to onboarding instead. |
 
 ---
 
@@ -36,10 +38,15 @@
 
 | ID | Area | Description | Impact | Effort | Notes |
 |----|------|-------------|--------|--------|-------|
-| TD-001 | Smart Shopping | "I Have This" defaults to Pantry. Should infer category. | Low | 1hr | Hardcoded in `api/routes/groceries.py` |
-| TD-002 | Recipes | Standardize ingredients (e.g. tamarind pulp -> concentrate, typos). | Low | 2hr | Affects shopping list aggregation. |
-| TD-003 | Recipes | Mashed ingredient quantities (e.g. 1onion -> 1 onion). | Low | 1hr | Found in several .md recipe files. |
-| TD-004 | Recipes | Redundant cuisine tags (italian, mexican, etc). | Low | 1hr | Cuisine is already a dedicated field. |
+| TD-001 | Smart Shopping | "I Have This" defaults to Pantry. Should infer category. | Low | 1hr | ✅ Fixed in phase 32. |
+| TD-002 | Recipes | Standardize ingredients (e.g. tamarind pulp -> concentrate, typos). | Low | 2hr | ✅ Bulk fixed 73 recipes in phase 32. |
+| TD-003 | Recipes | Mashed ingredient quantities (e.g. 1onion -> 1 onion). | Low | 1hr | ✅ Audited in phase 32 (0 found). |
+| TD-004 | Recipes | Redundant cuisine tags (italian, mexican, etc). | Low | 1hr | ✅ Bulk fixed 73 recipes in phase 32. |
+| TD-005 | Architecture | GroceryMapper uses local JSON (`data/store_map.json`). | High | 3hr | Scaling bottleneck for multi-household Vercel. |
+| TD-006 | Performance | Heuristic prep-task generation reads MD files on every request. | Medium | 2hr | Implement caching for `get_prep_tasks` results. |
+| TD-007 | Persistence | `StorageEngine` writes to local YAML/JSON in some methods. | High | 2hr | Fails on Vercel; should be 100% Supabase-backed. |
+| TD-008 | Performance | `get_pending_recipes` is a heavy, unoptimized scan. | Medium | 2hr | Should be an async job or computed field. |
+| TD-009 | Architecture | Large route files (`meals.py`) contain complex business logic. | Medium | 4hr | Refactor to service layers or utility classes. |
 
 **Count: 0** ✅
 

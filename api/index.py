@@ -38,6 +38,18 @@ app.register_blueprint(reviews_bp)
 app.register_blueprint(groceries_bp)
 app.register_blueprint(settings_bp)
 
+@app.errorhandler(Exception)
+def handle_exception(e):
+    import traceback
+    print(f"CRITICAL SYSTEM ERROR: {str(e)}")
+    traceback.print_exc()
+    return jsonify({
+        "status": "error",
+        "message": str(e),
+        "code": "INTERNAL_SERVER_ERROR",
+        "traceback": traceback.format_exc()
+    }), 500
+
 
 
 # Health Check

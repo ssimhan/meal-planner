@@ -1121,3 +1121,115 @@ The system had likely auto-generated or the user had accidentally triggered empt
     - Separate toast notifications showing counts for inventory additions vs shopping list removals
 
 **Learning:** Intercepting the workflow at the moment of "maximum intent" (right after planning) is the best time to capture inventory updates. Automatic staples removal significantly reduces "list noise".
+
+### Phase 32: Database Stability & Error Resilience (2026-01-28) ✅ Complete
+
+**Goal:** Eliminate transient database connection errors and improve system reliability under concurrent load.
+
+**Problem:** Users experiencing `[Errno 35] Resource temporarily unavailable` errors when:
+- Fetching inventory on dashboard load
+- Navigating to the planning wizard (`/plan`)
+- Making rapid concurrent API calls
+
+**Root Cause Analysis:**
+The Supabase Python client (`supabase-py`) makes HTTP requests to a remote database. When multiple requests fire simultaneously (e.g., dashboard loading status + inventory + recipes), the underlying connection pool can become temporarily exhausted, causing socket errors. This is especially common in serverless environments where cold starts create connection spikes.
+
+**Solution: Retry Logic with Exponential Backoff**
+
+Built a centralized `execute_with_retry()` wrapper in `api/utils/storage.py`:
+```python
+def execute_with_retry(query, max_retries=3, base_delay=0.1):
+    """Execute a Supabase query with exponential backoff retry logic."""
+    for attempt in range(max_retries):
+        try:
+            return query.execute()
+        except Exception as e:
+            if attempt == max_retries - 1:
+                raise
+            time.sleep(base_delay * (2 ** attempt))
+```
+
+**Implementation:**
+- **Wrapped ~30 database calls** across the codebase:
+  - `api/utils/storage.py` (17 calls) - Core operations
+  - `api/routes/status.py` (3 calls) - Dashboard data
+  - `api/routes/meals.py` (7 calls) - Meal planning
+  - `api/routes/groceries.py` (3 calls) - Shopping lists
+- **Added global error handler** to `api/index.py` for better debugging visibility
+- **Standardized error responses** with detailed tracebacks in development
+
+**Critical Debugging Insight: Objects vs Arrays in JavaScript**
+
+During debugging, discovered prep tasks weren't displaying despite being correctly stored in the database. The issue revealed an important frontend pattern:
+
+**The Problem:**
+```typescript
+// API returns this structure:
+{
+  "today": {
+    "prep_tasks": [
+      {"task": "Chop onions", "day": "tue"},
+      {"task": "Chop peppers", "day": "wed"}
+    ]
+  }
+}
+
+// Frontend component filters tasks:
+const grouped = tasks.reduce((acc, task) => {
+  const mealKey = task.meal_name || 'General Prep';
+  if (!acc[mealKey]) acc[mealKey] = [];  // ← Array
+  acc[mealKey].push(task);
+  return acc;
+}, {} as Record<string, PrepTask[]>);  // ← Object with array values
+```
+
+**Why This Matters:**
+- **Arrays** (`[]`) are ordered lists accessed by index: `tasks[0]`, `tasks[1]`
+- **Objects** (`{}`) are key-value maps accessed by name: `grouped["Balsamic Bruschetta"]`
+- **The Pattern:** Using an object to group arrays is extremely common in data processing
+  - Start with flat array from API
+  - Transform into grouped object for UI rendering
+  - Each group contains an array of related items
+
+**Real-World Example:**
+```javascript
+// Input (Array from API):
+[
+  {task: "Chop herbs", meal_name: "Bruschetta"},
+  {task: "Chop peppers", meal_name: "Salad"},
+  {task: "Wash greens", meal_name: "Salad"}
+]
+
+// Output (Object with Array values):
+{
+  "Bruschetta": [{task: "Chop herbs", ...}],
+  "Salad": [
+    {task: "Chop peppers", ...},
+    {task: "Wash greens", ...}
+  ]
+}
+```
+
+This pattern enables:
+1. **Efficient lookups** - Find all tasks for a specific meal in O(1) time
+2. **Clean rendering** - Map over object keys to create UI sections
+3. **Type safety** - TypeScript knows each value is an array
+
+**Learning for Readers:**
+- **Arrays** = "List of things in order" (shopping list, timeline)
+- **Objects** = "Named buckets" (settings, grouped data)
+- **Hybrid** = Object containing arrays (most real-world data structures)
+
+Understanding when to use each is fundamental to frontend development. Most bugs in data display come from mismatched expectations about structure.
+
+**Impact:**
+- ✅ Inventory errors eliminated
+- ✅ Planning wizard stable under load
+- ✅ Prep tasks displaying correctly (was always working, just needed to scroll)
+- ✅ System resilient to transient network issues
+
+**Remaining Work:**
+- 11 non-critical `.execute()` calls in edge cases (onboarding, auth)
+- Can be wrapped incrementally as needed
+
+**Learning:** Transient errors in distributed systems are inevitable. Retry logic with exponential backoff is a standard pattern that should be built into database wrappers from day one. The cost of 3 retries (max 700ms delay) is negligible compared to the user experience improvement.

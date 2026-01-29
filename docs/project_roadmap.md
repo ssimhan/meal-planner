@@ -16,7 +16,15 @@
 > See [BUGS.md](BUGS.md) for current status. Fix all issues before marking blocks complete.
 
 ## 🚀 Active Phase
-**Currently Planning Phase 33 & 35 Operations**
+**Phase 33: Advanced Recipe Management**
+
+---
+
+## ✅ Phase 32: Bug Cleanup & Tech Debt (Complete)
+- [x] **Prep Refresh:** Implemented heuristic fallback for prep steps (BUG-001).
+- [x] **Inventory Sync:** Implemented smart category inference for sync (BUG-002, TD-001).
+- [x] **Household Flexibility:** Removed hardcoded weekend defaults (BUG-003).
+- [x] **Database Hygiene:** Batch normalized 73 recipes for tags/veg naming (TD-002, TD-004).
 
 ---
 
@@ -39,8 +47,8 @@
 **Goal:** Enable multiple members to coordinate preferences and feedback.
 
 - **Block 1: Member Management (~4 hrs)**
-  - [ ] **Settings:** capability to define household members and individual preferences.
-  - [ ] **Fix:** Remove or re-scope legacy "Meal Defaults" that clash in multi-household setups (BUG-003).
+  - [ ] **Infrastructure:** Migrate `GroceryMapper` data to Supabase table `store_mappings` (TD-005).
+  - [ ] **Fix:** Remove or re-scope legacy "Meal Defaults" that clash in multi-household setups (BUG-003 - ✅ Fixed).
 - **Block 2: Per-Member Feedback Loop (~4 hrs)**
   - [ ] **UI:** Add "Who liked/disliked this?" toggles during meal confirmation.
   - [ ] **Analytics:** Implement basic trend identification for dish popularity across the household.
@@ -56,12 +64,15 @@
 - **Block 2: Closed-Loop Shopping (~4 hrs)**
   - [ ] **Sync:** Ensure marking an item as "Purchased" in the shopping list adds it to the correct inventory category (BUG-002).
   - [ ] **Persistence:** Automatically save store preference/mapping during shopping (Block B3).
+  - [ ] **Optimization:** Cache heuristic prep tasks at the recipe level in Supabase (TD-006).
 - **Block 3: Recipe-to-List Automation (~3 hrs)**
   - [ ] **UI:** Add "Add Ingredients to Shopping List" button to the Recipe Detail wrapper.
   - [ ] **Logic:** Implement deduplication/checking against current inventory when adding.
 - **Block 4: Prep & Data Hygiene (~4 hrs)**
+  - [ ] **Infrastructure:** Standardize all `StorageEngine` persistence to Supabase (TD-007).
   - [ ] **UI:** Implement a more logical, editable prep time slot selector for varied household schedules.
-  - [ ] **Normalization:** Batch fix ingredient typos (TD-002), mashed quantities (TD-003), and remove redundant tags (TD-004).
+  - [ ] **Normalization:** Batch fix ingredient typos (TD-002 - ✅), mashed quantities (TD-003 - ✅), and remove redundant tags (TD-004 - ✅).
+  - [ ] **Performance:** Optimize `get_pending_recipes` and add background worker for heavy tasks (TD-008, TD-009).
 
 ### Phase 36: Multimodal Inventory (The Future)
 **Goal:** Low-friction inventory tracking.

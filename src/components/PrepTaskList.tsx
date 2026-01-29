@@ -14,6 +14,7 @@ export default function PrepTaskList({ tasks, weekOf, onUpdate }: PrepTaskListPr
     // Track collapsed state by meal name. Default to empty (all expanded)
     const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
 
+
     // Group by meal
     const grouped = tasks.reduce((acc, task) => {
         if (task.status === 'complete') return acc; // Only show pending
@@ -22,6 +23,7 @@ export default function PrepTaskList({ tasks, weekOf, onUpdate }: PrepTaskListPr
         acc[mealKey].push(task);
         return acc;
     }, {} as Record<string, PrepTask[]>);
+
 
     const handleCheck = async (task: PrepTask) => {
         if (updating || bulkUpdating || !task.id) return;

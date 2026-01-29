@@ -18,7 +18,8 @@ meals_bp = Blueprint('meals', __name__)
 def generate_plan_route():
     try:
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).neq("status", "archived").order("week_of", desc=True).limit(1).execute()
+        query = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).neq("status", "archived").order("week_of", desc=True).limit(1)
+        res = storage.execute_with_retry(query)
         
         if not res.data:
             return jsonify({"status": "error", "message": "No active week found to generate plan"}), 404
@@ -30,7 +31,8 @@ def generate_plan_route():
         # 1. Fetch contexts from DB
         history = storage.StorageEngine.get_history()
         # We need the full recipe details for generation (with main_veg, etc.)
-        all_recipes_res = storage.supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id).execute()
+        query = storage.supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id)
+        all_recipes_res = storage.execute_with_retry(query)
         all_recipes = [
             {
                 "id": r['id'],
@@ -83,7 +85,8 @@ def generate_draft_route():
         h_id = storage.get_household_id()
         
         # 1. Fetch current plan
-        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_of).execute()
+        query = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_of)
+        res = storage.execute_with_retry(query)
         if not res.data or len(res.data) == 0:
              return jsonify({"status": "error", "message": f"Week {week_of} not found"}), 404
         
@@ -172,7 +175,8 @@ def generate_draft_route():
         if not updated_any:
             history.setdefault('weeks', []).append(history_week)
 
-        all_recipes_res = storage.supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id).execute()
+        query = storage.supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id)
+        all_recipes_res = storage.execute_with_retry(query)
         all_recipes = [{"id": r['id'], "name": r['name'], **(r.get('metadata') or {})} for r in all_recipes_res.data]
         
         # 4. Generate the rest of the plan
@@ -216,7 +220,8 @@ def get_shopping_list_route():
             return jsonify({"status": "error", "message": "week_of parameter required"}), 400
             
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("plan_data, history_data").eq("household_id", h_id).eq("week_of", week_of).execute()
+        query = storage.supabase.table("meal_plans").select("plan_data, history_data").eq("household_id", h_id).eq("week_of", week_of)
+        res = storage.execute_with_retry(query)
         
         if not res.data:
             return jsonify({"status": "error", "message": f"No plan found for week {week_of}"}), 404
@@ -272,7 +277,8 @@ def create_week():
         # 1. Fetch Latest Data for Proposal
         h_id = storage.get_household_id()
         history = storage.StorageEngine.get_history()
-        all_recipes_res = storage.supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id).execute()
+        query = storage.supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id)
+        all_recipes_res = storage.execute_with_retry(query)
         all_recipes = [{"id": r['id'], "name": r['name'], **(r.get('metadata') or {})} for r in all_recipes_res.data]
         
         # Load config from DB (or fallback to file for now)
@@ -378,7 +384,8 @@ def confirm_veg():
             return jsonify({"status": "error", "message": "No vegetables provided"}), 400
             
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).neq("status", "archived").order("week_of", desc=True).limit(1).execute()
+        query = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).neq("status", "archived").order("week_of", desc=True).limit(1)
+        res = storage.execute_with_retry(query)
         
         if not res.data:
             return jsonify({"status": "error", "message": "No active week found"}), 404
@@ -460,7 +467,8 @@ def log_meal():
         print(f"DEBUG: --- LOG MEAL REQUEST ---")
         print(f"DEBUG: Week: {week_str}, Day: {day}, Made: {made}")
         
-        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).order("week_of", desc=True).limit(1).execute()
+        query = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).order("week_of", desc=True).limit(1)
+        res = storage.execute_with_retry(query)
         if not res.data:
             print(f"DEBUG: Meal plan for {week_str} not found in DB")
             return jsonify({
@@ -621,7 +629,8 @@ def log_meal():
                 try:
                     recipe_id = actual_meal.lower().replace(' ', '_')
                     # Check if it exists first
-                    existing = storage.supabase.table("recipes").select("id").eq("household_id", h_id).eq("id", recipe_id).execute()
+                    query = storage.supabase.table("recipes").select("id").eq("household_id", h_id).eq("id", recipe_id)
+                    existing = storage.execute_with_retry(query)
                     if not existing.data:
                         storage.supabase.table("recipes").insert({
                             "id": recipe_id,
@@ -899,7 +908,8 @@ def delete_week():
             return jsonify({"status": "error", "message": "week_of required"}), 400
             
         h_id = storage.get_household_id()
-        storage.supabase.table("meal_plans").delete().eq("household_id", h_id).eq("week_of", week_of).execute()
+        query = storage.supabase.table("meal_plans").delete().eq("household_id", h_id).eq("week_of", week_of)
+        storage.execute_with_retry(query)
         
         invalidate_cache()
         return jsonify({"status": "success", "message": f"Deleted week {week_of}"})

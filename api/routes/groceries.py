@@ -55,7 +55,8 @@ def add_extra_items():
         if not items: return jsonify({"status": "success", "message": "No items to add"})
         
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).execute()
+        query = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of)
+        res = storage.execute_with_retry(query)
         
         if not res.data or len(res.data) == 0:
             return jsonify({"status": "error", "message": "Week not found"}), 404
@@ -92,7 +93,8 @@ def remove_extra_item():
         if not week_of or not item: return jsonify({"status": "error", "message": "Data required"}), 400
         
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).execute()
+        query = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of)
+        res = storage.execute_with_retry(query)
         
         if res.data and len(res.data) > 0:
             plan_data = res.data[0].get('plan_data') or {}
@@ -123,20 +125,23 @@ def smart_action():
         # Action 1: Add to inventory
         if action == 'add_to_inventory':
             try:
-                # Default to pantry, quantity 1
-                storage.StorageEngine.update_inventory_item('pantry', item, {
+                # TD-001: Infer category instead of hardcoding pantry
+                category = GroceryMapper.infer_category(item)
+                
+                storage.StorageEngine.update_inventory_item(category, item, {
                     'quantity': 1,
                     'unit': 'count'
                 })
                 invalidate_cache()
-                return jsonify({"status": "success", "message": "Item added to inventory"})
+                return jsonify({"status": "success", "message": f"Item added to {category}"})
             except Exception as e:
                 return jsonify({"status": "error", "message": "Failed to update inventory", "code": "INVENTORY_UPDATE_FAILED", "details": str(e)}), 500
             
         # Action 2: Exclude from plan
         elif action == 'exclude_from_plan':
             try:
-                res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).execute()
+                query = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of)
+                res = storage.execute_with_retry(query)
                 
                 if res.data and len(res.data) > 0:
                     plan_data = res.data[0].get('plan_data') or {}

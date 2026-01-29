@@ -311,11 +311,12 @@ def get_shopping_list(plan_data):
     # 5. Extra Manual Items (From Quick Add)
     extras = plan_data.get('extra_items', [])
     for extra in extras:
-        # We assume extras are explicitly needed, so we add them regardless of inventory?
-        # Or should we check inventory? Usually manual add means "I need this".
-        # Let's check inventory to be smart, but maybe flagging it?
-        # For now, just add them.
-        needed.append(extra.title())
+        norm = normalize_ingredient(extra)
+        # BUG-002 Fix: Check inventory for extras too
+        if (norm not in inventory_set and
+            norm not in EXCLUDED_STAPLES and
+            norm not in excluded_items):
+            needed.append(extra.title())
             
     # Enrich with Store info
     from api.utils.grocery_mapper import GroceryMapper

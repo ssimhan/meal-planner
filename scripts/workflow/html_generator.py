@@ -2,6 +2,12 @@ import re
 import yaml
 from pathlib import Path
 from datetime import datetime, timedelta
+try:
+    from ..generate_prep_steps import get_prep_tasks
+except ImportError:
+    import sys
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from generate_prep_steps import get_prep_tasks
 
 def _load_config(config_dict=None):
     """Load config.yml for fallback values or use provided dict."""
@@ -431,7 +437,7 @@ def extract_prep_tasks_for_db(selected_dinners, selected_lunches):
             recipe_name = recipe.get('name', 'dinner')
             recipe_id = recipe.get('id', 'unknown_recipe')
             
-            # Manual prep steps
+            # 1. Manual prep steps metadata
             if recipe.get('prep_steps'):
                 for idx, step in enumerate(recipe['prep_steps']):
                     task_id = f"dinner_{day}_{recipe_id}_step_{idx}"
@@ -445,25 +451,61 @@ def extract_prep_tasks_for_db(selected_dinners, selected_lunches):
                         "status": "pending"
                     })
             else:
-                # Fallback: Main Veg
-                main_vegs = recipe.get('main_veg', [])
-                unique_vegs = []
-                for v in main_vegs:
-                    if v not in unique_vegs:
-                        unique_vegs.append(v)
-                        
-                for idx, veg in enumerate(unique_vegs):
-                    veg_clean = veg.replace('_', ' ')
-                    task_id = f"dinner_{day}_{recipe_id}_veg_{idx}"
-                    structured_tasks.append({
-                        "id": task_id,
-                        "task": f"Chop {veg_clean}",
-                        "meal_id": recipe_id,
-                        "meal_name": recipe_name,
-                        "day": day,
-                        "type": "dinner",
-                        "status": "pending"
-                    })
+                # 2. Heuristic fallback from Markdown content
+                heuristic_tasks = []
+                try:
+                    # Try to find content in recipe object or load from file
+                    md_content = recipe.get('content')
+                    if not md_content:
+                        # Try to load from paths defined in index.yml (which were likely merged into recipe obj)
+                        possible_paths = [
+                            f"recipes/content/{recipe_id}.md",
+                            f"recipes/details/{recipe_id}.yaml" # Some might be yaml
+                        ]
+                        for p in possible_paths:
+                            path = Path(p)
+                            if path.exists():
+                                with open(path, 'r') as f:
+                                    md_content = f.read()
+                                break
+                    
+                    if md_content:
+                        heuristic_tasks = get_prep_tasks(md_content)
+                except Exception as e:
+                    print(f"Warning: Failed to get heuristic prep tasks for {recipe_id}: {e}")
+
+                if heuristic_tasks:
+                    for idx, step in enumerate(heuristic_tasks):
+                        task_id = f"dinner_{day}_{recipe_id}_heuristic_{idx}"
+                        structured_tasks.append({
+                            "id": task_id,
+                            "task": step,
+                            "meal_id": recipe_id,
+                            "meal_name": recipe_name,
+                            "day": day,
+                            "type": "dinner",
+                            "status": "pending"
+                        })
+                else:
+                    # 3. Last fallback: Main Veg
+                    main_vegs = recipe.get('main_veg', [])
+                    unique_vegs = []
+                    for v in main_vegs:
+                        if v not in unique_vegs:
+                            unique_vegs.append(v)
+                            
+                    for idx, veg in enumerate(unique_vegs):
+                        veg_clean = veg.replace('_', ' ')
+                        task_id = f"dinner_{day}_{recipe_id}_veg_{idx}"
+                        structured_tasks.append({
+                            "id": task_id,
+                            "task": f"Chop {veg_clean}",
+                            "meal_id": recipe_id,
+                            "meal_name": recipe_name,
+                            "day": day,
+                            "type": "dinner",
+                            "status": "pending"
+                        })
 
     # 2. Collect all Lunches
     for day in days:

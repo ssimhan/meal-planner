@@ -3,7 +3,9 @@
 import sys
 import re
 import argparse
+import hashlib
 from pathlib import Path
+from functools import lru_cache
 
 # Mapping of keywords (regex) to prep tasks
 PREP_RULES = [
@@ -37,10 +39,13 @@ PREP_RULES = [
     (r'\b(marinate|marinade)\b', "Marinate proteins (ahead of time)", []),
 ]
 
-def get_prep_tasks(md_content):
+# TD-006 FIX: Cache for parsed prep tasks to avoid re-parsing on every request
+# Uses content hash as key, with max 100 entries (LRU eviction)
+@lru_cache(maxsize=100)
+def _get_prep_tasks_cached(content_hash: str, md_content: str) -> tuple:
     """
-    Heuristic-based prep step generator.
-    Returns a list of suggested prep-ahead tasks.
+    Cached version of prep task parsing.
+    Returns tuple (immutable for caching) instead of list.
     """
     lines = md_content.split('\n')
     ingredients = []
@@ -89,8 +94,25 @@ def get_prep_tasks(md_content):
         if "Marinate proteins (ahead of time)" not in generated_steps:
              generated_steps.append("Marinate proteins (ahead of time)")
 
-    # Deduplicate
-    return list(dict.fromkeys(generated_steps))
+    # Deduplicate and return as tuple for caching
+    return tuple(dict.fromkeys(generated_steps))
+
+
+def get_prep_tasks(md_content):
+    """
+    Heuristic-based prep step generator.
+    Returns a list of suggested prep-ahead tasks.
+    
+    TD-006 FIX: Now uses caching to avoid re-parsing on every request.
+    """
+    # Generate hash for cache key
+    content_hash = hashlib.md5(md_content.encode()).hexdigest()
+    
+    # Get cached result (returns tuple)
+    cached_result = _get_prep_tasks_cached(content_hash, md_content)
+    
+    # Convert back to list for backward compatibility
+    return list(cached_result)
 
 def generate_prep_steps(md_content, force=False):
     """

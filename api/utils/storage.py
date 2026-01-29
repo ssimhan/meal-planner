@@ -74,6 +74,17 @@ def get_household_id():
     """Helper to get household_id from request context."""
     return getattr(request, 'household_id', "00000000-0000-0000-0000-000000000001")
 
+# TD-008 FIX: Cache for pending recipes (per-household, with TTL)
+_pending_recipes_cache = {}
+_PENDING_CACHE_TTL = 300  # 5 minutes
+
+def invalidate_pending_recipes_cache(household_id=None):
+    """Invalidate pending recipes cache. Called after recipe capture/save."""
+    if household_id:
+        _pending_recipes_cache.pop(household_id, None)
+    else:
+        _pending_recipes_cache.clear()
+
 class StorageEngine:
     """Storage abstraction to handle DB vs File operations."""
     
@@ -447,6 +458,14 @@ class StorageEngine:
         if not supabase: return []
         h_id = get_household_id()
         
+        # TD-008 FIX: Check cache first
+        import time as _time
+        cache_entry = _pending_recipes_cache.get(h_id)
+        if cache_entry:
+            cached_result, timestamp = cache_entry
+            if _time.time() - timestamp < _PENDING_CACHE_TTL:
+                return cached_result
+        
         try:
             # 1. Get all recipes
             query = supabase.table("recipes").select("id, name").eq("household_id", h_id)
@@ -468,13 +487,10 @@ class StorageEngine:
                 'freezer meal', 'ate out', 'make at home', 'takeout', 'delivery', 'restaurant'
             }
             
-            # Load ignored recipes from file
-            ignored_path = Path('data/ignored.yml')
-            if ignored_path.exists():
-                with open(ignored_path, 'r') as f:
-                    saved_ignores = yaml.safe_load(f) or []
-                    for i in saved_ignores:
-                        ignore.add(i.lower())
+            # TD-007 FIX: Load ignored recipes from DB config instead of local file
+            ignored_list = StorageEngine._get_config_key('ignored_recipes') or []
+            for i in ignored_list:
+                ignore.add(i.lower())
 
             for week in weeks:
                 # Check dinners
@@ -504,6 +520,8 @@ class StorageEngine:
                                 if actual_clean not in seen:
                                     pending.append(actual_clean)
                                     seen.add(actual_clean)
+            # TD-008 FIX: Store result in cache
+            _pending_recipes_cache[h_id] = (pending, _time.time())
             return pending
         except Exception as e:
             print(f"Error in get_pending_recipes: {e}")
@@ -669,25 +687,14 @@ class StorageEngine:
     @staticmethod
     def ignore_recipe(name):
         """Add a recipe name to the ignored list."""
+        # TD-007 FIX: Use DB config instead of local file
         try:
-            ignored_path = Path('data/ignored.yml')
-            existing = []
-            if ignored_path.exists():
-                with open(ignored_path, 'r') as f:
-                    existing = yaml.safe_load(f) or []
+            existing = StorageEngine._get_config_key('ignored_recipes') or []
             
             if name not in existing:
                 existing.append(name)
-                
-                # Sort for tidiness
                 existing.sort()
-                
-                try:
-                    with open(ignored_path, 'w', encoding='utf-8') as f:
-                        yaml.dump(existing, f)
-                except OSError as e:
-                    if e.errno == 30: print("WARN: Read-only filesystem. Cannot update ignored.yml")
-                    else: print(f"Error writing ignored.yml: {e}")
+                StorageEngine._set_config_key('ignored_recipes', existing)
                     
             return True
         except Exception as e:
@@ -697,50 +704,80 @@ class StorageEngine:
     @staticmethod
     def get_preferences():
         """Load user ingredient preferences."""
-        try:
-            pref_path = Path('data/preferences.yml')
-            if pref_path.exists():
-                with open(pref_path, 'r') as f:
-                    return yaml.safe_load(f) or {}
-            return {}
-        except Exception as e:
-            print(f"Error loading preferences: {e}")
-            return {}
+        # TD-007 FIX: Use DB config instead of local file
+        return StorageEngine._get_config_key('preferences') or {}
 
     @staticmethod
     def save_preference(ingredient, brand_or_note):
         """Save a user preference for an ingredient."""
-        if not IS_SERVICE_ROLE:
-            print("WARNING: Sketchy write without Service Role")
-            # raise Exception("SUPABASE_SERVICE_ROLE_KEY is missing. Cannot write to database.")
-            # Preferences are currently file-based fallback mostly, but let's be safe or strict?
-            # The current impl uses FILE based preferences (lines 586+).
-            # So actually, we don't need the DB check here for the current file implementation.
-            # But wait, looking at the code...
+        # TD-007 FIX: Use DB config instead of local file
         try:
-            pref_path = Path('data/preferences.yml')
-            current = {}
-            if pref_path.exists():
-                with open(pref_path, 'r') as f:
-                    current = yaml.safe_load(f) or {}
-            
-            # Simple Key-Value for now: "Milk" -> "Oatly"
-            # Normalize key
+            current = StorageEngine._get_config_key('preferences') or {}
             key = ingredient.lower().strip()
             current[key] = brand_or_note
-            
-            try:
-                with open(pref_path, 'w', encoding='utf-8') as f:
-                    yaml.dump(current, f)
-            except OSError as e:
-                if e.errno == 30: 
-                    print("WARN: Read-only filesystem. Cannot update preferences.yml")
-                else:
-                    print(f"Error writing preferences.yml: {e}")
+            StorageEngine._set_config_key('preferences', current)
             return True
         except Exception as e:
             print(f"Error saving preference: {e}")
             return False
+    
+    @staticmethod
+    def _get_config_key(key):
+        """Helper to get a specific key from households.config."""
+        if not supabase:
+            # Fallback to local file for local dev
+            local_path = Path(f'data/{key}.yml')
+            if local_path.exists():
+                try:
+                    with open(local_path, 'r') as f:
+                        return yaml.safe_load(f)
+                except:
+                    pass
+            return None
+        
+        try:
+            h_id = get_household_id()
+            query = supabase.table("households").select("config").eq("id", h_id)
+            res = execute_with_retry(query)
+            if res.data and len(res.data) > 0:
+                config = res.data[0].get('config') or {}
+                return config.get(key)
+        except Exception as e:
+            print(f"Error getting config key {key}: {e}")
+        return None
+    
+    @staticmethod
+    def _set_config_key(key, value):
+        """Helper to set a specific key in households.config."""
+        if not supabase or not IS_SERVICE_ROLE:
+            # Fallback to local file for local dev
+            try:
+                local_path = Path(f'data/{key}.yml')
+                local_path.parent.mkdir(parents=True, exist_ok=True)
+                with open(local_path, 'w', encoding='utf-8') as f:
+                    yaml.dump(value, f)
+            except OSError as e:
+                if e.errno == 30:
+                    print(f"WARN: Read-only filesystem. Cannot update {key}.yml")
+            return
+        
+        try:
+            h_id = get_household_id()
+            
+            # Fetch current config to merge
+            query = supabase.table("households").select("config").eq("id", h_id)
+            res = execute_with_retry(query)
+            
+            current_config = {}
+            if res.data and len(res.data) > 0:
+                current_config = res.data[0].get('config') or {}
+            
+            current_config[key] = value
+            
+            query = supabase.table("households").update({"config": current_config}).eq("id", h_id)
+            execute_with_retry(query)
+        except Exception as e:
+            print(f"Error setting config key {key}: {e}")
 
     @staticmethod
     def get_config():

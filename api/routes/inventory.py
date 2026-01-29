@@ -52,48 +52,11 @@ def add_inventory():
                 'category': 'leftovers' 
             }
 
-        # Deduplication Logic: Check if exists
-        current_inv = StorageEngine.get_inventory()
-        # Map category to inventory key
-        inv_key_map = {
-            'fridge': 'fridge',
-            'pantry': 'pantry',
-            'meals': 'freezer', # Special handling needed as freezer is dict
-            'frozen_ingredient': 'freezer',
-            'freezer_backup': 'freezer',
-            'freezer_ingredient': 'freezer',
-            'leftovers': 'fridge'
-        }
-        
-        inv_key = inv_key_map.get(category)
-        existing_item = None
-        
-        if inv_key == 'freezer':
-            # Check backups or ingredients
-            if category == 'meals':
-                existing_item = next((x for x in current_inv.get('freezer', {}).get('backups', []) if x.get('meal') == item), None)
-            else:
-                existing_item = next((x for x in current_inv.get('freezer', {}).get('ingredients', []) if x.get('item') == item), None)
-        elif inv_key:
-            existing_item = next((x for x in current_inv.get(inv_key, []) if x.get('item') == item), None)
-            
-        if existing_item:
-            # Merge/Increment
-            current_qty = existing_item.get('quantity') or existing_item.get('servings', 1)
-            # Default increment is 1 (or 4 for meals, based on original logic?)
-            # Logic: If quick-adding via "Add", usually implies adding 1 unit/batch
-            increment = 4 if category == 'meals' else 1
-            new_qty = int(current_qty) + increment
-            
-            if category == 'meals':
-                updates['quantity'] = new_qty # mapped to servings in storage
-            else:
-                updates['quantity'] = new_qty
-            
-            # Keep existing unit
-            if 'unit' in existing_item:
-                updates['unit'] = existing_item['unit']
-
+        # BUG-005 FIX: Removed redundant full inventory fetch.
+        # StorageEngine.update_inventory_item handles deduplication internally
+        # via a targeted query (SELECT by household_id + category + item).
+        # If item exists, it merges the updates. If not, it inserts.
+        # This avoids fetching the entire inventory for every add operation.
         StorageEngine.update_inventory_item(db_category, item, updates)
         
         # Legacy: Still invalidate cache if any

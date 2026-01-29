@@ -235,6 +235,19 @@ tags: ["not meal", "missing ingredients", "missing instructions"]
 """
             for ing in ing_list:
                 markdown_content += f"- {ing}\n"
+            
+            # TD-012 FIX: Auto-populate Prep Tasks using heuristic generator
+            try:
+                from scripts.generate_prep_steps import get_prep_tasks
+                prep_tasks = get_prep_tasks(markdown_content)
+                if prep_tasks:
+                    markdown_content += "\n## Prep Steps\n"
+                    for task in prep_tasks:
+                        markdown_content += f"- {task}\n"
+                    # Also store in metadata for direct DB access
+                    metadata['prep_steps'] = prep_tasks
+            except Exception as e:
+                print(f"WARNING: Failed to auto-generate prep tasks: {e}")
                 
             markdown_content += f"\n## Instructions\n{instructions}\n"
             

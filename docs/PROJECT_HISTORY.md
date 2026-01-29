@@ -1256,3 +1256,34 @@ Understanding when to use each is fundamental to frontend development. Most bugs
   - **Seamless Mode Switching:** Updated `RecipeDetailClientWrapper` to toggle between "View", "Edit", and "Cooking" modes instantly, using `router.refresh()` to propagate server-side updates.
 
 **Learning:** aligning the *editor* UI with the *viewer* UI minimizes cognitive dissonance. If the viewer separates "Prep" from "Steps", the editor must enforce that separation to ensure data quality. Using Markdown as the single source of truth (synced to DB) simplifies the mental model compared to split YAML/Text files.
+
+### Phase 34: Strategic Technical Debt Cleanup (2026-01-29) ✅ Complete
+
+**Goal:** Strengthen the foundation by addressing performance bottlenecks, architectural complexity, and test coverage gaps.
+
+**Key Achievements:**
+
+1. **Service Layer Extraction (TD-009):**
+   - **Problem:** `api/routes/meals.py` grew into a 1000+ line monolith with 250+ lines devoted to a single logging function (`log_meal`).
+   - **Solution:** Created `api/services/meal_service.py` and extracted 6 high-complexity logical blocks (dinner finding, status parsing, daily feedback, inventory updates).
+   - **Result:** Reduced `log_meal` by ~80 lines and improved testability through granular service helpers.
+
+2. **Multi-Layer Performance Caching (TD-006, TD-008):**
+   - **Problem:** Repeated expensive operations (reading MD files for prep tasks, scanning 20+ weeks of history for pending recipes) were slowing down the Dashboard.
+   - **Solution:** 
+     - **LRU Cache:** Added to `get_prep_tasks` with content-hash keys.
+     - **TTL Cache:** Added to `get_pending_recipes` (5-minute TTL per household).
+   - **Result:** Dashboard load times stabilized, particularly for large history datasets.
+
+3. **Integration Test Hardening (TD-010):**
+   - **Problem:** Core integration tests (`test_api_perf.py`, `test_backend.py`) were failing due to outdated file-based caching assumptions and missing Supabase mocks.
+   - **Solution:** Rewrote 7 tests with proper `StorageEngine` mocking and updated assertions to match the new Supabase-first architecture.
+   - **Result:** Restored 100% pass rate (13/13) for backend and performance suites.
+
+4. **Productivity Loops (TD-012, TD-011):**
+   - **Problem:** Recipe import was leaving "Prep Steps" empty, requiring manual entry even when content was available.
+   - **Solution:** Integrated `get_prep_tasks` directly into the ingestion pipeline (`capture_recipe`).
+   - **UX:** Improved the `ImportRecipeModal` with emerald-themed animated save buttons and consistent text sizing.
+
+**Learning:** Technical debt isn't just "dirty code"—it's a drag on feature velocity. By spending one high-intensity session on cleanup, we restored CI/CD confidence and made the core logging logic (the most used part of the app) readable again.
+

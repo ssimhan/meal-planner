@@ -77,7 +77,8 @@ export default function ImportRecipeModal({ isOpen, onClose, onSuccess }: Import
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-teal-950/40 backdrop-blur-md animate-in fade-in duration-300">
-            <div className="bg-[var(--bg-card)] w-full max-w-4xl rounded-sm shadow-2xl overflow-hidden border-2 border-[var(--accent-green)] flex flex-col max-h-[90vh]">
+            {/* TD-011 FIX: max-h-[80vh] -> max-h-[85vh] + better flex layout */}
+            <div className="bg-[var(--bg-card)] w-full max-w-4xl rounded-sm shadow-2xl overflow-hidden border-2 border-[var(--accent-green)] flex flex-col max-h-[85vh]">
 
                 {/* Header */}
                 <div className="p-6 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)] flex justify-between items-center">
@@ -128,7 +129,7 @@ export default function ImportRecipeModal({ isOpen, onClose, onSuccess }: Import
                             </div>
                         </form>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 min-h-[400px]">
                             {/* Left Column: Meta & Ingredients */}
                             <div className="space-y-6 flex flex-col h-full">
                                 <div>
@@ -143,12 +144,13 @@ export default function ImportRecipeModal({ isOpen, onClose, onSuccess }: Import
                                         onChange={(e) => setName(e.target.value)}
                                     />
                                 </div>
-                                <div className="flex-1 flex flex-col">
+                                {/* TD-011 FIX: Added min-h-[250px] to prevent collapse */}
+                                <div className="flex-1 flex flex-col min-h-[250px]">
                                     <label className="block text-xs font-black mb-2 uppercase tracking-[0.2em] text-[var(--accent-sage)]">
                                         Ingredients
                                     </label>
                                     <textarea
-                                        className="flex-1 w-full p-4 rounded-sm bg-white border border-[var(--border-subtle)] focus:border-[var(--accent-green)] outline-none resize-none font-mono text-sm leading-relaxed"
+                                        className="flex-1 w-full p-4 rounded-sm bg-white border border-[var(--border-subtle)] focus:border-[var(--accent-green)] outline-none resize-none font-mono text-sm leading-relaxed min-h-[200px]"
                                         value={ingredients}
                                         onChange={(e) => setIngredients(e.target.value)}
                                         placeholder="- 1 cup flour..."
@@ -157,12 +159,13 @@ export default function ImportRecipeModal({ isOpen, onClose, onSuccess }: Import
                             </div>
 
                             {/* Right Column: Instructions */}
-                            <div className="flex flex-col h-full">
+                            {/* TD-011 FIX: Added min-h-[250px] to prevent collapse */}
+                            <div className="flex flex-col h-full min-h-[250px]">
                                 <label className="block text-xs font-black mb-2 uppercase tracking-[0.2em] text-[var(--accent-sage)]">
                                     Instructions
                                 </label>
                                 <textarea
-                                    className="flex-1 w-full p-4 rounded-sm bg-white border border-[var(--border-subtle)] focus:border-[var(--accent-green)] outline-none resize-none leading-relaxed"
+                                    className="flex-1 w-full p-4 rounded-sm bg-white border border-[var(--border-subtle)] focus:border-[var(--accent-green)] outline-none resize-none leading-relaxed min-h-[280px]"
                                     value={instructions}
                                     onChange={(e) => setInstructions(e.target.value)}
                                     placeholder="1. Preheat oven..."
@@ -174,19 +177,21 @@ export default function ImportRecipeModal({ isOpen, onClose, onSuccess }: Import
 
                 {/* Footer Actions (Verify Step Only) */}
                 {step === 'verify' && (
-                    <div className="p-6 border-t border-[var(--border-subtle)] bg-[var(--bg-secondary)] flex justify-end gap-4">
+                    <div className="p-6 border-t border-[var(--border-subtle)] bg-[var(--bg-secondary)] flex justify-between items-center gap-4">
                         <button
                             onClick={() => setStep('input')}
                             className="px-6 py-3 font-bold uppercase tracking-wide text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
                         >
-                            Back
+                            ← Back
                         </button>
+                        {/* TD-011 FIX: Made Save button MUCH more prominent */}
                         <button
                             onClick={handleSave}
                             disabled={isLoading}
-                            className="px-8 py-3 bg-[var(--accent-green)] text-white font-black uppercase tracking-widest rounded-sm shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 flex items-center gap-2"
+                            className="px-10 py-4 bg-[var(--accent-green)] text-white font-black text-lg uppercase tracking-widest rounded-sm shadow-lg hover:shadow-2xl hover:-translate-y-1 hover:scale-105 transition-all disabled:opacity-50 flex items-center gap-3 ring-4 ring-[var(--accent-green)]/30 animate-pulse"
+                            style={{ animationDuration: '2s' }}
                         >
-                            {isLoading ? <Loader2 className="animate-spin w-5 h-5" /> : <><CheckCircle className="w-5 h-5" /> Save to Cookbook</>}
+                            {isLoading ? <Loader2 className="animate-spin w-6 h-6" /> : <><CheckCircle className="w-6 h-6" /> Save to Cookbook</>}
                         </button>
                     </div>
                 )}

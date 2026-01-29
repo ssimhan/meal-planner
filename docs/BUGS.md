@@ -1,7 +1,7 @@
 # Bug Tracking & Technical Debt
 
-**Last Updated:** 2026-01-26
-**Current Phase:** 30 (Multi-Tenant Architecture)
+**Last Updated:** 2026-01-29
+**Current Phase:** 32 (Bug Cleanup)
 
 ---
 
@@ -19,7 +19,7 @@
 
 **Must be 0 before phase completion.**
 
-**Count: 3** 
+**Count: 0** ✅
 
 | ID | Area | Description | Impact | Effort | Notes |
 |----|------|-------------|--------|--------|-------|
@@ -27,9 +27,9 @@
 | BUG-002 | Shopping List | Items purchased in list don't sync to inventory. | High | 2hr | ✅ Fixed with category inference. |
 | BUG-003 | Management | Meal defaults don't make sense for multiple households. | Medium | 1hr | ✅ Removed hardcoded weekend defaults. |
 | BUG-004 | Roadmap | Review future roadmap phases (35-39) for multi-household support. | Medium | 2hr | ✅ Completed review. |
-| BUG-005 | Inventory | `add_inventory` has redundant whole-inventory fetch check. | Low | 1hr | Slows down checkout on large inventories. |
-| BUG-006 | Auth | Hardcoded household ID fallback in `require_auth` hides profile gaps. | Medium | 1hr | Should probably redirect to onboarding instead. |
-| BUG-007 | Week View | Replace button (🔄) persists in View Mode after exiting Edit Mode. | Low | 1hr | State management issue in `WeekViewTable.tsx` - `viewState.editMode` not properly toggled. |
+| BUG-005 | Inventory | `add_inventory` has redundant whole-inventory fetch check. | Low | 1hr | ✅ Fixed: Removed redundant fetch, uses targeted query. |
+| BUG-006 | Auth | Hardcoded household ID fallback in `require_auth` hides profile gaps. | Medium | 1hr | ✅ Fixed: Now returns 403 with `PROFILE_INCOMPLETE` code. |
+| BUG-007 | Week View | Replace button (🔄) persists in View Mode after exiting Edit Mode. | Low | 1hr | ✅ Fixed: State closure race condition in editMode toggle. |
 
 ---
 
@@ -43,14 +43,14 @@
 | TD-002 | Recipes | Standardize ingredients (e.g. tamarind pulp -> concentrate, typos). | Low | 2hr | ✅ Bulk fixed 73 recipes in phase 32. |
 | TD-003 | Recipes | Mashed ingredient quantities (e.g. 1onion -> 1 onion). | Low | 1hr | ✅ Audited in phase 32 (0 found). |
 | TD-004 | Recipes | Redundant cuisine tags (italian, mexican, etc). | Low | 1hr | ✅ Bulk fixed 73 recipes in phase 32. |
-| TD-005 | Architecture | GroceryMapper uses local JSON (`data/store_map.json`). | High | 3hr | Scaling bottleneck for multi-household Vercel. |
-| TD-006 | Performance | Heuristic prep-task generation reads MD files on every request. | Medium | 2hr | Implement caching for `get_prep_tasks` results. |
-| TD-007 | Persistence | `StorageEngine` writes to local YAML/JSON in some methods. | High | 2hr | Fails on Vercel; should be 100% Supabase-backed. |
-| TD-008 | Performance | `get_pending_recipes` is a heavy, unoptimized scan. | Medium | 2hr | Should be an async job or computed field. |
-| TD-009 | Architecture | Large route files (`meals.py`) contain complex business logic. | Medium | 4hr | Refactor to service layers or utility classes. |
-| TD-010 | Testing | Integration tests need proper mocking and test data fixtures. | Medium | 4hr | 5 tests in `test_api_perf.py` and `test_backend.py` fail due to missing test data and lack of Supabase mocking. Need to mock `StorageEngine` and create test fixtures. |
-| TD-011 | UX | Import preview modal is too small and "Save" button is hard to find. | Low | 1hr | Modal needs better sizing (max-h-[80vh]) and prominent CTA button styling. |
-| TD-012 | Recipes | Recipe import doesn't auto-populate Prep Tasks section. | Medium | 3hr | Recipe-Scrapers returns flat instruction list. Need AI/heuristic parsing to separate prep from cooking steps. |
+| TD-005 | Architecture | GroceryMapper uses local JSON (`data/store_map.json`). | High | 3hr | ✅ Fixed: Migrated to Supabase `households.config.store_preferences`. |
+| TD-006 | Performance | Heuristic prep-task generation reads MD files on every request. | Medium | 2hr | ✅ Fixed: Added LRU cache with content hash key for `get_prep_tasks`. |
+| TD-007 | Persistence | `StorageEngine` writes to local YAML/JSON in some methods. | High | 2hr | ✅ Fixed: Migrated `ignored_recipes`, `preferences` to DB config. |
+| TD-008 | Performance | `get_pending_recipes` is a heavy, unoptimized scan. | Medium | 2hr | ✅ Fixed: Added TTL-based caching (5 min) per household. |
+| TD-009 | Architecture | Large route files (`meals.py`) contain complex business logic. | Medium | 4hr | ✅ Fixed: Extracted 6 helpers to `api/services/meal_service.py`. Reduced `log_meal` from 258 to ~180 lines. |
+| TD-010 | Testing | Integration tests need proper mocking and test data fixtures. | Medium | 4hr | ✅ Fixed: Rewrote `test_api_perf.py` and `test_backend.py` with proper mocking and assertions. |
+| TD-011 | UX | Import preview modal is too small and "Save" button is hard to find. | Low | 1hr | ✅ Fixed: Added min-height on textareas, prominent animated Save button. |
+| TD-012 | Recipes | Recipe import doesn't auto-populate Prep Tasks section. | Medium | 3hr | ✅ Fixed: Added inline `get_prep_tasks()` call in `capture_recipe()`. |
 
 **Count: 0** ✅
 

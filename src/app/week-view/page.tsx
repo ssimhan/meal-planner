@@ -465,12 +465,19 @@ function WeekViewContent() {
               </button>
               <button
                 onClick={() => {
-                  setViewState(prev => ({
-                    ...prev,
-                    editMode: !prev.editMode,
-                    isSwapMode: false // Exclusive modes
-                  }));
-                  if (viewState.editMode) setSelectedItems([]);
+                  // BUG-007 FIX: Clear selected items when EXITING edit mode.
+                  // We must check prev.editMode (the value BEFORE toggle) to know if we're exiting.
+                  setViewState(prev => {
+                    if (prev.editMode) {
+                      // We're exiting edit mode - clear selections
+                      setSelectedItems([]);
+                    }
+                    return {
+                      ...prev,
+                      editMode: !prev.editMode,
+                      isSwapMode: false // Exclusive modes
+                    };
+                  });
                 }}
                 className={`btn-secondary flex items-center gap-2 ${viewState.editMode ? 'bg-amber-50 border-amber-200 text-amber-900' : ''}`}
               >

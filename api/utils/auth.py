@@ -52,10 +52,14 @@ def require_auth(f):
                 request.household_id = profile_res.data[0].get('household_id')
                 print(f"AUTH SUCCESS: User {user_res.user.email} -> Household {request.household_id}")
             else:
-                print(f"AUTH WARNING: User {user_res.user.email} has no profile. Using Default Household fallback.")
-                # Fallback for now until Onboarding Block 3 is built
-                # This prevents "None" errors during transition
-                request.household_id = "00000000-0000-0000-0000-000000000001"
+                # BUG-006 FIX: Return 403 instead of using hardcoded fallback.
+                # This surfaces the profile gap so the frontend can redirect to onboarding.
+                print(f"AUTH DENIED: User {user_res.user.email} has no profile/household.")
+                return jsonify({
+                    "status": "error", 
+                    "message": "Profile setup incomplete. Please complete onboarding.",
+                    "code": "PROFILE_INCOMPLETE"
+                }), 403
             
         except Exception as e:
             print(f"Auth verification error: {str(e)}")

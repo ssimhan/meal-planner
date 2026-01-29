@@ -10,6 +10,15 @@ from scripts.workflow.actions import create_new_week
 from api.utils import storage, invalidate_cache
 from api.utils.auth import require_auth
 from scripts import log_execution
+# TD-009: Import extracted service functions
+from api.services.meal_service import (
+    parse_made_status,
+    find_or_create_dinner,
+    update_dinner_feedback,
+    update_daily_feedback,
+    update_inventory_from_meal,
+    auto_add_recipe_from_meal,
+)
 
 meals_bp = Blueprint('meals', __name__)
 
@@ -507,33 +516,21 @@ def log_meal():
                      target_dinner = d
                      break
              
-             if not target_dinner:
-                 # Try to find planned meal for this day to initialize correctly
-                 planned_recipe_ids = ['unplanned_meal']
-                 if active_plan_data and 'dinners' in active_plan_data:
-                     for pd in active_plan_data['dinners']:
-                         if pd.get('day') == target_day:
-                             ids = pd.get('recipe_ids')
-                             if not ids and pd.get('recipe_id'): ids = [pd.get('recipe_id')]
-                             planned_recipe_ids = ids if ids else ['unplanned_meal']
-                             break
-                 
-                 target_dinner = {'day': target_day, 'recipe_ids': planned_recipe_ids, 'cuisine': 'various', 'vegetables': []}
-                 history_week.setdefault('dinners', []).append(target_dinner)
+             # TD-009: Use find_or_create_dinner helper
+             target_dinner, was_created = find_or_create_dinner(history_week, target_day, active_plan_data)
 
-             # Update execution data
+             # TD-009: Use parse_made_status helper for consistent status parsing
              if confirm_day:
                  # Only update if not already marked
                  if target_dinner.get('made') is None:
                     target_dinner['made'] = True
-             elif str(made).lower() in ('yes', 'true', '1', 'y'): target_dinner['made'] = True
-             elif str(made).lower() in ('no', 'false', '0', 'n'): target_dinner['made'] = False
-             elif str(made).lower() in ('freezer', 'backup'): target_dinner['made'] = 'freezer_backup'
-             elif str(made).lower() == 'outside_meal' or str(made).lower() == 'ate_out': target_dinner['made'] = 'outside_meal'
-             elif str(made).lower() == 'leftovers': 
-                 target_dinner['made'] = 'leftovers'
-                 target_dinner['actual_meal'] = "Leftovers"
-             else: target_dinner['made'] = made
+             else:
+                 parsed_status = parse_made_status(made)
+                 if parsed_status == 'leftovers':
+                     target_dinner['made'] = 'leftovers'
+                     target_dinner['actual_meal'] = "Leftovers"
+                 elif parsed_status is not None:
+                     target_dinner['made'] = parsed_status
         
         print(f"DEBUG: Target dinner updated: {target_dinner}")
 
@@ -574,90 +571,18 @@ def log_meal():
             kids_lunch_needs_fix is not None or adult_lunch_needs_fix is not None or
             (prep_completed and len(prep_completed) > 0) or confirm_day):
             
-            day_fb = history_week.setdefault('daily_feedback', {}).setdefault(target_day, {})
-            
-            if confirm_day:
-                # Mark all as made if not already set
-                if 'school_snack_made' not in day_fb: day_fb['school_snack_made'] = True
-                if 'home_snack_made' not in day_fb: day_fb['home_snack_made'] = True
-                if 'kids_lunch_made' not in day_fb: day_fb['kids_lunch_made'] = True
-                if 'adult_lunch_made' not in day_fb: day_fb['adult_lunch_made'] = True
-            
-            if school_snack_feedback is not None: day_fb['school_snack'] = school_snack_feedback
-            if school_snack_made is not None: day_fb['school_snack_made'] = school_snack_made
-            if home_snack_feedback is not None: day_fb['home_snack'] = home_snack_feedback
-            if home_snack_made is not None: day_fb['home_snack_made'] = home_snack_made
-            if kids_lunch_feedback is not None: day_fb['kids_lunch'] = kids_lunch_feedback
-            if kids_lunch_made is not None: day_fb['kids_lunch_made'] = kids_lunch_made
-            if adult_lunch_feedback is not None: day_fb['adult_lunch'] = adult_lunch_feedback
-            if adult_lunch_made is not None: day_fb['adult_lunch_made'] = adult_lunch_made
-            
-            if school_snack_needs_fix is not None: day_fb['school_snack_needs_fix'] = school_snack_needs_fix
-            if home_snack_needs_fix is not None: day_fb['home_snack_needs_fix'] = home_snack_needs_fix
-            if kids_lunch_needs_fix is not None: day_fb['kids_lunch_needs_fix'] = kids_lunch_needs_fix
-            if adult_lunch_needs_fix is not None: day_fb['adult_lunch_needs_fix'] = adult_lunch_needs_fix
+            # TD-009: Use update_daily_feedback helper
+            update_daily_feedback(history_week, target_day, data, confirm_day)
 
-            if prep_completed:
-                 existing = set(day_fb.get('prep_completed', []))
-                 for t in prep_completed:
-                     if t not in existing:
-                         day_fb.setdefault('prep_completed', []).append(t)
-                         existing.add(t)
-
-        if not is_feedback_only:
-            # Freezer/Inventory updates
-            if made_2x:
-                target_dinner['made_2x_for_freezer'] = True
-                ids = target_dinner.get('recipe_ids') or []
-                if not ids and target_dinner.get('recipe_id'): ids = [target_dinner.get('recipe_id')]
-                first_name = ids[0].replace('_', ' ').title() if ids else 'Unknown'
-                storage.StorageEngine.update_inventory_item('freezer_backup', first_name, updates={'servings': 4, 'frozen_date': datetime.now().strftime('%Y-%m-%d')})
-            
-            if freezer_meal and target_dinner.get('made') == 'freezer_backup':
-                target_dinner['freezer_used'] = {'meal': freezer_meal, 'frozen_date': 'Unknown'}
-                storage.StorageEngine.update_inventory_item('freezer_backup', freezer_meal, delete=True)
-
-            if outside_leftover_name:
-                qty = outside_leftover_qty or 1
-                storage.StorageEngine.update_inventory_item('fridge', f"Leftover {outside_leftover_name}", updates={'quantity': qty, 'unit': 'serving', 'type': 'meal'})
-
-            if data.get('leftovers_created') and data.get('leftovers_created') != 'None':
-                qty_str = data.get('leftovers_created')
-                qty = 1
-                if '1' in qty_str: qty = 1
-                elif '2' in qty_str: qty = 2
-                elif 'Batch' in qty_str: qty = 4
-                
-                ids = target_dinner.get('recipe_ids') or []
-                if not ids and target_dinner.get('recipe_id'): ids = [target_dinner.get('recipe_id')]
-                first_name = ids[0].replace('_', ' ').title() if ids else 'Unknown'
-                
-                storage.StorageEngine.update_inventory_item('fridge', f"Leftover {first_name}", updates={'quantity': qty, 'unit': 'serving', 'type': 'meal'})
+            # TD-009: Use update_inventory_from_meal helper
+            update_inventory_from_meal(target_dinner, data, h_id)
 
             log_execution.calculate_adherence(history_week)
 
             # Handle "Add as Recipe" request
             if request_recipe and actual_meal:
-                try:
-                    recipe_id = actual_meal.lower().replace(' ', '_')
-                    # Check if it exists first
-                    query = storage.supabase.table("recipes").select("id").eq("household_id", h_id).eq("id", recipe_id)
-                    existing = storage.execute_with_retry(query)
-                    if not existing.data:
-                        query = storage.supabase.table("recipes").insert({
-                            "id": recipe_id,
-                            "household_id": h_id,
-                            "name": actual_meal,
-                            "metadata": {
-                                "cuisine": "Indian" if "rice" in actual_meal.lower() or "sambar" in actual_meal.lower() else "unknown",
-                                "meal_type": "dinner",
-                                "effort_level": "normal"
-                            },
-                            "content": f"# {actual_meal}\n\nAdded automatically from meal correction."
-                        })
-                        storage.execute_with_retry(query)
-                except Exception as re:
-                    print(f"Error auto-adding recipe: {re}")
+                # TD-009: Use auto_add_recipe_from_meal helper
+                auto_add_recipe_from_meal(actual_meal, h_id)
 
         # Save to DB
         storage.StorageEngine.update_meal_plan(week_str, history_data=history_week)

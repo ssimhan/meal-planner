@@ -31,7 +31,11 @@ Use this workflow to execute a structured implementation plan step-by-step.
 3. **Subagent Handoff (Optional)**
    - If a task is complex, you may spawn a subagent to handle the RED-GREEN-REFACTOR cycle, but you MUST review its work against the plan's success criteria.
 
-4. **Progress Tracking**
+4. **Technical Debt Discovery**
+   - As you implement, actively look for existing technical debt, complex code that needs refactoring, or missing edge case handling.
+   - If found, and it's out of scope for the current task, IMMEDIATELY add it to `BUGS.md` or the appropriate technical debt tracker.
+
+5. **Progress Tracking**
    - Check off tasks in the plan file as they are completed.
    - Update `PROJECT_HISTORY.md` at the end of the session.
 

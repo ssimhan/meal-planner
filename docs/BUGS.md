@@ -161,3 +161,5 @@ Before merging to `main`:
 - Verify both tables are empty (for current phase items)
 - Block merge to main if bugs remain
 - Suggest de-scoping features if needed to hit quality gate
+| TD-010 | Testing | Integration tests need proper mocking and test data fixtures. | Medium | 4hr | 5 tests in `test_api_perf.py` and `test_backend.py` fail due to missing test data and lack of Supabase mocking. Need to mock `StorageEngine` and create test fixtures. |
+

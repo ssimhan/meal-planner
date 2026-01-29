@@ -40,7 +40,7 @@
 
 - **Block 1: Member Management (~4 hrs)**
   - [ ] **Settings:** capability to define household members and individual preferences.
-  - [ ] **Fix:** Remove or re-scope legacy "Meal Defaults" that clash in multi-household setups (MG-001).
+  - [ ] **Fix:** Remove or re-scope legacy "Meal Defaults" that clash in multi-household setups (BUG-003).
 - **Block 2: Per-Member Feedback Loop (~4 hrs)**
   - [ ] **UI:** Add "Who liked/disliked this?" toggles during meal confirmation.
   - [ ] **Analytics:** Implement basic trend identification for dish popularity across the household.
@@ -51,17 +51,17 @@
 ### Phase 35: Frictionless Operations & Hygiene
 **Goal:** Eliminate manual friction in shopping and prep workflows.
 
-- **Block 1: Smart Category Inference (TD-003) (~3 hrs)**
+- **Block 1: Smart Category Inference (TD-001) (~3 hrs)**
   - [ ] **Logic:** Implement `GroceryMapper.infer_category()` to auto-assign items to Fridge/Pantry/Freezer based on inventory or keywords.
 - **Block 2: Closed-Loop Shopping (~4 hrs)**
-  - [ ] **Sync:** Ensure marking an item as "Purchased" in the shopping list adds it to the correct inventory category (SHOP-001).
+  - [ ] **Sync:** Ensure marking an item as "Purchased" in the shopping list adds it to the correct inventory category (BUG-002).
   - [ ] **Persistence:** Automatically save store preference/mapping during shopping (Block B3).
 - **Block 3: Recipe-to-List Automation (~3 hrs)**
   - [ ] **UI:** Add "Add Ingredients to Shopping List" button to the Recipe Detail wrapper.
   - [ ] **Logic:** Implement deduplication/checking against current inventory when adding.
 - **Block 4: Prep & Data Hygiene (~4 hrs)**
   - [ ] **UI:** Implement a more logical, editable prep time slot selector for varied household schedules.
-  - [ ] **Normalization:** Batch fix ingredient typos (TD-004), mashed quantities (TD-005), and remove redundant tags (TD-006).
+  - [ ] **Normalization:** Batch fix ingredient typos (TD-002), mashed quantities (TD-003), and remove redundant tags (TD-004).
 
 ### Phase 36: Multimodal Inventory (The Future)
 **Goal:** Low-friction inventory tracking.

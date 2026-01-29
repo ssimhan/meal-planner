@@ -23,10 +23,10 @@
 
 | ID | Area | Description | Impact | Effort | Notes |
 |----|------|-------------|--------|--------|-------|
-| PLAN-001 | Replan | Prep tasks don't refresh after a replan. | High | 2hr | Needs to trigger `generate_prep_steps.py` after replan. |
-| SHOP-001 | Shopping List | Items purchased in list don't sync to inventory. | High | 2hr | Should trigger `add_to_inventory` logic. |
-| MG-001 | Management | Meal defaults don't make sense for multiple households. | Medium | 1hr | Consider removal or scoped per-household defaults. |
-| MG-002 | Roadmap | Review future roadmap phases (35-39) for multi-household support. | Medium | 2hr | Ensure all future features remain multi-tenant aware. |
+| BUG-001 | Replan | Prep tasks don't refresh after a replan. | High | 2hr | Needs to trigger `generate_prep_steps.py` after replan. |
+| BUG-002 | Shopping List | Items purchased in list don't sync to inventory. | High | 2hr | Should trigger `add_to_inventory` logic. |
+| BUG-003 | Management | Meal defaults don't make sense for multiple households. | Medium | 1hr | Consider removal or scoped per-household defaults. |
+| BUG-004 | Roadmap | Review future roadmap phases (35-39) for multi-household support. | Medium | 2hr | Ensure all future features remain multi-tenant aware. |
 
 ---
 
@@ -36,10 +36,10 @@
 
 | ID | Area | Description | Impact | Effort | Notes |
 |----|------|-------------|--------|--------|-------|
-| TD-003 | Smart Shopping | "I Have This" defaults to Pantry. Should infer category. | Low | 1hr | Hardcoded in `api/routes/groceries.py` |
-| TD-004 | Recipes | Standardize ingredients (e.g. tamarind pulp -> concentrate, typos). | Low | 2hr | Affects shopping list aggregation. |
-| TD-005 | Recipes | Mashed ingredient quantities (e.g. 1onion -> 1 onion). | Low | 1hr | Found in several .md recipe files. |
-| TD-006 | Recipes | Redundant cuisine tags (italian, mexican, etc). | Low | 1hr | Cuisine is already a dedicated field. |
+| TD-001 | Smart Shopping | "I Have This" defaults to Pantry. Should infer category. | Low | 1hr | Hardcoded in `api/routes/groceries.py` |
+| TD-002 | Recipes | Standardize ingredients (e.g. tamarind pulp -> concentrate, typos). | Low | 2hr | Affects shopping list aggregation. |
+| TD-003 | Recipes | Mashed ingredient quantities (e.g. 1onion -> 1 onion). | Low | 1hr | Found in several .md recipe files. |
+| TD-004 | Recipes | Redundant cuisine tags (italian, mexican, etc). | Low | 1hr | Cuisine is already a dedicated field. |
 
 **Count: 0** ✅
 

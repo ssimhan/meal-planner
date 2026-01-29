@@ -2,7 +2,7 @@
 description: Execute an approved implementation plan using subagents and TDD.
 ---
 
-# /implement
+# /build
 
 Use this workflow to execute a structured implementation plan step-by-step.
 
@@ -35,4 +35,4 @@ Use this workflow to execute a structured implementation plan step-by-step.
    - Check off tasks in the plan file as they are completed.
    - Update `PROJECT_HISTORY.md` at the end of the session.
 
-**Next Step**: Once all tasks are complete, use `/review` for the final quality check.
+**Next Step**: Once all tasks are complete, use `/code-review` for the final quality check.

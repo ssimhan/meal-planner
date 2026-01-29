@@ -2,7 +2,7 @@
 description: Create a detailed, TDD-first implementation plan from an approved design.
 ---
 
-# /design
+# /plan
 
 Use this workflow once a design has been approved to create a bite-sized, executable path forward.
 
@@ -43,6 +43,6 @@ Use this workflow once a design has been approved to create a bite-sized, execut
 
 ## Persistence
 - Save the plan to `docs/plans/YYYY-MM-DD-<feature-name>.md`.
-- Ask the user: "Ready to start implementation? Use `/implement`."
+- Ask the user: "Ready to start building? Use `/build`."
 
 **Internal Note**: Use the `test-driven-development` skill during implementation. For complex architecture, use `c4-architecture`. For deep research, use `gepetto`.

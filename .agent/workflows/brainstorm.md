@@ -38,4 +38,4 @@ Use this workflow BEFORE starting any creative work to turn ideas into fully for
    - Write the final design doc to `docs/plans/YYYY-MM-DD-<topic>-design.md`.
    - Update `PROJECT_HISTORY.md` to reflect the design phase.
 
-**Next Step**: Once design is approved, use `/design` to create an implementation plan.
+**Next Step**: Once design is approved, use `/plan` to create an implementation plan.

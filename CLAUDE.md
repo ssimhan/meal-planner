@@ -6,8 +6,8 @@ Use the following slash commands for common tasks:
 - `/add-bug`: Add a bug to the tracking table.
 - `/add-feature`: Add a feature request to the roadmap.
 - `/brainstorm`: Explore complex feature intent and constraints.
-- `/design`: Create TDD-first implementation plans.
-- `/implement`: Execute approved plans with subagents and TDD.
+- `/plan`: Create TDD-first implementation plans.
+- `/build`: Execute approved plans with subagents and TDD.
 - `/code-review`: Review newly built code for debt/risks.
 - `/closeout`: Update docs, commit, and push.
 

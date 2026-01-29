@@ -1287,3 +1287,12 @@ Understanding when to use each is fundamental to frontend development. Most bugs
 
 **Learning:** Technical debt isn't just "dirty code"—it's a drag on feature velocity. By spending one high-intensity session on cleanup, we restored CI/CD confidence and made the core logging logic (the most used part of the app) readable again.
 
+### Workflow Evolution: Plan & Build (2026-01-29) ✅ Complete
+
+**Goal:** Simplify the agentic development cycle terminology.
+
+- **Renamed Commands:** Legacy `/design` and `/implement` were renamed to **`/plan`** and **`/build`**.
+- **Rationale:** "Plan" and "Build" more accurately describe the human-agent mental model (first we decide the path, then we execute it).
+- **Global Sync:** Pushed these workflow improvements to the `claude-code-quickstart` repository to standardize all future projects with the new naming and the **Production Reliability Checklist**.
+
+

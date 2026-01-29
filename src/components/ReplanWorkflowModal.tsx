@@ -101,7 +101,7 @@ export default function ReplanWorkflowModal({
 
     const currentDay = pastDays[currentDayIndex];
     const currentDinner = status.week_data?.dinners?.find((d: any) => d.day === currentDay);
-    const dinnerName = currentDinner?.recipe_id?.replace(/_/g, ' ') || 'Unplanned';
+    const dinnerName = currentDinner?.recipe_ids?.[0]?.replace(/_/g, ' ') || 'Unplanned';
 
 
 
@@ -396,7 +396,7 @@ export default function ReplanWorkflowModal({
                                         <div className="space-y-2">
                                             {pastDays.length < days.length && days.slice(pastDays.length).map(day => {
                                                 const dinner = status.week_data?.dinners?.find((d: any) => d.day === day);
-                                                const mealName = dinner?.recipe_id?.replace(/_/g, ' ') || 'Unplanned';
+                                                const mealName = dinner?.recipe_ids?.[0]?.replace(/_/g, ' ') || 'Unplanned';
                                                 return (
                                                     <label key={day} className="flex items-center p-3 border border-gray-100 rounded-lg hover:bg-gray-50 cursor-pointer">
                                                         <input

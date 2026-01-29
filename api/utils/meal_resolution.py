@@ -38,22 +38,28 @@ def resolve_slot(plan_item, actual_item):
         else:
             # Plan exists and Actual exists (and not skipped)
             # Check for substitution
-            # We compare loosely based on recipe_id or name if available
-            plan_id = plan_item.get('recipe_id')
-            actual_id = actual_item.get('recipe_id') or actual_item.get('actual_meal')
             
-            # Normalize for comparison if possible, but keep it simple for now
-            # If actual explicitly says "actual_meal" string, it might differ from plan key
+            # Helper to normalize lists of IDs
+            def get_ids(item):
+                if not item: return set()
+                ids = item.get('recipe_ids')
+                if not ids and item.get('recipe_id'):
+                    ids = [item.get('recipe_id')]
+                # Also handle actual_meal names as IDs for loose matching
+                if not ids and item.get('actual_meal'):
+                    ids = [item.get('actual_meal')]
+                return {str(i).lower().replace('_', ' ') for i in (ids or [])}
+
+            plan_ids = get_ids(plan_item)
+            actual_ids = get_ids(actual_item)
             
             made_status = actual_item.get('made')
             
-            # Normalize names for comparison
-            p_name = (plan_id or '').lower().replace('_', ' ')
-            a_name = (str(actual_item.get('actual_meal') or actual_item.get('recipe_id') or '')).lower().replace('_', ' ')
-
             if made_status is True or str(made_status) == 'True':
                  # Check if actual meal differs significantly from plan
-                 if p_name and a_name and p_name != a_name and actual_item.get('actual_meal'):
+                 # Logic: If intersection of normalized IDs is empty, it's a substitution
+                 # Unless plan was empty/generic? 
+                 if plan_ids and actual_ids and not plan_ids.intersection(actual_ids):
                      adherence = ADHERENCE_STATES['SUBSTITUTED']
                  else:
                      adherence = ADHERENCE_STATES['ADHERED']

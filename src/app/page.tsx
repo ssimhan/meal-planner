@@ -35,7 +35,7 @@ function DraftPlanSummary({ wizardState }: { wizardState: any }) {
         {wizardState.selections.map((s: any, i: number) => (
           <div key={i} className="flex items-center gap-2 p-2 bg-[var(--bg-primary)] rounded border border-[var(--border-subtle)]">
             <span className="text-xs font-bold uppercase text-[var(--text-muted)] w-8">{s.day}</span>
-            <span className="text-sm truncate">{s.recipe_name || s.recipe_id?.replace(/_/g, ' ')}</span>
+            <span className="text-sm truncate">{s.recipe_name || s.recipe_ids?.[0]?.replace(/_/g, ' ')}</span>
           </div>
         ))}
       </div>
@@ -409,7 +409,7 @@ function DashboardContent() {
       status: status.today_lunch?.kids_lunch_made !== undefined ? (status.today_lunch?.kids_lunch_made ? 'done' : 'skipped') : undefined,
       logFlowProps: isLoggingEnabled ? kidsLunchProps : undefined,
       onAction: () => isLoggingEnabled && handleOpenLoggingModal(kidsLunchProps),
-      onFocus: status.today_lunch?.recipe_id ? () => handleOpenFocusMode(status.today_lunch!.recipe_id!, status.today_lunch!.recipe_name || "Kids Lunch") : undefined,
+      onFocus: status.today_lunch?.recipe_ids?.length ? () => handleOpenFocusMode(status.today_lunch!.recipe_ids![0], status.today_lunch!.recipe_name || "Kids Lunch") : undefined,
       feedbackProps: {
         feedbackType: "kids_lunch",
         currentFeedback: status.today_lunch?.kids_lunch_feedback,
@@ -463,10 +463,10 @@ function DashboardContent() {
 
     // Dinner
     const dinnerName = getDisplayName(
-      status.today_dinner?.recipe_id?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Nothing planned',
+      status.today_dinner?.recipe_ids?.map(id => id.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())).join(' + ') || 'Nothing planned',
       status.today_dinner?.actual_meal
     );
-    const dinnerProps = getLogProps('dinner', status.today_dinner?.recipe_id?.replace(/_/g, ' ') || 'Dinner', status.today_dinner);
+    const dinnerProps = getLogProps('dinner', status.today_dinner?.recipe_ids?.map(id => id.replace(/_/g, ' ')).join(' + ') || 'Dinner', status.today_dinner);
     timelineItems.push({
       title: "Dinner",
       time: "6:30 PM",
@@ -475,7 +475,7 @@ function DashboardContent() {
       status: status.today_dinner?.made !== undefined ? (status.today_dinner.made === true ? 'done' : 'skipped') : undefined,
       logFlowProps: isLoggingEnabled ? dinnerProps : undefined,
       onAction: () => isLoggingEnabled && handleOpenLoggingModal(dinnerProps),
-      onFocus: status.today_dinner?.recipe_id ? () => handleOpenFocusMode(status.today_dinner!.recipe_id, status.today_dinner!.recipe_id.replace(/_/g, ' ')) : undefined
+      onFocus: status.today_dinner?.recipe_ids?.length ? () => handleOpenFocusMode(status.today_dinner!.recipe_ids![0], status.today_dinner!.recipe_ids![0].replace(/_/g, ' ')) : undefined
     });
   }
 
@@ -510,14 +510,14 @@ function DashboardContent() {
             <StatCard label="Dinner Tonight" className="relative group transition-all duration-500 hover:ring-2 hover:ring-[var(--accent-primary)]/20">
               <div className="flex justify-between items-start mb-2">
                 <div className="text-xl font-bold text-[var(--text-primary)] line-clamp-2 pr-2">
-                  {status?.today_dinner?.recipe_id ? getDisplayName(
-                    status.today_dinner.recipe_id.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
+                  {status?.today_dinner?.recipe_ids?.length ? getDisplayName(
+                    status.today_dinner.recipe_ids.map(id => id.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())).join(' + '),
                     status.today_dinner.actual_meal
                   ) : 'Nothing planned'}
                 </div>
-                {status?.today_dinner?.recipe_id && (
+                {status?.today_dinner?.recipe_ids?.length && (
                   <button
-                    onClick={() => status?.today_dinner?.recipe_id && handleOpenFocusMode(status.today_dinner.recipe_id, status.today_dinner.recipe_id.replace(/_/g, ' '))}
+                    onClick={() => status?.today_dinner?.recipe_ids?.[0] && handleOpenFocusMode(status.today_dinner.recipe_ids[0], status.today_dinner.recipe_ids[0].replace(/_/g, ' '))}
                     className="p-2 rounded-full bg-[var(--accent-primary)] text-white shadow-lg shadow-[var(--accent-primary)]/20 hover:scale-110 active:scale-95 transition-all"
                     title="Start Focus Mode"
                   >

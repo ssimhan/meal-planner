@@ -1,32 +1,19 @@
 ---
-id: romesco_gnocchi
-name: Romesco Gnocchi
-categories:
-- Dinner
-- Italian
+tags: [dinner, italian, stovetop]
+source: {file: recipes/content/romesco_gnocchi.md, type: markdown}
 cuisine: italian
+main_veg: [garlic, pepper, spinach, tomato]
 meal_type: pasta_noodles
-effort_level: normal
-no_chop_compatible: false
-prep_time_minutes: null
-cook_time_minutes: null
-appliances:
-- stovetop
-main_veg:
-- garlic
-- pepper
-- spinach
-- tomato
-- tomatoe
+appliances: [stovetop]
+effort_level: medium
 avoid_contains: []
-source_url: null
-source_file: Romesco Gnocchi.html
+no_chop_compatible: false
 ---
 
 # Romesco Gnocchi
 
-### Ingredients
-- 1cuproasted almonds
+## Ingredients
+- 1 cup almonds
 - 2 garlic cloves
 - 15-ounce can fire-roasted diced tomatoes
 - 2largeroasted red peppers from a jar
@@ -44,8 +31,9 @@ source_file: Romesco Gnocchi.html
 ## Prep Steps
 - Mince garlic
 - Chop peppers
+- Roast almonds
 
-### Instructions
+## Instructions
 1. Bring a large saucepan of water to a boil, seasoned with about 1 tablespoon kosher salt.
 2. Make the gnocchi sauce: Peel the garlic. In a blender or food processor, process all ingredients until smooth. Taste and add additional seasonings if desired.
 3. Once the water is boiling, add the gnocchi and boil until they float, about 2 to 3 minutes.

@@ -361,7 +361,9 @@ def get_recent_recipes(history, lookback_weeks=3):
     # Get last N weeks
     for week in history['weeks'][-lookback_weeks:]:
         for dinner in week.get('dinners', []):
-            if 'recipe_id' in dinner:
+            if 'recipe_ids' in dinner:
+                recent.update(dinner['recipe_ids'])
+            elif 'recipe_id' in dinner:
                 recent.add(dinner['recipe_id'])
 
     return recent
@@ -582,7 +584,7 @@ def update_history(history_path, inputs, selected_dinners):
         if day in selected_dinners:
             recipe = selected_dinners[day]
             new_week['dinners'].append({
-                'recipe_id': recipe['id'],
+                'recipe_ids': [recipe['id']],
                 'cuisine': recipe.get('cuisine'),
                 'meal_type': recipe.get('meal_type'),
                 'day': day,

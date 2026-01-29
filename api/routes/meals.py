@@ -116,7 +116,7 @@ def generate_draft_route():
                 found = False
                 for dinner in history_week.get('dinners', []):
                     if dinner.get('day') == day_abbr:
-                        dinner['recipe_id'] = recipe_id
+                        dinner['recipe_ids'] = [recipe_id]
                         found = True
                         break
                 if not found:
@@ -127,7 +127,7 @@ def generate_draft_route():
             elif slot == 'lunch':
                 history_week.setdefault('lunches', {})
                 history_week['lunches'][day_abbr] = {
-                    'recipe_id': recipe_id,
+                    'recipe_ids': [recipe_id],
                     'recipe_name': selection.get('recipe_name') or recipe_id.replace('_', ' ').title(),
                     'prep_style': 'manual'
                 }
@@ -148,15 +148,15 @@ def generate_draft_route():
                 found = False
                 for dinner in history_week.get('dinners', []):
                     if dinner.get('day') == day:
-                        dinner['recipe_id'] = recipe_id
+                        dinner['recipe_ids'] = [recipe_id]
                         found = True
                         break
                 if not found:
-                    history_week.setdefault('dinners', []).append({'day': day, 'recipe_id': recipe_id})
+                    history_week.setdefault('dinners', []).append({'day': day, 'recipe_ids': [recipe_id]})
             elif slot == 'lunch':
                 history_week.setdefault('lunches', {})
                 history_week['lunches'][day] = {
-                    'recipe_id': recipe_id,
+                    'recipe_ids': [recipe_id],
                     'recipe_name': item,
                     'prep_style': 'leftovers'
                 }
@@ -509,14 +509,16 @@ def log_meal():
              
              if not target_dinner:
                  # Try to find planned meal for this day to initialize correctly
-                 planned_recipe_id = 'unplanned_meal'
+                 planned_recipe_ids = ['unplanned_meal']
                  if active_plan_data and 'dinners' in active_plan_data:
                      for pd in active_plan_data['dinners']:
                          if pd.get('day') == target_day:
-                             planned_recipe_id = pd.get('recipe_id', 'unplanned_meal')
+                             ids = pd.get('recipe_ids')
+                             if not ids and pd.get('recipe_id'): ids = [pd.get('recipe_id')]
+                             planned_recipe_ids = ids if ids else ['unplanned_meal']
                              break
                  
-                 target_dinner = {'day': target_day, 'recipe_id': planned_recipe_id, 'cuisine': 'various', 'vegetables': []}
+                 target_dinner = {'day': target_day, 'recipe_ids': planned_recipe_ids, 'cuisine': 'various', 'vegetables': []}
                  history_week.setdefault('dinners', []).append(target_dinner)
 
              # Update execution data
@@ -547,10 +549,15 @@ def log_meal():
              if kids_feedback: target_dinner['kids_feedback'] = kids_feedback
              if kids_complaints:
                  target_dinner['kids_complaints'] = kids_complaints
+                 
+                 ids = target_dinner.get('recipe_ids') or []
+                 if not ids and target_dinner.get('recipe_id'): ids = [target_dinner.get('recipe_id')]
+                 first_id = ids[0] if ids else 'unknown'
+
                  history_week.setdefault('kids_dislikes', []).append({
                      'complaint': kids_complaints,
                      'date': datetime.now().strftime('%Y-%m-%d'),
-                     'recipe': target_dinner.get('recipe_id')
+                     'recipe': first_id
                  })
              if reason: target_dinner['reason'] = reason
              
@@ -601,8 +608,10 @@ def log_meal():
             # Freezer/Inventory updates
             if made_2x:
                 target_dinner['made_2x_for_freezer'] = True
-                meal_name = target_dinner.get('recipe_id', 'Unknown').replace('_', ' ').title()
-                storage.StorageEngine.update_inventory_item('freezer_backup', meal_name, updates={'servings': 4, 'frozen_date': datetime.now().strftime('%Y-%m-%d')})
+                ids = target_dinner.get('recipe_ids') or []
+                if not ids and target_dinner.get('recipe_id'): ids = [target_dinner.get('recipe_id')]
+                first_name = ids[0].replace('_', ' ').title() if ids else 'Unknown'
+                storage.StorageEngine.update_inventory_item('freezer_backup', first_name, updates={'servings': 4, 'frozen_date': datetime.now().strftime('%Y-%m-%d')})
             
             if freezer_meal and target_dinner.get('made') == 'freezer_backup':
                 target_dinner['freezer_used'] = {'meal': freezer_meal, 'frozen_date': 'Unknown'}
@@ -619,8 +628,11 @@ def log_meal():
                 elif '2' in qty_str: qty = 2
                 elif 'Batch' in qty_str: qty = 4
                 
-                meal_name = target_dinner.get('recipe_id', 'Unknown').replace('_', ' ').title()
-                storage.StorageEngine.update_inventory_item('fridge', f"Leftover {meal_name}", updates={'quantity': qty, 'unit': 'serving', 'type': 'meal'})
+                ids = target_dinner.get('recipe_ids') or []
+                if not ids and target_dinner.get('recipe_id'): ids = [target_dinner.get('recipe_id')]
+                first_name = ids[0].replace('_', ' ').title() if ids else 'Unknown'
+                
+                storage.StorageEngine.update_inventory_item('fridge', f"Leftover {first_name}", updates={'quantity': qty, 'unit': 'serving', 'type': 'meal'})
 
             log_execution.calculate_adherence(history_week)
 

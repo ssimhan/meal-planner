@@ -393,6 +393,7 @@ def update_recipe_content(recipe_id):
         data = request.json or {}
         ingredients = data.get('ingredients')
         instructions = data.get('instructions')
+        prep_steps = data.get('prep_steps')
         name = data.get('name')
         cuisine = data.get('cuisine')
         effort_level = data.get('effort_level')
@@ -400,7 +401,8 @@ def update_recipe_content(recipe_id):
         
         StorageEngine.update_recipe_content(
             recipe_id, 
-            ingredients=ingredients, 
+            ingredients=ingredients,
+            prep_steps=prep_steps,
             instructions=instructions,
             name=name,
             cuisine=cuisine,

@@ -378,17 +378,20 @@ export async function getRecipeContent(recipeId: string): Promise<any> {
 
 export async function updateRecipeContent(
     recipeId: string,
-    ingredients?: string[],
-    instructions?: string[],
-    name?: string,
-    cuisine?: string,
-    effort_level?: string,
-    tags?: string[]
+    updates: {
+        ingredients?: string[];
+        prep_steps?: string[];
+        instructions?: string[];
+        name?: string;
+        cuisine?: string;
+        effort_level?: string;
+        tags?: string[];
+    }
 ): Promise<any> {
     const res = await fetch(`/api/recipes/${recipeId}/content`, {
         method: 'PATCH',
         headers: await getAuthHeaders(),
-        body: JSON.stringify({ ingredients, instructions, name, cuisine, effort_level, tags }),
+        body: JSON.stringify(updates),
     });
     return handleResponse<any>(res, 'Failed to update recipe content');
 }

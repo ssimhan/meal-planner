@@ -298,7 +298,7 @@ export default function DinnerOptionsModal({
                                             >
                                                 <option value="">Select...</option>
                                                 {pastDinners.map(d => (
-                                                    <option key={d.day} value={d.recipe_id}>{d.recipe_id.replace(/_/g, ' ')} ({d.day.toUpperCase()})</option>
+                                                    <option key={d.day} value={d.recipe_ids?.[0]}>{d.recipe_ids?.[0]?.replace(/_/g, ' ')} ({d.day.toUpperCase()})</option>
                                                 ))}
                                                 <option value="untracked">Untracked Leftovers</option>
                                             </select>

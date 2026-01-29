@@ -108,6 +108,7 @@ export default async function RecipeViewer({ params }: RecipeViewerProps) {
                 </header>
 
                 <RecipeDetailClientWrapper
+                    recipeId={id}
                     name={recipeData.name || id}
                     ingredients={ingredients}
                     prepSteps={prepSteps}

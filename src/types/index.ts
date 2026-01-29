@@ -52,7 +52,7 @@ export interface PrepTask {
 
 export interface DinnerData {
   day: string;
-  recipe_id: string;
+  recipe_ids: string[];
   made?: boolean | string;
   vegetables?: string[];
   kids_feedback?: string;
@@ -62,7 +62,7 @@ export interface DinnerData {
 }
 
 export interface LunchData {
-  recipe_id?: string;
+  recipe_ids?: string[];
   recipe_name?: string;
   prep_style?: string;
   assembly_notes?: string;
@@ -124,7 +124,7 @@ export interface FreezerMeal {
 
 export interface Dinner {
   day: string;
-  recipe_id: string;
+  recipe_ids: string[];
   template?: string;
   made?: boolean | string;
   vegetables?: string[];
@@ -136,7 +136,7 @@ export interface Dinner {
 
 export interface Lunch {
   day: string;
-  recipe_id?: string;
+  recipe_ids?: string[];
   recipe_name?: string;
   type?: string;
   prep_style?: string;

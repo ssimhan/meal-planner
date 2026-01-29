@@ -243,10 +243,11 @@ def main():
         if 'freezer_inventory' not in week:
             week['freezer_inventory'] = []
             
-        # We need a name. history.yml uses recipe_id.
-        # Let's try to format the recipe_id nicely for the inventory name
         # e.g. bisi_bele_bath -> Bisi Bele Bath
-        meal_name = target_dinner.get('recipe_id', 'Unknown Meal').replace('_', ' ').title()
+        ids = target_dinner.get('recipe_ids') or []
+        if not ids and target_dinner.get('recipe_id'): ids = [target_dinner.get('recipe_id')]
+        first_id = ids[0] if ids else 'Unknown Meal'
+        meal_name = first_id.replace('_', ' ').title()
         
         # Add entry
         week['freezer_inventory'].append({
@@ -265,7 +266,7 @@ def main():
         week['kids_dislikes'].append({
             'complaint': args.kids_complaints,
             'date': datetime.now().strftime('%Y-%m-%d'),
-            'recipe': target_dinner.get('recipe_id')
+            'recipe': target_dinner.get('recipe_ids', ['unknown'])[0] if target_dinner.get('recipe_ids') else target_dinner.get('recipe_id', 'unknown')
         })
 
     if args.actual_meal:
@@ -296,7 +297,8 @@ def main():
     
     # Summary Output
     print(f"✅ Logged execution for {args.week} {target_day.capitalize()}")
-    print(f"Dinner: {target_dinner.get('recipe_id', 'Unknown')}")
+    ids = target_dinner.get('recipe_ids') or (dict(target_dinner).get('recipe_id') and [target_dinner.get('recipe_id')]) or ['Unknown']
+    print(f"Dinner: {', '.join(ids)}")
     print(f"Made: {target_dinner.get('made')}")
     if 'vegetables_used' in target_dinner:
         print(f"Vegetables used: {', '.join(target_dinner['vegetables_used'])}")

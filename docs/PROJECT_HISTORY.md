@@ -1234,22 +1234,25 @@ Understanding when to use each is fundamental to frontend development. Most bugs
 
 **Learning:** Transient errors in distributed systems are inevitable. Retry logic with exponential backoff is a standard pattern that should be built into database wrappers from day one. The cost of 3 retries (max 700ms delay) is negligible compared to the user experience improvement.
 
-### Phase 33: Recipe Link Extraction (2026-01-28)
+### Phase 33: Recipe Editing & Management Overhaul (2026-01-28) ✅ Complete
 
-**Goal:** Allow users to import recipes directly from URLs without relying on paid LLM APIs.
+**Goal:** Streamline the recipe lifecycle—from automated capture to structured editing.
 
-**Problem:**
-Previously, importing a recipe required manual entry or copy-pasting into LLM prompts. The user wanted a cost-free, automated way to extract recipe data (ingredients, instructions, time) from popular cooking sites.
+**Block 1: Recipe Link Extraction**
+- **Problem:** Importing required manual entry or copy-pasting.
+- **Solution:** Integrated `recipe-scrapers` library (free, deterministic) instead of LLMs.
+- **Built:**
+  - `POST /api/recipes/extract` endpoint wrapping 60+ site scrapers.
+  - `ImportRecipeModal` with a 2-step "Extract -> Verify" workflow.
+  - Restoration logic for `scripts/parse_recipes.py` to fix capture bugs.
 
-**Solution: `recipe-scrapers` Library**
-Instead of using a general-purpose LLM, we integrated the specialized `recipe-scrapers` Python library which supports 60+ major recipe sites.
+**Block 2: 3-Box Recipe Editor**
+- **Problem:** The existing editor was a simple text field or YAML file, lacking the structure of the new "Focus Mode" viewer. Data storage was split between YAML (content) and Supabase (metadata).
+- **Solution:** A unified 3-box editing experience (Ingredients, Prep Steps, Instructions) backed by Markdown storage.
+- **Built:**
+  - **Unified Storage:** Refactored `StorageEngine` to support read/write of Markdown files directly, keeping them in sync with Supabase `content` column. Removed reliance on legacy `recipes/details/*.yaml`.
+  - **Explicit Prep Steps:** Added first-class support for `prep_steps` in the API and storage layer, reinforcing the "Energy-Based Prep" philosophy.
+  - **RecipeEditor Component:** A dedicated React component with auto-expanding textareas for the 3 distinct sections.
+  - **Seamless Mode Switching:** Updated `RecipeDetailClientWrapper` to toggle between "View", "Edit", and "Cooking" modes instantly, using `router.refresh()` to propagate server-side updates.
 
-**Built:**
-- **Backend API (`POST /api/recipes/extract`):** Wraps `recipe-scrapers` and normalizes output to our internal schema.
-- **Frontend Modal (`ImportRecipeModal.tsx`):** A two-step Wizard:
-  1.  **Input:** User pastes URL.
-  2.  **Verify & Edit:** Extracted data is presented for review before saving.
-- **Integration:** Added "Import" button to Recipe Browser header.
-- **Robustness:** Added `scripts/parse\_recipes.py` restoration logic to fix 500 errors during capture.
-
-**Learning:** Specialized libraries often outperform general LLMs for structured extraction tasks—they are faster, cheaper (free), and more deterministic.
+**Learning:** aligning the *editor* UI with the *viewer* UI minimizes cognitive dissonance. If the viewer separates "Prep" from "Steps", the editor must enforce that separation to ensure data quality. Using Markdown as the single source of truth (synced to DB) simplifies the mental model compared to split YAML/Text files.

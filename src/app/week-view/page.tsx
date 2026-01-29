@@ -152,7 +152,13 @@ function WeekViewContent() {
     if (resolved.actual_meal) return resolved.actual_meal;
 
     // Fallback to recipe ID/name
-    const name = resolved.recipe_id || resolved.name || resolved.recipe_name;
+    const ids = resolved.recipe_ids || (resolved.recipe_id ? [resolved.recipe_id] : []);
+    const name = resolved.name || resolved.recipe_name;
+
+    if (ids.length > 0) {
+      return ids.map((id: string) => id.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())).join(' + ');
+    }
+
     if (!name) return fallback;
 
     return name.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase());

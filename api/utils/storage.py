@@ -525,69 +525,126 @@ class StorageEngine:
 
     @staticmethod
     def get_recipe_content(recipe_id):
-        """Get recipe content (ingredients, instructions) from YAML file."""
-        yaml_path = Path(f'recipes/details/{recipe_id}.yaml')
-        
-        if not yaml_path.exists():
-            # If YAML doesn't exist, return empty lists but don't fail
-            # This allows the editor to start fresh for newly captured recipes or missing files
-            return {
-                'ingredients': [],
-                'instructions': []
-            }
-        
-        try:
-            with open(yaml_path, 'r') as f:
-                data = yaml.safe_load(f) or {}
+        """Get recipe content (ingredients, prep_steps, instructions) from DB or Markdown."""
+        # Try DB first as truth
+        details = StorageEngine.get_recipe_details(recipe_id)
+        if details and details.get('markdown'):
+            return StorageEngine._parse_markdown_content(details['markdown'])
             
-            return {
-                'ingredients': data.get('ingredients', []),
-                'instructions': data.get('instructions') or data.get('directions', [])
-            }
-        except Exception as e:
-            print(f"Error reading recipe content for {recipe_id}: {e}")
-            return {
-                'ingredients': [],
-                'instructions': []
-            }
+        # Fallback to local file
+        md_path = Path(f'recipes/content/{recipe_id}.md')
+        if md_path.exists():
+            with open(md_path, 'r', encoding='utf-8') as f:
+                return StorageEngine._parse_markdown_content(f.read())
+                
+        return {'ingredients': [], 'prep_steps': [], 'instructions': []}
+
+    @staticmethod
+    def _parse_markdown_content(md_content):
+        """Helper to extract sections from Markdown."""
+        import re
+        
+        # Split by headers
+        # Normalize newlines
+        md = md_content.replace('\r\n', '\n')
+        
+        # Simple extraction using regex for standard sections
+        def extract_list(section_name):
+            pattern = re.compile(f"(?:##|###)\\s*{section_name}(.*?)(?=(?:##|###)|$)", re.DOTALL | re.IGNORECASE)
+            match = pattern.search(md)
+            if not match: return []
+            lines = [l.strip() for l in match.group(1).split('\n') if l.strip()]
+            # Remove bullet points
+            return [re.sub(r'^[-*]\s+|\d+\.\s+', '', l) for l in lines]
+
+        return {
+            'ingredients': extract_list('Ingredients'),
+            'prep_steps': extract_list('Prep Steps'),
+            'instructions': extract_list('Instructions') or extract_list('Directions')
+        }
     
     @staticmethod
-    def update_recipe_content(recipe_id, ingredients=None, instructions=None, name=None, cuisine=None, effort_level=None, tags=None):
-        """Update recipe YAML file with full metadata and content. Creates file if missing."""
-        yaml_path = Path(f'recipes/details/{recipe_id}.yaml')
+    def update_recipe_content(recipe_id, ingredients=None, prep_steps=None, instructions=None, name=None, cuisine=None, effort_level=None, tags=None):
+        """Update recipe Content (Markdown) and Metadata in DB + Local File."""
         
-        # Ensure directory exists
-        yaml_path.parent.mkdir(parents=True, exist_ok=True)
+        # 1. Fetch existing details to preserve what we aren't changing
+        existing = StorageEngine.get_recipe_details(recipe_id)
         
+        current_meta = existing['recipe'] if existing else {}
+        current_md = existing['markdown'] if existing else ""
+        
+        # Merge Metadata
+        new_meta = current_meta.copy()
+        if cuisine: new_meta['cuisine'] = cuisine
+        if effort_level: new_meta['effort_level'] = effort_level
+        if tags is not None: new_meta['tags'] = tags
+        
+        # Ensure critical fields exist
+        if 'meal_type' not in new_meta: new_meta['meal_type'] = 'dinner'
+        
+        # Filter metadata for frontmatter (remove ID/Name which are args/DB cols)
+        frontmatter_meta = {k: v for k, v in new_meta.items() if k not in ['id', 'name']}
+        
+        # Construct New Markdown
+        # Use provided values, or fallback to parsed existing values
+        parsed_existing = StorageEngine._parse_markdown_content(current_md) if current_md else {}
+        
+        final_ingredients = ingredients if ingredients is not None else parsed_existing.get('ingredients', [])
+        final_prep = prep_steps if prep_steps is not None else parsed_existing.get('prep_steps', [])
+        final_instructions = instructions if instructions is not None else (parsed_existing.get('instructions', []) or [])
+        
+        recipe_name = name or current_meta.get('name') or recipe_id.replace('_', ' ').title()
+        
+        # Generate Markdown String
+        md_output = "---\n"
+        # Dump frontmatter
+        md_output += yaml.dump(frontmatter_meta, default_flow_style=None, sort_keys=False).strip()
+        md_output += "\n---\n\n"
+        
+        md_output += f"# {recipe_name}\n\n"
+        
+        if final_ingredients:
+            md_output += "## Ingredients\n"
+            for item in final_ingredients:
+                md_output += f"- {item}\n"
+            md_output += "\n"
+            
+        if final_prep:
+            md_output += "## Prep Steps\n"
+            for item in final_prep:
+                md_output += f"- {item}\n"
+            md_output += "\n"
+            
+        if final_instructions:
+            md_output += "## Instructions\n"
+            # Auto-number instructions if they don't have numbers? 
+            # The input is usually lines. We'll verify presentation in UI.
+            # Standard md format for ordered list is "1. item"
+            for i, item in enumerate(final_instructions, 1):
+                # If item already starts with number, use it, else add
+                import re
+                if re.match(r'^\d+\.', item):
+                     md_output += f"{item}\n"
+                else:
+                     md_output += f"{i}. {item}\n"
+            md_output += "\n"
+            
+        # Save to DB
+        StorageEngine.save_recipe(recipe_id, recipe_name, frontmatter_meta, md_output)
+        
+        # Sync to Local File
         try:
-            # Read existing YAML if it exists
-            data = {}
-            if yaml_path.exists():
-                with open(yaml_path, 'r') as f:
-                    data = yaml.safe_load(f) or {}
-            
-            # Update fields if provided
-            if ingredients is not None: data['ingredients'] = ingredients
-            if instructions is not None: data['instructions'] = instructions
-            if name is not None: data['name'] = name
-            if cuisine is not None: data['cuisine'] = cuisine
-            if effort_level is not None: data['effort_level'] = effort_level
-            if tags is not None: data['tags'] = tags
-            
-            # Write back to file
-            try:
-                with open(yaml_path, 'w', encoding='utf-8') as f:
-                    yaml.dump(data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
-            except OSError as e:
-                if e.errno == 30: 
-                    print(f"WARN: Read-only filesystem. Cannot update local YAML for {recipe_id}")
-                    # Allow to proceed (return True) as DB might have been updated or this is secondary
-                else: raise e
-            
-            return True
-        except Exception as e:
-            print(f"Error updating recipe content for {recipe_id}: {e}")
-            raise e
+            md_path = Path(f'recipes/content/{recipe_id}.md')
+            md_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(md_path, 'w', encoding='utf-8') as f:
+                f.write(md_output)
+        except OSError as e:
+            if e.errno == 30: 
+                print(f"WARN: Read-only filesystem. Cannot update local content for {recipe_id}")
+            else: 
+                print(f"Error updating local file: {e}")
+                
+        return True
 
     @staticmethod
     def save_recipe(recipe_id, name, metadata, content):

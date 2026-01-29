@@ -132,28 +132,35 @@ export const WeekViewTable = ({
                                         >
                                             <div className="flex justify-between items-start gap-2">
                                                 <span className="font-medium leading-tight">
-                                                    {dinnerSlot?.resolved?.recipe_id ? (
-                                                        <Link
-                                                            href={viewState.isSwapMode ? '#' : `/recipes/${dinnerSlot.resolved.recipe_id}`}
-                                                            onClick={(e) => viewState.isSwapMode && e.preventDefault()}
-                                                            className={viewState.isSwapMode ? '' : "hover:text-[var(--accent-sage)] hover:underline"}
-                                                        >
-                                                            <span className="line-clamp-2" title={getMealName(dinnerSlot)}>
-                                                                {getMealName(dinnerSlot)}
-                                                            </span>
-                                                        </Link>
+                                                    {(dinnerSlot?.resolved?.recipe_ids && dinnerSlot.resolved.recipe_ids.length > 0) ? (
+                                                        <div className="flex flex-col gap-1">
+                                                            {dinnerSlot.resolved.recipe_ids.map((id: string, idx: number) => (
+                                                                <div key={id} className="flex items-center gap-1">
+                                                                    <Link
+                                                                        href={viewState.isSwapMode ? '#' : `/recipes/${id}`}
+                                                                        onClick={(e) => viewState.isSwapMode && e.preventDefault()}
+                                                                        className={viewState.isSwapMode ? '' : "hover:text-[var(--accent-sage)] hover:underline"}
+                                                                    >
+                                                                        <span className="line-clamp-1" title={id.replace(/_/g, ' ')}>
+                                                                            {id.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
+                                                                        </span>
+                                                                    </Link>
+                                                                    {!viewState.editMode && (
+                                                                        <button
+                                                                            onClick={() => handleOpenFocusMode(id, id.replace(/_/g, ' '))}
+                                                                            className="inline-flex items-center justify-center p-0.5 rounded-full bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-white transition-all"
+                                                                            title="Start Focus Mode"
+                                                                        >
+                                                                            <ChefHat size={10} />
+                                                                        </button>
+                                                                    )}
+                                                                </div>
+                                                            ))}
+                                                        </div>
                                                     ) : (
                                                         getMealName(dinnerSlot)
                                                     )}
-                                                    {dinnerSlot?.resolved?.recipe_id && !viewState.editMode && (
-                                                        <button
-                                                            onClick={() => handleOpenFocusMode(dinnerSlot.resolved!.recipe_id, getMealName(dinnerSlot))}
-                                                            className="ml-2 inline-flex items-center justify-center p-1 rounded-full bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-white transition-all transform hover:scale-110 active:scale-95"
-                                                            title="Start Focus Mode"
-                                                        >
-                                                            <ChefHat size={12} />
-                                                        </button>
-                                                    )}
+                                                    {/* ChefHat button handled inside map above */}
                                                 </span>
                                                 {getFeedbackBadge(dinnerSlot?.actual?.kids_feedback || dinnerSlot?.actual?.feedback, dinnerSlot?.actual?.made, dinnerSlot?.actual?.needs_fix)}
                                             </div>
@@ -167,7 +174,7 @@ export const WeekViewTable = ({
                                                             ...prev, replacementModal: {
                                                                 isOpen: true,
                                                                 day: day,
-                                                                currentMeal: dinnerSlot?.resolved?.actual_meal || dinnerSlot?.resolved?.recipe_id || '',
+                                                                currentMeal: dinnerSlot?.resolved?.actual_meal || dinnerSlot?.resolved?.recipe_ids?.[0] || '',
                                                                 type: 'dinner'
                                                             }
                                                         }));
@@ -219,17 +226,22 @@ export const WeekViewTable = ({
                                                 <span className="text-[var(--text-muted)] italic line-clamp-2" title={getMealName(kidsLunchSlot, 'Leftovers')}>
                                                     {getMealName(kidsLunchSlot, 'Leftovers')}
                                                 </span>
-                                                {kidsLunchSlot?.resolved?.recipe_id && !viewState.editMode && (
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleOpenFocusMode(kidsLunchSlot.resolved!.recipe_id!, getMealName(kidsLunchSlot));
-                                                        }}
-                                                        className="inline-flex items-center justify-center p-1 rounded-full bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-white transition-all transform hover:scale-110 active:scale-95"
-                                                        title="Start Focus Mode"
-                                                    >
-                                                        <ChefHat size={12} />
-                                                    </button>
+                                                {kidsLunchSlot?.resolved?.recipe_ids && kidsLunchSlot.resolved.recipe_ids.length > 0 && !viewState.editMode && (
+                                                    <div className="flex gap-1">
+                                                        {kidsLunchSlot.resolved.recipe_ids.map((id: string) => (
+                                                            <button
+                                                                key={id}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleOpenFocusMode(id, id.replace(/_/g, ' '));
+                                                                }}
+                                                                className="inline-flex items-center justify-center p-1 rounded-full bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-white transition-all transform hover:scale-110 active:scale-95"
+                                                                title={`Focus: ${id.replace(/_/g, ' ')}`}
+                                                            >
+                                                                <ChefHat size={12} />
+                                                            </button>
+                                                        ))}
+                                                    </div>
                                                 )}
                                                 {getFeedbackBadge(kidsLunchSlot?.actual?.actual_meal, kidsLunchSlot?.actual?.made, kidsLunchSlot?.actual?.needs_fix)}
                                             </div>

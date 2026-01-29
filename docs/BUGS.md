@@ -19,7 +19,7 @@
 
 **Must be 0 before phase completion.**
 
-**Count: 2** 
+**Count: 3** 
 
 | ID | Area | Description | Impact | Effort | Notes |
 |----|------|-------------|--------|--------|-------|
@@ -29,6 +29,7 @@
 | BUG-004 | Roadmap | Review future roadmap phases (35-39) for multi-household support. | Medium | 2hr | ✅ Completed review. |
 | BUG-005 | Inventory | `add_inventory` has redundant whole-inventory fetch check. | Low | 1hr | Slows down checkout on large inventories. |
 | BUG-006 | Auth | Hardcoded household ID fallback in `require_auth` hides profile gaps. | Medium | 1hr | Should probably redirect to onboarding instead. |
+| BUG-007 | Week View | Replace button (🔄) persists in View Mode after exiting Edit Mode. | Low | 1hr | State management issue in `WeekViewTable.tsx` - `viewState.editMode` not properly toggled. |
 
 ---
 
@@ -47,6 +48,9 @@
 | TD-007 | Persistence | `StorageEngine` writes to local YAML/JSON in some methods. | High | 2hr | Fails on Vercel; should be 100% Supabase-backed. |
 | TD-008 | Performance | `get_pending_recipes` is a heavy, unoptimized scan. | Medium | 2hr | Should be an async job or computed field. |
 | TD-009 | Architecture | Large route files (`meals.py`) contain complex business logic. | Medium | 4hr | Refactor to service layers or utility classes. |
+| TD-010 | Testing | Integration tests need proper mocking and test data fixtures. | Medium | 4hr | 5 tests in `test_api_perf.py` and `test_backend.py` fail due to missing test data and lack of Supabase mocking. Need to mock `StorageEngine` and create test fixtures. |
+| TD-011 | UX | Import preview modal is too small and "Save" button is hard to find. | Low | 1hr | Modal needs better sizing (max-h-[80vh]) and prominent CTA button styling. |
+| TD-012 | Recipes | Recipe import doesn't auto-populate Prep Tasks section. | Medium | 3hr | Recipe-Scrapers returns flat instruction list. Need AI/heuristic parsing to separate prep from cooking steps. |
 
 **Count: 0** ✅
 

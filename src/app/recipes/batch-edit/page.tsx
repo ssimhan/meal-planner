@@ -288,7 +288,14 @@ function RecipeContentModal({ recipe, onClose, onSave }: { recipe: RecipeListIte
         setSaving(true);
         try {
             // Save to local YAML file
-            await updateRecipeContent(recipe.id, ingredients, instructions, name, cuisine, effortLevel, tags);
+            await updateRecipeContent(recipe.id, {
+                ingredients,
+                instructions,
+                name,
+                cuisine,
+                effort_level: effortLevel,
+                tags
+            });
 
             // Pass updated state back to parent
             onSave({

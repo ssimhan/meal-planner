@@ -112,7 +112,7 @@ export const MobileDayCard = ({
                                         ...prev, replacementModal: {
                                             isOpen: true,
                                             day: day,
-                                            currentMeal: dinnerSlot?.resolved?.actual_meal || dinnerSlot?.resolved?.recipe_id || '',
+                                            currentMeal: dinnerSlot?.resolved?.actual_meal || dinnerSlot?.resolved?.recipe_ids?.[0] || '',
                                             type: 'dinner'
                                         }
                                     }));

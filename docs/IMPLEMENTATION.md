@@ -1,6 +1,6 @@
 # Meal Planner Implementation Guide
 
-**Last Updated:** 2026-01-27
+**Last Updated:** 2026-01-28
 **Live Site:** [meal-planner-eta-seven.vercel.app](https://meal-planner-eta-seven.vercel.app/)
 
 ---
@@ -21,18 +21,61 @@
 
 ## 📅 Upcoming Roadmap
 
-### Phase 33: Household Collaboration (The "Team" Update)
-**Goal:** Enable multiple adults to coordinate within the same verified household.
+### Phase 33: Household Collaboration & Recipe Enhancements
+**Goal:** Enable multiple adults to coordinate and improve recipe actionability.
 
-- **Block 1: Member Management (~2 hrs)**
+- **Block 1: Member Management & Preferences (~4 hrs)**
+  - [ ] **Household Members:** Add capability to define household members in Settings.
   - [ ] **Invite Flow:** "Invite Spouse" capability (via email or join code).
-  - [ ] **Profile Settings:** Manage display names and individual preferences within the household.
-- **Block 2: Shared Brain Dump (formerly Ph30) (~3 hrs)**
+  - [ ] **Profile Settings:** Manage display names and individual preferences.
+  - [ ] **Fix Defaults:** Remove/re-scope "Meal Defaults" as they clash in multi-household setups (MG-001).
+- **Block 2: Recipe to Shopping List (~2 hrs)**
+  - [ ] **UI:** Add "Add Ingredients to Shopping List" button to `RecipeDetailClientWrapper`.
+  - [ ] **Logic:** Implement API call to `/api/plan/shopping-list/add` with recipe ingredients.
+  - [ ] **Feedback:** Add toast notification for success/failure.
+- **Block 3: Shopping Experience Polish (~3 hrs)**
+  - [ ] **Bug: Purchased -> Inventory (SHOP-001):** Ensure checking an item in the shopping list adds it to the correct inventory category (using TD-003 inference).
+  - [ ] **Feature: Store Preference:** Ensure store mapping is explicitly saved when a user selects a store for an item in the shopping list.
+- **Block 4: Recipe Link Extraction (GPT-powered) (~5 hrs)**
+  - [ ] **Backend:** Implement enhanced extraction logic in `scripts/import_recipe.py` with optional LLM support (GPT-4) for parsing ingredients/steps.
+  - [ ] **API:** Update `/api/recipes/import` to return extracted ingredients and steps for confirmation.
+  - [ ] **UI:** Add "Import from Link" option to the Add Recipe interface.
+- **Block 5: Recipe Management Enhancements (~4 hrs)**
+  - [ ] **Sync:** Update "Save Locally" to sync to Supabase (and rename to "Save Recipe").
+  - [ ] **UI:** Update editor to have 3 distinct boxes: Ingredients, Prep Steps, and Cook Steps.
+  - [ ] **Consistency:** Ensure Markdown viewer and YAML editor stay in sync.
+- **Block 6: Recipe & Data Cleanup (~3 hrs)**
+  - [ ] **TD-004:** Standardize ingredients (e.g., "tamarind pulp" -> "tamarind concentrate").
+  - [ ] **TD-005:** Fix mashed ingredient quantities (e.g., "1onion" -> "1 onion") across recipe files.
+  - [ ] **TD-006:** Remove redundant cuisine tags (already in `cuisine` field).
+- **Block 7: Multi-item Meal Slots (~5 hrs)**
+  - [ ] **Data Model:** Update `meal_plans` and `history` to support multiple `recipe_id`s per slot (e.g., as delimiter-separated strings or list).
+  - [ ] **AI/Logic:** Update `generate_meal_plan` and `get_shopping_list` to handle multiple recipes per day.
+  - [ ] **UI:** Update Week View and Draft Modals to allow adding/searching multiple items for a single slot.
+- **Block 8: Prep Task & Slot Polish (~4 hrs)**
+  - [ ] **UI:** Implement a more logical prep time slot selector (e.g., categorical or hourly blocks) that works across different household schedules.
+  - [ ] **Logic:** Ensure `generate_prep_steps.py` respects these new slot definitions.
+- **Block 9: Per-Member Meal Feedback (~4 hrs)**
+  - [ ] **Data Model:** Update meal history to store "liked/disliked" status per household member.
+  - [ ] **UI:** Update meal logs/confirmation to include member-specific feedback toggles.
+  - [ ] **Analytics:** Add basic trend identification for which dishes are household favorites vs controversial.
+- **Block 10: Shared Brain Dump (formerly Ph30) (~3 hrs)**
   - [ ] **Persistence:** DB-backed `household_notes` table (replacing local state).
   - [ ] **Real-time:** Display shared notes on Dashboard for all household members.
   - [ ] **CRUD:** Add/Edit/Delete shared notes.
 
-### Phase 34: Mobile Friendly UX (Shifted up)
+### Phase 34: Multimodal Inventory
+**Goal:** Enable futuristic, low-friction inventory updates using vision and voice.
+
+- **Block 1: Vision-based Inventory (~8 hrs)**
+  - [ ] **Infrastructure:** Set up storage for uploaded images/videos.
+  - [ ] **AI Integration:** Implement Gemini Pro Vision or equivalent to detect items from fridge photos/videos.
+  - [ ] **UI:** Add camera capture and upload capability to the Inventory page.
+- **Block 2: Interactive Voice Inventory (~6 hrs)**
+  - [ ] **Audio Logic:** Implement back-and-forth Voice API style interface.
+  - [ ] **Integration:** Connect voice transcriptions to `StorageEngine.update_inventory_item` using existing category inference.
+
+### Phase 35: Mobile Friendly UX (Shifted up)
 **Goal:** Ensure - and validate - that the application is fully responsive and optimized for mobile devices.
 - **Block 1: Navigation & Layout**
   - [ ] Fix collapsible mobile navigation.
@@ -42,7 +85,7 @@
   - [ ] Audit touch targets (min 44px) across the app.
   - [ ] Improve modal behavior on small screens.
 
-### Phase 35: Native Mobile App (Hybrid/PWA)
+### Phase 36: Native Mobile App (Hybrid/PWA)
 **Goal:** Package the responsive web app into an installable mobile experience.
 - **Block 1: PWA Foundation (~2 hrs)**
   - [ ] **Manifest:** Update `manifest.json` with correct icons, screenshots, and theme colors.
@@ -56,7 +99,7 @@
   - [ ] **Splash Screen:** Create native splash screens.
   - [ ] **Push Notifications:** Setup OneSignal or Firebase-for-Capacitor.
 
-### Phase 36: Analytics & Advanced Features
+### Phase 37: Analytics & Advanced Features
 **Goal:** Lower-priority enhancements for power users.
 - **Block 1: Universal Search**
   - [ ] Global search bar (recipes, inventory, history).
@@ -64,7 +107,7 @@
   - [ ] Freezer ingredients tracking
   - [ ] Nutrition estimation
 
-### Phase 37: Advanced Features & Integrations
+### Phase 38: Advanced Features & Integrations
 **Goal:** Enhance the system with automation, intelligence, and integrations.
 - **Block 1: Universal Search (Detailed) (~3 hrs)**
   - [ ] Search across recipes (title, ingredients, tags)
@@ -98,15 +141,11 @@
   - [ ] Weekly nutrition summary dashboard
   - [ ] Dietary goal tracking (optional)
 
-### Phase 38: Individual Meal Tracking & Preferences
-**Goal:** deeply integrate individual household member preferences and track consumption at a granular level.
-- **Block 1: Enhanced Member Profiles**
-  - [ ] Track individual likes/dislikes (e.g., "Dad hates cilantro", "Kid 1 loves pasta").
-  - [ ] Integrate individual preferences into recipe scoring and suggestions.
-- **Block 2: Per-Person Meal Tracking (The "Split Meal" Overhaul)**
+### Phase 39: Per-Person Tracking Overhaul (Deep Integration)
+**Goal:** Deeply integrate individual household member preferences and track consumption at a granular level.
+- **Block 1: Per-Person Meal Tracking (The "Split Meal" Overhaul)**
   - [ ] Overhaul data model to track "who is eating what" for any given meal slot.
   - [ ] Support split meals (e.g., Parents eating Recipe A, Kids eating Recipe B).
-  - [ ] Individual feedback logging (who liked it, who didn't).
 
 ---
 

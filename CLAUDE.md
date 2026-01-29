@@ -1,9 +1,17 @@
-# Claude Code Operating Manual
-
-AI assistant instructions for meal planner system.
-
 ## Claude Instructions
 When responding, be concise. Use fewer filler words and minimal formatting when responding to user or creating documentation. 
+
+## Workflows & Skills
+Use the following slash commands for common tasks:
+- `/add-bug`: Add a bug to the tracking table.
+- `/add-feature`: Add a feature request to the roadmap.
+- `/brainstorm`: Explore complex feature intent and constraints.
+- `/design`: Create TDD-first implementation plans.
+- `/implement`: Execute approved plans with subagents and TDD.
+- `/code-review`: Review newly built code for debt/risks.
+- `/closeout`: Update docs, commit, and push.
+
+Specialized assistant skills are available in the `skills/` directory. Read `skills/*/SKILL.md` before use.
 
 ## Your Role
 

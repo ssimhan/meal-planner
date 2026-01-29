@@ -21,6 +21,7 @@ An intelligent, hybrid serverless meal planning system that generates personaliz
 - **Mid-Week Re-planning**: Smart re-plan that maintains leftover pipelines when meals shift
 - **Execution Tracking**: Log meals, track adherence, and capture feedback
 - **Inventory Management**: Track fridge, pantry, and freezer inventory
+- **Enhanced Agent Assets**: Advanced slash commands (`/brainstorm`, `/design`, `/implement`) and specialized skills located in `.agent/workflows` and `skills/`.
 
 ### Recipe Management
 - **Recipe Importer**: Import recipes from URLs with automatic parsing

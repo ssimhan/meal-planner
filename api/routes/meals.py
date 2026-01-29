@@ -632,7 +632,7 @@ def log_meal():
                     query = storage.supabase.table("recipes").select("id").eq("household_id", h_id).eq("id", recipe_id)
                     existing = storage.execute_with_retry(query)
                     if not existing.data:
-                        storage.supabase.table("recipes").insert({
+                        query = storage.supabase.table("recipes").insert({
                             "id": recipe_id,
                             "household_id": h_id,
                             "name": actual_meal,
@@ -642,7 +642,8 @@ def log_meal():
                                 "effort_level": "normal"
                             },
                             "content": f"# {actual_meal}\n\nAdded automatically from meal correction."
-                        }).execute()
+                        })
+                        storage.execute_with_retry(query)
                 except Exception as re:
                     print(f"Error auto-adding recipe: {re}")
 
@@ -678,7 +679,8 @@ def swap_meals():
 
         # Load from DB
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).execute()
+        query = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str)
+        res = storage.execute_with_retry(query)
         if not res.data or len(res.data) == 0:
             return jsonify({"status": "error", "message": f"Meal plan for week {week_str} not found"}), 404
         
@@ -738,7 +740,8 @@ def check_prep_task():
             
         # Load from DB
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).execute()
+        query = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str)
+        res = storage.execute_with_retry(query)
         if not res.data or len(res.data) == 0:
             return jsonify({"status": "error", "message": "Meal plan not found"}), 404
             
@@ -780,7 +783,8 @@ def bulk_check_prep_tasks():
             return jsonify({"status": "error", "message": "Task IDs required"}), 400
             
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str).execute()
+        query = storage.supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("week_of", week_str)
+        res = storage.execute_with_retry(query)
         if not res.data or len(res.data) == 0:
             return jsonify({"status": "error", "message": "Meal plan not found"}), 404
             
@@ -862,7 +866,8 @@ def save_wizard_state():
         h_id = storage.get_household_id()
         
         # 1. Fetch existing plan
-        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).execute()
+        query = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of)
+        res = storage.execute_with_retry(query)
         
         current_plan_data = {}
         if res.data and len(res.data) > 0:
@@ -888,7 +893,8 @@ def get_wizard_state():
             return jsonify({"status": "error", "message": "week_of required"}), 400
             
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).execute()
+        query = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of)
+        res = storage.execute_with_retry(query)
         
         if not res.data or len(res.data) == 0:
              return jsonify({"status": "success", "state": None})

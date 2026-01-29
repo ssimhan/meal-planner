@@ -13,8 +13,24 @@ def client():
     
     app.config['TESTING'] = True
     
-    with app.test_client() as client:
-        yield client
+    class AuthenticatedClient:
+        def __init__(self, test_client):
+            self.test_client = test_client
+            
+        def get(self, *args, **kwargs):
+            headers = kwargs.get('headers', {})
+            headers['Authorization'] = 'Bearer MAGIC_TEST_TOKEN'
+            kwargs['headers'] = headers
+            return self.test_client.get(*args, **kwargs)
+            
+        def post(self, *args, **kwargs):
+            headers = kwargs.get('headers', {})
+            headers['Authorization'] = 'Bearer MAGIC_TEST_TOKEN'
+            kwargs['headers'] = headers
+            return self.test_client.post(*args, **kwargs)
+    
+    with app.test_client() as test_client:
+        yield AuthenticatedClient(test_client)
 
 @pytest.fixture
 def mock_yaml_data():

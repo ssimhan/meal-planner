@@ -2,6 +2,7 @@ import os
 import yaml
 from pathlib import Path
 from supabase import create_client, Client
+from api.utils.storage import execute_with_retry
 
 # Initialize Supabase client with SERVICE ROLE for onboarding
 SUPABASE_URL = os.environ.get('NEXT_PUBLIC_SUPABASE_URL') or os.environ.get('SUPABASE_URL')
@@ -32,10 +33,11 @@ def onboard_new_user(user_id, email):
             }
         }
         
-        h_res = supabase_admin.table("households").insert({
+        query = supabase_admin.table("households").insert({
             "name": family_name,
             "config": config
-        }).execute()
+        })
+        h_res = execute_with_retry(query)
         
         if not h_res.data:
             raise Exception("Failed to create household")
@@ -43,11 +45,12 @@ def onboard_new_user(user_id, email):
         hh_id = h_res.data[0]['id']
         
         # 2. Create profile
-        supabase_admin.table("profiles").insert({
+        query = supabase_admin.table("profiles").insert({
             "id": user_id,
             "household_id": hh_id,
             "full_name": email.split('@')[0].title()
-        }).execute()
+        })
+        execute_with_retry(query)
         
         # 3. Add a sample recipe so the dashboard isn't empty
         sample_recipe = {
@@ -63,7 +66,8 @@ def onboard_new_user(user_id, email):
             },
             "content": "# Welcome Smoothie\n\n1. Blend spinach, banana, and water.\n2. Enjoy your new meal planner!"
         }
-        supabase_admin.table("recipes").insert(sample_recipe).execute()
+        query = supabase_admin.table("recipes").insert(sample_recipe)
+        execute_with_retry(query)
         
         print(f"Onboarded new user {email} with household {hh_id}")
         return hh_id

@@ -1,7 +1,7 @@
 import os
 from functools import wraps
 from flask import request, jsonify
-from api.utils.storage import supabase
+from api.utils.storage import supabase, execute_with_retry
 
 def require_auth(f):
     @wraps(f)
@@ -45,7 +45,8 @@ def require_auth(f):
 
             # Fetch household_id from profiles
             # Query by user_id (linked to auth.uid)
-            profile_res = supabase.table("profiles").select("household_id").eq("user_id", user_res.user.id).execute()
+            query = supabase.table("profiles").select("household_id").eq("user_id", user_res.user.id)
+            profile_res = execute_with_retry(query)
             
             if profile_res.data and len(profile_res.data) > 0:
                 request.household_id = profile_res.data[0].get('household_id')

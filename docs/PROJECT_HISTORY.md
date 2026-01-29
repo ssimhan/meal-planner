@@ -1233,3 +1233,23 @@ Understanding when to use each is fundamental to frontend development. Most bugs
 - Can be wrapped incrementally as needed
 
 **Learning:** Transient errors in distributed systems are inevitable. Retry logic with exponential backoff is a standard pattern that should be built into database wrappers from day one. The cost of 3 retries (max 700ms delay) is negligible compared to the user experience improvement.
+
+### Phase 33: Recipe Link Extraction (2026-01-28)
+
+**Goal:** Allow users to import recipes directly from URLs without relying on paid LLM APIs.
+
+**Problem:**
+Previously, importing a recipe required manual entry or copy-pasting into LLM prompts. The user wanted a cost-free, automated way to extract recipe data (ingredients, instructions, time) from popular cooking sites.
+
+**Solution: `recipe-scrapers` Library**
+Instead of using a general-purpose LLM, we integrated the specialized `recipe-scrapers` Python library which supports 60+ major recipe sites.
+
+**Built:**
+- **Backend API (`POST /api/recipes/extract`):** Wraps `recipe-scrapers` and normalizes output to our internal schema.
+- **Frontend Modal (`ImportRecipeModal.tsx`):** A two-step Wizard:
+  1.  **Input:** User pastes URL.
+  2.  **Verify & Edit:** Extracted data is presented for review before saving.
+- **Integration:** Added "Import" button to Recipe Browser header.
+- **Robustness:** Added `scripts/parse\_recipes.py` restoration logic to fix 500 errors during capture.
+
+**Learning:** Specialized libraries often outperform general LLMs for structured extraction tasks—they are faster, cheaper (free), and more deterministic.

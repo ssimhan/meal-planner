@@ -6,8 +6,33 @@ from flask import Blueprint, jsonify, request
 from api.utils import get_cached_data, get_yaml_data, invalidate_cache
 from api.utils.auth import require_auth
 from api.utils.storage import StorageEngine
+from api.utils.scrapers import extract_recipe_from_url
 
 recipes_bp = Blueprint('recipes', __name__)
+
+@recipes_bp.route("/api/recipes/extract", methods=["POST"])
+@require_auth
+def extract_recipe_route():
+    try:
+        data = request.json or {}
+        url = data.get('url')
+        if not url:
+            return jsonify({"status": "error", "message": "URL is required"}), 400
+            
+        # print(f"DEBUG: Extracting from {url}", flush=True)
+        result = extract_recipe_from_url(url)
+        # print(f"DEBUG: Extraction result success: {result.get('success')}", flush=True)
+        
+        if result.get('success'):
+            return jsonify({"status": "success", "data": result})
+        else:
+            # Return 422 Unprocessable Entity for scraper failures, not 500
+            return jsonify({"status": "error", "message": result.get('error', 'Unknown extraction error')}), 422
+            
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 @recipes_bp.route("/api/recipes")
 @require_auth
@@ -287,6 +312,8 @@ Added from URL: {url}
             "recipe_id": recipe_id
         })
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return jsonify({"status": "error", "message": str(e)}), 500
 
 

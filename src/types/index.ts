@@ -336,10 +336,25 @@ export interface ImportRecipeRequest {
   url: string;
 }
 
+
 export interface ImportRecipeResponse {
   success: boolean;
   message: string;
   recipe_id?: string;
+}
+
+export interface ExtractRecipeResponse {
+  status: 'success' | 'error';
+  data?: {
+    name: string;
+    ingredients: string[];
+    instructions: string[];
+    time: number;
+    yields: string;
+    source_url: string;
+    image?: string;
+  };
+  message?: string;
 }
 
 // Replan Types

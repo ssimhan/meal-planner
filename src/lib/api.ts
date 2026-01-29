@@ -13,6 +13,7 @@ import type {
     InventoryUpdateData,
     BulkAddInventoryItem,
     ImportRecipeResponse,
+    ExtractRecipeResponse,
     ReplanResponse,
     SwapMealsResponse,
     CaptureRecipeRequest,
@@ -194,6 +195,15 @@ export async function importRecipe(url: string): Promise<ImportRecipeResponse> {
         body: JSON.stringify({ url }),
     });
     return handleResponse<ImportRecipeResponse>(res, 'Failed to import recipe');
+}
+
+export async function extractRecipe(url: string): Promise<ExtractRecipeResponse> {
+    const res = await fetch('/api/recipes/extract', {
+        method: 'POST',
+        headers: await getAuthHeaders(),
+        body: JSON.stringify({ url }),
+    });
+    return handleResponse<ExtractRecipeResponse>(res, 'Failed to extract recipe');
 }
 
 export async function replan(notes?: string, strategy: 'shuffle' | 'fresh' = 'shuffle', keep_days: string[] = [], prep_days: string[] = []): Promise<ReplanResponse> {

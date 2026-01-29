@@ -1,836 +1,575 @@
-- id: aloo_corn_tikki_roll
-  name: Aloo Corn Tikki Roll
+- id: sweet_potato_tofu_chickpea_curry_make_sauce_ahead
+  name: Sweet Potato, Tofu & Chickpea Curry (Make Sauce Ahead)
   cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - avocado
-  - cilantro
-  - corn
-  - garlic
-  - ginger
-  - onion
-  - potato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/aloo_corn_tikki_roll.md
-  tags:
-  - dinner
-  - instant_pot
-  - sanjyot keer
-- id: apple_cinnamon_carrot_muffin
-  name: Apple Cinnamon Carrot Muffin
-  cuisine: dessert
-  meal_type: baked_goods
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - avocado
-  - carrot
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/apple_cinnamon_carrot_muffin.md
-  tags:
-  - instant_pot
-  - oven
-  - rew
-  - school snacks
-- id: apple_sauce
-  name: Apple sauce
-  cuisine: snack
   meal_type: sauce_dip
-  effort_level: low
+  effort_level: high
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/apple_sauce.md
-  tags:
-  - school snacks
-  - stovetop
-- id: arisi_upma_mix
-  name: Arisi Upma
-  cuisine: indian
-  meal_type: breakfast
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/arisi_upma_mix.md
-  tags:
-  - indian
-  - school entrees
-  - stovetop
-- id: avocado_packs
-  name: Avocado packs
-  cuisine: snack
-  meal_type: simple_snack
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - none
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/avocado_packs.md
-- id: baby_carrots
-  name: Baby Carrots
-  cuisine: snack
-  meal_type: simple_snack
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/baby_carrots.md
-  tags:
-  - school snacks
-  - stovetop
-- id: baked_black_bean_and_sweet_potato_flautas
-  name: Baked Black Bean and Sweet Potato Flautas
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - beans
-  - cilantro
-  - corn
-  - garlic
-  - onion
-  - pepper
-  - potato
-  - sweet potato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/baked_black_bean_and_sweet_potato_flautas.md
-  tags:
-  - instant_pot
-  - mexican
-  - oven
-- id: balsamic_bruschetta
-  name: Balsamic Bruschetta
-  cuisine: italian
-  meal_type: appetizer
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg:
-  - basil
-  - garlic
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/balsamic_bruschetta.md
-  tags:
-  - oven
-- id: banana_bread_muffins
-  name: Banana Bread Muffins
-  cuisine: dessert
-  meal_type: baked_goods
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/banana_bread_muffins.md
-  tags:
-  - oven
-  - rew
-  - school snacks
-- id: best_ever_banana_nut_muffins
-  name: Best Ever Banana Nut Muffins
-  cuisine: snack
-  meal_type: baked_goods
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/best_ever_banana_nut_muffins.md
-  tags:
-  - oven
-- id: bhel_puri_chaat
-  name: Bhel Puri Chaat
-  cuisine: indian
-  meal_type: appetizer
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg:
-  - cilantro
-  - cucumber
-  - lemon
-  - onion
-  - potato
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/bhel_puri_chaat.md
-  tags:
-  - dinner
-  - guest apps
-  - oven
-- id: bisi_bele_bath
-  name: Bisi Bele Bath
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - stovetop
-  main_veg:
-  - beans
-  - carrot
-  - onion
-  - peas
-  - potato
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/bisi_bele_bath.md
-  tags:
-  - indian
-  - instant_pot
-  - stovetop
-- id: black_bean_brownie_bites
-  name: Black Bean Brownie Bites
-  cuisine: dessert
-  meal_type: snack_bar
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - beans
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/black_bean_brownie_bites.md
-  tags:
-  - instant_pot
-  - oven
-  - school snacks
-- id: black_bean_quinoa_salad
-  name: Black Bean Quinoa Salad
-  cuisine: mexican
-  meal_type: salad
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - beans
-  - bell pepper
-  - cilantro
-  - lime
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/black_bean_quinoa_salad.md
-  tags:
-  - dinner
-  - middle eastern
-  - rew
-  - salad
-  - school entrees
-  - stovetop
-- id: blackberries
-  name: Blackberries
-  cuisine: snack
-  meal_type: unknown
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/blackberries.md
-- id: blueberry_chocolate_chip_muffin
-  name: Blueberry Chocolate Chip Muffin
-  cuisine: dessert
-  meal_type: baked_goods
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - avocado
-  - potato
-  - sweet potato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/blueberry_chocolate_chip_muffin.md
-  tags:
-  - instant pot
-  - instant_pot
-  - oven
-  - rew
-  - school snacks
-- id: broccoli_spinach_pasta_sauce
-  name: Broccoli Spinach Pasta Sauce
-  cuisine: italian
-  meal_type: pasta_noodles
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - broccoli
-  - garlic
-  - lemon
-  - pepper
-  - spinach
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/broccoli_spinach_pasta_sauce.md
-  tags:
-  - dinner
-  - stovetop
-- id: butternut_squash_mac_and_cheese
-  name: Butternut Squash Mac and Cheese
-  cuisine: american
-  meal_type: pasta_noodles
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
   main_veg:
   - butternut squash
-  - squash
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/butternut_squash_mac_and_cheese.md
-  tags:
-  - instant_pot
-- id: caramel_delight_energy_balls
-  name: Caramel Delight Energy Balls
-  cuisine: dessert
-  meal_type: snack_bar
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/caramel_delight_energy_balls.md
-  tags:
-  - instant_pot
-  - school snacks
-- id: carrot_cake_bars
-  name: Carrot Cake Bars
-  cuisine: dessert
-  meal_type: simple_snack
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - carrot
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/carrot_cake_bars.md
-  tags:
-  - dessert
-  - instant_pot
-  - oven
-  - weekend only
-- id: cauliflower_alfredo_sauce
-  name: Pasta with Cauliflower Alfredo Sauce
-  cuisine: italian
-  meal_type: sauce_dip
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - oven
-  - stovetop
-  main_veg:
   - cauliflower
-  - garlic
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/cauliflower_alfredo_sauce.md
-  tags:
-  - italian
-  - oven
-  - stovetop
-- id: cauliflower_rasam
-  name: Cauliflower Rasam
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - cauliflower
-  - cilantro
-  - lemon
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/cauliflower_rasam.md
-  tags:
-  - dinner
-  - indian
-  - stovetop
-- id: chana_masala_ip
-  name: Chana Masala (IP)
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - stovetop
-  main_veg:
-  - cilantro
   - garlic
   - ginger
+  - lemon
+  - onion
+  - peas
+  - potato
+  - potatoe
+  - squash
+  - sweet potato
+  - tomato
+  - tomatoe
+  appliances:
+  - instant_pot
+  - oven
+  - stovetop
+  categories:
+  - ''
+  source_url: null
+- id: puree_pancakes
+  name: Puree Pancakes
+  cuisine: american
+  meal_type: breakfast
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - School Entrees
+  source_url: null
+- id: homemade_larabars
+  name: Homemade Larabars
+  cuisine: unknown
+  meal_type: snack_bar
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - School Snacks
+  source_url: null
+- id: vegetarian_burrito_bowl_with_avocado_crema
+  name: Vegetarian Burrito Bowl with Avocado Crema
+  cuisine: mexican
+  meal_type: tacos_wraps
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - avocado
+  - beans
+  - bell pepper
+  - cauliflower
+  - cilantro
+  - garlic
+  - lettuce
+  - lime
+  - onion
+  appliances:
+  - instant_pot
+  - oven
+  categories:
+  - Mexican
+  source_url: null
+- id: pizza_muffins_with_veggies
+  name: Pizza Muffins (with Veggies!)
+  cuisine: italian
+  meal_type: pizza
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - carrot
+  appliances:
+  - oven
+  categories:
+  - ''
+  source_url: null
+- id: chex_cereal
+  name: Chex cereal
+  cuisine: unknown
+  meal_type: unknown
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - School Snacks
+  source_url: null
+- id: whole_fruit_ice_pops
+  name: Whole Fruit Ice Pops
+  cuisine: unknown
+  meal_type: frozen_treat
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - lime
+  appliances:
+  - stovetop
+  categories:
+  - ''
+  source_url: null
+- id: veggie_straws
+  name: Veggie straws
+  cuisine: unknown
+  meal_type: unknown
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - School Snacks
+  source_url: null
+- id: samosa_grilled_cheese
+  name: Samosa Grilled Cheese
+  cuisine: indian
+  meal_type: sandwich
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cilantro
+  - garlic
+  - onion
+  - potato
+  - potatoe
+  appliances:
+  - stovetop
+  categories:
+  - Indian
+  - Sandwich
+  - TCL
+  source_url: null
+- id: vegan_chocolate_mousse
+  name: Vegan Chocolate Mousse
+  cuisine: unknown
+  meal_type: unknown
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - ''
+  source_url: null
+- id: so_good_chickpea_blondies
+  name: So Good Chickpea Blondies
+  cuisine: unknown
+  meal_type: snack_bar
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  - peas
+  appliances:
+  - instant_pot
+  - oven
+  categories: []
+  source_url: null
+- id: soft_and_chewy_white_chocolate_chip_cookies
+  name: Soft and Chewy White Chocolate Chip Cookies
+  cuisine: unknown
+  meal_type: baked_goods
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - instant_pot
+  - oven
+  categories:
+  - Dessert
+  source_url: null
+- id: avocado_packs
+  name: Avocado packs
+  cuisine: unknown
+  meal_type: simple_snack
+  effort_level: normal
+  tags: []
+  no_chop_compatible: true
+  main_veg:
+  - avocado
+  appliances:
+  - none
+- id: vegetarian_tortilla_soup
+  name: Vegetarian Tortilla Soup
+  cuisine: mexican
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  - bell pepper
+  - cilantro
+  - corn
+  - garlic
+  - lime
+  - onion
+  - radish
+  - tomato
+  - tomatoe
+  appliances:
+  - instant_pot
+  - oven
+  - stovetop
+  categories:
+  - Dinner
+  - Mexican
+  source_url: null
+- id: paruppu_thogayal
+  name: Paruppu Thogayal
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - garlic
+  appliances:
+  - stovetop
+  categories:
+  - Indian
+  - Raks Kitchen
+  source_url: null
+- id: mini_orange
+  name: Mini orange
+  cuisine: unknown
+  meal_type: simple_snack
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - School Snacks
+  source_url: null
+- id: blueberry_chocolate_chip_muffin
+  name: Blueberry Chocolate Chip Muffin
+  cuisine: unknown
+  meal_type: baked_goods
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - avocado
+  - potato
+  - sweet potato
+  appliances:
+  - instant_pot
+  - oven
+  categories:
+  - REW
+  - School Snacks
+  source_url: null
+- id: strawberry_muffins
+  name: Strawberry Muffins
+  cuisine: unknown
+  meal_type: baked_goods
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - oven
+  categories:
+  - ''
+  source_url: null
+- id: romesco_gnocchi
+  name: Romesco Gnocchi
+  cuisine: italian
+  meal_type: pasta_noodles
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - garlic
+  - pepper
+  - spinach
+  - tomato
+  - tomatoe
+  appliances:
+  - stovetop
+  categories:
+  - Dinner
+  - Italian
+  source_url: null
+- id: instant_nei_appam
+  name: Instant Nei Appam
+  cuisine: indian
+  meal_type: breakfast
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - instant_pot
+  categories:
+  - Dessert
+  - Indian
+  source_url: null
+- id: tandoori_veggie_quesadillas
+  name: Tandoori Veggie Quesadillas
+  cuisine: mexican
+  meal_type: tacos_wraps
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - bell pepper
+  - cilantro
+  - corn
+  - garlic
+  - onion
+  appliances:
+  - stovetop
+  categories:
+  - Dinner
+  - TCL
+  source_url: null
+- id: mattar_paneer_sabji
+  name: Mattar Paneer Sabji
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cilantro
+  - garlic
   - onion
   - peas
   - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/chana_masala_ip.md
-  tags:
-  - dinner
-  - indian
-  - instant pot
-  - instant_pot
+  - tomatoe
+  appliances:
   - stovetop
-- id: cheese_and_tomato_quinoa_balls
-  name: Cheese and Tomato Quinoa Balls
-  cuisine: snack
-  meal_type: soup_stew
-  effort_level: high
+  categories:
+  - Dinner
+  - Indian
+  source_url: null
+- id: enchilada_sauce
+  name: Enchilada Sauce
+  cuisine: mexican
+  meal_type: tacos_wraps
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
+  main_veg:
+  - garlic
+  - tomato
+  appliances:
+  - stovetop
+  categories:
+  - Mexican
+  - Prep
+  source_url: null
+- id: raisins
+  name: Raisins
+  cuisine: unknown
+  meal_type: simple_snack
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - School Snacks
+  source_url: null
+- id: zucchini_and_paneer_waffles
+  name: Zucchini and Paneer Waffles
+  cuisine: indian
+  meal_type: breakfast
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cilantro
+  - zucchini
+  appliances:
+  - instant_pot
+  categories:
+  - ''
+  source_url: null
+- id: mediterranean_quinoa_salad
+  name: Mediterranean Quinoa Salad
+  cuisine: unknown
+  meal_type: salad
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  - cucumber
+  - lemon
+  - tomato
+  appliances:
+  - stovetop
+  categories:
+  - Dinner
+  - Middle Eastern
+  - REW
+  - Salad
+  - School Entrees
+  source_url: null
+- id: spinach_white_bean_enchiladas
+  name: Spinach White Bean Enchiladas
+  cuisine: mexican
+  meal_type: tacos_wraps
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  - cilantro
+  - corn
+  - garlic
+  - spinach
   appliances:
   - oven
   - stovetop
+  categories:
+  - ''
+  source_url: null
+- id: curried_egg_salad_sandwich
+  name: Curried Egg Salad Sandwich
+  cuisine: indian
+  meal_type: sandwich
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cilantro
+  - garlic
+  appliances:
+  - stovetop
+  categories:
+  - Sandwich
+  - School Entrees
+  - TCL
+  source_url: null
+- id: best_ever_banana_nut_muffins
+  name: Best Ever Banana Nut Muffins
+  cuisine: unknown
+  meal_type: baked_goods
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - oven
+  categories:
+  - ''
+  source_url: null
+- id: sheet_pan_coconut_vegetable_curry
+  name: Sheet Pan Coconut Vegetable Curry
+  cuisine: indian
+  meal_type: unknown
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cauliflower
+  - cilantro
+  - garlic
+  - kale
+  - lime
+  - onion
+  - potato
+  - sweet potato
+  appliances:
+  - instant_pot
+  - oven
+  categories:
+  - Asian
+  source_url: null
+- id: fruit_bar
+  name: Fruit bar
+  cuisine: unknown
+  meal_type: unknown
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - School Snacks
+  source_url: null
+- id: guacamole
+  name: Guacamole
+  cuisine: mexican
+  meal_type: sauce_dip
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - avocado
+  - cilantro
+  - lemon
+  - onion
+  - tomato
+  appliances:
+  - stovetop
+  categories:
+  - Guest Apps
+  - Mexican
+  - School Snacks
+  source_url: null
+- id: cheese_and_tomato_quinoa_balls
+  name: Cheese and Tomato Quinoa Balls
+  cuisine: unknown
+  meal_type: soup_stew
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
   main_veg:
   - basil
   - garlic
   - onion
   - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/cheese_and_tomato_quinoa_balls.md
-  tags:
-  - dinner
+  - tomatoe
+  appliances:
   - oven
-  - school entrees
-  - school snacks
   - stovetop
-- id: cheese_cubes
-  name: Cheese cubes
-  cuisine: snack
-  meal_type: simple_snack
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - none
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/cheese_cubes.md
-- id: cheesy_veggie_quesadilla
-  name: Cheesy Veggie Quesadilla
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - bell pepper
-  - corn
-  - garlic
-  - onion
-  - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/cheesy_veggie_quesadilla.md
-  tags:
-  - instant_pot
-  - mexican
-  - rew
-- id: chef_s_paniyaram
-  name: Chef’s Paniyaram
-  cuisine: indian
-  meal_type: unknown
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - cilantro
-  - onion
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/chef_s_paniyaram.md
-  tags:
-  - indian
-  - instant_pot
-- id: cherry_tomato_salad
-  name: Cherry Tomato Salad
-  cuisine: snack
-  meal_type: salad
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - garlic
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/cherry_tomato_salad.md
-  tags:
-  - dinner
-  - salad
-  - school snacks
-  - stovetop
-- id: cherry_tomatoes
-  name: Cherry tomatoes
-  cuisine: snack
-  meal_type: simple_snack
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/cherry_tomatoes.md
-  tags:
-  - school snacks
-  - stovetop
-- id: chex_cereal
-  name: Chex cereal
-  cuisine: snack
-  meal_type: unknown
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/chex_cereal.md
-  tags:
-  - school snacks
-  - stovetop
-- id: chickpea_chaat_salad
-  name: Chickpea Chaat Salad
-  cuisine: indian
-  meal_type: salad
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - bell pepper
-  - carrot
-  - cilantro
-  - cucumber
-  - garlic
-  - lemon
-  - onion
-  - peas
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/chickpea_chaat_salad.md
-  tags:
-  - guest apps
-  - indian
-  - mexican
-  - stovetop
+  categories:
+  - Dinner
+  - School Entrees
+  - School Snacks
+  source_url: null
 - id: chocolate_chip_mini_muffins_little_bites_copycat
   name: Chocolate Chip Mini Muffins (Little Bites Copycat)
-  cuisine: dessert
+  cuisine: unknown
   meal_type: baked_goods
-  effort_level: medium
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
   main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/chocolate_chip_mini_muffins_little_bites_copycat.md
-  tags:
-  - instant pot
-  - instant_pot
-  - oven
-- id: chocolate_protein_muffins_with_veggies
-  name: Chocolate Protein Muffins (with Veggies!)
-  cuisine: american
-  meal_type: baked_goods
-  effort_level: medium
-  no_chop_compatible: false
   appliances:
   - instant_pot
   - oven
-  main_veg:
-  - spinach
-  - zucchini
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/chocolate_protein_muffins_with_veggies.md
-  tags:
-  - instant_pot
-  - oven
-- id: chow_chow_kootu
-  name: Chow Chow Kootu
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/chow_chow_kootu.md
-  tags:
-  - indian
-  - instant_pot
-- id: corn_black_bean_dip_tcl
-  name: Corn & Black Bean Casserole
-  cuisine: mexican
-  meal_type: sauce_dip
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - beans
-  - bell pepper
-  - cilantro
-  - corn
-  - garlic
-  - onion
-  - pepper
-  - scallions
-  - serrano
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/corn_black_bean_dip_tcl.md
-  tags:
-  - guest apps
-  - instant pot
-  - instant_pot
-  - oven
-  - tcl
-- id: cowboy_caviar_salad
-  name: Cowboy Caviar Salad
-  cuisine: american
-  meal_type: salad
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - beans
-  - bell pepper
-  - cilantro
-  - corn
-  - garlic
-  - jalapeno
-  - lime
-  - onion
-  - peas
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/cowboy_caviar_salad.md
-  tags:
-  - instant_pot
-  - salad
-- id: creamy_macaroni_pasta_salad
-  name: Creamy Macaroni Pasta Salad
-  cuisine: italian
-  meal_type: pasta_noodles
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - broccoli
-  - cucumber
-  - onion
-  - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/creamy_macaroni_pasta_salad.md
-  tags:
-  - dinner
-  - stovetop
-- id: crispy_chipotle_sweet_potato_tacos_with_lime_crema
-  name: Crispy Chipotle Sweet Potato Tacos with Lime Crema
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - beans
-  - cilantro
-  - garlic
-  - lime
-  - pepper
-  - poblano
-  - potato
-  - sweet potato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/crispy_chipotle_sweet_potato_tacos_with_lime_crema.md
-  tags:
-  - instant pot
-  - instant_pot
-  - mexican
-  - oven
-- id: cubed_fried_tofu
-  name: Cubed, fried tofu
-  cuisine: asian
-  meal_type: side_dish
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/cubed_fried_tofu.md
-  tags:
-  - school snacks
-  - stovetop
-- id: cucumber_cream_cheese_bagel
-  name: Cucumber Cream Cheese Bagel
-  cuisine: snack
-  meal_type: sandwich
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - cucumber
-  - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/cucumber_cream_cheese_bagel.md
-  tags:
-  - rew
-  - school entrees
-  - stovetop
-- id: cucumber_sandwiches
-  name: Cucumber Sandwiches
-  cuisine: american
-  meal_type: sandwich
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - chives
-  - cucumber
-  - garlic
-  - lemon
-  - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/cucumber_sandwiches.md
-  tags:
-  - guest apps
-  - instant_pot
-  - sandwich
-  - school entrees
-  - school snacks
+  categories:
+  - ''
+  source_url: null
 - id: curried_cauliflower_quinoa_salad
   name: Curried Cauliflower Quinoa Salad
   cuisine: mediterranean
   meal_type: salad
-  effort_level: medium
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - oven
   main_veg:
   - arugula
   - cabbage
@@ -839,2656 +578,1800 @@
   - cucumber
   - garlic
   - lemon
-  avoid_contains:
-  - cabbage
-  source:
-    type: markdown
-    file: recipes/content/curried_cauliflower_quinoa_salad.md
-  tags:
+  appliances:
   - oven
-- id: curried_egg_salad_sandwich
-  name: Curried Egg Salad Sandwich
-  cuisine: indian
-  meal_type: sandwich
-  effort_level: medium
+  categories: []
+  source_url: null
+- id: wheat_thins_or_triscuits
+  name: Wheat thins or triscuits
+  cuisine: unknown
+  meal_type: unknown
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
+  main_veg: []
   appliances:
   - stovetop
-  main_veg:
-  - cilantro
-  - garlic
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/curried_egg_salad_sandwich.md
-  tags:
-  - sandwich
-  - school entrees
-  - stovetop
-  - tcl
-- id: dry_paneer_masala
-  name: Dry Paneer Masala
+  categories:
+  - School Snacks
+  source_url: null
+- id: pav_bhaji
+  name: Pav Bhaji
   cuisine: indian
   meal_type: soup_stew
-  effort_level: medium
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - stovetop
   main_veg:
+  - beet
   - bell pepper
-  - corn
+  - carrot
+  - cauliflower
   - garlic
   - ginger
   - onion
-  - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/dry_paneer_masala.md
-  tags:
-  - dinner
+  - peas
+  - potato
+  - potatoe
+  - tomato
+  - tomatoe
+  appliances:
+  - instant_pot
+  - oven
   - stovetop
-  - tcl
+  categories:
+  - Dinner
+  - Indian
+  source_url: null
+- id: protein_banana_bread
+  name: Protein Banana Bread
+  cuisine: indian
+  meal_type: baked_goods
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - oven
+  categories:
+  - ''
+  source_url: null
+- id: chow_chow_kootu
+  name: Chow Chow Kootu
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - instant_pot
+  categories:
+  - Indian
+  source_url: null
+- id: blackberries
+  name: Blackberries
+  cuisine: unknown
+  meal_type: unknown
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - Fruit
+  - Simple Snacks
+  source_url: null
+- id: vegetarian_chili
+  name: Vegetarian Chili
+  cuisine: mexican
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  - bell pepper
+  - cilantro
+  - garlic
+  - onion
+  - pepper
+  - potato
+  - potatoe
+  - sweet potato
+  - tomato
+  appliances:
+  - instant_pot
+  - oven
+  categories:
+  - Dinner
+  - Instant Pot
+  - Soup
+  source_url: null
+- id: pasta_with_veggie_sauce
+  name: Pasta with Veggie Sauce
+  cuisine: italian
+  meal_type: pasta_noodles
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beet
+  - onion
+  - potato
+  appliances:
+  - instant_pot
+  categories:
+  - Dinner
+  - Instant Pot
+  - Italian
+  source_url: null
+- id: panchmel_dal
+  name: Panchmel Dal
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cilantro
+  - ginger
+  - lime
+  - onion
+  - tomato
+  - tomatoe
+  appliances:
+  - instant_pot
+  - stovetop
+  categories:
+  - Dinner
+  - Indian
+  - Instant Pot
+  source_url: null
+- id: freeze_dried_fruits
+  name: Freeze dried fruits
+  cuisine: unknown
+  meal_type: unknown
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - School Snacks
+  source_url: null
 - id: easy_french_toast_sticks
   name: Easy French Toast Sticks
   cuisine: american
   meal_type: sandwich
-  effort_level: medium
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
+  main_veg: []
   appliances:
   - air_fryer
   - instant_pot
   - oven
+  categories:
+  - ''
+  source_url: null
+- id: loaded_greek_chickpea_pasta_salad
+  name: Loaded Greek Chickpea Pasta Salad
+  cuisine: italian
+  meal_type: salad
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - bell pepper
+  - cucumber
+  - garlic
+  - parsley
+  - peas
+  - tomato
+  - tomatoe
+  appliances:
+  - stovetop
+  categories:
+  - Dinner
+  - Middle Eastern
+  - Salad
+  source_url: null
+- id: instant_pot_mexican_rice_beans
+  name: Instant Pot Mexican Rice & Beans
+  cuisine: mexican
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  - corn
+  - garlic
+  - lettuce
+  - onion
+  - scallion
+  - serrano
+  appliances:
+  - instant_pot
+  categories:
+  - Dinner
+  - Instant Pot
+  - TCL
+  source_url: null
+- id: vetha_kozhumbu
+  name: Vetha Kozhumbu
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - onion
+  - tomato
+  appliances:
+  - stovetop
+  categories:
+  - Hebbar Kitchen
+  - Indian
+  source_url: null
+- id: apple_sauce
+  name: Apple sauce
+  cuisine: unknown
+  meal_type: sauce_dip
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
   main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/easy_french_toast_sticks.md
+  appliances:
+  - stovetop
+  categories:
+  - School Snacks
+  source_url: null
+- id: spinach_and_feta_stuffed_pita_with_a_side_of_greek_salad
+  name: Spinach and Feta Stuffed Pita with a Side of Greek Salad
+  cuisine: mediterranean
+  meal_type: sandwich
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cucumber
+  - garlic
+  - lemon
+  - onion
+  - spinach
+  - tomato
+  - tomatoe
+  appliances:
+  - stovetop
+  categories:
+  - Middle Eastern
+  - Salad
+  - Sandwich
+  source_url: null
+- id: hotel_sambar
+  name: Hotel Sambar
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  - carrot
+  - cilantro
+  - green bean
+  - onion
+  - tomato
+  appliances:
+  - stovetop
+  categories:
+  - Dinner
+  - Hebbar Kitchen
+  - Indian
+  source_url: null
+- id: pesto_gnocchi
+  name: Pesto Gnocchi
+  cuisine: italian
+  meal_type: pasta_noodles
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - Italian
+  - Pasta
+  source_url: null
+- id: veggie_wrap
+  name: Veggie Wrap
+  cuisine: mexican
+  meal_type: tacos_wraps
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - avocado
+  - beet
+  - bell pepper
+  - carrot
+  - corn
+  - cucumber
+  - lettuce
+  - pepper
+  - spinach
+  - tomato
+  appliances:
+  - oven
+  categories:
+  - ''
+  source_url: null
+- id: cauliflower_rasam
+  name: Cauliflower Rasam
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cauliflower
+  - cilantro
+  - lemon
+  - tomato
+  - tomatoe
+  appliances:
+  - stovetop
+  categories:
+  - Dinner
+  - Indian
+  source_url: null
+- id: tofu_scramble_freezer_meal_prep
+  name: Tofu Scramble (Freezer Meal Prep)
+  cuisine: unknown
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - garlic
+  - onion
+  - spinach
+  - tomato
+  - tomatoe
+  appliances:
+  - instant_pot
+  categories:
+  - ''
+  source_url: null
+- id: spinach_puffs
+  name: Spinach Puffs
+  cuisine: unknown
+  meal_type: appetizer
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - garlic
+  - onion
+  - spinach
+  appliances:
+  - oven
+  categories:
+  - Guest Apps
+  - School Entrees
+  source_url: null
+- id: test_recipe_granola_fix
+  name: Test Recipe Granola Fix
+  cuisine: unknown
+  meal_type: dinner
+  effort_level: normal
   tags:
-  - air_fryer
+  - not meal
+  - missing ingredients
+  - missing instructions
+- id: vegan_lemon_pepper_tofu
+  name: Vegan Lemon Pepper Tofu
+  cuisine: italian
+  meal_type: simple_snack
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - broccoli
+  - corn
+  - garlic
+  - lemon
+  appliances:
   - instant_pot
   - oven
+  categories:
+  - Dinner
+  - REW
+  source_url: null
+- id: khaman_dhokla_ip
+  name: Khaman Dhokla IP
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - ginger
+  - lime
+  appliances:
+  - instant_pot
+  - stovetop
+  categories:
+  - School Entrees
+  source_url: null
+- id: ip_masoor_dal_red_lentils
+  name: IP Masoor Dal / Red Lentils
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cilantro
+  - garlic
+  - ginger
+  - lime
+  - onion
+  - tomato
+  - tomatoe
+  appliances:
+  - instant_pot
+  - stovetop
+  categories:
+  - Dinner
+  - Indian
+  - Instant Pot
+  source_url: null
+- id: tomato_rice
+  name: Tomato Rice
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - lemon
+  - onion
+  - tomato
+  appliances:
+  - instant_pot
+  - stovetop
+  categories:
+  - Hebbar Kitchen
+  - Indian
+  source_url: null
+- id: vegan_spicy_thai_drunken_noodles_with_seared_tofu
+  name: Vegan Spicy Thai Drunken Noodles with Seared Tofu
+  cuisine: asian
+  meal_type: pasta_noodles
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - basil
+  - bell pepper
+  - broccoli
+  - carrot
+  - corn
+  - garlic
+  - lime
+  - onion
+  - peas
+  appliances:
+  - stovetop
+  categories:
+  - Asian
+  - Dinner
+  source_url: null
+- id: easy_zucchini_pasta_sauce
+  name: Easy Zucchini Pasta Sauce
+  cuisine: italian
+  meal_type: pasta_noodles
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - basil
+  - beans
+  - garlic
+  - lemon
+  - parsley
+  - spinach
+  - zucchini
+  appliances:
+  - instant_pot
+  categories:
+  - ''
+  source_url: null
+- id: crispy_chipotle_sweet_potato_tacos_with_lime_crema
+  name: Crispy Chipotle Sweet Potato Tacos with Lime Crema
+  cuisine: mexican
+  meal_type: tacos_wraps
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  - cilantro
+  - garlic
+  - lime
+  - poblano
+  - potato
+  - potatoe
+  - sweet potato
+  appliances:
+  - instant_pot
+  - oven
+  categories:
+  - Mexican
+  source_url: null
+- id: six_bean_chili
+  name: Six-Bean Chili
+  cuisine: unknown
+  meal_type: soup_stew
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - avocado
+  - beans
+  - carrot
+  - corn
+  - garlic
+  - onion
+  - tomato
+  - tomatoe
+  appliances:
+  - slow_cooker
+  categories:
+  - ''
+  source_url: null
+- id: ip_ven_pongal
+  name: IP Ven Pongal
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - ginger
+  appliances:
+  - instant_pot
+  - oven
+  - stovetop
+  categories:
+  - Indian
+  - Instant Pot
+  source_url: null
+- id: masala_puri
+  name: Masala Puri
+  cuisine: unknown
+  meal_type: dinner
+  effort_level: normal
+  tags: []
+  source_url: https://www.indianhealthyrecipes.com/masala-puri-chaat/
+- id: simple_vegetarian_slow_cooked_beans
+  name: Simple Vegetarian Slow-Cooked Beans
+  cuisine: unknown
+  meal_type: soup_stew
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  - carrot
+  - cilantro
+  - garlic
+  - parsley
+  - spinach
+  - tomato
+  - tomatoe
+  appliances:
+  - slow_cooker
+  categories:
+  - ''
+  source_url: null
+- id: vegan_pad_thai
+  name: Vegan Pad Thai
+  cuisine: asian
+  meal_type: pasta_noodles
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - chive
+  - cilantro
+  - garlic
+  - lime
+  appliances:
+  - stovetop
+  categories:
+  - Asian
+  - Dinner
+  source_url: null
+- id: banana_bread_muffins
+  name: Banana Bread Muffins
+  cuisine: unknown
+  meal_type: baked_goods
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - oven
+  categories:
+  - REW
+  - School Snacks
+  source_url: null
+- id: black_bean_brownie_bites
+  name: Black Bean Brownie Bites
+  cuisine: unknown
+  meal_type: snack_bar
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  appliances:
+  - instant_pot
+  - oven
+  categories:
+  - School Snacks
+  source_url: null
+- id: cucumber_cream_cheese_bagel
+  name: Cucumber Cream Cheese Bagel
+  cuisine: unknown
+  meal_type: sandwich
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cucumber
+  appliances:
+  - stovetop
+  categories:
+  - REW
+  - School Entrees
+  source_url: null
+- id: cheesy_veggie_quesadilla
+  name: Cheesy Veggie Quesadilla
+  cuisine: mexican
+  meal_type: tacos_wraps
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - bell pepper
+  - corn
+  - garlic
+  - onion
+  appliances:
+  - instant_pot
+  categories:
+  - Mexican
+  - REW
+  source_url: null
+- id: favorite_pizza_rolls_with_spinach_and_cheese
+  name: Favorite Pizza Rolls (with Spinach and Cheese)
+  cuisine: italian
+  meal_type: pizza
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - spinach
+  appliances:
+  - instant_pot
+  - oven
+  categories:
+  - Dinner
+  - Italian
+  source_url: null
+- id: corn_black_bean_dip_tcl
+  name: Corn & Black Bean Dip TCL
+  cuisine: unknown
+  meal_type: sauce_dip
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  - bell pepper
+  - cilantro
+  - corn
+  - garlic
+  - onion
+  - scallion
+  - serrano
+  appliances:
+  - instant_pot
+  - oven
+  categories:
+  - Guest Apps
+  - TCL
+  source_url: null
+- id: homemade_popcorn
+  name: Homemade popcorn
+  cuisine: unknown
+  meal_type: unknown
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - School Snacks
+  source_url: null
+- id: one_pan_enchilada_quinoa
+  name: One Pan Enchilada Quinoa
+  cuisine: mexican
+  meal_type: tacos_wraps
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - bell pepper
+  - garlic
+  - jalapeno
+  - onion
+  - scallion
+  appliances:
+  - stovetop
+  categories:
+  - Dinner
+  - Mexican
+  - TCL
+  - Weekend Only
+  source_url: null
+- id: no_bake_chocolate_granola_bars
+  name: No-Bake Chocolate Granola Bars
+  cuisine: unknown
+  meal_type: snack_bar
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - instant_pot
+  - oven
+  categories: []
+  source_url: null
+- id: greek_quesadillas
+  name: Greek Quesadillas
+  cuisine: mexican
+  meal_type: tacos_wraps
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - onion
+  - spinach
+  appliances:
+  - instant_pot
+  - oven
+  categories:
+  - Dinner
+  source_url: null
+- id: apple_cinnamon_carrot_muffin
+  name: Apple Cinnamon Carrot Muffin
+  cuisine: unknown
+  meal_type: baked_goods
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - avocado
+  - carrot
+  appliances:
+  - instant_pot
+  - oven
+  categories:
+  - REW
+  - School Snacks
+  source_url: null
+- id: instant_pot_lasagna_soup
+  name: Instant Pot Lasagna Soup
+  cuisine: italian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - bell pepper
+  - cilantro
+  - garlic
+  - onion
+  - parsley
+  - spinach
+  appliances:
+  - instant_pot
+  - stovetop
+  categories:
+  - Dinner
+  - Instant Pot
+  - Italian
+  - TCL
+  source_url: null
+- id: mini_egg_muffins_with_cheese_and_veggies
+  name: Mini Egg Muffins with Cheese and Veggies
+  cuisine: unknown
+  meal_type: baked_goods
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - broccoli
+  - butternut squash
+  - carrot
+  - onion
+  - spinach
+  - squash
+  appliances:
+  - instant_pot
+  - oven
+  categories: []
+  source_url: null
+- id: fruit_and_nut_bars_copycat_larabar
+  name: Fruit and Nut Bars (Copycat Larabar)
+  cuisine: unknown
+  meal_type: snack_bar
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - instant_pot
+  categories: []
+  source_url: null
+- id: poblano_cream_enchilada_sauce
+  name: Poblano Cream Enchilada Sauce
+  cuisine: mexican
+  meal_type: tacos_wraps
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cilantro
+  - garlic
+  - pepper
+  - poblano
+  appliances:
+  - oven
+  categories:
+  - Mexican
+  - Prep
+  - TCL
+  source_url: null
+- id: sambar_rice
+  name: Sambar Rice
+  cuisine: unknown
+  meal_type: dinner
+  effort_level: normal
+  tags: []
+- id: quick_tortilla_pizzas
+  name: Quick Tortilla Pizzas
+  cuisine: mexican
+  meal_type: tacos_wraps
+  effort_level: no_chop
+  tags: []
+  no_chop_compatible: true
+  main_veg:
+  - broccoli
+  appliances:
+  - instant_pot
+  - oven
+  categories: []
+  source_url: null
+- id: tangy_cucumber_salad
+  name: Tangy Cucumber Salad
+  cuisine: unknown
+  meal_type: salad
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - chive
+  - cucumber
+  appliances:
+  - stovetop
+  categories:
+  - Guest Apps
+  - School Snacks
+  source_url: null
+- id: chocolate_protein_muffins_with_veggies
+  name: Chocolate Protein Muffins (with Veggies!)
+  cuisine: unknown
+  meal_type: baked_goods
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - spinach
+  - zucchini
+  appliances:
+  - instant_pot
+  - oven
+  categories:
+  - ''
+  source_url: null
+- id: balsamic_bruschetta
+  name: Balsamic Bruschetta
+  cuisine: italian
+  meal_type: appetizer
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - basil
+  - garlic
+  - tomato
+  - tomatoe
+  appliances:
+  - oven
+  categories:
+  - ''
+  source_url: null
+- id: samosa_pinwheels_baked
+  name: Samosa Pinwheels (Baked)
+  cuisine: indian
+  meal_type: appetizer
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - ginger
+  - lemon
+  - peas
+  - potato
+  - potatoe
+  appliances:
+  - oven
+  categories:
+  - Guest Apps
+  source_url: null
+- id: freezer_ready_mini_pizzas
+  name: Freezer Ready Mini Pizzas
+  cuisine: italian
+  meal_type: pizza
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - bell pepper
+  appliances:
+  - oven
+  categories:
+  - Italian
+  source_url: null
+- id: lemon_crinkle_cookies
+  name: Lemon Crinkle Cookies
+  cuisine: unknown
+  meal_type: baked_goods
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - corn
+  - lemon
+  appliances:
+  - instant_pot
+  - oven
+  categories:
+  - ''
+  source_url: null
+- id: mini_crustless_quiches
+  name: Mini Crustless Quiches
+  cuisine: unknown
+  meal_type: breakfast
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - bell pepper
+  - onion
+  - spinach
+  appliances:
+  - oven
+  categories:
+  - Breakfast
+  - School Entrees
+  source_url: null
+- id: tortellini_primavera
+  name: Tortellini Primavera
+  cuisine: unknown
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - broccoli
+  - carrot
+  - chive
+  - garlic
+  - peas
+  appliances:
+  - stovetop
+  categories:
+  - Dinner
+  - Italian
+  - School Entrees
+  source_url: null
+- id: ip_no_soak_kidney_beans_rajma
+  name: IP No Soak Kidney Beans / Rajma
+  cuisine: unknown
+  meal_type: unknown
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  appliances:
+  - instant_pot
+  - stovetop
+  categories:
+  - Instant Pot
+  source_url: null
+- id: bisi_bele_bath
+  name: Bisi Bele Bath
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  - carrot
+  - onion
+  - peas
+  - potato
+  - potatoe
+  - tomato
+  - tomatoe
+  appliances:
+  - instant_pot
+  - stovetop
+  categories:
+  - Indian
+  source_url: null
+- id: baby_carrots
+  name: Baby Carrots
+  cuisine: unknown
+  meal_type: simple_snack
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - School Snacks
+  source_url: null
+- id: sweet_spinach_muffins_with_banana
+  name: Sweet Spinach Muffins with Banana
+  cuisine: unknown
+  meal_type: baked_goods
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - spinach
+  appliances:
+  - instant_pot
+  - oven
+  categories:
+  - School Snacks
+  source_url: null
+- id: veggie_roti
+  name: Veggie Roti
+  cuisine: indian
+  meal_type: tacos_wraps
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - potato
+  - sweet potato
+  appliances:
+  - oven
+  - stovetop
+  categories: []
+  source_url: null
+- id: black_bean_quinoa_salad
+  name: Black Bean Quinoa Salad
+  cuisine: unknown
+  meal_type: salad
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  - bell pepper
+  - cilantro
+  - lime
+  - tomato
+  appliances:
+  - stovetop
+  categories:
+  - Dinner
+  - Middle Eastern
+  - REW
+  - Salad
+  - School Entrees
+  source_url: null
+- id: grapes
+  name: Grapes
+  cuisine: unknown
+  meal_type: simple_snack
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - School Snacks
+  source_url: null
+- id: quick_refried_bean_tacos
+  name: Quick Refried Bean Tacos
+  cuisine: mexican
+  meal_type: tacos_wraps
+  effort_level: no_chop
+  tags: []
+  no_chop_compatible: true
+  main_veg:
+  - beans
+  - bell pepper
+  - cilantro
+  - garlic
+  - onion
+  appliances:
+  - instant_pot
+  - stovetop
+  categories:
+  - Dinner
+  - Mexican
+  source_url: null
+- id: paruppu_usili
+  name: Paruppu Usili
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  - green bean
+  appliances:
+  - instant_pot
+  categories:
+  - Indian
+  source_url: null
+- id: cheese_cubes
+  name: Cheese cubes
+  cuisine: unknown
+  meal_type: simple_snack
+  effort_level: normal
+  tags: []
+  no_chop_compatible: true
+  main_veg: []
+  appliances:
+  - none
+- id: bhel_puri_chaat
+  name: Bhel Puri Chaat
+  cuisine: indian
+  meal_type: appetizer
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cilantro
+  - cucumber
+  - lemon
+  - onion
+  - potato
+  - tomato
+  appliances:
+  - oven
+  categories:
+  - Dinner
+  - Guest Apps
+  source_url: null
+- id: sliced_cucumber
+  name: Sliced Cucumber
+  cuisine: unknown
+  meal_type: simple_snack
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - School Snacks
+  source_url: null
+- id: shiro_wot_ground_chickpea_stew
+  name: Shiro Wot (Ground-Chickpea Stew)
+  cuisine: unknown
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - garlic
+  - onion
+  - tomato
+  - tomatoe
+  appliances:
+  - oven
+  - stovetop
+  categories: []
+  source_url: null
+- id: protein_banana_muffins
+  name: Protein Banana Muffins
+  cuisine: indian
+  meal_type: baked_goods
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - instant_pot
+  - oven
+  categories: []
+  source_url: null
+- id: caramel_delight_energy_balls
+  name: Caramel Delight Energy Balls
+  cuisine: unknown
+  meal_type: snack_bar
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - instant_pot
+  categories:
+  - School Snacks
+  source_url: null
+- id: vegetable_gyoza
+  name: Vegetable Gyoza
+  cuisine: asian
+  meal_type: appetizer
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cabbage
+  - carrot
+  - corn
+  - garlic
+  - ginger
+  - green onion
+  - onion
+  - potato
+  - scallion
+  appliances:
+  - instant_pot
+  categories:
+  - ''
+  source_url: null
+- id: healthy_homemade_fruit_roll_ups_flavor_guide
+  name: Healthy Homemade Fruit Roll Ups (+ Flavor Guide)
+  cuisine: unknown
+  meal_type: snack_bar
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - lemon
+  appliances:
+  - instant_pot
+  - oven
+  categories:
+  - School Snacks
+  source_url: null
+- id: southwest_corn_chowder_freezer_meal_prep
+  name: Southwest Corn Chowder (Freezer Meal Prep)
+  cuisine: unknown
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - bell pepper
+  - corn
+  - garlic
+  - onion
+  appliances:
+  - instant_pot
+  categories:
+  - ''
+  source_url: null
 - id: easy_homemade_granola_bars
   name: Easy Homemade Granola Bars
-  cuisine: snack
+  cuisine: unknown
   meal_type: snack_bar
-  effort_level: medium
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
   main_veg:
   - butternut squash
   - potato
   - pumpkin
   - squash
   - sweet potato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/easy_homemade_granola_bars.md
-  tags:
+  appliances:
   - instant_pot
   - oven
-- id: easy_pear_popsicles
-  name: Easy Pear Popsicles
-  cuisine: dessert
-  meal_type: frozen_treat
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/easy_pear_popsicles.md
-  tags:
-  - instant_pot
-- id: easy_zucchini_pasta_sauce
-  name: Easy Zucchini Pasta Sauce
-  cuisine: italian
-  meal_type: pasta_noodles
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - basil
-  - beans
-  - garlic
-  - lemon
-  - parsley
-  - pepper
-  - spinach
-  - zucchini
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/easy_zucchini_pasta_sauce.md
-  tags:
-  - instant_pot
-- id: edamame
-  name: Edamame
-  cuisine: snack
+  categories:
+  - ''
+  source_url: null
+- id: carrot_cake_bars
+  name: Carrot Cake Bars
+  cuisine: indian
   meal_type: simple_snack
-  effort_level: low
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/edamame.md
-  tags:
-  - school snacks
-  - stovetop
-- id: enchilada_sauce
-  name: Enchilada Sauce
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - garlic
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/enchilada_sauce.md
-  tags:
-  - mexican
-  - prep
-  - stovetop
-- id: esquites_mexican_street_corn_salad
-  name: Esquites (Mexican Street Corn Salad)
-  cuisine: mexican
-  meal_type: salad
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - cilantro
-  - corn
-  - garlic
-  - lime
-  - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/esquites_mexican_street_corn_salad.md
-  tags:
-  - mexican
-  - stovetop
-- id: favorite_bliss_balls
-  name: Favorite Bliss Balls
-  cuisine: dessert
-  meal_type: snack_bar
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/favorite_bliss_balls.md
-  tags:
-  - instant_pot
-- id: favorite_pizza_rolls_with_spinach_and_cheese
-  name: Favorite Pizza Rolls (with Spinach and Cheese)
-  cuisine: italian
-  meal_type: pizza
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - spinach
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/favorite_pizza_rolls_with_spinach_and_cheese.md
-  tags:
-  - dinner
-  - instant_pot
-  - italian
-  - oven
-- id: freeze_dried_fruits
-  name: Dried mango (Costco)
-  cuisine: snack
-  meal_type: unknown
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/freeze_dried_fruits.md
-  tags:
-  - school snacks
-  - stovetop
-- id: freezer_ready_mini_pizzas
-  name: Freezer Ready Mini Pizzas
-  cuisine: italian
-  meal_type: pizza
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg:
-  - bell pepper
-  - pepper
-  avoid_contains:
-  - mushrooms
-  source:
-    type: markdown
-    file: recipes/content/freezer_ready_mini_pizzas.md
-  tags:
-  - italian
-  - oven
-- id: fruit_and_nut_bars_copycat_larabar
-  name: Fruit and Nut Bars (Copycat Larabar)
-  cuisine: snack
-  meal_type: snack_bar
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/fruit_and_nut_bars_copycat_larabar.md
-  tags:
-  - instant_pot
-- id: fruit_bar
-  name: Fruit bar
-  cuisine: snack
-  meal_type: unknown
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/fruit_bar.md
-  tags:
-  - school snacks
-  - stovetop
-- id: garlic_parmesan_white_beans
-  name: Garlic Parmesan White Beans
-  cuisine: italian
-  meal_type: side_dish
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - beans
-  - garlic
-  - lemon
-  - parsley
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/garlic_parmesan_white_beans.md
-  tags:
-  - stovetop
-- id: granola_bar
-  name: Granola bar
-  cuisine: snack
-  meal_type: snack_bar
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/granola_bar.md
-  tags:
-  - school snacks
-  - stovetop
-- id: grapes
-  name: Grapes
-  cuisine: snack
-  meal_type: simple_snack
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/grapes.md
-  tags:
-  - school snacks
-  - stovetop
-- id: greek_quesadillas
-  name: Greek Quesadillas
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - onion
-  - pepper
-  - spinach
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/greek_quesadillas.md
-  tags:
-  - dinner
-  - instant_pot
-  - oven
-- id: grilled_cheese_and_tomato_soup
-  name: Grilled Cheese and Tomato Soup
-  cuisine: american
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - stovetop
-  main_veg:
-  - garlic
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/grilled_cheese_and_tomato_soup.md
-  tags:
-  - dinner
-  - instant_pot
-  - sandwich
-  - soup
-  - stovetop
-- id: guacamole
-  name: Guacamole
-  cuisine: mexican
-  meal_type: sauce_dip
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - avocado
-  - cilantro
-  - lemon
-  - onion
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/guacamole.md
-  tags:
-  - guest apps
-  - mexican
-  - school snacks
-  - stovetop
-- id: healthy_homemade_fruit_roll_ups_flavor_guide
-  name: Healthy Homemade Fruit Roll Ups (+ Flavor Guide)
-  cuisine: snack
-  meal_type: snack_bar
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - lemon
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/healthy_homemade_fruit_roll_ups_flavor_guide.md
-  tags:
-  - instant_pot
-  - oven
-  - school snacks
-- id: homemade_larabars
-  name: Homemade Larabars
-  cuisine: snack
-  meal_type: snack_bar
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/homemade_larabars.md
-  tags:
-  - school snacks
-  - stovetop
-- id: homemade_oatmeal_cream_pies
-  name: Homemade Oatmeal Cream Pies
-  cuisine: dessert
-  meal_type: breakfast
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/homemade_oatmeal_cream_pies.md
-  tags:
-  - dessert
-  - instant_pot
-  - oven
-- id: homemade_popcorn
-  name: Homemade popcorn
-  cuisine: snack
-  meal_type: unknown
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/homemade_popcorn.md
-  tags:
-  - school snacks
-  - stovetop
-- id: hotel_sambar
-  name: Hotel Sambar
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - beans
-  - carrot
-  - cilantro
-  - green beans
-  - onion
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/hotel_sambar.md
-  tags:
-  - dinner
-  - hebbar kitchen
-  - indian
-  - stovetop
-- id: how_to_make_coconut_rice
-  name: How to Make Coconut Rice
-  cuisine: asian
-  meal_type: side_dish
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - stovetop
-  main_veg:
-  - ginger
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/how_to_make_coconut_rice.md
-  tags:
-  - instant_pot
-  - stovetop
-- id: idli_dosa_batter
-  name: Idli Dosa Batter
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/idli_dosa_batter.md
-  tags:
-  - indian
-  - oven
-- id: instant_nei_appam
-  name: Instant Nei Appam
-  cuisine: indian
-  meal_type: breakfast
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/instant_nei_appam.md
-  tags:
-  - dessert
-  - indian
-  - instant_pot
-- id: instant_pot_lasagna_soup
-  name: Instant Pot Lasagna Soup
-  cuisine: italian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - stovetop
-  main_veg:
-  - bell pepper
-  - cilantro
-  - garlic
-  - onion
-  - parsley
-  - pepper
-  - spinach
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/instant_pot_lasagna_soup.md
-  tags:
-  - dinner
-  - instant pot
-  - instant_pot
-  - italian
-  - stovetop
-  - tcl
-- id: instant_pot_mexican_rice_beans
-  name: Instant Pot Mexican Rice & Beans
-  cuisine: mexican
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - beans
-  - corn
-  - garlic
-  - lettuce
-  - onion
-  - scallions
-  - serrano
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/instant_pot_mexican_rice_beans.md
-  tags:
-  - dinner
-  - instant pot
-  - instant_pot
-  - tcl
-- id: ip_dal_tadka
-  name: IP Dal Tadka
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - stovetop
-  main_veg:
-  - cilantro
-  - garlic
-  - onion
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/ip_dal_tadka.md
-  tags:
-  - dinner
-  - indian
-  - instant pot
-  - instant_pot
-  - stovetop
-- id: ip_masoor_dal_red_lentils
-  name: IP Masoor Dal / Red Lentils
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - stovetop
-  main_veg:
-  - cilantro
-  - garlic
-  - ginger
-  - lime
-  - onion
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/ip_masoor_dal_red_lentils.md
-  tags:
-  - dinner
-  - indian
-  - instant pot
-  - instant_pot
-  - stovetop
-- id: ip_no_soak_kidney_beans_rajma
-  name: IP No Soak Kidney Beans / Rajma
-  cuisine: indian
-  meal_type: unknown
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - stovetop
-  main_veg:
-  - beans
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/ip_no_soak_kidney_beans_rajma.md
-  tags:
-  - instant pot
-  - instant_pot
-  - stovetop
-- id: ip_quinoa_chili
-  name: IP Quinoa Chili
-  cuisine: mexican
-  meal_type: soup_stew
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - beans
-  - bell pepper
-  - cilantro
-  - corn
-  - garlic
-  - lemon
-  - onion
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/ip_quinoa_chili.md
-  tags:
-  - dinner
-  - instant pot
-  - instant_pot
-  - mexican
-  - oven
-  - soup
-- id: ip_ven_pongal
-  name: IP Ven Pongal
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  - stovetop
-  main_veg:
-  - ginger
-  - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/ip_ven_pongal.md
-  tags:
-  - indian
-  - instant pot
-  - instant_pot
-  - oven
-  - stovetop
-- id: jeera_rice
-  name: Jeera Rice
-  cuisine: indian
-  meal_type: unknown
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/jeera_rice.md
-  tags:
-  - dinner
-  - instant_pot
-  - weekend only
-- id: khaman_dhokla_ip
-  name: Khaman Dhokla IP
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - stovetop
-  main_veg:
-  - ginger
-  - lime
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/khaman_dhokla_ip.md
-  tags:
-  - instant pot
-  - instant_pot
-  - school entrees
-  - stovetop
-- id: kondakadalai_kala_channa_masala_sundal
-  name: Kondakadalai Kala Channa Masala Sundal
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg:
-  - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/kondakadalai_kala_channa_masala_sundal.md
-  tags:
-  - dinner
-  - indian
-  - oven
-  - raks kitchen
-- id: lemon_crinkle_cookies
-  name: Lemon Crinkle Cookies
-  cuisine: dessert
-  meal_type: baked_goods
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - corn
-  - lemon
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/lemon_crinkle_cookies.md
-  tags:
-  - instant_pot
-  - oven
-- id: loaded_greek_chickpea_pasta_salad
-  name: Loaded Greek Chickpea Pasta Salad
-  cuisine: italian
-  meal_type: salad
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - bell pepper
-  - cucumber
-  - garlic
-  - parsley
-  - peas
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/loaded_greek_chickpea_pasta_salad.md
-  tags:
-  - dinner
-  - middle eastern
-  - salad
-  - stovetop
-- id: masala_puri
-  name: Masala Puri
-  cuisine: indian
-  meal_type: unknown
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/masala_puri.md
-  tags:
-  - indian
-  - stovetop
-  - street food
-  - vegetarian
-- id: masoor_dal
-  name: Masoor Dal
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - stovetop
-  main_veg:
-  - cilantro
-  - garlic
-  - lemon
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/masoor_dal.md
-  tags:
-  - dinner
-  - indian
-  - instant_pot
-  - stovetop
-- id: mattar_paneer_sabji
-  name: Mattar Paneer Sabji
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - cilantro
-  - garlic
-  - onion
-  - peas
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/mattar_paneer_sabji.md
-  tags:
-  - dinner
-  - indian
-  - stovetop
-- id: mediterranean_diet_black_bean_brownies
-  name: Mediterranean Diet Black Bean Brownies
-  cuisine: dessert
-  meal_type: snack_bar
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - beans
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/mediterranean_diet_black_bean_brownies.md
-  tags:
-  - instant_pot
-  - oven
-- id: mediterranean_quinoa_salad
-  name: Mediterranean Quinoa Salad
-  cuisine: mediterranean
-  meal_type: salad
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - beans
-  - cucumber
-  - lemon
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/mediterranean_quinoa_salad.md
-  tags:
-  - dinner
-  - middle eastern
-  - rew
-  - salad
-  - school entrees
-  - stovetop
-- id: mexican_papdi_chaat
-  name: Mexican Papdi Chaat
-  cuisine: indian
-  meal_type: appetizer
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - beans
-  - bell pepper
-  - cilantro
-  - corn
-  - onion
-  - pepper
-  - scallions
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/mexican_papdi_chaat.md
-  tags:
-  - guest apps
-  - indian
-  - instant_pot
-  - mexican
-  - school entrees
-  - tcl
-- id: mexican_risotto_ip
-  name: Mexican Risotto (IP)
-  cuisine: mexican
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - cilantro
-  - corn
-  - garlic
-  - jalapeno
-  - onion
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/mexican_risotto_ip.md
-  tags:
-  - dinner
-  - instant pot
-  - instant_pot
-  - mexican
-  - school entrees
-- id: mexican_sabudana_khichdi
-  name: Mexican Sabudana Khichdi
-  cuisine: indian
-  meal_type: grain_bowl
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - bell pepper
-  - cilantro
-  - corn
-  - garlic
-  - jalapeno
-  - lime
-  - pepper
-  - scallions
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/mexican_sabudana_khichdi.md
-  tags:
-  - dinner
-  - mexican
-  - stovetop
-  - tcl
-- id: mexican_street_corn_pasta_salad
-  name: Mexican Street Corn Pasta Salad
-  cuisine: italian
-  meal_type: pasta_noodles
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - cilantro
-  - corn
-  - garlic
-  - lime
-  - pepper
-  - scallions
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/mexican_street_corn_pasta_salad.md
-  tags:
-  - instant_pot
-  - mexican
-- id: mini_crustless_quiches
-  name: Mini Crustless Quiches
-  cuisine: american
-  meal_type: breakfast
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg:
-  - bell pepper
-  - onion
-  - pepper
-  - spinach
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/mini_crustless_quiches.md
-  tags:
-  - breakfast
-  - oven
-  - school entrees
-- id: mini_egg_muffins_with_cheese_and_veggies
-  name: Mini Egg Muffins with Cheese and Veggies
-  cuisine: american
-  meal_type: baked_goods
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - broccoli
-  - butternut squash
-  - carrot
-  - onion
-  - spinach
-  - squash
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/mini_egg_muffins_with_cheese_and_veggies.md
-  tags:
-  - instant_pot
-  - oven
-- id: mini_orange
-  name: Mini orange
-  cuisine: snack
-  meal_type: simple_snack
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/mini_orange.md
-  tags:
-  - school snacks
-  - stovetop
-- id: moong_dal_chilla
-  name: Moong Dal Chilla
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
   main_veg:
   - carrot
-  - cilantro
-  - ginger
-  - onion
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/moong_dal_chilla.md
-  tags:
-  - dinner
-  - indian
-  - stovetop
-- id: more_kozhumbu
-  name: Mor Kuzhambu
-  cuisine: indian
-  meal_type: dinner
-  effort_level: high
-  no_chop_compatible: false
-  appliances: []
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: manual
-- id: no_bake_chocolate_granola_bars
-  name: No-Bake Chocolate Granola Bars
-  cuisine: dessert
-  meal_type: snack_bar
-  effort_level: medium
-  no_chop_compatible: false
   appliances:
   - instant_pot
   - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/no_bake_chocolate_granola_bars.md
-  tags:
-  - instant_pot
-  - oven
-- id: one_pan_enchilada_quinoa
-  name: One Pan Enchilada Quinoa
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - bell pepper
-  - garlic
-  - jalapeno
-  - onion
-  - pepper
-  - scallions
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/one_pan_enchilada_quinoa.md
-  tags:
-  - dinner
-  - mexican
-  - stovetop
-  - tcl
-  - weekend only
-- id: one_pot_broccoli_cheddar_quinoa
-  name: One Pot Broccoli Cheddar Quinoa
-  cuisine: american
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - broccoli
-  - carrot
-  - garlic
-  - onion
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/one_pot_broccoli_cheddar_quinoa.md
-  tags:
-  - dinner
-  - instant_pot
-- id: oven_baked_crispy_black_bean_tacos
-  name: Oven-Baked Crispy Black Bean Tacos
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  - stovetop
-  main_veg:
-  - beans
-  - cilantro
-  - corn
-  - garlic
-  - lime
-  - onion
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/oven_baked_crispy_black_bean_tacos.md
-  tags:
-  - instant_pot
-  - mexican
-  - oven
-  - stovetop
-- id: pachai_payaru_moong_dal_sundal
-  name: Pachai Payaru, Moong Dal Sundal
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - ginger
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/pachai_payaru_moong_dal_sundal.md
-  tags:
-  - guest apps
-  - indian
-  - school snacks
-  - stovetop
-- id: palak_paneer_spinach
-  name: Palak Paneer Spinach
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - bell pepper
-  - garlic
-  - ginger
-  - onion
-  - pepper
-  - spinach
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/palak_paneer_spinach.md
-  tags:
-  - dinner
-  - indian
-  - school entrees
-  - stovetop
-- id: panchmel_dal
-  name: Panchmel Dal
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - stovetop
-  main_veg:
-  - cilantro
-  - ginger
-  - lime
-  - onion
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/panchmel_dal.md
-  tags:
-  - dinner
-  - indian
-  - instant pot
-  - instant_pot
-  - stovetop
-- id: paneeer_corn_utthapam
-  name: Paneeer & Corn Utthapam
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - corn
-  - onion
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/paneeer_corn_utthapam.md
-  tags:
-  - indian
-  - instant_pot
-- id: paruppu_thogayal
-  name: Paruppu Thogayal
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - garlic
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/paruppu_thogayal.md
-  tags:
-  - indian
-  - raks kitchen
-  - stovetop
-- id: paruppu_usili
-  name: Paruppu Usili
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - beans
-  - green beans
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/paruppu_usili.md
-  tags:
-  - indian
-  - instant_pot
-- id: pasta_with_veggie_sauce
-  name: Pasta with Veggie Sauce
-  cuisine: italian
-  meal_type: pasta_noodles
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - beet
-  - onion
-  - potato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/pasta_with_veggie_sauce.md
-  tags:
-  - dinner
-  - instant pot
-  - instant_pot
-  - italian
-- id: pav_bhaji
-  name: Pav Bhaji
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  - stovetop
-  main_veg:
-  - beet
-  - bell pepper
-  - carrot
-  - cauliflower
-  - garlic
-  - ginger
-  - onion
-  - peas
-  - pepper
-  - potato
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/pav_bhaji.md
-  tags:
-  - dinner
-  - indian
-  - instant_pot
-  - oven
-  - stovetop
+  categories:
+  - Dessert
+  - Weekend Only
+  source_url: null
 - id: peanut_chutney
   name: Peanut Chutney
   cuisine: indian
   meal_type: soup_stew
-  effort_level: medium
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - oven
   main_veg:
   - garlic
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/peanut_chutney.md
-  tags:
-  - dinner
-  - indian
+  appliances:
   - oven
-- id: pesarattu
-  name: Pesarattu
+  categories:
+  - Dinner
+  - Indian
+  source_url: null
+- id: moong_dal_chilla
+  name: Moong Dal Chilla
   cuisine: indian
-  meal_type: breakfast
-  effort_level: high
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - beans
-  - ginger
-  - onion
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/pesarattu.md
-  tags:
-  - dinner
-  - indian
-  - stovetop
-- id: pesto_gnocchi
-  name: Pesto Gnocchi
-  cuisine: italian
-  meal_type: pasta_noodles
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/pesto_gnocchi.md
-- id: pinto_bean_casserole
-  name: Pinto Bean Casserole
-  cuisine: mexican
-  meal_type: casserole
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - avocado
-  - beans
-  - bell pepper
-  - cilantro
-  - corn
-  - garlic
-  - lime
-  - onion
-  - pepper
-  - spinach
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/pinto_bean_casserole.md
-  tags:
-  - dinner
-  - mexican
-  - school entrees
-  - stovetop
-- id: pizza_muffins_with_veggies
-  name: Pizza Muffins (with Veggies!)
-  cuisine: italian
-  meal_type: pizza
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - oven
   main_veg:
   - carrot
-  - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/pizza_muffins_with_veggies.md
-  tags:
-  - oven
-- id: poblano_cream_enchilada_sauce
-  name: Poblano Cream Enchilada Sauce
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg:
   - cilantro
-  - garlic
-  - pepper
-  - poblano
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/poblano_cream_enchilada_sauce.md
-  tags:
-  - mexican
-  - oven
-  - prep
-  - tcl
-- id: protein_banana_bread
-  name: Protein Banana Bread
-  cuisine: indian
-  meal_type: baked_goods
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/protein_banana_bread.md
-  tags:
-  - oven
-- id: protein_banana_muffins
-  name: Protein Banana Muffins
-  cuisine: indian
-  meal_type: baked_goods
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/protein_banana_muffins.md
-  tags:
-  - instant_pot
-  - oven
-- id: puree_pancakes
-  name: Puree Pancakes
-  cuisine: american
-  meal_type: breakfast
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/puree_pancakes.md
-  tags:
-  - school entrees
-  - stovetop
-- id: quick_refried_bean_tacos
-  name: Quick Refried Bean Tacos
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: low
-  no_chop_compatible: true
-  appliances:
-  - instant_pot
-  - stovetop
-  main_veg:
-  - beans
-  - bell pepper
-  - cilantro
-  - garlic
-  - onion
-  - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/quick_refried_bean_tacos.md
-  tags:
-  - dinner
-  - instant_pot
-  - mexican
-  - stovetop
-- id: quick_tortilla_pizzas
-  name: Quick Tortilla Pizzas
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: low
-  no_chop_compatible: true
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - broccoli
-  - pepper
-  avoid_contains:
-  - mushrooms
-  source:
-    type: markdown
-    file: recipes/content/quick_tortilla_pizzas.md
-  tags:
-  - instant_pot
-  - oven
-- id: quinoa_fried_rice
-  name: Quinoa Fried Rice
-  cuisine: asian
-  meal_type: grain_bowl
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - stovetop
-  main_veg:
-  - carrot
-  - chard
-  - garlic
-  - ginger
-  - kale
-  - onion
-  - spinach
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/quinoa_fried_rice.md
-  tags:
-  - instant_pot
-  - stovetop
-- id: ragada_patty
-  name: Ragada Patty
-  cuisine: indian
-  meal_type: unknown
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - cilantro
-  - garlic
   - ginger
   - onion
-  - potato
-  - tomato
-  - tomatoe
-  avoid_contains: []
-  source:
-    file: recipes/content/ragada_patty.md
-    type: markdown
-- id: raisins
-  name: Raisins
-  cuisine: snack
+  appliances:
+  - stovetop
+  categories:
+  - Dinner
+  - Indian
+  source_url: null
+- id: string_cheese
+  name: String cheese
+  cuisine: unknown
   meal_type: simple_snack
-  effort_level: low
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - stovetop
   main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/raisins.md
-  tags:
-  - school snacks
-  - stovetop
-- id: rajma_nachos
-  name: Rajma Nachos
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - beans
-  - cilantro
-  - garlic
-  - ginger
-  - lime
-  - onion
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/rajma_nachos.md
-  tags:
-  - dinner
-  - indian
-  - instant pot
-  - instant_pot
-- id: rasam_recipe
-  name: Rasam Recipe
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - stovetop
-  main_veg:
-  - cilantro
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/rasam_recipe.md
-  tags:
-  - dinner
-  - hebbar kitchen
-  - indian
-  - instant pot
-  - instant_pot
-  - stovetop
-- id: rasam_rice_with_beetroot_kai
-  name: Rasam Rice with Beetroot Kai
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
   appliances:
   - stovetop
-  main_veg:
-  - garlic
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/rasam_rice_with_beetroot_kai.md
-  tags:
-  - comfort food
-  - fusion
-  - soup-rice
-  - south indian
-  - stovetop
-- id: rasam_rice_with_carrot_kai
-  name: Rasam Rice with Carrot Kai
-  cuisine: snack
-  meal_type: soup_stew
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - garlic
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/rasam_rice_with_carrot_kai.md
-  tags:
-  - comfort food
-  - fusion
-  - soup-rice
-  - south indian
-  - stovetop
-- id: refried_bean_burrito
-  name: Refried Bean Burrito
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - avocado
-  - beans
-  - bell pepper
-  - corn
-  - garlic
-  - onion
-  - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/refried_bean_burrito.md
-  tags:
-  - instant_pot
-  - mexican
-- id: romesco_gnocchi
-  name: Romesco Gnocchi
-  cuisine: italian
-  meal_type: pasta_noodles
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - garlic
-  - pepper
-  - spinach
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/romesco_gnocchi.md
-  tags:
-  - dinner
-  - italian
-  - stovetop
-- id: romesco_pasta_sauce
-  name: Romesco Pasta Sauce
-  cuisine: italian
-  meal_type: pasta_noodles
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg:
-  - garlic
-  - lemon
-  - parsley
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/romesco_pasta_sauce.md
-  tags:
-  - oven
-- id: salted_tahini_oatmeal_chocolate_chip_cookies
-  name: Salted Tahini Oatmeal Chocolate Chip Cookies
-  cuisine: mediterranean
-  meal_type: breakfast
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/salted_tahini_oatmeal_chocolate_chip_cookies.md
-  tags:
-  - dessert
-  - instant pot
-  - instant_pot
-  - oven
-- id: sambar_rice
-  name: Sambar Rice
-  cuisine: indian
-  meal_type: dinner
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - onion
-  - peas
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/sambar_rice.md
-- id: samosa_grilled_cheese
-  name: Samosa Grilled Cheese
-  cuisine: indian
-  meal_type: sandwich
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - cilantro
-  - garlic
-  - onion
-  - potato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/samosa_grilled_cheese.md
-  tags:
-  - indian
-  - sandwich
-  - stovetop
-  - tcl
-- id: samosa_pinwheels_baked
-  name: Samosa Pinwheels (Baked)
-  cuisine: indian
-  meal_type: appetizer
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg:
-  - ginger
-  - lemon
-  - peas
-  - potato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/samosa_pinwheels_baked.md
-  tags:
-  - guest apps
-  - oven
+  categories:
+  - School Snacks
+  source_url: null
 - id: sheet_pan_black_bean_quesadillas_with_coleslaw
   name: Sheet Pan Black Bean Quesadillas with Coleslaw
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: medium
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
   main_veg:
   - avocado
   - beans
   - garlic
   - lime
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/sheet_pan_black_bean_quesadillas_with_coleslaw.md
-  tags:
+  appliances:
   - instant_pot
-  - mexican
   - oven
-- id: sheet_pan_coconut_vegetable_curry
-  name: Sheet Pan Coconut Vegetable Curry
-  cuisine: indian
+  categories:
+  - Mexican
+  source_url: null
+- id: sweet_and_sour_quinoa
+  name: Sweet and Sour Quinoa
+  cuisine: unknown
+  meal_type: sauce_dip
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - garlic
+  - ginger
+  - onion
+  - tomato
+  appliances:
+  - stovetop
+  categories:
+  - School Entrees
+  source_url: null
+- id: jeera_rice
+  name: Jeera Rice
+  cuisine: unknown
   meal_type: unknown
-  effort_level: medium
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
+  main_veg: []
   appliances:
   - instant_pot
-  - oven
-  main_veg:
-  - cauliflower
-  - cilantro
-  - garlic
-  - kale
-  - lime
-  - onion
-  - potato
-  - sweet potato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/sheet_pan_coconut_vegetable_curry.md
-  tags:
-  - asian
-  - instant_pot
-  - oven
-- id: shiro_wot_ground_chickpea_stew
-  name: Shiro Wot (Ground-Chickpea Stew)
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - oven
-  - stovetop
-  main_veg:
-  - garlic
-  - onion
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/shiro_wot_ground_chickpea_stew.md
-  tags:
-  - oven
-  - stovetop
-- id: simple_vegetarian_slow_cooked_beans
-  name: Simple Vegetarian Slow-Cooked Beans
-  cuisine: american
-  meal_type: soup_stew
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - slow_cooker
-  main_veg:
-  - beans
-  - carrot
-  - cilantro
-  - garlic
-  - parsley
-  - spinach
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/simple_vegetarian_slow_cooked_beans.md
-  tags:
-  - slow_cooker
-- id: six_bean_chili
-  name: Six-Bean Chili
+  categories:
+  - Dinner
+  - Weekend Only
+  source_url: null
+- id: baked_black_bean_and_sweet_potato_flautas
+  name: Baked Black Bean and Sweet Potato Flautas
   cuisine: mexican
-  meal_type: soup_stew
-  effort_level: high
+  meal_type: tacos_wraps
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - slow_cooker
   main_veg:
-  - avocado
   - beans
-  - carrot
+  - cilantro
   - corn
   - garlic
   - onion
   - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/six_bean_chili.md
-  tags:
-  - slow_cooker
-- id: sliced_cucumber
-  name: Sliced Cucumber
-  cuisine: snack
-  meal_type: simple_snack
-  effort_level: low
+  - potato
+  - sweet potato
+  appliances:
+  - instant_pot
+  - oven
+  categories:
+  - Mexican
+  source_url: null
+- id: favorite_bliss_balls
+  name: Favorite Bliss Balls
+  cuisine: unknown
+  meal_type: snack_bar
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - instant_pot
+  categories: []
+  source_url: null
+- id: cubed_fried_tofu
+  name: Cubed, fried tofu
+  cuisine: unknown
+  meal_type: side_dish
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
   appliances:
   - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/sliced_cucumber.md
-  tags:
-  - school snacks
+  categories:
+  - School Snacks
+  source_url: null
+- id: cherry_tomato_salad
+  name: Cherry Tomato Salad
+  cuisine: unknown
+  meal_type: salad
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - garlic
+  - tomato
+  - tomatoe
+  appliances:
   - stovetop
+  categories:
+  - Dinner
+  - Salad
+  - School Snacks
+  source_url: null
+- id: spinach_cilantro_pesto
+  name: Spinach-Cilantro Pesto
+  cuisine: italian
+  meal_type: sauce_dip
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cilantro
+  - garlic
+  - spinach
+  appliances:
+  - stovetop
+  categories:
+  - Dinner
+  - Italian
+  - School Entrees
+  source_url: null
+- id: rajma_nachos
+  name: Rajma Nachos
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  - cilantro
+  - garlic
+  - ginger
+  - lime
+  - onion
+  - tomato
+  - tomatoe
+  appliances:
+  - instant_pot
+  categories:
+  - Dinner
+  - Indian
+  - Instant Pot
+  source_url: null
+- id: cauliflower_alfredo_sauce
+  name: Cauliflower Alfredo Sauce
+  cuisine: italian
+  meal_type: sauce_dip
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cauliflower
+  - garlic
+  appliances:
+  - oven
+  - stovetop
+  categories:
+  - Italian
+  source_url: null
+- id: cowboy_caviar_salad
+  name: Cowboy Caviar Salad
+  cuisine: unknown
+  meal_type: salad
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  - bell pepper
+  - cilantro
+  - corn
+  - garlic
+  - jalapeno
+  - lime
+  - onion
+  - peas
+  - tomato
+  - tomatoe
+  appliances:
+  - instant_pot
+  categories:
+  - Salad
+  source_url: null
 - id: snake_gourd_kootu
   name: Snake Gourd Kootu
   cuisine: indian
   meal_type: soup_stew
   effort_level: high
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - instant_pot
   main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/snake_gourd_kootu.md
-  tags:
-  - indian
-  - instant_pot
-  - raks kitchen
-- id: so_good_chickpea_blondies
-  name: So Good Chickpea Blondies
-  cuisine: dessert
-  meal_type: snack_bar
-  effort_level: medium
-  no_chop_compatible: false
   appliances:
   - instant_pot
-  - oven
-  main_veg:
-  - beans
-  - peas
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/so_good_chickpea_blondies.md
-  tags:
-  - instant_pot
-  - oven
-- id: soft_and_chewy_white_chocolate_chip_cookies
-  name: Soft and Chewy White Chocolate Chip Cookies
-  cuisine: dessert
-  meal_type: baked_goods
-  effort_level: medium
+  categories:
+  - Indian
+  - Raks Kitchen
+  source_url: null
+- id: refried_bean_burrito
+  name: Refried Bean Burrito
+  cuisine: mexican
+  meal_type: tacos_wraps
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/soft_and_chewy_white_chocolate_chip_cookies.md
-  tags:
-  - dessert
-  - instant pot
-  - instant_pot
-  - oven
-- id: southwest_corn_chowder_freezer_meal_prep
-  name: Southwest Corn Chowder (Freezer Meal Prep)
-  cuisine: american
-  meal_type: soup_stew
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - bell pepper
-  - corn
-  - garlic
-  - onion
-  - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/southwest_corn_chowder_freezer_meal_prep.md
-  tags:
-  - instant_pot
-- id: southwest_pasta_salad
-  name: Southwest Pasta Salad
-  cuisine: italian
-  meal_type: salad
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
   main_veg:
   - avocado
   - beans
   - bell pepper
-  - chives
+  - corn
+  - garlic
+  - onion
+  appliances:
+  - instant_pot
+  categories:
+  - Mexican
+  source_url: null
+- id: palak_paneer_spinach
+  name: Palak Paneer Spinach
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - bell pepper
+  - garlic
+  - ginger
+  - onion
+  - spinach
+  - tomato
+  appliances:
+  - stovetop
+  categories:
+  - Dinner
+  - Indian
+  - School Entrees
+  source_url: null
+- id: esquites_mexican_street_corn_salad
+  name: Esquites (Mexican Street Corn Salad)
+  cuisine: unknown
+  meal_type: salad
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
   - cilantro
   - corn
   - garlic
   - lime
-  - onion
-  - parsley
-  - pepper
-  - scallions
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/southwest_pasta_salad.md
-  tags:
-  - dinner
-  - instant_pot
-  - mexican
-  - salad
-- id: spinach_and_feta_stuffed_pita_with_a_side_of_greek_salad
-  name: Spinach and Feta Stuffed Pita with a Side of Greek Salad
-  cuisine: mediterranean
-  meal_type: sandwich
-  effort_level: medium
-  no_chop_compatible: false
   appliances:
   - stovetop
-  main_veg:
-  - cucumber
-  - garlic
-  - lemon
-  - onion
-  - spinach
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/spinach_and_feta_stuffed_pita_with_a_side_of_greek_salad.md
-  tags:
-  - middle eastern
-  - salad
-  - sandwich
-  - stovetop
-- id: spinach_cilantro_pesto
-  name: Spinach-Cilantro Pesto
-  cuisine: italian
-  meal_type: sauce_dip
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - cilantro
-  - garlic
-  - spinach
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/spinach_cilantro_pesto.md
-  tags:
-  - dinner
-  - italian
-  - school entrees
-  - stovetop
-- id: spinach_puffs
-  name: Spinach Puffs
+  categories:
+  - Mexican
+  source_url: null
+- id: mexican_papdi_chaat
+  name: Mexican Papdi Chaat
   cuisine: indian
   meal_type: appetizer
-  effort_level: high
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg:
-  - garlic
-  - onion
-  - pepper
-  - spinach
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/spinach_puffs.md
-  tags:
-  - guest apps
-  - oven
-  - school entrees
-- id: spinach_white_bean_enchiladas
-  name: Spinach White Bean Enchiladas
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - oven
-  - stovetop
   main_veg:
   - beans
-  - cilantro
-  - corn
-  - garlic
-  - pepper
-  - spinach
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/spinach_white_bean_enchiladas.md
-  tags:
-  - oven
-  - stovetop
-- id: stir_fry
-  name: Stir Fry
-  cuisine: asian
-  meal_type: stir_fry
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  main_veg:
-  - bell pepper
-  - broccoli
-  - corn
-  - garlic
-  - ginger
-  - onion
-  - peas
-  - pepper
-  - spinach
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/stir_fry.md
-  tags:
-  - asian
-  - dinner
-  - instant_pot
-- id: strawberries
-  name: Strawberries
-  cuisine: snack
-  meal_type: simple_snack
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/strawberries.md
-  tags:
-  - school snacks
-  - stovetop
-- id: strawberry_muffins
-  name: Strawberry Muffins
-  cuisine: dessert
-  meal_type: baked_goods
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/strawberry_muffins.md
-  tags:
-  - oven
-- id: string_cheese
-  name: String cheese
-  cuisine: snack
-  meal_type: simple_snack
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/string_cheese.md
-  tags:
-  - school snacks
-  - stovetop
-- id: sweet_and_sour_quinoa
-  name: Sweet and Sour Quinoa
-  cuisine: asian
-  meal_type: sauce_dip
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - garlic
-  - ginger
-  - onion
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/sweet_and_sour_quinoa.md
-  tags:
-  - school entrees
-  - stovetop
-- id: sweet_potato_black_bean_quesadilla
-  name: Sweet Potato Black Bean Quesadilla
-  cuisine: mexican
-  meal_type: dinner
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - beans
-  - corn
-  - onion
-  - potato
-  - sweet potato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/sweet_potato_black_bean_quesadilla.md
-  tags:
-  - mexican
-  - stovetop
-  - vegetarian
-- id: sweet_potato_roast_with_thai_peanut_butter_sauce
-  name: Sweet Potato Roast with Thai Peanut Butter Sauce
-  cuisine: asian
-  meal_type: dinner
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - bell pepper
-  - cabbage
-  - cilantro
-  - lime
-  - onion
-  - potato
-  - potatoe
-  - sweet potato
-  avoid_contains:
-  - cabbage
-  source:
-    file: recipes/content/sweet_potatoes_with_thai_peanut_butter_sauce.md
-    type: markdown
-  tags:
-  - asian
-  - stovetop
-- id: sweet_potato_tofu_chickpea_curry_make_sauce_ahead
-  name: Sweet Potato, Tofu & Chickpea Curry (Make Sauce Ahead)
-  cuisine: indian
-  meal_type: sauce_dip
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  - stovetop
-  main_veg:
-  - butternut squash
-  - cauliflower
-  - garlic
-  - ginger
-  - lemon
-  - onion
-  - peas
-  - pepper
-  - potato
-  - squash
-  - sweet potato
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/sweet_potato_tofu_chickpea_curry_make_sauce_ahead.md
-  tags:
-  - instant_pot
-  - oven
-  - stovetop
-- id: sweet_spinach_muffins_with_banana
-  name: Sweet Spinach Muffins with Banana
-  cuisine: dessert
-  meal_type: baked_goods
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - oven
-  main_veg:
-  - spinach
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/sweet_spinach_muffins_with_banana.md
-  tags:
-  - instant_pot
-  - oven
-  - school snacks
-- id: tandoori_veggie_quesadillas
-  name: Tandoori Veggie Quesadillas
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
   - bell pepper
   - cilantro
   - corn
-  - garlic
   - onion
-  - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/tandoori_veggie_quesadillas.md
-  tags:
-  - dinner
-  - stovetop
-  - tcl
-- id: tangy_cucumber_salad
-  name: Tangy Cucumber Salad
+  - scallion
+  appliances:
+  - instant_pot
+  categories:
+  - Guest Apps
+  - Indian
+  - Mexican
+  - School Entrees
+  - TCL
+  source_url: null
+- id: grilled_cheese_and_tomato_soup
+  name: Grilled Cheese and Tomato Soup
   cuisine: american
-  meal_type: salad
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - chives
-  - cucumber
-  - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/tangy_cucumber_salad.md
-  tags:
-  - guest apps
-  - school snacks
-  - stovetop
-- id: thai_curry_pizza_with_naan_bread
-  name: Thai Curry Pizza with Naan Bread
-  cuisine: indian
-  meal_type: pizza
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - oven
-  main_veg:
-  - cilantro
-  - onion
-  - pepper
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/thai_curry_pizza_with_naan_bread.md
-  tags:
-  - asian
-  - dinner
-  - oven
-- id: tofu_scramble_freezer_meal_prep
-  name: Tofu Scramble (Freezer Meal Prep)
-  cuisine: asian
   meal_type: soup_stew
-  effort_level: medium
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - instant_pot
   main_veg:
   - garlic
-  - onion
-  - pepper
-  - spinach
   - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/tofu_scramble_freezer_meal_prep.md
-  tags:
-  - instant_pot
-- id: tomato_bisque_with_feta_pesto_panini
-  name: Tomato Bisque with Feta-Pesto Panini
-  cuisine: italian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/tomato_bisque_with_feta_pesto_panini.md
-  tags:
-  - stovetop
-- id: tomato_rice
-  name: Tomato Rice
-  cuisine: indian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
   appliances:
   - instant_pot
   - stovetop
-  main_veg:
-  - lemon
-  - onion
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/tomato_rice.md
-  tags:
-  - hebbar kitchen
-  - indian
-  - instant_pot
-  - stovetop
-- id: tortellini_primavera
-  name: Tortellini Primavera
-  cuisine: italian
-  meal_type: soup_stew
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - broccoli
-  - carrot
-  - chives
-  - garlic
-  - peas
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/tortellini_primavera.md
-  tags:
-  - dinner
-  - italian
-  - school entrees
-  - stovetop
-- id: vegan_chocolate_mousse
-  name: Vegan Chocolate Mousse
-  cuisine: dessert
-  meal_type: unknown
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/vegan_chocolate_mousse.md
-  tags:
-  - stovetop
-- id: vegan_lemon_pepper_tofu
-  name: Vegan Lemon Pepper Tofu
-  cuisine: italian
+  categories:
+  - Dinner
+  - Sandwich
+  - Soup
+  source_url: null
+- id: edamame
+  name: Edamame
+  cuisine: unknown
   meal_type: simple_snack
-  effort_level: medium
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
+  main_veg: []
   appliances:
-  - instant_pot
-  - oven
+  - stovetop
+  categories:
+  - School Snacks
+  source_url: null
+- id: romesco_pasta_sauce
+  name: Romesco Pasta Sauce
+  cuisine: italian
+  meal_type: pasta_noodles
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
   main_veg:
-  - broccoli
-  - corn
   - garlic
   - lemon
+  - parsley
   - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/vegan_lemon_pepper_tofu.md
-  tags:
-  - dinner
+  - tomato
+  - tomatoe
+  appliances:
+  - oven
+  categories:
+  - ''
+  source_url: null
+- id: homemade_oatmeal_cream_pies
+  name: Homemade Oatmeal Cream Pies
+  cuisine: unknown
+  meal_type: breakfast
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
   - instant_pot
   - oven
-  - rew
-- id: vegan_pad_thai
-  name: Vegan Pad Thai
-  cuisine: asian
-  meal_type: pasta_noodles
-  effort_level: medium
+  categories:
+  - Dessert
+  source_url: null
+- id: arisi_upma_mix
+  name: Arisi Upma Mix
+  cuisine: indian
+  meal_type: breakfast
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
+  main_veg: []
   appliances:
   - stovetop
-  main_veg:
-  - chives
-  - cilantro
-  - garlic
-  - lime
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/vegan_pad_thai.md
-  tags:
-  - asian
-  - dinner
-  - stovetop
-- id: vegan_spicy_thai_drunken_noodles_with_seared_tofu
-  name: Vegan Spicy Thai Drunken Noodles with Seared Tofu
+  categories:
+  - Indian
+  - School Entrees
+  source_url: null
+- id: quinoa_fried_rice
+  name: Quinoa Fried Rice
   cuisine: asian
-  meal_type: pasta_noodles
-  effort_level: medium
+  meal_type: grain_bowl
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - stovetop
   main_veg:
-  - basil
-  - bell pepper
-  - broccoli
   - carrot
-  - corn
+  - chard
   - garlic
-  - lime
+  - ginger
+  - green onion
+  - kale
   - onion
-  - peas
-  - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/vegan_spicy_thai_drunken_noodles_with_seared_tofu.md
-  tags:
-  - asian
-  - dinner
+  - spinach
+  appliances:
+  - instant_pot
   - stovetop
+  categories: []
+  source_url: null
 - id: vegan_sweet_potato_beetroot_hotdogs
   name: Vegan Sweet Potato Beetroot Hotdogs
   cuisine: indian
   meal_type: soup_stew
-  effort_level: medium
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - stovetop
   main_veg:
   - avocado
   - beet
@@ -3499,194 +2382,595 @@
   - lemon
   - onion
   - peas
-  - pepper
   - potato
+  - potatoe
   - sweet potato
   - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/vegan_sweet_potato_beetroot_hotdogs.md
-  tags:
-  - indian
-  - stovetop
-- id: vegetable_gyoza
-  name: Vegetable Gyoza
-  cuisine: asian
-  meal_type: appetizer
-  effort_level: high
-  no_chop_compatible: false
+  - tomatoe
   appliances:
-  - instant_pot
+  - stovetop
+  categories:
+  - Indian
+  source_url: null
+- id: tomato_bisque_with_feta_pesto_panini
+  name: Tomato Bisque with Feta-Pesto Panini
+  cuisine: italian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - ''
+  source_url: null
+- id: veggie_upma
+  name: Veggie Upma
+  cuisine: indian
+  meal_type: breakfast
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
   main_veg:
-  - cabbage
+  - beans
   - carrot
   - corn
-  - garlic
-  - ginger
   - onion
-  - pepper
-  - potato
-  - scallions
-  avoid_contains:
-  - mushrooms
-  - cabbage
-  source:
-    type: markdown
-    file: recipes/content/vegetable_gyoza.md
-  tags:
-  - instant_pot
-- id: vegetable_lasagna
-  name: Vegetable Lasagna
-  cuisine: italian
-  meal_type: casserole
-  effort_level: high
-  no_chop_compatible: false
+  - peas
   appliances:
   - oven
   - stovetop
+  categories:
+  - Hebbar Kitchen
+  - Indian
+  source_url: null
+- id: chef_s_paniyaram
+  name: "Chef\u2019s Paniyaram"
+  cuisine: indian
+  meal_type: unknown
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
   main_veg:
-  - basil
-  - bell pepper
-  - garlic
+  - cilantro
   - onion
-  - parsley
-  - pepper
-  - spinach
-  - zucchini
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/vegetable_lasagna.md
-  tags:
-  - dinner
-  - italian
-  - oven
-  - stovetop
-- id: vegetarian_burrito_bowl_with_avocado_crema
-  name: Vegetarian Burrito Bowl with Avocado Crema
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: high
-  no_chop_compatible: false
   appliances:
   - instant_pot
-  - oven
+  categories:
+  - Indian
+  source_url: null
+- id: pinto_bean_casserole
+  name: Pinto Bean Casserole
+  cuisine: mexican
+  meal_type: casserole
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
   main_veg:
   - avocado
   - beans
   - bell pepper
-  - cauliflower
   - cilantro
+  - corn
   - garlic
-  - lettuce
   - lime
   - onion
   - pepper
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/vegetarian_burrito_bowl_with_avocado_crema.md
-  tags:
-  - instant_pot
-  - mexican
-  - oven
-- id: vegetarian_chili
-  name: Vegetarian Chili
-  cuisine: mexican
+  - spinach
+  - tomato
+  - tomatoe
+  appliances:
+  - stovetop
+  categories:
+  - Dinner
+  - Mexican
+  - School Entrees
+  source_url: null
+- id: rasam_rice_with_beetroot_kai
+  name: Rasam Rice with Beetroot Kai
+  cuisine: unknown
   meal_type: soup_stew
-  effort_level: medium
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
+  main_veg:
+  - garlic
+  - tomato
+  appliances:
+  - stovetop
+  categories:
+  - South Indian
+  - Fusion
+  - Soup-Rice
+  - Comfort Food
+  source_url: null
+- id: chana_masala_ip
+  name: Chana Masala (IP)
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cilantro
+  - garlic
+  - ginger
+  - onion
+  - peas
+  - tomato
+  - tomatoe
+  appliances:
+  - instant_pot
+  - stovetop
+  categories:
+  - Dinner
+  - Indian
+  - Instant Pot
+  source_url: null
+- id: mexican_sabudana_khichdi
+  name: Mexican Sabudana Khichdi
+  cuisine: indian
+  meal_type: grain_bowl
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - bell pepper
+  - cilantro
+  - corn
+  - garlic
+  - jalapeno
+  - lime
+  - scallion
+  appliances:
+  - stovetop
+  categories:
+  - Dinner
+  - Mexican
+  - TCL
+  source_url: null
+- id: creamy_macaroni_pasta_salad
+  name: Creamy Macaroni Pasta Salad
+  cuisine: italian
+  meal_type: pasta_noodles
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - broccoli
+  - cucumber
+  - onion
+  appliances:
+  - stovetop
+  categories:
+  - Dinner
+  source_url: null
+- id: cherry_tomatoes
+  name: Cherry tomatoes
+  cuisine: unknown
+  meal_type: simple_snack
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - School Snacks
+  source_url: null
+- id: chickpea_chaat_salad
+  name: Chickpea Chaat Salad
+  cuisine: indian
+  meal_type: salad
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - bell pepper
+  - carrot
+  - cilantro
+  - cucumber
+  - garlic
+  - lemon
+  - onion
+  - peas
+  - tomato
+  appliances:
+  - stovetop
+  categories:
+  - Guest Apps
+  - Indian
+  - Mexican
+  source_url: null
+- id: paneeer_corn_utthapam
+  name: Paneeer & Corn Utthapam
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - corn
+  - onion
+  appliances:
+  - instant_pot
+  categories:
+  - Indian
+  source_url: null
+- id: southwest_pasta_salad
+  name: Southwest Pasta Salad
+  cuisine: italian
+  meal_type: salad
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - avocado
+  - beans
+  - bell pepper
+  - chive
+  - cilantro
+  - corn
+  - garlic
+  - lime
+  - onion
+  - parsley
+  - scallion
+  - tomato
+  - tomatoe
+  appliances:
+  - instant_pot
+  categories:
+  - Dinner
+  - Mexican
+  - Salad
+  source_url: null
+- id: garlic_parmesan_white_beans
+  name: Garlic Parmesan White Beans
+  cuisine: unknown
+  meal_type: side_dish
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  - garlic
+  - lemon
+  - parsley
+  - tomato
+  - tomatoe
+  appliances:
+  - stovetop
+  categories:
+  - ''
+  source_url: null
+- id: mexican_street_corn_pasta_salad
+  name: Mexican Street Corn Pasta Salad
+  cuisine: italian
+  meal_type: pasta_noodles
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cilantro
+  - corn
+  - garlic
+  - lime
+  - pepper
+  - scallion
+  appliances:
+  - instant_pot
+  categories:
+  - Mexican
+  source_url: null
+- id: idli_dosa_batter
+  name: Idli Dosa Batter
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - oven
+  categories:
+  - Indian
+  source_url: null
+- id: oven_baked_crispy_black_bean_tacos
+  name: Oven-Baked Crispy Black Bean Tacos
+  cuisine: mexican
+  meal_type: tacos_wraps
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  - cilantro
+  - corn
+  - garlic
+  - lime
+  - onion
+  - tomato
   appliances:
   - instant_pot
   - oven
+  - stovetop
+  categories:
+  - Mexican
+  source_url: null
+- id: ip_quinoa_chili
+  name: IP Quinoa Chili
+  cuisine: unknown
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
   main_veg:
   - beans
   - bell pepper
   - cilantro
+  - corn
   - garlic
+  - lemon
   - onion
-  - pepper
-  - potato
-  - sweet potato
   - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/vegetarian_chili.md
-  tags:
-  - dinner
-  - instant pot
+  - tomatoe
+  appliances:
   - instant_pot
   - oven
-  - soup
+  categories:
+  - Dinner
+  - Instant Pot
+  - Mexican
+  - Soup
+  source_url: null
+- id: mexican_risotto_ip
+  name: Mexican Risotto (IP)
+  cuisine: mexican
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cilantro
+  - corn
+  - garlic
+  - jalapeno
+  - onion
+  appliances:
+  - instant_pot
+  categories:
+  - Dinner
+  - Instant Pot
+  - Mexican
+  - School Entrees
+  source_url: null
+- id: granola_bar
+  name: Granola bar
+  cuisine: unknown
+  meal_type: snack_bar
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - School Snacks
+  source_url: null
+- id: rasam_recipe
+  name: Rasam Recipe
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cilantro
+  - tomato
+  - tomatoe
+  appliances:
+  - instant_pot
+  - stovetop
+  categories:
+  - Dinner
+  - Hebbar Kitchen
+  - Indian
+  source_url: null
 - id: vegetarian_enchiladas
   name: Vegetarian Enchiladas
   cuisine: mexican
   meal_type: tacos_wraps
-  effort_level: medium
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - oven
-  - stovetop
   main_veg:
   - avocado
   - beans
   - bell pepper
   - cilantro
   - onion
-  - pepper
   - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/vegetarian_enchiladas.md
-  tags:
-  - dinner
-  - mexican
+  - tomatoe
+  appliances:
   - oven
   - stovetop
-- id: vegetarian_tortilla_soup
-  name: Vegetarian Tortilla Soup
-  cuisine: mexican
+  categories:
+  - Dinner
+  - Mexican
+  source_url: null
+- id: one_pot_broccoli_cheddar_quinoa
+  name: One Pot Broccoli Cheddar Quinoa
+  cuisine: unknown
   meal_type: soup_stew
-  effort_level: medium
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
+  main_veg:
+  - broccoli
+  - carrot
+  - garlic
+  - onion
+  appliances:
+  - instant_pot
+  categories:
+  - Dinner
+  source_url: null
+- id: how_to_make_coconut_rice
+  name: How to Make Coconut Rice
+  cuisine: unknown
+  meal_type: side_dish
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - ginger
+  appliances:
+  - instant_pot
+  - stovetop
+  categories:
+  - ''
+  source_url: null
+- id: kondakadalai_kala_channa_masala_sundal
+  name: Kondakadalai Kala Channa Masala Sundal
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - oven
+  categories:
+  - Dinner
+  - Indian
+  - Raks Kitchen
+  source_url: null
+- id: strawberries
+  name: Strawberries
+  cuisine: unknown
+  meal_type: simple_snack
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - stovetop
+  categories:
+  - School Snacks
+  source_url: null
+- id: thai_curry_pizza_with_naan_bread
+  name: Thai Curry Pizza with Naan Bread
+  cuisine: indian
+  meal_type: pizza
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cilantro
+  - green onion
+  - onion
+  - tomato
+  - tomatoe
+  appliances:
+  - oven
+  categories:
+  - Asian
+  - Dinner
+  source_url: null
+- id: salted_tahini_oatmeal_chocolate_chip_cookies
+  name: Salted Tahini Oatmeal Chocolate Chip Cookies
+  cuisine: mediterranean
+  meal_type: breakfast
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
   appliances:
   - instant_pot
   - oven
-  - stovetop
+  categories:
+  - Dessert
+  source_url: null
+- id: broccoli_spinach_pasta_sauce
+  name: Broccoli Spinach Pasta Sauce
+  cuisine: italian
+  meal_type: pasta_noodles
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
   main_veg:
-  - beans
-  - bell pepper
-  - cilantro
-  - corn
+  - broccoli
   - garlic
-  - lime
-  - onion
-  - pepper
-  - radish
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/vegetarian_tortilla_soup.md
-  tags:
-  - dinner
-  - instant_pot
-  - mexican
-  - oven
+  - lemon
+  - spinach
+  appliances:
   - stovetop
+  categories:
+  - Dinner
+  source_url: null
+- id: butternut_squash_mac_and_cheese
+  name: Butternut Squash Mac and Cheese
+  cuisine: american
+  meal_type: pasta_noodles
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - butternut squash
+  - squash
+  appliances:
+  - instant_pot
+  categories:
+  - ''
+  source_url: null
+- id: cucumber_sandwiches
+  name: Cucumber Sandwiches
+  cuisine: unknown
+  meal_type: sandwich
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - chive
+  - cucumber
+  - garlic
+  - lemon
+  appliances:
+  - instant_pot
+  categories:
+  - Guest Apps
+  - Sandwich
+  - School Entrees
+  - School Snacks
+  source_url: null
+- id: sweet_potato_black_bean_quesadilla
+  name: Sweet Potato Black Bean Quesadilla
+  cuisine: unknown
+  meal_type: dinner
+  effort_level: normal
+  tags: []
+- id: easy_pear_popsicles
+  name: Easy Pear Popsicles
+  cuisine: unknown
+  meal_type: frozen_treat
+  effort_level: high
+  tags: []
+  no_chop_compatible: false
+  main_veg: []
+  appliances:
+  - instant_pot
+  categories:
+  - ''
+  source_url: null
 - id: veggie_marinara_sauce
-  name: Pasta with Veggie Marinara
+  name: Veggie Marinara Sauce
   cuisine: italian
   meal_type: sauce_dip
-  effort_level: medium
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - instant_pot
-  - slow_cooker
-  - stovetop
   main_veg:
   - bell pepper
   - butternut squash
@@ -3694,168 +2978,224 @@
   - cauliflower
   - celery
   - onion
-  - pepper
   - potato
   - squash
   - sweet potato
   - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/veggie_marinara_sauce.md
-  tags:
+  - tomatoe
+  appliances:
   - instant_pot
   - slow_cooker
   - stovetop
-- id: veggie_roti
-  name: Veggie Roti
-  cuisine: indian
-  meal_type: tacos_wraps
-  effort_level: medium
+  categories:
+  - ''
+  source_url: null
+- id: rasam_rice_with_carrot_kai
+  name: Rasam Rice with Carrot Kai
+  cuisine: unknown
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - oven
-  - stovetop
   main_veg:
-  - potato
-  - sweet potato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/veggie_roti.md
-  tags:
-  - oven
-  - stovetop
-- id: veggie_straws
-  name: Veggie straws
-  cuisine: snack
-  meal_type: unknown
-  effort_level: low
-  no_chop_compatible: false
+  - garlic
+  - tomato
   appliances:
   - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/veggie_straws.md
+  categories:
+  - South Indian
+  - Fusion
+  - Soup-Rice
+  - Comfort Food
+  source_url: null
+- id: test_recipe_granola
+  name: Test Recipe Granola
+  cuisine: unknown
+  meal_type: dinner
+  effort_level: normal
   tags:
-  - school snacks
-  - stovetop
-- id: veggie_upma
-  name: Veggie Upma
+  - not meal
+  - missing ingredients
+  - missing instructions
+- id: pesarattu
+  name: Pesarattu
   cuisine: indian
   meal_type: breakfast
-  effort_level: medium
+  effort_level: high
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - oven
-  - stovetop
   main_veg:
   - beans
-  - carrot
-  - corn
+  - ginger
   - onion
-  - peas
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/veggie_upma.md
-  tags:
-  - hebbar kitchen
-  - indian
-  - oven
+  appliances:
   - stovetop
-- id: veggie_wrap
-  name: Veggie Wrap
-  cuisine: mexican
-  meal_type: tacos_wraps
-  effort_level: medium
+  categories:
+  - Dinner
+  - Indian
+  source_url: null
+- id: vegetable_lasagna
+  name: Vegetable Lasagna
+  cuisine: italian
+  meal_type: casserole
+  effort_level: high
+  tags: []
   no_chop_compatible: false
+  main_veg:
+  - basil
+  - bell pepper
+  - garlic
+  - onion
+  - parsley
+  - spinach
+  - zucchini
   appliances:
   - oven
-  main_veg:
-  - avocado
-  - beet
-  - bell pepper
-  - carrot
-  - corn
-  - cucumber
-  - lettuce
-  - pepper
-  - spinach
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/veggie_wrap.md
+  - stovetop
+  categories:
+  - Dinner
+  - Italian
+  source_url: null
+- id: high_protein_peanut_butter_granola
+  name: High Protein Peanut Butter Granola
+  cuisine: unknown
+  meal_type: dinner
+  effort_level: normal
   tags:
-  - oven
-- id: vetha_kozhumbu
-  name: Vetha Kozhumbu
+  - not meal
+  - missing ingredients
+  - missing instructions
+- id: ip_dal_tadka
+  name: IP Dal Tadka
   cuisine: indian
   meal_type: soup_stew
-  effort_level: medium
+  effort_level: normal
+  tags: []
   no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - onion
-  - tomato
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/vetha_kozhumbu.md
-  tags:
-  - hebbar kitchen
-  - indian
-  - stovetop
-- id: wheat_thins_or_triscuits
-  name: Wheat thins or triscuits
-  cuisine: snack
-  meal_type: unknown
-  effort_level: low
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg: []
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/wheat_thins_or_triscuits.md
-  tags:
-  - school snacks
-  - stovetop
-- id: whole_fruit_ice_pops
-  name: Whole Fruit Ice Pops
-  cuisine: snack
-  meal_type: frozen_treat
-  effort_level: high
-  no_chop_compatible: false
-  appliances:
-  - stovetop
-  main_veg:
-  - lime
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/whole_fruit_ice_pops.md
-  tags:
-  - stovetop
-- id: zucchini_and_paneer_waffles
-  name: Zucchini and Paneer Waffles
-  cuisine: indian
-  meal_type: breakfast
-  effort_level: medium
-  no_chop_compatible: false
-  appliances:
-  - instant_pot
   main_veg:
   - cilantro
-  - zucchini
-  avoid_contains: []
-  source:
-    type: markdown
-    file: recipes/content/zucchini_and_paneer_waffles.md
-  tags:
+  - garlic
+  - onion
+  - tomato
+  appliances:
   - instant_pot
+  - stovetop
+  categories:
+  - Dinner
+  - Indian
+  - Instant Pot
+  source_url: null
+- id: aloo_corn_tikki_roll
+  name: Aloo Corn Tikki Roll
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - avocado
+  - cilantro
+  - corn
+  - garlic
+  - ginger
+  - onion
+  - potato
+  appliances:
+  - instant_pot
+  categories:
+  - Dinner
+  - Sanjyot Keer
+  source_url: null
+- id: masoor_dal
+  name: Masoor Dal
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - cilantro
+  - garlic
+  - lemon
+  - tomato
+  - tomatoe
+  appliances:
+  - instant_pot
+  - stovetop
+  categories:
+  - Dinner
+  - Indian
+  source_url: null
+- id: stir_fry
+  name: Stir Fry
+  cuisine: asian
+  meal_type: stir_fry
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - bell pepper
+  - broccoli
+  - corn
+  - garlic
+  - ginger
+  - green onion
+  - onion
+  - peas
+  - pepper
+  - spinach
+  appliances:
+  - instant_pot
+  categories:
+  - Asian
+  - Dinner
+  source_url: null
+- id: pachai_payaru_moong_dal_sundal
+  name: Pachai Payaru, Moong Dal Sundal
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - ginger
+  appliances:
+  - stovetop
+  categories:
+  - Guest Apps
+  - Indian
+  - School Snacks
+  source_url: null
+- id: dry_paneer_masala
+  name: Dry Paneer Masala
+  cuisine: indian
+  meal_type: soup_stew
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - bell pepper
+  - corn
+  - garlic
+  - ginger
+  - onion
+  appliances:
+  - stovetop
+  categories:
+  - Dinner
+  - TCL
+  source_url: null
+- id: mediterranean_diet_black_bean_brownies
+  name: Mediterranean Diet Black Bean Brownies
+  cuisine: unknown
+  meal_type: snack_bar
+  effort_level: normal
+  tags: []
+  no_chop_compatible: false
+  main_veg:
+  - beans
+  appliances:
+  - instant_pot
+  - oven
+  categories: []
+  source_url: null

@@ -6,6 +6,7 @@ import AppLayout from '@/components/AppLayout';
 import Link from 'next/link';
 import { RecipeListItem } from '@/types';
 import EffortIndicator from '@/components/EffortIndicator';
+import ImportRecipeModal from '@/components/ImportRecipeModal';
 
 export default function RecipesPage() {
     const [recipes, setRecipes] = useState<RecipeListItem[]>([]);
@@ -14,6 +15,7 @@ export default function RecipesPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [groupBy, setGroupBy] = useState<'none' | 'cuisine' | 'effort'>('none');
     const [isReviewOpen, setIsReviewOpen] = useState(false);
+    const [isImportOpen, setIsImportOpen] = useState(false);
 
     // Filter States
     const [filterCuisine, setFilterCuisine] = useState<string>('all');
@@ -89,41 +91,48 @@ export default function RecipesPage() {
                         <h1 className="text-5xl">Recipe Browser</h1>
                     </div>
                     <div className="flex flex-col items-end gap-3">
-                        <div className="text-[var(--text-muted)] font-mono text-sm">{filteredRecipes.length} Recipes</div>
-                        {(() => {
-                            const needsReviewCount = recipes.filter(r => {
-                                const tags = r.tags || [];
-                                const hasAuditTags = tags.some(t =>
-                                    ['not meal', 'missing ingredients', 'missing instructions'].includes(t)
-                                );
-                                const noCuisine = !r.cuisine || r.cuisine === 'unknown';
-                                const noEffort = !r.effort_level;
-                                return hasAuditTags || noCuisine || noEffort;
-                            }).length;
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => setIsImportOpen(true)}
+                                className="px-6 py-2.5 bg-[var(--accent-gold)] text-[var(--bg-primary)] rounded-full font-bold text-sm transition-all hover:bg-yellow-400 hover:scale-105 active:scale-95 shadow-md flex items-center gap-2"
+                            >
+                                <span className="text-lg">✨</span> Import
+                            </button>
+                            {(() => {
+                                const needsReviewCount = recipes.filter(r => {
+                                    const tags = r.tags || [];
+                                    const hasAuditTags = tags.some(t =>
+                                        ['not meal', 'missing ingredients', 'missing instructions'].includes(t)
+                                    );
+                                    const noCuisine = !r.cuisine || r.cuisine === 'unknown';
+                                    const noEffort = !r.effort_level;
+                                    return hasAuditTags || noCuisine || noEffort;
+                                }).length;
 
-                            if (needsReviewCount > 0) {
-                                return (
-                                    <Link
-                                        href="/recipes/batch-edit"
-                                        className="relative group px-6 py-2.5 bg-emerald-600 text-white rounded-full font-bold text-sm transition-all hover:bg-emerald-700 hover:scale-105 active:scale-95 shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] flex items-center gap-2"
-                                    >
-                                        <span>Review</span>
-                                        <span className="bg-white text-emerald-600 rounded-full w-5 h-5 flex items-center justify-center text-[10px] shadow-inner">
-                                            {needsReviewCount}
-                                        </span>
-                                    </Link>
-                                );
-                            } else {
-                                return (
-                                    <Link
-                                        href="/recipes/batch-edit"
-                                        className="px-6 py-2.5 border border-gray-200 text-gray-400 rounded-full font-bold text-sm transition-all hover:border-gray-300 hover:text-gray-500 opacity-60"
-                                    >
-                                        Review
-                                    </Link>
-                                );
-                            }
-                        })()}
+                                if (needsReviewCount > 0) {
+                                    return (
+                                        <Link
+                                            href="/recipes/batch-edit"
+                                            className="relative group px-6 py-2.5 bg-emerald-600 text-white rounded-full font-bold text-sm transition-all hover:bg-emerald-700 hover:scale-105 active:scale-95 shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] flex items-center gap-2"
+                                        >
+                                            <span>Review</span>
+                                            <span className="bg-white text-emerald-600 rounded-full w-5 h-5 flex items-center justify-center text-[10px] shadow-inner">
+                                                {needsReviewCount}
+                                            </span>
+                                        </Link>
+                                    );
+                                } else {
+                                    return (
+                                        <Link
+                                            href="/recipes/batch-edit"
+                                            className="px-6 py-2.5 border border-gray-200 text-gray-400 rounded-full font-bold text-sm transition-all hover:border-gray-300 hover:text-gray-500 opacity-60"
+                                        >
+                                            Review
+                                        </Link>
+                                    );
+                                }
+                            })()}
+                        </div>
                     </div>
                 </header>
 
@@ -243,6 +252,15 @@ export default function RecipesPage() {
                     }}
                 />
             )}
+
+            <ImportRecipeModal
+                isOpen={isImportOpen}
+                onClose={() => setIsImportOpen(false)}
+                onSuccess={async () => {
+                    const data = await getRecipes();
+                    setRecipes(data.recipes);
+                }}
+            />
         </AppLayout >
     );
 }

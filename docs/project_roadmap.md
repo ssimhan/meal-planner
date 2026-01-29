@@ -34,14 +34,16 @@
 **Goal:** Transform recipe creation and organization into a high-utility engine.
 
 - **Block 1: Link Extraction (GPT-powered) (~5 hrs)**
-  - [ ] **LLM Integration:** Implement enhanced extraction logic in `scripts/import_recipe.py` using GPT-4 Vision/Text for URL parsing.
-  - [ ] **UI:** Add "Import from Link" option with an interactive confirmation step for ingredients and steps.
+  - [ ] **1.1 Extraction API (2 hrs):** Update `scripts/import_recipe.py` and create `/api/recipes/extract` endpoint using GPT-4 for URL/Image parsing.
+  - [ ] **1.2 Import UI - Input (1.5 hrs):** Add "Import from Link" dialog to UI; implement loading states and API integration.
+  - [ ] **1.3 Import UI - Verification (1.5 hrs):** Build interactive confirmation step to review/edit extracted ingredients and steps before saving.
 - **Block 2: 3-Box Recipe Editor (~4 hrs)**
-  - [ ] **UI:** Overhaul the recipe creator/editor with 3 distinct boxes: Ingredients, Prep Steps, and Cook Steps.
-  - [ ] **Sync:** Ensure "Save Recipe" triggers an immediate sync from local Markdown to Supabase.
+  - [ ] **2.1 3-Box Layout (2 hrs):** Overhaul recipe editor UI with distinct Ingredients, Prep Steps, and Cook Steps sections.
+  - [ ] **2.2 Persistence Sync (2 hrs):** Implement immediate local Markdown to Supabase sync logic on recipe save.
 - **Block 3: Multi-item Meal Slots (~5 hrs)**
-  - [ ] **Data Model:** Update `meal_plans` to support arrays of `recipe_id`s per slot.
-  - [ ] **UI/Logic:** Update Draft/Week views and the shopping list generator to handle multiple recipes per meal (e.g., Soup AND Salad).
+  - [ ] **3.1 Data Model & API (2 hrs):** Update `meal_plans` schema (`recipe_ids` array) and Python endpoints to support multiple recipes per slot.
+  - [ ] **3.2 UI Rendering (1.5 hrs):** Update Draft/Week views to display and manage multiple items (e.g., Soup AND Salad) per meal.
+  - [ ] **3.3 Shopping List Aggregate (1.5 hrs):** Update inventory/shopping engine to aggregate ingredients from all recipes in a multi-item slot.
 
 ### Phase 34: Household Synergy
 **Goal:** Enable multiple members to coordinate preferences and feedback.

@@ -20,7 +20,7 @@ Generate weekly meal plans:
 
 **Always read first:**
 - `README.md` - System architecture and current status
-- `docs/IMPLEMENTATION.md` - Complete roadmap and phase status
+- `docs/project_roadmap.md` - Complete roadmap and phase status
 - `recipes/index.yml` - 226 recipes with metadata (cuisine, meal_type, leftover_potential, kid_favorite)
 - `data/history.yml` - Last 3+ weeks (anti-repetition)
 - `inputs/YYYY-MM-DD.yml` - Current week constraints
@@ -28,8 +28,8 @@ Generate weekly meal plans:
 - `config.yml` - Kid profiles with allergy tracking
 
 **After implementation:**
-- Update `docs/IMPLEMENTATION.md` and `docs/PROJECT_HISTORY.md`
-- `docs/IMPLEMENTATION.md` = single source of truth
+- Update `docs/project_roadmap.md` and `docs/PROJECT_HISTORY.md`
+- `docs/project_roadmap.md` = single source of truth
 
 **Task-specific:**
 - `scripts/workflow.py` - Automated workflow
@@ -107,7 +107,7 @@ Note: "Make 2x batch, freeze half"
 - Batch suggestions coordinated with lunch plan
 - Dynamic "Pack leftovers" prep tasks
 **Confirmation-Driven Fixes:**
-Whenever ingredient normalization or prep-step ambiguity arises, ask for user confirmation, record the decision, and update `docs/IMPLEMENTATION.md` for a permanent fix.
+Whenever ingredient normalization or prep-step ambiguity arises, ask for user confirmation, record the decision, and update `docs/project_roadmap.md` for a permanent fix.
 
 **Recipe Importing:**
 - Use `python3 scripts/import_recipe.py <URL>` to add new recipes

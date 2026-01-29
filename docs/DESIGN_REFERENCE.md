@@ -2,7 +2,7 @@
 
 **Status:** Aspirational design for future development
 
-**Current implementation:** See [IMPLEMENTATION.md](../IMPLEMENTATION.md) for what's actually built
+**Current implementation:** See [project_roadmap.md](../project_roadmap.md) for what's actually built
 
 ---
 
@@ -57,7 +57,7 @@
 - Preference drift detection
 
 ### Future (Phase 6 - Optional)
-See [IMPLEMENTATION.md](../IMPLEMENTATION.md) "Phase 6: Learning & Adaptation" for technical details.
+See [project_roadmap.md](../project_roadmap.md) "Phase 6: Learning & Adaptation" for technical details.
 
 ---
 
@@ -68,5 +68,5 @@ This describes the *ideal experience* - what the system could become if fully de
 - Design reference for incremental improvements
 - Reminder of the meta-goal (mental load reduction, not just nutrition)
 
-**For what's actually built:** See [IMPLEMENTATION.md](../IMPLEMENTATION.md)
+**For what's actually built:** See [project_roadmap.md](../project_roadmap.md)
 **For current capabilities:** See [README.md](../README.md)

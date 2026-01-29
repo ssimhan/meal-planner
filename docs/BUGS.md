@@ -54,7 +54,7 @@ Before merging to `main`:
 - [ ] All block features implemented
 - [ ] Local testing passed (`npm run dev:full`)
 - [ ] Vercel preview deployed and verified
-- [ ] IMPLEMENTATION.md updated with ✅ Complete
+- [ ] project_roadmap.md updated with ✅ Complete
 - [ ] PROJECT_HISTORY.md updated
 
 ---

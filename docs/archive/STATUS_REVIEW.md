@@ -193,7 +193,7 @@ git add -A && git commit -m "chore: remove legacy backup after successful migrat
 
 ### Existing Docs (Good Coverage)
 - ✅ [README.md](README.md) - Quick start, features, tech stack
-- ✅ [docs/IMPLEMENTATION.md](docs/IMPLEMENTATION.md) - Architecture, roadmap
+- ✅ [docs/project_roadmap.md](docs/project_roadmap.md) - Architecture, roadmap
 - ✅ [docs/PROJECT_HISTORY.md](docs/PROJECT_HISTORY.md) - Development timeline
 - ✅ [docs/CONFIGURATION.md](docs/CONFIGURATION.md) - Config guide
 - ✅ [docs/FIELD_NAMING_CONVENTION.md](docs/FIELD_NAMING_CONVENTION.md) - Data standards

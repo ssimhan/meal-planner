@@ -652,7 +652,7 @@ The best tools are the ones you actually use. This system works because it reduc
     - **People Profiles:** Settings section for family dietary preferences.
 
 **Roadmap Restructure:**
-- Realigned `IMPLEMENTATION.md` to prioritize the UX implementation (Phase 22) and push Authentication to Phase 24.
+- Realigned `project_roadmap.md` to prioritize the UX implementation (Phase 22) and push Authentication to Phase 24.
 - Phase 23 defined for specific bug fixes (logic gaps) and advanced features (personalization).
 
 **Learning:** Prototyping in a single HTML file is an incredibly fast way to validate UX/UI changes before committing to complex React/Next.js refactors.

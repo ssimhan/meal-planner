@@ -2,7 +2,7 @@
 
 ## Documentation
 - `docs/USER_GUIDE.md`: Non-technical "How To" guide
-- `docs/IMPLEMENTATION.md`: Automation setup and implementation status
+- `docs/project_roadmap.md`: Automation setup and implementation status
 - `docs/PROJECT_HISTORY.md`: Development journey and key decisions
 - `docs/DEVELOPER_GUIDE.md`: Developer setup, deployment, and CI/CD
  for the meal-planner repository.
@@ -15,7 +15,7 @@
 meal-planner/
 ├── README.md                    # Project overview
 ├── CLAUDE.md                    # AI assistant instructions
-├── IMPLEMENTATION.md            # Implementation status
+├── project_roadmap.md            # Implementation status
 ├── PROJECT_HISTORY.md           # Development journey
 ├── GITHUB_ACTIONS_SETUP.md      # GitHub Actions setup guide
 ├── mealplan                     # Main CLI tool
@@ -26,7 +26,7 @@ meal-planner/
 │
 ├── docs/                        # Documentation
 │   ├── DESIGN_REFERENCE.md      # Original UX vision
-│   ├── IMPLEMENTATION.md        # Implementation details
+│   ├── project_roadmap.md        # Implementation details
 │   ├── DEVELOPER_GUIDE.md       # Setup & Deployment guide
 │   ├── PROJECT_HISTORY.md       # Project history
 │   ├── REPO_STRUCTURE.md (this file)

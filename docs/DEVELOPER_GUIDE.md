@@ -180,7 +180,7 @@ To maintain a clean and effective documentation workflow, please adhere to the f
 *   **No Other Subcategories:** Do not add sections like "Guidelines", "Audit Log", "Future Ideas", or "Notes". Keeping this file clean ensures we focus on the "Zero-Debt Policy".
 *   **Handling Resolved Issues:** Once an issue is fixed, remove it from this file. If you wish to keep a record, move it to .
 
-### 2. docs/IMPLEMENTATION.md
+### 2. docs/project_roadmap.md
 **Sole Purpose:** Tracking feature implementation status for the current execution block.
 
 *   **Features Only:** All new features, blocks of work, and functional requirements go here.

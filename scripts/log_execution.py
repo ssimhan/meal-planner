@@ -227,7 +227,7 @@ def main():
             
     else:
         # Default: if made=true and no veggies specified, assume planned veggies used?
-        # IMPLEMENTATION.md says: "If vegetables not specified: Defaults to planned vegetables"
+        # project_roadmap.md says: "If vegetables not specified: Defaults to planned vegetables"
         if target_dinner['made'] is True and 'vegetables' in target_dinner:
              target_dinner['vegetables_used'] = list(target_dinner['vegetables'])
 
@@ -258,7 +258,7 @@ def main():
         target_dinner['kids_complaints'] = args.kids_complaints
         
         # Add to global/weekly dislikes list
-        # IMPLEMENTATION.md structure: included in the week object
+        # project_roadmap.md structure: included in the week object
         if 'kids_dislikes' not in week:
             week['kids_dislikes'] = []
             

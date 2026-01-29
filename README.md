@@ -132,7 +132,7 @@ meal-planner/
 
 ## 📖 Documentation
 
-- **[IMPLEMENTATION.md](docs/IMPLEMENTATION.md)**: Complete system architecture and roadmap
+- **[project_roadmap.md](docs/project_roadmap.md)**: Complete system architecture and roadmap
 - **[DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md)**: Setup, testing, deployment, and CI/CD guide
 - **[BUGS.md](docs/BUGS.md)**: Bug tracking and technical debt (zero-debt policy)
 - **[PROJECT_HISTORY.md](docs/PROJECT_HISTORY.md)**: Development history and session logs
@@ -153,7 +153,7 @@ meal-planner/
 - User authentication (single-household access)
 - Mobile-friendly UX improvements
 
-See [IMPLEMENTATION.md](docs/IMPLEMENTATION.md) for complete roadmap.
+See [project_roadmap.md](docs/project_roadmap.md) for complete roadmap.
 
 ## 🛠️ Technology Stack
 

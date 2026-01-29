@@ -31,3 +31,99 @@ Use this workflow to ensure high-quality, spec-compliant code before merging.
 2. Run the test suite on the modified files.
 3. If issues are found, provide specific feedback or implement the fixes.
 4. Once satisfied, approve the changes for closeout.
+
+## Production Reliability Checklist
+
+**Before approving any PR**, verify these **P0 (Blocking)** requirements:
+
+### 1. External Dependencies
+- [ ] Timeouts on all HTTP/database calls
+- [ ] Retry logic with exponential backoff
+- [ ] Graceful degradation when dependencies fail
+
+### 2. Write Operations  
+- [ ] Idempotent (safe to retry)
+- [ ] Unique constraints enforced
+- [ ] Atomic (all-or-nothing)
+
+### 3. Resource Management
+- [ ] Connections closed in `finally` blocks
+- [ ] Memory/queue size limits
+- [ ] Rate limiting where needed
+
+### 4. Error Handling
+- [ ] All exceptions logged with context
+- [ ] User-friendly error messages
+- [ ] No silent failures (`except: pass`)
+
+### 5. Input Validation
+- [ ] Validated at API boundaries
+- [ ] Type checking enforced
+- [ ] Size limits on uploads/requests
+
+### Quick Examples
+
+**Timeouts:**
+```python
+# ❌ Bad: Can hang forever
+response = requests.get(url)
+
+# ✅ Good: Fails fast
+response = requests.get(url, timeout=5)
+```
+
+**Idempotency:**
+```python
+# ❌ Bad: Retry creates duplicates
+items.append(new_item)
+
+# ✅ Good: Retry is safe
+items[item_id] = new_item
+```
+
+**Resource Cleanup:**
+```python
+# ❌ Bad: Connection leak
+conn = get_connection()
+return conn.query()
+
+# ✅ Good: Guaranteed cleanup
+with get_connection() as conn:
+    return conn.query()
+```
+
+**Error Logging:**
+```python
+# ❌ Bad: Silent failure
+try:
+    send_email()
+except:
+    pass
+
+# ✅ Good: Logged with context
+try:
+    send_email()
+except Exception as e:
+    logger.error(f"Email failed: {e}", extra={"user_id": user.id})
+```
+
+**Input Validation:**
+```python
+# ❌ Bad: Assumes valid input
+def create_week(week_of):
+    return storage.create(week_of)
+
+# ✅ Good: Validates first
+def create_week(week_of):
+    if not re.match(r'^\d{4}-\d{2}-\d{2}$', week_of):
+        raise ValueError("Invalid date format")
+    return storage.create(week_of)
+```
+
+### Decision Tree
+
+**If ANY P0 check fails:**
+- **\u003c 30 min fix?** → Fix now before merge
+- **\u003e 30 min fix?** → Add to `docs/BUGS.md`, block merge
+
+**Rationale:** These 5 checks prevent 80% of production outages. Non-negotiable for production code.

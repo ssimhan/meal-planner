@@ -226,11 +226,10 @@ Fruit + protein/fat (apple + peanut butter, banana + almond butter)
 **Groceries:**
 By aisle: Fresh Produce, Frozen, Dairy, Grains, Canned, Spices, Snacks, Condiments
 
+
 ## Production Reliability Standards
 
-Before merging any code, verify against the **Production Reliability Checklist**:
-
-See `docs/RELIABILITY_CHECKLIST.md` for the complete checklist.
+Before merging any code, use the **`/code-review` workflow** which includes production reliability checks.
 
 ### P0 Requirements (Blocking)
 1. **Timeouts** - All external calls have timeouts
@@ -239,12 +238,6 @@ See `docs/RELIABILITY_CHECKLIST.md` for the complete checklist.
 4. **Error logging** - Exceptions logged with context
 5. **Resource cleanup** - Connections/files closed in `finally` blocks
 
-### Quick Checks
-- [ ] External calls have `timeout=` parameter
-- [ ] Write endpoints use unique IDs or upsert logic
-- [ ] API routes validate input before processing
-- [ ] Errors logged with `logger.error(..., extra={context})`
-- [ ] Database connections use `with` or `try/finally`
-
 **Rationale:** "Works fine until load or failure" bugs are the #1 production killer. These checks prevent 80% of outages.
 
+See `.agent/workflows/code-review.md` for complete checklist with examples.

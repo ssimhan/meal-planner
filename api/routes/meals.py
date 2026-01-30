@@ -263,14 +263,17 @@ def get_shopping_list_route():
     try:
         week_of = request.args.get('week_of')
         if not week_of:
+            print("[ERROR] Shopping List: Missing week_of parameter")
             return jsonify({"status": "error", "message": "week_of parameter required"}), 400
             
         h_id = storage.get_household_id()
+        print(f"[DEBUG] Fetching shopping list for week: {week_of}, household: {h_id}")
         query = storage.supabase.table("meal_plans").select("plan_data, history_data").eq("household_id", h_id).eq("week_of", week_of)
         res = storage.execute_with_retry(query)
         
         if not res.data:
-            return jsonify({"status": "error", "message": f"No plan found for week {week_of}"}), 404
+            print(f"[DEBUG] Shopping List: No plan found for week {week_of}, returning empty list.")
+            return jsonify({"status": "success", "shopping_list": []}), 200
             
         plan_data = res.data[0].get('plan_data') or {}
         history_data = res.data[0].get('history_data') or {}

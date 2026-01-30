@@ -104,27 +104,34 @@ class StorageEngine:
         inventory = {'fridge': [], 'pantry': [], 'spice_rack': [], 'freezer': {'backups': [], 'ingredients': []}}
         
         for item in res.data:
-            category = item['category']
-            formatted = {
-                'item': item['item'],
-                'quantity': item['quantity'],
-                'unit': item['unit'],
-                **(item.get('metadata') or {})
-            }
-            
-            if category == 'fridge':
-                inventory['fridge'].append(formatted)
-            elif category == 'pantry':
-                inventory['pantry'].append(formatted)
-            elif category == 'spice_rack':
-                inventory['spice_rack'].append(formatted)
-            elif category == 'freezer_ingredient':
-                inventory['freezer']['ingredients'].append(formatted)
-            elif category == 'freezer_backup':
-                # Convert back to 'meal' and 'servings' for UI compatibility
-                formatted['meal'] = formatted.pop('item')
-                formatted['servings'] = formatted.pop('quantity')
-                inventory['freezer']['backups'].append(formatted)
+            try:
+                category = item.get('category')
+                if not category: continue
+
+                formatted = {
+                    'item': item.get('item', 'Unknown'),
+                    'quantity': item.get('quantity', 1),
+                    'unit': item.get('unit', 'count'),
+                    **(item.get('metadata') or {})
+                }
+                
+                if category == 'fridge':
+                    inventory['fridge'].append(formatted)
+                elif category == 'pantry':
+                    inventory['pantry'].append(formatted)
+                elif category == 'spice_rack':
+                    inventory['spice_rack'].append(formatted)
+                elif category == 'freezer_ingredient':
+                    inventory['freezer']['ingredients'].append(formatted)
+                elif category == 'freezer_backup':
+                    # Convert back to 'meal' and 'servings' for UI compatibility
+                    formatted['meal'] = formatted.pop('item')
+                    formatted['servings'] = formatted.pop('quantity')
+                    inventory['freezer']['backups'].append(formatted)
+            except Exception as e:
+                 print(f"Error processing inventory item {item.get('id', 'unknown')}: {e}")
+                 # Continue processing other items
+                 continue
         
         return inventory
 

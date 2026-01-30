@@ -3,6 +3,17 @@ from flask import request
 from supabase import create_client
 from pathlib import Path
 import yaml
+import httpx
+
+# MONKEY PATCH: Disable HTTP/2 in httpx to fix "ConnectionTerminated error_code:ErrorCodes.COMPRESSION_ERROR"
+# This is required because of SSL/LibreSSL issues on macOS affecting HTTP/2 negotiation with Supabase.
+_original_httpx_client_init = httpx.Client.__init__
+
+def _patched_httpx_client_init(self, *args, **kwargs):
+    kwargs['http2'] = False
+    _original_httpx_client_init(self, *args, **kwargs)
+
+httpx.Client.__init__ = _patched_httpx_client_init
 
 # Load local environment variables if they exist
 try:

@@ -232,3 +232,41 @@ def auto_add_recipe_from_meal(actual_meal, h_id):
     except Exception as e:
         print(f"Error auto-adding recipe: {e}")
     return False
+
+
+def ensure_recipe_for_legacy_text(text_value, h_id):
+    """
+    Given a text value (legacy actual_meal or quick add), ensure a recipe exists.
+    Returns: list of recipe_ids (e.g. ['slug'])
+    """
+    if not text_value: return []
+    
+    import re
+    # 1. Simple Slug
+    suggested_id = re.sub(r'[^a-zA-Z0-9]', '_', text_value.lower()).strip('_')
+    if not suggested_id: return []
+
+    # 2. Check existence
+    try:
+        query = storage.supabase.table("recipes").select("id").eq("household_id", h_id).eq("id", suggested_id)
+        existing = storage.execute_with_retry(query)
+        if existing.data:
+            return [suggested_id]
+            
+        # 3. Create Placeholder
+        metadata = {
+            "name": text_value,
+            "cuisine": "unknown",
+            "meal_type": "dinner",
+            "effort_level": "normal",
+            "tags": ["auto_created", "placeholder", "from_log"]
+        }
+        content = f"# {text_value}\n\nAuto-created from Quick Add."
+        
+        storage.StorageEngine.save_recipe(suggested_id, text_value, metadata, content)
+        invalidate_cache('recipes')
+        return [suggested_id]
+        
+    except Exception as e:
+        print(f"Error ensuring recipe for text: {e}")
+        return []

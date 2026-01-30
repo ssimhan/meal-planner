@@ -1304,3 +1304,11 @@ Understanding when to use each is fundamental to frontend development. Most bugs
 - **Global Sync:** Pushed these improvements to the `claude-code-quickstart` repository for cross-project standardization.
 
 
+
+## 2026-01-30 [Decision] Deprecate 'actual_meal' String Logic
+**Context**: Phase 34 introduced Modular Recipes, allowing multiple recipes per meal slot. However, the legacy  string field was causing split-brain states where meals logged as text overrides lost their structured data (ingredients, prep steps).
+**Decision**: 
+1. Strictly enforce  (array) as the source of truth for all resolved meals.
+2. Deprecate the  string logic for content. It may still be used for display or temporary notes, but not as the primary data.
+3. "Quick Add" text entries will now auto-create placeholder recipes in the database to ensure every slot maps to a valid .
+**Impact**: Requires refactoring  endpoint and updating  replacement logic. Ensures full support for multi-recipe slots and interactive recipe cards.

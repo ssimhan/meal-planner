@@ -331,6 +331,25 @@ def bulk_update_recipes_route():
             # Metadata merge (excluding name/id)
             incoming_metadata = u.get('metadata', {})
             updates_filtered = {k: v for k, v in incoming_metadata.items() if k not in ['id', 'name']}
+            
+            # SMART TAG MERGE: Preserve system tags if incoming update has tags
+            if 'tags' in updates_filtered:
+                incoming_tags = set(updates_filtered['tags'] or [])
+                current_tags = set(current_meta.get('tags') or [])
+                
+                # Define system tags that frequent the DB but might be hidden in UI
+                # imported: From URL import
+                # missing_*: specific audit tags
+                # not meal: specific audit tag
+                PROTECTED_TAGS = {'imported', 'not meal'}
+                
+                # Keep existing protected tags even if not in incoming
+                preserved = current_tags & PROTECTED_TAGS
+                
+                # Final tags = Incoming user tags + Preserved system tags
+                final_tags = list(incoming_tags | preserved)
+                updates_filtered['tags'] = final_tags
+            
             new_metadata = {**current_meta, **updates_filtered}
             new_metadata.pop('name', None)
             new_metadata.pop('id', None)

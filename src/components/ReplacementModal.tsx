@@ -68,7 +68,11 @@ export default function ReplacementModal({ currentMeal, day, recipes, leftoverIn
         }
 
         // Final confirmation
-        const allIds = recipeId ? [recipeId, ...selectedSides] : [name, ...selectedSides];
+        // MODULAR UPDATE: Ensure we pass a list of IDs.
+        // If recipeId is present, use it. If not, 'name' is treated as a potential ID or Text to be auto-created.
+        const mainId = recipeId || name;
+        const allIds = [mainId, ...selectedSides];
+
         onConfirm(name, isFromSearch, madeStatus, allIds);
     };
 

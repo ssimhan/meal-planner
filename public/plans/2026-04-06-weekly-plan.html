@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Meal Plan: Apr 06, 2026 - Apr 10, 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;700;900&family=Outfit:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Solarpunk Color Palette */
+            --bg-primary: #fef9f3;
+            --bg-secondary: #f0e6d2;
+            --bg-card: #ffffff;
+            --accent-green: #2d6a4f;
+            --accent-gold: #d4a574;
+            --accent-terracotta: #c1666b;
+            --accent-sage: #6a8e7f;
+            --text-primary: #2b2d42;
+            --text-muted: #6c757d;
+            --border-subtle: rgba(109, 122, 95, 0.2);
+
+            /* Typography Scale */
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.5rem;
+            --text-2xl: 2rem;
+            --text-3xl: 3rem;
+            --text-4xl: 4.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.03"/></svg>');
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            padding: 50px;
+            border-radius: 2px;
+            box-shadow: 0 4px 30px rgba(45, 106, 79, 0.08);
+            border: 1px solid var(--border-subtle);
+        }
+
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 900;
+            font-size: var(--text-4xl);
+            color: var(--accent-green);
+            margin-bottom: 30px;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--accent-terracotta);
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: var(--text-sm);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -3px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover {
+            background: rgba(45, 106, 79, 0.05);
+            color: var(--accent-green);
+        }
+
+        .tab-button.active {
+            color: var(--accent-green);
+            background: rgba(45, 106, 79, 0.08);
+            border-bottom-color: var(--accent-green);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 700;
+            font-size: var(--text-2xl);
+            color: var(--accent-green);
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: var(--text-lg);
+            color: var(--accent-green);
+            margin-bottom: 12px;
+        }
+
+        h4 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            font-size: var(--text-base);
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .energy-level {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 2px;
+            font-size: var(--text-xs);
+            font-weight: 700;
+            margin-left: 15px;
+            letter-spacing: 0.08em;
+            border: 2px solid;
+        }
+
+        .energy-high {
+            background: var(--accent-green);
+            color: white;
+            border-color: var(--accent-green);
+        }
+
+        .energy-mild {
+            background: var(--accent-gold);
+            color: var(--text-primary);
+            border-color: var(--accent-gold);
+        }
+
+        .energy-morning-ok {
+            background: #f0d49c;
+            color: var(--text-primary);
+            border-color: #d4a574;
+        }
+
+        .energy-none {
+            background: var(--accent-terracotta);
+            color: white;
+            border-color: var(--accent-terracotta);
+        }
+
+        .day-header {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: var(--text-2xl);
+            color: var(--accent-green);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--accent-terracotta);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .section {
+            margin: 25px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(240, 230, 210, 0.5) 100%);
+            border-radius: 2px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .meal-card {
+            background: white;
+            padding: 0;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-left: 4px solid var(--accent-terracotta);
+            transition: box-shadow 0.2s ease;
+        }
+
+        .meal-card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .meal-card h3 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin: 0;
+            padding: 12px 16px 8px 16px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .meal-card h3::before {
+            content: "🍽️";
+            font-size: 1em;
+        }
+
+        .meal-type {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: var(--text-base);
+            color: var(--text-primary);
+            padding: 0 16px;
+            margin-bottom: 8px;
+        }
+
+        .meal-type a {
+            color: var(--text-primary);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .meal-type a:hover {
+            color: var(--accent-terracotta);
+            border-bottom-color: var(--accent-terracotta);
+        }
+
+        .meal-type a::after {
+            content: " 🔗";
+            font-size: 0.8em;
+            opacity: 0.3;
+            transition: opacity 0.2s ease;
+        }
+
+        .meal-type a:hover::after {
+            opacity: 1;
+        }
+
+        .vegetables {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-style: normal;
+            padding: 0 16px;
+            margin: 4px 0;
+            font-size: var(--text-xs);
+        }
+
+        .prep-notes {
+            background: rgba(240, 230, 210, 0.3);
+            padding: 10px 16px;
+            margin: 8px 0 0 0;
+            border-left: none;
+            font-size: var(--text-xs);
+            line-height: 1.5;
+        }
+
+        .evening-assembly {
+            background: rgba(193, 102, 107, 0.06);
+            padding: 10px 16px 16px 16px;
+            margin: 8px 0 0 0;
+            border-left: none;
+            font-weight: 400;
+            font-size: var(--text-xs);
+            line-height: 1.5;
+        }
+
+        /* ENHANCED MEAL SECTIONS - Compact card-based design inspired by meal planner apps */
+
+        .lunch-section {
+            background: white;
+            padding: 0;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: none;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .lunch-section h4 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin: 0;
+            padding: 12px 16px 8px 16px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lunch-section h4::before {
+            content: "🥪";
+            font-size: 1em;
+        }
+
+        .lunch-section p {
+            padding: 0 16px 12px 16px;
+            margin: 4px 0;
+            font-size: var(--text-sm);
+            line-height: 1.5;
+        }
+
+        .lunch-section p strong {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .lunch-section p:last-child {
+            padding-bottom: 16px;
+        }
+
+        .snacks {
+            background: white;
+            padding: 0;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: none;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-left: 4px solid var(--accent-sage);
+        }
+
+        .snacks h4 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin: 0;
+            padding: 12px 16px 8px 16px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .snacks h4::before {
+            content: "🍎";
+            font-size: 1em;
+        }
+
+        .snacks p {
+            padding: 0 16px 16px 16px;
+            margin: 0;
+            font-size: var(--text-sm);
+            line-height: 1.5;
+        }
+
+        .snacks ul {
+            list-style: none;
+            margin: 0;
+            padding: 0 16px 16px 16px;
+        }
+
+        .snacks li {
+            margin: 4px 0;
+            font-size: var(--text-sm);
+        }
+
+        .snacks li:before {
+            content: "• ";
+            color: var(--accent-sage);
+            font-weight: 700;
+        }
+
+        .heavy-snack {
+            background: linear-gradient(135deg, rgba(193, 102, 107, 0.12) 0%, rgba(193, 102, 107, 0.06) 100%);
+            padding: 15px;
+            border-radius: 2px;
+            margin: 15px 0;
+            border: 2px solid var(--accent-terracotta);
+        }
+
+        .heavy-snack h4 {
+            color: var(--accent-terracotta);
+            margin-bottom: 10px;
+        }
+
+        .heavy-snack p {
+            margin: 6px 0;
+            font-size: var(--text-sm);
+        }
+
+        .prep-tasks {
+            background: white;
+            padding: 0;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: none;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .prep-tasks h4 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin: 0;
+            padding: 12px 16px 8px 16px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Add icons for prep headers - will be set in content generation */
+        .prep-tasks h4::before {
+            content: "⚙️";
+            font-size: 1em;
+        }
+
+        .prep-tasks p {
+            padding: 0 16px;
+            margin: 8px 0;
+            font-size: var(--text-sm);
+            line-height: 1.5;
+        }
+
+        .prep-tasks p strong {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .prep-tasks ul {
+            margin: 0;
+            padding: 0 16px 16px 40px;
+        }
+
+        .prep-tasks li {
+            margin: 4px 0;
+            font-size: var(--text-xs);
+            line-height: 1.5;
+        }
+
+        .freezer-backup {
+            background: linear-gradient(135deg, rgba(106, 142, 127, 0.15) 0%, rgba(106, 142, 127, 0.08) 100%);
+            padding: 25px;
+            border-radius: 2px;
+            margin: 25px 0;
+            border: 2px solid var(--accent-sage);
+        }
+
+        .freezer-backup h3 {
+            color: var(--accent-sage);
+            margin-bottom: 15px;
+        }
+
+        .freezer-backup ul {
+            margin: 10px 0 10px 25px;
+        }
+
+        .freezer-backup li {
+            margin: 8px 0;
+            font-size: var(--text-sm);
+        }
+
+        .from-scratch {
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.15) 0%, rgba(212, 165, 116, 0.08) 100%);
+            padding: 25px;
+            border-radius: 2px;
+            margin: 25px 0;
+            border: 2px solid var(--accent-gold);
+        }
+
+        .from-scratch h3 {
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+        }
+
+        .from-scratch p {
+            margin: 10px 0;
+            font-size: var(--text-sm);
+            line-height: 1.6;
+        }
+
+        .week-glance {
+            background: white;
+            padding: 25px;
+            border-radius: 2px;
+            margin: 25px 0;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .week-glance h3 {
+            margin-bottom: 15px;
+        }
+
+        .week-glance ul {
+            list-style: none;
+            margin: 0;
+        }
+
+        .week-glance li {
+            margin: 10px 0;
+            padding: 10px;
+            background: var(--bg-secondary);
+            border-radius: 2px;
+            font-size: var(--text-sm);
+        }
+
+        .grocery-section {
+            margin: 25px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 2px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .grocery-section h4 {
+            color: var(--accent-green);
+            margin-bottom: 12px;
+            font-size: var(--text-lg);
+            border-bottom: 2px solid var(--accent-terracotta);
+            padding-bottom: 8px;
+        }
+
+        .grocery-section ul {
+            margin: 10px 0 10px 25px;
+        }
+
+        .grocery-section li {
+            margin: 6px 0;
+            font-size: var(--text-sm);
+        }
+
+        /* Visual Separators for Major Sections */
+        .section-separator {
+            height: 2px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                var(--accent-terracotta) 20%,
+                var(--accent-terracotta) 80%,
+                transparent 100%);
+            margin: 50px 0;
+            opacity: 0.3;
+        }
+
+        /* Mobile Optimizations - Make sections EXTRA scannable on small screens */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: var(--text-3xl);
+            }
+
+            .tab-nav {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+            }
+
+            .tab-button {
+                flex-shrink: 0;
+                padding: 10px 16px;
+                font-size: var(--text-xs);
+            }
+
+            /* MOBILE: Keep compact spacing - already optimized */
+            .lunch-section,
+            .snacks,
+            .meal-card,
+            .prep-tasks {
+                margin: 24px 0;
+            }
+
+            /* MOBILE: Slightly larger headers for readability */
+            .lunch-section h4,
+            .snacks h4,
+            .meal-card h3,
+            .prep-tasks h4 {
+                font-size: 0.75rem;
+                padding: 14px 18px 10px 18px;
+            }
+
+            /* MOBILE: Keep thin borders consistent */
+            .lunch-section,
+            .snacks,
+            .meal-card,
+            .prep-tasks {
+                border-left-width: 4px;
+            }
+
+            /* MOBILE: Ensure table in overview is scrollable */
+            .week-glance {
+                padding: 15px;
+                overflow-x: auto;
+            }
+            
+            .week-glance table {
+                min-width: 600px;
+            }
+
+            /* MOBILE: Increase content padding for easier reading */
+            .lunch-section p,
+            .snacks p,
+            .meal-type,
+            .vegetables,
+            .prep-notes,
+            .evening-assembly,
+            .prep-tasks p {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+
+            /* MOBILE: Increase touch target size */
+            .meal-type a {
+                padding: 4px 0;
+                display: inline-block;
+            }
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <h1>📅 Weekly Meal Plan: Apr 06, 2026 - Apr 10, 2026</h1>
+
+        <div class="tab-nav">
+            <button class="tab-button active" onclick="showTab('overview')">Overview</button>
+            <button class="tab-button" onclick="showTab('monday')">Monday</button>
+            <button class="tab-button" onclick="showTab('tuesday')">Tuesday</button>
+            <button class="tab-button" onclick="showTab('wednesday')">Wednesday</button>
+            <button class="tab-button" onclick="showTab('thursday')">Thursday</button>
+            <button class="tab-button" onclick="showTab('friday')">Friday</button>
+            <button class="tab-button" onclick="showTab('saturday')">Saturday</button>
+            <button class="tab-button" onclick="showTab('sunday')">Sunday</button>
+            <button class="tab-button" onclick="showTab('groceries')">Groceries</button>
+        </div>
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <div class="freezer-backup">
+                <h3>🧊 Freezer Backup Status</h3>
+                <p style="margin-bottom: 15px; color: var(--accent-terracotta);">⚠️ <strong>Freezer Empty!</strong> No backup meals found.</p>
+                <p style="margin-top: 15px;"><strong>This week's suggestion:</strong> Double the <strong>Chana Masala (IP)</strong> on Thu</p>
+            </div>
+            <div class="week-glance">
+                <h3>📋 Week at a Glance</h3>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                    <thead>
+                        <tr style="background: var(--bg-secondary); border-bottom: 2px solid var(--accent-green);">
+                            <th style="padding: 12px; text-align: left; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Day</th>
+                            <th style="padding: 12px; text-align: left; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Kids Lunch</th>
+                            <th style="padding: 12px; text-align: left; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Adult Lunch</th>
+                            <th style="padding: 12px; text-align: left; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Dinner</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid var(--border-subtle); background: transparent;">
+                            <td style="padding: 12px; font-weight: 500;"><strong>Monday</strong></td>
+                            <td style="padding: 12px; color: var(--text-muted); font-size: 0.9rem;">Akira: Balsamic Bruschetta <br> Anya: Balsamic Bruschetta</td>
+                            <td style="padding: 12px; color: var(--text-muted); font-size: 0.9rem;"><em>Leftovers or dinner components</em></td>
+                            <td style="padding: 12px; font-weight: 500;">Balsamic Bruschetta</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-subtle); background: rgba(0,0,0,0.02);">
+                            <td style="padding: 12px; font-weight: 500;"><strong>Tuesday</strong></td>
+                            <td style="padding: 12px; color: var(--text-muted); font-size: 0.9rem;">Akira: Egg sandwich or scrambled egg sandwich <br> Anya: Egg sandwich or scrambled egg sandwich</td>
+                            <td style="padding: 12px; color: var(--text-muted); font-size: 0.9rem;"><em>Leftovers or grain bowl</em></td>
+                            <td style="padding: 12px; font-weight: 500;">Southwest Pasta Salad</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-subtle); background: transparent;">
+                            <td style="padding: 12px; font-weight: 500;"><strong>Wednesday</strong></td>
+                            <td style="padding: 12px; color: var(--text-muted); font-size: 0.9rem;">Akira: Toad-in-a-hole (egg cooked in bread) <br> Anya: Toad-in-a-hole (egg cooked in bread)</td>
+                            <td style="padding: 12px; color: var(--text-muted); font-size: 0.9rem;"><em>Leftovers or grain bowl</em></td>
+                            <td style="padding: 12px; font-weight: 500;">Tandoori Veggie Quesadillas</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-subtle); background: rgba(0,0,0,0.02);">
+                            <td style="padding: 12px; font-weight: 500;"><strong>Thursday</strong></td>
+                            <td style="padding: 12px; color: var(--text-muted); font-size: 0.9rem;">Akira: Ravioli with brown butter or simple tomato sauce <br> Anya: Ravioli with brown butter or simple tomato sauce</td>
+                            <td style="padding: 12px; color: var(--text-muted); font-size: 0.9rem;"><em>Leftovers or grain bowl</em></td>
+                            <td style="padding: 12px; font-weight: 500;">Chana Masala (IP)</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-subtle); background: transparent;">
+                            <td style="padding: 12px; font-weight: 500;"><strong>Friday</strong></td>
+                            <td style="padding: 12px; color: var(--text-muted); font-size: 0.9rem;">Akira: Chapati or dosa rolls with fruit <br> Anya: Chapati or dosa rolls with fruit</td>
+                            <td style="padding: 12px; color: var(--text-muted); font-size: 0.9rem;"><em>Leftovers or grain bowl</em></td>
+                            <td style="padding: 12px; font-weight: 500;">Easy French Toast Sticks</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Monday Tab -->
+        <div id="monday" class="tab-content">
+            <div class="day-header">
+                Monday <span class="energy-level energy-high">PM PREP ONLY</span>
+            </div>
+            <div class="lunch-section">
+                <h4>🥪 Lunch</h4>
+                <p><strong>Akira:</strong> Balsamic Bruschetta</p>
+                <p><strong>Anya:</strong> Balsamic Bruschetta</p>
+                <p><strong>Adult (1):</strong> Leftovers or grain bowl with dinner components</p>
+                <p><strong>Components:</strong> Fresh ingredients
+</p>
+                <p><strong>Prep:</strong> All components prepped Sun - assemble only</p>
+            </div>
+            <div class="meal-card">
+                <h3>🍽️ Dinner</h3>
+                <div class="meal-type"><a href="../recipes/raw_html/Balsamic Bruschetta.html">Balsamic Bruschetta</a> - Italian Appetizer</div>
+                <div class="vegetables">Main vegetables: basil, garlic, pepper, tomato</div>
+                <div class="prep-notes">
+                    <strong>Prep notes:</strong> Consider making 2x batch and freeze half for backup
+                </div>
+                <div class="evening-assembly">
+                    <strong>Evening assembly (5-9pm):</strong> Minimal tasks - assemble, heat, serve
+                </div>
+            </div>
+            <div class="prep-tasks">
+                <h4>Monday Prep Tasks (MON-TUE PREP)</h4>
+                <ul>
+                    <li data-prep-task="Chop basil for Mon Balsamic Bruschetta">Chop basil for Mon Balsamic Bruschetta</li>
+                    <li data-prep-task="Chop garlic for Mon Balsamic Bruschetta">Chop garlic for Mon Balsamic Bruschetta</li>
+                    <li data-prep-task="Chop pepper for Mon Balsamic Bruschetta">Chop pepper for Mon Balsamic Bruschetta</li>
+                    <li data-prep-task="Chop tomato for Mon Balsamic Bruschetta">Chop tomato for Mon Balsamic Bruschetta</li>
+                    <li data-prep-task="Chop avocado for Tue Southwest Pasta Salad">Chop avocado for Tue Southwest Pasta Salad</li>
+                    <li data-prep-task="Chop bean for Tue Southwest Pasta Salad">Chop bean for Tue Southwest Pasta Salad</li>
+                    <li data-prep-task="Chop bell pepper for Tue Southwest Pasta Salad">Chop bell pepper for Tue Southwest Pasta Salad</li>
+                    <li data-prep-task="Chop chive for Tue Southwest Pasta Salad">Chop chive for Tue Southwest Pasta Salad</li>
+                    <li data-prep-task="Chop cilantro for Tue Southwest Pasta Salad">Chop cilantro for Tue Southwest Pasta Salad</li>
+                    <li data-prep-task="Chop corn for Tue Southwest Pasta Salad">Chop corn for Tue Southwest Pasta Salad</li>
+                    <li data-prep-task="Chop garlic for Tue Southwest Pasta Salad">Chop garlic for Tue Southwest Pasta Salad</li>
+                    <li data-prep-task="Chop lime for Tue Southwest Pasta Salad">Chop lime for Tue Southwest Pasta Salad</li>
+                    <li data-prep-task="Chop onion for Tue Southwest Pasta Salad">Chop onion for Tue Southwest Pasta Salad</li>
+                    <li data-prep-task="Chop parsley for Tue Southwest Pasta Salad">Chop parsley for Tue Southwest Pasta Salad</li>
+                    <li data-prep-task="Chop pepper for Tue Southwest Pasta Salad">Chop pepper for Tue Southwest Pasta Salad</li>
+                    <li data-prep-task="Chop scallion for Tue Southwest Pasta Salad">Chop scallion for Tue Southwest Pasta Salad</li>
+                    <li data-prep-task="Chop tomato for Tue Southwest Pasta Salad">Chop tomato for Tue Southwest Pasta Salad</li>
+                    <li data-prep-task="Cube cheese brick for Tuesday snack">Cube cheese brick for Tuesday snack</li>
+                    <li data-prep-task="Portion snacks into grab-and-go containers for early week">Portion snacks into grab-and-go containers for early week</li>
+                    <li data-prep-task="Identify freezer-friendly dinner to double (batch cook)">Identify freezer-friendly dinner to double (batch cook)</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Tuesday Tab -->
+        <div id="tuesday" class="tab-content">
+            <div class="day-header">
+                Tuesday <span class="energy-level energy-mild">AM + PM PREP</span>
+            </div>
+            <div class="lunch-section">
+                <h4>🥪 Lunch</h4>
+                <p><strong>Akira:</strong> Egg sandwich or scrambled egg sandwich</p>
+                <p><strong>Anya:</strong> Egg sandwich or scrambled egg sandwich</p>
+                <p><strong>Adult (1):</strong> Leftovers or grain bowl</p>
+                <p><strong>Prep:</strong> Kids: Egg sandwich or scrambled egg sandwich (<10 mins)</p>
+            </div>
+            <div class="meal-card">
+                <h3>🍽️ Dinner</h3>
+                <div class="meal-type"><a href="../recipes/raw_html/Southwest Pasta Salad.html">Southwest Pasta Salad</a> - Italian Salad</div>
+                <div class="vegetables">Main vegetables: avocado, bean, bell_pepper, chive, cilantro, corn, garlic, lime, onion, parsley, pepper, scallion, tomato</div>
+                <div class="prep-notes">
+                    <strong>Prep notes:</strong> All vegetables prepped Monday - just cook and assemble
+                </div>
+                <div class="evening-assembly">
+                    <strong>Evening assembly (5-9pm):</strong> Minimal tasks - assemble, heat, serve
+                </div>
+            </div>
+            <div class="prep-tasks">
+                <h4>Tuesday Prep Tasks (WED-FRI PREP)</h4>
+                <div style="margin-top: 15px;">
+                    <strong>☀️ AM Prep (Morning):</strong>
+                    <ul>
+                        <li data-prep-task="Assemble Tuesday lunch: Egg sandwich or scrambled egg sandwich" data-prep-time="am">Assemble Tuesday lunch: Egg sandwich or scrambled egg sandwich</li>
+                        <li data-prep-task="Portion Monday's batch-cooked items" data-prep-time="am">Portion Monday's batch-cooked items</li>
+                        <li data-prep-task="Check freezer backup inventory (verify 3 meals)" data-prep-time="am">Check freezer backup inventory (verify 3 meals)</li>
+                    </ul>
+                </div>
+                <div style="margin-top: 15px;">
+                    <strong>🌙 PM Prep (Evening 5-9pm):</strong>
+                    <ul>
+                        <li data-prep-task="Chop bell pepper for Wed Tandoori Veggie Quesadillas" data-prep-time="pm">Chop bell pepper for Wed Tandoori Veggie Quesadillas</li>
+                        <li data-prep-task="Chop cilantro for Wed Tandoori Veggie Quesadillas" data-prep-time="pm">Chop cilantro for Wed Tandoori Veggie Quesadillas</li>
+                        <li data-prep-task="Chop corn for Wed Tandoori Veggie Quesadillas" data-prep-time="pm">Chop corn for Wed Tandoori Veggie Quesadillas</li>
+                        <li data-prep-task="Chop garlic for Wed Tandoori Veggie Quesadillas" data-prep-time="pm">Chop garlic for Wed Tandoori Veggie Quesadillas</li>
+                        <li data-prep-task="Chop onion for Wed Tandoori Veggie Quesadillas" data-prep-time="pm">Chop onion for Wed Tandoori Veggie Quesadillas</li>
+                        <li data-prep-task="Chop pepper for Wed Tandoori Veggie Quesadillas" data-prep-time="pm">Chop pepper for Wed Tandoori Veggie Quesadillas</li>
+                        <li data-prep-task="Chop cilantro for Thu Chana Masala (IP)" data-prep-time="pm">Chop cilantro for Thu Chana Masala (IP)</li>
+                        <li data-prep-task="Chop garlic for Thu Chana Masala (IP)" data-prep-time="pm">Chop garlic for Thu Chana Masala (IP)</li>
+                        <li data-prep-task="Chop ginger for Thu Chana Masala (IP)" data-prep-time="pm">Chop ginger for Thu Chana Masala (IP)</li>
+                        <li data-prep-task="Chop onion for Thu Chana Masala (IP)" data-prep-time="pm">Chop onion for Thu Chana Masala (IP)</li>
+                        <li data-prep-task="Chop pea for Thu Chana Masala (IP)" data-prep-time="pm">Chop pea for Thu Chana Masala (IP)</li>
+                        <li data-prep-task="Chop tomato for Thu Chana Masala (IP)" data-prep-time="pm">Chop tomato for Thu Chana Masala (IP)</li>
+                        <li data-prep-task="Portion snacks for rest of week" data-prep-time="pm">Portion snacks for rest of week</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Wednesday Tab -->
+        <div id="wednesday" class="tab-content">
+            <div class="day-header">
+                Wednesday <span class="energy-level energy-mild">PM PREP ONLY</span>
+            </div>
+            <div class="lunch-section">
+                <h4>🥪 Lunch</h4>
+                <p><strong>Akira:</strong> Toad-in-a-hole (egg cooked in bread)</p>
+                <p><strong>Anya:</strong> Toad-in-a-hole (egg cooked in bread)</p>
+                <p><strong>Adult (1):</strong> Leftovers or grain bowl</p>
+                <p><strong>Prep:</strong> Kids: Toad-in-a-hole (egg cooked in bread) (<10 mins)</p>
+            </div>
+            <div class="meal-card">
+                <h3>🍽️ Dinner</h3>
+                <div class="meal-type"><a href="../recipes/raw_html/Tandoori Veggie Quesadillas.html">Tandoori Veggie Quesadillas</a> - Mexican Tacos Wraps</div>
+                <div class="vegetables">Main vegetables: bell_pepper, cilantro, corn, garlic, onion, pepper</div>
+                <div class="prep-notes">
+                    <strong>Prep notes:</strong> All vegetables prepped Monday - just cook and assemble
+                </div>
+                <div class="evening-assembly">
+                    <strong>Evening assembly (5-9pm):</strong> Minimal tasks - assemble, heat, serve
+                </div>
+            </div>
+            <div class="prep-tasks">
+                <h4>Wednesday Prep Tasks (BACKUP PREP)</h4>
+                <ul>
+                    <li data-prep-task="Finish any remaining veg/lunch prep for Thu/Fri">Finish any remaining veg/lunch prep for Thu/Fri</li>
+                    <li data-prep-task="Load Instant Pot or slow cooker for Thursday if needed">Load Instant Pot or slow cooker for Thursday if needed</li>
+                    <li data-prep-task="Final check: All Thu/Fri components ready">Final check: All Thu/Fri components ready</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Thursday Tab -->
+        <div id="thursday" class="tab-content">
+            <div class="day-header">
+                Thursday <span class="energy-level energy-morning-ok">MORNING PREP OK</span>
+            </div>
+            <div class="lunch-section">
+                <h4>🥪 Lunch</h4>
+                <p><strong>Akira:</strong> Ravioli with brown butter or simple tomato sauce</p>
+                <p><strong>Anya:</strong> Ravioli with brown butter or simple tomato sauce</p>
+                <p><strong>Adult (1):</strong> Leftovers or grain bowl</p>
+                <p><strong>Prep:</strong> Kids: Ravioli with brown butter or simple tomato sauce (<10 mins)</p>
+            </div>
+            <div class="meal-card">
+                <h3>🍽️ Dinner</h3>
+                <div class="meal-type"><a href="../recipes/raw_html/Chana Masala (IP).html">Chana Masala (IP)</a> - Indian Soup Stew</div>
+                <div class="vegetables">Main vegetables: cilantro, garlic, ginger, onion, pea, tomato</div>
+                <div class="prep-notes">
+                    <strong>Prep notes:</strong> Can prep in morning (8-9am) if needed - NO chopping after noon, NO evening prep
+                </div>
+                <div class="evening-assembly">
+                    <strong>Evening assembly (5-9pm):</strong> Reheat and serve only
+                </div>
+            </div>
+            <div class="prep-tasks">
+                <h4>Thursday Prep Tasks (MORNING PREP OK)</h4>
+                <ul>
+                    <li data-prep-task="Light prep allowed (8-9am) if needed" data-prep-time="am">Light prep allowed (8-9am) if needed</li>
+                    <li data-prep-task="NO chopping after noon" data-prep-time="am">NO chopping after noon</li>
+                    <li data-prep-task="NO evening prep - only reheating/assembly" data-prep-time="am">NO evening prep - only reheating/assembly</li>
+                    <li data-prep-task="Fallback: Use freezer backup if energy is depleted" data-prep-time="am">Fallback: Use freezer backup if energy is depleted</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Friday Tab -->
+        <div id="friday" class="tab-content">
+            <div class="day-header">
+                Friday <span class="energy-level energy-none">NO PREP DAY</span>
+            </div>
+            <div class="lunch-section">
+                <h4>🥪 Lunch</h4>
+                <p><strong>Akira:</strong> Chapati or dosa rolls with fruit</p>
+                <p><strong>Anya:</strong> Chapati or dosa rolls with fruit</p>
+                <p><strong>Adult (1):</strong> Leftovers or grain bowl</p>
+                <p><strong>Prep:</strong> Kids: Chapati or dosa rolls with fruit (<10 mins)</p>
+            </div>
+            <div class="meal-card">
+                <h3>🍽️ Dinner</h3>
+                <div class="meal-type"><a href="../recipes/raw_html/Easy French Toast Sticks.html">Easy French Toast Sticks</a> - American Sandwich</div>
+                <div class="prep-notes">
+                    <strong>Prep notes:</strong> ⚠️ WARNING: This recipe requires chopping but Friday is strictly no-prep!
+                </div>
+                <div class="evening-assembly">
+                    <strong>Evening assembly (5-9pm):</strong> Reheat and serve only
+                </div>
+            </div>
+            <div class="prep-tasks">
+                <h4>Friday Prep Tasks (NO PREP DAY - STRICT)</h4>
+                <ul>
+                    <li data-prep-task="ALL DAY: NO chopping allowed">ALL DAY: NO chopping allowed</li>
+                    <li data-prep-task="ALL DAY: NO cooking allowed - only reheating">ALL DAY: NO cooking allowed - only reheating</li>
+                    <li data-prep-task="Only actions: reheating, simple assembly">Only actions: reheating, simple assembly</li>
+                    <li data-prep-task="Fallback: Use freezer backup if energy is depleted">Fallback: Use freezer backup if energy is depleted</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Saturday Tab -->
+        <div id="saturday" class="tab-content">
+            <div class="day-header">
+                Saturday <span class="energy-level energy-mild">WEEKEND - FLEXIBLE</span>
+            </div>
+            <div class="section" style="background: rgba(212, 165, 116, 0.08); padding: 20px; border-radius: 2px; margin: 20px 0;">
+                <h4 style="color: var(--accent-terracotta); margin-bottom: 10px;">🏠 Weekend Meals</h4>
+                <p style="font-size: var(--text-sm); color: var(--text-muted);">Meals for Saturday are set to "Make at home" by default. Check the dashboard to update what you actually made and identify any leftovers.</p>
+            </div>
+            <div class="lunch-section">
+                <h4>🥪 Kids Lunch</h4>
+                <p><strong>Plan:</strong> Make at home</p>
+            </div>
+            <div class="meal-card">
+                <h3>🍽️ Dinner</h3>
+                <div class="meal-type">Make at home</div>
+            </div>
+            <div class="prep-tasks">
+                <h4>🌙 Afternoon Prep (Optional)</h4>
+                <ul>
+                    <li>Review next week's meal plan</li>
+                    <li>Make grocery list (see Groceries tab)</li>
+                    <li>Clean out fridge and freezer</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Sunday Tab -->
+        <div id="sunday" class="tab-content">
+            <div class="day-header">
+                Sunday <span class="energy-level energy-mild">GROCERY SHOPPING DAY</span>
+            </div>
+            <div class="prep-tasks">
+                <h4>☀️ AM Prep (Morning - Grocery Shopping)</h4>
+                <ul style="list-style: none; margin-left: 0;">
+                    <li style="margin: 8px 0; padding-left: 0;">✓ Farmers market shopping (fresh produce for next week)</li>
+                    <li style="margin: 8px 0; padding-left: 0;">✓ Regular grocery shopping (use Groceries tab for full list)</li>
+                    <li style="margin: 8px 0; padding-left: 0;">✓ Put away all groceries</li>
+                </ul>
+            </div>
+            <div class="lunch-section">
+                <h4>🥪 Kids Lunch</h4>
+                <p><strong>Plan:</strong> Make at home</p>
+            </div>
+            <div class="meal-card">
+                <h3>🍽️ Dinner</h3>
+                <div class="meal-type">Make at home</div>
+            </div>
+        </div>
+        <!-- Groceries Tab -->
+        <div id="groceries" class="tab-content">
+            <h2>🛒 Comprehensive Shopping List</h2>
+            <div class="grocery-section">
+                <h4>Fresh Produce</h4>
+                <ul>
+                    <li>Avocado</li>
+                    <li>Basil</li>
+                    <li>Bean</li>
+                    <li>Bell Pepper</li>
+                    <li>Chive</li>
+                    <li>Cilantro</li>
+                    <li>Corn</li>
+                    <li>Garlic</li>
+                    <li>Ginger</li>
+                    <li>Lime</li>
+                    <li>Onion</li>
+                    <li>Parsley</li>
+                    <li>Pea</li>
+                    <li>Pepper</li>
+                    <li>Scallion</li>
+                    <li>Tomato</li>
+                </ul>
+            </div>
+            <div class="grocery-section">
+                <h4>Dairy & Refrigerated</h4>
+                <ul>
+                    <li>Check staples</li>
+                </ul>
+            </div>
+            <div class="grocery-section">
+                <h4>Shelf Stable</h4>
+                <ul>
+                    <li>Check staples</li>
+                </ul>
+            </div>
+            <div class="grocery-section">
+                <h4>Grains, Pasta & Bread</h4>
+                <ul>
+                    <li>Southwest Pasta Salad</li>
+                </ul>
+            </div>
+            <div class="grocery-section">
+                <h4>Canned & Dry Goods</h4>
+                <ul>
+                    <li>Chana Masala (Ip)</li>
+                </ul>
+            </div>
+            <div class="grocery-section">
+                <h4>Frozen</h4>
+                <ul>
+                    <li>Check staples</li>
+                </ul>
+            </div>
+            <div class="grocery-section">
+                <h4>Misc</h4>
+                <ul>
+                    <li>Balsamic Bruschetta</li>
+                    <li>Easy French Toast Sticks</li>
+                    <li>Tandoori Veggie Quesadillas</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

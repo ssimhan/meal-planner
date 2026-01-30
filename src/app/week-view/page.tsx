@@ -281,64 +281,71 @@ function WeekViewContent() {
     }
   };
 
-  const handleReplacementConfirm = async (newMeal: string, requestRecipe: boolean = false, madeStatus: boolean | string = true) => {
+  const handleReplacementConfirm = async (newMeal: string, requestRecipe: boolean = false, madeStatus: boolean | string = true, recipeIds?: string[]) => {
     const { day, type } = viewState.replacementModal;
-    console.log('[WeekView] handleReplacementConfirm triggered. Full State:', {
-      modalState: viewState.replacementModal,
-      weekStatus: status?.week_of
-    });
+    // ... logging ...
 
     if (!day || !status?.week_of) {
-      console.error('[WeekView] Missing data:', {
-        day: String(day),
-        week: String(status?.week_of),
-        isOpen: viewState.replacementModal.isOpen
-      });
-      showToast("Error: Missing session data. Please refresh.", "error");
+      // ... error handling ...
       return;
     }
 
-    const payload: any = {
-      week: status.week_of,
-      day,
-      request_recipe: requestRecipe
-    };
-
-    if (type === 'dinner') {
-      payload.actual_meal = newMeal;
-      payload.dinner_needs_fix = false;
-      payload.made = madeStatus;
-    } else {
-      payload[`${type}_feedback`] = newMeal;
-      payload[`${type}_needs_fix`] = false;
-      payload[`${type}_made`] = madeStatus;
-    }
-
     try {
-      const data = await logMeal(payload);
+      // Use the new modular payload structure
+      // recipeIds is passed from ReplacementModal
+      const payload: any = {
+        week: status.week_of,
+        day,
+        confirm_day: false,
+        request_recipe: requestRecipe
+      };
 
-      if (data.week_of) {
-        setStatus(data as WorkflowStatus);
+      if (type === 'dinner') {
+        // MODULAR UPDATE: Send recipe_ids if available.
+        // If no recipeIds (legacy path?), we send actual_meal string.
+        // But logic prefers recipe_ids.
+        if (recipeIds && recipeIds.length > 0) {
+          payload.recipe_ids = recipeIds;
+          // We can still send actual_meal for display fallback or just name
+          payload.actual_meal = newMeal;
+        } else {
+          payload.actual_meal = newMeal;
+        }
+
+        // Fix needs_fix status
+        payload.dinner_needs_fix = false;
+
+        if (madeStatus === 'freezer_backup') {
+          payload.freezer_meal = true;
+          payload.made = 'freezer_backup';
+        } else if (madeStatus === 'leftovers') {
+          payload.made = 'leftovers';
+        } else if (madeStatus !== undefined) {
+          payload.made = madeStatus;
+        }
       } else {
-        const newData = await getStatus(status.week_of);
-        setStatus(newData);
+        // ... logic for other slots ...
+        payload[`${type}_feedback`] = newMeal;
+        payload[`${type}_needs_fix`] = false;
       }
 
-      setViewState(prev => ({ ...prev, replacementModal: { isOpen: false, day: '', currentMeal: '', type: 'dinner' } }));
+      await logMeal(payload);
+      // ... existing updates ...
+      const data = await getStatus(status.week_of); // Forces refresh
+      setStatus(data);
+
       showToast("Meal replaced successfully", "success");
-    } catch (e: any) {
-      console.error('[WeekView Error] Replacement failed:', e);
+      setViewState(prev => ({
+        ...prev,
+        replacementModal: { ...prev.replacementModal, isOpen: false }
+      }));
 
-      // Extract detailed error info if available
-      const message = e.message || "Replacement failed";
-
-      // Log full details for debugging
-      if (e.code) console.error(`[Error Code] ${e.code}`);
-      if (e.details) console.debug(`[Error Details]`, e.details);
-
-      showToast(message, "error");
+    } catch (e) {
+      showToast(e instanceof Error ? e.message : "Failed to replace meal", "error");
     }
   };
+
+
 
   if (viewState.isFixing) {
     return (

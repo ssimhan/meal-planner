@@ -598,8 +598,26 @@ def log_meal():
                  })
              if reason: target_dinner['reason'] = reason
              
+        # Prepare IDs
+        ids = data.get('recipe_ids')
+        
+        # If no explicit IDs but we have text, convert text to ID (Auto-Create)
+        if not ids and actual_meal:
+            from api.services.meal_service import ensure_recipe_for_legacy_text
+            ids = ensure_recipe_for_legacy_text(actual_meal, h_id)
+            # We consumed the text, so clear it to prevent legacy field writing
+            actual_meal = None
+            
         if target_dinner:
-             if actual_meal: target_dinner['actual_meal'] = actual_meal
+             # STRICT MODULAR ENFORCEMENT: Write IDs, remove legacy string
+             if ids:
+                 target_dinner['recipe_ids'] = ids
+                 if 'actual_meal' in target_dinner:
+                     del target_dinner['actual_meal']
+             elif actual_meal: 
+                 # Fallback if ensure_recipe failed? Should be rare.
+                 target_dinner['actual_meal'] = actual_meal
+                 
              if dinner_needs_fix is not None: target_dinner['needs_fix'] = dinner_needs_fix
 
         # Feedback logging (snacks/lunch)

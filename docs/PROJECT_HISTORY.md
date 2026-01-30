@@ -1257,42 +1257,33 @@ Understanding when to use each is fundamental to frontend development. Most bugs
 
 **Learning:** aligning the *editor* UI with the *viewer* UI minimizes cognitive dissonance. If the viewer separates "Prep" from "Steps", the editor must enforce that separation to ensure data quality. Using Markdown as the single source of truth (synced to DB) simplifies the mental model compared to split YAML/Text files.
 
-### Phase 34: Strategic Technical Debt Cleanup (2026-01-29) ✅ Complete
+### Phase 34: Frictionless Recipe Loop & Architecture Hardening (2026-01-29) ✅ Complete
 
-**Goal:** Strengthen the foundation by addressing performance bottlenecks, architectural complexity, and test coverage gaps.
+**Goal:** Enable complex meal combinations, streamline shopping intelligence, and address core performance issues.
 
-**Key Achievements:**
+**Block 1: Modular Recipes & Pairing Logic (Completed)**
+- **Multi-Recipe Slots:** Overhauled the data model to support arrays of recipes per slot (`recipe_ids`), enabling "Taco Night" (Main + Multiple Sides).
+- **Pairing Engine:** Built a history-based suggestion engine that analyzes past pairings to recommend complementary sides.
+- **Pairing Drawer:** Added a slide-out UI for rapid side-dish selection during the planning wizard.
 
-1. **Service Layer Extraction (TD-009):**
-   - **Problem:** `api/routes/meals.py` grew into a 1000+ line monolith with 250+ lines devoted to a single logging function (`log_meal`).
-   - **Solution:** Created `api/services/meal_service.py` and extracted 6 high-complexity logical blocks (dinner finding, status parsing, daily feedback, inventory updates).
-   - **Result:** Reduced `log_meal` by ~80 lines and improved testability through granular service helpers.
+**Block 2: Frictionless Shopping & Library Mastery (Completed)**
+- **Ingredient Aggregation:** Automatically combines ingredients from multiple recipes in the same slot.
+- **Permanent Pantry Filtering:** Added intelligence to skip basics (oil, salt, ghee) and "Permanent Pantry" items (flour, sugar) from the shopping list.
+- **Bulk Tagging:** Added a "Batch Editor" for rapid categorization of the recipe library (Main, Side, Needs Side).
 
-2. **Multi-Layer Performance Caching (TD-006, TD-008):**
-   - **Problem:** Repeated expensive operations (reading MD files for prep tasks, scanning 20+ weeks of history for pending recipes) were slowing down the Dashboard.
-   - **Solution:** 
-     - **LRU Cache:** Added to `get_prep_tasks` with content-hash keys.
-     - **TTL Cache:** Added to `get_pending_recipes` (5-minute TTL per household).
-   - **Result:** Dashboard load times stabilized, particularly for large history datasets.
+**Block 3: Strategic Technical Debt Cleanup (Completed)**
+- **Service Layer Extraction:** Extracted 1000+ lines of logging logic from `meals.py` into `api/services/meal_service.py`.
+- **Multi-Layer Performance Caching:** Implemented LRU/TTL caching for expensive operations (Prep steps, Pending recipes), reducing dashboard load times.
+- **Integration Test Hardening:** Restored 100% test pass rate by updating mocks for the Supabase-first architecture.
 
-3. **Integration Test Hardening (TD-010):**
-   - **Problem:** Core integration tests (`test_api_perf.py`, `test_backend.py`) were failing due to outdated file-based caching assumptions and missing Supabase mocks.
-   - **Solution:** Rewrote 7 tests with proper `StorageEngine` mocking and updated assertions to match the new Supabase-first architecture.
-   - **Result:** Restored 100% pass rate (13/13) for backend and performance suites.
-
-4. **Productivity Loops (TD-012, TD-011):**
-   - **Problem:** Recipe import was leaving "Prep Steps" empty, requiring manual entry even when content was available.
-   - **Solution:** Integrated `get_prep_tasks` directly into the ingestion pipeline (`capture_recipe`).
-   - **UX:** Improved the `ImportRecipeModal` with emerald-themed animated save buttons and consistent text sizing.
-
-**Learning:** Technical debt isn't just "dirty code"—it's a drag on feature velocity. By spending one high-intensity session on cleanup, we restored CI/CD confidence and made the core logging logic (the most used part of the app) readable again.
+**Learning:** "Modularization" is the theme of this phase. Moving from single recipe strings to ID arrays required updates across 15+ files, but unlocked the ability to plan real-world meals that aren't just one-pot dishes. Technical debt cleanup restored feature velocity for the upcoming multi-household features.
 
 ### Workflow Evolution: Plan & Build (2026-01-29) ✅ Complete
 
-**Goal:** Simplify the agentic development cycle terminology.
+**Goal:** Simplify the agentic development cycle and standardize reliability.
 
-- **Renamed Commands:** Legacy `/design` and `/implement` were renamed to **`/plan`** and **`/build`**.
-- **Rationale:** "Plan" and "Build" more accurately describe the human-agent mental model (first we decide the path, then we execute it).
-- **Global Sync:** Pushed these workflow improvements to the `claude-code-quickstart` repository to standardize all future projects with the new naming and the **Production Reliability Checklist**.
+- **Renamed Commands:** Legacy `/design` and `/implement` were renamed to **`/plan`** and **`/build`** to better match developer mental models.
+- **Reliability Standards:** Integrated a **Production Reliability Checklist** (timeouts, idempotency, validation) into the core workflows.
+- **Global Sync:** Pushed these improvements to the `claude-code-quickstart` repository for cross-project standardization.
 
 

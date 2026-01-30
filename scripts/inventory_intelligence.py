@@ -244,17 +244,46 @@ def get_shopping_list(plan_data):
     for excl in plan_data.get('excluded_items', []):
         excluded_items.add(normalize_ingredient(excl))
     
-    # 1. Dinners (Main veggies)
+    # 0a. Get Permanent Pantry from config
+    pantry_basics = set()
+    try:
+        config = StorageEngine.get_config()
+        basics = config.get('permanent_pantry', [])
+        for item in basics:
+            pantry_basics.add(normalize_ingredient(item))
+    except: pass
+
+    # 1. Dinners (Main veggies/ingredients)
     for dinner in plan_data.get('dinners', []):
-        for veg in dinner.get('vegetables', []):
+        # Support multi-recipe aggregation
+        recipes_to_process = []
+        if 'recipe_ids' in dinner:
+            recipes_to_process = dinner['recipe_ids']
+        elif 'recipe_id' in dinner:
+            recipes_to_process = [dinner['recipe_id']]
+            
+        # Collect ingredients from all recipes in this slot
+        ingredients_to_check = set(dinner.get('vegetables', []))
+        for rid in recipes_to_process:
+            try:
+                content = StorageEngine.get_recipe_content(rid)
+                # We specifically look for "main ingredients" or vegetables in the context of this app's logic
+                # For now, let's assume all 'ingredients' should be checked unless they are staples
+                for ing in content.get('ingredients', []):
+                    ingredients_to_check.add(ing)
+            except: pass
+
+        for veg in ingredients_to_check:
             norm = normalize_ingredient(veg)
             
             # Checks:
             # 1. Not in inventory (quantity aware)
             # 2. Not a hardcoded staple
-            # 3. Not user excluded
+            # 3. Not in Permanent Pantry
+            # 4. Not user excluded
             if (norm not in inventory_set and 
                 norm not in EXCLUDED_STAPLES and 
+                norm not in pantry_basics and
                 norm not in excluded_items):
                 
                 # Remove underscores for display
@@ -277,6 +306,7 @@ def get_shopping_list(plan_data):
                 
                 if (norm not in inventory_set and 
                     norm not in EXCLUDED_STAPLES and 
+                    norm not in pantry_basics and
                     norm not in excluded_items):
                     needed.append(display_name)
                     
@@ -298,6 +328,7 @@ def get_shopping_list(plan_data):
                         if (norm and 
                             norm not in inventory_set and 
                             norm not in EXCLUDED_STAPLES and 
+                            norm not in pantry_basics and
                             norm not in excluded_items):
                             needed.append(item.title())
 
@@ -315,6 +346,7 @@ def get_shopping_list(plan_data):
         # BUG-002 Fix: Check inventory for extras too
         if (norm not in inventory_set and
             norm not in EXCLUDED_STAPLES and
+            norm not in pantry_basics and
             norm not in excluded_items):
             needed.append(extra.title())
             

@@ -127,3 +127,5 @@ def create_week(week_of):
 - **\u003e 30 min fix?** → Add to `docs/BUGS.md`, block merge
 
 **Rationale:** These 5 checks prevent 80% of production outages. Non-negotiable for production code.
+
+**Next Step**: Once review is complete, use `/fix` to resolve ALL identified bugs and debt before `/closeout`.

@@ -6,6 +6,11 @@ description: Update documentation, commit and push to the latest branch
 
 Use this workflow to wrap up a development session and maintain a clean project history.
 
+## Prerequisites
+- `/code-review` has been completed
+- `/fix` has been completed with zero remaining bugs/debt
+- BUGS.md shows all items resolved for current phase
+
 ## Core Principles
 - **Document as You Go**: History is most accurate when fresh.
 - **Kaizen (Continuous Improvement)**: Each session should leave the codebase better than it found it.

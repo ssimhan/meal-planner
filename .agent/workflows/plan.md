@@ -49,4 +49,15 @@ Use this workflow once a design has been approved to create a bite-sized, execut
 - Save the plan to `docs/plans/YYYY-MM-DD-<feature-name>.md`.
 - Ask the user: "Ready to start building? Use `/build`."
 
+## Phase Completion Requirements
+
+A phase is NOT complete until the following workflow sequence is executed:
+
+1. **`/build`** - Execute the implementation plan
+2. **`/code-review`** - Review for bugs, debt, and production risks
+3. **`/fix`** - Resolve ALL identified bugs and debt (zero carryover)
+4. **`/closeout`** - Document and commit
+
+Skipping `/code-review` or `/fix` is not permitted. The phase remains open until BUGS.md shows zero active items for that phase.
+
 **Internal Note**: Use the `test-driven-development` skill during implementation. For complex architecture, use `c4-architecture`. For deep research, use `gepetto`.

@@ -294,13 +294,28 @@ def get_shopping_list(plan_data):
     lunches = plan_data.get('lunches', {})
     if isinstance(lunches, dict):
         for day, lunch in lunches.items():
-            components = []
+            # Support multi-recipe aggregation
+            recipes_to_process = []
             if isinstance(lunch, dict):
+                if 'recipe_ids' in lunch: recipes_to_process = lunch['recipe_ids']
+                elif 'recipe_id' in lunch: recipes_to_process = [lunch['recipe_id']]
                 components = lunch.get('prep_components', [])
             else:
                 components = getattr(lunch, 'prep_components', [])
-                
-            for comp in components:
+                rid = getattr(lunch, 'recipe_id', None)
+                if rid: recipes_to_process = [rid]
+            
+            # Aggregate ingredients/components from all recipes
+            all_comps = set(components)
+            for rid in recipes_to_process:
+                if rid and rid.startswith('leftover:'): continue
+                try:
+                    content = StorageEngine.get_recipe_content(rid)
+                    for ing in content.get('ingredients', []):
+                        all_comps.add(ing)
+                except: pass
+
+            for comp in all_comps:
                 norm = normalize_ingredient(comp)
                 display_name = comp.replace('_', ' ').title()
                 

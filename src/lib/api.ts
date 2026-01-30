@@ -95,6 +95,7 @@ export async function generatePlan(week_of: string): Promise<GeneratePlanRespons
 export async function getRecipes(): Promise<RecipesResponse> {
     const res = await fetch('/api/recipes', {
         headers: await getAuthHeaders(false),
+        cache: 'no-store'
     });
     return handleResponse<RecipesResponse>(res, 'Failed to fetch recipes');
 }
@@ -102,6 +103,7 @@ export async function getRecipes(): Promise<RecipesResponse> {
 export async function getPairedRecipes(mainId: string): Promise<{ status: string, suggestions: string[] }> {
     const res = await fetch(`/api/recipes/paired?main_id=${encodeURIComponent(mainId)}`, {
         headers: await getAuthHeaders(false),
+        cache: 'no-store'
     });
     return handleResponse<{ status: string, suggestions: string[] }>(res, 'Failed to fetch paired recipes');
 }
@@ -234,6 +236,7 @@ export async function swapMeals(week: string, day1: string, day2: string): Promi
 export async function getAnalytics(): Promise<Analytics> {
     const res = await fetch('/api/analytics', {
         headers: await getAuthHeaders(false),
+        cache: 'no-store'
     });
     return handleResponse<Analytics>(res, 'Failed to fetch analytics');
 }
@@ -258,6 +261,7 @@ export async function bulkCheckPrepTasks(week: string, taskIds: string[], status
 export async function getSuggestions(): Promise<any> {
     const res = await fetch('/api/suggestions', {
         headers: await getAuthHeaders(false),
+        cache: 'no-store'
     });
     return handleResponse<any>(res, 'Failed to fetch suggestions');
 }
@@ -265,6 +269,7 @@ export async function getSuggestions(): Promise<any> {
 export async function getLastWeekReview(): Promise<any> {
     const res = await fetch('/api/reviews/last_week', {
         headers: await getAuthHeaders(false),
+        cache: 'no-store'
     });
     return handleResponse<any>(res, 'Failed to fetch last week review');
 }
@@ -281,6 +286,7 @@ export async function submitReview(week_of: string, reviews: any[]): Promise<any
 export async function getWasteNotSuggestions(): Promise<any> {
     const res = await fetch('/api/suggestions/waste-not', {
         headers: await getAuthHeaders(false),
+        cache: 'no-store'
     });
     return handleResponse<any>(res, 'Failed to fetch waste-not suggestions');
 }
@@ -296,7 +302,7 @@ export async function getSuggestOptions(selections: any[] = [], leftovers: any[]
 
 export async function generateDraft(
     week_of: string,
-    selections: { day: string, slot: string, recipe_id: string, recipe_name: string }[],
+    selections: { day: string, slot: string, recipe_id?: string, recipe_ids?: string[], recipe_name: string }[],
     locked_days: string[] = [],
     leftovers: { day: string, slot: string, item: string }[] = [],
     exclude_defaults: string[] = []
@@ -339,6 +345,7 @@ export async function saveWizardState(week_of: string, state: any): Promise<any>
 export async function getWizardState(week_of: string): Promise<any> {
     const res = await fetch(`/api/wizard/state?week_of=${week_of}`, {
         headers: await getAuthHeaders(false),
+        cache: 'no-store'
     });
     return handleResponse<any>(res, 'Failed to fetch wizard state');
 }
@@ -388,6 +395,7 @@ export async function searchRecipes(query: string): Promise<any> {
 export async function getRecipeContent(recipeId: string): Promise<any> {
     const res = await fetch(`/api/recipes/${recipeId}/content`, {
         headers: await getAuthHeaders(false),
+        cache: 'no-store'
     });
     return handleResponse<any>(res, 'Failed to get recipe content');
 }
@@ -438,6 +446,7 @@ export type { WorkflowStatus, LogMealData } from '@/types';
 export async function getStores() {
     const res = await fetch('/api/groceries/stores', {
         headers: await getAuthHeaders(false),
+        cache: 'no-store'
     });
     return handleResponse<{ stores: string[] }>(res, 'Failed to fetch stores');
 }
@@ -490,6 +499,7 @@ export async function smartAction(weekOf: string, item: string, action: 'add_to_
 export async function getSettings() {
     const res = await fetch('/api/settings', {
         headers: await getAuthHeaders(false),
+        cache: 'no-store'
     });
     return handleResponse<any>(res, 'Failed to fetch settings');
 }

@@ -112,7 +112,7 @@ export const DraftStep: React.FC = () => {
                                                 </button>
                                             </div>
                                             <p className="font-bold text-sm line-clamp-2">
-                                                {dinner?.recipe_name || dinner?.recipe_id?.replace(/_/g, ' ') || 'Not Planned'}
+                                                {dinner?.recipe_name || dinner?.recipe_id?.replace(/_/g, ' ') || (dinner?.recipe_ids?.length > 1 ? dinner.recipe_ids.join(' + ').replace(/_/g, ' ') : 'Not Planned')}
                                             </p>
                                             {dinner?.vegetables && dinner.vegetables.length > 0 && (
                                                 <p className="text-[10px] text-[var(--text-muted)] mt-1 font-medium">🥬 {dinner.vegetables.join(', ')}</p>
@@ -206,7 +206,7 @@ export const DraftStep: React.FC = () => {
                     currentMeal={isReplacing.currentMeal}
                     recipes={recipes}
                     leftoverInventory={inventory?.meals || []}
-                    onConfirm={(newMeal, req, status) => handleReplacementConfirm(newMeal, req || false, status)}
+                    onConfirm={(newMeal, req, status, ids) => handleReplacementConfirm(newMeal, req || false, status, ids)}
                     onCancel={() => setIsReplacing(null)}
                 />
             )}

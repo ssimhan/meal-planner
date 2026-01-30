@@ -46,8 +46,8 @@ interface WizardContextType {
     selectedSuggestions: string[];
     draftPlan: any;
     setDraftPlan: (plan: any) => void;
-    selections: { day: string, slot: string, recipe_id: string, recipe_name: string }[];
-    setSelections: React.Dispatch<React.SetStateAction<{ day: string, slot: string, recipe_id: string, recipe_name: string }[]>>;
+    selections: { day: string, slot: string, recipe_id?: string, recipe_ids?: string[], recipe_name: string }[];
+    setSelections: React.Dispatch<React.SetStateAction<{ day: string, slot: string, recipe_id?: string, recipe_ids?: string[], recipe_name: string }[]>>;
     suggestionOptions: {
         snacks: { id: string, name: string }[],
         lunch_recipes: { id: string, name: string }[],
@@ -90,7 +90,7 @@ interface WizardContextType {
     finalizePlan: (week: string) => Promise<any>;
     bulkUpdateInventory: (updates: any[]) => Promise<any>;
     getShoppingList: (week: string) => Promise<any>;
-    handleReplacementConfirm: (newMeal: string, requestRecipe?: boolean, madeStatus?: boolean | string) => Promise<void>;
+    handleReplacementConfirm: (newMeal: string, requestRecipe?: boolean, madeStatus?: boolean | string, recipeIds?: string[]) => Promise<void>;
 }
 
 const WizardContext = createContext<WizardContextType | undefined>(undefined);
@@ -120,7 +120,7 @@ export const WizardProvider = ({ children }: { children: ReactNode }) => {
 
     // Draft State
     const [draftPlan, setDraftPlan] = useState<any>(null);
-    const [selections, setSelections] = useState<{ day: string, slot: string, recipe_id: string, recipe_name: string }[]>([]);
+    const [selections, setSelections] = useState<{ day: string, slot: string, recipe_id?: string, recipe_ids?: string[], recipe_name: string }[]>([]);
     const [suggestionOptions, setSuggestionOptions] = useState<{
         snacks: { id: string, name: string }[],
         lunch_recipes: { id: string, name: string }[],
@@ -641,7 +641,7 @@ export const WizardProvider = ({ children }: { children: ReactNode }) => {
         async function loadRecipes() {
             try {
                 const data = await getRecipes();
-                setRecipes(data.recipes.map((r: any) => ({ id: r.id, name: r.name })));
+                setRecipes(data.recipes); // Preserve full recipe metadata (tags, requires_side, etc.)
             } catch (e) {
                 console.error("Failed to load recipes", e);
             }
@@ -649,7 +649,7 @@ export const WizardProvider = ({ children }: { children: ReactNode }) => {
         loadRecipes();
     }, []);
 
-    const handleReplacementConfirm = async (newMeal: string, requestRecipe: boolean = false, madeStatus: boolean | string = true) => {
+    const handleReplacementConfirm = async (newMeal: string, requestRecipe: boolean = false, madeStatus: boolean | string = true, recipeIds?: string[]) => {
         if (!isReplacing) return;
         const { day, slot } = isReplacing;
 
@@ -663,19 +663,36 @@ export const WizardProvider = ({ children }: { children: ReactNode }) => {
         } else {
             const recipe = recipes.find(r => r.name === newMeal);
             const recipeId = recipe ? recipe.id : newMeal;
-            const recipeName = newMeal;
+            const sideNames = recipeIds && recipeIds.length > 1
+                ? recipeIds.slice(1).map(id => recipes.find(r => r.id === id)?.name).filter(Boolean)
+                : [];
+            const recipeName = sideNames.length > 0
+                ? `${newMeal} + ${sideNames.join(' & ')}`
+                : newMeal;
 
             let newSelections;
             if (slot === 'school_snack' || slot === 'home_snack') {
                 const workDays = ['mon', 'tue', 'wed', 'thu', 'fri'];
                 newSelections = [
                     ...selections.filter(s => (s as any).slot !== slot),
-                    ...workDays.map(d => ({ day: d, slot, recipe_id: recipeId, recipe_name: recipeName }))
+                    ...workDays.map(d => ({
+                        day: d,
+                        slot,
+                        recipe_id: !recipeIds || recipeIds.length <= 1 ? recipeId : undefined,
+                        recipe_ids: recipeIds && recipeIds.length > 1 ? recipeIds : undefined,
+                        recipe_name: recipeName
+                    }))
                 ];
             } else {
                 newSelections = [
                     ...selections.filter(s => !(s.day === day && (s as any).slot === slot)),
-                    { day, slot, recipe_id: recipeId, recipe_name: recipeName }
+                    {
+                        day,
+                        slot,
+                        recipe_id: !recipeIds || recipeIds.length <= 1 ? recipeId : undefined,
+                        recipe_ids: recipeIds && recipeIds.length > 1 ? recipeIds : undefined,
+                        recipe_name: recipeName
+                    }
                 ];
             }
             setSelections(newSelections);

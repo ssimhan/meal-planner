@@ -139,8 +139,11 @@ def generate_draft_route():
             day = selection.get('day')
             recipe_id = selection.get('recipe_id')
             slot = selection.get('slot', 'dinner')
-            if not day or not recipe_id: continue
+            recipe_ids = selection.get('recipe_ids')
             
+            if not day or (not recipe_id and not recipe_ids): continue
+            
+            ids = recipe_ids or [recipe_id]
             day_abbr = day.lower()[:3]
             days_covered.add(day_abbr)
             
@@ -149,19 +152,19 @@ def generate_draft_route():
                 found = False
                 for dinner in history_week.get('dinners', []):
                     if dinner.get('day') == day_abbr:
-                        dinner['recipe_ids'] = [recipe_id]
+                        dinner['recipe_ids'] = ids
                         found = True
                         break
                 if not found:
                     history_week.setdefault('dinners', []).append({
                         'day': day_abbr,
-                        'recipe_id': recipe_id
+                        'recipe_ids': ids
                     })
             elif slot == 'lunch':
                 history_week.setdefault('lunches', {})
                 history_week['lunches'][day_abbr] = {
-                    'recipe_ids': [recipe_id],
-                    'recipe_name': selection.get('recipe_name') or recipe_id.replace('_', ' ').title(),
+                    'recipe_ids': ids,
+                    'recipe_name': selection.get('recipe_name') or (recipe_id.replace('_', ' ').title() if recipe_id else "Multiple Recipes"),
                     'prep_style': 'manual'
                 }
             elif slot in ['school_snack', 'home_snack']:

@@ -261,7 +261,7 @@ export const SuggestionsStep: React.FC = () => {
                     currentMeal={isReplacing.currentMeal}
                     recipes={recipes}
                     leftoverInventory={inventory?.meals || []}
-                    onConfirm={(newMeal, req, status) => handleReplacementConfirm(newMeal, req || false, status)}
+                    onConfirm={(newMeal, req, status, ids) => handleReplacementConfirm(newMeal, req || false, status, ids)}
                     onCancel={() => setIsReplacing(null)}
                 />
             )}

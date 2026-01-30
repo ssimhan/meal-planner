@@ -267,17 +267,38 @@ def select_dinners(filtered_recipes, inputs, current_week_history=None, all_reci
         for dh in current_week_history['dinners']:
             day = dh.get('day')
             recipe_id = dh.get('recipe_id')
+            recipe_ids = dh.get('recipe_ids')
+            
             if day in days:
-                if recipe_id == 'freezer_meal':
+                if recipe_id == 'freezer_meal' or (recipe_ids and 'freezer_meal' in recipe_ids):
                     selected[day] = {'id': 'freezer_meal', 'name': 'Freezer Backup Meal', 'main_veg': [], 'meal_type': 'freezer', 'cuisine': 'various'}
-                elif recipe_id and recipe_id.startswith('leftover:'):
-                    meal_name = recipe_id.split(':', 1)[1]
-                    selected[day] = {'id': recipe_id, 'name': meal_name, 'main_veg': [], 'meal_type': 'leftover', 'cuisine': 'various'}
+                elif (recipe_id and recipe_id.startswith('leftover:')) or (recipe_ids and any(rid.startswith('leftover:') for rid in recipe_ids)):
+                    rid = recipe_id or recipe_ids[0]
+                    meal_name = rid.split(':', 1)[1]
+                    selected[day] = {'id': rid, 'name': meal_name, 'main_veg': [], 'meal_type': 'leftover', 'cuisine': 'various'}
                 elif all_recipes:
-                    recipe = next((r for r in all_recipes if r.get('id') == recipe_id), None)
-                    if recipe:
-                        selected[day] = recipe
-                        used_meal_types.add(recipe.get('meal_type'))
+                    if recipe_ids and len(recipe_ids) > 1:
+                        # Modular Recipe: Combine metadata
+                        subs = [next((r for r in all_recipes if r.get('id') == rid), None) for rid in recipe_ids]
+                        subs = [s for s in subs if s]
+                        if subs:
+                            main = subs[0]
+                            selected[day] = {
+                                'id': main.get('id'),
+                                'recipe_ids': recipe_ids,
+                                'name': f"{main.get('name')} + {', '.join(s.get('name') for s in subs[1:])}",
+                                'main_veg': list(set([v for s in subs for v in s.get('main_veg', [])])),
+                                'meal_type': main.get('meal_type'),
+                                'cuisine': main.get('cuisine'),
+                                'requires_side': False # Already has sides
+                            }
+                            used_meal_types.add(main.get('meal_type'))
+                    else:
+                        rid = recipe_id or (recipe_ids[0] if recipe_ids else None)
+                        recipe = next((r for r in all_recipes if r.get('id') == rid), None)
+                        if recipe:
+                            selected[day] = recipe
+                            used_meal_types.add(recipe.get('meal_type'))
     if rollover_data and all_recipes:
         for r_meta in rollover_data:
             r_id = r_meta.get('recipe_id')

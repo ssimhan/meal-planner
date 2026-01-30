@@ -145,6 +145,7 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None, e
         {
             'day': d, 
             'recipe_id': r.get('id'), 
+            'recipe_ids': r.get('recipe_ids'),
             'recipe_name': r.get('name'), 
             'vegetables': list(r.get('main_veg', [])),
             'cuisine': r.get('cuisine'),
@@ -159,6 +160,7 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None, e
         data['lunches'] = {
             d: {
                 'recipe_id': getattr(l, 'recipe_id', None) if not isinstance(l, dict) else l.get('recipe_id'),
+                'recipe_ids': getattr(l, 'recipe_ids', None) if not isinstance(l, dict) else l.get('recipe_ids'),
                 'recipe_name': getattr(l, 'recipe_name', 'Unknown') if not isinstance(l, dict) else l.get('recipe_name'),
                 'kid_friendly': getattr(l, 'kid_friendly', True) if not isinstance(l, dict) else l.get('kid_friendly'),
                 'prep_style': getattr(l, 'prep_style', 'fresh') if not isinstance(l, dict) else l.get('prep_style'),

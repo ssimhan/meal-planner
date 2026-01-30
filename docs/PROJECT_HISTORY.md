@@ -404,6 +404,14 @@ Previously, the frontend received a merged "week view" where actual execution da
 
 ### Pattern 7: Module-level errors propagate silently - test imports in isolation
 
+### Pattern 8: The "Bridge" Cache Bug (Stale State)
+
+**Symptoms:** Tests fail checking state even after a "successful" mutation or cache invalidation.
+
+**Root Cause:** Introducing a newer persistence layer (Supabase) but keeping an older local cache alive. The "bridge" function (`invalidate_cache`) updated the new system but forgot to clear the old local memory.
+
+**Lesson for New Coders:** **State is a liability.** If you store the same data in two places (e.g., a local variable and a database), you now have two sources of "truth." This is called "redundant state." If you only update one, the other becomes a "ghost" that will haunt your tests and your users. The fix is to always have a "Single Source of Truth"—when you change the database, you MUST explicitly kill or update any local copies of that data.
+
 ## Decision Frameworks
 
 ### Framework 1: Progressive Enhancement Over Big Rewrites
@@ -1261,8 +1269,17 @@ Understanding when to use each is fundamental to frontend development. Most bugs
 
 **Goal:** Enable complex meal combinations, streamline shopping intelligence, and address core performance issues.
 
+**Key Design Decisions:**
+
+1. **Multi-Recipe Data Model (Modular Recipes):** Pivot from a single `recipe_id` (string) to a `recipe_ids` (array) per slot. This enabled "Modular Recipes" (e.g., Tacos + 3 Sides) but required updating the `StorageEngine`, UI modals, and recommendation engine to handle arrays across the entire stack.
+2. **Statelessness vs. Performance:** Opted for a "Stateless" Supabase-first approach to avoid race conditions, but introduced a multi-layer caching strategy (LRU for recipe content, TTL for heavy historical scans) to maintain sub-10ms response times.
+
+**Technical Hurdles:**
+- **Service Layer Extraction:** De-tangling `api/routes/meals.py` (1000+ line monolith) into `api/services/meal_service.py` required isolating deeply coupled logic between history logging, inventory sync, and daily feedback.
+- **Frictionless Shopping Logic:** Developing the "Shopping Intelligence" engine to aggregate ingredients from *multiple* recipes simultaneously while filtering out "Permanent Pantry" basics.
+- **Test Suite Modernization:** Rewriting legacy integration tests that relied on a local file system to work correctly with a fully mocked Supabase `StorageEngine`.
+
 **Block 1: Modular Recipes & Pairing Logic (Completed)**
-- **Multi-Recipe Slots:** Overhauled the data model to support arrays of recipes per slot (`recipe_ids`), enabling "Taco Night" (Main + Multiple Sides).
 - **Pairing Engine:** Built a history-based suggestion engine that analyzes past pairings to recommend complementary sides.
 - **Pairing Drawer:** Added a slide-out UI for rapid side-dish selection during the planning wizard.
 
@@ -1272,9 +1289,9 @@ Understanding when to use each is fundamental to frontend development. Most bugs
 - **Bulk Tagging:** Added a "Batch Editor" for rapid categorization of the recipe library (Main, Side, Needs Side).
 
 **Block 3: Strategic Technical Debt Cleanup (Completed)**
-- **Service Layer Extraction:** Extracted 1000+ lines of logging logic from `meals.py` into `api/services/meal_service.py`.
-- **Multi-Layer Performance Caching:** Implemented LRU/TTL caching for expensive operations (Prep steps, Pending recipes), reducing dashboard load times.
-- **Integration Test Hardening:** Restored 100% test pass rate by updating mocks for the Supabase-first architecture.
+- **Service Layer Extraction:** Extracted logging logic from `meals.py` into `api/services/meal_service.py`.
+- **Multi-Layer Performance Caching:** Implemented LRU/TTL caching for expensive operations.
+- **Integration Test Hardening:** Restored 100% test pass rate by updating mocks.
 
 **Learning:** "Modularization" is the theme of this phase. Moving from single recipe strings to ID arrays required updates across 15+ files, but unlocked the ability to plan real-world meals that aren't just one-pot dishes. Technical debt cleanup restored feature velocity for the upcoming multi-household features.
 

@@ -11,6 +11,7 @@ from api.utils import storage, invalidate_cache
 from api.utils.auth import require_auth
 from scripts import log_execution
 # TD-009: Import extracted service functions
+from api.services.pairing_service import get_paired_suggestions
 from api.services.meal_service import (
     parse_made_status,
     find_or_create_dinner,
@@ -21,6 +22,24 @@ from api.services.meal_service import (
 )
 
 meals_bp = Blueprint('meals', __name__)
+
+@meals_bp.route("/api/recipes/paired", methods=["GET"])
+@require_auth
+def get_paired_recipes_route():
+    try:
+        main_id = request.args.get('main_id')
+        if not main_id:
+            return jsonify({"status": "error", "message": "main_id required"}), 400
+            
+        history = storage.StorageEngine.get_history()
+        suggestions = get_paired_suggestions(main_id, history)
+        
+        return jsonify({
+            "status": "success",
+            "suggestions": suggestions
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 @meals_bp.route("/api/generate-plan", methods=["POST"])
 @require_auth

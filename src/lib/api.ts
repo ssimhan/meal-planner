@@ -99,6 +99,13 @@ export async function getRecipes(): Promise<RecipesResponse> {
     return handleResponse<RecipesResponse>(res, 'Failed to fetch recipes');
 }
 
+export async function getPairedRecipes(mainId: string): Promise<{ status: string, suggestions: string[] }> {
+    const res = await fetch(`/api/recipes/paired?main_id=${encodeURIComponent(mainId)}`, {
+        headers: await getAuthHeaders(false),
+    });
+    return handleResponse<{ status: string, suggestions: string[] }>(res, 'Failed to fetch paired recipes');
+}
+
 export async function getInventory(): Promise<InventoryResponse> {
     const res = await fetch('/api/inventory', {
         headers: await getAuthHeaders(false),
@@ -386,6 +393,7 @@ export async function updateRecipeContent(
         cuisine?: string;
         effort_level?: string;
         tags?: string[];
+        requires_side?: boolean;
     }
 ): Promise<any> {
     const res = await fetch(`/api/recipes/${recipeId}/content`, {

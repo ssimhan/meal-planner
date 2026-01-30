@@ -70,7 +70,8 @@ export default function BatchEditPage() {
                         name: recipe.name,
                         cuisine: recipe.cuisine,
                         effort_level: recipe.effort_level,
-                        tags: recipe.tags
+                        tags: recipe.tags,
+                        requires_side: recipe.requires_side
                     };
 
                     await updateRecipeMetadata(recipe.id, updates);
@@ -152,11 +153,11 @@ export default function BatchEditPage() {
                                     <th className="text-left p-4 font-bold text-xs uppercase tracking-wider text-[var(--text-muted)]">
                                         Recipe Name
                                     </th>
-                                    <th className="text-left p-4 font-bold text-xs uppercase tracking-wider text-[var(--text-muted)] w-48">
-                                        Cuisine
+                                    <th className="text-left p-4 font-bold text-xs uppercase tracking-wider text-[var(--text-muted)] w-32">
+                                        Type
                                     </th>
-                                    <th className="text-left p-4 font-bold text-xs uppercase tracking-wider text-[var(--text-muted)] w-48">
-                                        Effort
+                                    <th className="text-left p-4 font-bold text-xs uppercase tracking-wider text-[var(--text-muted)] w-32">
+                                        Needs Side?
                                     </th>
                                     <th className="text-left p-4 font-bold text-xs uppercase tracking-wider text-[var(--text-muted)] w-24">
                                         Actions
@@ -203,20 +204,36 @@ export default function BatchEditPage() {
                                             </select>
                                         </td>
                                         <td className="p-4" onClick={(e) => e.stopPropagation()}>
-                                            <div className="flex items-center gap-3">
-                                                <select
-                                                    value={recipe.effort_level || ''}
-                                                    onChange={(e) => handleUpdate(recipe.id, 'effort_level', e.target.value)}
-                                                    disabled={saving.has(recipe.id)}
-                                                    className="flex-1 p-2 border border-[var(--border-subtle)] rounded-lg bg-white focus:ring-2 focus:ring-[var(--accent-sage)] outline-none text-sm"
+                                            <div className="flex gap-1">
+                                                <button
+                                                    onClick={() => {
+                                                        const tags = recipe.tags || [];
+                                                        const newTags = tags.includes('main') ? tags.filter(t => t !== 'main') : [...tags.filter(t => t !== 'side'), 'main'];
+                                                        handleRecipeChange(recipe.id, { tags: newTags });
+                                                    }}
+                                                    className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest transition-all ${recipe.tags?.includes('main') ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}
                                                 >
-                                                    <option value="">Select effort...</option>
-                                                    <option value="low">Low</option>
-                                                    <option value="medium">Medium</option>
-                                                    <option value="high">High</option>
-                                                </select>
-                                                <EffortIndicator level={recipe.effort_level} size="sm" />
+                                                    Main
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        const tags = recipe.tags || [];
+                                                        const newTags = tags.includes('side') ? tags.filter(t => t !== 'side') : [...tags.filter(t => t !== 'main'), 'side'];
+                                                        handleRecipeChange(recipe.id, { tags: newTags });
+                                                    }}
+                                                    className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest transition-all ${recipe.tags?.includes('side') ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}
+                                                >
+                                                    Side
+                                                </button>
                                             </div>
+                                        </td>
+                                        <td className="p-4" onClick={(e) => e.stopPropagation()}>
+                                            <button
+                                                onClick={() => handleRecipeChange(recipe.id, { requires_side: !recipe.requires_side })}
+                                                className={`w-12 h-6 rounded-full transition-all relative ${recipe.requires_side ? 'bg-green-500' : 'bg-gray-200'}`}
+                                            >
+                                                <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${recipe.requires_side ? 'right-1' : 'left-1'}`} />
+                                            </button>
                                         </td>
                                         <td className="p-4" onClick={(e) => e.stopPropagation()}>
                                             <button
@@ -259,6 +276,7 @@ function RecipeContentModal({ recipe, onClose, onSave }: { recipe: RecipeListIte
     const [cuisine, setCuisine] = useState(recipe.cuisine || 'unknown');
     const [effortLevel, setEffortLevel] = useState(recipe.effort_level || '');
     const [tags, setTags] = useState<string[]>(recipe.tags || []);
+    const [requiresSide, setRequiresSide] = useState<boolean>(recipe.requires_side || false);
     const [ingredients, setIngredients] = useState<string[]>([]);
     const [instructions, setInstructions] = useState<string[]>([]);
 
@@ -294,7 +312,8 @@ function RecipeContentModal({ recipe, onClose, onSave }: { recipe: RecipeListIte
                 name,
                 cuisine,
                 effort_level: effortLevel,
-                tags
+                tags,
+                requires_side: requiresSide
             });
 
             // Pass updated state back to parent
@@ -302,7 +321,8 @@ function RecipeContentModal({ recipe, onClose, onSave }: { recipe: RecipeListIte
                 name,
                 cuisine,
                 effort_level: effortLevel,
-                tags
+                tags,
+                requires_side: requiresSide
             });
         } catch (err) {
             console.error('Failed to save content:', err);
@@ -354,10 +374,27 @@ function RecipeContentModal({ recipe, onClose, onSave }: { recipe: RecipeListIte
                                     className="text-xs px-2 py-1 bg-green-50 text-green-800 rounded border border-green-200 outline-none"
                                 >
                                     <option value="">Select effort...</option>
-                                    <option value="low">Low</option>
-                                    <option value="medium">Medium</option>
                                     <option value="high">High</option>
                                 </select>
+                                <button
+                                    onClick={() => setRequiresSide(!requiresSide)}
+                                    className={`text-xs px-2 py-1 rounded border transition-all flex items-center gap-1 ${requiresSide ? 'bg-green-100 text-green-700 border-green-200 shadow-sm' : 'bg-gray-50 text-gray-400 border-gray-200'}`}
+                                >
+                                    {requiresSide ? '✓ Needs Side' : 'No Side Needed'}
+                                </button>
+                                <div className="h-6 w-px bg-gray-200 mx-1" />
+                                <button
+                                    onClick={() => setTags(prev => prev.includes('main') ? prev.filter(t => t !== 'main') : [...prev.filter(t => t !== 'side'), 'main'])}
+                                    className={`text-xs px-2 py-1 rounded border transition-all ${tags.includes('main') ? 'bg-amber-100 text-amber-700 border-amber-200' : 'bg-gray-50 text-gray-400 border-gray-200'}`}
+                                >
+                                    Main
+                                </button>
+                                <button
+                                    onClick={() => setTags(prev => prev.includes('side') ? prev.filter(t => t !== 'side') : [...prev.filter(t => t !== 'main'), 'side'])}
+                                    className={`text-xs px-2 py-1 rounded border transition-all ${tags.includes('side') ? 'bg-blue-100 text-blue-700 border-blue-200' : 'bg-gray-50 text-gray-400 border-gray-200'}`}
+                                >
+                                    Side
+                                </button>
                                 {tags.map((tag) => (
                                     <span key={tag} className="text-xs px-2 py-1 bg-[var(--accent-sage)]/10 text-[var(--accent-sage)] rounded flex items-center gap-1 group">
                                         {tag}

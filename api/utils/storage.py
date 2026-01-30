@@ -142,7 +142,8 @@ class StorageEngine:
                     "meal_type": (r.get('metadata') or {}).get('meal_type', 'unknown'),
                     "effort_level": (r.get('metadata') or {}).get('effort_level', 'normal'),
                     "no_chop_compatible": (r.get('metadata') or {}).get('no_chop_compatible', False),
-                    "tags": (r.get('metadata') or {}).get('tags', [])
+                    "tags": (r.get('metadata') or {}).get('tags', []),
+                    "requires_side": (r.get('metadata') or {}).get('requires_side', False)
                 } for r in res.data
             ]
         except Exception as e:
@@ -205,12 +206,52 @@ class StorageEngine:
             query = supabase.table("meal_plans").upsert({
                 "household_id": h_id,
                 "week_of": week_of,
-                **update_payload
+                **StorageEngine.normalize_plan_data(update_payload)
             }, on_conflict="household_id, week_of")
             execute_with_retry(query)
         except Exception as e:
             print(f"Error updating meal plan for {week_of}: {e}")
             raise e
+
+    @staticmethod
+    def normalize_plan_data(data):
+        """
+        Normalize meal plan data to ensure recipe_ids (array) is prioritized over recipe_id (string).
+        Handles both plan_data top-level and history_data nested structures.
+        """
+        if not data: return data
+        
+        # 1. Handle plan_data/history_data wrapper if present (e.g. from update_payload)
+        for key in ['plan_data', 'history_data']:
+            if key in data and isinstance(data[key], dict):
+                data[key] = StorageEngine._normalize_inner_data(data[key])
+        
+        # 2. Handle if data is the inner dict itself
+        return StorageEngine._normalize_inner_data(data)
+
+    @staticmethod
+    def _normalize_inner_data(inner):
+        if not isinstance(inner, dict): return inner
+        
+        # Normalize Dinners
+        if 'dinners' in inner and isinstance(inner['dinners'], list):
+            for dinner in inner['dinners']:
+                if not isinstance(dinner, dict): continue
+                # recipe_id -> recipe_ids
+                if 'recipe_id' in dinner and 'recipe_ids' not in dinner:
+                    dinner['recipe_ids'] = [dinner['recipe_id']] if dinner['recipe_id'] else []
+                # ensure recipe_id for legacy UI
+                if 'recipe_ids' in dinner and dinner['recipe_ids'] and 'recipe_id' not in dinner:
+                    dinner['recipe_id'] = dinner['recipe_ids'][0]
+        
+        # Normalize Lunches
+        if 'lunches' in inner and isinstance(inner['lunches'], dict):
+            for day, lunch in inner['lunches'].items():
+                if not isinstance(lunch, dict): continue
+                if 'recipe_id' in lunch and 'recipe_ids' not in lunch:
+                    lunch['recipe_ids'] = [lunch['recipe_id']] if lunch['recipe_id'] else []
+        
+        return inner
 
     @staticmethod
     def update_inventory_item(category, item_name, updates=None, delete=False):
@@ -308,18 +349,18 @@ class StorageEngine:
                 
                 # Check if today is within the 7-day window
                 if week_start <= today < (week_start + timedelta(days=7)):
-                    return plan
-
+                    return StorageEngine.normalize_plan_data(plan)
+            
             # 2. Second priority: find any plan currently in 'planning'
             query = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("status", "planning").order("week_of", desc=True).limit(1)
             res = execute_with_retry(query)
             if res.data:
-                return res.data[0]
+                return StorageEngine.normalize_plan_data(res.data[0])
 
             # 3. Last fallback: the most recent non-archived plan of any status
             query = supabase.table("meal_plans").select("*").eq("household_id", h_id).neq("status", "archived").order("week_of", desc=True).limit(1)
             res = execute_with_retry(query)
-            return res.data[0] if res.data else None
+            return StorageEngine.normalize_plan_data(res.data[0]) if res.data else None
             
         except Exception as e:
             print(f"Error fetching active week: {e}")

@@ -205,11 +205,13 @@ def update_history(history_path, inputs, selected_dinners, selected_lunches=None
         if day in selected_dinners:
             recipe = selected_dinners[day]
             new_week['dinners'].append({
-                'recipe_id': recipe['id'],
+                'recipe_id': recipe.get('id'),
+                'recipe_ids': recipe.get('recipe_ids'),
+                'recipe_name': recipe.get('name'),
                 'cuisine': recipe.get('cuisine'),
                 'meal_type': recipe.get('meal_type'),
                 'day': day,
-                'vegetables': recipe.get('main_veg', [])
+                'vegetables': list(recipe.get('main_veg') or [])
             })
         if selected_lunches and day in selected_lunches:
             lunch = selected_lunches[day]

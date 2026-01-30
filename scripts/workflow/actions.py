@@ -112,7 +112,7 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None, e
     
     lunch_selector = LunchSelector(recipes=recipes)
     days = ['mon', 'tue', 'wed', 'thu', 'fri']
-    dinner_plan_list = [{'recipe_id': r.get('id'), 'recipe_name': r.get('name'), 'day': d, 'vegetables': list(r.get('main_veg', []))} for d, r in selected_dinners.items() if d in days]
+    dinner_plan_list = [{'recipe_id': r.get('id'), 'recipe_name': r.get('name'), 'day': d, 'vegetables': list(r.get('main_veg') or [])} for d, r in selected_dinners.items() if d in days]
     
     selected_lunches = {}
     selected_lunches = {}
@@ -147,7 +147,7 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None, e
             'recipe_id': r.get('id'), 
             'recipe_ids': r.get('recipe_ids'),
             'recipe_name': r.get('name'), 
-            'vegetables': list(r.get('main_veg', [])),
+            'vegetables': list(r.get('main_veg') or []),
             'cuisine': r.get('cuisine'),
             'meal_type': r.get('meal_type')
         } 

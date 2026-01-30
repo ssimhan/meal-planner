@@ -230,8 +230,10 @@ def get_recent_recipes(history, lookback_weeks=3):
         return recent
     for week in history['weeks'][-lookback_weeks:]:
         for dinner in week.get('dinners', []):
-            if 'recipe_id' in dinner:
-                recent.add(dinner['recipe_id'])
+            rid = dinner.get('recipe_id')
+            rids = dinner.get('recipe_ids', [])
+            if rid: recent.add(rid)
+            for rid in rids: recent.add(rid)
     return recent
 
 def filter_recipes(recipes, inputs, recent_recipes):
@@ -286,8 +288,8 @@ def select_dinners(filtered_recipes, inputs, current_week_history=None, all_reci
                             selected[day] = {
                                 'id': main.get('id'),
                                 'recipe_ids': recipe_ids,
-                                'name': f"{main.get('name')} + {', '.join(s.get('name') for s in subs[1:])}",
-                                'main_veg': list(set([v for s in subs for v in s.get('main_veg', [])])),
+                                'name': f"{main.get('name') or 'Unknown'} + {', '.join(str(s.get('name') or 'Unknown') for s in subs[1:])}",
+                                'main_veg': list(set([v for s in subs for v in (s.get('main_veg') or [])])),
                                 'meal_type': main.get('meal_type'),
                                 'cuisine': main.get('cuisine'),
                                 'requires_side': False # Already has sides

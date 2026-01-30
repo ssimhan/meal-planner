@@ -213,7 +213,17 @@ def generate_draft_route():
 
         query = storage.supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id)
         all_recipes_res = storage.execute_with_retry(query)
-        all_recipes = [{"id": r['id'], "name": r['name'], **(r.get('metadata') or {})} for r in all_recipes_res.data]
+        
+        # BUG-002: Fixed fragility with safe parsing and defensive checks
+        all_recipes = []
+        if all_recipes_res.data:
+            for r in all_recipes_res.data:
+                try:
+                    meta = r.get('metadata') or {}
+                    # Use .get() everywhere to avoid KeyErrors
+                    all_recipes.append({"id": r.get('id'), "name": r.get('name') or "Unknown Recipe", **meta})
+                except Exception as ex:
+                    print(f"Warning: Skipping malformed recipe: {ex}")
         
         # 4. Generate the rest of the plan
         new_plan_data, new_history = generate_meal_plan(

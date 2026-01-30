@@ -220,14 +220,14 @@ def get_waste_not_suggestions(limit=4):
                 if norm_veg in leftovers: # Double bonus if it's a specific leftover veg
                     score += 5
                     
-        if score > 0:
-            scored_recipes.append({
-                'recipe': recipe,
-                'score': score,
-                'rationale': list(set(rationale))
-            })
-            
-    scored_recipes.sort(key=lambda x: x['score'], reverse=True)
+            if score > 0:
+                scored_recipes.append({
+                    'recipe': recipe,
+                    'score': score,
+                    'rationale': list(set(rationale))
+                })
+        
+    scored_recipes.sort(key=lambda x: x.get('score', 0), reverse=True)
     
     return scored_recipes[:limit]
 
@@ -265,8 +265,10 @@ def get_shopping_list(plan_data):
         # Collect ingredients from all recipes in this slot
         ingredients_to_check = set(dinner.get('vegetables', []))
         for rid in recipes_to_process:
+            if not rid: continue
             try:
                 content = StorageEngine.get_recipe_content(rid)
+                if not content: continue
                 # We specifically look for "main ingredients" or vegetables in the context of this app's logic
                 # For now, let's assume all 'ingredients' should be checked unless they are staples
                 for ing in content.get('ingredients', []):
@@ -297,11 +299,11 @@ def get_shopping_list(plan_data):
             # Support multi-recipe aggregation
             recipes_to_process = []
             if isinstance(lunch, dict):
-                if 'recipe_ids' in lunch: recipes_to_process = lunch['recipe_ids']
+                if 'recipe_ids' in lunch: recipes_to_process = lunch['recipe_ids'] or []
                 elif 'recipe_id' in lunch: recipes_to_process = [lunch['recipe_id']]
-                components = lunch.get('prep_components', [])
+                components = lunch.get('prep_components') or []
             else:
-                components = getattr(lunch, 'prep_components', [])
+                components = getattr(lunch, 'prep_components', []) or []
                 rid = getattr(lunch, 'recipe_id', None)
                 if rid: recipes_to_process = [rid]
             

@@ -85,6 +85,11 @@ def invalidate_pending_recipes_cache(household_id=None):
     else:
         _pending_recipes_cache.clear()
 
+def invalidate_cache(key=None):
+    """Global cache invalidation. Currently a no-op as we move to statelessness, 
+    but preserved for route compatibility during migration."""
+    invalidate_pending_recipes_cache()
+
 class StorageEngine:
     """Storage abstraction to handle DB vs File operations."""
     
@@ -726,6 +731,38 @@ class StorageEngine:
             raise e
 
     @staticmethod
+    def bulk_update_recipes(updates):
+        """
+        Execute multiple recipe updates in a single atomic transaction.
+        'updates' should be a list of dicts: [{'id': str, 'name': str, 'metadata': dict, 'content': str}]
+        """
+        if not supabase: return
+        if not updates: return
+        
+        h_id = get_household_id()
+        if not IS_SERVICE_ROLE:
+            raise Exception("SUPABASE_SERVICE_ROLE_KEY is missing. Cannot write to database.")
+            
+        try:
+            # Prepare rows for upsert. Supabase handles list of dicts as an atomic operation.
+            rows = []
+            for u in updates:
+                rows.append({
+                    "id": u['id'],
+                    "household_id": h_id,
+                    "name": u['name'],
+                    "metadata": u['metadata'],
+                    "content": u['content']
+                })
+            
+            query = supabase.table("recipes").upsert(rows)
+            execute_with_retry(query)
+            return True
+        except Exception as e:
+            print(f"Error in bulk_update_recipes: {e}")
+            raise e
+
+    @staticmethod
     def ignore_recipe(name):
         """Add a recipe name to the ignored list."""
         # TD-007 FIX: Use DB config instead of local file
@@ -824,14 +861,6 @@ class StorageEngine:
     def get_config():
         """Load config from DB or fallback to file."""
         if not supabase: 
-            # Fallback to loading local config.yml if DB not available
-            try:
-                config_path = Path('config.yml')
-                if config_path.exists():
-                    with open(config_path, 'r') as f:
-                        return yaml.safe_load(f) or {}
-            except:
-                pass
             return {}
 
         h_id = get_household_id()

@@ -1,36 +1,30 @@
-def get_paired_suggestions(main_id, history):
+from collections import Counter
+from typing import List, Dict, Any
+
+def get_paired_suggestions(main_id: str, history: Dict[str, Any], limit: int = 5) -> List[str]:
     """
-    Analyzes meal plan history to find co-occurrences of recipes in the same meal slot.
-    Returns a sorted list of suggested recipe IDs based on frequency.
+    Analyzes meal history to find recipes frequently paired with the given main_id.
+    Standardized to handle the nested {"weeks": [{"dinners": [...]}]} structure.
     """
-    pairs = {}
-    for week in history.get('weeks', []):
-        # We check both dinners and lunches if they follow the multi-recipe structure
+    if not main_id or not isinstance(history, dict):
+        return []
+
+    pairing_counts = Counter()
+    
+    weeks = history.get('weeks', [])
+    for week in weeks:
+        if not isinstance(week, dict): continue
         
-        # Check Dinners
-        for dinner in week.get('dinners', []):
-            ids = dinner.get('recipe_ids', [])
-            # Fallback for old data if any remains un-normalized in the history object
-            if not ids and dinner.get('recipe_id'):
-                ids = [dinner.get('recipe_id')]
-            
-            if main_id in ids:
-                for side_id in ids:
-                    if side_id != main_id:
-                        pairs[side_id] = pairs.get(side_id, 0) + 1
-                        
-        # Check Lunches (some people pair specific things for lunch too)
-        lunches = week.get('lunches', {})
-        if isinstance(lunches, dict):
-            for day, lunch in lunches.items():
-                ids = lunch.get('recipe_ids', [])
-                if not ids and lunch.get('recipe_id'):
-                    ids = [lunch.get('recipe_id')]
-                    
-                if main_id in ids:
-                    for side_id in ids:
-                        if side_id != main_id:
-                            pairs[side_id] = pairs.get(side_id, 0) + 1
-                            
-    # Sort by frequency descending
-    return sorted(pairs, key=pairs.get, reverse=True)
+        dinners = week.get('dinners', [])
+        for dinner in dinners:
+            recipes = dinner.get('recipe_ids', [])
+            if not isinstance(recipes, list) or main_id not in recipes:
+                continue
+                
+            # Add all other recipes in the same meal to pairing counts
+            for r_id in recipes:
+                if r_id != main_id:
+                    pairing_counts[r_id] += 1
+                
+    # Return most common pairings
+    return [r_id for r_id, count in pairing_counts.most_common(limit)]

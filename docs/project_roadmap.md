@@ -16,7 +16,7 @@
 > See [BUGS.md](BUGS.md) for current status. Fix all issues before marking blocks complete.
 
 ## 🚀 Active Phase
-**Phase 33: Advanced Recipe Management**
+**Phase 35: Household Synergy & Infrastructure**
 
 ---
 
@@ -24,26 +24,18 @@
 - [x] **Prep Refresh:** Implemented heuristic fallback for prep steps (BUG-001).
 - [x] **Inventory Sync:** Implemented smart category inference for sync (BUG-002, TD-001).
 - [x] **Household Flexibility:** Removed hardcoded weekend defaults (BUG-003).
-- [x] **Database Hygiene:** Batch normalized 73 recipes for tags/veg naming (TD-002, TD-004).
+- [x] **Database Hygiene:** Batch normalized 73 recipes (TD-002, TD-004).
+- [x] **Modular Recipes:** Implemented Pairing Service and Pairing Drawer (Phase 34 Block 1).
+- [x] **Smart Inventory:** Added Permanent Pantry filtering and multi-recipe aggregation (Phase 34 Block 1).
 
 ---
 
 ## 📅 Upcoming Roadmap
 
-### Phase 34: Frictionless Shopping & Recipe Loop
-**Goal:** Transform the core user loop into a high-utility, automated engine.
-
-- **Block 1: Multi-item Meal Slots (~5 hrs)**
-  - [ ] **3.1 Data Model & API (2 hrs):** Update `meal_plans` schema (`recipe_ids` array) and Python endpoints to support multiple recipes per slot.
-  - [ ] **3.2 UI Rendering (1.5 hrs):** Update Draft/Week views to display and manage multiple items (e.g., Soup AND Salad) per meal.
-  - [ ] **3.3 Shopping List Aggregate (1.5 hrs):** Update inventory/shopping engine to aggregate ingredients from all recipes in a multi-item slot.
-- **Block 2: Closed-Loop Shopping (~4 hrs)**
-  - [ ] **Sync:** Ensure marking an item as "Purchased" in the shopping list adds it to the correct inventory category (BUG-002).
-  - [ ] **Persistence:** Automatically save store preference/mapping during shopping.
-  - [ ] **Optimization:** Cache heuristic prep tasks at the recipe level in Supabase (TD-006).
-- **Block 3: Recipe-to-List Automation (~3 hrs)**
-  - [ ] **UI:** Add "Add Ingredients to Shopping List" button to the Recipe Detail wrapper.
-  - [ ] **Logic:** Implement deduplication/checking against current inventory when adding.
+### ✅ Phase 34: Frictionless Shopping & Recipe Loop (Complete)
+- [x] **Modular Recipes:** Support for multiple recipes per slot with history-based pairing suggestions.
+- [x] **Frictionless Shopping:** Aggregate ingredients from multi-recipe slots and filter via Permanent Pantry basics.
+- [x] **Library Mastery:** Bulk tagging UI in Batch Editor for rapid Main/Side/Needs-Side categorization.
 
 ### Phase 35: Household Synergy & Infrastructure
 **Goal:** Enable multiple members to coordinate and stabilize the data foundation.

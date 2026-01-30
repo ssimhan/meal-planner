@@ -28,10 +28,15 @@ meals_bp = Blueprint('meals', __name__)
 def get_paired_recipes_route():
     try:
         main_id = request.args.get('main_id')
-        if not main_id:
-            return jsonify({"status": "error", "message": "main_id required"}), 400
+        if not main_id or not isinstance(main_id, str):
+            return jsonify({"status": "error", "message": "Valid main_id required"}), 400
             
-        history = storage.StorageEngine.get_history()
+        try:
+            history = storage.StorageEngine.get_history()
+        except Exception as e:
+            print(f"Error fetching history: {e}")
+            history = []
+            
         suggestions = get_paired_suggestions(main_id, history)
         
         return jsonify({

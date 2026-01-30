@@ -104,7 +104,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
         {/* Brand */}
         <div className="flex items-center gap-4 px-2 relative">
-          <div className="w-10 h-10 bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-sage)] rounded-2xl flex items-center justify-center text-white font-black shadow-lg shadow-[var(--accent-primary)]/20 rotate-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-[var(--turmeric)] to-[var(--beetroot)] rounded-2xl flex items-center justify-center text-white font-black shadow-lg shadow-[var(--turmeric)]/20 rotate-3">
             M
           </div>
           <span className="text-2xl font-black text-[var(--text-main)] tracking-tight">MealPlanner</span>
@@ -138,7 +138,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             <div className="w-8 h-8 rounded-full bg-[var(--bg-sidebar)] border border-[var(--border-subtle)] flex items-center justify-center text-xs">👤</div>
             <div className="flex flex-col">
               <span className="text-xs font-bold text-[var(--text-main)]">Demo User</span>
-              <span className="text-[10px] text-[var(--text-muted)] uppercase font-mono">Family Pro</span>
+              <span className="text-[10px] text-[var(--turmeric)] uppercase font-black tracking-widest">Family Pro</span>
             </div>
           </div>
         </div>

@@ -89,54 +89,55 @@ def import_recipe():
             
         print(f"Starting import for URL: {url}")
         
-        # We'll use the scripts/import_recipe.py functionality
-        # Since it's a script designed to be run from CLI usually, we might need to subprocess it
-        # OR better, if we can import the main function.
-        # Checking scripts/import_recipe.py (Need to verify if it has a callable main)
-        # As a fallback, we can use subprocess which is safer for isolation
+        # Logic: Extract -> Normalize -> Save to DB (Stateless)
+        result = extract_recipe_from_url(url)
         
-        # However, we are in the same environment. Let's try subprocess for reliability as originally intended?
-        # Or let's see if we can import.
-        # Given potential complexity of imports in that script, let's stick to subprocess or just replicate logic if simple.
-        # But wait, we want to Modularize. 
-        
-        # Let's assume we can subprocess it for now to avoid refactoring import_recipe.py in this step.
-        import subprocess
-        
-        # Prepare command
-        cmd = [sys.executable, "scripts/import_recipe.py", url]
-        
-        # Run properly
-        result = subprocess.run(cmd, capture_output=True, text=True, cwd=os.getcwd())
-        
-        if result.returncode != 0:
-            print(f"Import failed: {result.stderr}")
-            return jsonify({"status": "error", "message": f"Import script failed: {result.stderr}"}), 500
+        if not result.get('success'):
+            return jsonify({"status": "error", "message": result.get('error', 'Extraction failed')}), 422
             
-        # Parse output to find the new recipe ID or file
-        # The script usually prints "Successfully imported/parsed recipe: [ID]"
-        output = result.stdout
-        print(f"Import Output: {output}")
+        import re
+        recipe_id = re.sub(r'[^a-zA-Z0-9]', '_', result['name'].lower()).strip('_')
         
-        # Sync changes to GitHub if on Vercel
-        # The script import_recipe.py writes to disk.
-        # If on Vercel, we need to commit the new files.
-        # scripts/import_recipe.py MIGHT already handle git commit if it uses github_helper?
-        # Let's check import_recipe.py content if needed, but for now assuming it does local write.
+        # Prepare metadata
+        metadata = {
+            "name": result['name'],
+            "cuisine": "unknown",
+            "meal_type": "dinner",
+            "effort_level": "normal",
+            "source_url": url,
+            "tags": ["imported"]
+        }
         
-        # After import, we should migrate the new data to the DB.
-        try:
-            subprocess.run([sys.executable, "scripts/migrate_to_db.py"], capture_output=True)
-        except Exception as e:
-            print(f"Post-import migration failed: {e}")
+        # Prepare markdown
+        markdown_content = f"""---
+name: {result['name']}
+source_url: {url}
+cuisine: unknown
+meal_type: dinner
+tags: ["imported"]
+---
+
+# {result['name']}
+
+## Ingredients
+"""
+        for ing in result.get('ingredients', []):
+            markdown_content += f"- {ing}\n"
             
+        markdown_content += "\n## Instructions\n"
+        for ins in result.get('instructions', []):
+            markdown_content += f"{ins}\n"
+
+        # Save to Supabase (Stateless)
+        StorageEngine.save_recipe(recipe_id, result['name'], metadata, markdown_content)
+        
         # Invalidate cache
         invalidate_cache('recipes')
         
         return jsonify({
             "status": "success", 
-            "message": "Recipe imported successfully",
-            "details": output
+            "message": "Recipe imported and saved to database successfully",
+            "recipe_id": recipe_id
         })
 
     except Exception as e:
@@ -279,44 +280,16 @@ tags: ["not meal", "missing ingredients", "missing instructions"]
 Added from URL: {url}
 """
 
-        # Save MD to disk if we generated content
-        if markdown_content:
-            md_path = Path(f'recipes/content/{recipe_id}.md')
-            md_path.parent.mkdir(parents=True, exist_ok=True)
-            with open(md_path, 'w', encoding='utf-8') as f:
-                f.write(markdown_content)
-
-        import subprocess
-        md_file_path = Path(f'recipes/content/{recipe_id}.md')
-        if md_file_path.exists():
-            subprocess.run([sys.executable, "scripts/generate_prep_steps.py", str(md_file_path)], capture_output=True)
-
-        # Run parser to update local index.yml
-        parse_res = subprocess.run([sys.executable, "scripts/parse_recipes.py"], capture_output=True, text=True)
-        if parse_res.returncode != 0:
-            print(f"Recipe parsing failed: {parse_res.stderr}")
-            return jsonify({"status": "error", "message": f"Parsing failed: {parse_res.stderr}"}), 500
+        # Save to Supabase via StorageEngine
+        # StorageEngine.save_recipe handles both metadata and content updates in the DB
+        # We don't need markdown_content local files anymore.
         
-        # Targeted Sync to DB instead of full migration
-        try:
-            with open('recipes/index.yml', 'r') as f:
-                index = yaml.safe_load(f)
-            
-            entry = next((e for e in index if e['id'] == recipe_id), None)
-            if entry:
-                with open(md_file_path, 'r', encoding='utf-8') as f:
-                    content = f.read()
-                StorageEngine.save_recipe(recipe_id, entry['name'], entry, content)
-            else:
-                # If for some reason parser didn't pick it up, sync what we have
-                content = ""
-                with open(md_file_path, 'r', encoding='utf-8') as f:
-                    content = f.read()
-                StorageEngine.save_recipe(recipe_id, meal_name, {"name": meal_name}, content)
-        except Exception as e:
-            print(f"Targeted DB sync failed: {e}")
-            # Non-fatal for the user, but it means DB and local files are out of sync
+        # Ensure we have some content to save
+        save_markdown = markdown_content if markdown_content else f"# {meal_name}\n\nRecipe imported from {url if mode == 'url' else 'manual entry'}."
 
+        StorageEngine.save_recipe(recipe_id, meal_name, metadata, save_markdown)
+
+        # Invalidate cache
         invalidate_cache('recipes')
         
         return jsonify({
@@ -324,6 +297,60 @@ Added from URL: {url}
             "message": f"Successfully captured recipe for {meal_name}",
             "recipe_id": recipe_id
         })
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@recipes_bp.route("/api/recipes/bulk-update", methods=["POST"])
+@require_auth
+def bulk_update_recipes_route():
+    try:
+        data = request.json or {}
+        updates = data.get('updates', [])
+        
+        if not updates or not isinstance(updates, list):
+            return jsonify({"status": "error", "message": "List of updates required"}), 400
+            
+        prepared_updates = []
+        for u in updates:
+            recipe_id = u.get('id')
+            if not recipe_id: continue
+            
+            # Fetch current details to preserve content/metadata not being changed
+            existing = StorageEngine.get_recipe_details(recipe_id)
+            if not existing: continue
+            
+            current_meta = existing['recipe']
+            current_content = existing['markdown']
+            
+            # Merge name, metadata, and content
+            new_name = u.get('name', current_meta.get('name'))
+            
+            # Metadata merge (excluding name/id)
+            incoming_metadata = u.get('metadata', {})
+            updates_filtered = {k: v for k, v in incoming_metadata.items() if k not in ['id', 'name']}
+            new_metadata = {**current_meta, **updates_filtered}
+            new_metadata.pop('name', None)
+            new_metadata.pop('id', None)
+            
+            new_content = u.get('content', current_content)
+            
+            prepared_updates.append({
+                "id": recipe_id,
+                "name": new_name,
+                "metadata": new_metadata,
+                "content": new_content
+            })
+            
+        if prepared_updates:
+            StorageEngine.bulk_update_recipes(prepared_updates)
+            invalidate_cache('recipes')
+            return jsonify({"status": "success", "message": f"Successfully updated {len(prepared_updates)} recipes"})
+        else:
+            return jsonify({"status": "error", "message": "No valid recipes found for update"}), 404
+            
     except Exception as e:
         import traceback
         traceback.print_exc()

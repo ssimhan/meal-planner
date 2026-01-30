@@ -361,6 +361,15 @@ export async function updateRecipeMetadata(recipeId: string, updates: any): Prom
     return handleResponse<any>(res, 'Failed to update recipe metadata');
 }
 
+export async function bulkUpdateRecipes(updates: { id: string, name?: string, metadata?: any, content?: string }[]): Promise<any> {
+    const res = await fetch('/api/recipes/bulk-update', {
+        method: 'POST',
+        headers: await getAuthHeaders(),
+        body: JSON.stringify({ updates }),
+    });
+    return handleResponse<any>(res, 'Failed to bulk update recipes');
+}
+
 export async function deleteRecipe(recipeId: string): Promise<any> {
     const res = await fetch(`/api/recipes/${recipeId}`, {
         method: 'DELETE',

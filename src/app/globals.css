@@ -3,28 +3,50 @@
 
 /* Earth Tones Theme - Light Mode (Default) */
 :root {
-  --bg-body: #fdfbf7;
-  --bg-sidebar: #f0eadd;
-  --bg-card: #ffffff;
-  --text-main: #2c241b;
-  --text-muted: #6e645a;
-  --accent-primary: #5c7f67;
-  --accent-sage: #5c7f67;
-  --accent-gold: #c9a86e;
-  --accent-terracotta: #c98e6e;
-  --accent-hover: #4a6652;
-  --accent-secondary: #c98e6e;
-  --border-color: #e6e0d4;
-  --border-subtle: #eeede9;
-  --shadow: rgba(44, 36, 27, 0.05);
-  --glass-bg: rgba(255, 255, 255, 0.8);
-  --bg-secondary: #f4f1ea;
-  --nav-hover: rgba(92, 127, 103, 0.1);
-  --nav-active-bg: #e6e0d4;
-  --nav-active-text: #2c241b;
-  --stock-good: #5c7f67;
-  --stock-med: #d4a373;
-  --stock-low: #bc6c25;
+  /* Earthy Spice Tokens */
+  --turmeric: #E2B007;
+  --beetroot: #8B0000;
+  --cardamom: #8DA399;
+  --background: #FFFDF9;
+  --surface: #FFFFFF;
+  --border-subtle: #E2E2E2;
+  --text-main: #2D2D2D;
+  --text-muted: #666666;
+
+  /* Semantic Mappings */
+  --bg-body: var(--background);
+  --bg-sidebar: #F5F1E9;
+  --bg-card: var(--surface);
+  --accent-primary: var(--turmeric);
+  --accent-sage: var(--cardamom);
+  --accent-gold: var(--turmeric);
+  --accent-terracotta: var(--beetroot);
+  --accent-hover: #C59A06;
+  /* Darker turmeric */
+  --accent-secondary: var(--beetroot);
+  --border-color: var(--border-subtle);
+  --shadow: rgba(45, 45, 45, 0.05);
+  --glass-bg: rgba(255, 253, 249, 0.8);
+  --bg-secondary: #F9F6F0;
+  --nav-hover: rgba(226, 176, 7, 0.08);
+  --nav-active-bg: var(--turmeric);
+  --nav-active-text: #FFFFFF;
+
+  /* Status & Categories (Spice Infused) */
+  --status-followed: rgba(141, 163, 153, 0.15);
+  /* Cardamom tint */
+  --status-followed-text: #3D5A4D;
+  --status-ate-out: rgba(226, 176, 7, 0.1);
+  /* Turmeric tint */
+  --status-ate-out-text: var(--turmeric);
+  --status-backup: rgba(139, 0, 0, 0.05);
+  /* Beetroot tint */
+  --status-backup-text: var(--beetroot);
+
+  --cat-produce: #F1F4F2;
+  --cat-produce-text: var(--cardamom);
+  --cat-pantry: #F9F6F0;
+  --cat-pantry-text: var(--text-muted);
 
   /* Status Colors (Light) */
   --status-followed: #E8F5E9;
@@ -55,25 +77,26 @@
 
 /* Earth Tones Theme - Dark Mode */
 [data-theme="dark"] {
-  --bg-body: #14110E;
-  --bg-sidebar: #1E1A16;
-  --bg-card: #1E1A16;
-  --text-main: #EDE8E2;
+  /* Dark Spice Theme */
+  --background: #1A1814;
+  --surface: #24211C;
+  --text-main: #F4F1ED;
   --text-muted: #A89F94;
-  --accent-primary: #6F8F75;
-  --accent-sage: #6F8F75;
-  --accent-gold: #C78F3A;
-  --accent-terracotta: #B86A45;
-  --accent-hover: #86A98C;
-  --accent-secondary: #B86A45;
-  --border-color: #2F2924;
-  --border-subtle: #2F2924;
+  --turmeric: #F5C518;
+  --beetroot: #C22A2A;
+  --cardamom: #A8BDB4;
+  --border-subtle: #332E28;
+
+  --bg-body: var(--background);
+  --bg-sidebar: #1E1B17;
+  --bg-card: var(--surface);
+  --accent-primary: var(--turmeric);
+  --accent-sage: var(--cardamom);
+  --accent-hover: #D4A810;
+  --border-color: var(--border-subtle);
   --shadow: rgba(0, 0, 0, 0.4);
-  --glass-bg: rgba(30, 26, 22, 0.85);
-  --bg-secondary: #26221E;
-  --nav-hover: rgba(111, 143, 117, 0.08);
-  --nav-active-bg: #2F2924;
-  --nav-active-text: #EDE8E2;
+  --glass-bg: rgba(36, 33, 28, 0.9);
+  --bg-secondary: #2C2822;
 
   /* Status Colors (Dark) */
   --status-followed: #4F8A65;

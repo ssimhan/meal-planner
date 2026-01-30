@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getRecipes, updateRecipeMetadata, deleteRecipe, getRecipeContent, updateRecipeContent } from '@/lib/api';
+import { getRecipes, updateRecipeMetadata, deleteRecipe, getRecipeContent, updateRecipeContent, bulkUpdateRecipes } from '@/lib/api';
 import AppLayout from '@/components/AppLayout';
 import Link from 'next/link';
 import { RecipeListItem } from '@/types';
@@ -59,34 +59,24 @@ export default function BatchEditPage() {
 
     async function saveAll() {
         setSavingAll(true);
-        let successCount = 0;
-        let errorCount = 0;
-
         try {
-            for (const recipe of recipes) {
-                try {
-                    // Push everything to Supabase
-                    const updates: any = {
-                        name: recipe.name,
-                        cuisine: recipe.cuisine,
-                        effort_level: recipe.effort_level,
-                        tags: recipe.tags,
-                        requires_side: recipe.requires_side
-                    };
-
-                    await updateRecipeMetadata(recipe.id, updates);
-                    successCount++;
-                } catch (err) {
-                    console.error(`Failed to save ${recipe.name} to Supabase:`, err);
-                    errorCount++;
+            const updates = recipes.map(recipe => ({
+                id: recipe.id,
+                name: recipe.name,
+                metadata: {
+                    cuisine: recipe.cuisine,
+                    effort_level: recipe.effort_level,
+                    tags: recipe.tags,
+                    requires_side: recipe.requires_side
                 }
-            }
+            }));
 
-            alert(`Synced ${successCount} recipes to Supabase${errorCount > 0 ? `, ${errorCount} failed` : ''}`);
+            await bulkUpdateRecipes(updates);
+            alert(`Successfully synced ${recipes.length} recipes to Supabase`);
             fetchRecipesNeedingReview();
         } catch (err) {
             console.error('Save all failed:', err);
-            alert('Failed to save recipes');
+            alert('Failed to save recipes: ' + (err instanceof Error ? err.message : String(err)));
         } finally {
             setSavingAll(false);
         }
@@ -122,18 +112,18 @@ export default function BatchEditPage() {
         <AppLayout>
             <div className="container mx-auto max-w-6xl">
                 <header className="mb-8">
-                    <Link href="/recipes" className="text-[var(--accent-green)] hover:underline mb-4 inline-block font-mono">
+                    <Link href="/recipes" className="text-[var(--cardamom)] hover:underline mb-4 inline-block font-mono">
                         ← Back to Recipes
                     </Link>
                     <div className="flex justify-between items-end">
                         <div>
-                            <h1 className="text-5xl mb-2">Review Recipes</h1>
+                            <h1 className="text-5xl font-black text-[var(--text-main)] mb-2">Review Recipes</h1>
                             <p className="text-[var(--text-muted)]">{recipes.length} recipes need review</p>
                         </div>
                         <button
                             onClick={saveAll}
                             disabled={savingAll || recipes.length === 0}
-                            className="px-8 py-4 bg-green-600 text-white text-base font-bold rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg"
+                            className="px-8 py-4 bg-[var(--cardamom)] text-white text-base font-bold rounded-full hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg flex items-center gap-2"
                         >
                             {savingAll ? 'Syncing...' : '💾 Save All to Supabase'}
                         </button>
@@ -176,7 +166,7 @@ export default function BatchEditPage() {
                                             <div className="font-medium">{recipe.name}</div>
                                             <div className="flex gap-1 mt-1 flex-wrap">
                                                 {(recipe.tags || []).map((tag: string) => (
-                                                    <span key={tag} className="text-[10px] px-1.5 py-0.5 bg-[var(--accent-sage)]/10 text-[var(--accent-sage)] rounded">
+                                                    <span key={tag} className="text-[10px] px-1.5 py-0.5 bg-[var(--cardamom)]/10 text-[var(--cardamom)] rounded">
                                                         {tag}
                                                     </span>
                                                 ))}
@@ -187,7 +177,7 @@ export default function BatchEditPage() {
                                                 value={recipe.cuisine || 'unknown'}
                                                 onChange={(e) => handleUpdate(recipe.id, 'cuisine', e.target.value)}
                                                 disabled={saving.has(recipe.id)}
-                                                className="w-full p-2 border border-[var(--border-subtle)] rounded-lg bg-white focus:ring-2 focus:ring-[var(--accent-sage)] outline-none text-sm"
+                                                className="w-full p-2 border border-[var(--border-subtle)] rounded-lg bg-white focus:ring-2 focus:ring-[var(--turmeric)] outline-none text-sm"
                                             >
                                                 <option value="unknown">Select cuisine...</option>
                                                 <option value="american">American</option>
@@ -230,7 +220,7 @@ export default function BatchEditPage() {
                                         <td className="p-4" onClick={(e) => e.stopPropagation()}>
                                             <button
                                                 onClick={() => handleRecipeChange(recipe.id, { requires_side: !recipe.requires_side })}
-                                                className={`w-12 h-6 rounded-full transition-all relative ${recipe.requires_side ? 'bg-green-500' : 'bg-gray-200'}`}
+                                                className={`w-12 h-6 rounded-full transition-all relative ${recipe.requires_side ? 'bg-[var(--cardamom)]' : 'bg-gray-200'}`}
                                             >
                                                 <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${recipe.requires_side ? 'right-1' : 'left-1'}`} />
                                             </button>
@@ -239,7 +229,7 @@ export default function BatchEditPage() {
                                             <button
                                                 onClick={() => handleDelete(recipe.id)}
                                                 disabled={saving.has(recipe.id)}
-                                                className="text-rose-600 hover:text-rose-800 text-sm font-bold disabled:opacity-50"
+                                                className="text-[var(--beetroot)] hover:underline text-sm font-bold disabled:opacity-50"
                                                 title="Delete recipe permanently"
                                             >
                                                 Delete
@@ -337,8 +327,8 @@ function RecipeContentModal({ recipe, onClose, onSave }: { recipe: RecipeListIte
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--beetroot)]/10 backdrop-blur-md p-4">
+            <div className="bg-[var(--bg-card)] rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col border border-[var(--border-subtle)]">
                 <div className="p-6 border-b border-gray-200">
                     <div className="flex justify-between items-start">
                         <div className="flex-1 mr-4">
@@ -346,14 +336,14 @@ function RecipeContentModal({ recipe, onClose, onSave }: { recipe: RecipeListIte
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="text-2xl font-bold w-full p-1 border-b border-transparent hover:border-gray-300 focus:border-blue-500 outline-none transition-colors"
+                                className="text-2xl font-black text-[var(--text-main)] w-full p-1 border-b-2 border-transparent hover:border-[var(--turmeric)] focus:border-[var(--turmeric)] outline-none transition-colors bg-transparent"
                                 placeholder="Recipe Name"
                             />
                             <div className="flex flex-wrap gap-2 mt-3">
                                 <select
                                     value={cuisine}
                                     onChange={(e) => setCuisine(e.target.value)}
-                                    className="text-xs px-2 py-1 bg-blue-50 text-blue-800 rounded border border-blue-200 outline-none"
+                                    className="text-xs px-2 py-1 bg-[var(--cardamom)]/10 text-[var(--cardamom)] rounded border border-[var(--cardamom)]/20 outline-none font-bold uppercase tracking-widest"
                                 >
                                     <option value="unknown">Select cuisine...</option>
                                     <option value="american">American</option>
@@ -371,36 +361,36 @@ function RecipeContentModal({ recipe, onClose, onSave }: { recipe: RecipeListIte
                                 <select
                                     value={effortLevel}
                                     onChange={(e) => setEffortLevel(e.target.value)}
-                                    className="text-xs px-2 py-1 bg-green-50 text-green-800 rounded border border-green-200 outline-none"
+                                    className="text-xs px-2 py-1 bg-[var(--turmeric)]/10 text-[var(--turmeric)] rounded border border-[var(--turmeric)]/20 outline-none font-bold uppercase tracking-widest"
                                 >
                                     <option value="">Select effort...</option>
                                     <option value="high">High</option>
                                 </select>
                                 <button
                                     onClick={() => setRequiresSide(!requiresSide)}
-                                    className={`text-xs px-2 py-1 rounded border transition-all flex items-center gap-1 ${requiresSide ? 'bg-green-100 text-green-700 border-green-200 shadow-sm' : 'bg-gray-50 text-gray-400 border-gray-200'}`}
+                                    className={`text-xs px-2 py-1 rounded border transition-all flex items-center gap-1 font-bold uppercase tracking-widest ${requiresSide ? 'bg-[var(--beetroot)] text-white border-[var(--beetroot)] shadow-md' : 'bg-gray-50 text-gray-400 border-gray-200'}`}
                                 >
                                     {requiresSide ? '✓ Needs Side' : 'No Side Needed'}
                                 </button>
                                 <div className="h-6 w-px bg-gray-200 mx-1" />
                                 <button
                                     onClick={() => setTags(prev => prev.includes('main') ? prev.filter(t => t !== 'main') : [...prev.filter(t => t !== 'side'), 'main'])}
-                                    className={`text-xs px-2 py-1 rounded border transition-all ${tags.includes('main') ? 'bg-amber-100 text-amber-700 border-amber-200' : 'bg-gray-50 text-gray-400 border-gray-200'}`}
+                                    className={`text-xs px-2 py-1 rounded border transition-all font-bold uppercase tracking-widest ${tags.includes('main') ? 'bg-amber-100 text-amber-700 border-amber-200' : 'bg-gray-50 text-gray-400 border-gray-200'}`}
                                 >
                                     Main
                                 </button>
                                 <button
                                     onClick={() => setTags(prev => prev.includes('side') ? prev.filter(t => t !== 'side') : [...prev.filter(t => t !== 'main'), 'side'])}
-                                    className={`text-xs px-2 py-1 rounded border transition-all ${tags.includes('side') ? 'bg-blue-100 text-blue-700 border-blue-200' : 'bg-gray-50 text-gray-400 border-gray-200'}`}
+                                    className={`text-xs px-2 py-1 rounded border transition-all font-bold uppercase tracking-widest ${tags.includes('side') ? 'bg-blue-100 text-blue-700 border-blue-200' : 'bg-gray-50 text-gray-400 border-gray-200'}`}
                                 >
                                     Side
                                 </button>
                                 {tags.map((tag) => (
-                                    <span key={tag} className="text-xs px-2 py-1 bg-[var(--accent-sage)]/10 text-[var(--accent-sage)] rounded flex items-center gap-1 group">
+                                    <span key={tag} className="text-[10px] px-2 py-1 bg-[var(--cardamom)]/10 text-[var(--cardamom)] rounded flex items-center gap-1 group font-bold uppercase tracking-widest">
                                         {tag}
                                         <button
                                             onClick={() => removeTag(tag)}
-                                            className="hover:text-amber-900 font-bold ml-1"
+                                            className="hover:text-[var(--beetroot)] font-bold ml-1"
                                         >
                                             ✕
                                         </button>
@@ -408,7 +398,7 @@ function RecipeContentModal({ recipe, onClose, onSave }: { recipe: RecipeListIte
                                 ))}
                             </div>
                         </div>
-                        <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl">✕</button>
+                        <button onClick={onClose} className="text-[var(--text-muted)] hover:text-[var(--beetroot)] text-2xl p-2 transition-colors">✕</button>
                     </div>
                 </div>
 
@@ -422,7 +412,7 @@ function RecipeContentModal({ recipe, onClose, onSave }: { recipe: RecipeListIte
                                 <textarea
                                     value={Array.isArray(ingredients) ? ingredients.join('\n') : String(ingredients)}
                                     onChange={(e) => setIngredients(e.target.value.split('\n'))}
-                                    className="w-full h-48 p-3 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                    className="w-full h-48 p-4 border border-[var(--border-subtle)] rounded-xl font-mono text-sm focus:ring-2 focus:ring-[var(--turmeric)] outline-none bg-white shadow-inner"
                                     placeholder="Enter ingredients, one per line..."
                                 />
                             </div>
@@ -432,7 +422,7 @@ function RecipeContentModal({ recipe, onClose, onSave }: { recipe: RecipeListIte
                                 <textarea
                                     value={Array.isArray(instructions) ? instructions.join('\n') : String(instructions)}
                                     onChange={(e) => setInstructions(e.target.value.split('\n'))}
-                                    className="w-full h-48 p-3 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                    className="w-full h-48 p-4 border border-[var(--border-subtle)] rounded-xl font-mono text-sm focus:ring-2 focus:ring-[var(--turmeric)] outline-none bg-white shadow-inner"
                                     placeholder="Enter instructions, one per line..."
                                 />
                             </div>
@@ -450,7 +440,7 @@ function RecipeContentModal({ recipe, onClose, onSave }: { recipe: RecipeListIte
                     <button
                         onClick={handleLocalSave}
                         disabled={saving || loading}
-                        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-all font-bold shadow-md hover:shadow-lg active:transform active:scale-95"
+                        className="px-8 py-3 bg-[var(--turmeric)] text-white rounded-full hover:brightness-110 disabled:opacity-50 transition-all font-black uppercase tracking-widest shadow-lg hover:shadow-xl active:scale-95"
                     >
                         {saving ? 'Saving...' : '💾 Save Locally (Files)'}
                     </button>

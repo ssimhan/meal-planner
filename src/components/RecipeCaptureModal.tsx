@@ -65,8 +65,8 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
     };
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-teal-950/40 backdrop-blur-md animate-in fade-in duration-300">
-            <div className="bg-[var(--bg-card)] w-full max-w-2xl rounded-sm shadow-2xl overflow-hidden border-2 border-[var(--accent-green)] flex flex-col max-h-[90vh]">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[var(--beetroot)]/10 backdrop-blur-md animate-in fade-in duration-300">
+            <div className="bg-[var(--bg-card)] w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden border border-[var(--border-subtle)] flex flex-col max-h-[90vh]">
                 {/* Header with textured background */}
                 <div className="p-8 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)] relative overflow-hidden">
                     <div className="absolute inset-0 opacity-10 pointer-events-none"
@@ -74,11 +74,11 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
                     </div>
                     <div className="relative z-10 flex justify-between items-start">
                         <div>
-                            <h2 className="text-3xl font-serif font-black text-[var(--accent-green)] mb-1">Capture Recipe</h2>
-                            <p className="text-[var(--text-muted)] font-medium">Adding details for: <span className="text-[var(--accent-terracotta)] font-bold">{mealName}</span></p>
+                            <h2 className="text-3xl font-black text-[var(--cardamom)] mb-1">Capture Recipe</h2>
+                            <p className="text-[var(--text-muted)] font-medium">Adding details for: <span className="text-[var(--beetroot)] font-bold">{mealName}</span></p>
                         </div>
                         <button onClick={onClose} className="p-2 hover:bg-neutral-200/50 rounded-full transition-colors">
-                            <span className="text-2xl text-[var(--accent-green)]">✕</span>
+                            <span className="text-2xl text-[var(--cardamom)]">✕</span>
                         </button>
                     </div>
                 </div>
@@ -90,14 +90,14 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
                             <button
                                 type="button"
                                 onClick={() => setMode('url')}
-                                className={`flex-1 py-3 text-sm font-black uppercase tracking-widest transition-all ${mode === 'url' ? 'bg-[var(--accent-green)] text-white shadow-md' : 'text-[var(--text-muted)] hover:text-[var(--accent-green)]'}`}
+                                className={`flex-1 py-3 text-sm font-black uppercase tracking-widest transition-all ${mode === 'url' ? 'bg-[var(--turmeric)] text-white shadow-md' : 'text-[var(--text-muted)] hover:text-[var(--turmeric)]'}`}
                             >
                                 Website URL
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setMode('manual')}
-                                className={`flex-1 py-3 text-sm font-black uppercase tracking-widest transition-all ${mode === 'manual' ? 'bg-[var(--accent-green)] text-white shadow-md' : 'text-[var(--text-muted)] hover:text-[var(--accent-green)]'}`}
+                                className={`flex-1 py-3 text-sm font-black uppercase tracking-widest transition-all ${mode === 'manual' ? 'bg-[var(--turmeric)] text-white shadow-md' : 'text-[var(--text-muted)] hover:text-[var(--turmeric)]'}`}
                             >
                                 Manual Entry
                             </button>
@@ -108,7 +108,7 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
                             <button
                                 type="button"
                                 onClick={() => setShowPrefs(!showPrefs)}
-                                className="text-sm font-bold text-[var(--accent-gold)] hover:text-[var(--accent-terracotta)] flex items-center gap-2 mb-2"
+                                className="text-sm font-bold text-[var(--turmeric)] hover:text-[var(--beetroot)] flex items-center gap-2 mb-2"
                             >
                                 {showPrefs ? '▼' : '▶'} Add Ingredient Preference (Optional)
                             </button>
@@ -138,7 +138,7 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
                                         type="button"
                                         onClick={handleAddPreference}
                                         disabled={!prefIngredient || !prefBrand}
-                                        className="w-full py-1 bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-gold)] text-[var(--text-secondary)] text-xs font-bold uppercase tracking-wider rounded disabled:opacity-50"
+                                        className="w-full py-1 bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--turmeric)] text-[var(--text-secondary)] text-xs font-bold uppercase tracking-wider rounded disabled:opacity-50"
                                     >
                                         Save Preference
                                     </button>
@@ -151,9 +151,9 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
                                 type="checkbox"
                                 checked={isSnackOnly}
                                 onChange={(e) => setIsSnackOnly(e.target.checked)}
-                                className="w-4 h-4 text-[var(--accent-sage)] rounded focus:ring-[var(--accent-green)]"
+                                className="w-4 h-4 text-[var(--cardamom)] rounded focus:ring-[var(--turmeric)]"
                             />
-                            <span className="text-sm font-medium text-[var(--text-muted)] group-hover:text-[var(--accent-green)] transition-colors">
+                            <span className="text-sm font-medium text-[var(--text-muted)] group-hover:text-[var(--turmeric)] transition-colors">
                                 This is a <span className="font-bold">Snack Only</span> item
                             </span>
                         </label>
@@ -169,7 +169,7 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
                                 type="url"
                                 required
                                 placeholder="Paste link (NYT, Bon Appétit, etc.)"
-                                className="w-full p-5 rounded-sm bg-white border-2 border-[var(--border-subtle)] focus:border-[var(--accent-green)] outline-none transition-all shadow-inner text-lg"
+                                className="w-full p-5 rounded-xl bg-white border-2 border-[var(--border-subtle)] focus:border-[var(--turmeric)] outline-none transition-all shadow-inner text-lg"
                                 value={url}
                                 onChange={(e) => setUrl(e.target.value)}
                             />
@@ -190,7 +190,7 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
                                     required
                                     rows={5}
                                     placeholder="e.g., 2 cups flour, 1 tsp salt..."
-                                    className="w-full p-5 rounded-sm bg-white border-2 border-[var(--border-subtle)] focus:border-[var(--accent-green)] outline-none transition-all shadow-inner resize-none font-mono text-sm"
+                                    className="w-full p-5 rounded-xl bg-white border-2 border-[var(--border-subtle)] focus:border-[var(--turmeric)] outline-none transition-all shadow-inner resize-none font-mono text-sm"
                                     value={ingredients}
                                     onChange={(e) => setIngredients(e.target.value)}
                                 />
@@ -203,7 +203,7 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
                                     required
                                     rows={7}
                                     placeholder="Describe how to cook it..."
-                                    className="w-full p-5 rounded-sm bg-white border-2 border-[var(--border-subtle)] focus:border-[var(--accent-green)] outline-none transition-all shadow-inner resize-none leading-relaxed"
+                                    className="w-full p-5 rounded-xl bg-white border-2 border-[var(--border-subtle)] focus:border-[var(--turmeric)] outline-none transition-all shadow-inner resize-none leading-relaxed"
                                     value={instructions}
                                     onChange={(e) => setInstructions(e.target.value)}
                                 />
@@ -222,7 +222,7 @@ export default function RecipeCaptureModal({ isOpen, onClose, mealName, onSucces
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className={`flex-1 py-4 font-black uppercase tracking-widest text-white rounded-sm shadow-xl transition-all ${isSubmitting ? 'bg-neutral-400 cursor-not-allowed' : 'bg-[var(--accent-green)] hover:translate-y-[-2px] hover:shadow-2xl active:translate-y-[0]'}`}
+                            className={`flex-1 py-4 font-black uppercase tracking-widest text-white rounded-xl shadow-xl transition-all ${isSubmitting ? 'bg-neutral-400 cursor-not-allowed' : 'bg-[var(--beetroot)] hover:translate-y-[-2px] hover:shadow-2xl active:translate-y-[0]'}`}
                         >
                             {isSubmitting ? 'Processing...' : 'Save & Capture'}
                         </button>

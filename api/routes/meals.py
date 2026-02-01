@@ -230,13 +230,17 @@ def generate_draft_route():
                 except Exception as ex:
                     print(f"Warning: Skipping malformed recipe: {ex}")
         
+        # 3.5 Fetch live inventory for accurate generation
+        live_inventory = storage.StorageEngine.get_inventory()
+
         # 4. Generate the rest of the plan
         new_plan_data, new_history = generate_meal_plan(
             input_file=None, 
             data=plan_data,
             recipes_list=all_recipes,
             history_dict=history,
-            exclude_defaults=data.get('exclude_defaults')
+            exclude_defaults=data.get('exclude_defaults'),
+            inventory_data=live_inventory
         )
         
         # 5. Extract the generated week's history
@@ -307,7 +311,20 @@ def get_shopping_list_route():
             "shopping_list": shopping_list
         })
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        import traceback
+        error_trace = traceback.format_exc()
+        print(f"ERROR: /api/plan/shopping-list failed: {e}")
+        try:
+            with open('debug_error.log', 'w') as f:
+                f.write(error_trace)
+        except: pass
+        traceback.print_exc()
+        return jsonify({
+            "status": "error",
+            "code": "SHOPPING_LIST_GENERATION_FAILED", 
+            "message": f"Failed to fetch shopping list: {str(e)}",
+            "details": error_trace.splitlines()[-1] if error_trace else str(e)
+        }), 500
 
 @meals_bp.route("/api/plan/finalize", methods=["POST"])
 @require_auth

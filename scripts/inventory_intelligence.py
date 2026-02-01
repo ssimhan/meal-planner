@@ -258,9 +258,9 @@ def get_shopping_list(plan_data):
         # Support multi-recipe aggregation
         recipes_to_process = []
         if 'recipe_ids' in dinner:
-            recipes_to_process = dinner['recipe_ids']
+            recipes_to_process = dinner['recipe_ids'] or []
         elif 'recipe_id' in dinner:
-            recipes_to_process = [dinner['recipe_id']]
+            recipes_to_process = [dinner['recipe_id']] if dinner['recipe_id'] else []
             
         # Collect ingredients from all recipes in this slot
         ingredients_to_check = set(dinner.get('vegetables', []))
@@ -268,13 +268,23 @@ def get_shopping_list(plan_data):
             if not rid: continue
             try:
                 content = StorageEngine.get_recipe_content(rid)
-                if not content: continue
+                if not content: 
+                    print(f"[DEBUG] No content found for recipe {rid}")
+                    continue
+                
                 # We specifically look for "main ingredients" or vegetables in the context of this app's logic
                 # For now, let's assume all 'ingredients' should be checked unless they are staples
-                for ing in content.get('ingredients', []):
+                found_ings = content.get('ingredients', [])
+                if not found_ings:
+                    print(f"[DEBUG] Recipe {rid} has content but no 'ingredients' list found in markdown.")
+                    
+                for ing in found_ings:
                     ingredients_to_check.add(ing)
-            except: pass
+            except Exception as e:
+                print(f"[ERROR] Failed to get content for {rid}: {e}")
+                pass
 
+        print(f"[DEBUG] Dinner {dinner.get('day')}: Checking {len(ingredients_to_check)} ingredients against inventory.")
         for veg in ingredients_to_check:
             norm = normalize_ingredient(veg)
             

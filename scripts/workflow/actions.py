@@ -59,7 +59,7 @@ def create_new_week(week_str, history_dict=None, recipes_list=None, config_dict=
     return input_data
 
 
-def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None, exclude_defaults=None):
+def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None, exclude_defaults=None, inventory_data=None):
     """Generate the weekly meal plan."""
     print("\n" + "="*60)
     print(f"GENERATING MEAL PLAN for week {data.get('week_of')}")
@@ -209,9 +209,11 @@ def generate_meal_plan(input_file, data, recipes_list=None, history_dict=None, e
         
         # Optional: fetch inventory for the status box
         inv_data = None
+        # Optional: fetch inventory for the status box
+        inv_data = None
         try:
             from .selection import _load_inventory_data
-            inv_data = _load_inventory_data()
+            inv_data = _load_inventory_data(inventory_dict=inventory_data)
         except: pass
 
         plan_content = generate_html_plan(

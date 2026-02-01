@@ -30,12 +30,12 @@
 
 ---
 
-## 📅 Upcoming Roadmap
+### 📅 Upcoming Roadmap
 
-### ✅ Phase 34: Frictionless Shopping & Recipe Loop (Complete)
-- [x] **Modular Recipes:** Support for multiple recipes per slot with history-based pairing suggestions.
-- [x] **Frictionless Shopping:** Aggregate ingredients from multi-recipe slots and filter via Permanent Pantry basics.
-- [x] **Library Mastery:** Bulk tagging UI in Batch Editor for rapid Main/Side/Needs-Side categorization.
+### 🚨 Next Session Priority: UX/Deploy Polish
+**Goal:** Ensure Shopping List generator works reliably in Vercel (read-only) environments and exposes debug info to the user.
+- [ ] **Frontend Integration:** Update `ShoppingListStep.tsx` to display the "warnings" returned by the API (e.g., missing ingredients, recipe content errors) as toasts/alerts.
+- [ ] **Vercel Verification:** Verify that the "500 Error" is resolved by the recent backend fixes and that users get useful feedback if it fails.
 
 ### Phase 35: Household Synergy & Infrastructure
 **Goal:** Enable multiple members to coordinate and stabilize the data foundation.

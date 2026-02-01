@@ -168,7 +168,7 @@ class LunchSelector:
             recipe = self._find_recipe_by_id(dinner['recipe_id'])
             if recipe:
                 # Extract common pantry items that might be reused
-                main_veg = recipe.get('main_veg', [])
+                main_veg = recipe.get('main_veg') or []
                 for v in main_veg:
                     if v not in vegetables:
                         vegetables.append(v)

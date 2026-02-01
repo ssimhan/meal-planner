@@ -99,7 +99,7 @@ def get_substitutions(limit=3):
         matches = []
         
         # Check main veg
-        for veg in recipe.get('main_veg', []):
+        for veg in (recipe.get('main_veg') or []):
             norm_veg = normalize_ingredient(veg)
             if norm_veg in inventory_set:
                 score += 2
@@ -212,7 +212,7 @@ def get_waste_not_suggestions(limit=4):
             
         # Check fridge items (Perishables)
         # We assume anything in 'fridge' is perishable
-        for veg in recipe.get('main_veg', []):
+        for veg in (recipe.get('main_veg') or []):
             norm_veg = normalize_ingredient(veg)
             if norm_veg in inventory_set:
                 score += 3

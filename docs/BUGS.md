@@ -51,6 +51,7 @@
 | TD-010 | Testing | Integration tests need proper mocking and test data fixtures. | Medium | 4hr | Fixed: Rewrote `test_api_perf.py` and `test_backend.py` with proper mocking and assertions. |
 | TD-011 | UX | Import preview modal is too small and "Save" button is hard to find. | Low | 1hr | Fixed: Added min-height on textareas, prominent animated Save button. |
 | TD-013 | Architecture | BatchEditPage `saveAll` is non-atomic (sequential API calls). | High | 3hr | Fixed: Implemented `bulk_update_recipes` atomic endpoint. |
+| TD-015 | Architecture | Vulnerability: Scripts crash if recipe metadata is None. | High | 2hr | Documented in `docs/tech_debt/TD-015_systemic_data_sanitization.md`. |
 
 **Count: 0** ✅
 

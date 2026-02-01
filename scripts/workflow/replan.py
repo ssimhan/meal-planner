@@ -95,7 +95,7 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
                 filtered = []
                 for r in to_be_planned:
                     # Construct search text from ID, name, veg, tags
-                    r_text = f"{r.get('recipe_id', '')} {r.get('recipe_name', '')} {' '.join(r.get('vegetables', []))} {r.get('cuisine', '')} {r.get('meal_type', '')}".lower()
+                    r_text = f"{r.get('recipe_id', '')} {r.get('recipe_name', '')} {' '.join(r.get('vegetables') or [])} {r.get('cuisine', '')} {r.get('meal_type', '')}".lower()
                     
                     if not any(ex in r_text for ex in exclusions):
                         filtered.append(r)
@@ -111,7 +111,7 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
             
             if inclusions:
                  for r in to_be_planned:
-                    r_text = f"{r.get('recipe_id', '')} {r.get('recipe_name', '')} {' '.join(r.get('vegetables', []))}".lower()
+                    r_text = f"{r.get('recipe_id', '')} {r.get('recipe_name', '')} {' '.join(r.get('vegetables') or [])}".lower()
                     if any(inc in r_text for inc in inclusions):
                         # Add a temporary boost flag or just artificially high inventory score later?
                         # We'll attach metadata 'boost': True
@@ -203,7 +203,7 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
                 'recipe_name': recipe.get('name'), # selection returns full obj
                 'cuisine': recipe.get('cuisine'),
                 'meal_type': recipe.get('meal_type'),
-                'vegetables': recipe.get('main_veg', [])
+                'vegetables': recipe.get('main_veg') or []
             })
             
         # Mark all old meals as handled so they don't roll over (fresh start means fresh start)
@@ -229,7 +229,7 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
                  'recipe_id': r.get('recipe_id'), 
                  'cuisine': r.get('cuisine'), 
                  'meal_type': r.get('meal_type'), 
-                 'vegetables': r.get('vegetables', [])
+                 'vegetables': r.get('vegetables') or []
              })
     else:
         week_entry.pop('rollover', None)
@@ -243,7 +243,7 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
         {
             'day': d.get('day'), 
             'recipe_id': d.get('recipe_id'),
-            'vegetables': d.get('vegetables', []),
+            'vegetables': d.get('vegetables') or [],
             'cuisine': d.get('cuisine', 'unknown'),
             'meal_type': d.get('meal_type', 'dinner')
         } 
@@ -336,7 +336,7 @@ def replan_meal_plan(input_file, data, inventory_dict=None, history_dict=None, n
                  continue
                  
              # Add main veg
-             for v in d.get('vegetables', []):
+             for v in (d.get('vegetables') or []):
                  if v: new_ingredients.add(v.lower())
         
         if new_ingredients:

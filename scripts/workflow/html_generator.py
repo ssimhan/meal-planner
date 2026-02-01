@@ -316,7 +316,7 @@ def generate_dinner_section(recipe, day_key, busy_days):
     cuisine = recipe.get('cuisine', 'unknown')
     meal_type = recipe.get('meal_type', 'unknown')
     html.append(f'                <div class="meal-type"><a href="../recipes/raw_html/{recipe_file}">{recipe_name}</a> - {cuisine.title()} {meal_type.replace("_", " ").title()}</div>')
-    main_veg = recipe.get('main_veg', [])
+    main_veg = recipe.get('main_veg') or []
     if main_veg:
         unique_veg = []
         for v in main_veg:
@@ -488,7 +488,7 @@ def extract_prep_tasks_for_db(selected_dinners, selected_lunches):
                         })
                 else:
                     # 3. Last fallback: Main Veg
-                    main_vegs = recipe.get('main_veg', [])
+                    main_vegs = recipe.get('main_veg') or []
                     unique_vegs = []
                     for v in main_vegs:
                         if v not in unique_vegs:
@@ -715,7 +715,7 @@ def generate_groceries_tab(inputs, selected_dinners, selected_lunches):
     for item in snack_items: categorize_ingredient(item, lists)
     for day, recipe in selected_dinners.items():
         if day in ['mon', 'tue', 'wed', 'thu', 'fri'] and recipe:
-            produce.extend(recipe.get('main_veg', []))
+            produce.extend(recipe.get('main_veg') or [])
             categorize_ingredient(recipe.get('name', '').lower(), lists)
     for day, lunch in selected_lunches.items():
         if lunch:

@@ -42,6 +42,7 @@ Generate weekly meal plans:
 **Task-specific:**
 - `scripts/workflow.py` - Automated workflow
 - `scripts/validate_plan.py` - Validation logic
+- `scripts/reset_week.py` - Cascading delete tool (Dev/Test)
 
 ## Files to Write
 

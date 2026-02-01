@@ -123,7 +123,7 @@ class LunchSelector:
                 # Convert dict to LunchSuggestion if needed
                 if isinstance(l, dict):
                     weekly_lunches[day] = LunchSuggestion(
-                        recipe_id=l.get('recipe_id'),
+                        recipe_id=l.get('recipe_id') or f"replan_lunch_{day}",
                         recipe_name=l.get('recipe_name', 'Unknown'),
                         kid_friendly=l.get('kid_friendly', True),
                         prep_style=l.get('prep_style', 'leftovers'),

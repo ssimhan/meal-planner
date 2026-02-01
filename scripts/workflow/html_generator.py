@@ -155,7 +155,7 @@ def generate_overview_tab(inputs, history, selected_dinners, from_scratch_recipe
     days_of_week = ['mon', 'tue', 'wed', 'thu', 'fri']
     if selected_lunches:
         for day, suggestion in selected_lunches.items():
-            if suggestion.recipe_id.startswith('pipeline_'):
+            if suggestion and suggestion.recipe_id and suggestion.recipe_id.startswith('pipeline_'):
                 recipe_n = suggestion.recipe_name.replace("Leftovers: ", "")
                 day_order = ['mon', 'tue', 'wed', 'thu', 'fri']
                 try:

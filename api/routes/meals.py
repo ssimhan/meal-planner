@@ -103,7 +103,12 @@ def generate_plan_route():
             "week_of": week_str
         })
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        import traceback; traceback.print_exc()
+        return jsonify({
+            "status": "error", 
+            "code": "GENERATION_FAILED",
+            "message": f"Failed to generate plan: {str(e)}"
+        }), 500
 
 @meals_bp.route("/api/plan/draft", methods=["POST"])
 @require_auth
@@ -254,8 +259,22 @@ def generate_draft_route():
             "history_data": current_history_week
         })
     except Exception as e:
-        import traceback; traceback.print_exc()
-        return jsonify({"status": "error", "message": str(e)}), 500
+        import traceback
+        error_trace = traceback.format_exc()
+        print(f"ERROR: /api/plan/draft failed: {e}")
+        # Write to log file for user debugging
+        try:
+            with open('debug_error.log', 'w') as f:
+                f.write(error_trace)
+        except: pass
+        
+        traceback.print_exc()
+        return jsonify({
+            "status": "error", 
+            "code": "DRAFT_GENERATION_FAILED",
+            "message": f"Failed to generate draft plan: {str(e)}",
+            "details": error_trace.splitlines()[-1] if error_trace else str(e)
+        }), 500
 
 @meals_bp.route("/api/plan/shopping-list", methods=["GET"])
 @require_auth
@@ -314,7 +333,11 @@ def finalize_plan_route():
             "message": f"Plan for {week_of} is now active!"
         })
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({
+            "status": "error", 
+            "code": "FINALIZATION_FAILED",
+            "message": f"Failed to finalize plan: {str(e)}"
+        }), 500
 
 @meals_bp.route("/api/create-week", methods=["POST"])
 @require_auth
@@ -355,7 +378,12 @@ def create_week():
             "message": f"Created new week {week_str}"
         })
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        import traceback; traceback.print_exc()
+        return jsonify({
+            "status": "error", 
+            "code": "WEEK_CREATION_FAILED",
+            "message": f"Failed to create new week: {str(e)}"
+        }), 500
 
 @meals_bp.route("/api/replan", methods=["POST"])
 @require_auth

@@ -27,6 +27,7 @@
 - [x] **Database Hygiene:** Batch normalized 73 recipes (TD-002, TD-004).
 - [x] **Modular Recipes:** Implemented Pairing Service and Pairing Drawer (Phase 34 Block 1).
 - [x] **Smart Inventory:** Added Permanent Pantry filtering and multi-recipe aggregation (Phase 34 Block 1).
+- [x] **Data Robustness:** Implemented systemic recipe data sanitization (TD-015).
 
 ---
 

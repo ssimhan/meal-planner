@@ -157,18 +157,22 @@ class StorageEngine:
                 return []
                 
             # Transformation to include id and name from the columns, plus categories/cuisine from metadata
-            return [
-                {
+            sanitized = []
+            for r in res.data:
+                meta = r.get('metadata') or {}
+                sanitized.append({
                     "id": r['id'],
                     "name": r['name'],
-                    "cuisine": (r.get('metadata') or {}).get('cuisine', 'unknown'),
-                    "meal_type": (r.get('metadata') or {}).get('meal_type', 'unknown'),
-                    "effort_level": (r.get('metadata') or {}).get('effort_level', 'normal'),
-                    "no_chop_compatible": (r.get('metadata') or {}).get('no_chop_compatible', False),
-                    "tags": (r.get('metadata') or {}).get('tags', []),
-                    "requires_side": (r.get('metadata') or {}).get('requires_side', False)
-                } for r in res.data
-            ]
+                    "cuisine": meta.get('cuisine') or 'unknown',
+                    "meal_type": meta.get('meal_type') or 'unknown',
+                    "effort_level": meta.get('effort_level') or 'normal',
+                    "no_chop_compatible": meta.get('no_chop_compatible') or False,
+                    "tags": meta.get('tags') or [],
+                    "requires_side": meta.get('requires_side') or False,
+                    "main_veg": meta.get('main_veg') or [],
+                    "ingredients": meta.get('ingredients') or []
+                })
+            return sanitized
         except Exception as e:
             print(f"Error fetching recipes: {e}")
             import traceback
@@ -187,6 +191,17 @@ class StorageEngine:
             row = res.data[0]
             # Merge name into recipe metadata for UI
             recipe_data = row.get('metadata') or {}
+            
+            # Sanitization Layer
+            for list_field in ['tags', 'main_veg', 'ingredients', 'prep_steps']:
+                if recipe_data.get(list_field) is None:
+                    recipe_data[list_field] = []
+            
+            # Ensure strings fallback to defaults
+            recipe_data['cuisine'] = recipe_data.get('cuisine') or 'unknown'
+            recipe_data['meal_type'] = recipe_data.get('meal_type') or 'unknown'
+            recipe_data['effort_level'] = recipe_data.get('effort_level') or 'normal'
+            
             recipe_data['name'] = row['name']
             recipe_data['id'] = row['id']
             

@@ -1343,3 +1343,14 @@ Understanding when to use each is fundamental to frontend development. Most bugs
 **Learning:** 
 - **Tooling Parity:** Dev tools (scripts) and UI tools (Settings page) should share the same underlying logic to prevent behavior mismatches.
 - **Observability:** In serverless environments, critical debug info must be exposed in the API response or Toast notifications, not just stdout.
+
+### Phase 34: Data Sanitization & Tech Debt (2026-02-01) ✅ Complete
+
+**Goal:** Proactively address technical debt and prevent frontend crashes caused by malformed data.
+
+**Block 1: Data Sanitization Layer (Completed)**
+- **Issue:** `get_recipes` and `get_recipe_details` could return `None` for list fields (tags, ingredients, etc.), causing frontend crashes (`map of undefined`).
+- **Solution:** Implemented a robust **Sanitization Layer** in `StorageEngine` that enforces type safety (ensures lists are `[]`, strings are `'unknown'`, booleans are `False`) before data leaves the API.
+- **Verification:** Created `scripts/test_sanitization.py` verifying that even with malformed database responses, the API returns safe, predictable structures.
+
+**Learning:** Data hygiene should be enforced at the boundary. The frontend shouldn't have to wish for good data; the backend guarantee it.

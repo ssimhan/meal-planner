@@ -231,13 +231,14 @@ def get_waste_not_suggestions(limit=4):
     
     return scored_recipes[:limit]
 
-def get_shopping_list(plan_data):
+def get_shopping_list(plan_data, return_warnings=False):
     """
     Generate shopping list by identifying missing ingredients from plan.
     Considers dinners, lunches, and planned snacks.
     """
     inventory_set, _ = get_inventory_items()
     needed = []
+    warnings = []
     
     # 0. Get user exclusions
     excluded_items = set()
@@ -269,19 +270,25 @@ def get_shopping_list(plan_data):
             try:
                 content = StorageEngine.get_recipe_content(rid)
                 if not content: 
-                    print(f"[DEBUG] No content found for recipe {rid}")
+                    msg = f"No content found for recipe {rid}"
+                    print(f"[DEBUG] {msg}")
+                    warnings.append(msg)
                     continue
                 
                 # We specifically look for "main ingredients" or vegetables in the context of this app's logic
                 # For now, let's assume all 'ingredients' should be checked unless they are staples
                 found_ings = content.get('ingredients', [])
                 if not found_ings:
-                    print(f"[DEBUG] Recipe {rid} has content but no 'ingredients' list found in markdown.")
+                    msg = f"Recipe {rid} has content but no 'ingredients' list found"
+                    print(f"[DEBUG] {msg}")
+                    warnings.append(msg)
                     
                 for ing in found_ings:
                     ingredients_to_check.add(ing)
             except Exception as e:
-                print(f"[ERROR] Failed to get content for {rid}: {e}")
+                msg = f"Failed to get content for {rid}: {e}"
+                print(f"[ERROR] {msg}")
+                warnings.append(msg)
                 pass
 
         print(f"[DEBUG] Dinner {dinner.get('day')}: Checking {len(ingredients_to_check)} ingredients against inventory.")
@@ -389,7 +396,7 @@ def get_shopping_list(plan_data):
             "store": store
         })
         
-    return enrichment
+    return (enrichment, warnings) if return_warnings else enrichment
 
 if __name__ == "__main__":
     subs = get_substitutions()

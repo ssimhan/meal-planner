@@ -8,6 +8,7 @@
 | BUG-002 | Draft generation is fragile and frequently returns 500 errors | Planning/Backend | Critical | 2026-01-29 | Modular recipe logic prone to TypeErrors/crashes |
 | BUG-003 | Technical Debt: Hardened draft generation and improved error signaling | Infrastructure/API | Medium | 2026-01-29 | Need better recovery and specific error codes/UI feedback |
 | BUG-004 | Shopping list generation returns 500 error after verifying plan | Planning/Shopping List | High | 2026-02-01 | Occurs on approval. Possibly related to inventory sync mismatch. |
+| BUG-005 | Tech Debt: Add robust unit testing (supplementing functional tests) | Testing/QA | Medium | 2026-02-01 | Improve test coverage beyond end-to-end flows |
 
 ## Resolved Bugs
 

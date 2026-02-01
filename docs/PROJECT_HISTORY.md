@@ -1312,3 +1312,34 @@ Understanding when to use each is fundamental to frontend development. Most bugs
 2. Deprecate the  string logic for content. It may still be used for display or temporary notes, but not as the primary data.
 3. "Quick Add" text entries will now auto-create placeholder recipes in the database to ensure every slot maps to a valid .
 **Impact**: Requires refactoring  endpoint and updating  replacement logic. Ensures full support for multi-recipe slots and interactive recipe cards.
+
+### Phase 34: Debugging & Tooling Enhancements (2026-02-01)
+
+**Goal:** Resolve critical 500 errors in the Planning Wizard and improve developer tooling for easier local testing.
+
+**1. Critical Crash Fixes (500 Internal Server Error):**
+- **Issue:** Planning Wizard crashed at `draft` and `shopping-list` stages.
+- **Root Cause:** 
+    - `draft`: Missing or `None` lunch IDs causing generation failures.
+    - `shopping-list`: `TypeError` when iterating over `None` recipe IDs in `inventory_intelligence.py`. 
+    - **Inventory Mismatch:** Local generator was reading from stale `data/inventory.yml` instead of live Supabase data, causing "no ingredients found" errors.
+- **Fix:**
+    - Patched `html_generator.py` and `lunch_selector.py` to handle `None` values.
+    - Updated `api/routes/meals.py` to fetch live inventory from Supabase and pass it to the generator.
+    - Added comprehensive error codes (`SHOPPING_LIST_GENERATION_FAILED`, `DRAFT_GENERATION_FAILED`) for better observability.
+
+**2. Improved Debug Visibility:**
+- **Problem:** Errors on Vercel were hard to debug because terminal logs aren't visible.
+- **Solution:** Updated the `/api/plan/shopping-list` endpoint to include a `debug_info` object in the JSON response.
+- **Impact:** Developers can now inspect the browser Network tab to see "warnings" (e.g., "Recipe content not found") without needing server logs.
+
+**3. Tooling: Cascading Meal Plan Reset:**
+- **Problem:** The "Clear Current Plan" button only deleted a single week, leaving orphaned future plans (from replans) that corrupted testing state.
+- **Solution:** 
+    - Upgraded `scripts/reset_week.py` to support **Cascading Deletes** (deleting target week + ALL future weeks).
+    - **Settings UX Update:** Replaced the static "Clear Current Plan" button with a **Date Picker** and "Clear Plans (Cascade)" button.
+    - **Refactor:** Extracted logic into `reset_from_week` shared function used by both CLI and API.
+
+**Learning:** 
+- **Tooling Parity:** Dev tools (scripts) and UI tools (Settings page) should share the same underlying logic to prevent behavior mismatches.
+- **Observability:** In serverless environments, critical debug info must be exposed in the API response or Toast notifications, not just stdout.

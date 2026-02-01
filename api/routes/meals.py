@@ -304,11 +304,13 @@ def get_shopping_list_route():
         from scripts.inventory_intelligence import get_shopping_list
         # During planning, plan_data is often more up-to-date in the DB
         data_to_use = plan_data if plan_data.get('dinners') else history_data
-        shopping_list = get_shopping_list(data_to_use)
+        shopping_list, warnings = get_shopping_list(data_to_use, return_warnings=True)
         
         return jsonify({
             "status": "success",
-            "shopping_list": shopping_list
+            "shopping_list": shopping_list,
+            "debug_info": {"warnings": warnings},
+            "warnings": warnings 
         })
     except Exception as e:
         import traceback
@@ -954,11 +956,13 @@ def delete_week():
             return jsonify({"status": "error", "message": "week_of required"}), 400
             
         h_id = storage.get_household_id()
-        query = storage.supabase.table("meal_plans").delete().eq("household_id", h_id).eq("week_of", week_of)
-        storage.execute_with_retry(query)
+        
+        # Use shared reset logic (cascading delete)
+        from scripts.reset_week import reset_from_week
+        count = reset_from_week(week_of, interactive=False)
         
         invalidate_cache()
-        return jsonify({"status": "success", "message": f"Deleted week {week_of}"})
+        return jsonify({"status": "success", "message": f"Deleted {count} weeks starting from {week_of}"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 

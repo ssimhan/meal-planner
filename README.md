@@ -112,33 +112,23 @@ npm run dev
 
 ```
 meal-planner/
-├── api/                    # Vercel serverless functions
-├── scripts/                # Core Python logic
-│   ├── workflow.py        # Main workflow orchestration
-│   ├── lunch_selector.py  # Lunch planning logic
-│   ├── parse_recipes.py   # Recipe parser
-│   └── import_recipe.py   # Recipe importer
-├── src/                    # Next.js web UI
-│   ├── app/               # App router pages
-│   └── lib/               # API client
-├── recipes/                # Recipe database
-│   ├── index.yml          # Curated recipe index
-│   └── raw_html/          # Source HTML files
-├── data/                   # Backup/Template files
-│   ├── history.yml        # (Sync to Supabase via migrate_to_supabase.py)
-│   └── inventory.yml      # (Sync to Supabase via migrate_to_supabase.py)
-├── inputs/                 # Weekly input files
-└── public/plans/          # Generated HTML plans
+├── api/                    # Vercel serverless functions (Python)
+├── docs/                   # Documentation & Archival
+├── scripts/                # Core Python automation
+├── src/                    # Next.js web UI (TypeScript)
+├── public/                 # Static assets & plans
+├── recipes/                # Recipe database (Markdown)
+├── data/                   # Persistent data & logs
+└── supabase/               # DB migrations & triggers
 ```
 
 ## 📖 Documentation
 
-- **[project_roadmap.md](docs/project_roadmap.md)**: Complete system architecture and roadmap
-- **[DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md)**: Setup, testing, deployment, and CI/CD guide
-- **[BUGS.md](docs/BUGS.md)**: Bug tracking and technical debt (zero-debt policy)
-- **[PROJECT_HISTORY.md](docs/PROJECT_HISTORY.md)**: Development history and session logs
-- **[FIELD_NAMING_CONVENTION.md](docs/FIELD_NAMING_CONVENTION.md)**: Field naming standards for meal feedback
-- **[CLAUDE.md](CLAUDE.md)**: AI assistant context and guidelines
+- **[project_roadmap.md](docs/project_roadmap.md)**: System architecture and roadmap
+- **[DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md)**: Setup, testing, and deployment
+- **[BUGS.md](docs/BUGS.md)**: Active bug tracking
+- **[PROJECT_HISTORY.md](docs/PROJECT_HISTORY.md)**: Development journey & insights
+- **[REPO_STRUCTURE.md](docs/REPO_STRUCTURE.md)**: Detailed file organization
 
 ## 🎯 Current Status
 

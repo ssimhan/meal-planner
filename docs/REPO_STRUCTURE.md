@@ -15,58 +15,41 @@
 meal-planner/
 ├── README.md                    # Project overview
 ├── CLAUDE.md                    # AI assistant instructions
-├── project_roadmap.md            # Implementation status
-├── PROJECT_HISTORY.md           # Development journey
-├── GITHUB_ACTIONS_SETUP.md      # GitHub Actions setup guide
+├── CONTRIBUTING.md              # Contribution guide
 ├── mealplan                     # Main CLI tool
 ├── requirements.txt             # Python dependencies
 │
-├── .github/workflows/           # GitHub Actions automation
-│   └── data-integrity.yml      # Data validation checks
+├── .agent/                      # Agent workflows and skills
+├── .github/                     # GitHub configuration
+├── .interface-design/           # Design tokens and UI system
 │
-├── docs/                        # Documentation
-│   ├── DESIGN_REFERENCE.md      # Original UX vision
-│   ├── project_roadmap.md        # Implementation details
+├── api/                         # Vercel serverless functions (Python)
+│   ├── routes/                  # API endpoints
+│   └── utils/                   # Shared backend utilities
+│
+├── docs/                        # Project documentation
+│   ├── archive/                 # Legacy history and docs
+│   ├── BUGS.md                  # Active bug tracker
 │   ├── DEVELOPER_GUIDE.md       # Setup & Deployment guide
-│   ├── PROJECT_HISTORY.md       # Project history
-│   ├── REPO_STRUCTURE.md (this file)
-│   ├── archive/                 # Archived/Outdated docs
-│   └── UPDATE_RECIPE_TEMPLATES.md
+│   ├── PROJECT_HISTORY.md       # Development journey
+│   ├── project_roadmap.md       # Phased roadmap
+│   └── REPO_STRUCTURE.md        # (this file)
 │
-├── scripts/                     # Python automation
-│   ├── workflow.py              # State-based workflow
-│   ├── mealplan.py              # CLI commands
-│   ├── lunch_selector.py        # Lunch recipe selection
-│   ├── parse_recipes.py         # Recipe HTML parser
-│   ├── import_recipe.py         # Recipe importer
-│   └── validate_plan.py         # Plan validator
+├── scripts/                     # Python automation & CLI logic
+│   ├── mealplan.py              # CLI entry point
+│   ├── workflow.py              # State management
+│   └── ... (automation helpers)
 │
-├── recipes/                     # Recipe database
-│   ├── index.yml                # 234 recipes with metadata
-│   ├── taxonomy.yml             # Classification schema
-│   └── raw_html/                # Source HTML files (234)
+├── src/                         # Next.js frontend (TypeScript)
+│   ├── app/                     # App router pages
+│   ├── components/              # UI components
+│   └── lib/                     # Frontend utilities & API client
 │
-├── data/                        # Persistent data
-│   ├── history.yml              # Meal plan tracking
-│   ├── inventory.yml            # Freezer/pantry/fridge
-│   └── logs.yml                 # Daily check-in logs
-│
-├── templates/                   # HTML templates
-│   ├── weekly-plan-template.html
-│   └── landing-page-template.html
-│
-├── inputs/                      # Weekly inputs (temporary)
-│   └── YYYY-MM-DD.yml           # Week constraints
-│
-├── plans/                       # Generated meal plans
-│   └── YYYY-MM-DD-weekly-plan.html
-│
-├── public/                      # Static assets for Vercel
-│   └── plans/                   # Public meal plans
-│
-└── src/                         # Next.js frontend
-    ├── app/                     # App router pages
-    └── lib/                     # API client
+├── public/                      # Static assets & generated plans
+├── recipes/                     # Recipe database (Markdown/YAML)
+├── data/                        # Local data caches
+├── supabase/                    # Database migrations & seeds
+└── tests/                       # Test suites (Pytest/Jest)
 ```
 
 ---

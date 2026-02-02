@@ -103,32 +103,131 @@ effort_level: normal
         self.assertGreaterEqual(len(tasks), 4)
         
     def test_td_008_pending_recipes_caching(self):
-        """Test TD-008: Pending recipes cache with TTL."""
+        """Test TD-008: Pending recipes cache with SWR semantics."""
         from api.utils import storage
-        
+
         # Clear any existing cache
-        storage._pending_recipes_cache.clear()
-        
+        storage._pending_recipes_cache.invalidate()
+
         # Verify cache starts empty
-        self.assertEqual(len(storage._pending_recipes_cache), 0)
-        
+        stats = storage._pending_recipes_cache.get_stats()
+        self.assertEqual(stats['entries'], 0)
+
         # Manually add a cache entry for testing
-        import time
         test_household = "test-household-123"
-        storage._pending_recipes_cache[test_household] = (["Test Recipe"], time.time())
-        
+        storage._pending_recipes_cache.set(test_household, ["Test Recipe"])
+
         # Verify cache has entry
-        self.assertEqual(len(storage._pending_recipes_cache), 1)
-        self.assertIn(test_household, storage._pending_recipes_cache)
-        
+        stats = storage._pending_recipes_cache.get_stats()
+        self.assertEqual(stats['entries'], 1)
+        self.assertIn(test_household, stats['keys'])
+
         # Verify invalidate clears specific entry
         storage.invalidate_pending_recipes_cache(test_household)
-        self.assertNotIn(test_household, storage._pending_recipes_cache)
-        
+        stats = storage._pending_recipes_cache.get_stats()
+        self.assertNotIn(test_household, stats['keys'])
+
         # Add another entry and test global invalidation
-        storage._pending_recipes_cache["another-household"] = (["Another Recipe"], time.time())
+        storage._pending_recipes_cache.set("another-household", ["Another Recipe"])
         storage.invalidate_pending_recipes_cache()  # Clear all
-        self.assertEqual(len(storage._pending_recipes_cache), 0)
+        stats = storage._pending_recipes_cache.get_stats()
+        self.assertEqual(stats['entries'], 0)
+
+    def test_swr_cache_fresh_status(self):
+        """Test SWR cache returns 'fresh' status for recent entries."""
+        from api.utils.storage import SWRCache
+
+        cache = SWRCache(fresh_ttl=300, stale_ttl=600)
+
+        # Set a value
+        cache.set("key1", ["data1"])
+
+        # Get should return fresh
+        value, status = cache.get("key1")
+        self.assertEqual(value, ["data1"])
+        self.assertEqual(status, "fresh")
+
+    def test_swr_cache_stale_status(self):
+        """Test SWR cache returns 'stale' status for aged entries."""
+        from api.utils.storage import SWRCache
+        import time
+
+        # Create cache with very short TTLs for testing
+        cache = SWRCache(fresh_ttl=0.1, stale_ttl=10)
+
+        cache.set("key1", ["data1"])
+
+        # Wait for fresh TTL to expire
+        time.sleep(0.15)
+
+        # Should return stale
+        value, status = cache.get("key1")
+        self.assertEqual(value, ["data1"])
+        self.assertEqual(status, "stale")
+
+        # Should be marked for refresh
+        self.assertTrue(cache.needs_refresh("key1"))
+
+    def test_swr_cache_miss_status(self):
+        """Test SWR cache returns 'miss' for missing or very stale entries."""
+        from api.utils.storage import SWRCache
+        import time
+
+        cache = SWRCache(fresh_ttl=0.05, stale_ttl=0.1)
+
+        # Missing key
+        value, status = cache.get("nonexistent")
+        self.assertIsNone(value)
+        self.assertEqual(status, "miss")
+
+        # Add entry and let it expire completely
+        cache.set("key1", ["data1"])
+        time.sleep(0.15)  # Past stale_ttl
+
+        value, status = cache.get("key1")
+        self.assertIsNone(value)
+        self.assertEqual(status, "miss")
+
+    def test_swr_cache_refresh_clears_pending(self):
+        """Test that setting a value clears the pending refresh flag."""
+        from api.utils.storage import SWRCache
+        import time
+
+        cache = SWRCache(fresh_ttl=0.05, stale_ttl=10)
+
+        cache.set("key1", ["data1"])
+        time.sleep(0.1)  # Make it stale
+
+        # Get stale value (marks for refresh)
+        cache.get("key1")
+        self.assertTrue(cache.needs_refresh("key1"))
+
+        # Set new value should clear pending
+        cache.set("key1", ["data2"])
+        self.assertFalse(cache.needs_refresh("key1"))
+
+    def test_swr_cache_invalidate(self):
+        """Test SWR cache invalidation."""
+        from api.utils.storage import SWRCache
+
+        cache = SWRCache()
+
+        cache.set("key1", ["data1"])
+        cache.set("key2", ["data2"])
+
+        # Invalidate specific key
+        cache.invalidate("key1")
+        value, status = cache.get("key1")
+        self.assertEqual(status, "miss")
+
+        # key2 should still exist
+        value, status = cache.get("key2")
+        self.assertEqual(status, "fresh")
+
+        # Invalidate all
+        cache.invalidate()
+        stats = cache.get_stats()
+        self.assertEqual(stats['entries'], 0)
         
     def test_td_009_meal_service_helpers(self):
         """Test TD-009: Meal service helper functions work correctly."""

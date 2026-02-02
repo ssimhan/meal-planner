@@ -16,6 +16,7 @@ Use this workflow to execute a structured implementation plan step-by-step.
 1. **Setup**
    - Read the implementation plan from `docs/plans/`.
    - Ensure you are in the correct context (checkout branch if needed).
+   - Run `npm run check` to verify clean starting state.
 
 2. **Task Execution (Round-robin per task)**
    - For each task in the plan:
@@ -38,5 +39,18 @@ Use this workflow to execute a structured implementation plan step-by-step.
 5. **Progress Tracking**
    - Check off tasks in the plan file as they are completed.
    - Update `PROJECT_HISTORY.md` at the end of the session.
+
+6. **Continuous Verification**
+   - Run `npm run check` after each task to catch regressions early.
+   - Pre-commit hooks will run automatically on commit (type check, lint, tests).
+   - If pre-commit fails, fix before proceeding.
+
+**Test Commands:**
+| Command | When to Use |
+|---------|-------------|
+| `npm run check` | Quick validation after each task (~15s) |
+| `npm run check:full` | Full validation including Python (~20s) |
+| `npm test -- --watch` | TDD mode for frontend |
+| `npm run test:py` | Python unit tests only |
 
 **Next Step**: Once all tasks are complete, use `/code-review` for the final quality check.

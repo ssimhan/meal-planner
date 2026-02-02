@@ -14,7 +14,11 @@ Use this workflow to wrap up a development session and maintain a clean project 
 
 ## The Process
 1. **Verification**
-   - Run ALL tests in the project to ensure no regressions.
+   - Run `npm run check:full` to execute all automated checks:
+     - TypeScript type checking
+     - ESLint
+     - Jest tests (15 frontend tests)
+     - pytest (37 Python unit tests)
    - Verify `CLAUDE.md` is updated if any new patterns were established.
 
 2. **Improvement (Kaizen)**
@@ -34,6 +38,8 @@ Use this workflow to wrap up a development session and maintain a clean project 
 4. **Git Hygiene**
    - Stage any remaining changes.
    - Commit with a descriptive message if not already done.
+   - Pre-commit hooks will run automatically (type check, lint, tests).
+   - If pre-commit fails, fix issues before retrying commit.
    - Push to the remote branch.
    - (Optional) Clean up local worktrees.
 

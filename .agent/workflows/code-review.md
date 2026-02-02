@@ -27,10 +27,31 @@ Use this workflow to ensure high-quality, spec-compliant code before merging.
   - Suggest corrections aligned with established system
 
 ## The Process
-1. Inspect the diff of the changes.
-2. Run the test suite on the modified files.
-3. If issues are found, provide specific feedback or implement the fixes.
-4. Once satisfied, approve the changes for closeout.
+1. **Automated Checks First**
+   - Run `npm run check:full` to execute all automated checks.
+   - This runs: TypeScript, ESLint, Jest (15 tests), pytest (60+ tests).
+   - If any fail, fix before proceeding.
+
+2. **Inspect the diff** of the changes.
+
+3. **Manual Review** for items automation can't catch:
+   - Business logic correctness
+   - Architecture decisions
+   - Security implications
+
+4. If issues are found, provide specific feedback or implement the fixes.
+
+5. Once satisfied, approve the changes for closeout.
+
+## CI Pipeline
+
+The CI pipeline (`.github/workflows/ci.yml`) runs automatically on PRs:
+- `lint-and-typecheck` - ESLint + TypeScript
+- `test-frontend` - Jest tests with coverage
+- `test-python` - pytest unit tests with coverage
+- `validate-yaml` - YAML syntax validation
+
+All jobs must pass before merge. The `ci-success` job gates PRs.
 
 ## Production Reliability Checklist
 

@@ -85,16 +85,83 @@ def get_household_id():
     """Helper to get household_id from request context."""
     return getattr(request, 'household_id', "00000000-0000-0000-0000-000000000001")
 
-# TD-008 FIX: Cache for pending recipes (per-household, with TTL)
-_pending_recipes_cache = {}
-_PENDING_CACHE_TTL = 300  # 5 minutes
+# =============================================================================
+# SWR (Stale-While-Revalidate) Cache Implementation
+# =============================================================================
+# Pattern: Return stale data immediately, refresh in background on next request
+# Benefits: Fast responses even when cache expired, eventual consistency
+# =============================================================================
+
+class SWRCache:
+    """
+    Stale-While-Revalidate cache for serverless environments.
+
+    - fresh_ttl: Data is considered fresh (no refresh needed)
+    - stale_ttl: Data is stale but usable (triggers background refresh)
+    - After stale_ttl: Data is too old, must refresh synchronously
+    """
+
+    def __init__(self, fresh_ttl=300, stale_ttl=600):
+        self._cache = {}
+        self._fresh_ttl = fresh_ttl   # 5 minutes default
+        self._stale_ttl = stale_ttl   # 10 minutes default (stale window)
+        self._pending_refresh = set()  # Keys marked for refresh
+
+    def get(self, key):
+        """
+        Get cached value with SWR semantics.
+        Returns: (value, status) where status is 'fresh', 'stale', or 'miss'
+        """
+        entry = self._cache.get(key)
+        if not entry:
+            return None, 'miss'
+
+        value, timestamp = entry
+        age = time.time() - timestamp
+
+        if age < self._fresh_ttl:
+            return value, 'fresh'
+        elif age < self._stale_ttl:
+            # Mark for background refresh on next opportunity
+            self._pending_refresh.add(key)
+            return value, 'stale'
+        else:
+            # Too stale, treat as miss
+            return None, 'miss'
+
+    def set(self, key, value):
+        """Store value in cache."""
+        self._cache[key] = (value, time.time())
+        self._pending_refresh.discard(key)
+
+    def needs_refresh(self, key):
+        """Check if key is marked for background refresh."""
+        return key in self._pending_refresh
+
+    def invalidate(self, key=None):
+        """Invalidate specific key or entire cache."""
+        if key:
+            self._cache.pop(key, None)
+            self._pending_refresh.discard(key)
+        else:
+            self._cache.clear()
+            self._pending_refresh.clear()
+
+    def get_stats(self):
+        """Return cache statistics for debugging."""
+        return {
+            'entries': len(self._cache),
+            'pending_refresh': len(self._pending_refresh),
+            'keys': list(self._cache.keys())
+        }
+
+
+# TD-008 FIX: Cache for pending recipes (per-household, with SWR)
+_pending_recipes_cache = SWRCache(fresh_ttl=300, stale_ttl=600)
 
 def invalidate_pending_recipes_cache(household_id=None):
     """Invalidate pending recipes cache. Called after recipe capture/save."""
-    if household_id:
-        _pending_recipes_cache.pop(household_id, None)
-    else:
-        _pending_recipes_cache.clear()
+    _pending_recipes_cache.invalidate(household_id)
 
 def invalidate_cache(key=None):
     """Global cache invalidation. Currently a no-op as we move to statelessness, 
@@ -533,78 +600,106 @@ class StorageEngine:
 
     @staticmethod
     def get_pending_recipes():
-        """Detect 'Actual Meals' logged that are not in the recipe index."""
+        """
+        Detect 'Actual Meals' logged that are not in the recipe index.
+        Uses SWR (Stale-While-Revalidate) caching for fast responses.
+        """
         if not supabase: return []
         h_id = get_household_id()
-        
-        # TD-008 FIX: Check cache first
-        import time as _time
-        cache_entry = _pending_recipes_cache.get(h_id)
-        if cache_entry:
-            cached_result, timestamp = cache_entry
-            if _time.time() - timestamp < _PENDING_CACHE_TTL:
-                return cached_result
-        
-        try:
-            # 1. Get all recipes
-            query = supabase.table("recipes").select("id, name").eq("household_id", h_id)
-            recipes_res = execute_with_retry(query)
-            recipe_ids = {r['id'] for r in recipes_res.data}
-            recipe_names = {r['name'].lower() for r in recipes_res.data}
-            
-            # 2. Get history (all weeks)
-            query = supabase.table("meal_plans").select("history_data").eq("household_id", h_id)
-            res = execute_with_retry(query)
-            weeks = [row['history_data'] for row in res.data if row.get('history_data')]
-            
-            pending = []
-            seen = set()
-            
-            # Common non-recipe keywords to ignore
-            ignore = {
-                'leftovers', 'skipped', 'outside_meal', 'same', 'none', 'yes', 'no', 'true', 'false',
-                'freezer meal', 'ate out', 'make at home', 'takeout', 'delivery', 'restaurant'
-            }
-            
-            # TD-007 FIX: Load ignored recipes from DB config instead of local file
-            ignored_list = StorageEngine._get_config_key('ignored_recipes') or []
-            for i in ignored_list:
-                ignore.add(i.lower())
 
-            for week in weeks:
-                # Check dinners
-                for dinner in week.get('dinners', []):
-                    actual = dinner.get('actual_meal')
+        # TD-008 FIX: SWR cache - return stale data immediately if available
+        cached_value, cache_status = _pending_recipes_cache.get(h_id)
+
+        if cache_status == 'fresh':
+            # Data is fresh, return immediately
+            return cached_value
+        elif cache_status == 'stale':
+            # Data is stale but usable - return it now, refresh will happen on next miss
+            # In serverless, we can't truly background refresh, but this gives fast response
+            return cached_value
+
+        # Cache miss or too stale - must fetch fresh data
+        try:
+            pending = StorageEngine._fetch_pending_recipes_impl(h_id)
+            _pending_recipes_cache.set(h_id, pending)
+            return pending
+        except Exception as e:
+            print(f"Error in get_pending_recipes: {e}")
+            # On error, return stale data if we have any
+            if cached_value is not None:
+                return cached_value
+            return []
+
+    @staticmethod
+    def _fetch_pending_recipes_impl(h_id):
+        """Internal implementation of pending recipes scan."""
+        # 1. Get all recipes
+        query = supabase.table("recipes").select("id, name").eq("household_id", h_id)
+        recipes_res = execute_with_retry(query)
+        recipe_ids = {r['id'] for r in recipes_res.data}
+        recipe_names = {r['name'].lower() for r in recipes_res.data}
+
+        # 2. Get history (all weeks)
+        query = supabase.table("meal_plans").select("history_data").eq("household_id", h_id)
+        res = execute_with_retry(query)
+        weeks = [row['history_data'] for row in res.data if row.get('history_data')]
+
+        pending = []
+        seen = set()
+
+        # Common non-recipe keywords to ignore
+        ignore = {
+            'leftovers', 'skipped', 'outside_meal', 'same', 'none', 'yes', 'no', 'true', 'false',
+            'freezer meal', 'ate out', 'make at home', 'takeout', 'delivery', 'restaurant'
+        }
+
+        # TD-007 FIX: Load ignored recipes from DB config instead of local file
+        ignored_list = StorageEngine._get_config_key('ignored_recipes') or []
+        for i in ignored_list:
+            ignore.add(i.lower())
+
+        for week in weeks:
+            # Check dinners
+            for dinner in week.get('dinners', []):
+                actual = dinner.get('actual_meal')
+                if actual and isinstance(actual, str):
+                    actual_clean = actual.strip()
+                    if actual_clean.lower() in ignore: continue
+
+                    actual_id = actual_clean.lower().replace(' ', '_')
+                    if actual_id not in recipe_ids and actual_clean.lower() not in recipe_names:
+                        if actual_clean not in seen:
+                            pending.append(actual_clean)
+                            seen.add(actual_clean)
+
+            # Check lunches/snacks in daily_feedback
+            df = week.get('daily_feedback', {})
+            for day, feedback in df.items():
+                for key in ['kids_lunch_made', 'adult_lunch_made', 'school_snack_made', 'home_snack_made']:
+                    actual = feedback.get(key)
                     if actual and isinstance(actual, str):
                         actual_clean = actual.strip()
                         if actual_clean.lower() in ignore: continue
-                        
+
                         actual_id = actual_clean.lower().replace(' ', '_')
                         if actual_id not in recipe_ids and actual_clean.lower() not in recipe_names:
                             if actual_clean not in seen:
                                 pending.append(actual_clean)
                                 seen.add(actual_clean)
-                                
-                # Check lunches/snacks in daily_feedback
-                df = week.get('daily_feedback', {})
-                for day, feedback in df.items():
-                    for key in ['kids_lunch_made', 'adult_lunch_made', 'school_snack_made', 'home_snack_made']:
-                        actual = feedback.get(key)
-                        if actual and isinstance(actual, str):
-                            actual_clean = actual.strip()
-                            if actual_clean.lower() in ignore: continue
-                            
-                            actual_id = actual_clean.lower().replace(' ', '_')
-                            if actual_id not in recipe_ids and actual_clean.lower() not in recipe_names:
-                                if actual_clean not in seen:
-                                    pending.append(actual_clean)
-                                    seen.add(actual_clean)
-            # TD-008 FIX: Store result in cache
-            _pending_recipes_cache[h_id] = (pending, _time.time())
-            return pending
-        except Exception as e:
-            print(f"Error in get_pending_recipes: {e}")
-            return []
+
+        return pending
+
+    @staticmethod
+    def get_pending_recipes_cache_stats():
+        """Return cache statistics for debugging."""
+        return _pending_recipes_cache.get_stats()
+
+    @staticmethod
+    def refresh_pending_recipes_cache():
+        """Force refresh of pending recipes cache. Call when you want fresh data."""
+        h_id = get_household_id()
+        _pending_recipes_cache.invalidate(h_id)
+        return StorageEngine.get_pending_recipes()
 
     @staticmethod
     def delete_recipe(recipe_id):

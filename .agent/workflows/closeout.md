@@ -18,12 +18,15 @@ Use this workflow to wrap up a development session and maintain a clean project 
 - **Atomic History**: Ensure the branch is ready for merge or PR.
 
 ## The Process
+1. **Verification**
+   - Run `npm run check:full` to execute all automated checks:
+     - TypeScript type checking
+     - ESLint
+     - Jest tests (15 frontend tests)
+     - pytest (37 Python unit tests)
+   - Verify `CLAUDE.md` is updated if any new patterns were established.
 
-### 1. Verification
-- Run ALL tests in the project to ensure no regressions.
-- Verify `CLAUDE.md` is updated if any new patterns were established.
-
-### 2. Session Review
+2. **Session Review**
 Review the active phase and generate a **numbered list** of noteworthy items:
 - Interesting new errors encountered
 - Difficult technical hurdles overcome
@@ -40,17 +43,20 @@ Session Learnings:
 
 **WAIT for user selection** before proceeding. User will indicate which items (by number) to include in project history.
 
-### 3. Documentation
+3. **Documentation**
 - **History**: Update `PROJECT_HISTORY.md` with:
   - What was built
   - User-selected learnings from step 2
   - Git commit hashes
 - **Changelog**: Use the `changelog-generator` logic for user-facing summary if needed.
 
-### 4. Git Hygiene
-- Stage any remaining changes.
-- Commit with a descriptive message.
-- Push to the remote branch.
+4. **Git Hygiene**
+   - Stage any remaining changes.
+   - Commit with a descriptive message if not already done.
+   - Pre-commit hooks will run automatically (type check, lint, tests).
+   - If pre-commit fails, fix issues before retrying commit.
+   - Push to the remote branch.
+   - (Optional) Clean up local worktrees.
 
-### 5. Summary
+5. **Summary**
 - Provide a final brief summary of the session to the user.

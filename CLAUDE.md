@@ -163,6 +163,41 @@ If blocked, explain which constraint failed:
 
 NEVER proceed with invalid plan. Ask for guidance.
 
+## Testing & CI
+
+**Automated Testing:**
+- **Pre-commit hooks**: Run automatically on every commit (type check, lint, tests)
+- **CI Pipeline**: Runs on all PRs with parallel jobs
+
+**Quick Commands:**
+| Command | Purpose | Speed |
+|---------|---------|-------|
+| `npm run check` | Fast local validation (TS + lint + Jest) | ~15s |
+| `npm run check:full` | Full check including Python tests | ~20s |
+| `npm run test:py` | Python unit tests only | ~3s |
+| `npm run test:py:all` | All Python tests (including integration) | ~5s |
+
+**CI Jobs (parallel):**
+1. `lint-and-typecheck` - ESLint + TypeScript
+2. `test-frontend` - Jest (15 tests)
+3. `test-python` - pytest (37 unit tests)
+4. `validate-yaml` - YAML syntax validation
+
+**Pre-commit Hook:**
+Runs before every commit:
+```
+→ Type checking...
+→ Linting...
+→ Frontend tests...
+→ Python tests...
+✓ All pre-commit checks passed!
+```
+
+**Test Organization:**
+- Unit tests: `tests/test_*.py` (run in CI)
+- Integration tests: `test_integration.py`, `test_shopping_api.py`, `test_api_perf.py` (require Supabase, run locally with `npm run test:py:all`)
+- Frontend tests: `src/components/__tests__/*.test.tsx`
+
 ## Engineering Standards
 
 **Dependency Management:**

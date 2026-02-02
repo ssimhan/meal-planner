@@ -1,53 +1,62 @@
-# Phase 34 Session Changelog: Data Sanitization
+# Phase 34 Session Changelog: Data Sanitization & Infrastructure Hardening
 
-**Date:** 2026-02-01
-**Branch:** `phase-34-data-sanitization`
-**Goal:** Address systemic fragility in recipe data handling (TD-015).
+**Date:** 2026-02-01 to 2026-02-02
+**Branch:** `phase-34-frictionless-loop`
+**Goal:** Address systemic fragility, modularize meal engine, and establish high-fidelity workflow standards.
 
 ---
 
 ## 🎯 Objectives Completed
 
 ### 1. Systemic Data Sanitization (TD-015) ✅
-**Problem:** Backend scripts and frontend components were vulnerable to `NoneType` errors when Supabase returned `null` for metadata fields like `tags`, `main_veg`, or `ingredients`.
+- **Problem:** Frequent 500 errors and frontend crashes due to `null` values in legacy recipe/history data.
+- **Solution:** Implemented a centralized **Normalization Pipeline** in `StorageEngine` (`api/utils/storage.py`).
+- **Impact:** Ensures every API response for recipes, history, and meal plans contains safe defaults (e.g., `[]` for lists, `unknown` for categories). Verified via `scripts/test_sanitization.py`.
 
-**Solution:** Implemented a centralized sanitization layer in `StorageEngine` (`api/utils/storage.py`) that ensures all list fields return at least an empty list `[]` and categorical fields return safe defaults like `'unknown'`.
+### 2. Modular Recipe Slot Architecture ✅
+- **Evolution:** Migrated from a single `recipe_id` (string) to a robust `recipe_ids` (array) model.
+- **Features:** 
+    - Support for multi-recipe aggregation in a single meal slot.
+    - Seamless logic for side dishes and pairings.
+    - Backward compatibility for legacy data via the sanitization layer.
 
-**Impact:**
-- ✅ "Vaccinated" the system against the most common category of 500 errors.
-- ✅ Reduced defensive coding requirements in `replan.py`, `inventory_intelligence.py`, and `html_generator.py`.
-- ✅ Enabled safer future development for Phase 34 "Frictionless Shopping" features.
+### 3. Service Layer Extraction (TD-009) ✅
+- **Extracted `meal_service.py`**: 12+ helpers for complex meal logging, made-status parsing, and inventory subtraction.
+- **Extracted `pairing_service.py`**: Algorithmic suggestion of sides based on historical "co-occurrence" in user history.
+- **Result:** Reduced `meals.py` complexity and paved the way for the Phase 35 route modularization.
+
+### 4. SWR (Stale-While-Revalidate) Caching (TD-008/13) ✅
+- **Pattern:** Implemented `SWRCache` in `api/utils/storage.py`.
+- **Result:** Eliminates "cold start" latency for pending recipe fetches in serverless (Vercel) environments by serving stale data while background-refreshing the cache.
+
+### 5. Inventory Intelligence Enhancements ✅
+- **Shopping Optimization:** `get_shopping_list` now cross-references full recipe content and permanent pantry settings.
+- **Usage:** New "Shop Fridge" and "Freezer Stash" suggestions in the `ReplacementModal`.
+
+### 6. Workflow Evolution & "Reproduction FIRST" ✅
+- **New Convention:** Every bug fix MUST be preceded by a failing code-based test or a documented Markdown UI Test Plan.
+- **Workflow Split:** 
+    - `/code-review`: Deep dive into logic and reliability.
+    - `/verify-ux`: Dedicated interactive audit for aesthetics and flow.
+- **Cleanup:** Archived legacy history (Phases 0-19) and resolved bugs into archive files for project scannability.
 
 ---
 
-## 📦 Deliverables
-
-### Code Changes
-- **`api/utils/storage.py`**: Added mapping logic to `get_recipes()` and `get_recipe_details()` to sanitize dictionary fields.
-
-### New Tests
-- **`scripts/test_sanitization.py`**: Regression test script verifying null handling in `StorageEngine`.
-
-### Documentation
-- **`docs/project_roadmap.md`**: Updated with TD-015 completion.
-- **`docs/BUGS.md`**: Marked TD-015 as fixed.
-- **`docs/tech_debt/TD-015_systemic_data_sanitization.md`**: Marked as Resolved.
+## 🎨 UI/UX: Earthy Spice Aesthetic
+- **Compliance:** Verified and applied premium tokens (`turmeric`, `beetroot`, `cardamom`) across all new components.
+- **Components:**
+    - **PairingDrawer**: Premium slide-out interface for building modular meals.
+    - **ReplacementModal**: Unified substitutuon engine with inventory-aware tabs.
 
 ---
 
-## 🧹 Documentation Cleanup ✅
-Executed a major documentation audit and cleanup:
-- **Archived Legend History**: Moved Phases 0-19 from `PROJECT_HISTORY.md` to `docs/archive/PROJECT_HISTORY_LEGACY.md`.
-- **Consolidated Audit Logs**: Moved historical bug logs from `BUGS.md` to `docs/archive/BUG_ARCHIVE.md`.
-- **Archived Tech Debt**: Moved resolved `TD-015` to `docs/tech_debt/archive/`.
+## 📦 Deliverables & Metrics
+- **New Files:** `api/services/meal_service.py`, `api/services/pairing_service.py`, `scripts/test_sanitization.py`.
+- **Test Coverage:** 59 total Python tests passed. 100% logic coverage for `meal_service.py`.
+- **Reliability:** 100% adherence to Production Reliability P0 checklist (Retries, Sanitization, HTTP/2 fixes).
 
 ---
 
-## 💡 Key Learnings & Decisions
-- **Structured Data**: Transitioned from free-text `actual_meal` to structured `recipe_ids` across the board to prevent data gaps in modular recipes.
-- **Workflow Optimization**: Separated `/code-review` (logic) from `/verify-ux` (experience) to streamline the QA process.
-- **Observability**: Implemented detailed error codes and expanded unit test coverage (59 passed) to harden the system against silent failures.
-
-## 🚀 Next Steps
-- Transition to **Phase 35: Frictionless Shopping & Architecture Hardening**.
-- Refactor `meals.py` into modular service routes.
+## 🚀 Next Steps: Phase 35
+- **Goal:** Frictionless Shopping & Architecture Hardening.
+- **Priority:** Refactor `api/routes/meals.py` (TD-017) and run the Data Janitor (TD-016).

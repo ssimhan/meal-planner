@@ -15,16 +15,12 @@
 > No phase is complete until **Active Bugs = 0** and **Technical Debt = 0**.
 > See [BUGS.md](BUGS.md) for current status. Fix all issues before marking blocks complete.
 
-## 🚀 Active Phase
-## ✅ Phase 34: Strategic Tech Debt Cleanup (Complete)
-- [x] **TD-006:** LRU caching for `get_prep_tasks` with content-hash keys
-- [x] **TD-008:** SWR (Stale-While-Revalidate) cache for `get_pending_recipes`
-- [x] **TD-009:** Extracted `meal_service.py` with 6 helpers, 100% test coverage (12 tests)
-- [x] **TD-010:** Restored integration tests with proper StorageEngine mocking
-- [x] **TD-011/12:** Import recipe UX improvements and auto prep task generation
-- [x] **TD-013:** SWRCache class for serverless environments (5 tests)
-- [x] **TD-014:** Unit test coverage for all `meal_service.py` functions
-- [x] **TD-015:** Systemic data sanitization layer in `StorageEngine`
+## ✅ Phase 34: Infrastructure Hardening & Modular Architecture (Complete)
+- [x] **TD-015:** Systemic Data Sanitization layer in `StorageEngine` (vaccinating against 500s)
+- [x] **Modular Recipes:** Transitioned from `recipe_id` to `recipe_ids` array across the stack
+- [x] **Service Extraction:** Extracted `meal_service.py` and `pairing_service.py` logic
+- [x] **Performance:** Implemented SWR caching for serverless environments
+- [x] **Workflow:** Established **Reproduction FIRST** convention and logic/UX review split
 
 ---
 

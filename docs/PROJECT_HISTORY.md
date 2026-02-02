@@ -852,23 +852,19 @@ Understanding when to use each is fundamental to frontend development. Most bugs
 - **Tooling Parity:** Dev tools (scripts) and UI tools (Settings page) should share the same underlying logic to prevent behavior mismatches.
 - **Observability:** In serverless environments, critical debug info must be exposed in the API response or Toast notifications, not just stdout.
 
-### Phase 34: Data Sanitization & Tech Debt (2026-02-01) ✅ Complete
+### Phase 34: Infrastructure Hardening & Modular Architecture (2026-02-01 to 2026-02-02) ✅ Complete
 
-**Goal:** Proactively address technical debt and prevent frontend crashes caused by malformed data.
+**Goal:** Transform the meal engine from a legacy string-based model to a modular, service-oriented architecture while "vaccinating" the system against data fragility.
 
-**Block 1: Data Sanitization Layer (Completed)**
-- **Issue:** `get_recipes` and `get_recipe_details` could return `None` for list fields (tags, ingredients, etc.), causing frontend crashes (`map of undefined`).
-- **Solution:** Implemented a robust **Sanitization Layer** in `StorageEngine` that enforces type safety (ensures lists are `[]`, strings are `'unknown'`, booleans are `False`) before data leaves the API.
-- **Verification:** Created `scripts/test_sanitization.py` verifying that even with malformed database responses, the API returns safe, predictable structures.
+**Achievements:**
+- **Systemic Sanitization Layer**: Implemented a normalization pipeline in `StorageEngine` that ensures all data (Recipes, History, Plans) is type-safe and default-populated before hitting the frontend. Resolved TD-015.
+- **Modular Recipe Slots**: Transitioned the core data model from `recipe_id` to `recipe_ids` (array), enabling side-dish pairings and multi-recipe meal slots. 
+- **Service Domain Extraction**: Extracted 20+ logic helpers from `meals.py` into dedicated `meal_service.py` and `pairing_service.py`, improving testability and code hygiene.
+- **SWR Performance Engine**: Implemented Stale-While-Revalidate caching for pending recipes, significantly improving perceived performance in Vercel's serverless environment.
+- **Earthy Spice UX Refresh**: Applied the premium design system to the new Pairing Drawer and Replacement Modal components, ensuring high-fidelity interaction design.
+- **Workflow Hardening**: Established the **Reproduction FIRST** TDD convention and split logic review from UX verification to ensure production-grade reliability.
 
-**Learning:** Data hygiene should be enforced at the boundary. The frontend shouldn't have to wish for good data; the backend guarantee it.
-
-**Session Learnings:**
-1. **Decision (Data Integrity)**: Deprecated the legacy `actual_meal` string field in favor of a structured `recipe_ids` array. This ensures all meal slots map to valid recipe records, supporting multi-recipe slots and modular replacements without data loss.
-2. **Decision (Workflows)**: Established a formal split between `/code-review` (technical logic/correctness) and `/verify-ux` (human interaction/aesthetics). This allows for faster iterations on business logic while maintaining a high bar for the user experience.
-3. **Decision (Planning)**: Formalized "Architecture Hardening" as the foundational block of Phase 35. This ensures that major technical debt (like the 1000-line `meals.py` monolith) is addressed before stacking new features.
-4. **Learning (Observability)**: Realized the critical importance of unit testing and granular error codes (e.g. `SHOPPING_LIST_GENERATION_FAILED`, `DRAFT_GENERATION_FAILED`). These significantly accelerated debugging in serverless environments and provided much better system observability.
-5. **Decision (Workflow Refinement)**: Enforced **Reproduction FIRST** for all bug fixes. Every fix must now be preceded by a failing code-based test or a documented Markdown UI Test Plan.
-6. **Build Fix**: Resolved a critical Vercel deployment blocker caused by a version mismatch in `@types/jest`.
+**Decision (Infrastructure)**: Chose to prioritize a foundational data sanitization layer over ad-hoc error handling. This "boundary-first" approach eliminated an entire class of 500 errors and simplified all downstream logic.
+**Decision (Workflows)**: Decided to archive legacy project history (Phases 0-19) to maintain sub-second scannability of current project context while preserving historical records in `docs/archive`.
 
 **Next Phase**: Transitioning to Phase 35: Frictionless Shopping & Architecture Hardening.

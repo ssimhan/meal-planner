@@ -47,9 +47,12 @@
 ---
 
 ## 🚀 Active Phase
-49: ### Phase 35: Frictionless Shopping & Recipe Loop (Active)
-**Goal:** Transform the core user loop into a high-utility, automated engine, ensuring Shopping List generator works reliably in Vercel environments.
+### Phase 35: Frictionless Shopping & Architecture Hardening (Active)
+**Goal:** Transform the core user loop into a high-utility engine while hardening the service architecture and cleaning up historical data.
 
+- **Block 0: Architecture Hardening (Foundational)**
+  - [ ] **TD-017:** Refactor `api/routes/meals.py` (1000+ line monolith) into modular service routes (`planning.py`, `tracking.py`, `shopping.py`).
+  - [ ] **TD-016:** Implement "Data Janitor" script to clean up historical `meal_plans` records with missing recipe IDs in lunch data.
 - **Block 1: Closed-Loop Shopping (~4 hrs)**
   - [ ] **Sync:** Ensure marking an item as "Purchased" in the shopping list adds it to the correct inventory category.
   - [ ] **Persistence:** Automatically save store preference/mapping during shopping.
@@ -57,8 +60,8 @@
   - [ ] **UI:** Add "Add Ingredients to Shopping List" button to the Recipe Detail wrapper.
   - [ ] **Logic:** Implement deduplication/checking against current inventory when adding.
 - **Block 3: UX/Deploy Polish**
-  - [ ] **Frontend Integration:** Update `ShoppingListStep.tsx` to display the "warnings" returned by the API (e.g., missing ingredients, recipe content errors) as toasts/alerts.
-  - [ ] **Vercel Verification:** Verify that the "500 Error" is resolved by latest backend fixes.
+  - [ ] **Frontend Integration:** Update `ShoppingListStep.tsx` to display API "warnings" (missing ingredients, recipe content errors) as toasts.
+  - [ ] **Verification:** Verify 500-error immunity in serverless production env.
 
 ### Phase 36: Household Synergy & Coordination
 **Goal:** Enable multiple members to coordinate and improve household collaboration.
@@ -77,6 +80,7 @@
   - [ ] **AI Vision:** Implement Gemini Vision to detect items from uploaded fridge/pantry photos.
   - [ ] **Voice API:** Implement an interactive, back-and-forth voice interface to log items.
 - **Block 2: Intelligent Assistance (~15 hrs)**
+  - [ ] **AI Prep Generation:** Implement automated prep step extraction during manual recipe ingestion (Legacy TODO).
   - [ ] **Universal Search:** Global search (recipes/inventory/history) + Multi-timer support in Focus Mode.
   - [ ] **Integrations:** Weather/Calendar meal suggestions and Weekly Summary Emails.
   - [ ] **AI Substitutions:** Ingredient swap suggestions based on inventory and allergens.

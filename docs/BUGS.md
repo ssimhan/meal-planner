@@ -32,8 +32,10 @@
 
 | ID | Area | Description | Impact | Effort | Notes |
 |----|------|-------------|--------|--------|-------|
+| TD-016 | Infrastructure | Data Janitor: Clean up historical `meal_plans` records with missing recipe IDs. | High | 2hr | Found in Phase 34 debugging. |
+| TD-017 | Architecture | Refactor `meals.py` monolith into modular service routes. | Medium | 4hr | File exceeds 1000 lines; scalability risk. |
 
-**Count: 0** ✅
+**Count: 2** 🚧
 
 
 ---

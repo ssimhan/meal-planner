@@ -1,7 +1,7 @@
 # Bug Tracking & Technical Debt
 
 **Last Updated:** 2026-02-02
-**Current Phase:** 34 (Tech Debt Review Complete)
+**Current Phase:** 35 (Frictionless Shopping)
 
 ---
 
@@ -23,13 +23,6 @@
 
 | ID | Area | Description | Impact | Effort | Notes |
 |----|------|-------------|--------|--------|-------|
-| BUG-001 | Replan | Prep tasks don't refresh after a replan. | High | 2hr | Fixed via heuristic fallback. |
-| BUG-002 | Shopping List | Items purchased in list don't sync to inventory. | High | 2hr | Fixed with category inference. |
-| BUG-003 | Management | Meal defaults don't make sense for multiple households. | Medium | 1hr | Removed hardcoded weekend defaults. |
-| BUG-004 | Roadmap | Review future roadmap phases (35-39) for multi-household support. | Medium | 2hr | Completed review. |
-| BUG-005 | Inventory | `add_inventory` has redundant whole-inventory fetch check. | Low | 1hr | Fixed: Removed redundant fetch, uses targeted query. |
-| BUG-006 | Auth | Hardcoded household ID fallback in `require_auth` hides profile gaps. | Medium | 1hr | Fixed: Now returns 403 with `PROFILE_INCOMPLETE` code. |
-| BUG-007 | Week View | Replace button (🔄) persists in View Mode after exiting Edit Mode. | Low | 1hr | Fixed: State closure race condition in editMode toggle. |
 
 ---
 
@@ -39,21 +32,6 @@
 
 | ID | Area | Description | Impact | Effort | Notes |
 |----|------|-------------|--------|--------|-------|
-| TD-001 | Smart Shopping | "I Have This" defaults to Pantry. Should infer category. | Low | 1hr | ✅ Fixed in phase 32. |
-| TD-002 | Recipes | Standardize ingredients (e.g. tamarind pulp -> concentrate, typos). | Low | 2hr | ✅ Bulk fixed 73 recipes in phase 32. |
-| TD-003 | Recipes | Mashed ingredient quantities (e.g. 1onion -> 1 onion). | Low | 1hr | ✅ Audited in phase 32 (0 found). |
-| TD-004 | Recipes | Redundant cuisine tags (italian, mexican, etc). | Low | 1hr | ✅ Bulk fixed 73 recipes in phase 32. |
-| TD-005 | Architecture | GroceryMapper uses local JSON (`data/store_map.json`). | High | 3hr | ✅ Fixed: Migrated to Supabase `households.config.store_preferences`. |
-| TD-006 | Performance | Heuristic prep-task generation reads MD files on every request. | Medium | 2hr | ✅ Fixed: Added LRU cache with content hash key for `get_prep_tasks`. |
-| TD-007 | Persistence | `StorageEngine` writes to local YAML/JSON in some methods. | High | 2hr | ✅ Fixed: Migrated `ignored_recipes`, `preferences` to DB config. |
-| TD-008 | Performance | `get_pending_recipes` is a heavy, unoptimized scan. | Medium | 2hr | ✅ Fixed: Upgraded to SWR cache pattern (fresh 5min, stale 10min). |
-| TD-009 | Architecture | Large route files (`meals.py`) contain complex business logic. | Medium | 4hr | ✅ Fixed: Extracted 6 helpers to `api/services/meal_service.py`. Added 12 unit tests for 100% coverage. |
-| TD-010 | Testing | Integration tests need proper mocking and test data fixtures. | Medium | 4hr | ✅ Fixed: Rewrote `test_api_perf.py` and `test_backend.py` with proper mocking and assertions. |
-| TD-011 | UX | Import preview modal is too small and "Save" button is hard to find. | Low | 1hr | ✅ Fixed: Added min-height on textareas, prominent animated Save button. |
-| TD-012 | Recipes | Recipe import doesn't auto-populate Prep Tasks section. | Medium | 3hr | ✅ Fixed: Added inline `get_prep_tasks()` call in `capture_recipe()`. |
-| TD-013 | Performance | SWR (Stale-While-Revalidate) cache pattern for serverless. | Medium | 2hr | ✅ Added: `SWRCache` class with fresh/stale/miss semantics. 5 tests added. |
-| TD-014 | Testing | `meal_service.py` helpers lack unit test coverage. | Medium | 2hr | ✅ Fixed: Added 12 tests for all 6 functions (100% coverage). |
-| TD-015 | Architecture | Vulnerability: Scripts crash if recipe metadata is None. | High | 2hr | ✅ Fixed: Implemented systemic sanitization layer in `StorageEngine`. |
 
 **Count: 0** ✅
 

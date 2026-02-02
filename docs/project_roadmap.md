@@ -46,7 +46,8 @@
 
 ---
 
-### Phase 35: Frictionless Shopping & Recipe Loop (Current)
+## 🚀 Active Phase
+49: ### Phase 35: Frictionless Shopping & Recipe Loop (Active)
 **Goal:** Transform the core user loop into a high-utility, automated engine, ensuring Shopping List generator works reliably in Vercel environments.
 
 - **Block 1: Closed-Loop Shopping (~4 hrs)**

@@ -3,6 +3,27 @@
 Historical records of resolved issues from completed phases.
 
 ---
+7: 
+8: ### Phase 34 (Completed 2026-02-02)
+9: - Fixed: Prep tasks don't refresh after a replan (BUG-001)
+10: - Fixed: Items purchased in list don't sync to inventory (BUG-002)
+11: - Fixed: Meal defaults don't make sense for multiple households (BUG-003)
+12: - Completed: Review future roadmap phases (35-39) for multi-household support (BUG-004)
+13: - Fixed: `add_inventory` has redundant whole-inventory fetch check (BUG-005)
+14: - Fixed: Hardcoded household ID fallback in `require_auth` hides profile gaps (BUG-006)
+15: - Fixed: Replace button (🔄) persists in View Mode after exiting Edit Mode (BUG-007)
+16: - Fixed: "I Have This" defaults to Pantry. Should infer category (TD-001)
+17: - Fixed: Standardize ingredients and redundant cuisine tags (TD-002, TD-004)
+18: - Fixed: GroceryMapper usage of local JSON (TD-005)
+19: - Fixed: Performance issues with prep-task generation and pending recipes (TD-006, TD-008)
+20: - Fixed: Local YAML/JSON persistence in `StorageEngine` (TD-007)
+21: - Fixed: Monolithic route files business logic extraction (TD-009)
+22: - Fixed: Integration test mocking and coverage (TD-010, TD-014)
+23: - Fixed: Import recipe UX and auto-prep task generation (TD-011, TD-012)
+24: - Added: SWR (Stale-While-Revalidate) cache pattern for serverless (TD-013)
+25: - Fixed: Systemic data sanitization for null metadata (TD-015)
+26: 
+27: ---
 
 ### Phase 32 (Completed 2026-01-30)
 - Fixed: `TypeError: e.map is not a function` in ReviewGroceriesModal (SM-001). API response was an object, expected array.

@@ -9,6 +9,7 @@ Use the following slash commands for common tasks:
 - `/plan`: Create TDD-first implementation plans.
 - `/build`: Execute approved plans with subagents and TDD.
 - `/code-review`: Review newly built code for debt/risks.
+- `/fix`: Resolve all bugs and technical debt before phase completion.
 - `/closeout`: Update docs, commit, and push.
 
 Specialized assistant skills are available in the `skills/` directory. Read `skills/*/SKILL.md` before use.
@@ -178,9 +179,9 @@ NEVER proceed with invalid plan. Ask for guidance.
 | `npm run test:py:all` | All Python tests (including integration) | ~5s |
 
 **CI Jobs (parallel):**
-1. `lint-and-typecheck` - ESLint + TypeScript
+1. `lint-and-typecheck` - ESLint + TypeScript (ignores `claude-code-quickstart/`)
 2. `test-frontend` - Jest (15 tests)
-3. `test-python` - pytest (37 unit tests)
+3. `test-python` - pytest (59 unit tests)
 4. `validate-yaml` - YAML syntax validation
 
 **Pre-commit Hook:**
@@ -212,6 +213,7 @@ Runs before every commit:
 - **Environment Variables**: Verify `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are in Vercel before deployment.
 - **Debug Endpoints**: Keep `/api/debug` updated to expose connection/init errors.
 - **Error Handling**: return structured errors `{"status": "error", "code": "CODE", "message": "msg", "details": ...}` for easy frontend debugging.
+- **Data Integrity**: Every slot must map to a valid `recipe_ids` (array). The legacy `actual_meal` string is deprecated for primary content.
 - **Workflow & Git Standards**:
     - **Branching**: Create a new branch for every subphase (e.g., `feat/phase-18-block-1`). NEVER push directly to `main`.
     - **Testing**: Test changes locally first.

@@ -142,17 +142,16 @@ meal-planner/
 
 ## 🎯 Current Status
 
-**Phase 28: General Workflow and Frontend Clean up** ✅ Complete
-- Global visual polish and dark mode improvements
-- Inventory & shopping stability fixes
-- Recipe experience enhancements (Focus Mode, tag migration)
-- Advanced planning persistence (pause/resume workflow)
+**Phase 34: Strategic Tech Debt Cleanup** ✅ Complete
+- Systemic data sanitization in StorageEngine (null metadata safety)
+- SWR (Stale-While-Revalidate) cache pattern for serverless reliability
+- 100% test coverage for core `meal_service.py` functions
+- Performance optimizations for pending recipe scans
 
-**Phase 29+: Next Steps** 🚧 Planned
-- Wizard architecture refactor
-- Household communication & persistence
-- User authentication (single-household access)
-- Mobile-friendly UX improvements
+**Phase 35: Frictionless Shopping & Recipe Loop** 🚧 Active
+- Closed-loop shopping list to inventory sync
+- Recipe-to-List automation with ingredient deduplication
+- Automated multi-recipe shopping intelligence
 
 See [project_roadmap.md](docs/project_roadmap.md) for complete roadmap.
 

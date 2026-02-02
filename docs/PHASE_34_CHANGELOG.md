@@ -43,6 +43,11 @@ Executed a major documentation audit and cleanup:
 
 ---
 
+## 💡 Key Learnings & Decisions
+- **Structured Data**: Transitioned from free-text `actual_meal` to structured `recipe_ids` across the board to prevent data gaps in modular recipes.
+- **Workflow Optimization**: Separated `/code-review` (logic) from `/verify-ux` (experience) to streamline the QA process.
+- **Observability**: Implemented detailed error codes and expanded unit test coverage (59 passed) to harden the system against silent failures.
+
 ## 🚀 Next Steps
-- Continue Phase 34 Block 2: Interactive Shopping List & Inventory Sync refinements.
-- Focus on addressing remaining high-priority technical debt (`TD-016`).
+- Transition to **Phase 35: Frictionless Shopping & Architecture Hardening**.
+- Refactor `meals.py` into modular service routes.

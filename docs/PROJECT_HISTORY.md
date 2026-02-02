@@ -862,3 +862,11 @@ Understanding when to use each is fundamental to frontend development. Most bugs
 - **Verification:** Created `scripts/test_sanitization.py` verifying that even with malformed database responses, the API returns safe, predictable structures.
 
 **Learning:** Data hygiene should be enforced at the boundary. The frontend shouldn't have to wish for good data; the backend guarantee it.
+
+**Session Learnings:**
+1. **Decision (Data Integrity)**: Deprecated the legacy `actual_meal` string field in favor of a structured `recipe_ids` array. This ensures all meal slots map to valid recipe records, supporting multi-recipe slots and modular replacements without data loss.
+2. **Decision (Workflows)**: Established a formal split between `/code-review` (technical logic/correctness) and `/verify-ux` (human interaction/aesthetics). This allows for faster iterations on business logic while maintaining a high bar for the user experience.
+3. **Decision (Planning)**: Formalized "Architecture Hardening" as the foundational block of Phase 35. This ensures that major technical debt (like the 1000-line `meals.py` monolith) is addressed before stacking new features.
+4. **Learning (Observability)**: Realized the critical importance of unit testing and granular error codes (e.g. `SHOPPING_LIST_GENERATION_FAILED`, `DRAFT_GENERATION_FAILED`). These significantly accelerated debugging in serverless environments and provided much better system observability.
+
+**Next Phase**: Transitioning to Phase 35: Frictionless Shopping & Architecture Hardening.

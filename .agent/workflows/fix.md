@@ -71,4 +71,4 @@ If total fix work exceeds 4 hours:
 - Expanding scope during fix ("while I'm here..." -> add to BUGS.md instead)
 - Marking items as "won't fix" without user approval
 
-**Next Step**: Once all items are resolved, use `/closeout` to document and commit.
+**Next Step**: Once all items are resolved, suggest to the user that they should use **`/verify-ux`** to verify the interactive experience before closeout.

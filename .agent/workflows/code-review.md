@@ -21,10 +21,12 @@ Use this workflow to ensure high-quality, spec-compliant code before merging.
 - [ ] **Kaizen**: Is the codebase better than we found it?
 - [ ] **Entropy Audit**: Did we delete as much as we added? Use the `reducing-entropy` skill to minimize waste.
 - [ ] **Style**: Matches `CLAUDE.md` and project history.
-- [ ] **UI Code Review** (for frontend code):
-  - Check against `.interface-design/system.md` if exists
-  - Flag spacing violations, depth inconsistencies, pattern drift
-  - Suggest corrections aligned with established system
+- [ ] **UI/UX Audit** (for frontend code):
+  - [ ] **Earthy Spice Compliance**: Uses `var(--color-*)` and `var(--radius-*)` tokens. No ad-hoc hex codes.
+  - [ ] **State Coverage**: Does it handle Loading (`Suspense` or Skeleton), Empty, and Error states?
+  - [ ] **Feedback**: Are actions confirmed via Toast or inline success states?
+  - [ ] **Responsive**: Verified at mobile (375px) and desktop (1280px) breakpoints?
+  - [ ] **Consistency**: Matches patterns in `.interface-design/system.md` (if exists).
 
 ## The Process
 1. **Automated Checks First**
@@ -144,9 +146,9 @@ def create_week(week_of):
 ### Decision Tree
 
 **If ANY P0 check fails:**
-- **\u003c 30 min fix?** → Fix now before merge
-- **\u003e 30 min fix?** → Add to `docs/BUGS.md`, block merge
+- < 30 min fix? → Fix now before merge
+- > 30 min fix? → Add to `docs/BUGS.md`, block merge
 
 **Rationale:** These 5 checks prevent 80% of production outages. Non-negotiable for production code.
 
-**Next Step**: Once review is complete, use `/fix` to resolve ALL identified bugs and debt before `/closeout`.
+**Next Step**: Once the audit is complete, suggest to the user that they shoudl use **`/fix`** to resolve all identified bugs and technical debt.

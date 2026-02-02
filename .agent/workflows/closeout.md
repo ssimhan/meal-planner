@@ -9,6 +9,7 @@ Use this workflow to wrap up a development session and maintain a clean project 
 ## Prerequisites
 - `/code-review` has been completed
 - `/fix` has been completed with zero remaining bugs/debt
+- `/verify-ux` has been completed for interactive verification
 - BUGS.md shows all items resolved for current phase
 
 ## Core Principles

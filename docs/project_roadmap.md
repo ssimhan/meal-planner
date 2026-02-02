@@ -50,7 +50,8 @@
 ### Phase 35: Frictionless Shopping & Architecture Hardening (Active)
 **Goal:** Transform the core user loop into a high-utility engine while hardening the service architecture and cleaning up historical data.
 
-- **Block 0: Architecture Hardening (Foundational)**
+- **Block 0: Architecture Hardening (Foundational)**  
+  *See [Phase 34 Audit Walkthrough](/Users/sandhya.simhan/.gemini/antigravity/brain/c4df0b32-6b42-4523-bba9-6d0a0736c9dc/walkthrough.md) for rationale.*
   - [ ] **TD-017:** Refactor `api/routes/meals.py` (1000+ line monolith) into modular service routes (`planning.py`, `tracking.py`, `shopping.py`).
   - [ ] **TD-016:** Implement "Data Janitor" script to clean up historical `meal_plans` records with missing recipe IDs in lunch data.
 - **Block 1: Closed-Loop Shopping (~4 hrs)**

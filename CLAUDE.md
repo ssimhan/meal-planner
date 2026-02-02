@@ -9,6 +9,7 @@ Use the following slash commands for common tasks:
 - `/plan`: Create TDD-first implementation plans.
 - `/build`: Execute approved plans with subagents and TDD.
 - `/code-review`: Review newly built code for debt/risks.
+- `/verify-ux`: Perform interactive UX audit and automated browser tests.
 - `/fix`: Resolve all bugs and technical debt before phase completion.
 - `/closeout`: Update docs, commit, and push.
 

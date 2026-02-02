@@ -41,7 +41,7 @@ Use this workflow to ensure high-quality, spec-compliant code before merging.
    - Architecture decisions
    - Security implications
 
-4. If issues are found, provide specific feedback or implement the fixes.
+4. If issues are found, provide specific feedback on the fixes.
 
 5. Once satisfied, approve the changes for closeout.
 

@@ -868,5 +868,7 @@ Understanding when to use each is fundamental to frontend development. Most bugs
 2. **Decision (Workflows)**: Established a formal split between `/code-review` (technical logic/correctness) and `/verify-ux` (human interaction/aesthetics). This allows for faster iterations on business logic while maintaining a high bar for the user experience.
 3. **Decision (Planning)**: Formalized "Architecture Hardening" as the foundational block of Phase 35. This ensures that major technical debt (like the 1000-line `meals.py` monolith) is addressed before stacking new features.
 4. **Learning (Observability)**: Realized the critical importance of unit testing and granular error codes (e.g. `SHOPPING_LIST_GENERATION_FAILED`, `DRAFT_GENERATION_FAILED`). These significantly accelerated debugging in serverless environments and provided much better system observability.
+5. **Decision (Workflow Refinement)**: Enforced **Reproduction FIRST** for all bug fixes. Every fix must now be preceded by a failing code-based test or a documented Markdown UI Test Plan.
+6. **Build Fix**: Resolved a critical Vercel deployment blocker caused by a version mismatch in `@types/jest`.
 
 **Next Phase**: Transitioning to Phase 35: Frictionless Shopping & Architecture Hardening.

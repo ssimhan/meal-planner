@@ -7,7 +7,7 @@ description: Create a detailed, TDD-first implementation plan from an approved d
 Use this workflow once a design has been approved to create a bite-sized, executable path forward.
 
 ## Core Principles
-- **TDD-First**: Every task must start with a failing test.
+- **TDD-First**: Every task must start with a failing test. For bug fixes, Phase 1 MUST be "Reproduction" via a failing test or a documented UI test plan.
 - **Architectural Rigor**: Apply Clean Architecture, SOLID, and Domain-Driven Design (DDD) to ensure maintainability and high quality.
 - **Bite-sized Granularity**: Each task should take 2-5 minutes to implement.
 - **Zero Ambiguity**: Use exact file paths and specify line ranges when modifying.

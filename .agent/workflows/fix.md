@@ -8,6 +8,7 @@ Use this workflow to eliminate all bugs and debt identified during code-review. 
 
 ## Core Principles
 - **Zero Carryover**: Every bug and debt item is resolved before closeout. No deferrals.
+- **Reproduction FIRST**: NEVER start a fix without a failing test (or a UI test plan) that proves the bug exists.
 - **Decompose to Conquer**: Large fixes get broken into atomic sub-tasks.
 - **Regression Prevention**: Every fix includes a test proving the bug is dead.
 - **Scope Discipline**: Fix what's documented. New discoveries go to BUGS.md, then get fixed.
@@ -28,11 +29,13 @@ For each item, assess complexity:
 Document the breakdown in TodoWrite before starting fixes.
 
 ### 3. Fix Loop (for each item/sub-task)
-- **Reproduce**: Confirm the bug exists (write a failing test).
-- **Isolate**: Identify root cause, not just symptoms.
-- **Fix**: Apply minimal, targeted change.
+- **Reproduce FIRST**:
+  - **Logic/Backend**: Write a failing unit or integration test that reproduces the bug.
+  - **Complex UI**: If a code-based test is insufficient or too complex for the current state, output a **Markdown UI Test Plan** (e.g., `docs/tests/BUG-XXX-repro.md`) detailing the exact steps to reproduce and verify the fix in the browser.
+- **Isolate**: Identify root cause, not just symptoms. Do NOT modify the fix until the reproduction proof (test or plan) is active.
+- **Fix**: Apply minimal, targeted change using subagents (e.g., via `/implement` or `/plan`).
 - **Verify**:
-  - Failing test now passes
+  - Reproduction test now passes OR UI Test Plan steps are successfully executed and verified.
   - Full test suite passes (no regressions)
 - **Update BUGS.md**: Mark as Fixed with brief note.
 - **Commit**: Atomic commit per fix (e.g., `fix(area): resolve BUG-XXX - description`).

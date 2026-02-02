@@ -26,16 +26,22 @@
 
 ---
 
+## Resolved Bugs
+
+| ID | Description | Resolution | Resolved |
+|----|-------------|------------|----------|
+| BUG-001 | Vercel build fail: `@types/jest@^29.7.0` invalid version. | Downgraded to `@types/jest@^29.5.14` (last valid v29 types). | 2026-02-02 |
+
+---
+
 ## Features
 
 **New features or enhancements identified during development.**
 
 | ID | Area | Description | Impact | Effort | Notes |
 |----|------|-------------|--------|--------|-------|
-| TD-016 | Infrastructure | Data Janitor: Clean up historical `meal_plans` records with missing recipe IDs. | High | 2hr | Found in Phase 34 debugging. |
-| TD-017 | Architecture | Refactor `meals.py` monolith into modular service routes. | Medium | 4hr | File exceeds 1000 lines; scalability risk. |
 
-**Count: 2** 🚧
+**Count: 0** ✅
 
 
 ---
@@ -64,6 +70,11 @@ Before merging to `main`:
 - Added: 5 unit tests for `SWRCache` class
 - Upgraded: `get_pending_recipes` from simple TTL to SWR semantics (TD-008)
 - Added: `refresh_pending_recipes_cache()` and `get_pending_recipes_cache_stats()` debugging utilities
+- **Learning (Observability)**: Realized the critical importance of unit testing and granular error codes (e.g. `SHOPPING_LIST_GENERATION_FAILED`, `DRAFT_GENERATION_FAILED`). These significantly accelerated debugging in serverless environments and provided much better system observability.
+- **Decision (Workflow Refinement)**: Enforced **Reproduction FIRST** for all bug fixes. Every fix must now be preceded by a failing code-based test or a documented Markdown UI Test Plan.
+- **Build Fix**: Resolved a critical Vercel deployment blocker caused by a version mismatch in `@types/jest` (BUG-001).
+
+**Next Phase**: Transitioning to Phase 35: Frictionless Shopping & Architecture Hardening.
 
 ### Phase 32 (Completed 2026-01-28)
 - Fixed: `TypeError: e.map is not a function` in ReviewGroceriesModal (SM-001). API response was an object, expected array.
@@ -152,7 +163,6 @@ Before merging to `main`:
 4. Help triage priority/impact levels
 
 **Before phase completion:**
-- Verify both tables are empty (for current phase items)
-- Block merge to main if bugs remain
-- Suggest de-scoping features if needed to hit quality gate
-
+1. Verify both tables are empty (for current phase items)
+2. Block merge to main if bugs remain
+3. Suggest de-scoping features if needed to hit quality gate

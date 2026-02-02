@@ -1,7 +1,7 @@
 # Bug Tracking & Technical Debt
 
-**Last Updated:** 2026-01-29
-**Current Phase:** 34 (Frictionless Shopping)
+**Last Updated:** 2026-02-02
+**Current Phase:** 34 (Tech Debt Review Complete)
 
 ---
 
@@ -46,9 +46,11 @@
 | TD-005 | Architecture | GroceryMapper uses local JSON (`data/store_map.json`). | High | 3hr | ✅ Fixed: Migrated to Supabase `households.config.store_preferences`. |
 | TD-006 | Performance | Heuristic prep-task generation reads MD files on every request. | Medium | 2hr | ✅ Fixed: Added LRU cache with content hash key for `get_prep_tasks`. |
 | TD-007 | Persistence | `StorageEngine` writes to local YAML/JSON in some methods. | High | 2hr | ✅ Fixed: Migrated `ignored_recipes`, `preferences` to DB config. |
-| TD-008 | Performance | `get_pending_recipes` is a heavy, unoptimized scan. | Medium | 2hr | ✅ Fixed: Added TTL-based caching (5 min) per household. |
-| TD-009 | Architecture | Large route files (`meals.py`) contain complex business logic. | Medium | 4hr | ✅ Fixed: Extracted 6 helpers to `api/services/meal_service.py`. Reduced `log_meal` from 258 to ~180 lines. |
+| TD-008 | Performance | `get_pending_recipes` is a heavy, unoptimized scan. | Medium | 2hr | ✅ Fixed: Upgraded to SWR cache pattern (fresh 5min, stale 10min). |
+| TD-009 | Architecture | Large route files (`meals.py`) contain complex business logic. | Medium | 4hr | ✅ Fixed: Extracted 6 helpers to `api/services/meal_service.py`. Added 12 unit tests for 100% coverage. |
 | TD-010 | Testing | Integration tests need proper mocking and test data fixtures. | Medium | 4hr | ✅ Fixed: Rewrote `test_api_perf.py` and `test_backend.py` with proper mocking and assertions. |
+| TD-013 | Performance | SWR (Stale-While-Revalidate) cache pattern for serverless. | Medium | 2hr | ✅ Added: `SWRCache` class with fresh/stale/miss semantics. 5 tests added. |
+| TD-014 | Testing | `meal_service.py` helpers lack unit test coverage. | Medium | 2hr | ✅ Fixed: Added 12 tests for all 6 functions (100% coverage). |
 | TD-011 | UX | Import preview modal is too small and "Save" button is hard to find. | Low | 1hr | ✅ Fixed: Added min-height on textareas, prominent animated Save button. |
 | TD-012 | Recipes | Recipe import doesn't auto-populate Prep Tasks section. | Medium | 3hr | ✅ Fixed: Added inline `get_prep_tasks()` call in `capture_recipe()`. |
 
@@ -104,7 +106,14 @@ Before merging to `main`:
 - Fixed: Task Duplication (In-place list modification)
 - Fixed: Prep Counter / Dinner Display out of sync
 
-### Phase 32 (In Progress / Finishing)
+### Phase 34 (Completed 2026-02-02)
+- Added: SWR (Stale-While-Revalidate) cache pattern for serverless environments (TD-013)
+- Added: 12 unit tests for `meal_service.py` helpers (TD-014)
+- Added: 5 unit tests for `SWRCache` class
+- Upgraded: `get_pending_recipes` from simple TTL to SWR semantics (TD-008)
+- Added: `refresh_pending_recipes_cache()` and `get_pending_recipes_cache_stats()` debugging utilities
+
+### Phase 32 (Completed 2026-01-28)
 - Fixed: `TypeError: e.map is not a function` in ReviewGroceriesModal (SM-001). API response was an object, expected array.
 - Fixed: `[Errno 30] Read-only file system: 'debug_log.txt'` during replan confirm (SYS-001)
 - Fixed: Replan Inventory Scroll (UI-005)

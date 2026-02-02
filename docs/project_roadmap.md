@@ -1,6 +1,6 @@
 # Meal Planner Implementation Guide - Project Roadmap
 
-**Last Updated:** 2026-01-28
+**Last Updated:** 2026-02-02
 **Live Site:** [meal-planner-eta-seven.vercel.app](https://meal-planner-eta-seven.vercel.app/)
 
 ---
@@ -16,7 +16,25 @@
 > See [BUGS.md](BUGS.md) for current status. Fix all issues before marking blocks complete.
 
 ## 🚀 Active Phase
-**Phase 33: Advanced Recipe Management**
+**Phase 35: Household Synergy & Infrastructure**
+
+---
+
+## ✅ Phase 34: Strategic Tech Debt Cleanup (Complete)
+- [x] **TD-006:** LRU caching for `get_prep_tasks` with content-hash keys
+- [x] **TD-008:** SWR (Stale-While-Revalidate) cache for `get_pending_recipes`
+- [x] **TD-009:** Extracted `meal_service.py` with 6 helpers, 100% test coverage (12 tests)
+- [x] **TD-010:** Restored integration tests with proper StorageEngine mocking
+- [x] **TD-011/12:** Import recipe UX improvements and auto prep task generation
+- [x] **TD-013:** SWRCache class for serverless environments (5 tests)
+- [x] **TD-014:** Unit test coverage for all `meal_service.py` functions
+
+---
+
+## ✅ Phase 33: Advanced Recipe Management (Complete)
+- [x] Multi-recipe slots per dinner
+- [x] 3-box recipe editor (Ingredients, Prep Steps, Instructions)
+- [x] Recipe import with auto-prep task generation
 
 ---
 
@@ -30,35 +48,27 @@
 
 ## 📅 Upcoming Roadmap
 
-### Phase 34: Frictionless Shopping & Recipe Loop
+### Phase 35: Frictionless Shopping & Recipe Loop (Current)
 **Goal:** Transform the core user loop into a high-utility, automated engine.
 
-- **Block 1: Multi-item Meal Slots (~5 hrs)**
-  - [ ] **3.1 Data Model & API (2 hrs):** Update `meal_plans` schema (`recipe_ids` array) and Python endpoints to support multiple recipes per slot.
-  - [ ] **3.2 UI Rendering (1.5 hrs):** Update Draft/Week views to display and manage multiple items (e.g., Soup AND Salad) per meal.
-  - [ ] **3.3 Shopping List Aggregate (1.5 hrs):** Update inventory/shopping engine to aggregate ingredients from all recipes in a multi-item slot.
-- **Block 2: Closed-Loop Shopping (~4 hrs)**
-  - [ ] **Sync:** Ensure marking an item as "Purchased" in the shopping list adds it to the correct inventory category (BUG-002).
+- **Block 1: Closed-Loop Shopping (~4 hrs)**
+  - [ ] **Sync:** Ensure marking an item as "Purchased" in the shopping list adds it to the correct inventory category.
   - [ ] **Persistence:** Automatically save store preference/mapping during shopping.
-  - [ ] **Optimization:** Cache heuristic prep tasks at the recipe level in Supabase (TD-006).
-- **Block 3: Recipe-to-List Automation (~3 hrs)**
+- **Block 2: Recipe-to-List Automation (~3 hrs)**
   - [ ] **UI:** Add "Add Ingredients to Shopping List" button to the Recipe Detail wrapper.
   - [ ] **Logic:** Implement deduplication/checking against current inventory when adding.
 
-### Phase 35: Household Synergy & Infrastructure
-**Goal:** Enable multiple members to coordinate and stabilize the data foundation.
+### Phase 36: Household Synergy & Coordination
+**Goal:** Enable multiple members to coordinate and improve household collaboration.
 
 - **Block 1: Shared Coordination (~10 hrs)**
-  - [ ] **Member Management:** Migrate `GroceryMapper` data to Supabase table `store_mappings` (TD-005).
+  - [ ] **Member Management:** Invite household members and manage permissions.
   - [ ] **Feedback Loop:** Add "Who liked/disliked this?" toggles and basic trend identification.
   - [ ] **Shared Brain Dump:** DB-backed `household_notes` table for shared household items and real-time Dashboard widget.
-- **Block 2: Smart Operations & Hygiene (~10 hrs)**
-  - [ ] **Inference:** Implement `GroceryMapper.infer_category()` to auto-assign items to Fridge/Pantry/Freezer.
-  - [ ] **Infrastructure:** Standardize all `StorageEngine` persistence to Supabase (TD-007).
-  - [ ] **Performance:** Optimize `get_pending_recipes` and add background worker for heavy tasks (TD-008, TD-009).
+- **Block 2: Schedule Flexibility (~5 hrs)**
   - [ ] **Schedule Flexibility:** Implement a more logical, editable prep time slot selector for varied household schedules.
 
-### Phase 36: AI-Powered Operations & Search
+### Phase 37: AI-Powered Operations & Search
 **Goal:** Leverage AI for low-friction logging and intelligent assistance.
 
 - **Block 1: Multimodal Inventory (~14 hrs)**
@@ -69,14 +79,14 @@
   - [ ] **Integrations:** Weather/Calendar meal suggestions and Weekly Summary Emails.
   - [ ] **AI Substitutions:** Ingredient swap suggestions based on inventory and allergens.
 
-### Phase 37: Mobile Experience & PWA
+### Phase 38: Mobile Experience & PWA
 **Goal:** Ensure the app feels like a native utility on mobile.
 
 - **Block 1: Mobile UX & Offline (~10 hrs)**
   - [ ] **Mobile UX Audit:** Optimize "Week View" and Navigation for one-handed mobile use.
   - [ ] **PWA & Capacitor:** Implement Offline Service Workers and wrap with Capacitor for native haptics.
 
-### Phase 38: Nutrition & Precision Tracking
+### Phase 39: Nutrition & Precision Tracking
 **Goal:** Granular health and consumption analytics.
 
 - **Block 1: Health & Split Meals (~8 hrs)**

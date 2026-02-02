@@ -29,7 +29,7 @@ Use this workflow to ensure high-quality, spec-compliant code before merging.
 ## The Process
 1. **Automated Checks First**
    - Run `npm run check:full` to execute all automated checks.
-   - This runs: TypeScript, ESLint, Jest (15 tests), pytest (37 tests).
+   - This runs: TypeScript, ESLint, Jest (15 tests), pytest (60+ tests).
    - If any fail, fix before proceeding.
 
 2. **Inspect the diff** of the changes.

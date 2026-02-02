@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# Fast pre-commit checks
+# Runs type checking, linting, and tests before allowing commit
+
+echo "Running pre-commit checks..."
+
+# Type check (fast, catches most errors)
+echo "→ Type checking..."
+npx tsc --noEmit
+if [ $? -ne 0 ]; then
+    echo "✗ Type check failed. Fix errors before committing."
+    exit 1
+fi
+
+# Lint (quiet mode - only errors, no warnings)
+echo "→ Linting..."
+npm run lint --quiet
+if [ $? -ne 0 ]; then
+    echo "✗ Lint failed. Fix errors before committing."
+    exit 1
+fi
+
+# Run frontend tests (bail on first failure for speed)
+echo "→ Running frontend tests..."
+npm test -- --bail --passWithNoTests
+if [ $? -ne 0 ]; then
+    echo "✗ Frontend tests failed. Fix before committing."
+    exit 1
+fi
+
+# Run Python tests (unit tests only, stop on first failure for speed)
+echo "→ Running Python tests..."
+if [ -d ".venv" ]; then
+    PYTHONPATH=. .venv/bin/pytest tests/ -x --tb=line -q \
+        --ignore=tests/test_integration.py \
+        --ignore=tests/test_shopping_api.py \
+        --ignore=tests/test_api_perf.py
+else
+    PYTHONPATH=. python3 -m pytest tests/ -x --tb=line -q \
+        --ignore=tests/test_integration.py \
+        --ignore=tests/test_shopping_api.py \
+        --ignore=tests/test_api_perf.py
+fi
+if [ $? -ne 0 ]; then
+    echo "✗ Python tests failed. Fix before committing."
+    exit 1
+fi
+
+echo "✓ All pre-commit checks passed!"

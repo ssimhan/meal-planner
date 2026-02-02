@@ -197,6 +197,7 @@ export interface Recipe {
   ingredients?: string[];
   instructions?: string;
   tags?: string[];
+  requires_side?: boolean;
 }
 
 export interface RecipeListItem {
@@ -207,6 +208,7 @@ export interface RecipeListItem {
   effort_level?: string;
   no_chop_compatible?: boolean;
   tags?: string[];
+  requires_side?: boolean;
 }
 
 export interface RecipesResponse {

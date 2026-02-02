@@ -87,14 +87,14 @@ export default function RecipesPage() {
             <div className="container mx-auto max-w-4xl">
                 <header className="mb-8 flex justify-between items-end">
                     <div>
-                        <Link href="/" className="text-[var(--accent-green)] hover:underline mb-4 inline-block font-mono">← Dashboard</Link>
-                        <h1 className="text-5xl">Recipe Browser</h1>
+                        <Link href="/" className="text-[var(--cardamom)] hover:underline mb-4 inline-block font-mono">← Dashboard</Link>
+                        <h1 className="text-5xl font-black text-[var(--text-main)]">Recipe Browser</h1>
                     </div>
                     <div className="flex flex-col items-end gap-3">
                         <div className="flex gap-2">
                             <button
                                 onClick={() => setIsImportOpen(true)}
-                                className="px-6 py-2.5 bg-[var(--accent-gold)] text-[var(--bg-primary)] rounded-full font-bold text-sm transition-all hover:bg-yellow-400 hover:scale-105 active:scale-95 shadow-md flex items-center gap-2"
+                                className="px-6 py-2.5 bg-[var(--turmeric)] text-white rounded-full font-bold text-sm transition-all hover:brightness-110 hover:scale-105 active:scale-95 shadow-md flex items-center gap-2"
                             >
                                 <span className="text-lg">✨</span> Import
                             </button>
@@ -113,10 +113,10 @@ export default function RecipesPage() {
                                     return (
                                         <Link
                                             href="/recipes/batch-edit"
-                                            className="relative group px-6 py-2.5 bg-emerald-600 text-white rounded-full font-bold text-sm transition-all hover:bg-emerald-700 hover:scale-105 active:scale-95 shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] flex items-center gap-2"
+                                            className="relative group px-6 py-2.5 bg-[var(--cardamom)] text-white rounded-full font-bold text-sm transition-all hover:brightness-110 hover:scale-105 active:scale-95 shadow-md flex items-center gap-2"
                                         >
                                             <span>Review</span>
-                                            <span className="bg-white text-emerald-600 rounded-full w-5 h-5 flex items-center justify-center text-[10px] shadow-inner">
+                                            <span className="bg-white text-[var(--cardamom)] rounded-full w-5 h-5 flex items-center justify-center text-[10px] shadow-inner">
                                                 {needsReviewCount}
                                             </span>
                                         </Link>
@@ -140,7 +140,7 @@ export default function RecipesPage() {
                     <input
                         type="text"
                         placeholder="Search recipes or meal types..."
-                        className="w-full p-4 border border-[var(--border-subtle)] rounded-lg bg-[var(--bg-secondary)] focus:ring-2 focus:ring-[var(--accent-sage)] focus:border-transparent outline-none transition-all"
+                        className="w-full p-4 border border-[var(--border-subtle)] rounded-lg bg-[var(--bg-secondary)] focus:ring-2 focus:ring-[var(--turmeric)] focus:border-transparent outline-none transition-all"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -196,7 +196,7 @@ export default function RecipesPage() {
                                     setFilterEffort('all');
                                     setFilterTag('all');
                                 }}
-                                className="text-xs text-[var(--accent-terracotta)] hover:underline font-bold px-2"
+                                className="text-xs text-[var(--beetroot)] hover:underline font-bold px-2"
                             >
                                 Clear ✕
                             </button>
@@ -271,7 +271,7 @@ function RecipeCard({ recipe }: { recipe: any }) {
             <Link href={`/recipes/${recipe.id}`} className="absolute inset-0 z-10" />
             <div className="flex justify-between items-start">
                 <div>
-                    <h3 className="text-xl mb-1 group-hover:text-[var(--accent-sage)] transition-colors">{recipe.name}</h3>
+                    <h3 className="text-xl mb-1 group-hover:text-[var(--turmeric)] transition-colors">{recipe.name}</h3>
                     <div className="flex gap-2 text-sm text-[var(--text-muted)] font-mono uppercase tracking-widest items-center">
                         <span>{recipe.meal_type}</span>
                         {recipe.cuisine && <span className="opacity-50">• {recipe.cuisine}</span>}
@@ -420,7 +420,7 @@ function RecipeReviewModal({ recipes, onClose, onRefresh }: { recipes: RecipeLis
                 <div className="p-6">
                     <div className="flex justify-between items-start mb-6">
                         <div className="flex-1 mr-4">
-                            <span className="text-[10px] font-bold text-[var(--accent-sage)] uppercase tracking-widest mb-1 block">
+                            <span className="text-[10px] font-bold text-[var(--turmeric)] uppercase tracking-widest mb-1 block">
                                 Reviewing {currentIndex + 1} of {recipes.length}
                             </span>
                             <div className="flex items-center gap-3">
@@ -474,7 +474,7 @@ function RecipeReviewModal({ recipes, onClose, onRefresh }: { recipes: RecipeLis
                                 value={cuisine}
                                 onChange={(e) => setCuisine(e.target.value)}
                                 placeholder="e.g. Indian, Italian"
-                                className="w-full p-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-[var(--accent-sage)] focus:bg-white outline-none transition-all"
+                                className="w-full p-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-[var(--turmeric)] focus:bg-white outline-none transition-all"
                             />
                         </div>
 
@@ -488,10 +488,10 @@ function RecipeReviewModal({ recipes, onClose, onRefresh }: { recipes: RecipeLis
                             </div>
                             <div className="grid grid-cols-2 gap-2">
                                 {[
-                                    { id: 'low', label: '1 - Low', color: 'bg-[var(--accent-green)]' },
-                                    { id: 'mild', label: '2 - Mild', color: 'bg-[var(--accent-gold)]' },
+                                    { id: 'low', label: '1 - Low', color: 'bg-[var(--cardamom)]' },
+                                    { id: 'mild', label: '2 - Mild', color: 'bg-[var(--turmeric)]' },
                                     { id: 'normal', label: '3 - Normal', color: 'bg-gray-400' },
-                                    { id: 'high', label: '4 - High', color: 'bg-[var(--accent-terracotta)]' }
+                                    { id: 'high', label: '4 - High', color: 'bg-[var(--beetroot)]' }
                                 ].map(opt => (
                                     <button
                                         key={opt.id}

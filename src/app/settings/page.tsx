@@ -14,6 +14,7 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [config, setConfig] = useState<any>({});
+  const [resetDate, setResetDate] = useState(new Date().toISOString().split('T')[0]); // Default to today
 
   const loadSettings = React.useCallback(async () => {
     try {
@@ -407,29 +408,42 @@ export default function SettingsPage() {
 
             <div className="p-4 bg-white border border-red-100 rounded-xl space-y-4">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                  <h4 className="font-bold text-sm">Reset Current Week</h4>
-                  <p className="text-xs text-[var(--text-muted)]">Deletes the active meal plan so you can restart the Planning Wizard.</p>
+                <div className="flex-1">
+                  <h4 className="font-bold text-sm">Reset Plans (Cascade)</h4>
+                  <p className="text-xs text-[var(--text-muted)]">
+                    Permanently delete all meal plans starting from the selected date onwards.
+                    Useful for resetting test data.
+                  </p>
                 </div>
-                <button
-                  onClick={async () => {
-                    if (confirm('Are you sure you want to delete the current week\'s plan? This will let you restart the planning wizard.')) {
-                      try {
-                        const status = await getStatus();
-                        if (status.week_of) {
-                          await deleteWeek(status.week_of);
-                          showToast('Week deleted. Redirecting to home...', 'success');
-                          setTimeout(() => window.location.href = '/', 1500);
-                        }
-                      } catch (err) {
-                        showToast('Failed to reset week', 'error');
+                <div className="flex items-center gap-2">
+                  <input
+                    type="date"
+                    className="input text-xs py-2 px-2"
+                    value={resetDate}
+                    onChange={(e) => setResetDate(e.target.value)}
+                  />
+                  <button
+                    onClick={async () => {
+                      if (!resetDate) {
+                        showToast('Please select a start date', 'error');
+                        return;
                       }
-                    }
-                  }}
-                  className="px-4 py-2 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700 transition-colors shadow-sm"
-                >
-                  Clear Current Plan
-                </button>
+                      if (confirm(`WARNING: This will delete ALL meal plans from ${resetDate} onwards. Are you sure?`)) {
+                        try {
+                          await deleteWeek(resetDate);
+                          showToast(`Plans from ${resetDate} cleared. Redirecting...`, 'success');
+                          setTimeout(() => window.location.href = '/', 1500);
+                        } catch (err) {
+                          showToast('Failed to reset plans', 'error');
+                          console.error(err);
+                        }
+                      }
+                    }}
+                    className="px-4 py-2 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700 transition-colors shadow-sm whitespace-nowrap"
+                  >
+                    Clear Plans
+                  </button>
+                </div>
               </div>
             </div>
           </section>

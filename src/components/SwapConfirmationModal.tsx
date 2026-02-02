@@ -21,12 +21,12 @@ const dayNames: { [key: string]: string } = {
 export default function SwapConfirmationModal({ day1, day2, onConfirm, onCancel, isLoading }: SwapConfirmationModalProps) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 transform transition-all animate-in zoom-in-95 duration-200">
+            <div className="bg-[var(--bg-card)] rounded-2xl shadow-2xl max-w-sm w-full p-6 transform transition-all animate-in zoom-in-95 duration-200 border border-[var(--border-subtle)]">
                 <h3 className="text-xl font-bold text-[var(--text-primary)] mb-4 text-center">Swap Meals?</h3>
 
                 <div className="flex items-center justify-center gap-4 mb-8">
                     <div className="text-center">
-                        <div className="w-12 h-12 rounded-full bg-[var(--bg-secondary)] flex items-center justify-center mx-auto mb-2 text-xl font-bold text-[var(--accent-sage)]">
+                        <div className="w-12 h-12 rounded-full bg-[var(--bg-secondary)] flex items-center justify-center mx-auto mb-2 text-xl font-bold text-[var(--turmeric)]">
                             {dayNames[day1].substring(0, 3)}
                         </div>
                         <span className="text-sm font-medium">{dayNames[day1]}</span>
@@ -35,7 +35,7 @@ export default function SwapConfirmationModal({ day1, day2, onConfirm, onCancel,
                     <div className="text-[var(--text-muted)] text-xl">⇄</div>
 
                     <div className="text-center">
-                        <div className="w-12 h-12 rounded-full bg-[var(--bg-secondary)] flex items-center justify-center mx-auto mb-2 text-xl font-bold text-[var(--accent-sage)]">
+                        <div className="w-12 h-12 rounded-full bg-[var(--bg-secondary)] flex items-center justify-center mx-auto mb-2 text-xl font-bold text-[var(--turmeric)]">
                             {dayNames[day2].substring(0, 3)}
                         </div>
                         <span className="text-sm font-medium">{dayNames[day2]}</span>
@@ -47,7 +47,7 @@ export default function SwapConfirmationModal({ day1, day2, onConfirm, onCancel,
                         This will swap the dinners and automatically regenerate your prep instructions.
                     </p>
                     {isLoading && (
-                        <p className="text-[var(--accent-sage)] font-medium animate-pulse">
+                        <p className="text-[var(--turmeric)] font-medium animate-pulse">
                             Swapping meals and updating prep tasks. This may take a few seconds...
                         </p>
                     )}
@@ -64,7 +64,7 @@ export default function SwapConfirmationModal({ day1, day2, onConfirm, onCancel,
                     <button
                         onClick={onConfirm}
                         disabled={isLoading}
-                        className="flex-1 px-4 py-2 rounded-lg bg-[var(--accent-sage)] text-white font-medium hover:brightness-95 transition-all shadow-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex-1 px-4 py-2 rounded-lg bg-[var(--turmeric)] text-white font-medium hover:brightness-95 transition-all shadow-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isLoading ? 'Swapping...' : 'Confirm Swap'}
                     </button>

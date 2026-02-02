@@ -65,10 +65,14 @@ def get_cached_data(key, path):
     return data
 
 def invalidate_cache(key=None):
-    """Clear specific cache key or all keys."""
+    """Bridge to StorageEngine invalidation and local cleanup."""
     if key:
         if key in CACHE:
             CACHE[key] = {'data': None, 'timestamp': 0}
     else:
         for k in CACHE:
             CACHE[k] = {'data': None, 'timestamp': 0}
+            
+    from api.utils.storage import invalidate_cache as storage_invalidate
+    storage_invalidate(key)
+

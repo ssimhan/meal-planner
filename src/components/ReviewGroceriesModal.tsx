@@ -94,7 +94,7 @@ export default function ReviewGroceriesModal({ weekOf, onClose }: ReviewGrocerie
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60]">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
-                <div className="p-6 bg-[var(--accent-sage)]/10 border-b border-[var(--accent-sage)]/20">
+                <div className="p-6 bg-[var(--turmeric)]/5 border-b border-[var(--turmeric)]/10">
                     <h2 className="text-xl font-bold text-gray-800">Review Shopping List</h2>
                     <p className="text-sm text-gray-600 mt-1">
                         These ingredients are missing. Let me know what you already have so I can update your inventory and shopping list.
@@ -156,7 +156,7 @@ export default function ReviewGroceriesModal({ weekOf, onClose }: ReviewGrocerie
                                     ) : (
                                         <button
                                             onClick={() => handleAction(idx, 'keep')}
-                                            className="text-xs text-[var(--accent-sage)] underline hover:text-[var(--accent-primary)]"
+                                            className="text-xs text-[var(--turmeric)] underline hover:text-[var(--beetroot)]"
                                         >
                                             Undo
                                         </button>
@@ -173,7 +173,7 @@ export default function ReviewGroceriesModal({ weekOf, onClose }: ReviewGrocerie
                         disabled={processing}
                         className="px-6 py-3 bg-[var(--accent-primary)] text-white font-bold rounded-lg shadow hover:shadow-lg disabled:opacity-50 transition-all flex items-center gap-2"
                     >
-                        {processing ? <span className="animate-spin">⟳</span> : null}
+                        {processing ? <div className="w-4 h-4 border-2 border-[var(--turmeric)] border-t-transparent rounded-full animate-spin"></div> : null}
                         {processing ? 'Updating...' : 'Confirm List'}
                     </button>
                 </div>

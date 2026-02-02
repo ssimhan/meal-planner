@@ -11,6 +11,7 @@ from api.utils import storage, invalidate_cache
 from api.utils.auth import require_auth
 from scripts import log_execution
 # TD-009: Import extracted service functions
+from api.services.pairing_service import get_paired_suggestions
 from api.services.meal_service import (
     parse_made_status,
     find_or_create_dinner,
@@ -21,6 +22,29 @@ from api.services.meal_service import (
 )
 
 meals_bp = Blueprint('meals', __name__)
+
+@meals_bp.route("/api/recipes/paired", methods=["GET"])
+@require_auth
+def get_paired_recipes_route():
+    try:
+        main_id = request.args.get('main_id')
+        if not main_id or not isinstance(main_id, str):
+            return jsonify({"status": "error", "message": "Valid main_id required"}), 400
+            
+        try:
+            history = storage.StorageEngine.get_history()
+        except Exception as e:
+            print(f"Error fetching history: {e}")
+            history = []
+            
+        suggestions = get_paired_suggestions(main_id, history)
+        
+        return jsonify({
+            "status": "success",
+            "suggestions": suggestions
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 @meals_bp.route("/api/generate-plan", methods=["POST"])
 @require_auth
@@ -79,7 +103,12 @@ def generate_plan_route():
             "week_of": week_str
         })
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        import traceback; traceback.print_exc()
+        return jsonify({
+            "status": "error", 
+            "code": "GENERATION_FAILED",
+            "message": f"Failed to generate plan: {str(e)}"
+        }), 500
 
 @meals_bp.route("/api/plan/draft", methods=["POST"])
 @require_auth
@@ -115,8 +144,11 @@ def generate_draft_route():
             day = selection.get('day')
             recipe_id = selection.get('recipe_id')
             slot = selection.get('slot', 'dinner')
-            if not day or not recipe_id: continue
+            recipe_ids = selection.get('recipe_ids')
             
+            if not day or (not recipe_id and not recipe_ids): continue
+            
+            ids = recipe_ids or [recipe_id]
             day_abbr = day.lower()[:3]
             days_covered.add(day_abbr)
             
@@ -125,19 +157,19 @@ def generate_draft_route():
                 found = False
                 for dinner in history_week.get('dinners', []):
                     if dinner.get('day') == day_abbr:
-                        dinner['recipe_ids'] = [recipe_id]
+                        dinner['recipe_ids'] = ids
                         found = True
                         break
                 if not found:
                     history_week.setdefault('dinners', []).append({
                         'day': day_abbr,
-                        'recipe_id': recipe_id
+                        'recipe_ids': ids
                     })
             elif slot == 'lunch':
                 history_week.setdefault('lunches', {})
                 history_week['lunches'][day_abbr] = {
-                    'recipe_ids': [recipe_id],
-                    'recipe_name': selection.get('recipe_name') or recipe_id.replace('_', ' ').title(),
+                    'recipe_ids': ids,
+                    'recipe_name': selection.get('recipe_name') or (recipe_id.replace('_', ' ').title() if recipe_id else "Multiple Recipes"),
                     'prep_style': 'manual'
                 }
             elif slot in ['school_snack', 'home_snack']:
@@ -186,15 +218,29 @@ def generate_draft_route():
 
         query = storage.supabase.table("recipes").select("id, name, metadata").eq("household_id", h_id)
         all_recipes_res = storage.execute_with_retry(query)
-        all_recipes = [{"id": r['id'], "name": r['name'], **(r.get('metadata') or {})} for r in all_recipes_res.data]
         
+        # BUG-002: Fixed fragility with safe parsing and defensive checks
+        all_recipes = []
+        if all_recipes_res.data:
+            for r in all_recipes_res.data:
+                try:
+                    meta = r.get('metadata') or {}
+                    # Use .get() everywhere to avoid KeyErrors
+                    all_recipes.append({"id": r.get('id'), "name": r.get('name') or "Unknown Recipe", **meta})
+                except Exception as ex:
+                    print(f"Warning: Skipping malformed recipe: {ex}")
+        
+        # 3.5 Fetch live inventory for accurate generation
+        live_inventory = storage.StorageEngine.get_inventory()
+
         # 4. Generate the rest of the plan
         new_plan_data, new_history = generate_meal_plan(
             input_file=None, 
             data=plan_data,
             recipes_list=all_recipes,
             history_dict=history,
-            exclude_defaults=data.get('exclude_defaults')
+            exclude_defaults=data.get('exclude_defaults'),
+            inventory_data=live_inventory
         )
         
         # 5. Extract the generated week's history
@@ -217,8 +263,22 @@ def generate_draft_route():
             "history_data": current_history_week
         })
     except Exception as e:
-        import traceback; traceback.print_exc()
-        return jsonify({"status": "error", "message": str(e)}), 500
+        import traceback
+        error_trace = traceback.format_exc()
+        print(f"ERROR: /api/plan/draft failed: {e}")
+        # Write to log file for user debugging
+        try:
+            with open('debug_error.log', 'w') as f:
+                f.write(error_trace)
+        except: pass
+        
+        traceback.print_exc()
+        return jsonify({
+            "status": "error", 
+            "code": "DRAFT_GENERATION_FAILED",
+            "message": f"Failed to generate draft plan: {str(e)}",
+            "details": error_trace.splitlines()[-1] if error_trace else str(e)
+        }), 500
 
 @meals_bp.route("/api/plan/shopping-list", methods=["GET"])
 @require_auth
@@ -226,14 +286,17 @@ def get_shopping_list_route():
     try:
         week_of = request.args.get('week_of')
         if not week_of:
+            print("[ERROR] Shopping List: Missing week_of parameter")
             return jsonify({"status": "error", "message": "week_of parameter required"}), 400
             
         h_id = storage.get_household_id()
+        print(f"[DEBUG] Fetching shopping list for week: {week_of}, household: {h_id}")
         query = storage.supabase.table("meal_plans").select("plan_data, history_data").eq("household_id", h_id).eq("week_of", week_of)
         res = storage.execute_with_retry(query)
         
         if not res.data:
-            return jsonify({"status": "error", "message": f"No plan found for week {week_of}"}), 404
+            print(f"[DEBUG] Shopping List: No plan found for week {week_of}, returning empty list.")
+            return jsonify({"status": "success", "shopping_list": []}), 200
             
         plan_data = res.data[0].get('plan_data') or {}
         history_data = res.data[0].get('history_data') or {}
@@ -241,14 +304,29 @@ def get_shopping_list_route():
         from scripts.inventory_intelligence import get_shopping_list
         # During planning, plan_data is often more up-to-date in the DB
         data_to_use = plan_data if plan_data.get('dinners') else history_data
-        shopping_list = get_shopping_list(data_to_use)
+        shopping_list, warnings = get_shopping_list(data_to_use, return_warnings=True)
         
         return jsonify({
             "status": "success",
-            "shopping_list": shopping_list
+            "shopping_list": shopping_list,
+            "debug_info": {"warnings": warnings},
+            "warnings": warnings 
         })
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        import traceback
+        error_trace = traceback.format_exc()
+        print(f"ERROR: /api/plan/shopping-list failed: {e}")
+        try:
+            with open('debug_error.log', 'w') as f:
+                f.write(error_trace)
+        except: pass
+        traceback.print_exc()
+        return jsonify({
+            "status": "error",
+            "code": "SHOPPING_LIST_GENERATION_FAILED", 
+            "message": f"Failed to fetch shopping list: {str(e)}",
+            "details": error_trace.splitlines()[-1] if error_trace else str(e)
+        }), 500
 
 @meals_bp.route("/api/plan/finalize", methods=["POST"])
 @require_auth
@@ -274,7 +352,11 @@ def finalize_plan_route():
             "message": f"Plan for {week_of} is now active!"
         })
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({
+            "status": "error", 
+            "code": "FINALIZATION_FAILED",
+            "message": f"Failed to finalize plan: {str(e)}"
+        }), 500
 
 @meals_bp.route("/api/create-week", methods=["POST"])
 @require_auth
@@ -315,7 +397,12 @@ def create_week():
             "message": f"Created new week {week_str}"
         })
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        import traceback; traceback.print_exc()
+        return jsonify({
+            "status": "error", 
+            "code": "WEEK_CREATION_FAILED",
+            "message": f"Failed to create new week: {str(e)}"
+        }), 500
 
 @meals_bp.route("/api/replan", methods=["POST"])
 @require_auth
@@ -558,8 +645,26 @@ def log_meal():
                  })
              if reason: target_dinner['reason'] = reason
              
+        # Prepare IDs
+        ids = data.get('recipe_ids')
+        
+        # If no explicit IDs but we have text, convert text to ID (Auto-Create)
+        if not ids and actual_meal:
+            from api.services.meal_service import ensure_recipe_for_legacy_text
+            ids = ensure_recipe_for_legacy_text(actual_meal, h_id)
+            # We consumed the text, so clear it to prevent legacy field writing
+            actual_meal = None
+            
         if target_dinner:
-             if actual_meal: target_dinner['actual_meal'] = actual_meal
+             # STRICT MODULAR ENFORCEMENT: Write IDs, remove legacy string
+             if ids:
+                 target_dinner['recipe_ids'] = ids
+                 if 'actual_meal' in target_dinner:
+                     del target_dinner['actual_meal']
+             elif actual_meal: 
+                 # Fallback if ensure_recipe failed? Should be rare.
+                 target_dinner['actual_meal'] = actual_meal
+                 
              if dinner_needs_fix is not None: target_dinner['needs_fix'] = dinner_needs_fix
 
         # Feedback logging (snacks/lunch)
@@ -851,11 +956,13 @@ def delete_week():
             return jsonify({"status": "error", "message": "week_of required"}), 400
             
         h_id = storage.get_household_id()
-        query = storage.supabase.table("meal_plans").delete().eq("household_id", h_id).eq("week_of", week_of)
-        storage.execute_with_retry(query)
+        
+        # Use shared reset logic (cascading delete)
+        from scripts.reset_week import reset_from_week
+        count = reset_from_week(week_of, interactive=False)
         
         invalidate_cache()
-        return jsonify({"status": "success", "message": f"Deleted week {week_of}"})
+        return jsonify({"status": "success", "message": f"Deleted {count} weeks starting from {week_of}"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 

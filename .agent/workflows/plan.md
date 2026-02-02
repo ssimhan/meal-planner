@@ -7,7 +7,7 @@ description: Create a detailed, TDD-first implementation plan from an approved d
 Use this workflow once a design has been approved to create a bite-sized, executable path forward.
 
 ## Core Principles
-- **TDD-First**: Every task must start with a failing test.
+- **TDD-First**: Every task must start with a failing test. For bug fixes, Phase 1 MUST be "Reproduction" via a failing test or a documented UI test plan.
 - **Architectural Rigor**: Apply Clean Architecture, SOLID, and Domain-Driven Design (DDD) to ensure maintainability and high quality.
 - **Bite-sized Granularity**: Each task should take 2-5 minutes to implement.
 - **Zero Ambiguity**: Use exact file paths and specify line ranges when modifying.
@@ -48,5 +48,16 @@ Use this workflow once a design has been approved to create a bite-sized, execut
 ## Persistence
 - Save the plan to `docs/plans/YYYY-MM-DD-<feature-name>.md`.
 - Ask the user: "Ready to start building? Use `/build`."
+
+## Phase Completion Requirements
+
+A phase is NOT complete until the following workflow sequence is executed:
+
+1. **`/build`** - Execute the implementation plan
+2. **`/code-review`** - Review for bugs, debt, and production risks
+3. **`/fix`** - Resolve ALL identified bugs and debt (zero carryover)
+4. **`/closeout`** - Document and commit
+
+Skipping `/code-review` or `/fix` is not permitted. The phase remains open until BUGS.md shows zero active items for that phase.
 
 **Internal Note**: Use the `test-driven-development` skill during implementation. For complex architecture, use `c4-architecture`. For deep research, use `gepetto`.

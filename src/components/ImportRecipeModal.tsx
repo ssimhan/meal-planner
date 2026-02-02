@@ -76,14 +76,14 @@ export default function ImportRecipeModal({ isOpen, onClose, onSuccess }: Import
     };
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-teal-950/40 backdrop-blur-md animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[var(--beetroot)]/10 backdrop-blur-md animate-in fade-in duration-300">
             {/* TD-011 FIX: max-h-[80vh] -> max-h-[85vh] + better flex layout */}
-            <div className="bg-[var(--bg-card)] w-full max-w-4xl rounded-sm shadow-2xl overflow-hidden border-2 border-[var(--accent-green)] flex flex-col max-h-[85vh]">
+            <div className="bg-[var(--bg-card)] w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden border border-[var(--border-subtle)] flex flex-col max-h-[85vh]">
 
                 {/* Header */}
                 <div className="p-6 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)] flex justify-between items-center">
                     <div>
-                        <h2 className="text-2xl font-serif font-black text-[var(--accent-green)] mb-1 flex items-center gap-2">
+                        <h2 className="text-2xl font-black text-[var(--cardamom)] mb-1 flex items-center gap-2">
                             <LinkIcon className="w-6 h-6" />
                             Import Recipe
                         </h2>
@@ -92,7 +92,7 @@ export default function ImportRecipeModal({ isOpen, onClose, onSuccess }: Import
                         </p>
                     </div>
                     <button onClick={onClose} className="p-2 hover:bg-neutral-200/50 rounded-full transition-colors">
-                        <span className="text-xl text-[var(--accent-green)]">✕</span>
+                        <span className="text-xl text-[var(--cardamom)]">✕</span>
                     </button>
                 </div>
 
@@ -101,7 +101,7 @@ export default function ImportRecipeModal({ isOpen, onClose, onSuccess }: Import
                     {step === 'input' ? (
                         <form onSubmit={handleExtract} className="space-y-6 max-w-xl mx-auto mt-8">
                             <div className="space-y-2">
-                                <label className="block text-xs font-black uppercase tracking-[0.2em] text-[var(--accent-sage)]">
+                                <label className="block text-xs font-black uppercase tracking-[0.2em] text-[var(--turmeric)]">
                                     Recipe URL
                                 </label>
                                 <input
@@ -109,7 +109,7 @@ export default function ImportRecipeModal({ isOpen, onClose, onSuccess }: Import
                                     type="url"
                                     required
                                     placeholder="https://cooking.nytimes.com/..."
-                                    className="w-full p-4 rounded-sm bg-white border-2 border-[var(--border-subtle)] focus:border-[var(--accent-green)] outline-none transition-all shadow-sm text-lg"
+                                    className="w-full p-4 rounded-xl bg-white border-2 border-[var(--border-subtle)] focus:border-[var(--turmeric)] outline-none transition-all shadow-sm text-lg"
                                     value={url}
                                     onChange={(e) => setUrl(e.target.value)}
                                 />
@@ -118,7 +118,7 @@ export default function ImportRecipeModal({ isOpen, onClose, onSuccess }: Import
                             <button
                                 type="submit"
                                 disabled={isLoading || !url}
-                                className="w-full py-4 bg-[var(--accent-green)] text-white font-black uppercase tracking-widest rounded-sm shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+                                className="w-full py-4 bg-[var(--turmeric)] text-white font-black uppercase tracking-widest rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
                             >
                                 {isLoading ? <Loader2 className="animate-spin" /> : 'Analyze Link'}
                             </button>
@@ -133,13 +133,13 @@ export default function ImportRecipeModal({ isOpen, onClose, onSuccess }: Import
                             {/* Left Column: Meta & Ingredients */}
                             <div className="space-y-6 flex flex-col h-full">
                                 <div>
-                                    <label className="block text-xs font-black mb-2 uppercase tracking-[0.2em] text-[var(--accent-sage)]">
+                                    <label className="block text-xs font-black mb-2 uppercase tracking-[0.2em] text-[var(--cardamom)]">
                                         Recipe Name
                                     </label>
                                     <input
                                         type="text"
                                         required
-                                        className="w-full p-3 rounded-sm bg-white border border-[var(--border-subtle)] focus:border-[var(--accent-green)] outline-none font-serif text-xl font-bold text-[var(--accent-green)]"
+                                        className="w-full p-3 rounded-xl bg-white border border-[var(--border-subtle)] focus:border-[var(--turmeric)] outline-none font-bold text-xl text-[var(--beetroot)]"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                     />
@@ -150,7 +150,7 @@ export default function ImportRecipeModal({ isOpen, onClose, onSuccess }: Import
                                         Ingredients
                                     </label>
                                     <textarea
-                                        className="flex-1 w-full p-4 rounded-sm bg-white border border-[var(--border-subtle)] focus:border-[var(--accent-green)] outline-none resize-none font-mono text-sm leading-relaxed min-h-[200px]"
+                                        className="flex-1 w-full p-4 rounded-xl bg-white border border-[var(--border-subtle)] focus:border-[var(--turmeric)] outline-none resize-none font-mono text-sm leading-relaxed min-h-[200px]"
                                         value={ingredients}
                                         onChange={(e) => setIngredients(e.target.value)}
                                         placeholder="- 1 cup flour..."
@@ -165,7 +165,7 @@ export default function ImportRecipeModal({ isOpen, onClose, onSuccess }: Import
                                     Instructions
                                 </label>
                                 <textarea
-                                    className="flex-1 w-full p-4 rounded-sm bg-white border border-[var(--border-subtle)] focus:border-[var(--accent-green)] outline-none resize-none leading-relaxed min-h-[280px]"
+                                    className="flex-1 w-full p-4 rounded-xl bg-white border border-[var(--border-subtle)] focus:border-[var(--turmeric)] outline-none resize-none leading-relaxed min-h-[280px]"
                                     value={instructions}
                                     onChange={(e) => setInstructions(e.target.value)}
                                     placeholder="1. Preheat oven..."
@@ -188,7 +188,7 @@ export default function ImportRecipeModal({ isOpen, onClose, onSuccess }: Import
                         <button
                             onClick={handleSave}
                             disabled={isLoading}
-                            className="px-10 py-4 bg-[var(--accent-green)] text-white font-black text-lg uppercase tracking-widest rounded-sm shadow-lg hover:shadow-2xl hover:-translate-y-1 hover:scale-105 transition-all disabled:opacity-50 flex items-center gap-3 ring-4 ring-[var(--accent-green)]/30 animate-pulse"
+                            className="px-10 py-4 bg-[var(--beetroot)] text-white font-black text-lg uppercase tracking-widest rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-1 hover:scale-105 transition-all disabled:opacity-50 flex items-center gap-3 ring-4 ring-[var(--beetroot)]/30 animate-pulse"
                             style={{ animationDuration: '2s' }}
                         >
                             {isLoading ? <Loader2 className="animate-spin w-6 h-6" /> : <><CheckCircle className="w-6 h-6" /> Save to Cookbook</>}

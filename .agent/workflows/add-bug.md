@@ -9,7 +9,7 @@ Use this workflow when describing a bug that needs to be tracked for later resol
 ## Core Principles
 - **Capture, Don't Fix**: Your job is to document, not to solve.
 - **Structured Tracking**: All bugs go in `BUGS.md` in the project root.
-- **No Side Quests**: Do NOT investigate, reproduce, or attempt fixes.
+- **No Side Quests**: Do NOT investigate or attempt fixes. Reproduction will be handled as the first step of the `/fix` workflow.
 
 ## The Process
 

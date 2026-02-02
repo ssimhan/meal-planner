@@ -1,7 +1,7 @@
 # Bug Tracking & Technical Debt
 
-**Last Updated:** 2026-01-29
-**Current Phase:** 34 (Frictionless Shopping)
+**Last Updated:** 2026-02-02
+**Current Phase:** 35 (Frictionless Shopping)
 
 ---
 
@@ -23,13 +23,14 @@
 
 | ID | Area | Description | Impact | Effort | Notes |
 |----|------|-------------|--------|--------|-------|
-| BUG-001 | Replan | Prep tasks don't refresh after a replan. | High | 2hr | ✅ Fixed via heuristic fallback. |
-| BUG-002 | Shopping List | Items purchased in list don't sync to inventory. | High | 2hr | ✅ Fixed with category inference. |
-| BUG-003 | Management | Meal defaults don't make sense for multiple households. | Medium | 1hr | ✅ Removed hardcoded weekend defaults. |
-| BUG-004 | Roadmap | Review future roadmap phases (35-39) for multi-household support. | Medium | 2hr | ✅ Completed review. |
-| BUG-005 | Inventory | `add_inventory` has redundant whole-inventory fetch check. | Low | 1hr | ✅ Fixed: Removed redundant fetch, uses targeted query. |
-| BUG-006 | Auth | Hardcoded household ID fallback in `require_auth` hides profile gaps. | Medium | 1hr | ✅ Fixed: Now returns 403 with `PROFILE_INCOMPLETE` code. |
-| BUG-007 | Week View | Replace button (🔄) persists in View Mode after exiting Edit Mode. | Low | 1hr | ✅ Fixed: State closure race condition in editMode toggle. |
+
+---
+
+## Resolved Bugs
+
+| ID | Description | Resolution | Resolved |
+|----|-------------|------------|----------|
+| BUG-001 | Vercel build fail: `@types/jest@^29.7.0` invalid version. | Downgraded to `@types/jest@^29.5.14` (last valid v29 types). | 2026-02-02 |
 
 ---
 
@@ -39,18 +40,6 @@
 
 | ID | Area | Description | Impact | Effort | Notes |
 |----|------|-------------|--------|--------|-------|
-| TD-001 | Smart Shopping | "I Have This" defaults to Pantry. Should infer category. | Low | 1hr | ✅ Fixed in phase 32. |
-| TD-002 | Recipes | Standardize ingredients (e.g. tamarind pulp -> concentrate, typos). | Low | 2hr | ✅ Bulk fixed 73 recipes in phase 32. |
-| TD-003 | Recipes | Mashed ingredient quantities (e.g. 1onion -> 1 onion). | Low | 1hr | ✅ Audited in phase 32 (0 found). |
-| TD-004 | Recipes | Redundant cuisine tags (italian, mexican, etc). | Low | 1hr | ✅ Bulk fixed 73 recipes in phase 32. |
-| TD-005 | Architecture | GroceryMapper uses local JSON (`data/store_map.json`). | High | 3hr | ✅ Fixed: Migrated to Supabase `households.config.store_preferences`. |
-| TD-006 | Performance | Heuristic prep-task generation reads MD files on every request. | Medium | 2hr | ✅ Fixed: Added LRU cache with content hash key for `get_prep_tasks`. |
-| TD-007 | Persistence | `StorageEngine` writes to local YAML/JSON in some methods. | High | 2hr | ✅ Fixed: Migrated `ignored_recipes`, `preferences` to DB config. |
-| TD-008 | Performance | `get_pending_recipes` is a heavy, unoptimized scan. | Medium | 2hr | ✅ Fixed: Added TTL-based caching (5 min) per household. |
-| TD-009 | Architecture | Large route files (`meals.py`) contain complex business logic. | Medium | 4hr | ✅ Fixed: Extracted 6 helpers to `api/services/meal_service.py`. Reduced `log_meal` from 258 to ~180 lines. |
-| TD-010 | Testing | Integration tests need proper mocking and test data fixtures. | Medium | 4hr | ✅ Fixed: Rewrote `test_api_perf.py` and `test_backend.py` with proper mocking and assertions. |
-| TD-011 | UX | Import preview modal is too small and "Save" button is hard to find. | Low | 1hr | ✅ Fixed: Added min-height on textareas, prominent animated Save button. |
-| TD-012 | Recipes | Recipe import doesn't auto-populate Prep Tasks section. | Medium | 3hr | ✅ Fixed: Added inline `get_prep_tasks()` call in `capture_recipe()`. |
 
 **Count: 0** ✅
 
@@ -73,7 +62,30 @@ Before merging to `main`:
 
 ## Audit Log
 
-**Historical reference only - issues from completed phases.**
+**Historical reference only.** Resolved issues from Phases 1-32 have been moved to [docs/archive/BUG_ARCHIVE.md](archive/BUG_ARCHIVE.md).
+
+### Phase 34 (Completed 2026-02-02)
+- Added: SWR (Stale-While-Revalidate) cache pattern for serverless environments (TD-013)
+- Added: 12 unit tests for `meal_service.py` helpers (TD-014)
+- Added: 5 unit tests for `SWRCache` class
+- Upgraded: `get_pending_recipes` from simple TTL to SWR semantics (TD-008)
+- Added: `refresh_pending_recipes_cache()` and `get_pending_recipes_cache_stats()` debugging utilities
+- **Learning (Observability)**: Realized the critical importance of unit testing and granular error codes (e.g. `SHOPPING_LIST_GENERATION_FAILED`, `DRAFT_GENERATION_FAILED`). These significantly accelerated debugging in serverless environments and provided much better system observability.
+- **Decision (Workflow Refinement)**: Enforced **Reproduction FIRST** for all bug fixes. Every fix must now be preceded by a failing code-based test or a documented Markdown UI Test Plan.
+- **Build Fix**: Resolved a critical Vercel deployment blocker caused by a version mismatch in `@types/jest` (BUG-001).
+
+**Next Phase**: Transitioning to Phase 35: Frictionless Shopping & Architecture Hardening.
+
+### Phase 32 (Completed 2026-01-28)
+- Fixed: `TypeError: e.map is not a function` in ReviewGroceriesModal (SM-001). API response was an object, expected array.
+- Fixed: `[Errno 30] Read-only file system: 'debug_log.txt'` during replan confirm (SYS-001)
+- Fixed: Replan Inventory Scroll (UI-005)
+- Fixed: Replan Failed Alert (SYS-003)
+- Fixed: Inventory Scroll Usability (UI-006) - Removed nested scroll container
+- Fixed: Replan Error Toast (UI-007) - Confirmed use of Toast instead of alert()
+- Fixed: Replan 500 Error (Server Crash) - Added robustness for missing data and auto-injection of `week_of`.
+- Fixed: Inventory Visibility in Replan (ID: 4) - Standardized inventory state to use normalized structure, fixing empty list display.
+- Fixed: Cache Invalidation (CACHE-001) - Added `invalidate_cache()` to 3 endpoints (`add_store`, `map_item`, `update_settings`) that were missing it.
 
 ### Phase 30 (Completed 2026-01-25)
 - Fixed: Database Trigger Error (UUID Type Mismatch in `handle_new_user`) (CRIT-001)
@@ -103,17 +115,6 @@ Before merging to `main`:
 - Fixed: Leftovers Sync Failure (Misclassified as Ingredients)
 - Fixed: Task Duplication (In-place list modification)
 - Fixed: Prep Counter / Dinner Display out of sync
-
-### Phase 32 (In Progress / Finishing)
-- Fixed: `TypeError: e.map is not a function` in ReviewGroceriesModal (SM-001). API response was an object, expected array.
-- Fixed: `[Errno 30] Read-only file system: 'debug_log.txt'` during replan confirm (SYS-001)
-- Fixed: Replan Inventory Scroll (UI-005)
-- Fixed: Replan Failed Alert (SYS-003)
-- Fixed: Inventory Scroll Usability (UI-006) - Removed nested scroll container
-- Fixed: Replan Error Toast (UI-007) - Confirmed use of Toast instead of alert()
-- Fixed: Replan 500 Error (Server Crash) - Added robustness for missing data and auto-injection of `week_of`.
-- Fixed: Inventory Visibility in Replan (ID: 4) - Standardized inventory state to use normalized structure, fixing empty list display.
-- Fixed: Cache Invalidation (CACHE-001) - Added `invalidate_cache()` to 3 endpoints (`add_store`, `map_item`, `update_settings`) that were missing it.
 
 
 ---
@@ -162,7 +163,6 @@ Before merging to `main`:
 4. Help triage priority/impact levels
 
 **Before phase completion:**
-- Verify both tables are empty (for current phase items)
-- Block merge to main if bugs remain
-- Suggest de-scoping features if needed to hit quality gate
-
+1. Verify both tables are empty (for current phase items)
+2. Block merge to main if bugs remain
+3. Suggest de-scoping features if needed to hit quality gate

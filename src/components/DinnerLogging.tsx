@@ -111,7 +111,7 @@ export default function DinnerLogging({
         </div>
         <button
           onClick={() => { setIsDinnerEditing(true); setDinnerEditInput(status?.today_dinner?.actual_meal || ''); }}
-          className="text-[10px] text-[var(--text-muted)] hover:text-[var(--accent-sage)] underline decoration-dotted text-center"
+          className="text-[10px] text-[var(--text-muted)] hover:text-[var(--turmeric)] underline decoration-dotted text-center"
         >
           🔧 Fix / Edit Actual Meal
         </button>
@@ -141,7 +141,7 @@ export default function DinnerLogging({
         <button
           onClick={handleMadeAsPlanned}
           disabled={logLoading}
-          className="w-full py-2 bg-[var(--accent-green)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
+          className="w-full py-2 bg-[var(--cardamom)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
         >
           ✓ Made
         </button>
@@ -163,13 +163,13 @@ export default function DinnerLogging({
         <span className="text-[10px] text-[var(--text-muted)] mb-1">What did you eat instead?</span>
         <button
           onClick={() => handleAlternativeSelect('freezer')}
-          className="w-full py-2 bg-[var(--accent-terracotta)] text-white text-xs rounded hover:opacity-90"
+          className="w-full py-2 bg-[var(--beetroot)] text-white text-xs rounded hover:opacity-90"
         >
           🧊 Freezer Meal
         </button>
         <button
           onClick={() => handleAlternativeSelect('outside')}
-          className="w-full py-2 bg-[var(--accent-gold)] text-white text-xs rounded hover:opacity-90"
+          className="w-full py-2 bg-[var(--turmeric)] text-white text-xs rounded hover:opacity-90"
         >
           🍽️ Ate Out / Restaurant
         </button>
@@ -181,7 +181,7 @@ export default function DinnerLogging({
         </button>
         <button
           onClick={() => handleAlternativeSelect('leftovers')}
-          className="w-full py-2 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90"
+          className="w-full py-2 bg-[var(--text-main)] text-white text-xs rounded hover:opacity-90"
         >
           🥡 Leftovers
         </button>
@@ -216,7 +216,7 @@ export default function DinnerLogging({
         <button
           onClick={handleSubmitAlternative}
           disabled={logLoading || !selectedFreezerMeal}
-          className="w-full py-2 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
+          className="w-full py-2 bg-[var(--cardamom)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
         >
           Save
         </button>
@@ -284,13 +284,13 @@ export default function DinnerLogging({
           value={otherMealText}
           onChange={(e) => setOtherMealText(e.target.value)}
           placeholder="e.g., Leftovers, Sandwiches, Cereal"
-          className="w-full px-2 py-1 text-xs border border-[var(--border-subtle)] rounded focus:outline-none focus:ring-1 focus:ring-[var(--accent-sage)]"
+          className="w-full px-2 py-1 text-xs border border-[var(--border-subtle)] rounded focus:outline-none focus:ring-1 focus:ring-[var(--turmeric)]"
           disabled={logLoading}
         />
         <button
           onClick={handleSubmitAlternative}
           disabled={logLoading || !otherMealText.trim()}
-          className="w-full py-2 bg-[var(--accent-sage)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
+          className="w-full py-2 bg-[var(--cardamom)] text-white text-xs rounded hover:opacity-90 disabled:opacity-50"
         >
           Save
         </button>

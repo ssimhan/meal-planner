@@ -99,7 +99,7 @@ def get_substitutions(limit=3):
         matches = []
         
         # Check main veg
-        for veg in recipe.get('main_veg', []):
+        for veg in (recipe.get('main_veg') or []):
             norm_veg = normalize_ingredient(veg)
             if norm_veg in inventory_set:
                 score += 2
@@ -212,7 +212,7 @@ def get_waste_not_suggestions(limit=4):
             
         # Check fridge items (Perishables)
         # We assume anything in 'fridge' is perishable
-        for veg in recipe.get('main_veg', []):
+        for veg in (recipe.get('main_veg') or []):
             norm_veg = normalize_ingredient(veg)
             if norm_veg in inventory_set:
                 score += 3
@@ -220,41 +220,89 @@ def get_waste_not_suggestions(limit=4):
                 if norm_veg in leftovers: # Double bonus if it's a specific leftover veg
                     score += 5
                     
-        if score > 0:
-            scored_recipes.append({
-                'recipe': recipe,
-                'score': score,
-                'rationale': list(set(rationale))
-            })
-            
-    scored_recipes.sort(key=lambda x: x['score'], reverse=True)
+            if score > 0:
+                scored_recipes.append({
+                    'recipe': recipe,
+                    'score': score,
+                    'rationale': list(set(rationale))
+                })
+        
+    scored_recipes.sort(key=lambda x: x.get('score', 0), reverse=True)
     
     return scored_recipes[:limit]
 
-def get_shopping_list(plan_data):
+def get_shopping_list(plan_data, return_warnings=False):
     """
     Generate shopping list by identifying missing ingredients from plan.
     Considers dinners, lunches, and planned snacks.
     """
     inventory_set, _ = get_inventory_items()
     needed = []
+    warnings = []
     
     # 0. Get user exclusions
     excluded_items = set()
     for excl in plan_data.get('excluded_items', []):
         excluded_items.add(normalize_ingredient(excl))
     
-    # 1. Dinners (Main veggies)
+    # 0a. Get Permanent Pantry from config
+    pantry_basics = set()
+    try:
+        config = StorageEngine.get_config()
+        basics = config.get('permanent_pantry', [])
+        for item in basics:
+            pantry_basics.add(normalize_ingredient(item))
+    except: pass
+
+    # 1. Dinners (Main veggies/ingredients)
     for dinner in plan_data.get('dinners', []):
-        for veg in dinner.get('vegetables', []):
+        # Support multi-recipe aggregation
+        recipes_to_process = []
+        if 'recipe_ids' in dinner:
+            recipes_to_process = dinner['recipe_ids'] or []
+        elif 'recipe_id' in dinner:
+            recipes_to_process = [dinner['recipe_id']] if dinner['recipe_id'] else []
+            
+        # Collect ingredients from all recipes in this slot
+        ingredients_to_check = set(dinner.get('vegetables', []))
+        for rid in recipes_to_process:
+            if not rid: continue
+            try:
+                content = StorageEngine.get_recipe_content(rid)
+                if not content: 
+                    msg = f"No content found for recipe {rid}"
+                    print(f"[DEBUG] {msg}")
+                    warnings.append(msg)
+                    continue
+                
+                # We specifically look for "main ingredients" or vegetables in the context of this app's logic
+                # For now, let's assume all 'ingredients' should be checked unless they are staples
+                found_ings = content.get('ingredients', [])
+                if not found_ings:
+                    msg = f"Recipe {rid} has content but no 'ingredients' list found"
+                    print(f"[DEBUG] {msg}")
+                    warnings.append(msg)
+                    
+                for ing in found_ings:
+                    ingredients_to_check.add(ing)
+            except Exception as e:
+                msg = f"Failed to get content for {rid}: {e}"
+                print(f"[ERROR] {msg}")
+                warnings.append(msg)
+                pass
+
+        print(f"[DEBUG] Dinner {dinner.get('day')}: Checking {len(ingredients_to_check)} ingredients against inventory.")
+        for veg in ingredients_to_check:
             norm = normalize_ingredient(veg)
             
             # Checks:
             # 1. Not in inventory (quantity aware)
             # 2. Not a hardcoded staple
-            # 3. Not user excluded
+            # 3. Not in Permanent Pantry
+            # 4. Not user excluded
             if (norm not in inventory_set and 
                 norm not in EXCLUDED_STAPLES and 
+                norm not in pantry_basics and
                 norm not in excluded_items):
                 
                 # Remove underscores for display
@@ -265,18 +313,34 @@ def get_shopping_list(plan_data):
     lunches = plan_data.get('lunches', {})
     if isinstance(lunches, dict):
         for day, lunch in lunches.items():
-            components = []
+            # Support multi-recipe aggregation
+            recipes_to_process = []
             if isinstance(lunch, dict):
-                components = lunch.get('prep_components', [])
+                if 'recipe_ids' in lunch: recipes_to_process = lunch['recipe_ids'] or []
+                elif 'recipe_id' in lunch: recipes_to_process = [lunch['recipe_id']]
+                components = lunch.get('prep_components') or []
             else:
-                components = getattr(lunch, 'prep_components', [])
-                
-            for comp in components:
+                components = getattr(lunch, 'prep_components', []) or []
+                rid = getattr(lunch, 'recipe_id', None)
+                if rid: recipes_to_process = [rid]
+            
+            # Aggregate ingredients/components from all recipes
+            all_comps = set(components)
+            for rid in recipes_to_process:
+                if rid and rid.startswith('leftover:'): continue
+                try:
+                    content = StorageEngine.get_recipe_content(rid)
+                    for ing in content.get('ingredients', []):
+                        all_comps.add(ing)
+                except: pass
+
+            for comp in all_comps:
                 norm = normalize_ingredient(comp)
                 display_name = comp.replace('_', ' ').title()
                 
                 if (norm not in inventory_set and 
                     norm not in EXCLUDED_STAPLES and 
+                    norm not in pantry_basics and
                     norm not in excluded_items):
                     needed.append(display_name)
                     
@@ -298,6 +362,7 @@ def get_shopping_list(plan_data):
                         if (norm and 
                             norm not in inventory_set and 
                             norm not in EXCLUDED_STAPLES and 
+                            norm not in pantry_basics and
                             norm not in excluded_items):
                             needed.append(item.title())
 
@@ -315,6 +380,7 @@ def get_shopping_list(plan_data):
         # BUG-002 Fix: Check inventory for extras too
         if (norm not in inventory_set and
             norm not in EXCLUDED_STAPLES and
+            norm not in pantry_basics and
             norm not in excluded_items):
             needed.append(extra.title())
             
@@ -330,7 +396,7 @@ def get_shopping_list(plan_data):
             "store": store
         })
         
-    return enrichment
+    return (enrichment, warnings) if return_warnings else enrichment
 
 if __name__ == "__main__":
     subs = get_substitutions()

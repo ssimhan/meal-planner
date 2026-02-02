@@ -103,7 +103,7 @@ export default function PrepTaskList({ tasks, weekOf, onUpdate }: PrepTaskListPr
                                     handleBulkCheck(meal, taskIds);
                                 }}
                                 disabled={isUpdatingThisMeal}
-                                className="bg-[var(--bg-secondary)] px-4 py-3 border-b border-l border-[var(--border-subtle)] hover:bg-[var(--accent-sage)]/10 text-[var(--accent-sage)] transition-all flex items-center gap-2 group/btn disabled:opacity-50"
+                                className="bg-[var(--bg-secondary)] px-4 py-3 border-b border-l border-[var(--border-subtle)] hover:bg-[var(--turmeric)]/5 text-[var(--turmeric)] transition-all flex items-center gap-2 group/btn disabled:opacity-50"
                                 title="Check all for this dish"
                             >
                                 {isUpdatingThisMeal ? (
@@ -130,7 +130,7 @@ export default function PrepTaskList({ tasks, weekOf, onUpdate }: PrepTaskListPr
                                                 />
                                                 {(updating === task.id || isUpdatingThisMeal) && (
                                                     <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
-                                                        <div className="w-3 h-3 border-2 border-[var(--accent-sage)] border-t-transparent rounded-full animate-spin"></div>
+                                                        <div className="w-3 h-3 border-2 border-[var(--turmeric)] border-t-transparent rounded-full animate-spin"></div>
                                                     </div>
                                                 )}
                                             </div>

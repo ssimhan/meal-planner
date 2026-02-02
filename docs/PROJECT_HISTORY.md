@@ -88,514 +88,9 @@ See [README.md](README.md#design-philosophy) for the complete design philosophy 
 
 ## Technical Architecture Evolution
 
-### Phase 0-6: CLI Foundation (2025-12-30)
-
-**Built:**
-- Recipe parser extracting 234 HTML files → structured YAML
-- Two-step workflow (propose vegetables → shop → confirm → generate plan)
-- Algorithm with 3-week lookback, template filtering, busy-day no-chop matching
-- `./mealplan next` - single command with state tracking
-
-**Learning:** Validation scripts are like spell-check for automation - catch mistakes before you see them.
-
-### Phase 7-12: Human-Centered Refinement (2025-12-30)
-
-**Built:**
-- HTML plans with 9 tabs (Overview, Mon-Fri, Sat-Sun, Groceries)
-- Solarpunk design aesthetic (earth-tone palette, print-friendly)
-- Clickable recipe links reducing mental load
-- Snack simplification (3-4 options → 1 strategic choice)
-
-**Learning:** Technical implementation was necessary but insufficient. Human-centered design made the system actually usable.
-
-### GitHub Actions → Vercel Migration (2026-01-04) ⚡ CRITICAL PIVOT
-
-**Trigger:** Need for real-time inventory updates, meal logging without CLI.
-
-**Decision:** Move from static GitHub Pages to Vercel serverless app.
-
-**Architecture:**
-- Python serverless functions (`/api` endpoints)
-- Next.js frontend (React + Tailwind CSS)
-- GitHub-as-database (GitOps persistence via API)
-- Cost: $0/mo on Vercel Hobby tier
-
-**Constraints:**
-- Read-only filesystem on Vercel required rethinking all I/O operations
-- All writes must go through GitHub API
-- Cache invalidation critical for state consistency
-
-**Learning:** Serverless environments require different patterns - functions that work locally may fail in read-only environments.
-
-### Phase 6: Execution Tracking (2026-01-01)
-
-**Key Decisions:**
-
-1. **Single source of truth:** Use `history.yml` only - no separate execution files
-   - Rationale: Minimize duplication, optimize LLM context usage, simpler data management
-   - Learning: More files ≠ better organization - single file with clear structure beats multiple files
-
-2. **Minimal required fields:** `made` (yes/no/freezer) + `vegetables_used` only
-   - Removed: prep time tracking, energy levels, lunch tracking
-   - Learning: Start simple, expand only if needed - avoid premature complexity
-
-3. **Structured inputs over AI parsing:** GitHub Issue checkboxes instead of free-text parsing
-   - Why: Higher reliability, better mobile UX, less parsing complexity
-   - Learning: Let users pick from lists when possible
-
-4. **Kids preferences tracking:** Multi-choice feedback (Loved it ❤️ / Liked it 👍 / Neutral 😐 / Didn't like 👎 / Refused ❌)
-   - Track both favorites (what to repeat) and dislikes (what to avoid)
-
-### Phase 7: Smart Features (2026-01-01)
-
-**Built:**
-- Analytics script (`analyze_trends.py`) - recipe success rates, vegetable consumption, weekly adherence
-- Live development setup (`dev.sh`) - auto-regenerate plans on file changes
-- Persistent meal substitutions - respect manual changes in `history.yml`
-- Recipe measurement standardization - 83 recipes fixed (35% → 9.4% with issues)
-- Smart re-planning - automatically shifts skipped meals to future days
-
-**Learning:** Data quality compounds - good measurements make grocery lists accurate, which reduces food waste and shopping stress.
-
-### Phase 8-11: Web Dashboard (2026-01-04)
-
-**Built:**
-- Interactive dashboard with real-time state
-- "Start New Week" / "Confirm Veg" / "Generate Plan" buttons
-- Daily check-in with emoji feedback for all meals
-- Freezer inventory auto-removal when meals used
-- Multi-step dinner logging (Made / Freezer Backup / Ate Out / Something Else)
-- Prep completion tracking with checkboxes
-- Week at a Glance view with execution status
-
-**Technical Decisions:**
-1. **Full API Response on Write:** POST endpoints return complete updated state to prevent stale data
-2. **State Lifting:** Dinner logging state lifted to parent Dashboard to prevent re-render issues
-3. **Optimistic UI with Undo:** Inventory deletions have 5-second undo instead of confirmation dialogs
-4. **Progressive Disclosure:** Multi-step flows reduce cognitive load
-
-**Learning:** Feedback is as important as speed - clear loading states prevent "is it frozen?" feeling.
-
-### Phase 11: Advanced Features (2026-01-05 - 2026-01-06)
-
-**Block 1: Performance Optimization**
-- Split monolithic `recipes.json` → 227 individual YAML files
-- API caching (5-minute TTL, invalidation on write)
-- Response time (cached): <10ms
-
-**Block 2: Meal Swap**
-- Drag-and-drop style swapping between days
-- Dynamic prep regeneration (swapping meals also moves prep instructions)
-- State-based 2-click selection (simpler than drag-and-drop libraries)
-
-**Block 4: Inventory Intelligence**
-- Split `freezer` into `backups` (ready-to-eat) and `ingredients` (components)
-- Smart substitution engine scoring recipes by available ingredients
-- Replacement modal with 3 tabs: Shop Your Fridge / Freezer Stash / Quick Fix
-
-**Block 5: Recipe Format Migration**
-- Migrated 227 recipes from HTML to Markdown with YAML frontmatter
-- 70% reduction in token usage for meal planning
-- Rich recipe viewer with `react-markdown` and Tailwind Typography
-
-**Learning:** Migrating to simpler text-based format reveals hidden data inconsistencies and provides immediate performance boost.
-
-### Phase 12: Architecture Hardening (2026-01-08)
-
-**Problem:** Monolithic files, no types, limited tests, silent errors.
-
-**Built:**
-
-**12.1 Component Extraction:**
-- Reduced `page.tsx` from 950 lines to 634 lines (33% reduction)
-- Extracted `Skeleton`, `Card`, `FeedbackButtons`, `DinnerLogging` components
-
-**12.2 TypeScript Interfaces:**
-- Created `src/types/index.ts` with 30+ interfaces
-- TypeScript errors: 34 → 7 (79% reduction)
-- All 15 API functions properly typed
-
-**12.3 Hook Stabilization:**
-- Fixed "Minified React Error #310" (Rules of Hooks violation)
-- Consolidated 25+ `useState` hooks into structured state objects
-- Added global `ErrorBoundary` and `ToastContext`
-
-**12.5 Backend Refactoring:**
-- Split `api/index.py` (1400 lines) → Flask Blueprints (`status.py`, `meals.py`, `inventory.py`, `recipes.py`)
-- Refactored `workflow.py` (2652 lines) → package structure (`state.py`, `selection.py`, `html_generator.py`, `replan.py`, `actions.py`)
-
-**12.6 Documentation:**
-- Created `CONTRIBUTING.md`, `ARCHITECTURE.md`, `API_REFERENCE.md`
-- Created `recipes/TEMPLATE.md` with Prep Steps section
-- Created `.env.example` for environment variables
-
-**Learning:** Technical debt compounds - organic growth through 11 phases created architectural debt that needed explicit acknowledgment.
-
-### Phase 13: Refinement & Productization (2026-01-08 - Present)
-
-**13.1 Critical State Fixes (2026-01-08) ✅ Complete**
-- Fixed "No active week plan found" by adding `week_data` to status API
-- Fixed analytics page argument mismatch
-- Removed analytics widgets from main dashboard
-
-**13.2 Advanced Inventory UX (2026-01-08) ✅ Complete**
-- Unified search across Fridge/Pantry/Freezer
-- Quick actions: `(+)` and `(-)` for quantity adjustments
-- Move functionality to transfer items between locations
-- Brain Dump modal for bulk adding
-
-**13.3 Persistent Prep Workflow (2026-01-08) ✅ Complete**
-- Prep tasks extracted from recipes during plan generation
-- Deterministic task IDs for robust status tracking
-- Tasks stored in `history.yml` with `status: pending`
-- Interactive checklist grouped by meal on dashboard
-- Real-time backend sync when checking boxes
-
-**Learning:** Granular tasks provide better tracking than generic categories. Leveraging existing data structures prevents state fragmentation.
-
-**13.4 Productization Architecture (2026-01-09 - In Progress) 🔄**
-**Goal:** Enable white-labeling by making all personal data config-driven
-
-**Audit Findings (2026-01-09):**
-Identified 7 locations with hardcoded personal data:
-1. `scripts/workflow/actions.py:27` - Entire config fallback object
-2. `scripts/mealplan.py:255-257` - Default preferences
-3. `scripts/lunch_selector.py:39-54` - Kids lunch defaults
-4. `scripts/update_lunch_fields.py:57-63` - Lunch field mapping
-5. `api/routes/status.py:46` - Hardcoded Pacific timezone
-6. `api/routes/status.py:86-89, 92-98` - Snack defaults (2 locations)
-7. `scripts/workflow/html_generator.py:210-211` - Schedule fallbacks
-
-**Progress:**
-- **Chunks 1-7 (2026-01-09, 30min total):** Config-driven architecture migration ✅ COMPLETE
-  - **Chunk 1:** Enhanced `config.yml` with `lunch_defaults`/`snack_defaults`, created `config.example.yml`, added `validate_config_schema()`
-  - **Chunk 2:** Created `docs/HARDCODED_AUDIT.md` with 7 findings prioritized by impact
-  - **Chunk 3:** Removed hardcoded config fallbacks in `workflow/actions.py` and `mealplan.py` (2 critical ✅)
-  - **Chunk 4:** Created `_load_config()` helper in `api/routes/status.py`, timezone now config-driven (1 high ✅)
-  - **Chunk 5:** Modified `lunch_selector.py` to load lunch defaults from config.yml (1 high ✅)
-  - **Chunk 6:** Updated snack defaults in `api/routes/status.py` to read from config.yml (1 high ✅)
-  - **Chunk 7:** Fixed schedule fallbacks in `html_generator.py` to use config.yml (1 medium ✅)
-
-**Result:** All 7 hardcoded locations now config-driven. System ready for white-labeling.
-
-- **Chunk 8 (2026-01-09, 10min):** Documentation
-  - Created comprehensive `docs/CONFIGURATION.md` (2000+ words) with examples, troubleshooting, best practices
-  - Updated `CONTRIBUTING.md` with "Customizing for Your Family" section
-  - Enhanced `README.md` quick start with configuration steps
-- **Chunk 9 (2026-01-09, 10min):** Interactive Setup Script
-  - Created `scripts/setup.py` - 300-line interactive wizard for guided config generation
-  - Prompts for timezone, schedule, preferences, family profiles, lunch/snack defaults
-  - Includes preview, validation, and backup of existing config
-  - Updated README.md and CONFIGURATION.md to reference setup wizard
-
-**Phase 13.4 COMPLETE ✅** - Total time: 50 minutes (vs 20 hours estimated = 24x faster)
-
-**Remaining (Optional):** Frontend config display in dashboard, white-label end-to-end testing
-
-**Learning:** Systematic audit enabled laser-focused fixes. Distributed config loading (each module loads independently) worked better than centralized helper. Comprehensive documentation + interactive tooling as critical as code for white-labeling success.
-
-
-### Phase 14: Data Layer Redesign (2026-01-10)
-
-**Goal:** Strict separation of "Plan" (Historical Intent) vs "Actual" (Reality) for accurate analytics.
-
-**Problem:**
-Previously, the frontend received a merged "week view" where actual execution data overwrote the planned slot. This made it impossible to answer questions like "how often do we stick to the plan?" or "what do we usually eat when we skip the plan?".
-
-**Solution: The 3-Layer Data Model**
-1.  **Plan Layer (Intent):** Immutable record of what was generated/planned (e.g., "Tacos").
-2.  **Actual Layer (Reality):** Sparse record of what actually happened (e.g., "Pizza", "Skipped", "Leftovers").
-3.  **Resolved Layer (Display):** Runtime logic merging Plan + Actual -> Final State.
-
-**Implementation:**
-- **New Module:** `api/utils/meal_resolution.py` handles the merge logic.
-- **Strict Adherence States:**
-    - `ADHERED`: Actual matches Plan.
-    - `SUBSTITUTED`: Actual exists but differs from Plan.
-    - `SKIPPED`: Explicitly marked as not made.
-    - `NOT_LOGGED`: Plan exists, no actual data.
-    - `UNPLANNED`: No plan, but meal logged.
-    - `EMPTY`: Neither plan nor actual.
-- **API Strategy:** `GET /api/status` now returns a new `slots` object with strict state, while maintaining the legacy `dinners` list for frontend compatibility.
-- **Testing:** Moved from mocking external libraries (Supabase) to mocking the internal `StorageEngine` for robust, deterministic tests.
-
-**Learning:** Separating "intent" from "reality" is critical for analytics. A "merged" view is good for UI, but bad for data science. Always store the raw layers.
-
-### Phase 15: Database Migration & Infrastructure Stability (2026-01-10 - 2026-01-11)
-
-**Goal:** Establish a robust database foundation (Supabase) and resolve technical debt introduced by Next.js/React framework upgrades.
-
-**Key Decisions:**
-1. **Supabase Integration:** Transitioned from file-based (YAML/GitOps) storage to Supabase (PostgreSQL).
-   - **Rationale:** Eliminate race conditions during concurrent updates and provide a real query engine for future features (like "Smart Suggestions").
-   - **Learning:** Database schemas force data cleanliness. The migration script revealed structural inconsistencies in historical YAML files that the application was previously "masking."
-2. **Next.js 15 Compatibility:** Proactively addressed the breaking change in Next.js 15 where `searchParams` and `params` became async.
-3. **Dependency Consolidation:** Downgraded to stable versions of Next.js/React to eliminate "noise" from deprecation warnings while ensuring core functionality remained modern.
-
-**Built:**
-- `scripts/migrate_to_supabase.py`: Full ETL pipeline for porting YAML data to SQL.
-- `scripts/verify_supabase.py`: Integrity checker for the new data layer.
-- `api/utils/meal_resolution.py`: Merged Plan vs. Actual logic into a unified "Resolved" state.
-- Automated tests for database integration (100% coverage on new resolution logic).
-
-**Critical Lessons from Phase 15 Deployment:**
-- **Pinning is Mandatory**: Never leave library names "barefoot" in `requirements.txt`. A transient update to `httpx` broke the incompatible `supabase-py` library in production. Always use `==` for every dependency.
-- **Async Props in Next.js 15**: `params` and `searchParams` in Page components are now Promises. Failing to `await` them causes build-time TypeScript errors and runtime crashes.
-- **Env Var Pre-flight**: Local `.env.local` success does not guarantee production success. Always verify Vercel secrets before merging to `main`.
-- **Debug Endpoints Save Time**: Adding `/api/debug` to expose initialization errors (`init_error: string`) turned a "black box" 500 error into a 5-minute fix.
-
-**Learning:** The "Git-as-a-Database" model was an excellent starting point for speed, but SQL becomes necessary once you need to perform complex analytical queries across history and inventory.
-
-## Recurring Error Patterns & Solutions
-
-### Pattern 1: State Synchronization in Serverless
-
-**Symptoms:** Stale data after mutations, missing updates in UI
-
-**Root Causes:**
-- Vercel's read-only filesystem + in-memory caching
-- Endpoints returning success messages instead of updated state
-- Frontend expecting data shapes API didn't provide
-
-**Solution Evolution:**
-- Added GitHub API writes bypassing filesystem
-- Cache invalidation on writes
-- All mutation endpoints return full `WorkflowStatus`
-
-### Pattern 2: Field Naming Inconsistencies
-
-**Symptoms:** Data written correctly but not displayed in UI
-
-**Root Causes:**
-- `school_snack` (storage) vs `school_snack_feedback` (API) vs `today_snacks.school` (display)
-- Suffix transformations applied inconsistently across layers
-
-**Solution:** Created `FIELD_NAMING_CONVENTION.md` documenting 3-layer naming system
-
-### Pattern 3: React Hook Ordering Violations
-
-**Symptoms:** "Minified React error #310" crashes
-
-**Root Causes:**
-- 25+ individual `useState` hooks in monolithic components
-- Conditional hook calls inside logic blocks
-- Component definitions inside render loops (IIFEs)
-
-**Solution:**
-- Consolidated to structured state objects
-- Lifted all hooks to top of component (before any logic)
-- Extracted sub-components outside render function
-
-### Pattern 5: Next.js 15 Async Params
-
-**Symptoms:** "Type '{ searchParams: ... }' does not satisfy the constraint 'PageProps'" and runtime errors in LoginPage.
-
-**Root Cause:** Next.js 15 changed `params` and `searchParams` from plain objects to Promises in page/layout components.
-
-**Solution:** Updated component types and awaited `searchParams` before access.
-
-### Pattern 6: Supabase/Vercel Proxy Conflict
-
-**Symptoms:** Success locally but 500/Crash in Vercel with "proxy" argument errors.
-
-**Root Cause:** `supabase-py` versions < 2.11.0 had a bug trying to handle proxies in serverless environments.
-
-**Solution:** Forced upgrade to `supabase>=2.11.0` and `httpx>=0.28.0`.
-
-### Pattern 7: Module-level errors propagate silently - test imports in isolation
-
-## Decision Frameworks
-
-### Framework 1: Progressive Enhancement Over Big Rewrites
-
-**Examples:**
-- CLI → GitHub Actions → Vercel (not CLI → full web app immediately)
-- Static HTML → Dynamic dashboard → Interactive editing
-- Generic feedback → Emoji feedback → Multi-step workflows
-
-**Principle:** Each phase must be production-ready; no "throw it all away" moments
-
-### Framework 2: Constraints Create Freedom
-
-**Examples:**
-- Limiting Thu/Fri to no-prep increased usability (not decreased it)
-- ONE snack/day reduced decision fatigue vs 3-4 options
-- Freezer backup quota (maintain 3 meals) made system resilient
-
-**Principle:** Well-designed limits paradoxically expand capability
-
-### Framework 3: Data Quality Compounds
-
-**Examples:**
-- Recipe metadata → constraint satisfaction → accurate plans → less food waste
-- Measurement standardization → better grocery lists → less shopping stress
-- Structured feedback → analytics → smarter future plans
-
-**Principle:** Invest in tagging/structure early - multiplies value over time
-
-### Framework 4: Optimize for Debugging
-
-**Examples:**
-- Verbose console output for inventory scoring ("45/100: fridge=tomato, pantry=bean")
-- Field naming documentation after mapping bugs
-- Type interfaces as executable documentation
-
-**Principle:** Make the system's reasoning transparent to humans
-
-## What Would Be Different in a Rewrite?
-
-### Start With:
-1. **Type-first design:** Define TypeScript interfaces before writing any API code
-2. **Component library:** Build reusable components (Card, Modal, Buttons) in Phase 1
-3. **API contract:** Document endpoint shapes in OpenAPI before implementation
-4. **Test harness:** Write data validation tests alongside feature code
-
-### Avoid:
-1. **Premature optimization:** Don't split files until they're painful to navigate (>800 lines)
-2. **Over-abstraction:** Three similar lines > premature helper function
-3. **Magic parsing:** Structured inputs (checkboxes) > free-text AI parsing
-4. **Global state:** Pass props explicitly until scale demands context/Redux
-
-### Keep:
-1. **Plain text storage:** YAML + Markdown is future-proof and version-control friendly
-2. **Energy-based scheduling:** This is the core innovation - never compromise it
-3. **Freezer backup system:** Escape hatches make rigid systems usable
-4. **Incremental migration:** Each phase delivered working software
-
-## Metrics That Mattered
-
-### Pre-System (Manual Spreadsheets):
-- 30min/week planning time
-- High recipe repetition (same 10 meals)
-- Frequent "what's for dinner?" panic
-- Evening cooking interfered with bedtime routines
-
-### Post-System (Current State):
-- 5min/week planning time (90% reduction)
-- 0 recipe repeats within 3 weeks (enforced by algorithm)
-- Zero planning paralysis (system proposes, user approves)
-- Thu/Fri evenings device-free (5-9pm protected)
-- 3 freezer backups maintained (system tracks automatically)
-
-### Code Quality Evolution:
-- Phase 0-6: 3 Python files, no types, no tests
-- Phase 12 Complete: 40+ modular files, 30+ TypeScript interfaces, 15+ test suites
-- Phase 15 Complete: Supabase Postgres migration, 100% resolution logic test coverage, Next.js 15 compatibility
-- TypeScript errors: 34 → 0 (100% resolution of build errors)
-- API response time (cached): <10ms (instant)
-
-## Lessons for Future Projects
-
-1. **Start manual first** - Understand problem deeply before automating
-2. **Write clear instructions** - CLAUDE.md = "how to do your job" manual
-3. **Plain text > databases** - YAML is human-readable, version-controlled, future-proof
-4. **Design for failure** - Freezer backups = escape hatch for imperfect adherence
-5. **Constraints create freedom** - Limiting Thu/Fri to no-prep increases usability
-6. **Iterate in public (Git)** - Track evolution, revert mistakes, learn from history
-7. **Metadata is magic** - Tag once, query forever
-8. **Let AI handle complex logic** - Constraint satisfaction is hard for humans, easy for AI
-9. **Progressive enhancement** - Each phase delivers working software
-10. **Documentation during implementation** - This history file captured decisions in real-time
-11. **Chunking for sanity** - Break work into 1-2 hour execution blocks. "Heavy" blocks lead to painful debugging sessions.
-
-## Final Thoughts
-
-**Systems should serve human needs, not idealized behavior.** The energy-based prep model works because it acknowledges energy depletion. The freezer backup works because it acknowledges plans fail.
-
-The best tools are the ones you actually use. This system works because it reduces cognitive load, respects constraints (evening time, energy levels), and builds in flexibility.
-
-**Meta-Learning:** The best documentation is written during implementation (not after). This history file captured decisions in real-time, making consolidation possible. Future projects should maintain a running PROJECT_HISTORY.md from Day 1.
-
-### Phase 16: Smart Weekly Planning Workflow (End-to-End) (2026-01-11)
-
-**Goal:** Create a guided, intelligent wizard for weekly planning that leverages historical data.
-
-**Block 1: Smart Data Collection (Completed)**
-- **Step 0 (Prior Week Review):** Interactive UI to confirm made/skipped meals and log leftovers.
-- **Step 1 (Inventory Update):** Bulk update interface integrated into the planning wizard.
-- **Step 2 (Waste Not Engine):** Suggests recipes for Mon/Tue based on leftovers and perishable fridge items.
-- **Block 2: Collaborative Planning (Completed)**
-    - **Step 3 (Tentative Plan):** Logic to fill remaining days while respecting manual selections.
-    - **Step 4 (Smart Grocery List):** Dynamic shopping list generation comparing plan needs vs current inventory.
-    - **Step 5 (Purchase Confirmation):** UI to confirm purchases and auto-update inventory.
-    - **Step 6 (Plan Finalization):** Endpoint to set plan status to "active" and lock it in.
-- **Technical Implementation:**
-    - New `PlanningWizard` components for all steps.
-    - New Backend routes: `/api/plan/draft`, `/api/plan/shopping-list`, `/api/plan/finalize`.
-    - Integrated `inventory_intelligence.get_shopping_list` for smart subtraction.
-    - Full end-to-end flow from Review -> Active Plan.
-
-### Phase 17: Core Stability & Data Hygiene (2026-01-11)
-
-**Goal:** Establish a stable foundation by fixing critical bugs and standardizing data before adding new features.
-
-- **Bug Fix:** Resolved critical "Week View" issue where adhered meals showed "Not planned" due to missing recipe metadata in the resolved state. Updated `api/routes/status.py` to correctly merge Plan + Actual data.
-- **Workflow Standards:** Formalized branching strategy in `CLAUDE.md`. Every subphase now requires a dedicated branch, local testing, and Vercel preview validation.
-- **Data Cleanup:** 
-    - Removed unused imports (`yaml`, `log_execution`).
-    - Standardized recipe index (fixed "tomatoe" typo, removed duplicate `ragada_patty`).
-
-
-### Phase 18: Enhanced Planning Workflow (Wizard 2.0) (2026-01-11)
-
-**Goal:** Refine the planning wizard UX to be more robust, robust, and user-friendly, handling edge cases like "no previous week" and ensuring React stability.
-
-**Block 1: Wizard UX Overhaul & Stability (Completed)**
-- **UI Enhancements:**
-    - Split "Review" into distinct "Dinners" (Step 0) and "Snacks" (Step 1) screens for focus.
-    - Improved "Inventory" (Step 2) with "Leftovers" vs "Ingredients" categorization and quantity inputs.
-    - Added "Meal Suggestions" dashboard (Step 3) as a clear bridge between Inventory and Planning.
-- **Critical Fixes:**
-    - **React Hook Order:** Resolved invalid hook calls by moving conditional logic out of component rendering path.
-    - **Review Fetching:** Fixed backend crash (`invalid input syntax for type date: "None"`) when no prior week existed.
-    - **Draft Loading:** Fixed `planningWeek` initialization logic to correctly target the upcoming Monday.
-    - **Inventory Safety:** Added robust null-checks to prevent wizard crashes on empty inventory states.
-- **Workflow:** Verified full end-to-end flow from "Start Fresh" -> "Active Plan".
-    - **Editable Tentative Plan:** Added pencil icon and modal to "Draft" step (Step 4) for immediate corrections without restarting.
-    - **Low-Friction Leftovers:** "Did you have leftovers?" now auto-fills item name and backend intelligently aggregates batches.
-
-**Block 2: Pause Capability (Draft Mode) (Completed)**
-- **Feature:** Wizard state is now persisted to the `meal_plans` table (`wizard_state` JSON field).
-- **UX:** Refreshing the page or navigating away no longer loses progress.
-- **Auto-Resume:** Returning to `/plan` automatically restores the user to the correct step with all inputs (reviews, inventory draft, selections) intact.
-
-**Block 3: Nightly Confirmation (Completed)**
-- **Feature:** Dashboard now detects if it's after 6 PM and meals aren't logged.
-- **UX:** Persistent banner prompts for review, simplifying the daily "did we actually eat this?" check.
-
-**Block 4: Interactive Shopping List & Inventory Sync (Completed)**
-- **Feature:** Wizard Step 5 is now an interactive checklist.
-- **Integration:** Items checked off are automatically added back to the `fridge` inventory upon finalizing the plan. 
-- **UX:** Supports adding custom items (milk, eggs) directly to the grocery list within the wizard.
-
-**Hardening Phase: Bug & Fix Requirement Gathering (2026-01-12) ✅**
-- **Artifact:** Compiled a comprehensive "Bug & Fix List" covering Recipe Ingestion, Main Page UX, Inventory IA, and Global Behavior.
-- **Goal:** Standardize data normalization, ensure prep step persistence, and overhaul the Inventory interface.
-- **Impact:** Shifted focus back to Phase 17 (Stability) and defined Phase 19/21 for better closure and UX.
-
-### Phase 19: Loop Closure & Adjustments (2026-01-13) ✅ Complete
-**Goal:** Close the loop between execution and planning by enabling new recipe capture and mid-week plan adjustments.
-
-**Block 1: New Recipe Capture Flow (Completed)**
-- **Detection:** Added backend logic to scan historical logs for meals that are not in the recipe index. These are flagged as `pending_recipes`.
-- **UI:** Implemented a non-intrusive "New Recipes Detected" banner on the dashboard that appears only when unindexed meals are found.
-- **Capture:** Created a modal allowing users to capture recipes via a URL or manual entry (Ingredients + Instructions).
-- **Ingestion:** 
-    - Automated the creation of Markdown recipe files with YAML frontmatter.
-    - **Heuristic Prep Generation:** Built a script that automatically suggests prep tasks (e.g., "Chop onions", "Mince garlic") by analyzing recipe text during ingestion.
-    - Synchronized new recipes to Supabase immediately upon capture.
-
-**Block 2: Index Intelligence & Hygiene (Completed)**
-- **Audit:** Automated index audit found 0 duplicates across 235 recipes.
-- **Prep Standardization:** Overhauled `generate_prep_steps.py` with improved heuristics and forced a standardization pass across the entire index (145 recipes updated).
-- **Auto-Generation:** New recipes now get prep steps automatically.
-
-**Block 3: Flexible Logging & Adjustments (Completed)**
-- **Feature:** Added native support for logging "Leftovers" and "Ate Out" (Restaurant) meals, ensuring accurate adherence metrics (adhered=False but accounted for).
-- **Feature:** Implemented "Change Plan" modal directly on the dashboard dinner card.
-- **UX:** Users can now move today's dinner to another day with one click, swapping meals if necessary, handling the common "too tired today, will cook Friday" scenario.
-
-**Learning:** Automated "loop closure" is critical. By detecting missing recipes (`pending_recipes`) and allowing easy mid-week pivots ("Change Plan"), the system minimizes friction and prevents "abandonment due to rigidity."
+### Phases 0-19 (Legacy Archive)
+> [!NOTE]
+> Detailed history for Phases 0-19 (December 2025 - January 2026) has been moved to [docs/archive/PROJECT_HISTORY_LEGACY.md](archive/PROJECT_HISTORY_LEGACY.md) to keep this file focused on current development.
 
 ### Phase 20: Advanced Planning Control (2026-01-13) ✅ Complete
 
@@ -1093,34 +588,23 @@ The system had likely auto-generated or the user had accidentally triggered empt
 
 **Learning:** "Replan" isn't one thing. Sometimes you just need to shuffle days (Shuffle), and sometimes you need to scrap half the week and start over (Fresh). The system must support both mental models.
 
-### Phase 32: Smart Shopping Integration ✅
-**Status:** Complete (2026-01-27)
+### Phase 32: Smart Shopping & Production Reliability (2026-01-27) ✅ Complete
+**Goal:** Intercept the meal planning workflow with smart shopping list reviews and harden the system for production-grade reliability.
 
-**Goal:** Intercept the meal planning workflow with a smart review of the shopping list to reduce friction and redundant purchases.
-
-**Built:**
+**Block 1: Smart Shopping Integration**
 - **Intelligence Layer:**
     - **Staples Exclusion:** Automatic filtering of oils, ghee, salt, pepper, and common spices from shopping suggestions.
     - **Inventory Awareness:** Items with `quantity > 0` in Fridge, Pantry, or Freezer are automatically subtracted from the list.
-    - **Quantity Logic:** Only items truly "in stock" (qty > 0) are considered available.
-- **Backend API:**
-    - Created `/api/plan/shopping-list/smart-update` for interactive user actions.
-    - Supports `add_to_inventory` (marks item as "I Have It") and `exclude_from_plan` (marks item as "Skip").
-- **Frontend Components:**
-    - **ReviewGroceriesModal:** A new high-fidelity interface that appears after replanning.
-    - Integrates with `ReplanWorkflowModal` to facilitate immediate shopping list adjustments.
-- **Robustness:** 
-    - Added detailed error codes (`MISSING_FIELDS`, `INVENTORY_UPDATE_FAILED`, etc.) and batch error handling.
-    - **Metadata Merging:** Hardened `StorageEngine` to prevent data loss during inventory updates.
-    - **Recipe Data Preservation:** Fixed a critical bug in replanning that stripped recipe metadata (vegetables), ensuring shopping list continuity.
-    - **Cache Control:** Implemented `no-store` API fetching for immediate UI feedback.
-    - **Cache Invalidation:** Added `invalidate_cache()` to `add_to_inventory` action to ensure inventory page refreshes immediately.
-- **UX Polish:**
-    - Redesigned modal header with clearer instructional copy and visual legend
-    - Renamed "Skip" → "Don't Need" for better clarity
-    - Separate toast notifications showing counts for inventory additions vs shopping list removals
+- **Backend API:** Created `/api/plan/shopping-list/smart-update` for interactive "I Have This" and "Don't Need" actions.
 
-**Learning:** Intercepting the workflow at the moment of "maximum intent" (right after planning) is the best time to capture inventory updates. Automatic staples removal significantly reduces "list noise".
+**Block 2: Production Reliability Hardening**
+- **Retry Logic:** Implemented exponential backoff for all Supabase operations to handle `[Errno 35]` transient network errors.
+- **Reliability Standards:** Established a P0 checklist for all new code (timeouts, idempotency, validation, error logging, and resource cleanup).
+- **Workflow Portability:** Synced project-specific workflows to global standards, ensuring reliability checks are integrated into every code review.
+
+**Learning:** 
+- **The "Pre-flight" Pattern:** High-intent moments (like right after planning) are the best times to capture user data (like updated inventory). 
+- **Production-Grade ≠ Just Working:** Moving from "it works locally" to "production-grade" means designing for failure (retries) and scale (idempotency). 5 P0 checks can prevent 80% of production outages.
 
 ### Phase 32: Database Stability & Error Resilience (2026-01-28) ✅ Complete
 
@@ -1257,42 +741,130 @@ Understanding when to use each is fundamental to frontend development. Most bugs
 
 **Learning:** aligning the *editor* UI with the *viewer* UI minimizes cognitive dissonance. If the viewer separates "Prep" from "Steps", the editor must enforce that separation to ensure data quality. Using Markdown as the single source of truth (synced to DB) simplifies the mental model compared to split YAML/Text files.
 
-### Phase 34: Strategic Technical Debt Cleanup (2026-01-29) ✅ Complete
+### Phase 34: Frictionless Recipe Loop & Architecture Hardening (2026-01-29) ✅ Complete
 
-**Goal:** Strengthen the foundation by addressing performance bottlenecks, architectural complexity, and test coverage gaps.
+**Goal:** Enable complex meal combinations, streamline shopping intelligence, and address core performance issues.
 
-**Key Achievements:**
+**Key Design Decisions:**
 
-1. **Service Layer Extraction (TD-009):**
-   - **Problem:** `api/routes/meals.py` grew into a 1000+ line monolith with 250+ lines devoted to a single logging function (`log_meal`).
-   - **Solution:** Created `api/services/meal_service.py` and extracted 6 high-complexity logical blocks (dinner finding, status parsing, daily feedback, inventory updates).
-   - **Result:** Reduced `log_meal` by ~80 lines and improved testability through granular service helpers.
+1. **Multi-Recipe Data Model (Modular Recipes):** Pivot from a single `recipe_id` (string) to a `recipe_ids` (array) per slot. This enabled "Modular Recipes" (e.g., Tacos + 3 Sides) but required updating the `StorageEngine`, UI modals, and recommendation engine to handle arrays across the entire stack.
+2. **Statelessness vs. Performance:** Opted for a "Stateless" Supabase-first approach to avoid race conditions, but introduced a multi-layer caching strategy (LRU for recipe content, TTL for heavy historical scans) to maintain sub-10ms response times.
 
-2. **Multi-Layer Performance Caching (TD-006, TD-008):**
-   - **Problem:** Repeated expensive operations (reading MD files for prep tasks, scanning 20+ weeks of history for pending recipes) were slowing down the Dashboard.
-   - **Solution:** 
-     - **LRU Cache:** Added to `get_prep_tasks` with content-hash keys.
-     - **TTL Cache:** Added to `get_pending_recipes` (5-minute TTL per household).
-   - **Result:** Dashboard load times stabilized, particularly for large history datasets.
+**Technical Hurdles:**
+- **Service Layer Extraction:** De-tangling `api/routes/meals.py` (1000+ line monolith) into `api/services/meal_service.py` required isolating deeply coupled logic between history logging, inventory sync, and daily feedback.
+- **Frictionless Shopping Logic:** Developing the "Shopping Intelligence" engine to aggregate ingredients from *multiple* recipes simultaneously while filtering out "Permanent Pantry" basics.
+- **Test Suite Modernization:** Rewriting legacy integration tests that relied on a local file system to work correctly with a fully mocked Supabase `StorageEngine`.
 
-3. **Integration Test Hardening (TD-010):**
-   - **Problem:** Core integration tests (`test_api_perf.py`, `test_backend.py`) were failing due to outdated file-based caching assumptions and missing Supabase mocks.
-   - **Solution:** Rewrote 7 tests with proper `StorageEngine` mocking and updated assertions to match the new Supabase-first architecture.
-   - **Result:** Restored 100% pass rate (13/13) for backend and performance suites.
+**Block 1: Modular Recipes & Pairing Logic (Completed)**
+- **Pairing Engine:** Built a history-based suggestion engine that analyzes past pairings to recommend complementary sides.
+- **Pairing Drawer:** Added a slide-out UI for rapid side-dish selection during the planning wizard.
 
-4. **Productivity Loops (TD-012, TD-011):**
-   - **Problem:** Recipe import was leaving "Prep Steps" empty, requiring manual entry even when content was available.
-   - **Solution:** Integrated `get_prep_tasks` directly into the ingestion pipeline (`capture_recipe`).
-   - **UX:** Improved the `ImportRecipeModal` with emerald-themed animated save buttons and consistent text sizing.
+**Block 2: Frictionless Shopping & Library Mastery (Completed)**
+- **Ingredient Aggregation:** Automatically combines ingredients from multiple recipes in the same slot.
+- **Permanent Pantry Filtering:** Added intelligence to skip basics (oil, salt, ghee) and "Permanent Pantry" items (flour, sugar) from the shopping list.
+- **Bulk Tagging:** Added a "Batch Editor" for rapid categorization of the recipe library (Main, Side, Needs Side).
 
-**Learning:** Technical debt isn't just "dirty code"—it's a drag on feature velocity. By spending one high-intensity session on cleanup, we restored CI/CD confidence and made the core logging logic (the most used part of the app) readable again.
+**Block 3: Strategic Technical Debt Cleanup (Completed)**
+- **Service Layer Extraction:** Extracted logging logic from `meals.py` into `api/services/meal_service.py`.
+- **Multi-Layer Performance Caching:** Implemented LRU/TTL caching for expensive operations.
+- **Integration Test Hardening:** Restored 100% test pass rate by updating mocks.
+
+**Learning:** "Modularization" is the theme of this phase. Moving from single recipe strings to ID arrays required updates across 15+ files, but unlocked the ability to plan real-world meals that aren't just one-pot dishes. Technical debt cleanup restored feature velocity for the upcoming multi-household features.
 
 ### Workflow Evolution: Plan & Build (2026-01-29) ✅ Complete
 
-**Goal:** Simplify the agentic development cycle terminology.
+**Goal:** Simplify the agentic development cycle and standardize reliability.
 
-- **Renamed Commands:** Legacy `/design` and `/implement` were renamed to **`/plan`** and **`/build`**.
-- **Rationale:** "Plan" and "Build" more accurately describe the human-agent mental model (first we decide the path, then we execute it).
-- **Global Sync:** Pushed these workflow improvements to the `claude-code-quickstart` repository to standardize all future projects with the new naming and the **Production Reliability Checklist**.
+- **Renamed Commands:** Legacy `/design` and `/implement` were renamed to **`/plan`** and **`/build`** to better match developer mental models.
+- **Reliability Standards:** Integrated a **Production Reliability Checklist** (timeouts, idempotency, validation) into the core workflows.
+- **Global Sync:** Pushed these improvements to the `claude-code-quickstart` repository for cross-project standardization.
+
+### Phase 34 Continuation: Test Coverage & SWR Cache (2026-02-02) ✅ Complete
+
+**Goal:** Increase test coverage for core services and implement serverless-friendly caching patterns.
+
+**1. meal_service.py Test Coverage (TD-014):**
+- **Problem:** The 6 helper functions extracted in TD-009 lacked unit test coverage.
+- **Solution:** Added 12 comprehensive tests covering:
+  - `update_dinner_feedback()` - vegetables parsing, kids feedback, complaints tracking
+  - `update_daily_feedback()` - basic feedback, confirm_day bulk marking, prep completion deduplication
+  - `update_inventory_from_meal()` - 2x batch freezer, freezer used deletion, outside leftovers, leftover quantity parsing
+  - `auto_add_recipe_from_meal()` - new recipe creation, existing recipe skip, Indian cuisine inference
+- **Result:** 100% function coverage for `meal_service.py`.
+
+**2. SWR (Stale-While-Revalidate) Cache Pattern (TD-013):**
+- **Problem:** Simple TTL caching forced users to wait for fresh data when cache expired, even in serverless environments where background refresh isn't possible.
+- **Solution:** Implemented `SWRCache` class with three states:
+  - **Fresh (0-5 min):** Return immediately, no refresh needed
+  - **Stale (5-10 min):** Return cached data immediately, mark for refresh on next miss
+  - **Miss (>10 min):** Fetch fresh data, with fallback to stale on error
+- **Benefits:**
+  - Fast responses even when cache expired
+  - Graceful degradation on errors (returns stale data)
+  - Debugging utilities: `get_pending_recipes_cache_stats()`, `refresh_pending_recipes_cache()`
+- **Result:** Dashboard loads remain fast even with expired cache; errors don't break the UI.
+
+**3. Test Suite Improvements:**
+- Added 5 tests for `SWRCache` class (fresh/stale/miss status, refresh clearing, invalidation)
+- Total test count in `test_phase_32.py`: 23 tests (up from 6)
+- All tests pass with proper mocking patterns
+
+**Learning:** The SWR pattern is ideal for serverless environments where true background processing is impossible. By accepting slightly stale data (within a reasonable window), we eliminate the latency penalty of cache expiration while maintaining eventual consistency.
 
 
+
+## 2026-01-30 [Decision] Deprecate 'actual_meal' String Logic
+**Context**: Phase 34 introduced Modular Recipes, allowing multiple recipes per meal slot. However, the legacy  string field was causing split-brain states where meals logged as text overrides lost their structured data (ingredients, prep steps).
+**Decision**: 
+1. Strictly enforce  (array) as the source of truth for all resolved meals.
+2. Deprecate the  string logic for content. It may still be used for display or temporary notes, but not as the primary data.
+3. "Quick Add" text entries will now auto-create placeholder recipes in the database to ensure every slot maps to a valid .
+**Impact**: Requires refactoring  endpoint and updating  replacement logic. Ensures full support for multi-recipe slots and interactive recipe cards.
+
+### Phase 34: Debugging & Tooling Enhancements (2026-02-01)
+
+**Goal:** Resolve critical 500 errors in the Planning Wizard and improve developer tooling for easier local testing.
+
+**1. Critical Crash Fixes (500 Internal Server Error):**
+- **Issue:** Planning Wizard crashed at `draft` and `shopping-list` stages.
+- **Root Cause:** 
+    - `draft`: Missing or `None` lunch IDs causing generation failures.
+    - `shopping-list`: `TypeError` when iterating over `None` recipe IDs in `inventory_intelligence.py`. 
+    - **Inventory Mismatch:** Local generator was reading from stale `data/inventory.yml` instead of live Supabase data, causing "no ingredients found" errors.
+- **Fix:**
+    - Patched `html_generator.py` and `lunch_selector.py` to handle `None` values.
+    - Updated `api/routes/meals.py` to fetch live inventory from Supabase and pass it to the generator.
+    - Added comprehensive error codes (`SHOPPING_LIST_GENERATION_FAILED`, `DRAFT_GENERATION_FAILED`) for better observability.
+
+**2. Improved Debug Visibility:**
+- **Problem:** Errors on Vercel were hard to debug because terminal logs aren't visible.
+- **Solution:** Updated the `/api/plan/shopping-list` endpoint to include a `debug_info` object in the JSON response.
+- **Impact:** Developers can now inspect the browser Network tab to see "warnings" (e.g., "Recipe content not found") without needing server logs.
+
+**3. Tooling: Cascading Meal Plan Reset:**
+- **Problem:** The "Clear Current Plan" button only deleted a single week, leaving orphaned future plans (from replans) that corrupted testing state.
+- **Solution:** 
+    - Upgraded `scripts/reset_week.py` to support **Cascading Deletes** (deleting target week + ALL future weeks).
+    - **Settings UX Update:** Replaced the static "Clear Current Plan" button with a **Date Picker** and "Clear Plans (Cascade)" button.
+    - **Refactor:** Extracted logic into `reset_from_week` shared function used by both CLI and API.
+
+**Learning:** 
+- **Tooling Parity:** Dev tools (scripts) and UI tools (Settings page) should share the same underlying logic to prevent behavior mismatches.
+- **Observability:** In serverless environments, critical debug info must be exposed in the API response or Toast notifications, not just stdout.
+
+### Phase 34: Infrastructure Hardening & Modular Architecture (2026-02-01 to 2026-02-02) ✅ Complete
+
+**Goal:** Transform the meal engine from a legacy string-based model to a modular, service-oriented architecture while "vaccinating" the system against data fragility.
+
+**Achievements:**
+- **Systemic Sanitization Layer**: Implemented a normalization pipeline in `StorageEngine` that ensures all data (Recipes, History, Plans) is type-safe and default-populated before hitting the frontend. Resolved TD-015.
+- **Modular Recipe Slots**: Transitioned the core data model from `recipe_id` to `recipe_ids` (array), enabling side-dish pairings and multi-recipe meal slots. 
+- **Service Domain Extraction**: Extracted 20+ logic helpers from `meals.py` into dedicated `meal_service.py` and `pairing_service.py`, improving testability and code hygiene.
+- **SWR Performance Engine**: Implemented Stale-While-Revalidate caching for pending recipes, significantly improving perceived performance in Vercel's serverless environment.
+- **Earthy Spice UX Refresh**: Applied the premium design system to the new Pairing Drawer and Replacement Modal components, ensuring high-fidelity interaction design.
+- **Workflow Hardening**: Established the **Reproduction FIRST** TDD convention and split logic review from UX verification to ensure production-grade reliability.
+
+**Decision (Infrastructure)**: Chose to prioritize a foundational data sanitization layer over ad-hoc error handling. This "boundary-first" approach eliminated an entire class of 500 errors and simplified all downstream logic.
+**Decision (Workflows)**: Decided to archive legacy project history (Phases 0-19) to maintain sub-second scannability of current project context while preserving historical records in `docs/archive`.
+
+**Next Phase**: Transitioning to Phase 35: Frictionless Shopping & Architecture Hardening.

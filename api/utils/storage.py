@@ -3,6 +3,17 @@ from flask import request
 from supabase import create_client
 from pathlib import Path
 import yaml
+import httpx
+
+# MONKEY PATCH: Disable HTTP/2 in httpx to fix "ConnectionTerminated error_code:ErrorCodes.COMPRESSION_ERROR"
+# This is required because of SSL/LibreSSL issues on macOS affecting HTTP/2 negotiation with Supabase.
+_original_httpx_client_init = httpx.Client.__init__
+
+def _patched_httpx_client_init(self, *args, **kwargs):
+    kwargs['http2'] = False
+    _original_httpx_client_init(self, *args, **kwargs)
+
+httpx.Client.__init__ = _patched_httpx_client_init
 
 # Load local environment variables if they exist
 try:
@@ -74,16 +85,88 @@ def get_household_id():
     """Helper to get household_id from request context."""
     return getattr(request, 'household_id', "00000000-0000-0000-0000-000000000001")
 
-# TD-008 FIX: Cache for pending recipes (per-household, with TTL)
-_pending_recipes_cache = {}
-_PENDING_CACHE_TTL = 300  # 5 minutes
+# =============================================================================
+# SWR (Stale-While-Revalidate) Cache Implementation
+# =============================================================================
+# Pattern: Return stale data immediately, refresh in background on next request
+# Benefits: Fast responses even when cache expired, eventual consistency
+# =============================================================================
+
+class SWRCache:
+    """
+    Stale-While-Revalidate cache for serverless environments.
+
+    - fresh_ttl: Data is considered fresh (no refresh needed)
+    - stale_ttl: Data is stale but usable (triggers background refresh)
+    - After stale_ttl: Data is too old, must refresh synchronously
+    """
+
+    def __init__(self, fresh_ttl=300, stale_ttl=600):
+        self._cache = {}
+        self._fresh_ttl = fresh_ttl   # 5 minutes default
+        self._stale_ttl = stale_ttl   # 10 minutes default (stale window)
+        self._pending_refresh = set()  # Keys marked for refresh
+
+    def get(self, key):
+        """
+        Get cached value with SWR semantics.
+        Returns: (value, status) where status is 'fresh', 'stale', or 'miss'
+        """
+        entry = self._cache.get(key)
+        if not entry:
+            return None, 'miss'
+
+        value, timestamp = entry
+        age = time.time() - timestamp
+
+        if age < self._fresh_ttl:
+            return value, 'fresh'
+        elif age < self._stale_ttl:
+            # Mark for background refresh on next opportunity
+            self._pending_refresh.add(key)
+            return value, 'stale'
+        else:
+            # Too stale, treat as miss
+            return None, 'miss'
+
+    def set(self, key, value):
+        """Store value in cache."""
+        self._cache[key] = (value, time.time())
+        self._pending_refresh.discard(key)
+
+    def needs_refresh(self, key):
+        """Check if key is marked for background refresh."""
+        return key in self._pending_refresh
+
+    def invalidate(self, key=None):
+        """Invalidate specific key or entire cache."""
+        if key:
+            self._cache.pop(key, None)
+            self._pending_refresh.discard(key)
+        else:
+            self._cache.clear()
+            self._pending_refresh.clear()
+
+    def get_stats(self):
+        """Return cache statistics for debugging."""
+        return {
+            'entries': len(self._cache),
+            'pending_refresh': len(self._pending_refresh),
+            'keys': list(self._cache.keys())
+        }
+
+
+# TD-008 FIX: Cache for pending recipes (per-household, with SWR)
+_pending_recipes_cache = SWRCache(fresh_ttl=300, stale_ttl=600)
 
 def invalidate_pending_recipes_cache(household_id=None):
     """Invalidate pending recipes cache. Called after recipe capture/save."""
-    if household_id:
-        _pending_recipes_cache.pop(household_id, None)
-    else:
-        _pending_recipes_cache.clear()
+    _pending_recipes_cache.invalidate(household_id)
+
+def invalidate_cache(key=None):
+    """Global cache invalidation. Currently a no-op as we move to statelessness, 
+    but preserved for route compatibility during migration."""
+    invalidate_pending_recipes_cache()
 
 class StorageEngine:
     """Storage abstraction to handle DB vs File operations."""
@@ -99,27 +182,34 @@ class StorageEngine:
         inventory = {'fridge': [], 'pantry': [], 'spice_rack': [], 'freezer': {'backups': [], 'ingredients': []}}
         
         for item in res.data:
-            category = item['category']
-            formatted = {
-                'item': item['item'],
-                'quantity': item['quantity'],
-                'unit': item['unit'],
-                **(item.get('metadata') or {})
-            }
-            
-            if category == 'fridge':
-                inventory['fridge'].append(formatted)
-            elif category == 'pantry':
-                inventory['pantry'].append(formatted)
-            elif category == 'spice_rack':
-                inventory['spice_rack'].append(formatted)
-            elif category == 'freezer_ingredient':
-                inventory['freezer']['ingredients'].append(formatted)
-            elif category == 'freezer_backup':
-                # Convert back to 'meal' and 'servings' for UI compatibility
-                formatted['meal'] = formatted.pop('item')
-                formatted['servings'] = formatted.pop('quantity')
-                inventory['freezer']['backups'].append(formatted)
+            try:
+                category = item.get('category')
+                if not category: continue
+
+                formatted = {
+                    'item': item.get('item', 'Unknown'),
+                    'quantity': item.get('quantity', 1),
+                    'unit': item.get('unit', 'count'),
+                    **(item.get('metadata') or {})
+                }
+                
+                if category == 'fridge':
+                    inventory['fridge'].append(formatted)
+                elif category == 'pantry':
+                    inventory['pantry'].append(formatted)
+                elif category == 'spice_rack':
+                    inventory['spice_rack'].append(formatted)
+                elif category == 'freezer_ingredient':
+                    inventory['freezer']['ingredients'].append(formatted)
+                elif category == 'freezer_backup':
+                    # Convert back to 'meal' and 'servings' for UI compatibility
+                    formatted['meal'] = formatted.pop('item')
+                    formatted['servings'] = formatted.pop('quantity')
+                    inventory['freezer']['backups'].append(formatted)
+            except Exception as e:
+                 print(f"Error processing inventory item {item.get('id', 'unknown')}: {e}")
+                 # Continue processing other items
+                 continue
         
         return inventory
 
@@ -134,17 +224,22 @@ class StorageEngine:
                 return []
                 
             # Transformation to include id and name from the columns, plus categories/cuisine from metadata
-            return [
-                {
+            sanitized = []
+            for r in res.data:
+                meta = r.get('metadata') or {}
+                sanitized.append({
                     "id": r['id'],
                     "name": r['name'],
-                    "cuisine": (r.get('metadata') or {}).get('cuisine', 'unknown'),
-                    "meal_type": (r.get('metadata') or {}).get('meal_type', 'unknown'),
-                    "effort_level": (r.get('metadata') or {}).get('effort_level', 'normal'),
-                    "no_chop_compatible": (r.get('metadata') or {}).get('no_chop_compatible', False),
-                    "tags": (r.get('metadata') or {}).get('tags', [])
-                } for r in res.data
-            ]
+                    "cuisine": meta.get('cuisine') or 'unknown',
+                    "meal_type": meta.get('meal_type') or 'unknown',
+                    "effort_level": meta.get('effort_level') or 'normal',
+                    "no_chop_compatible": meta.get('no_chop_compatible') or False,
+                    "tags": meta.get('tags') or [],
+                    "requires_side": meta.get('requires_side') or False,
+                    "main_veg": meta.get('main_veg') or [],
+                    "ingredients": meta.get('ingredients') or []
+                })
+            return sanitized
         except Exception as e:
             print(f"Error fetching recipes: {e}")
             import traceback
@@ -163,6 +258,17 @@ class StorageEngine:
             row = res.data[0]
             # Merge name into recipe metadata for UI
             recipe_data = row.get('metadata') or {}
+            
+            # Sanitization Layer
+            for list_field in ['tags', 'main_veg', 'ingredients', 'prep_steps']:
+                if recipe_data.get(list_field) is None:
+                    recipe_data[list_field] = []
+            
+            # Ensure strings fallback to defaults
+            recipe_data['cuisine'] = recipe_data.get('cuisine') or 'unknown'
+            recipe_data['meal_type'] = recipe_data.get('meal_type') or 'unknown'
+            recipe_data['effort_level'] = recipe_data.get('effort_level') or 'normal'
+            
             recipe_data['name'] = row['name']
             recipe_data['id'] = row['id']
             
@@ -205,12 +311,52 @@ class StorageEngine:
             query = supabase.table("meal_plans").upsert({
                 "household_id": h_id,
                 "week_of": week_of,
-                **update_payload
+                **StorageEngine.normalize_plan_data(update_payload)
             }, on_conflict="household_id, week_of")
             execute_with_retry(query)
         except Exception as e:
             print(f"Error updating meal plan for {week_of}: {e}")
             raise e
+
+    @staticmethod
+    def normalize_plan_data(data):
+        """
+        Normalize meal plan data to ensure recipe_ids (array) is prioritized over recipe_id (string).
+        Handles both plan_data top-level and history_data nested structures.
+        """
+        if not data: return data
+        
+        # 1. Handle plan_data/history_data wrapper if present (e.g. from update_payload)
+        for key in ['plan_data', 'history_data']:
+            if key in data and isinstance(data[key], dict):
+                data[key] = StorageEngine._normalize_inner_data(data[key])
+        
+        # 2. Handle if data is the inner dict itself
+        return StorageEngine._normalize_inner_data(data)
+
+    @staticmethod
+    def _normalize_inner_data(inner):
+        if not isinstance(inner, dict): return inner
+        
+        # Normalize Dinners
+        if 'dinners' in inner and isinstance(inner['dinners'], list):
+            for dinner in inner['dinners']:
+                if not isinstance(dinner, dict): continue
+                # recipe_id -> recipe_ids
+                if 'recipe_id' in dinner and 'recipe_ids' not in dinner:
+                    dinner['recipe_ids'] = [dinner['recipe_id']] if dinner['recipe_id'] else []
+                # ensure recipe_id for legacy UI
+                if 'recipe_ids' in dinner and dinner['recipe_ids'] and 'recipe_id' not in dinner:
+                    dinner['recipe_id'] = dinner['recipe_ids'][0]
+        
+        # Normalize Lunches
+        if 'lunches' in inner and isinstance(inner['lunches'], dict):
+            for day, lunch in inner['lunches'].items():
+                if not isinstance(lunch, dict): continue
+                if 'recipe_id' in lunch and 'recipe_ids' not in lunch:
+                    lunch['recipe_ids'] = [lunch['recipe_id']] if lunch['recipe_id'] else []
+        
+        return inner
 
     @staticmethod
     def update_inventory_item(category, item_name, updates=None, delete=False):
@@ -308,18 +454,18 @@ class StorageEngine:
                 
                 # Check if today is within the 7-day window
                 if week_start <= today < (week_start + timedelta(days=7)):
-                    return plan
-
+                    return StorageEngine.normalize_plan_data(plan)
+            
             # 2. Second priority: find any plan currently in 'planning'
             query = supabase.table("meal_plans").select("*").eq("household_id", h_id).eq("status", "planning").order("week_of", desc=True).limit(1)
             res = execute_with_retry(query)
             if res.data:
-                return res.data[0]
+                return StorageEngine.normalize_plan_data(res.data[0])
 
             # 3. Last fallback: the most recent non-archived plan of any status
             query = supabase.table("meal_plans").select("*").eq("household_id", h_id).neq("status", "archived").order("week_of", desc=True).limit(1)
             res = execute_with_retry(query)
-            return res.data[0] if res.data else None
+            return StorageEngine.normalize_plan_data(res.data[0]) if res.data else None
             
         except Exception as e:
             print(f"Error fetching active week: {e}")
@@ -454,78 +600,106 @@ class StorageEngine:
 
     @staticmethod
     def get_pending_recipes():
-        """Detect 'Actual Meals' logged that are not in the recipe index."""
+        """
+        Detect 'Actual Meals' logged that are not in the recipe index.
+        Uses SWR (Stale-While-Revalidate) caching for fast responses.
+        """
         if not supabase: return []
         h_id = get_household_id()
-        
-        # TD-008 FIX: Check cache first
-        import time as _time
-        cache_entry = _pending_recipes_cache.get(h_id)
-        if cache_entry:
-            cached_result, timestamp = cache_entry
-            if _time.time() - timestamp < _PENDING_CACHE_TTL:
-                return cached_result
-        
-        try:
-            # 1. Get all recipes
-            query = supabase.table("recipes").select("id, name").eq("household_id", h_id)
-            recipes_res = execute_with_retry(query)
-            recipe_ids = {r['id'] for r in recipes_res.data}
-            recipe_names = {r['name'].lower() for r in recipes_res.data}
-            
-            # 2. Get history (all weeks)
-            query = supabase.table("meal_plans").select("history_data").eq("household_id", h_id)
-            res = execute_with_retry(query)
-            weeks = [row['history_data'] for row in res.data if row.get('history_data')]
-            
-            pending = []
-            seen = set()
-            
-            # Common non-recipe keywords to ignore
-            ignore = {
-                'leftovers', 'skipped', 'outside_meal', 'same', 'none', 'yes', 'no', 'true', 'false',
-                'freezer meal', 'ate out', 'make at home', 'takeout', 'delivery', 'restaurant'
-            }
-            
-            # TD-007 FIX: Load ignored recipes from DB config instead of local file
-            ignored_list = StorageEngine._get_config_key('ignored_recipes') or []
-            for i in ignored_list:
-                ignore.add(i.lower())
 
-            for week in weeks:
-                # Check dinners
-                for dinner in week.get('dinners', []):
-                    actual = dinner.get('actual_meal')
+        # TD-008 FIX: SWR cache - return stale data immediately if available
+        cached_value, cache_status = _pending_recipes_cache.get(h_id)
+
+        if cache_status == 'fresh':
+            # Data is fresh, return immediately
+            return cached_value
+        elif cache_status == 'stale':
+            # Data is stale but usable - return it now, refresh will happen on next miss
+            # In serverless, we can't truly background refresh, but this gives fast response
+            return cached_value
+
+        # Cache miss or too stale - must fetch fresh data
+        try:
+            pending = StorageEngine._fetch_pending_recipes_impl(h_id)
+            _pending_recipes_cache.set(h_id, pending)
+            return pending
+        except Exception as e:
+            print(f"Error in get_pending_recipes: {e}")
+            # On error, return stale data if we have any
+            if cached_value is not None:
+                return cached_value
+            return []
+
+    @staticmethod
+    def _fetch_pending_recipes_impl(h_id):
+        """Internal implementation of pending recipes scan."""
+        # 1. Get all recipes
+        query = supabase.table("recipes").select("id, name").eq("household_id", h_id)
+        recipes_res = execute_with_retry(query)
+        recipe_ids = {r['id'] for r in recipes_res.data}
+        recipe_names = {r['name'].lower() for r in recipes_res.data}
+
+        # 2. Get history (all weeks)
+        query = supabase.table("meal_plans").select("history_data").eq("household_id", h_id)
+        res = execute_with_retry(query)
+        weeks = [row['history_data'] for row in res.data if row.get('history_data')]
+
+        pending = []
+        seen = set()
+
+        # Common non-recipe keywords to ignore
+        ignore = {
+            'leftovers', 'skipped', 'outside_meal', 'same', 'none', 'yes', 'no', 'true', 'false',
+            'freezer meal', 'ate out', 'make at home', 'takeout', 'delivery', 'restaurant'
+        }
+
+        # TD-007 FIX: Load ignored recipes from DB config instead of local file
+        ignored_list = StorageEngine._get_config_key('ignored_recipes') or []
+        for i in ignored_list:
+            ignore.add(i.lower())
+
+        for week in weeks:
+            # Check dinners
+            for dinner in week.get('dinners', []):
+                actual = dinner.get('actual_meal')
+                if actual and isinstance(actual, str):
+                    actual_clean = actual.strip()
+                    if actual_clean.lower() in ignore: continue
+
+                    actual_id = actual_clean.lower().replace(' ', '_')
+                    if actual_id not in recipe_ids and actual_clean.lower() not in recipe_names:
+                        if actual_clean not in seen:
+                            pending.append(actual_clean)
+                            seen.add(actual_clean)
+
+            # Check lunches/snacks in daily_feedback
+            df = week.get('daily_feedback', {})
+            for day, feedback in df.items():
+                for key in ['kids_lunch_made', 'adult_lunch_made', 'school_snack_made', 'home_snack_made']:
+                    actual = feedback.get(key)
                     if actual and isinstance(actual, str):
                         actual_clean = actual.strip()
                         if actual_clean.lower() in ignore: continue
-                        
+
                         actual_id = actual_clean.lower().replace(' ', '_')
                         if actual_id not in recipe_ids and actual_clean.lower() not in recipe_names:
                             if actual_clean not in seen:
                                 pending.append(actual_clean)
                                 seen.add(actual_clean)
-                                
-                # Check lunches/snacks in daily_feedback
-                df = week.get('daily_feedback', {})
-                for day, feedback in df.items():
-                    for key in ['kids_lunch_made', 'adult_lunch_made', 'school_snack_made', 'home_snack_made']:
-                        actual = feedback.get(key)
-                        if actual and isinstance(actual, str):
-                            actual_clean = actual.strip()
-                            if actual_clean.lower() in ignore: continue
-                            
-                            actual_id = actual_clean.lower().replace(' ', '_')
-                            if actual_id not in recipe_ids and actual_clean.lower() not in recipe_names:
-                                if actual_clean not in seen:
-                                    pending.append(actual_clean)
-                                    seen.add(actual_clean)
-            # TD-008 FIX: Store result in cache
-            _pending_recipes_cache[h_id] = (pending, _time.time())
-            return pending
-        except Exception as e:
-            print(f"Error in get_pending_recipes: {e}")
-            return []
+
+        return pending
+
+    @staticmethod
+    def get_pending_recipes_cache_stats():
+        """Return cache statistics for debugging."""
+        return _pending_recipes_cache.get_stats()
+
+    @staticmethod
+    def refresh_pending_recipes_cache():
+        """Force refresh of pending recipes cache. Call when you want fresh data."""
+        h_id = get_household_id()
+        _pending_recipes_cache.invalidate(h_id)
+        return StorageEngine.get_pending_recipes()
 
     @staticmethod
     def delete_recipe(recipe_id):
@@ -685,6 +859,38 @@ class StorageEngine:
             raise e
 
     @staticmethod
+    def bulk_update_recipes(updates):
+        """
+        Execute multiple recipe updates in a single atomic transaction.
+        'updates' should be a list of dicts: [{'id': str, 'name': str, 'metadata': dict, 'content': str}]
+        """
+        if not supabase: return
+        if not updates: return
+        
+        h_id = get_household_id()
+        if not IS_SERVICE_ROLE:
+            raise Exception("SUPABASE_SERVICE_ROLE_KEY is missing. Cannot write to database.")
+            
+        try:
+            # Prepare rows for upsert. Supabase handles list of dicts as an atomic operation.
+            rows = []
+            for u in updates:
+                rows.append({
+                    "id": u['id'],
+                    "household_id": h_id,
+                    "name": u['name'],
+                    "metadata": u['metadata'],
+                    "content": u['content']
+                })
+            
+            query = supabase.table("recipes").upsert(rows)
+            execute_with_retry(query)
+            return True
+        except Exception as e:
+            print(f"Error in bulk_update_recipes: {e}")
+            raise e
+
+    @staticmethod
     def ignore_recipe(name):
         """Add a recipe name to the ignored list."""
         # TD-007 FIX: Use DB config instead of local file
@@ -783,14 +989,6 @@ class StorageEngine:
     def get_config():
         """Load config from DB or fallback to file."""
         if not supabase: 
-            # Fallback to loading local config.yml if DB not available
-            try:
-                config_path = Path('config.yml')
-                if config_path.exists():
-                    with open(config_path, 'r') as f:
-                        return yaml.safe_load(f) or {}
-            except:
-                pass
             return {}
 
         h_id = get_household_id()

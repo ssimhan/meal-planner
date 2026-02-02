@@ -19,7 +19,7 @@ const eslintConfig = [
     },
   },
   {
-    ignores: [".next/", "next-env.d.ts", "coverage/", "skills/"],
+    ignores: [".next/", "next-env.d.ts", "coverage/", "skills/", "claude-code-quickstart/"],
   },
 ];
 

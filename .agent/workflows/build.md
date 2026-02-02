@@ -53,4 +53,4 @@ Use this workflow to execute a structured implementation plan step-by-step.
 | `npm test -- --watch` | TDD mode for frontend |
 | `npm run test:py` | Python unit tests only |
 
-**Next Step**: Once all tasks are complete, use `/code-review` for the final quality check.
+**Next Step**: Once all tasks are complete, use `/code-review` for the final quality check, then `/fix` to resolve all identified issues.

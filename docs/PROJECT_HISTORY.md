@@ -866,5 +866,7 @@ Understanding when to use each is fundamental to frontend development. Most bugs
 
 **Decision (Infrastructure)**: Chose to prioritize a foundational data sanitization layer over ad-hoc error handling. This "boundary-first" approach eliminated an entire class of 500 errors and simplified all downstream logic.
 **Decision (Workflows)**: Decided to archive legacy project history (Phases 0-19) to maintain sub-second scannability of current project context while preserving historical records in `docs/archive`.
+**Decision (Quality)**: Enforced **Reproduction FIRST** for all bug fixes, including the use of **Markdown UI Test Plans** for complex visual bugs. This ensures every fix is proven and verifiable.
+**Learning (Observability)**: Discovered that granular error codes and centralized sanitization are force-multipliers for debugging in serverless environments, where logs can be ephemeral and stack traces expensive.
 
 **Next Phase**: Transitioning to Phase 35: Frictionless Shopping & Architecture Hardening.

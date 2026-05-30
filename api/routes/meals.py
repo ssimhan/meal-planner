@@ -808,7 +808,9 @@ def save_wizard_state():
         h_id = storage.get_household_id()
         
         # 1. Fetch existing plan
-        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).execute()
+        # 1. Fetch existing plan
+        query = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of)
+        res = storage.execute_with_retry(query)
         
         current_plan_data = {}
         if res.data and len(res.data) > 0:
@@ -834,7 +836,8 @@ def get_wizard_state():
             return jsonify({"status": "error", "message": "week_of required"}), 400
             
         h_id = storage.get_household_id()
-        res = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of).execute()
+        query = storage.supabase.table("meal_plans").select("plan_data").eq("household_id", h_id).eq("week_of", week_of)
+        res = storage.execute_with_retry(query)
         
         if not res.data or len(res.data) == 0:
              return jsonify({"status": "success", "state": None})

@@ -18,10 +18,14 @@ def get_last_week_review_data():
         
         # specific logic: Get the latest week that isn't 'planning' (i.e. the one we just finished or are finishing)
         # We assume the user is starting a NEW week, so we want the PREVIOUS chronological week.
+        # ALSO: Filter out future weeks!
+        today = datetime.now().strftime('%Y-%m-%d')
+        
         query = storage.supabase.table("meal_plans") \
             .select("*") \
             .eq("household_id", h_id) \
             .neq("status", "planning") \
+            .lte("week_of", today) \
             .order("week_of", desc=True) \
             .limit(1)
             

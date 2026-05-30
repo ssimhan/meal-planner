@@ -48,7 +48,7 @@ if SUPABASE_URL and SUPABASE_SERVICE_KEY:
 
 import time
 
-def execute_with_retry(query, max_retries=3, delay=0.5):
+def execute_with_retry(query, max_retries=5, delay=1.0):
     """
     Execute a Supabase query with retry logic for transient network errors.
     Handles [Errno 35] Resource temporarily unavailable and other httpx errors.
@@ -145,7 +145,8 @@ class StorageEngine:
         if not supabase: return None
         h_id = get_household_id()
         try:
-            res = supabase.table("recipes").select("id, name, metadata, content").eq("household_id", h_id).eq("id", recipe_id).execute()
+            query = supabase.table("recipes").select("id, name, metadata, content").eq("household_id", h_id).eq("id", recipe_id)
+            res = execute_with_retry(query)
             if not res.data:
                 return None
             row = res.data[0]
@@ -171,7 +172,8 @@ class StorageEngine:
             # The original instruction snippet for get_history was likely a mistake,
             # as it introduced a 'week_of' parameter that wasn't present in the method signature
             # and changed the select columns. Reverting to original logic for fetching all history.
-            res = supabase.table("meal_plans").select("history_data").eq("household_id", h_id).order("week_of", desc=True).execute()
+            query = supabase.table("meal_plans").select("history_data").eq("household_id", h_id).order("week_of", desc=True)
+            res = execute_with_retry(query)
             return {"weeks": [row['history_data'] for row in res.data]}
         except Exception as e:
             print(f"Error fetching history: {e}")
@@ -189,11 +191,12 @@ class StorageEngine:
             if history_data is not None: update_payload['history_data'] = history_data
             if status is not None: update_payload['status'] = status
             
-            supabase.table("meal_plans").upsert({
+            query = supabase.table("meal_plans").upsert({
                 "household_id": h_id,
                 "week_of": week_of,
                 **update_payload
-            }, on_conflict="household_id, week_of").execute()
+            }, on_conflict="household_id, week_of")
+            execute_with_retry(query)
         except Exception as e:
             print(f"Error updating meal plan for {week_of}: {e}")
 
@@ -205,7 +208,8 @@ class StorageEngine:
             raise Exception("SUPABASE_SERVICE_ROLE_KEY is missing. Cannot write to database.")
         try:
             if delete:
-                supabase.table("inventory_items").delete().eq("household_id", h_id).eq("category", category).eq("item", item_name).execute()
+                query = supabase.table("inventory_items").delete().eq("household_id", h_id).eq("category", category).eq("item", item_name)
+                execute_with_retry(query)
                 return
 
             # Prepare payload for upsert
@@ -213,14 +217,15 @@ class StorageEngine:
             quantity = updates.pop('quantity', 1) if updates else 1
             unit = updates.pop('unit', 'count') if updates else 'count'
             
-            supabase.table("inventory_items").upsert({
+            query = supabase.table("inventory_items").upsert({
                 "household_id": h_id,
                 "category": category,
                 "item": item_name,
                 "quantity": quantity,
                 "unit": unit,
                 "metadata": updates or {}
-            }, on_conflict="household_id, category, item").execute()
+            })
+            execute_with_retry(query)
 
             # PENDING RECIPE WORKFLOW: If this is a freezer meal, ensure it exists in the recipe index
             if category == 'freezer_backup' and not delete:
@@ -552,13 +557,14 @@ class StorageEngine:
         if not IS_SERVICE_ROLE:
             raise Exception("SUPABASE_SERVICE_ROLE_KEY is missing. Cannot write to database.")
         try:
-            supabase.table("recipes").upsert({
+            query = supabase.table("recipes").upsert({
                 "id": recipe_id,
                 "household_id": h_id,
                 "name": name,
                 "metadata": metadata,
                 "content": content
-            }).execute()
+            })
+            execute_with_retry(query)
         except Exception as e:
             print(f"Error saving recipe {recipe_id}: {e}")
             raise e

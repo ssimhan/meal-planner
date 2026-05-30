@@ -25,6 +25,7 @@ import ReplacementModal from '@/components/ReplacementModal';
 import { useToast } from '@/context/ToastContext';
 import { ReviewStep } from './components/ReviewStep';
 import { InventoryStep } from './components/InventoryStep';
+import { WasteNotStep } from './components/WasteNotStep';
 import { ReviewDay, InventoryState } from '@/types';
 
 
@@ -67,6 +68,7 @@ function PlanningWizardContent() {
     const PHASES = [
         { id: 'review', label: 'Review', icon: '📝', steps: ['review_meals', 'review_snacks'] },
         { id: 'inventory', label: 'Inventory', icon: '🥦', steps: ['inventory'] },
+        { id: 'waste_not', label: 'Waste Not', icon: '♻️', steps: ['waste_not'] },
         { id: 'plan', label: 'Plan', icon: '🍳', steps: ['suggestions', 'draft', 'groceries'] }
     ];
 
@@ -115,7 +117,7 @@ function PlanningWizardContent() {
     const [pendingChanges, setPendingChanges] = useState<{ category: string, item: string, quantity: number, type?: 'meal' | 'ingredient', operation: 'add' | 'remove' | 'update' }[]>([]);
     const [newItemInputs, setNewItemInputs] = useState<Record<string, { name: string, qty: number, type?: 'meal' | 'ingredient' }>>({});
     const [submitting, setSubmitting] = useState(false);
-    const [step, setStep] = useState<'review_meals' | 'review_snacks' | 'inventory' | 'suggestions' | 'draft' | 'groceries'>('review_meals');
+    const [step, setStep] = useState<'review_meals' | 'review_snacks' | 'inventory' | 'waste_not' | 'suggestions' | 'draft' | 'groceries'>('review_meals');
     const [suggestionPhase, setSuggestionPhase] = useState<'dinners' | 'lunches' | 'snacks'>('dinners');
     const [error, setError] = useState<string | null>(null);
 
@@ -335,6 +337,23 @@ function PlanningWizardContent() {
         }
     }, [step, loadSuggestions]);
 
+    useEffect(() => {
+        if (step === 'waste_not' && wasteNotSuggestions.length === 0) {
+            const loadWasteNot = async () => {
+                setLoadingSuggestions(true);
+                try {
+                    const data = await getWasteNotSuggestions();
+                    setWasteNotSuggestions(data.suggestions || []);
+                } catch (e) {
+                    console.error("Failed to load waste not suggestions", e);
+                } finally {
+                    setLoadingSuggestions(false);
+                }
+            };
+            loadWasteNot();
+        }
+    }, [step, wasteNotSuggestions.length]);
+
     const handleSaveInventory = async () => {
         setSubmitting(true);
         try {
@@ -372,7 +391,7 @@ function PlanningWizardContent() {
             }
             showToast('Inventory updated!', 'success');
             setSuggestionPhase('dinners');
-            setStep('suggestions');
+            setStep('waste_not');
         } catch (error) {
             showToast('Failed to update inventory.', 'error');
             console.error('Failed to update inventory:', error);
@@ -1327,6 +1346,32 @@ function PlanningWizardContent() {
                 handleSubmitReview={handleSubmitReview}
                 dayNames={dayNames}
                 WizardProgress={WizardProgress}
+            />
+        );
+    }
+
+    // STEP 3.5: WASTE NOT UI
+    if (step === 'waste_not') {
+        const handleWasteNotNext = () => {
+            setSuggestionPhase('dinners');
+            setStep('suggestions');
+        };
+
+
+
+        return (
+            <WasteNotStep
+                step="waste_not"
+                inventory={inventory}
+                wasteNotSuggestions={wasteNotSuggestions}
+                selections={selections}
+                setSelections={setSelections}
+                leftoverAssignments={leftoverAssignments}
+                setLeftoverAssignments={setLeftoverAssignments}
+                setStep={setStep}
+                WizardProgress={WizardProgress}
+                onNext={handleWasteNotNext}
+                onBack={() => setStep('inventory')}
             />
         );
     }

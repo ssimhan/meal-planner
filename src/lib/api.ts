@@ -66,7 +66,7 @@ export async function getAuthHeaders(includeJson: boolean = true) {
 }
 
 export async function getStatus(week?: string): Promise<WorkflowStatus> {
-    const url = week ? `/api/status?week=${week}` : '/api/status';
+    const url = week ? `/api/status?week=${week}&t=${Date.now()}` : `/api/status?t=${Date.now()}`;
     const res = await fetch(url, {
         headers: await getAuthHeaders(false),
     });
@@ -90,8 +90,8 @@ export async function getRecipes(): Promise<RecipesResponse> {
 }
 
 export async function getInventory(): Promise<InventoryResponse> {
-    const res = await fetch('/api/inventory', {
-        headers: await getAuthHeaders(false),
+    const res = await fetch(`/api/inventory?t=${Date.now()}`, {
+        headers: await getAuthHeaders(),
     });
     return handleResponse<InventoryResponse>(res, 'Failed to fetch inventory');
 }
